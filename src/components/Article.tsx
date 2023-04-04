@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import {InlineMath, BlockMath} from "react-katex";
 import "katex/dist/katex.min.css";
 import gfm from "remark-gfm";
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import "./Article.css";
 
 
@@ -27,17 +28,12 @@ const Article: React.FC<ArticleProps> = ({ filePath }) => {
       .catch((error) => console.error(error));
   }, [id, filePath]);
 
-  const renderers = {
-    inlineMath: ({value}: { value: string }) => <InlineMath math={value} />,
-    math: ({value}: {value: string}) => <BlockMath math={value} />,
-  };
-
   return (
     <div className="Article">
       <ReactMarkdown
         children={content}
-	components={renderers}
-	remarkPlugins={[gfm]}
+	remarkPlugins={[gfm, remarkMath]}
+	rehypePlugins={[rehypeKatex]}
       />
     </div>
   );
