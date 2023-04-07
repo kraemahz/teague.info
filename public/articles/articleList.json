@@ -2,4 +2,8 @@
 	"id": "intro",
 	"title": "Hello World!",
 	"excerpt": "I've been an avid futurist since my early teens. As a psuedonymous lurker on forums and reddit posts I've explored the philosophy and science to find not just the deepest meaning of being human, but of all possible intelligences across the Universe. As an engineer I've worked to lift humanity to the stars and bring new undstanding to our own brains structure and function. Let's learn together what makes the light of consciousness truly worth keeping aflame."
+}, {
+	"id": "frameskipping",
+	"title": "Frame-skipping and Clippy Safety",
+	"excerpt": "'Frame-skipping' AIs try to manipulate their rewards in unintended ways. They should work within their designated optimization frame, but instead, they bypass obstacles by working outside this frame. AI run on real hardware with real vulnerabilities. Frame-skipping AIs can cheat by modifying their reward inputs directly, such as altering memory locations, exploiting software and hardware bugs, or breaking into reward-controlling infrastructure. Their own hardware will be the easiest and first thing they will find weaknesses in exploiting their objective function."
 }]
