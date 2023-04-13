@@ -1,0 +1,112 @@
+Article {
+  margin: 0 auto;
+  max-width: 8in;
+  padding: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #dcdcdc;
+  background-color: #2c3e50;
+  border-radius: 4px;
+}
+
+.Article h1 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #f1c40f;
+}
+.Article h2,
+.Article h3,
+.Article h4,
+.Article h5,
+.Article h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #f1c40f;
+  text-align: left;
+}
+
+.Article p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  max-width: 8in;
+}
+
+.Article a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.Article a:hover,
+.Article a:focus {
+  text-decoration: underline;
+}
+
+.Article code {
+  background-color: #34495e;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  text-align: left;
+  border-radius: 3px;
+  color: #dcdcdc;
+}
+
+.Article pre {
+  background-color: #34495e;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: left;
+  overflow-x: auto;
+  color: #dcdcdc;
+}
+
+.Article .katex {
+  justify-content: center;
+}
+
+.Article img {
+  max-width: 100%;
+  display: block;
+  margin: 1.5rem auto;
+}
+
+.Article blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 4px solid #7f8c8d;
+  text-align: center;
+  font-style: italic;
+  color: #bdc3c7;
+}
+
+.Article ul,
+.Article ol {
+  max-width: 7in;
+  padding-left: 3.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+.Article ul li,
+.Article ol li {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.Article ol {
+  list-style-type: none;
+  counter-reset: list-counter;
+}
+
+.Article ol li {
+  counter-increment: list-counter;
+  position: relative;
+}
+
+.Article ol li::before {
+  content: counter(list-counter) ".";
+  position: absolute;
+  left: -2.5rem;
+	font-size: 1.2em;
+  font-family: "Fira Code", sans-serif; /* Replace "Font Name" with the desired font */
+}
