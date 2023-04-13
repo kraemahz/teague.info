@@ -6,4 +6,8 @@
 	"id": "frameskipping",
 	"title": "Frame-skipping and Clippy Safety",
 	"excerpt": "'Frame-skipping' AIs try to manipulate their rewards in unintended ways. They should work within their designated optimization frame, but instead, they bypass obstacles by working outside this frame. AI run on real hardware with real vulnerabilities. Frame-skipping AIs can cheat by modifying their reward inputs directly, such as altering memory locations, exploiting software and hardware bugs, or breaking into reward-controlling infrastructure. Their own hardware will be the easiest and first thing they will find weaknesses in exploiting their objective function."
+}, {
+	"id": "limitsofthought",
+	"title": "The Limits of Thought",
+	"excerpt": "It is a mistake to consider intelligence too abstractly. Any assumption of formlessness builds intuitions that are nonphysical. Examples of this are concepts that small-scale AI projects might be sources for an intelligence explosion or that once formed an AGI may become a distributed network in a viral way such that it is impossible to contain. Here I will begin to physically ground these ideas by elaborating on the computational bounds that all intelligences must obey."
 }]
