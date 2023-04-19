@@ -10,4 +10,8 @@
 	"id": "limitsofthought",
 	"title": "The Limits of Thought",
 	"excerpt": "It is a mistake to consider intelligence too abstractly. Any assumption of formlessness builds intuitions that are nonphysical. Examples of this are concepts that small-scale AI projects might be sources for an intelligence explosion or that once formed an AGI may become a distributed network in a viral way such that it is impossible to contain. Here I will begin to physically ground these ideas by elaborating on the computational bounds that all intelligences must obey."
+}, {
+	"id": "agi",
+	"title": "General Intelligence",
+  "excerpt": "In this article I describe the modelling of an intelligent actor broadly, connecting both humans and AGI. This is presented as a model for how actors can model other actors in their world and infer agency when the agent is not fully observed. This is intended to be a basis by which we can discuss how general intelligences perceive and interact with their world in at an abstract enough level for the description to be applicable to approaches not yet attempted."
 }]
