@@ -14,4 +14,8 @@
 	"id": "agi",
 	"title": "General Intelligence",
   "excerpt": "In this article I describe the modelling of an intelligent actor broadly, connecting both humans and AGI. This is presented as a model for how actors can model other actors in their world and infer agency when the agent is not fully observed. This is intended to be a basis by which we can discuss how general intelligences perceive and interact with their world in at an abstract enough level for the description to be applicable to approaches not yet attempted."
+}, {
+	"id": "free",
+	"title": "Free Relative Energy Ethics",
+  "excerpt": "In bringing forth new minds in our machines we are faced with these deep moral questions of who we are, who we aspire to be, and what decisions we need to make to ensure that our civilization prospers into the future. Our goal in making an ethical machine is not to create an actor which is enslaved to humanity or its past preconceptions about how things ought to be. Our goal is to make an actor that converges over time to a morally good position and thus our goal is to define what that morally good position could be."
 }]
