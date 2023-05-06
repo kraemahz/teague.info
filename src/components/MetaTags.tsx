@@ -1,14 +1,21 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
+interface ArticleMeta {
+  id: string;
+  title: string;
+  excerpt: string;
+  image: string;
+}
+
 interface MetaTagsProps {
-  article: object;
+  article: ArticleMeta;
 }
 
 const MetaTags: React.FC<MetaTagsProps> = ({ article }) => {
   const imageUrl = `/images/${article.image}`;
   const title = article.title;
-  const description = article.description;
+  const description = article.excerpt;
 
   return (
     <Helmet>

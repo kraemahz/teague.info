@@ -6,6 +6,7 @@ interface ArticleMeta {
   id: string;
   title: string;
   excerpt: string;
+  image: string;
 }
 
 const ArticlePreview: React.FC = () => {

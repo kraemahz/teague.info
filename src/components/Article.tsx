@@ -9,14 +9,15 @@ import rehypeKatex from 'rehype-katex';
 import "./Article.css";
 import MetaTags from "./MetaTags";
 
-
 interface ArticleProps {
   filePath: string;
 }
 
 const Article: React.FC<ArticleProps> = ({ filePath }) => {
   const [content, setContent] = useState("");
-  const [article, setArticle] = useState("");
+  const [article, setArticle] = useState({
+    id: "", title: "", excerpt: "", image: ""
+  });
   const { id } = useParams<{id: string}>();
 
   useEffect(() => {
