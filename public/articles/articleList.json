@@ -22,5 +22,10 @@
 	"id": "free",
 	"title": "Free Relative Energy Ethics",
 	"image": "article4.png",
-	"excerpt": "In bringing forth new minds in our machines we are faced with these deep moral questions of who we are, who we aspire to be, and what decisions we need to make to ensure that our civilization prospers into the future. Our goal in making an ethical machine is not to create an actor which is enslaved to humanity or its past preconceptions about how things ought to be. Our goal is to make an actor that converges over time to a morally good position and thus our goal is to define what that morally good position could be."
+  "excerpt": "In bringing forth new minds in our machines we are faced with these deep moral questions of who we are, who we aspire to be, and what decisions we need to make to ensure that our civilization prospers into the future. Our goal in making an ethical machine is not to create an actor which is enslaved to humanity or its past preconceptions about how things ought to be. Our goal is to make an actor that converges over time to a morally good position and thus our goal is to define what that morally good position could be."
+}, {
+  "id": "scorpions",
+  "title": "The Scorpion Problem",
+  "image": "article5.png",
+  "excerpt": "In a game theory sense, a scorpion is an agent that plans to defect eventually regardless of the rewards of the game they are playing. No amount of winning satisfies the scorpion and so whether or not the odds are stacked in their favor they eventually start playing the game to make others lose. Scorpions are not rational economic agents maximizing their utility. Scorpions are willing to destroy themselves to impose a penalty on the other players."
 }]
