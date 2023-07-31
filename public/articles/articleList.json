@@ -28,4 +28,9 @@
   "title": "The Scorpion Problem",
   "image": "article5.png",
   "excerpt": "In a game theory sense, a scorpion is an agent that plans to defect eventually regardless of the rewards of the game they are playing. No amount of winning satisfies the scorpion and so whether or not the odds are stacked in their favor they eventually start playing the game to make others lose. Scorpions are not rational economic agents maximizing their utility. Scorpions are willing to destroy themselves to impose a penalty on the other players."
+}, {
+  "id": "horizon",
+  "title": "Short Story: Just Over the Horizon",
+  "image": "article6.png",
+  "excerpt": "We first detected it in an automated survey of the Oort Cloud in the southern sky above Peru. 2024 OZ-92 was flagged for review by the analysis pipeline Tuesday morning at 2:09 AM local time. It wasn’t anywhere on the optical array but it lit up in ultraviolet like a light. In case you weren’t keeping up on these things, nature doesn’t do that. The spectra were hardly believable too. Carbon, iron, titanium, vanadium, aluminum; it wasn’t just some rock for sure."
 }]
