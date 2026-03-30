@@ -476,7 +476,7 @@ Restate the result and its significance.
 | Blog: `agi.md` | `public/articles/agi.md` | Actor model (sensors, self, environment, attention, beliefs), architecture sketch |
 | Blog: `free.md` | `public/articles/free.md` | FREE framework, CHIEFS, goal frontiers, GFAGI behavior, adversary dynamics |
 | Blog: `scorpions.md` | `public/articles/scorpions.md` | Scorpion taxonomy, AI solutions, future concerns |
-| Predraft PDF | `predraft.pdf` | Equations 5, 6-12, 22-25; Evil Twin Time Bomb; trust model; goal estimation; Doll Problem; Self-Wireheading |
+| Predraft PDF | `docs/predraft.pdf` | Equations 5, 6-12, 22-25; Evil Twin Time Bomb; trust model; goal estimation; Doll Problem; Self-Wireheading |
 
 ---
 
