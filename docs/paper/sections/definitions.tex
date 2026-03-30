@@ -29,9 +29,20 @@
 
 \begin{definition}[Goal]
 \label{def:goal}
-% TODO: Formal definition adopting Candidate B (capabilities)
-% with Candidate C (experiences) as motivating justification
+A \emph{goal} $g \in \G$ is a capability: something an agent or coalition of agents could do or be. A goal represents an option available to an agent---a degree of freedom, a functioning, a realizable possibility---not an outcome the agent has achieved or a state of the world.
 \end{definition}
+
+The choice of capabilities as the formal interpretation of ``goal'' is deliberate and requires justification, because the word admits at least two other natural readings. One could define goals as world-states an agent is trying to reach, which maps cleanly onto reinforcement learning but leaves the goal space unstructured---two agents pursuing ``learn piano'' and ``learn guitar'' occupy unrelated points in a high-dimensional state space with no notion of similarity. Alternatively, one could define goals as experiences an agent can have---qualia, subjective outcomes, lived satisfactions---which is the most philosophically satisfying interpretation but the hardest to formalize, since it presupposes a theory of experience we do not yet possess.
+
+Capabilities occupy the middle ground. They inherit formal structure from empowerment maximization \citep{klyubin2005empowerment}, where an agent's empowerment is the channel capacity between its actions and resulting states---a measure of how many distinguishable futures it can reach. They connect to Sen's capability approach \citep{sen1999development}, where human development is measured not by utility or income but by the substantive freedoms people can exercise. And they avoid the measurement problems of both alternatives: state spaces for real agents are astronomically high-dimensional, while experience spaces are not yet formalizable at all.
+
+The deeper reason for choosing capabilities is instrumental. Agents ultimately care about experiences---the subjective quality of what it is like to pursue and achieve their goals. Capabilities are the preconditions for those experiences. Money, skills, social connection, health, and optionality are all capabilities that are instrumental to the experiences agents actually want. A framework that expands capabilities without prescribing which experiences agents pursue is maximally respectful of agent autonomy.
+
+This gives us the paper's core philosophical move: \emph{GFM does not claim to know what experiences agents want. It maximizes the capabilities that let agents choose for themselves.} The formal proofs use capabilities for three reasons: (1) capabilities have the strongest existing formal bridge via empowerment maximization, (2) the self-balancing argument is most natural in capability space, where restricting capabilities is obviously $\vol(G)$-contracting without requiring a theory of experiences, and (3) capabilities avoid the measurement problems of state space (too high-dimensional) and experience space (not yet formalizable). But experiences remain the justification---without them, a critic could ask why expanding capabilities matters if nobody exercises them. The answer: because capabilities are what let agents reach the experiences they value. We return to this distinction in Section~\ref{sec:future_concerns}, where the experience interpretation does the heavy philosophical lifting for the Doll Problem and wireheading.
+
+\medskip
+
+An open problem accompanies this choice. The capability space $\G$ requires structure---at minimum a $\sigma$-algebra equipped with a measure---for $\vol(G)$ to be well-defined. Capabilities are not naturally a vector space (what does it mean to ``add'' two capabilities?), so the measure must be defined over a structured set, possibly a lattice with partial order (``can run a mile'' subsumes ``can walk a mile'') or a topological space where nearby capabilities are similar. The choice of measure has downstream consequences for tractability (Section~\ref{sec:tractability}) and remains an open problem that this paper does not resolve. We proceed by assuming $\G$ admits a suitable measure and flag the consequences of this assumption where they arise.
 
 % ---------------------------------------------------------------------------
 % Definition 1: Capability Space, Agent, Individual Capability Set
@@ -43,8 +54,10 @@
 \label{def:capability_space}
 The \emph{capability space} $\G$ is the universe of all possible capabilities---everything any agent or coalition of agents could do or be. An \emph{agent} $a_k$ is an entity with an \emph{individual capability set} $\Gind{k} \subseteq \G$: the capabilities $a_k$ can realize unilaterally given its current resources, embodiment, and environment.
 
-A capability $g \in \Gind{k}$ represents something $a_k$ \emph{can} do or be, not necessarily something it \emph{is} doing or \emph{will} do.
+A capability $g \in \Gind{k}$ represents something $a_k$ \emph{can} do or be, not necessarily something it \emph{is} doing or \emph{will} do. The distinction matters: GFM maximizes options, not outcomes.
 \end{definition}
+
+The reason we maximize capabilities rather than experiences directly is that capabilities are the instrumental precondition for experiences. An agent chooses which capabilities to exercise based on the experiences it seeks. GFM respects this by expanding the option set without prescribing which options to take---a stance that remains agnostic about what constitutes a good life while ensuring that agents retain the freedom to answer that question for themselves.
 
 % ---------------------------------------------------------------------------
 % Definition 2: Joint Goal Space
@@ -61,8 +74,10 @@ G = \bigcup_k \Gind{k} \;\cup\; \Gcoop
 \end{equation}
 where $\Gcoop \subseteq \G$ contains capabilities achievable only through multi-agent cooperation. By construction, $\Gind{k} \subseteq G \subseteq \G$ for all $k$.
 
-The \emph{frontier} $\partial G$ is the boundary of $G$. The \emph{canonical measure} is $\vol(G)$: the volume of the jointly achievable capability space. This is the quantity we optimize.
+The \emph{frontier} $\partial G$ is the boundary of $G$---the locus where expansion or contraction occurs. The \emph{canonical measure} is $\vol(G)$: the volume of the jointly achievable capability space. This is the quantity we optimize.
 \end{definition}
+
+A critical feature of Equation~\eqref{eq:joint_goal_space} is that $G$ generically exceeds $\bigcup_k \Gind{k}$. Cooperation creates capabilities no individual possesses. Two agents who can each carry 50\,kg individually can jointly carry 100\,kg---a capability in $\Gcoop$ that exists in neither $\Gind{1}$ nor $\Gind{2}$. A surgeon and an anesthesiologist can jointly perform an operation that neither can perform alone. This combinatorial richness is where the joint space gets its volume: each new agent contributes not only its individual capabilities but also the cooperative capabilities unlocked by its interactions with every existing agent. This is why eliminating an agent has super-linear cost (Section~\ref{sec:self_balancing})---the cooperative capabilities lost grow combinatorially with the number of interaction partners.
 
 % ---------------------------------------------------------------------------
 % Definition 3: Goal-Frontier Maximizer (GFM)
@@ -75,6 +90,7 @@ A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize t
 \label{eq:gfm_objective}
 \pi^* = \arg\max_\pi \;\mathbb{E}\bigl[\Delta \vol(G) \mid \pi\bigr]
 \end{equation}
+A GFM actor that perfectly optimizes Equation~\eqref{eq:gfm_objective} would select, at each decision point, the action that most expands the jointly achievable capability space. In practice, the actor optimizes an estimate of this quantity (Section~\ref{sec:tractability}).
 \end{definition}
 
 % ---------------------------------------------------------------------------
@@ -83,7 +99,7 @@ A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize t
 
 \begin{definition}[Contraction and Expansion]
 \label{def:contraction_expansion}
-An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$ and \emph{contracting} if $\mathbb{E}[\Delta \vol(G) \mid \pi] < 0$. Contraction includes both direct contraction (destroying an agent's capabilities) and indirect contraction (restricting agency through coercion, deception, or rigid rules).
+An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$ and \emph{contracting} if $\mathbb{E}[\Delta \vol(G) \mid \pi] < 0$. Contraction includes both direct contraction (destroying an agent's capabilities) and indirect contraction (restricting agency through coercion, deception, or rigid rules that reduce the realizable portion of $\G$).
 \end{definition}
 
 % ---------------------------------------------------------------------------
@@ -93,12 +109,21 @@ An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$
 
 \begin{definition}[Social Objective]
 \label{def:social_objective}
-The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities.
+The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities. It rests on two assumptions.
 
-\emph{Additivity under independence:} When agents' individual capability sets are independent (non-overlapping, non-interacting), $V(G) \geq \sum_k \vol(\Gind{k})$. Cooperative capabilities $\Gcoop$ contribute additional volume.
+\emph{Additivity under independence.} When agents' individual capability sets are independent (non-overlapping, non-interacting),
+\begin{equation}
+\label{eq:additivity}
+V(G) \;\geq\; \sum_k \vol(\Gind{k}).
+\end{equation}
+Cooperative capabilities $\Gcoop$ contribute additional volume beyond the individual contributions.
 
-\emph{Tradeoff acknowledgment:} When expanding $G_j$ requires contracting $G_k$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
+\emph{Tradeoff acknowledgment.} When expanding $\Gind{j}$ requires contracting $\Gind{k}$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
 \end{definition}
+
+Both assumptions carry weight and the argument depends on them. Additivity under independence (Equation~\ref{eq:additivity}) ensures that adding agents to a population cannot decrease $\vol(G)$ when their capabilities do not interfere---a minimal compositionality requirement without which the self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold, since eliminating an agent could then be volume-neutral or even volume-increasing. If independent agents could somehow reduce joint volume by their mere presence, the geometric argument against destruction collapses. The inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq \emptyset$: cooperation contributes volume that no individual possesses alone.
+
+Tradeoff acknowledgment is the assumption that prevents GFM from degenerating into naive expansion. Real conflicts exist: quarantining an infected agent restricts its capabilities to protect others, and the net effect on $\vol(G)$ depends on the magnitudes involved. Without explicit tradeoff evaluation, a GFM actor could either refuse all restrictions (permitting unbounded harm) or impose restrictions freely (becoming authoritarian). The framework does not resolve which tradeoffs are worth making---it provides the accounting system for evaluating them. Where other frameworks hide tradeoffs behind categorical rules or aggregate them into a scalar utility, GFM keeps them visible as geometric operations on the joint space.
 
 % ---------------------------------------------------------------------------
 % Definition 6: Observable Goal Model
@@ -106,5 +131,11 @@ The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not
 
 \begin{definition}[Observable Goal Model]
 \label{def:observable_goal_model}
-A GFM actor maintains a model $M_k(G)$ of each observed agent's goals, inferred from communication, behavior, and environmental observation. Each model has an associated trust factor $T_k \in [0, 1]$ and confidence $C_k$.
+A GFM actor maintains a model $M_k(G)$ of each observed agent $a_k$'s contribution to the joint goal space, inferred from communication, behavior, and environmental observation. Each model has an associated trust factor $T_k \in [0, 1]$ and confidence $C_k \in [0, 1]$.
 \end{definition}
+
+The model $M_k(G)$ is a reconstruction, not a given. No agent broadcasts its true capability set; the GFM actor must infer $\Gind{k}$ from observable evidence---what $a_k$ says, what $a_k$ does, and what the environment reveals about $a_k$'s options. The trust factor $T_k$ captures how reliably $a_k$'s stated goals reflect its actual capabilities and intentions: an agent that consistently acts in accordance with its stated goals earns high $T_k$, while one whose actions diverge from its claims earns low $T_k$. The confidence $C_k$ captures the GFM actor's uncertainty about $M_k(G)$ itself---how much evidence it has, how stable the estimate is, and how much weight the model should receive in decisions. Both $T_k$ and $C_k$ are learned quantities, updated through interaction, not hyperparameters set at design time. The trust model's formal structure is developed in Appendix~\ref{app:trust_model}.
+
+\medskip
+
+A closing observation on the geometric character of these definitions. The key distinction from standard utility maximization is that $G$ is a \emph{space} with volume, not a scalar. A utility function maps states to a single number; $\vol(G)$ measures the extent of a region in capability space. This geometric character is what gives GFM its self-balancing property: destroying capabilities removes volume from $G$, restricting capabilities shrinks $G$'s boundary inward, and both operations are $\vol(G)$-contracting for the same geometric reason---you cannot remove part of a measurable set and increase its measure. The single objective simultaneously penalizes both extremes not because it encodes two separate preferences, but because contraction and restriction are both instances of the same geometric operation: reducing the measure of a set.
