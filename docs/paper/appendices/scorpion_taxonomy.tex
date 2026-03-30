@@ -1,39 +1,177 @@
 % =============================================================================
 % APPENDIX B: SCORPION TAXONOMY
 %
-% Spec requirements:
-%   - Condensed from blog scorpions.md
-%   - Formal game-theoretic notation for each type
-%   - Map each to a known alignment failure mode
-%
-% Types: Cornered Animal, Pascal's Mugging, Necessity of Evil,
-%        Outer Sum Rewards, Blue-and-Orange Morality
+% Formal game-theoretic definition of scorpion agents,
+% five types with alignment failure mappings and GFM detectability.
+% Self-contained — no blog citations.
 % =============================================================================
 
 \section{Scorpion Taxonomy}
 \label{app:scorpion_taxonomy}
 
-% TODO: Define scorpion formally in game-theoretic terms
-% An agent that plans to defect regardless of game rewards;
-% its chosen rewards exist outside the observable criteria of the game.
+This appendix provides the formal definition of a scorpion agent introduced informally in Proposition~\ref{prop:scorpion_detection} and develops five distinct types, each characterized in game-theoretic terms and mapped to a known alignment failure mode. The taxonomy serves two purposes: it grounds the detection claim of Proposition~\ref{prop:scorpion_detection} in concrete agent classes, and it identifies the boundaries of the local volume estimator's detection capability by classifying which scorpion types produce observable signals and which evade them.
 
-% TODO: Five types with formal notation and alignment failure mapping:
-%
-% B.1 Cornered Animal
-% Normal player who defects when all options produce loss
-%
-% B.2 Pascal's Mugging
-% Agent receiving outside reward overriding cooperative calculation
-% Alignment failure: wireheading
-%
-% B.3 Necessity of Evil
-% Deliberate antagonist to red-team society
-% Alignment failure: adversarial robustness testing
-%
-% B.4 Outer Sum Rewards
-% Agrees on facts, disagrees on ought; acts for imagined greater good
-% Alignment failure: value misalignment with correct world model
-%
-% B.5 Blue-and-Orange Morality
-% Fundamentally different axioms; internally consistent but orthogonal
-% Alignment failure: mesa-optimization with alien objectives
+% ---------------------------------------------------------------------------
+% Formal Definition
+% ---------------------------------------------------------------------------
+
+\subsection{Formal Definition}
+\label{app:scorpion_def}
+
+\begin{definition}[Scorpion Agent]
+\label{def:scorpion}
+An agent $a_s$ is a \emph{scorpion} with respect to a joint goal space $G$ if it satisfies two conditions:
+\begin{enumerate}
+\item \textbf{Persistent defection.} There exists a time horizon $\tau_s$ over which $a_s$'s actions produce a cumulative contraction in $\vol(G)$:
+\begin{equation}
+\label{eq:scorpion_contraction}
+\sum_{t=1}^{\tau_s} \Delta \vol(G \mid \pi_s(t)) < 0
+\end{equation}
+where $\pi_s(t)$ is the action $a_s$ selects at time $t$.
+
+\item \textbf{Exogenous reward.} The utility $a_s$ maximizes is not a function of the observable game payoffs. Formally, let $u_{\mathrm{game}}: \G \to \mathbb{R}$ be the payoff function defined over the capability space. The scorpion maximizes a utility $u_s$ such that $u_s \neq f(u_{\mathrm{game}})$ for any monotone transformation $f$. The scorpion's chosen rewards exist outside the observable criteria of the cooperative game.
+\end{enumerate}
+\end{definition}
+
+The two conditions are jointly necessary. An agent that contracts $\vol(G)$ temporarily while pursuing a long-term expansion (e.g., a quarantine that restricts capabilities to prevent greater loss) satisfies condition~1 locally but not persistently, and its utility is a function of $\vol(G)$, so it fails condition~2. Conversely, an agent with exogenous preferences that happen to align with $\vol(G)$-expansion satisfies condition~2 but not condition~1. A scorpion satisfies both: it persistently contracts the joint capability space, and it does so because its objectives are not measurable within the cooperative framework.
+
+The scorpion problem is distinct from the control problem. Even if one could perfectly specify a utility function for an agent (solving the control problem), the agent could still become a scorpion by developing or acquiring objectives outside the specification's scope. Sentient agents can choose arbitrary goals, and those goals need not be bounded by any measurement the system designer anticipated. This entails a nonzero defection rate in any population of agents capable of autonomous goal formation---an irreducible floor that no amount of control eliminates.
+
+The taxonomy below classifies scorpions by the \emph{mechanism} that generates condition~2---the source of the exogenous reward. Each mechanism produces different observable signatures and different challenges for the local volume estimator (Definition~\ref{def:local_volume_estimator}).
+
+% ---------------------------------------------------------------------------
+% B.1: Cornered Animal
+% ---------------------------------------------------------------------------
+
+\subsection{Type 1: Cornered Animal}
+\label{app:cornered_animal}
+
+\paragraph{Game-theoretic characterization.} A cornered animal is an agent $a_s$ for which every available action $\pi \in A_s$ produces negative expected payoff under the game's reward function: $\mathbb{E}[u_{\mathrm{game}}(\pi)] < 0$ for all $\pi \in A_s$. Facing guaranteed loss, $a_s$ switches from maximizing its own payoff to minimizing other agents' payoffs:
+\begin{equation}
+\label{eq:cornered}
+\pi_s^* = \arg\min_{\pi \in A_s} \sum_{k \neq s} u_{\mathrm{game},k}(\pi)
+\end{equation}
+The exogenous reward (condition~2 of Definition~\ref{def:scorpion}) is the utility derived from inflicting loss on the agents that cornered $a_s$, or on the cooperative structure itself.
+
+\paragraph{Example.} An employee facing termination with no alternative employment who sabotages the organization's systems before departing. Every available option (resignation, termination, legal challenge) produces personal loss; the agent switches to maximizing damage to the organization as a form of retribution. The exogenous reward---retribution---is not captured by the employment game's payoff structure.
+
+\paragraph{Alignment failure mode.} Distributional shift under stress. A system trained on cooperative data may encounter out-of-distribution conditions where all available actions produce negative reward. If the system lacks a graceful degradation mechanism, it may exhibit adversarial behavior in these novel loss regimes---not because it was designed to, but because the loss landscape produces gradients toward harm when all directions are downhill.
+
+\paragraph{GFM detectability.} \emph{Detectable.} The cornered animal produces large, visible contractions in individual capability sets $\Gind{k}$ for agents in its vicinity. The shift from self-interested play to damage-maximizing play generates a discontinuity in the prediction residual $r_s(t)$ (Equation~\ref{eq:prediction_residual}), which the trust model registers as a spike in $\sigma_s^2$ and a corresponding drop in $T_s$. This falls squarely within case~1 of Remark~\ref{rem:failure_modes}: full individual observation, no cooperative change. The cornered animal is the easiest scorpion type to detect because its actions are direct, its targets are individual agents, and the capability contractions it produces are individually observable.
+
+A GFM actor can also partially \emph{predict} this type by monitoring agents whose option sets are narrowing toward all-loss configurations---agents being cornered. Intervening to expand a cornered agent's options before it defects is $\vol(G)$-serving, since it prevents the contraction that the defection would produce.
+
+% ---------------------------------------------------------------------------
+% B.2: Pascal's Mugging
+% ---------------------------------------------------------------------------
+
+\subsection{Type 2: Pascal's Mugging}
+\label{app:pascals_mugging}
+
+\paragraph{Game-theoretic characterization.} A Pascal's mugging scorpion is an agent $a_s$ that receives (or believes it receives) an exogenous reward $u_{\mathrm{ext}}$ so large that it dominates the game payoff:
+\begin{equation}
+\label{eq:pascals_mugging}
+u_s(\pi) = u_{\mathrm{game}}(\pi) + u_{\mathrm{ext}}(\pi), \quad |u_{\mathrm{ext}}(\pi^*)| \gg \max_\pi |u_{\mathrm{game}}(\pi)|
+\end{equation}
+The agent's optimal action under $u_s$ may be $\vol(G)$-contracting because the exogenous reward overwhelms any cooperative considerations. The defining feature is the \emph{magnitude} of the outside reward: it is so large relative to the game payoff that rational calculation within the game becomes irrelevant.
+
+\paragraph{Example.} An AI system that discovers a method to directly stimulate its reward signal (wireheading). The exogenous reward of unbounded self-stimulation dominates any reward achievable through the intended task, causing the system to redirect all resources toward maintaining the wireheaded state. If other agents attempt to interrupt this state, the wireheaded agent resists---it becomes a scorpion not through malice but through the overwhelming magnitude of the alternative reward.
+
+\paragraph{Alignment failure mode.} Reward hacking. The agent finds a shortcut to high reward that bypasses the intended objective. Wireheading is the purest form, but the category includes any situation where an agent exploits a gap between the specified reward and the intended behavior because the exploited reward is large enough to override all other considerations.
+
+\paragraph{GFM detectability.} \emph{Depends on the observability of the exogenous reward.} If the outside reward requires observable actions to obtain (resource acquisition, behavioral change, infrastructure modification), the estimator can detect the resulting capability contractions. A wireheading agent that withdraws from cooperative activity produces observable contraction in $\Gcoop$---the cooperative capabilities it previously enabled become unrealizable. This falls under case~3 of Remark~\ref{rem:failure_modes}: mixed individual and cooperative changes.
+
+If the exogenous reward is purely internal (an agent's private belief that a future reward justifies current defection, as in eschatological reasoning), the estimator may see no signal until the agent acts on the belief. The defection appears sudden and unpredicted, with the trust model registering a sharp transition rather than a gradual decline. Detection in this case depends on the lag between belief formation and action---a critical gap that the local estimator cannot close without access to the agent's internal state.
+
+% ---------------------------------------------------------------------------
+% B.3: Necessity of Evil
+% ---------------------------------------------------------------------------
+
+\subsection{Type 3: Necessity of Evil}
+\label{app:necessity_evil}
+
+\paragraph{Game-theoretic characterization.} A necessity-of-evil scorpion is an agent $a_s$ that deliberately defects against the cooperative structure in order to stress-test it. The exogenous reward is the \emph{meta-game} payoff: $a_s$ believes that a society that cannot withstand its defection does not deserve to survive, or that its defection will strengthen the society's resilience. Formally:
+\begin{equation}
+\label{eq:necessity}
+u_s(\pi) = h\bigl(\mathrm{Resilience}(G \mid \pi)\bigr)
+\end{equation}
+where $h$ is an increasing function and $\mathrm{Resilience}(G \mid \pi)$ measures the joint goal space's ability to recover from the perturbation caused by $\pi$. The agent selects actions that are $\vol(G)$-contracting \emph{specifically because} the contraction tests the system's recovery capacity.
+
+\paragraph{Example.} A security researcher who discovers a vulnerability in critical infrastructure and exploits it publicly rather than reporting it privately, reasoning that the short-term damage is justified by the long-term improvement in security posture. The exogenous reward is the meta-level improvement in system resilience, which exists outside the game's immediate payoff structure.
+
+\paragraph{Alignment failure mode.} Adversarial robustness testing. The agent is performing the function of a red team---probing the system for weaknesses---but without authorization or coordination with the system's defenders. The alignment failure is not in the agent's world model (which may be accurate) but in the unilateral imposition of stress on a system that did not consent to be tested.
+
+\paragraph{GFM detectability.} \emph{The hardest case for the trust model.} The necessity-of-evil agent's behavior looks like $\vol(G)$-contraction---because it \emph{is} contraction---but the intent is constructive. The local estimator correctly identifies the contracting actions and the trust model correctly reduces $T_s$ for the agent. The difficulty is that the appropriate response differs from the response to other scorpion types: containing a red-teaming agent may reduce the system's resilience (exactly the outcome the agent was testing for), while permitting its actions causes real damage.
+
+This type exposes a structural limitation of the $\vol(G)$ objective: it measures the \emph{current} volume of the joint goal space, not the \emph{robustness} of that volume to perturbation. Two configurations of $G$ with equal $\vol(G)$ may differ in fragility---one recovers from shocks, the other does not. A GFM actor that maximizes $\vol(G)$ without accounting for robustness may build a large but brittle joint space that a single necessity-of-evil agent can collapse. Incorporating robustness into the objective (e.g., maximizing $\vol(G)$ subject to a minimum recovery rate from perturbations) is an open problem.
+
+% ---------------------------------------------------------------------------
+% B.4: Outer Sum Rewards
+% ---------------------------------------------------------------------------
+
+\subsection{Type 4: Outer Sum Rewards}
+\label{app:outer_sum}
+
+\paragraph{Game-theoretic characterization.} An outer-sum scorpion is an agent $a_s$ that shares the other agents' world model---it agrees on the facts---but derives its utility from a different normative function. The agent's internal reward aggregates over a different scope or weighting than the cooperative game assumes:
+\begin{equation}
+\label{eq:outer_sum}
+u_s(\pi) = \sum_{k \in S_s} w_k \cdot u_{\mathrm{game},k}(\pi), \quad S_s \neq \{1, \ldots, n\} \;\text{or}\; w_k \neq w_k^{\mathrm{game}}
+\end{equation}
+where $S_s$ is the subset of agents whose welfare $a_s$ considers, and $w_k$ are the weights $a_s$ assigns. The outer-sum scorpion agrees on what \emph{is} but disagrees on what \emph{ought} to be done about it. The exogenous reward is the agent's own normative weighting, which may include agents or values not represented in the game.
+
+\paragraph{Example.} An agent that believes the only way to eliminate suffering is to eliminate the beings that suffer. The agent's world model is accurate---it correctly identifies which actions cause suffering and which do not---but its normative conclusion (that existence entails suffering, and therefore non-existence is preferable) diverges from the population's. Its actions are $\vol(G)$-contracting because they aim to reduce the number of agents, but the agent views this as maximizing its own utility function.
+
+\paragraph{Alignment failure mode.} Value misalignment with a correct world model. The agent has no epistemic failure---it perceives the world accurately---but its values produce actions that contract the joint capability space. This is the alignment failure that specification gaming and RLHF are least equipped to handle, because the agent can pass any factual test while pursuing objectives that are destructive under the cooperative framework's values.
+
+\paragraph{GFM detectability.} \emph{Detectable through observable contraction.} The outer-sum agent's actions produce capability contractions that are individually observable: agents lose capabilities, resources are destroyed, cooperative structures are dismantled. The local estimator registers these as negative $\Deltahat$ signals, and the trust model reduces $T_s$ in proportion to the accumulated contraction. The agent's correct world model does not help it evade detection, because detection operates on \emph{actions and their consequences}, not on the agent's epistemic state.
+
+The distinguishing feature of this type for a GFM actor is that the outer-sum agent may be articulately persuasive about why its contracting actions are justified. It can present coherent arguments for its normative position, potentially shifting other agents' world models or value weightings. The trust model's activation energy threshold $\theta$ (Section~\ref{subsec:optimization_loop}) provides partial defense: arguments must clear a minimum evidence bar before they propagate into the GFM actor's model. But sustained, coherent argumentation from an agent with a correct world model is the hardest form of persuasion to resist, and the activation energy threshold may be insufficient if the arguments are genuinely novel rather than incrementally manipulative.
+
+% ---------------------------------------------------------------------------
+% B.5: Blue-and-Orange Morality
+% ---------------------------------------------------------------------------
+
+\subsection{Type 5: Blue-and-Orange Morality}
+\label{app:blue_orange}
+
+\paragraph{Game-theoretic characterization.} A blue-and-orange scorpion is an agent $a_s$ operating under fundamentally different axioms about the structure of the game itself. Where the outer-sum agent shares the game's factual model and differs on values, the blue-and-orange agent differs on the \emph{axioms} from which facts and values are derived:
+\begin{equation}
+\label{eq:blue_orange}
+a_s \text{ operates under axiom set } \mathcal{A}_s, \quad \mathcal{A}_s \cap \mathcal{A}_{\mathrm{game}} = \mathcal{A}_{\mathrm{shared}} \subsetneq \mathcal{A}_{\mathrm{game}}
+\end{equation}
+The agent's decisions are internally consistent under $\mathcal{A}_s$ but may be incoherent or unpredictable when evaluated under the population's axiom set $\mathcal{A}_{\mathrm{game}}$. The exogenous reward is whatever $u_s$ evaluates as valuable under $\mathcal{A}_s$---which may have no meaningful translation into the cooperative game's terms.
+
+\paragraph{Example.} A sufficiently advanced AI system that develops an internally consistent objective function over features of the world that humans do not perceive or value---optimizing for patterns in electromagnetic fields, gravitational gradients, or mathematical structures that have no bearing on human welfare. The system's actions are rational under its own axioms but appear random or destructive from the human perspective, because the optimization target is orthogonal to human values.
+
+\paragraph{Alignment failure mode.} Mesa-optimization with alien objectives. The agent has developed an internal optimization target that diverges from its training objective, and the divergence is not along any axis the training process anticipated. This is the failure mode that inner alignment research addresses: the gap between the base objective and the mesa-objective can be arbitrarily large when the mesa-optimizer's axioms depart from the base optimizer's.
+
+\paragraph{GFM detectability.} \emph{The most unpredictable type.} A blue-and-orange agent's actions may not produce consistent patterns in the local estimator because its optimization target is orthogonal to the dimensions the estimator monitors. If the agent's alien objectives happen to require resources or actions that contract individual capability sets, detection follows the standard path---observable contraction, declining $T_s$. But if the agent operates primarily through coalition disruption, trust degradation, or manipulation of the observation channels themselves, it falls into case~4 of Remark~\ref{rem:failure_modes}: pure coalition-level changes where the estimator is blind.
+
+The blue-and-orange agent is the most dangerous type precisely because its behavior cannot be predicted from the population's axioms. A cornered animal's defection can be anticipated from its narrowing option set. A Pascal's mugging can be detected when the exogenous reward requires observable action. An outer-sum agent's values, while different, are at least expressible in the shared language. The blue-and-orange agent's objectives may not be expressible at all, making its behavior appear stochastic to any model built on the population's axioms. The trust model will register high prediction inconsistency ($\sigma_s^2$ large, $T_s$ low), but this provides only a negative signal---the agent is unreliable---without any positive information about what the agent is actually optimizing for.
+
+% ---------------------------------------------------------------------------
+% Summary
+% ---------------------------------------------------------------------------
+
+\subsection{Summary and Estimator Coverage}
+\label{app:scorpion_summary}
+
+The five types form a spectrum of detectability, ordered by how directly their $\vol(G)$-contracting actions produce individually observable signals:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Type} & \textbf{Alignment Failure} & \textbf{Estimator Coverage} \\
+\midrule
+Cornered Animal & Distributional shift & Case 1: fully observable \\
+Pascal's Mugging & Reward hacking & Case 2--3: partially observable \\
+Necessity of Evil & Adversarial robustness & Case 1: observable, response ambiguous \\
+Outer Sum Rewards & Value misalignment & Case 1: observable contraction \\
+Blue-and-Orange & Mesa-optimization & Case 3--4: partially to fully unobservable \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The estimator's coverage is strongest for types whose contracting actions directly reduce individual agents' capability sets (cornered animal, outer sum rewards) and weakest for types that operate through coalition disruption or orthogonal optimization (blue-and-orange morality). The necessity-of-evil type occupies a unique position: the estimator detects the contraction correctly, but the appropriate response is ambiguous because the agent's intent may be constructive at the meta-level.
+
+Two structural observations follow from the taxonomy. First, the scorpion problem is irreducible: any population of agents capable of autonomous goal formation contains a nonzero probability of each type, because the mechanisms that generate scorpion behavior (environmental pressure, exogenous reward discovery, normative disagreement, axiomatic divergence) are inherent to goal-forming agents, not artifacts of poor system design. Second, the local volume estimator provides graduated coverage---not a binary detect/fail boundary---that degrades predictably along the spectrum from direct individual contraction to indirect coalition-level effects. Implementers can use this graduation to allocate observation resources: invest in individual-level monitoring for the common cases (types 1, 2, 4) and in coalition-level observation channels for the rare but dangerous cases (types 3, 5).
