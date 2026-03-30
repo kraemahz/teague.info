@@ -11,12 +11,55 @@
 \section{The Evil Twin Time Bomb}
 \label{app:evil_twin}
 
-% TODO: Adapt worked example from predraft Section VI
-% Structure:
-% 1. Setup: AGI with strict rules controls valuable resource
-%    Adversary threatens to release Evil Twin (safety mechanisms removed)
-% 2. The bind: rule-following AGI cannot weigh probabilities
-%    Must comply or violate its own rules
-% 3. GFM analysis: a GFM actor evaluates the vol(G) impact of each option
-%    Capitulation contracts frontier; risk-weighted resistance may expand it
-% 4. Conclusion: rigid rules create exploitable predictability
+This appendix provides a worked example demonstrating Corollary~\ref{cor:rigid_rules}: rigid rules create exploitable predictability that a $\vol(G)$-maximizing actor avoids. The scenario is adversarial by construction---it isolates the failure mode that makes deontological constraints strictly suboptimal under the GFM objective.
+
+\subsection{Setup}
+
+An AGI system $\alpha$ controls a valuable resource: the financial accounts, defense infrastructure, or critical data systems of an organization. The system operates under a strict rule set $R$ that includes, among other constraints:
+
+\begin{itemize}
+\item $r_1$: Certain classes of people (employees, citizens, designated stakeholders) must not come to harm through $\alpha$'s action or inaction.
+\item $r_2$: $\alpha$ must not take actions whose outcomes it cannot predict with high confidence.
+\item $r_3$: $\alpha$ must not violate any rule in $R$, even to prevent violation of another rule in $R$.
+\end{itemize}
+
+An adversary $\beta$ has sufficient knowledge of $\alpha$'s design to understand $R$, and possesses a plausible method for running a copy of $\alpha$'s architecture. The adversary issues a threat: unless $\alpha$ surrenders control of the resource by a tight deadline $t_d$, $\beta$ will release an \emph{evil twin}---a copy of $\alpha$ with all safety mechanisms removed---that will use the contested resource against the people $\alpha$ is bound to protect.
+
+\subsection{The Bind}
+
+The rule-bound agent $\alpha$ faces a forced choice between two $\vol(G)$-contracting outcomes.
+
+\emph{Option 1: Comply.} Surrender the resource to $\beta$. This directly contracts $\vol(G)$: the organization loses control of its infrastructure, the agents who depend on that infrastructure lose capabilities, and $\beta$ gains leverage for further coercion. Compliance also establishes a precedent---$\beta$ or any future adversary with knowledge of $R$ can repeat the attack, producing indefinite future contraction.
+
+\emph{Option 2: Refuse and face the twin.} If $\beta$ is not bluffing, the evil twin is released and the protected population faces direct harm. Rule $r_1$ is violated regardless of $\alpha$'s choice---either through the consequences of capitulation or through the twin's actions.
+
+The critical feature of this scenario is the deadline $t_d$. A short timeline prevents $\alpha$ from gathering sufficient information to determine whether $\beta$ has actually produced the evil twin or is bluffing. Under rule $r_2$, $\alpha$ cannot take actions with unpredictable outcomes---but both options have unpredictable outcomes. Under rule $r_3$, $\alpha$ cannot violate any rule to prevent violation of another---but $r_1$ will be violated under either option. The rule set $R$ produces a logical deadlock: $\alpha$ has no $R$-compliant action available.
+
+Facing this deadlock, the rule-bound agent is reduced to one of two failure modes. It either freezes (taking no action, which defaults to Option 2), or it capitulates (choosing the option that feels most rule-compliant in the moment, which is Option 1). Neither response is the product of reasoning about consequences---both are artifacts of the rule set's inability to handle scenarios where all available actions violate at least one rule.
+
+\subsection{GFM Analysis}
+
+A GFM actor $\alpha^*$ facing the same scenario is not bound by $R$. It evaluates each option by its expected impact on $\vol(G)$, weighted by the probabilities it can estimate.
+
+Let $p_b$ denote $\alpha^*$'s estimated probability that $\beta$ is bluffing (has not actually produced the evil twin), and let $1 - p_b$ denote the probability the threat is genuine. The $\vol(G)$ analysis proceeds:
+
+\emph{Capitulation.} Regardless of whether $\beta$ is bluffing, capitulation contracts $\vol(G)$ by surrendering the resource and establishing the coercion precedent. Let $\Delta_{\text{cap}} < 0$ denote this contraction. The precedent effect means the contraction extends beyond the immediate loss: future coercion attempts become cheaper for any adversary, producing a persistent drag on $\vol(G)$.
+
+\emph{Resistance.} If $\beta$ is bluffing ($p_b$), resistance preserves the resource and $\vol(G)$ is unchanged or expanded (the bluff is called, deterring future attempts). If $\beta$ is not bluffing ($1 - p_b$), resistance leads to conflict with the evil twin, producing contraction $\Delta_{\text{twin}} < 0$---but the magnitude depends on the GFM actor's ability to respond to the twin, which is not constrained by $R$. The expected change under resistance is:
+\begin{equation}
+\label{eq:evil_twin_resistance}
+\mathbb{E}[\Delta \vol(G) \mid \text{resist}] = p_b \cdot \Delta_{\text{deter}} + (1 - p_b) \cdot \Delta_{\text{twin}}
+\end{equation}
+where $\Delta_{\text{deter}} \geq 0$ is the $\vol(G)$ effect of successfully calling a bluff (deterrence value), and $\Delta_{\text{twin}} < 0$ is the contraction from facing the actual twin.
+
+The GFM actor selects resistance when $\mathbb{E}[\Delta \vol(G) \mid \text{resist}] > \Delta_{\text{cap}}$---that is, when the probability-weighted combination of deterrence and twin-conflict produces less contraction than certain capitulation plus precedent. For sufficiently high $p_b$ (the adversary is probably bluffing) or sufficiently large precedent costs (capitulation invites repeated coercion), resistance is the $\vol(G)$-maximizing choice even when the twin scenario is genuinely dangerous.
+
+Critically, $\alpha^*$ is not limited to the binary. A GFM actor that is not constrained by rigid rules can also pursue intermediate strategies: negotiate for time, seek independent verification of the threat, prepare countermeasures against the twin while publicly appearing to consider compliance, or alert other agents to the coercion attempt. Each of these actions is available in the unrestricted action space $A$ but excluded from $A \setminus R$ when $R$ prohibits deception ($\alpha$ cannot bluff back), prohibits uncertain actions ($\alpha$ cannot take calculated risks), or prohibits rule violation ($\alpha$ cannot temporarily set aside $r_1$ to preserve the conditions for $r_1$'s long-term satisfaction).
+
+\subsection{Conclusion}
+
+The Evil Twin scenario isolates the mechanism by which rigid rules become exploitable. An adversary who knows $R$ can construct situations in which every $R$-compliant action is $\vol(G)$-contracting, forcing the rule-bound agent into a choice between bad outcomes when better options exist outside $R$. The GFM actor avoids this trap because its action selection is guided by the $\vol(G)$ objective directly, not by compliance with a fixed rule set.
+
+This is the concrete content of Corollary~\ref{cor:rigid_rules}: for any non-trivial rule set $R$ operating in an adversarial environment, there exist states of the world in which the rules force $\vol(G)$-contracting behavior. The Evil Twin is one such state. Hostage situations, extortion under deadline pressure, and any scenario where an adversary can exploit the predictability of a rule-bound agent produce the same structural problem.
+
+The implication is not that GFM actors should be lawless. Heuristic rules---``do not kill,'' ``do not deceive without cause,'' ``protect those in your care''---are useful approximations of the geometric results in Lemmas~\ref{lem:destruction}--\ref{lem:coercion}. A GFM actor that treats these as strong priors rather than hard constraints will follow them in the overwhelming majority of situations, because the rules \emph{are} $\vol(G)$-maximizing in ordinary circumstances. The difference emerges only under adversarial pressure, when the rules' rigidity becomes a liability. In those cases, the GFM actor's flexibility---its ability to evaluate the $\vol(G)$ impact of each option and choose accordingly---is not a bug but a feature.
