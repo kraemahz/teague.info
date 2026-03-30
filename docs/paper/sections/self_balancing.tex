@@ -50,15 +50,15 @@ The bound in Equation~\eqref{eq:destruction_bound} is conservative. It accounts 
 
 \begin{lemma}[Coercive Actions are Anti-Maximizing, with Caveat]
 \label{lem:coercion}
-If an action $\pi$ restricts agent $a_j$'s achievable capabilities, replacing $\Gind{j}$ with $\Gind{j}' \subset \Gind{j}$, then
+If an action $\pi$ restricts agent $a_j$'s achievable capabilities, replacing $\Gind{j}$ with ${\Gind{j}}' \subset \Gind{j}$, then
 \begin{equation}
 \label{eq:coercion_bound}
 \Delta \vol(G) \;\leq\; \vol(G') - \vol(G) \;\leq\; 0
 \end{equation}
-where $G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup \Gind{j}'\bigr) \cup \Gcoop'$ and $\Gcoop' \subseteq \Gcoop$ excludes any cooperative capabilities rendered unrealizable by the restriction. The inequality is strict whenever $a_j$'s restriction removes capabilities not covered by other agents.
+where $G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup {\Gind{j}}'\bigr) \cup {\Gcoop}'$ and ${\Gcoop}' \subseteq \Gcoop$ excludes any cooperative capabilities rendered unrealizable by the restriction. The inequality is strict whenever $a_j$'s restriction removes capabilities not covered by other agents.
 \end{lemma}
 
-\emph{Proof sketch.} Since $\Gind{j}' \subset \Gind{j}$ and $\Gcoop' \subseteq \Gcoop$, the restricted joint space satisfies $G' \subseteq G$. Measure monotonicity gives the result. \qed
+\emph{Proof sketch.} Since ${\Gind{j}}' \subset \Gind{j}$ and ${\Gcoop}' \subseteq \Gcoop$, the restricted joint space satisfies $G' \subseteq G$. Measure monotonicity gives the result. \qed
 
 \emph{The caveat.} Lemma~\ref{lem:coercion} states a \emph{ceteris paribus} result: restricting $a_j$ in isolation contracts $\vol(G)$. But actions rarely occur in isolation. Restricting $a_j$ to protect $a_k$ may produce a net expansion if $\Delta \vol(\Gind{k}) > |\Delta \vol(\Gind{j})|$---that is, if the capabilities preserved or created for $a_k$ exceed the capabilities removed from $a_j$. A quarantine that temporarily restricts movement to prevent a pandemic may be net-expanding: the capabilities preserved by keeping agents alive and healthy outweigh the temporary restriction on movement. An authoritarian state that permanently restricts many agents' capabilities to protect a ruling class is net-contracting: the concentration of capabilities in a few agents cannot compensate for the broad contraction across the population, because independent capability sets are additive under Definition~\ref{def:social_objective}.
 
@@ -142,7 +142,7 @@ Let $a_s$ be an agent whose actions persistently contract $\vol(G)$---a \emph{sc
 
 A \emph{scorpion}---an agent that defects against the cooperative structure regardless of the rewards available through cooperation---is defined by its persistent $\vol(G)$-contracting behavior. The scorpion taxonomy includes cornered animals (agents forced into defection by circumstance), rational scorpions (agents whose private objectives diverge from cooperative play), and ideological scorpions (agents operating under value systems orthogonal to the population's). All produce the same observable signature: persistent contraction of the joint capability space. We defer the full taxonomy to Appendix~\ref{app:scorpion_taxonomy}.
 
-\emph{Proof sketch.} Under Definition~\ref{def:observable_goal_model}, the GFM actor observes changes in each agent's individual capability set through communication, behavior, and environmental signals. When $a_s$ persistently reduces other agents' capabilities---destroying resources, coercing agents, disrupting cooperation---the affected agents' capability sets contract: $\Gind{k}' \subset \Gind{k}$ for agents $a_k$ in $a_s$'s vicinity. These contractions are individually observable, producing negative $\Delta \vol(\Gind{k})$ signals that aggregate into a persistent negative $\Deltahat$ in the local estimator. The trust update mechanism attributes persistent contraction to its source: $T_s$ decreases as the pattern accumulates, eventually flagging $a_s$ as a net-contracting agent. \qed
+\emph{Proof sketch.} Under Definition~\ref{def:observable_goal_model}, the GFM actor observes changes in each agent's individual capability set through communication, behavior, and environmental signals. When $a_s$ persistently reduces other agents' capabilities---destroying resources, coercing agents, disrupting cooperation---the affected agents' capability sets contract: ${\Gind{k}}' \subset \Gind{k}$ for agents $a_k$ in $a_s$'s vicinity. These contractions are individually observable, producing negative $\Delta \vol(\Gind{k})$ signals that aggregate into a persistent negative $\Deltahat$ in the local estimator. The trust update mechanism attributes persistent contraction to its source: $T_s$ decreases as the pattern accumulates, eventually flagging $a_s$ as a net-contracting agent. \qed
 
 \begin{remark}[Scope Limitation]
 \label{rem:detection_scope}
