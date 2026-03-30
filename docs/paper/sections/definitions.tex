@@ -1,0 +1,110 @@
+% =============================================================================
+% DEFINITIONS (2-3 pages)
+%
+% Spec requirements:
+%   Establish minimal formal vocabulary for the propositions.
+%   Definitions 0-6 plus implementation notes.
+%
+% Key design decision (resolved in spec):
+%   Candidate B (capabilities) as formal target.
+%   Candidate C (experiences) as motivating justification.
+%   "GFM does not claim to know what experiences agents want. It maximizes
+%    the capabilities that let agents choose for themselves."
+%
+% Reference material:
+%   - Predraft Part III opening and Equation 5
+%   - Blog: free.md (informal goal frontier definitions)
+%   - Klyubin et al. (2005), Sen (1999)
+% =============================================================================
+
+\section{Definitions}
+\label{sec:definitions}
+
+% ---------------------------------------------------------------------------
+% Definition 0: What Is a Goal?
+% The paper's core philosophical move: capabilities (B) as formal proxy,
+% experiences (C) as justification. Make the B-as-proxy-for-C relationship
+% explicit here, and return to it in Section 8 (Doll Problem, wireheading).
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Goal]
+\label{def:goal}
+% TODO: Formal definition adopting Candidate B (capabilities)
+% with Candidate C (experiences) as motivating justification
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 1: Capability Space, Agent, Individual Capability Set
+% G is the universe of all possible capabilities.
+% Agent a_k has individual capability set G_k^ind \subseteq G.
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Capability Space, Agent, and Individual Capability Set]
+\label{def:capability_space}
+The \emph{capability space} $\G$ is the universe of all possible capabilities---everything any agent or coalition of agents could do or be. An \emph{agent} $a_k$ is an entity with an \emph{individual capability set} $\Gind{k} \subseteq \G$: the capabilities $a_k$ can realize unilaterally given its current resources, embodiment, and environment.
+
+A capability $g \in \Gind{k}$ represents something $a_k$ \emph{can} do or be, not necessarily something it \emph{is} doing or \emph{will} do.
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 2: Joint Goal Space
+% G = union of G_k^ind plus G^coop
+% Canonical measure: vol(G)
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Joint Goal Space]
+\label{def:joint_goal_space}
+The \emph{joint goal space} $G$ for a population of agents $\{a_1, \ldots, a_n\}$ is the set of all capabilities the population can realize through any combination of individual and coordinated action:
+\begin{equation}
+\label{eq:joint_goal_space}
+G = \bigcup_k \Gind{k} \;\cup\; \Gcoop
+\end{equation}
+where $\Gcoop \subseteq \G$ contains capabilities achievable only through multi-agent cooperation. By construction, $\Gind{k} \subseteq G \subseteq \G$ for all $k$.
+
+The \emph{frontier} $\partial G$ is the boundary of $G$. The \emph{canonical measure} is $\vol(G)$: the volume of the jointly achievable capability space. This is the quantity we optimize.
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 3: Goal-Frontier Maximizer (GFM)
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Goal-Frontier Maximizer]
+\label{def:gfm}
+A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize the expected change in the volume of the joint goal space:
+\begin{equation}
+\label{eq:gfm_objective}
+\pi^* = \arg\max_\pi \;\mathbb{E}\bigl[\Delta \vol(G) \mid \pi\bigr]
+\end{equation}
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 4: Contraction and Expansion
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Contraction and Expansion]
+\label{def:contraction_expansion}
+An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$ and \emph{contracting} if $\mathbb{E}[\Delta \vol(G) \mid \pi] < 0$. Contraction includes both direct contraction (destroying an agent's capabilities) and indirect contraction (restricting agency through coercion, deception, or rigid rules).
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 5: Social Objective
+% Critical assumptions: additivity under independence, tradeoff acknowledgment
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Social Objective]
+\label{def:social_objective}
+The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities.
+
+\emph{Additivity under independence:} When agents' individual capability sets are independent (non-overlapping, non-interacting), $V(G) \geq \sum_k \vol(\Gind{k})$. Cooperative capabilities $\Gcoop$ contribute additional volume.
+
+\emph{Tradeoff acknowledgment:} When expanding $G_j$ requires contracting $G_k$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
+\end{definition}
+
+% ---------------------------------------------------------------------------
+% Definition 6: Observable Goal Model
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Observable Goal Model]
+\label{def:observable_goal_model}
+A GFM actor maintains a model $M_k(G)$ of each observed agent's goals, inferred from communication, behavior, and environmental observation. Each model has an associated trust factor $T_k \in [0, 1]$ and confidence $C_k$.
+\end{definition}

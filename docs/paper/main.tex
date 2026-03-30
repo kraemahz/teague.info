@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\usepackage[preprint, nonatbib]{neurips_2023}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{xcolor}
+
+% Theorem-style environments (spec uses Definition 0 as starting point)
+\newtheorem{definition}{Definition}
+\setcounter{definition}{-1}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}[proposition]
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+
+% Operators and shortcuts
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Gind}[1]{G_{#1}^{\mathrm{ind}}}
+\newcommand{\Gcoop}{G^{\mathrm{coop}}}
+\newcommand{\Vhat}{\hat{V}}
+\newcommand{\Deltahat}{\hat{\Delta}}
+
+\title{Goal-Frontier Maximizers are Civilization Aligned}
+
+\author{
+  Teague Lasser \\
+  \texttt{contact@teague.info}
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Introduction ---
+\input{sections/introduction}
+
+% --- Definitions ---
+\input{sections/definitions}
+
+% --- Self-Balancing Property ---
+\input{sections/self_balancing}
+
+% --- Tractability ---
+\input{sections/tractability}
+
+% --- Multi-Agent Dynamics ---
+\input{sections/multi_agent}
+
+% --- Connections to Existing Frameworks ---
+\input{sections/connections}
+
+% --- Future Concerns and Open Problems ---
+\input{sections/future_concerns}
+
+% --- Conclusion ---
+\input{sections/conclusion}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\appendix
+\input{appendices/evil_twin}
+\input{appendices/scorpion_taxonomy}
+\input{appendices/trust_model}
+\input{appendices/agent_similarity}
+
+\end{document}

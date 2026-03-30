@@ -1,0 +1,93 @@
+% =============================================================================
+% THE SELF-BALANCING PROPERTY (3-4 pages)
+%
+% Spec requirements:
+%   - Proposition 1 (a)-(d) with conditions and proof sketches
+%   - Corollary 1.1: Elimination is almost always anti-maximizing
+%   - Corollary 1.2: Rigid rules are anti-maximizing
+%   - Proposition 2: Scorpion detection under observable contraction
+%
+% Open problems to acknowledge:
+%   - Detection bounded by Prop 3 observability constraints
+%   - (d) is structural, not an equilibrium existence proof
+%   - No convergence rate claims
+%
+% Reference material:
+%   - Blog: free.md ("Goal Frontiers Create Ethical Behavior")
+%   - Blog: scorpions.md (scorpion taxonomy)
+%   - Blog: frameskipping.md (path of least action)
+%   - Predraft Section XV (CHIEFS as derived consequences)
+% =============================================================================
+
+\section{The Self-Balancing Property}
+\label{sec:self_balancing}
+
+% ---------------------------------------------------------------------------
+% Proposition 1: Self-Balancing Property
+% Consider whether (a)-(c) should be lemmas with (d) as the proposition.
+% ---------------------------------------------------------------------------
+
+\begin{proposition}[Self-Balancing Property]
+\label{prop:self_balancing}
+For a GFM actor optimizing $\vol(G)$ over a population of agents, under the assumptions of Definition~\ref{def:social_objective}, the following hold:
+
+\begin{enumerate}
+\item[\textbf{(a)}] \textbf{Destructive actions are anti-maximizing.}
+% TODO: Formal statement and proof sketch
+% Key: eliminating a_k removes unique volume vol(G_k^ind \ union_{j!=k} G_j)
+% plus cooperative capabilities requiring a_k
+
+\item[\textbf{(b)}] \textbf{Coercive actions are anti-maximizing, with a caveat.}
+% TODO: Formal statement
+% Key: restricting G_j contracts vol(G) unless compensated elsewhere
+% Honest caveat: quarantine vs authoritarian state
+
+\item[\textbf{(c)}] \textbf{Self-imposed rigidity is anti-maximizing.}
+% TODO: Formal statement
+% Key: constraining own action space reduces frontier expansion ability
+
+\item[\textbf{(d)}] \textbf{Structural balance.}
+% TODO: Structural claim (NOT equilibrium existence)
+% Key: same objective penalizes both extremes
+\end{enumerate}
+\end{proposition}
+
+% TODO: Proof sketch for Proposition 1
+
+% ---------------------------------------------------------------------------
+% Corollary 1.1: Elimination is almost always anti-maximizing
+% ---------------------------------------------------------------------------
+
+\begin{corollary}[Elimination is Almost Always Anti-Maximizing]
+\label{cor:elimination}
+% TODO: Formal statement
+% Key: unique contribution is strictly positive for any agent with at least
+% one non-universal goal; cooperative loss grows super-linearly
+\end{corollary}
+
+% ---------------------------------------------------------------------------
+% Corollary 1.2: Rigid rules are anti-maximizing
+% ---------------------------------------------------------------------------
+
+\begin{corollary}[Rigid Rules are Anti-Maximizing]
+\label{cor:rigid_rules}
+% TODO: Formal statement
+% Key: fixed rule set R reduces action space
+% Connect to Evil Twin Time Bomb (Appendix A)
+\end{corollary}
+
+% ---------------------------------------------------------------------------
+% Proposition 2: Scorpion Detection
+% ---------------------------------------------------------------------------
+
+\begin{proposition}[Scorpion Detection under Observable Contraction]
+\label{prop:scorpion_detection}
+% TODO: Formal statement
+% Key: persistent vol(G)-contracting behavior produces persistent negative
+% signals in individually observable capability sets
+%
+% SCOPE LIMITATION (must state explicitly):
+% Inherits observability constraints of Proposition 3.
+% Social/structural scorpions (coalition disruption, trust degradation,
+% observability reduction) may evade detection.
+\end{proposition}

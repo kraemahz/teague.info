@@ -1,0 +1,55 @@
+% =============================================================================
+% MULTI-AGENT DYNAMICS (2-3 pages)
+%
+% Spec requirements:
+%   - GFM-GFM cooperation (shared objective, coalition formation)
+%   - GFM-Scorpion interaction (detection, containment, proportional response)
+%   - Trust model (reconstructed from predraft concepts)
+%   - Defection conditions (containment, not destruction)
+%
+% Reference material:
+%   - Predraft Section XIII (payoff matrices, cooperation conditions)
+%   - Blog: scorpions.md (full taxonomy)
+%   - Blog: free.md ("Adversary FREE")
+%   - Axelrod (1984), Kramar et al. (2022)
+% =============================================================================
+
+\section{Multi-Agent Dynamics}
+\label{sec:multi_agent}
+
+\subsection{GFM--GFM Cooperation}
+
+% TODO: Shared objective function -> cooperation favored when trust is
+% sufficient and world models are compatible
+% Joint action expands G^coop in ways unilateral action cannot
+% Goal drift bounded by shared objective; divergent models produce conflict
+
+\subsection{GFM--Scorpion Interaction}
+
+% TODO: Scorpions produce persistent frontier contraction
+% Trust model flags behavior as T_k decreases (subject to observability)
+% Response is containment: reduce scorpion's contraction ability
+% without unnecessarily contracting frontier further
+% Self-balancing applied to adversarial agents: proportional response
+
+\subsection{The Trust Model}
+\label{subsec:trust_model}
+
+% RECONSTRUCT, DO NOT IMPORT from predraft Equations 22-25.
+% Interface defined here; full derivation in Appendix C.
+%
+% Key concepts:
+%   - Trust factor T_k in [0,1]: consistency of M_k(G) with observed behavior
+%   - Cooling period tau: new agents start low, trust increases with convergence
+%   - Self-trust T_s: confidence in own world model
+%   - Activation energy theta: model only updates when evidence exceeds threshold
+%   - Trust updated via gradient tracking
+
+% TODO: Define trust model interface and key properties
+
+\subsection{Defection Conditions}
+
+% TODO: When GFM actor may rationally defect:
+% very low goal alignment, very low trust, repeated defection observed,
+% preventing exploitation requires non-cooperation
+% Key: defection is containment, not destruction

@@ -1,0 +1,110 @@
+% =============================================================================
+% TRACTABILITY AND LOCAL APPROXIMATION (3-4 pages)
+%
+% Spec requirements:
+%   - Intractability result (two arguments with different epistemic status)
+%   - Definition 7: Local Volume Estimator
+%   - Proposition 3: Self-Balancing Survives Approximation
+%   - Observability channels (individual + coalition signals)
+%   - Remark on estimator failure modes (4 cases)
+%   - The feedback loop (re-derive from vol(G) objective)
+%   - Computational cost analysis
+%
+% Reference material:
+%   - Predraft Equation 5 (loop structure, needs re-derivation)
+%   - Predraft Equations 22-25 (trust model concepts, re-derive notation)
+%   - Blog: limitsofthought.md (computational bounds, motivational)
+%   - Dyer & Frieze (1988), Klyubin et al. (2005)
+% =============================================================================
+
+\section{Tractability and Local Approximation}
+\label{sec:tractability}
+
+% ---------------------------------------------------------------------------
+% The Intractability Result
+% Two separate arguments: formal (#P-hard, external) and motivating
+% (combinatorial interaction effects, original, informal)
+% ---------------------------------------------------------------------------
+
+\subsection{Intractability of Exact GFM}
+
+% TODO: Formal result (Dyer & Frieze 1988): volume of high-dimensional
+% polytope is #P-hard. Applied result, not new proof.
+
+% TODO: Motivating observation: joint goal space includes interaction effects
+% growing combinatorially with agent count. Illustrative, not a formal
+% reduction. The 60! > 8.3 x 10^81 comparison from predraft is motivational.
+
+% ---------------------------------------------------------------------------
+% Definition 7: Local Volume Estimator
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Local Volume Estimator]
+\label{def:local_volume_estimator}
+For a proposed action $\pi$, define the \emph{local volume difference}:
+\begin{equation}
+\label{eq:local_volume_diff}
+\Deltahat(\pi) = \Vhat(G \mid \mathrm{do}(\pi)) - \Vhat(G \mid \mathrm{skip}(\pi))
+\end{equation}
+where $\Vhat$ is an estimate of $\vol(G)$. This requires only that $\vol(G)$ is \emph{measurable}---not that it is differentiable or that $\G$ has smooth structure.
+\end{definition}
+
+% TODO: Observability channels discussion
+% 1. Individual capability signals (accept/reject from affected agents)
+% 2. Coalition capability signals (indirect, noisier, slower)
+% Critical assumption: V-hat is better estimator of vol(union G_k^ind) than vol(G)
+
+% ---------------------------------------------------------------------------
+% Proposition 3: Self-Balancing Survives Approximation
+% ---------------------------------------------------------------------------
+
+\begin{proposition}[Self-Balancing Survives Approximation]
+\label{prop:sign_correctness}
+Under the following assumptions, $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \mid \pi)$:
+\begin{enumerate}
+\item The actor observes a representative sample of affected agents.
+\item The actor's trust model is accurate enough to distinguish genuine feedback from adversarial noise.
+\item \textbf{Sign-preservation:} There exists $\epsilon < 1$ such that
+\begin{equation}
+\label{eq:sign_preservation}
+\bigl|\Delta \vol(\Gcoop) - \widehat{\Delta \vol}(\Gcoop)\bigr| < (1 - \epsilon) \cdot \bigl|\Delta \vol\bigl(\textstyle\bigcup_k \Gind{k}\bigr)\bigr|
+\end{equation}
+\end{enumerate}
+\end{proposition}
+
+% TODO: Proof sketch
+% TODO: Discussion of when condition 3 holds (most important cases)
+% TODO: Discussion of when condition 3 fails (coalition-structure actions)
+
+% ---------------------------------------------------------------------------
+% Remark: Estimator failure modes
+% ---------------------------------------------------------------------------
+
+\begin{remark}[Estimator Failure Modes]
+\label{rem:failure_modes}
+% TODO: Four cases:
+% 1. Full individual observation, no cooperative change -> sign-correct
+% 2. Partial individual, no cooperative change -> depends on sampling
+% 3. Mixed individual and cooperative -> unreliable when cooperative dominates
+% 4. Pure coalition-level -> blind
+\end{remark}
+
+% ---------------------------------------------------------------------------
+% The Feedback Loop
+% Re-derive from vol(G) objective using Definitions 1-6
+% ---------------------------------------------------------------------------
+
+\subsection{The Optimization Loop}
+
+% TODO: Re-derive loop structure from canonical vol(G) objective
+% Predraft Eq 5 is directionally correct but must use new definitions
+% Trust model interface here, full derivation in Appendix C
+
+% ---------------------------------------------------------------------------
+% Computational Cost
+% ---------------------------------------------------------------------------
+
+\subsection{Computational Cost}
+
+% TODO: Local GFM scales with observed agents, not total population
+% Comparable to multi-armed bandit with contextual feedback
