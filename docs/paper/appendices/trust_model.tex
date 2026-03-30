@@ -1,36 +1,177 @@
 % =============================================================================
 % APPENDIX C: FULL DERIVATION OF TRUST MODEL
 %
-% Spec requirements:
-%   RECONSTRUCTION PROJECT, not cleanup.
-%   Start from Definitions 1-7 and derive from vol(G) objective.
-%   Predraft equations 22-25 are reference for concepts and intent only.
-%
-% Concepts to PRESERVE:
-%   - Trust factor T_k
-%   - Cooling period tau
-%   - Activation energy threshold theta
-%   - Self-trust T_s
-%   - Gradient-based trust updating
-%
-% Concepts to RECONSIDER:
-%   - MSE as error metric (predraft Eq 10-11)
-%   - Binary confidence threshold (predraft Eq 11)
-%   - Specific functional form of update rule (predraft Eq 25)
-%
-% Output must be consistent with canonical vol(G) objective and
-% social objective assumptions (Definition 5).
+% RECONSTRUCTION from Definitions 1-7 and the vol(G) objective.
+% Predraft equations 22-25 are reference for concepts and intent only.
+% All notation rebuilt from this paper's definitions.
 % =============================================================================
 
 \section{Full Derivation of Trust Model}
 \label{app:trust_model}
 
-% TODO: Re-derive trust model from first principles
-% Starting point: Definitions 1-7 of the main paper
-%
-% Structure:
-% C.1 Trust Factor T_k: derivation from consistency of M_k(G) predictions
-% C.2 Cooling Period: why new agents start with low trust
-% C.3 Self-Trust T_s and Activation Energy theta
-% C.4 Trust Update Rule: gradient tracking on M_k(G) convergence
-% C.5 Integration with Local Volume Estimator (Definition 7)
+This appendix derives the trust model from the definitions and propositions of the main paper. The trust model serves a specific function in the GFM framework: it provides the weights by which agent reports are aggregated in the local volume estimator (Definition~\ref{def:local_volume_estimator}), satisfying condition~2 of Proposition~\ref{prop:sign_correctness}. The derivation proceeds from the observable goal model (Definition~\ref{def:observable_goal_model}) and the optimization loop (Section~\ref{subsec:optimization_loop}).
+
+% ---------------------------------------------------------------------------
+% C.1: Trust Factor T_k
+% ---------------------------------------------------------------------------
+
+\subsection{Trust Factor $T_k$}
+\label{app:trust_factor}
+
+The observable goal model $M_k(G)$ (Definition~\ref{def:observable_goal_model}) represents the GFM actor's belief about agent $a_k$'s contribution to the joint goal space. At each interaction, the actor observes $a_k$'s behavior---the capability changes $a_k$ produces or reports---and compares this against $M_k(G)$'s prediction.
+
+Define the \emph{prediction residual} at time $t$ as the discrepancy between the model's predicted capability change and the observed change:
+\begin{equation}
+\label{eq:prediction_residual}
+r_k(t) = R_k(t) - \hat{R}_k(t \mid M_k(G))
+\end{equation}
+where $R_k(t)$ is the observed capability-change signal from agent $a_k$ at time $t$, and $\hat{R}_k(t \mid M_k(G))$ is the model's prediction of that signal. When $M_k(G)$ accurately captures $a_k$'s behavior, $r_k(t) \approx 0$; when $a_k$ acts in ways the model does not predict, $|r_k(t)|$ is large.
+
+The trust factor $T_k$ is derived from the running consistency of the model's predictions with observed behavior. Define the \emph{cumulative prediction consistency} as an exponentially weighted moving average of squared residuals:
+\begin{equation}
+\label{eq:cumulative_consistency}
+\sigma_k^2(t) = \alpha \cdot \sigma_k^2(t-1) + (1 - \alpha) \cdot r_k(t)^2
+\end{equation}
+where $\alpha \in (0, 1)$ is a decay parameter that controls how much weight is given to recent observations versus historical consistency. The trust factor is then a decreasing function of cumulative inconsistency:
+\begin{equation}
+\label{eq:trust_factor}
+T_k(t) = \frac{1}{1 + \beta \cdot \sigma_k^2(t)}
+\end{equation}
+where $\beta > 0$ is a sensitivity parameter controlling how rapidly trust decays with increasing prediction error.
+
+\paragraph{Properties.} The trust factor defined by Equations~\eqref{eq:cumulative_consistency}--\eqref{eq:trust_factor} has several properties that the main-body interface requires:
+\begin{itemize}
+\item $T_k \in (0, 1]$ for all $t$, with $T_k = 1$ only when $\sigma_k^2 = 0$ (perfect prediction consistency).
+\item $T_k$ decreases monotonically with increasing prediction inconsistency $\sigma_k^2$.
+\item Recent observations receive more weight than distant ones (controlled by $\alpha$), so trust can recover after a period of consistent behavior following earlier divergence.
+\item The rate of trust decay is governed by $\beta$: large $\beta$ produces rapid trust loss on prediction failure, while small $\beta$ produces gradual trust erosion.
+\end{itemize}
+
+\paragraph{Design choices.} The predraft used MSE as the error metric (predraft Eq.\ 10--11) and a binary confidence threshold. The reconstruction replaces both. The exponentially weighted moving average in Equation~\eqref{eq:cumulative_consistency} is preferred over raw MSE because it naturally discounts stale evidence---an agent that was unreliable a long time ago but has been consistent recently should have recovering trust, which a simple MSE over the full history does not provide. The continuous trust factor in Equation~\eqref{eq:trust_factor} replaces the binary confidence threshold because trust is not a binary property: an agent with moderate prediction consistency should receive moderate weight in the estimator, not be classified as either fully trusted or fully distrusted.
+
+\paragraph{Relation to $\vol(G)$ objective.} The trust factor connects to the GFM objective through the aggregate signal (Equation~\eqref{eq:aggregate_signal}). An agent $a_k$ with high $T_k$ exerts proportionally more influence on $\Deltahat(\pi)$, meaning the actor's decisions are more responsive to high-trust agents' reports. This is $\vol(G)$-serving when high-trust agents are genuinely reliable: their reports more accurately reflect true capability changes, so weighting them more heavily improves the estimator's sign-correctness. The trust factor degrades gracefully under adversarial conditions: a deceptive agent whose reports are inconsistent with observed reality will accumulate large residuals, driving $T_k$ down and reducing its influence on the estimator without requiring explicit adversary detection.
+
+% ---------------------------------------------------------------------------
+% C.2: Cooling Period
+% ---------------------------------------------------------------------------
+
+\subsection{Cooling Period $\tau$}
+\label{app:cooling_period}
+
+A new agent $a_k$ entering the GFM actor's observation set has no prediction history: $\sigma_k^2(0)$ is undefined. The cooling period $\tau$ addresses this by initializing the trust factor at a conservative value and requiring evidence accumulation before trust can reach levels that significantly influence the estimator.
+
+Set the initial cumulative inconsistency to a prior value $\sigma_0^2 > 0$, reflecting the actor's uncertainty about a novel agent:
+\begin{equation}
+\label{eq:initial_trust}
+T_k(0) = \frac{1}{1 + \beta \cdot \sigma_0^2}
+\end{equation}
+The prior $\sigma_0^2$ determines the initial trust level. For $\sigma_0^2 = 1/\beta$, the initial trust is $T_k(0) = 1/2$; for larger $\sigma_0^2$, the initial trust is lower.
+
+During the cooling period, the exponential decay in Equation~\eqref{eq:cumulative_consistency} means the prior $\sigma_0^2$ is gradually replaced by observed evidence. After $\tau$ observations, the contribution of the prior to $\sigma_k^2$ has decayed by a factor of $\alpha^\tau$. The effective cooling period is the number of observations required for the prior's influence to fall below a threshold $\delta$:
+\begin{equation}
+\label{eq:cooling_period}
+\tau = \left\lceil \frac{\log \delta}{\log \alpha} \right\rceil
+\end{equation}
+For $\alpha = 0.9$ and $\delta = 0.1$, the cooling period is $\tau = 22$ observations. After $\tau$ observations, the trust factor is determined primarily by the agent's actual prediction consistency rather than the prior.
+
+\paragraph{Justification from the $\vol(G)$ objective.} The cooling period is not an arbitrary safety margin. It addresses a specific failure mode of the local estimator: a novel agent that immediately receives high trust can inject false signals into $\Deltahat(\pi)$ before the actor has sufficient evidence to evaluate its reliability. This is a direct threat to condition~2 of Proposition~\ref{prop:sign_correctness}. By initializing trust conservatively and requiring evidence accumulation, the cooling period ensures that the estimator's sign-correctness is not compromised by a single new agent's reports.
+
+The cost of the cooling period is reduced responsiveness to genuinely reliable new agents. A cooperative agent that enters the observation set with accurate reports will be underweighted during $\tau$, reducing the estimator's accuracy for actions that primarily affect that agent. This is a direct tradeoff between adversarial robustness (low initial trust) and cooperative efficiency (high initial trust), governed by the prior $\sigma_0^2$. In adversarial environments, $\sigma_0^2$ should be large (long cooling, low initial trust); in cooperative environments, it can be smaller.
+
+% ---------------------------------------------------------------------------
+% C.3: Self-Trust and Activation Energy
+% ---------------------------------------------------------------------------
+
+\subsection{Self-Trust $T_s$ and Activation Energy $\theta$}
+\label{app:self_trust}
+
+The GFM actor maintains a model not only of other agents but of the world as a whole. The self-trust factor $T_s \in [0, 1]$ represents the actor's confidence in its own world model---the degree to which its predictions about the consequences of its actions match observed outcomes.
+
+Define the actor's \emph{self-prediction residual}:
+\begin{equation}
+\label{eq:self_residual}
+r_s(t) = \Deltahat(\pi_t) - \Delta_{\mathrm{obs}}(\pi_t)
+\end{equation}
+where $\Deltahat(\pi_t)$ is the estimated volume change for the action taken at time $t$ and $\Delta_{\mathrm{obs}}(\pi_t)$ is the subsequently observed volume change (reconstructed from post-action capability signals). The self-trust factor follows the same structure as the agent trust factor:
+\begin{equation}
+\label{eq:self_trust}
+\sigma_s^2(t) = \alpha_s \cdot \sigma_s^2(t-1) + (1 - \alpha_s) \cdot r_s(t)^2, \qquad T_s(t) = \frac{1}{1 + \beta_s \cdot \sigma_s^2(t)}
+\end{equation}
+where $\alpha_s$ and $\beta_s$ are the self-trust decay and sensitivity parameters, which may differ from the corresponding agent-trust parameters.
+
+\paragraph{Interaction with activation energy.} The activation energy threshold $\theta$ from Equation~\eqref{eq:model_update} gates model updates: a piece of evidence must exceed $\theta$ in magnitude before it propagates into the world model. The relationship between $T_s$ and $\theta$ is complementary:
+\begin{itemize}
+\item $\theta$ controls \emph{which} evidence enters the model (magnitude gating).
+\item $T_s$ controls \emph{how much} influence accepted evidence has on the model (scaling).
+\end{itemize}
+
+The model update (Equation~\eqref{eq:model_update}) combines both:
+\[
+M_k'(G) = M_k(G) + T_k \cdot T_s \cdot f(R_k \mid M_k(G)) \cdot \mathbf{1}[\Delta E(R_k, M_k(G)) > \theta]
+\]
+When $T_s$ is high, the actor trusts its current model and accepted updates are scaled down (the factor $T_s$ appears in a product with $T_k$, so the update is modulated by both). When $T_s$ is low, the actor's confidence in its model is reduced, and it is more receptive to revisions.
+
+\paragraph{Formal relationship to $\vol(G)$.} Self-trust connects to the $\vol(G)$ objective through the optimization loop. An actor with inaccurate self-trust---either too high (overconfident, resistant to correction) or too low (underconfident, vulnerable to manipulation)---will make suboptimal action selections, because its estimates $\Deltahat(\pi)$ will be miscalibrated. The self-prediction residual in Equation~\eqref{eq:self_residual} provides the feedback signal that calibrates $T_s$: when the actor's predictions consistently match reality, $T_s$ rises, and the actor appropriately maintains its current model; when predictions fail, $T_s$ drops, and the actor becomes more receptive to model revision.
+
+The activation energy threshold $\theta$ serves a distinct purpose from $T_s$. Even with well-calibrated self-trust, an adversary could incrementally shift the actor's model through a sequence of small perturbations, each below the actor's detection threshold. The threshold $\theta$ prevents this by requiring that any single update clear a minimum evidence bar. The combination of $T_s$ and $\theta$ produces a model that is stable under small perturbations (activation energy blocks incremental drift), calibrated in its confidence (self-trust tracks prediction accuracy), and responsive to genuine large signals (evidence above $\theta$ is incorporated at a rate scaled by $T_s$).
+
+% ---------------------------------------------------------------------------
+% C.4: Trust Update Rule
+% ---------------------------------------------------------------------------
+
+\subsection{Trust Update Rule}
+\label{app:trust_update}
+
+The trust factors $T_k$ and $T_s$ evolve through the exponentially weighted update in Equations~\eqref{eq:cumulative_consistency} and~\eqref{eq:self_trust}. This section formalizes the gradient-tracking interpretation of this update and establishes its convergence properties.
+
+The trust update can be viewed as stochastic gradient tracking on the prediction loss $\ell_k(t) = r_k(t)^2$. The cumulative inconsistency $\sigma_k^2(t)$ is an exponentially weighted estimate of $\mathbb{E}[\ell_k]$. When agent $a_k$'s behavior is stationary (its mapping from situations to actions does not change), $\sigma_k^2(t)$ converges to the true expected prediction loss:
+\begin{equation}
+\label{eq:convergence}
+\sigma_k^2(t) \xrightarrow{t \to \infty} \mathbb{E}[\ell_k] \quad \text{under stationarity of } a_k\text{'s policy}
+\end{equation}
+and $T_k(t)$ converges to the corresponding steady-state trust value $T_k^* = 1 / (1 + \beta \cdot \mathbb{E}[\ell_k])$.
+
+For a cooperative agent whose behavior is well-predicted by $M_k(G)$, $\mathbb{E}[\ell_k]$ is small (driven by observation noise rather than model error), and $T_k^*$ is close to 1. For a scorpion whose behavior systematically diverges from the model's predictions, $\mathbb{E}[\ell_k]$ is large, and $T_k^*$ is close to 0. For an agent with partially predictable behavior---cooperative in some contexts, adversarial in others---$T_k^*$ takes an intermediate value, appropriately weighting the agent's reports at a level commensurate with their reliability.
+
+\paragraph{Non-stationary agents.} When agent $a_k$'s behavior changes over time---for instance, a cooperative agent that becomes adversarial, or vice versa---the exponential weighting in Equation~\eqref{eq:cumulative_consistency} ensures that $\sigma_k^2(t)$ tracks the change. The tracking speed is controlled by $\alpha$: smaller $\alpha$ gives more weight to recent observations and tracks changes faster, at the cost of higher variance in the trust estimate. The trust factor responds to behavioral change with a lag proportional to $1/(1 - \alpha)$: a sudden shift from cooperation to defection will be fully reflected in $T_k$ after approximately $1/(1 - \alpha)$ observations.
+
+This tracking lag is a fundamental tradeoff. Fast tracking (small $\alpha$) detects behavioral change quickly but makes the trust estimate noisy, potentially misclassifying random variation as defection. Slow tracking (large $\alpha$) produces stable trust estimates but delays detection of genuine behavioral shifts. The parameter $\alpha$ must be tuned to the expected rate of behavioral change in the environment---a design choice for implementers, not a quantity derivable from the framework's definitions.
+
+\paragraph{Gradient interpretation.} The update to $\sigma_k^2$ in Equation~\eqref{eq:cumulative_consistency} is equivalent to an exponentially weighted gradient step on the loss $\ell_k(t)$:
+\begin{equation}
+\label{eq:gradient_step}
+\sigma_k^2(t) = \sigma_k^2(t-1) + (1 - \alpha) \cdot \bigl(\ell_k(t) - \sigma_k^2(t-1)\bigr)
+\end{equation}
+This is a standard form of online gradient tracking with learning rate $(1 - \alpha)$. The trust factor $T_k$ inherits the convergence and tracking properties of this estimator. Under standard conditions on the learning rate ($(1 - \alpha) \in (0, 1)$, which holds by construction), the estimator converges almost surely to $\mathbb{E}[\ell_k]$ for stationary processes, and tracks non-stationary processes with bounded lag.
+
+% ---------------------------------------------------------------------------
+% C.5: Integration with Local Volume Estimator
+% ---------------------------------------------------------------------------
+
+\subsection{Integration with the Local Volume Estimator}
+\label{app:trust_estimator_integration}
+
+The trust model interfaces with the local volume estimator (Definition~\ref{def:local_volume_estimator}) through the aggregate signal in Equation~\eqref{eq:aggregate_signal}:
+\[
+\Deltahat(\pi) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi)
+\]
+The trust weights $T_k$ serve two functions in this aggregation: they improve the estimator's accuracy (by upweighting reliable reports) and they provide adversarial robustness (by downweighting unreliable or deceptive reports).
+
+\paragraph{Effect on sign-correctness.} Proposition~\ref{prop:sign_correctness} requires that the trust model is accurate enough to distinguish genuine feedback from adversarial noise (condition~2). The trust factor achieves this under the following condition: for each agent $a_k$ in the observation set, the trust factor $T_k$ is positively correlated with $a_k$'s report accuracy. Formally, define an agent's \emph{report accuracy} as the probability that $\sign(R_k(\pi)) = \sign(\Delta \vol(\Gind{k}) \mid \pi)$. If $T_k$ is higher for agents with higher report accuracy, then the trust-weighted aggregate $\Deltahat(\pi)$ is a better estimator of $\sign(\Delta \vol(G))$ than the unweighted aggregate.
+
+The trust factor defined in Section~\ref{app:trust_factor} satisfies this condition under a regularity assumption: agents whose reports are accurate produce small prediction residuals $r_k$, which produce small $\sigma_k^2$, which produce high $T_k$. Agents whose reports are inaccurate---whether through incompetence or deception---produce large prediction residuals, large $\sigma_k^2$, and low $T_k$. The regularity assumption is that prediction residuals correlate with report inaccuracy, which holds when the actor's model $M_k(G)$ is accurate enough to detect discrepancies between reported and actual capability changes.
+
+\paragraph{Adversarial robustness.} Consider an adversarial agent $a_s$ that reports false capability changes to manipulate the estimator. The false reports produce prediction residuals: the actor observes (through independent channels or subsequent observations) that $a_s$'s reported changes do not match actual capability changes. These residuals accumulate in $\sigma_s^2$, driving $T_s$ downward and reducing $a_s$'s influence on $\Deltahat(\pi)$.
+
+The adversary's optimal strategy is to balance deceptive reports (which advance its goals but increase $\sigma_s^2$) against accurate reports (which maintain $T_s$ but do not serve its adversarial purpose). The trust model forces this tradeoff: an adversary that reports accurately to maintain trust is constrained in its ability to manipulate the estimator, while one that reports deceptively loses influence as $T_s$ drops. Neither strategy achieves both goals simultaneously. The trust model does not prevent adversarial influence entirely---an adversary can inject some bias before $T_s$ drops sufficiently---but it bounds the cumulative influence an adversary can exert, with the bound tightening as the prediction residuals accumulate.
+
+\paragraph{Weighted estimator bias.} The trust-weighted estimator introduces a systematic bias: agents with longer observation histories (who have had time to accumulate evidence and build trust) receive more weight than recent arrivals (who are still in their cooling period). This biases the estimator toward the perspectives of established agents, which is conservative but potentially suboptimal when the environment is changing and new agents carry more accurate information about current conditions. The bias is bounded by the cooling period $\tau$: after $\tau$ observations, a reliable new agent's trust approaches the trust of established agents with comparable prediction consistency, and the bias diminishes.
+
+\paragraph{Summary of parameters.} The trust model introduces five parameters that implementers must set:
+\begin{itemize}
+\item $\alpha$ (agent trust decay): controls the tradeoff between tracking speed and estimate stability.
+\item $\beta$ (agent trust sensitivity): controls how rapidly trust decays with prediction inconsistency.
+\item $\sigma_0^2$ (initial inconsistency prior): determines the initial trust level and effective cooling period.
+\item $\alpha_s$, $\beta_s$ (self-trust parameters): control the actor's own model-confidence dynamics.
+\end{itemize}
+These parameters, together with the activation energy threshold $\theta$ from the optimization loop, constitute the tunable surface of the trust model. The framework specifies their roles and interactions but does not determine their values---those depend on the adversarial pressure, observation noise, and behavioral dynamics of the specific environment in which the GFM actor operates.
