@@ -70,9 +70,9 @@ The \emph{joint goal space} $G$ for a population of agents $\{a_1, \ldots, a_n\}
 G = \bigcup_k \Gind{k} \;\cup\; \Gcoop
 \end{equation}
 where $\Gcoop \subseteq \G$ contains capabilities achievable only through multi-agent cooperation. By construction, $\Gind{k} \subseteq G \subseteq \G$ for all $k$.
+\end{definition}
 
 The \emph{frontier} $\partial G$ is the boundary of $G$---the locus where expansion or contraction occurs. The \emph{canonical measure} is $\vol(G)$: the volume of the jointly achievable capability space. This is the quantity we optimize.
-\end{definition}
 
 A critical feature of Equation~\eqref{eq:joint_goal_space} is that $G$ generically exceeds $\bigcup_k \Gind{k}$. Cooperation creates capabilities no individual possesses. Two agents who can each carry 50\,kg individually can jointly carry 100\,kg---a capability in $\Gcoop$ that exists in neither $\Gind{1}$ nor $\Gind{2}$. A surgeon and an anesthesiologist can jointly perform an operation that neither can perform alone. This combinatorial richness is where the joint space gets its volume: each new agent contributes not only its individual capabilities but also the cooperative capabilities unlocked by its interactions with every existing agent. This is why eliminating an agent has super-linear cost (Section~\ref{sec:self_balancing})---the cooperative capabilities lost grow combinatorially with the number of interaction partners.
 
@@ -87,8 +87,9 @@ A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize t
 \label{eq:gfm_objective}
 \pi^* = \arg\max_\pi \;\mathbb{E}\bigl[\Delta \vol(G) \mid \pi\bigr]
 \end{equation}
-A GFM actor that perfectly optimizes Equation~\eqref{eq:gfm_objective} would select, at each decision point, the action that most expands the jointly achievable capability space. In practice, the actor optimizes an estimate of this quantity (Section~\ref{sec:tractability}).
 \end{definition}
+
+In practice, a GFM actor optimizes an estimate of Equation~\eqref{eq:gfm_objective} rather than the exact quantity (Section~\ref{sec:tractability}).
 
 % ---------------------------------------------------------------------------
 % Definition 4: Contraction and Expansion
@@ -106,7 +107,10 @@ An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$
 
 \begin{definition}[Social Objective]
 \label{def:social_objective}
-The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities. It rests on two assumptions.
+The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities.
+\end{definition}
+
+This definition rests on two assumptions.
 
 \emph{Additivity under independence.} When agents' individual capability sets are independent (non-overlapping, non-interacting),
 \begin{equation}
@@ -116,7 +120,6 @@ V(G) \;\geq\; \sum_k \vol(\Gind{k}).
 Cooperative capabilities $\Gcoop$ contribute additional volume beyond the individual contributions.
 
 \emph{Tradeoff acknowledgment.} When expanding $\Gind{j}$ requires contracting $\Gind{k}$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
-\end{definition}
 
 Both assumptions carry weight and the argument depends on them. Additivity under independence (Equation~\ref{eq:additivity}) ensures that adding agents to a population cannot decrease $\vol(G)$ when their capabilities do not interfere---a minimal compositionality requirement without which the self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold, since eliminating an agent could then be volume-neutral or even volume-increasing. If independent agents could somehow reduce joint volume by their mere presence, the geometric argument against destruction collapses. The inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq \emptyset$: cooperation contributes volume that no individual possesses alone.
 
