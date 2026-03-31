@@ -1,6 +1,10 @@
 \documentclass{article}
 
 \usepackage[preprint, nonatbib]{neurips_2023}
+% Override the preprint footer — "Under review" is not accurate
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
