@@ -37,7 +37,7 @@ The metric has the structure of a Jaccard index over projected capability region
 \begin{itemize}
 \item \emph{Symmetry:} $S_G(g_i, g_j \mid M) = S_G(g_j, g_i \mid M)$.
 \item \emph{Boundedness:} $S_G \in [0, 1]$ by construction.
-\item \emph{Model-dependence:} $S_G$ is not an intrinsic property of goals but a property of goals-as-projected-through-a-model. This is a feature: it means the similarity metric improves as the world model improves, and two GFM actors with different world models may assign different similarities to the same goal pair.
+\item \emph{Model-dependence:} $S_G$ is a property of goals-as-projected-through-a-model, not an intrinsic property of goals. This dependence is constructive: the similarity metric improves as the world model improves, and two GFM actors with different world models may assign different similarities to the same goal pair.
 \end{itemize}
 
 \paragraph{Relation to $\vol(G)$.} Goal similarity connects to the optimization objective through redundancy. When $S_G(g_i, g_j \mid M)$ is high, the two goals contribute overlapping capability volume to $G$. Expanding both adds less to $\vol(G)$ than expanding two dissimilar goals, because the intersection is counted only once. A GFM actor seeking to maximize $\Delta \vol(G)$ per unit effort should preferentially expand goals with low pairwise similarity---diversifying the capability space rather than deepening existing niches. This provides a formal basis for the intuition that diversity is instrumentally valuable: a population with diverse goals has higher $\vol(G)$ than one with uniform goals, all else equal, because the union of dissimilar sets has greater measure than the union of similar ones.

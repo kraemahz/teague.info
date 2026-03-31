@@ -42,7 +42,7 @@ This gives us the paper's core philosophical move: \emph{GFM does not claim to k
 
 \medskip
 
-An open problem accompanies this choice. The capability space $\G$ requires structure---at minimum a $\sigma$-algebra equipped with a measure---for $\vol(G)$ to be well-defined. Capabilities are not naturally a vector space (what does it mean to ``add'' two capabilities?), so the measure must be defined over a structured set, possibly a lattice with partial order (``can run a mile'' subsumes ``can walk a mile'') or a topological space where nearby capabilities are similar. The choice of measure has downstream consequences for tractability (Section~\ref{sec:tractability}) and remains an open problem that this paper does not resolve. We proceed by assuming $\G$ admits a suitable measure and flag the consequences of this assumption where they arise.
+An open problem accompanies this choice. The capability space $\G$ requires structure---at minimum a $\sigma$-algebra equipped with a measure---for $\vol(G)$ to be well-defined. Capabilities are not naturally a vector space (what does it mean to ``add'' two capabilities?), so the measure must be defined over a structured set, possibly a lattice with partial order (``can run a mile'' subsumes ``can walk a mile'') or a topological space where nearby capabilities are similar. The choice of measure has downstream consequences for tractability (Section~\ref{sec:tractability}) and the precise form of the self-balancing lemmas. We return to this problem with a concrete instantiation after Definition~\ref{def:social_objective} establishes what the measure must satisfy.
 
 % ---------------------------------------------------------------------------
 % Definition 1: Capability Space, Agent, Individual Capability Set
@@ -112,7 +112,7 @@ The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not
 
 This definition rests on two assumptions.
 
-\emph{Additivity under independence.} When agents' individual capability sets are independent (non-overlapping, non-interacting),
+\emph{Superadditivity under independence.} When agents' individual capability sets are independent (non-overlapping, non-interacting),
 \begin{equation}
 \label{eq:additivity}
 V(G) \;\geq\; \sum_k \vol(\Gind{k}).
@@ -121,9 +121,27 @@ Cooperative capabilities $\Gcoop$ contribute additional volume beyond the indivi
 
 \emph{Tradeoff acknowledgment.} When expanding $\Gind{j}$ requires contracting $\Gind{k}$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
 
-Both assumptions carry weight and the argument depends on them. Additivity under independence (Equation~\ref{eq:additivity}) ensures that adding agents to a population cannot decrease $\vol(G)$ when their capabilities do not interfere---a minimal compositionality requirement without which the self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold, since eliminating an agent could then be volume-neutral or even volume-increasing. If independent agents could somehow reduce joint volume by their mere presence, the geometric argument against destruction collapses. The inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq \emptyset$: cooperation contributes volume that no individual possesses alone.
+Both assumptions carry weight and the argument depends on them. Superadditivity under independence (Equation~\ref{eq:additivity}) ensures that adding agents to a population cannot decrease $\vol(G)$ when their capabilities do not interfere---a minimal compositionality requirement without which the self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold, since eliminating an agent could then be volume-neutral or even volume-increasing. If independent agents could somehow reduce joint volume by their mere presence, the geometric argument against destruction collapses. The inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq \emptyset$: cooperation contributes volume that no individual possesses alone.
 
 Tradeoff acknowledgment is the assumption that prevents GFM from degenerating into naive expansion. Real conflicts exist: quarantining an infected agent restricts its capabilities to protect others, and the net effect on $\vol(G)$ depends on the magnitudes involved. Without explicit tradeoff evaluation, a GFM actor could either refuse all restrictions (permitting unbounded harm) or impose restrictions freely (becoming authoritarian). The framework does not resolve which tradeoffs are worth making---it provides the accounting system for evaluating them. Where other frameworks hide tradeoffs behind categorical rules or aggregate them into a scalar utility, GFM keeps them visible as geometric operations on the joint space.
+
+A standing assumption underlies both conditions and several subsequent proofs: the capability measure assigns strictly positive volume to any non-empty individual capability set. Formally, $\vol(\{g\}) > 0$ for any $g \in \G$---no atomic capability has zero measure at the granularity of interest. This is invoked in the proofs of Corollary~\ref{cor:elimination} (where it ensures $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) > 0$ when the uniqueness condition holds) and Lemma~\ref{lem:cooperation} (where it ensures unrealized cooperative capabilities contribute positive volume). The assumption fails if capabilities are defined at coarser granularity than the distinctions that matter---a further reason why the structure of $\G$ shapes the framework's formal guarantees.
+
+We now exhibit one concrete measure satisfying these assumptions, showing that the framework is not vacuous while leaving open what the best or most natural measure is for any given domain.
+
+\begin{definition}[Population Empowerment Measure]
+\label{def:pop_empowerment}
+Let each agent $a_k$ have an action space $A_k$ and let $S'$ be the joint successor state under the population's actions. The \emph{population empowerment measure} is:
+\begin{equation}
+\label{eq:pop_empowerment}
+\vol_{\mathrm{PE}}(G) \;=\; \sup_{p(A)}\; I\!\bigl(A;\, S' \mid G\bigr)
+\end{equation}
+where $A = (A_1, \ldots, A_n)$ is the joint action profile, $I(\cdot\,;\cdot)$ is Shannon mutual information, and the supremum is taken over all input distributions $p(A)$ on the joint action space.
+\end{definition}
+
+$\vol_{\mathrm{PE}}(G)$ is the channel capacity between the population's joint actions and the resulting states---the maximum mutual information achievable by the population acting together. The conditioning on $G$ in Equation~\eqref{eq:pop_empowerment} constrains which joint actions are feasible: $p(S' \mid A, G)$ is the state-transition distribution restricted to actions that $G$ makes available, so $I(A; S' \mid G)$ measures only the channel capacity achievable through capabilities the population actually possesses. It satisfies both assumptions of Definition~\ref{def:social_objective}: measure monotonicity holds because enlarging $G$ admits additional action-outcome pairs, which can only increase channel capacity; superadditivity under independence holds with equality for independent agents and strictly when cooperation creates state outcomes neither agent can produce alone. For a single agent $a_k$, $\vol_{\mathrm{PE}}(\Gind{k}) = I(A_k; S'_k)$, recovering the single-agent empowerment of \citet{klyubin2005empowerment} as a special case (Section~\ref{sec:connections_empowerment}).
+
+The population empowerment measure requires specifying action and state spaces, which is implementation-dependent. Other measures---Lebesgue measure on a capability embedding, a weighted subsumption-lattice measure, a counting measure over enumerated capabilities---may be more natural in different settings and produce the same qualitative results under the same monotonicity conditions. The formal proofs of this paper require only that the measure satisfies Definition~\ref{def:social_objective}; $\vol_{\mathrm{PE}}$ is offered as an existence proof, not a prescription.
 
 % ---------------------------------------------------------------------------
 % Definition 6: Observable Goal Model

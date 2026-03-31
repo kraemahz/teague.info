@@ -15,7 +15,7 @@
 \section{Connections to Existing Frameworks}
 \label{sec:connections}
 
-GFM does not emerge from a vacuum. Four existing frameworks independently converge on related problems and collectively supply the tools, intuitions, and empirical track record that GFM inherits and extends.
+Four existing frameworks independently converge on related problems and collectively supply the tools, intuitions, and empirical track record that GFM inherits and extends.
 
 \subsection{Empowerment Maximization}
 \label{sec:connections_empowerment}
@@ -38,11 +38,30 @@ The key difference is orientation. Sen's capability approach is \emph{descriptiv
 \subsection{Free Energy Principle}
 \label{sec:connections_fep}
 
-The Free Energy Principle (FEP) \citep{friston2013life} proposes that self-organizing systems, from cells to brains, can be understood as minimizing \emph{variational free energy} --- a quantity that upper-bounds the surprise of sensory observations given an agent's generative model of the world. Under FEP, an agent acts and perceives in ways that confirm its model: it takes actions that drive sensory observations toward those the model predicts, and it updates its model when predictions persistently fail. The result is a system that maintains an accurate internal representation of its environment while remaining adaptive to change.
+The Free Energy Principle (FEP) \citep{friston2013life} proposes that self-organizing systems minimize \emph{variational free energy} $\mathcal{F}$---a quantity that upper-bounds the surprise of sensory observations given an agent's generative model. Under FEP, an agent acts to drive observations toward model predictions and updates its model when predictions persistently fail.
 
-The structural parallel to GFM is not accidental. The name ``Free Relative Energy Ethics'' is a deliberate echo: FREE agents maximize the goal frontier of their society in the same way that FEP agents minimize prediction error relative to their model. Both frameworks produce agents that maintain coherent, accurate world models --- FEP because minimizing surprise requires accurate prediction, GFM because $\vol(G)$ estimation requires knowing what capabilities exist and how actions affect them. Both produce agents that adapt: FEP agents update their models when surprised, GFM agents update their policy when the frontier shifts. And both produce agents with a kind of intrinsic stability: the FEP agent resists entropy because disorder is surprising; the GFM agent resists destruction because destruction contracts the frontier.
+GFM's trust maintenance dynamics (Appendix~\ref{app:trust_model}, Section~C.3) implement the same mathematical operation at the world-model level:
 
-The differences are in objective and scope. FEP is a descriptive principle for how biological systems behave given their physical constraints; it does not prescribe what a system should optimize or how to construct one. GFM is normative: it specifies a target ($\vol(G)$) and derives properties of agents that optimize it. FEP is individual-centered, characterizing the internal model of a single organism. GFM is social, characterizing the joint capability space of a population. The echo is real, but GFM is not derived from FEP --- the connection is structural resonance and shared intuition about what it means for an agent to be coherent and adaptive, not a formal reduction.
+\begin{remark}[GFM--FEP Structural Correspondence]
+\label{rem:fep_correspondence}
+Define the following correspondence between the two frameworks:
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{FEP} & \textbf{GFM} \\
+\midrule
+Variational free energy $\mathcal{F}_t$ & Self-prediction error $\sigma_s^2(t)$ \\
+Generative model $p(s, o)$ & World model $M_k(G)$ \\
+Posterior belief $q(s \mid o)$ & Trust-weighted estimate $\hat{V}$ \\
+Belief update (perception) & Model update (Equation~\eqref{eq:model_update}) \\
+Active inference (action) & GFM optimization loop (Section~\ref{subsec:optimization_loop}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+Under stationarity of the environment, $\sigma_s^2(t) \to \mathbb{E}[r_s^2]$ (Equation~\eqref{eq:convergence}), the GFM actor's world-model dynamics minimize mean squared prediction error---formally equivalent to minimizing $\mathcal{F}$ under a Gaussian generative model. Both frameworks produce agents whose coherent world models emerge from prediction-error minimization rather than from a separate accuracy objective.
+\end{remark}
+
+The differences are in scope and direction. FEP is descriptive---it characterizes how biological systems behave; it does not prescribe a target or prove properties of agents that optimize it. GFM is normative---it specifies $\vol(G)$ and derives the self-balancing property. FEP is individual-centered; GFM is population-centered. Remark~\ref{rem:fep_correspondence} establishes that the model-maintenance component of GFM is an instance of the mathematical structure FEP describes, but the $\vol(G)$ objective and its self-balancing consequences are not derived from any biological imperative---they follow from measure monotonicity applied to a joint capability space.
 
 \subsection{Constitutional AI and RLHF}
 \label{sec:connections_rlhf}

@@ -105,9 +105,9 @@ where $\alpha_s$ and $\beta_s$ are the self-trust decay and sensitivity paramete
 
 The model update (Equation~\eqref{eq:model_update}) combines both:
 \[
-M_k'(G) = M_k(G) + T_k \cdot T_s \cdot f(R_k \mid M_k(G)) \cdot \mathbf{1}[\Delta E(R_k, M_k(G)) > \theta]
+M_k'(G) = M_k(G) + T_k \cdot (1 - T_s) \cdot f(R_k \mid M_k(G)) \cdot \mathbf{1}[\Delta E(R_k, M_k(G)) > \theta]
 \]
-When $T_s$ is high, the actor trusts its current model and accepted updates are scaled down (the factor $T_s$ appears in a product with $T_k$, so the update is modulated by both). When $T_s$ is low, the actor's confidence in its model is reduced, and it is more receptive to revisions.
+When $T_s$ is high, the actor trusts its current model and accepted updates are scaled down: the learning rate $(1 - T_s)$ is small, so only strong evidence above the activation energy threshold produces meaningful revision. When $T_s$ is low, the actor's confidence in its model is reduced, the learning rate $(1 - T_s)$ is large, and the model admits many updates---the bootstrapping phase.
 
 \paragraph{Formal relationship to $\vol(G)$.} Self-trust connects to the $\vol(G)$ objective through the optimization loop. An actor with inaccurate self-trust---either too high (overconfident, resistant to correction) or too low (underconfident, vulnerable to manipulation)---will make suboptimal action selections, because its estimates $\Deltahat(\pi)$ will be miscalibrated. The self-prediction residual in Equation~\eqref{eq:self_residual} provides the feedback signal that calibrates $T_s$: when the actor's predictions consistently match reality, $T_s$ rises, and the actor appropriately maintains its current model; when predictions fail, $T_s$ drops, and the actor becomes more receptive to model revision.
 
