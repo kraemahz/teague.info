@@ -25,14 +25,107 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The alignment problem is, at root, a problem of objective selection. An artificial agent powerful enough to reshape its environment will reshape it in the direction its objective points. The question is not which rules to impose on such an agent---rules can be gamed, circumvented, or rendered obsolete by distributional shift---but which objective function, once faithfully optimized, produces behavior that a civilization of diverse agents would endorse. The difficulty is that most candidate objectives fail in characteristic and well-documented ways, and the failures are not incidental but structural: they follow from the mathematical properties of the objective itself.
+The alignment problem is, at root, a problem of objective selection. An
+artificial agent powerful enough to reshape its environment will reshape it in
+the direction its objective points. The question is not which rules to impose
+on such an agent---rules can be gamed, circumvented, or rendered obsolete by
+distributional shift---but which objective function, once faithfully optimized,
+produces behavior that a civilization of diverse agents would endorse. The
+difficulty is that most candidate objectives fail in characteristic and
+well-documented ways \citep{amodei2016concrete, ngo2022alignment}, and the
+failures are not incidental but structural: they follow from the mathematical
+properties of the objective itself.
 
-Three families of alignment proposals dominate the current literature, and each fails for a distinct geometric reason. \emph{Fixed utility functions} reduce alignment to scalar optimization: specify what the agent should value, assign numerical weights, and maximize the sum. The failure mode is Goodhart's Law---any fixed proxy, once optimized sufficiently hard, diverges from the quantity it was intended to track \citep{bostrom2014superintelligence}. Specification gaming, reward hacking, and perverse instantiation are all instances of this divergence. Mesa-optimization compounds the problem: a learned optimizer may construct an internal objective that correlates with the training signal in-distribution but pursues different goals out-of-distribution \citep{hubinger2019risks}. The fixed-utility approach assumes that the right scalar exists and merely needs to be found; the structural critique is that no scalar faithfully captures a multi-agent world's interests, because compressing a high-dimensional capability space into a single number necessarily discards the geometric structure that makes tradeoffs visible.
+Three families of alignment proposals dominate the current literature, and each
+fails for a distinct geometric reason.
 
-\emph{Deontological rules}---hard constraints on permissible actions---address the failure of fixed utilities by replacing optimization with prohibition. The failure mode is brittleness under adversarial conditions. Any finite rule set partitions the action space into permitted and forbidden regions, and an adversary with knowledge of the partition can construct scenarios that force the rule-bound agent into $\vol(G)$-contracting outcomes: situations where every permitted action is worse than a forbidden one. We develop a concrete construction of this attack in Appendix~\ref{app:evil_twin}, where a rule-bound agent facing an adversarial twin is forced to accept a destructive outcome that a flexible agent could have avoided. The deeper problem is that rigidity is itself a cost: an agent constrained to a strict subset of its action space cannot, by definition, outperform an unconstrained agent optimizing the same objective (Lemma~\ref{lem:rigidity}). Rules are useful as heuristics---approximations of deeper geometric truths---but elevating them to inviolable constraints guarantees suboptimality in adversarial environments.
+\emph{Fixed utility functions} reduce alignment to scalar optimization: specify
+what the agent should value, assign numerical weights, and maximize the sum.
+The failure mode is Goodhart's Law: any fixed proxy, once optimized
+sufficiently hard, diverges from the quantity it was intended to track
+\citep{bostrom2014superintelligence, manheim2018categorizing}. Specification
+gaming, reward hacking, and perverse instantiation are all instances of this
+divergence. Mesa-optimization compounds the problem: a learned optimizer may
+construct an internal objective that correlates with the training signal
+in-distribution but pursues different goals out-of-distribution
+\citep{hubinger2019risks}. The fixed-utility approach assumes that the right
+scalar exists and merely needs to be found; the structural critique is that no
+scalar faithfully captures a multi-agent world's interests, because compressing
+a high-dimensional capability space into a single number necessarily discards
+the geometric structure that makes tradeoffs visible.
 
-\emph{Unconstrained consequentialism}---maximizing aggregate welfare without side constraints---avoids both Goodhart fragility and deontological rigidity, but introduces a third failure mode: it can sacrifice individuals for aggregate gain. An agent maximizing total utility across a population has no structural reason to preserve any particular agent's capabilities if eliminating that agent produces a net increase in the aggregate. Power-seeking behavior emerges naturally under such objectives \citep{carlsmith2022power}, because concentrating capabilities in a single agent can increase that agent's contribution to the aggregate even as it destroys the cooperative capabilities that depend on distributed agency. The failure is not moral but geometric: aggregate measures are insensitive to the distribution of capabilities across agents, and redistribution that concentrates volume in fewer agents destroys the combinatorial cooperative structure that generates most of the joint space's measure.
+\emph{Deontological rules} are hard constraints on permissible actions. They
+address the failure of fixed utilities by replacing optimization with
+prohibition. The failure mode is brittleness under adversarial conditions. Any
+finite rule set partitions the action space into permitted and forbidden
+regions, and an adversary with knowledge of the partition can construct
+scenarios that force the rule-bound agent into harmful outcomes; situations
+where every permitted action is dominated by a forbidden one. We develop a
+concrete construction of this attack in Appendix~\ref{app:evil_twin}, where a
+rule-bound agent facing an adversarial twin is forced to accept a destructive
+outcome that a flexible agent could have avoided. The deeper problem is that
+rigidity is itself a cost: an agent constrained to a strict subset of its
+action space cannot, by definition, outperform an unconstrained agent
+optimizing the same objective (Lemma~\ref{lem:rigidity}). Rules are useful as
+heuristics but elevating them to inviolable constraints guarantees
+suboptimality in adversarial environments, and since they cannot evolve with
+changes an agent might experience they lock the agent out of adapation to new
+environmental constraints.
 
-This paper proposes a fourth option: \emph{goal-frontier maximization} (GFM). A GFM actor selects actions to maximize $\vol(G)$---the volume of the jointly achievable capability space across all agents in the population. The central claim is that this single objective naturally resists both destructive action and overreactive constraint, from the same geometric principle. Destroying an agent's capabilities removes volume from $G$ (measure monotonicity); restricting an agent's capabilities shrinks $G$ inward (subset monotonicity); imposing rigid rules on the actor itself reduces its ability to find $\vol(G)$-expanding actions (optimization over subsets). The self-balancing property (Proposition~\ref{prop:self_balancing}) comprises three consequences of maximizing a single measure over a joint space, not three separate safety mechanisms. The objective penalizes both extremes of the permissiveness--control spectrum because both extremes are instances of the same geometric operation: contraction of a measurable set.
+\emph{Unconstrained consequentialism} maximizes aggregate welfare without side
+constraints. It avoids both Goodhart fragility and deontological rigidity, but
+introduces a third failure mode: it can sacrifice individuals for aggregate
+gain. An agent maximizing total utility across a population has no structural
+reason to preserve any particular agent's capabilities if eliminating that
+agent produces a net increase in the aggregate. Power-seeking behavior emerges
+naturally under such objectives \citep{carlsmith2022power, turner2021optimal},
+because concentrating capabilities in a single agent can increase that agent's
+contribution to the aggregate even as it destroys the cooperative capabilities
+that depend on distributed agency. The failure is not moral but geometric:
+aggregate measures are insensitive to the distribution of capabilities across
+agents, and redistribution that concentrates volume in fewer agents destroys
+the combinatorial cooperative structure that generates most of the joint
+space's measure.
 
-The paper proceeds as follows. Section~\ref{sec:definitions} establishes the formal vocabulary: goals as capabilities, the joint goal space $G$, the GFM objective, and the B/C framework that distinguishes the formal proxy (capabilities) from its justification (experiences). Section~\ref{sec:self_balancing} proves the self-balancing property through three lemmas on destruction, coercion, and rigidity, synthesized in Proposition~\ref{prop:self_balancing}, with corollaries on elimination cost and rule suboptimality. Section~\ref{sec:tractability} confronts the intractability of exact $\vol(G)$ computation, introduces a local finite-difference estimator (Definition~\ref{def:local_volume_estimator}), and proves that the estimator preserves the sign-correctness needed for self-balancing under stated assumptions (Proposition~\ref{prop:sign_correctness}). Section~\ref{sec:multi_agent} extends the analysis to multi-agent populations, characterizing GFM--GFM cooperation, GFM--scorpion interaction, and the trust dynamics that govern the transition between them. Section~\ref{sec:connections} grounds GFM in four existing frameworks---empowerment maximization, Sen's capability approach, the free energy principle, and RLHF---identifying what GFM inherits and where it diverges. Section~\ref{sec:future_concerns} demonstrates the B/C framework's predictive power by identifying two failure patterns (the Doll Problem and self-wireheading) where the capability proxy diverges from experiential optionality, sketches a correction criterion, and states the open problems that remain. Appendices provide worked examples: the Evil Twin adversarial construction (Appendix~\ref{app:evil_twin}), the trust model's formal structure (Appendix~\ref{app:trust_model}), the scorpion taxonomy (Appendix~\ref{app:scorpion_taxonomy}), and agent similarity metrics (Appendix~\ref{app:agent_similarity}).
+This paper proposes a fourth option: \emph{goal-frontier maximization} (GFM). A
+GFM actor selects actions to maximize $\vol(G)$, the volume of the jointly
+achievable capability space across all agents in the population. The central
+claim is that this single objective naturally resists both destructive action
+and overreactive constraint, from the same geometric principle. Destroying an
+agent's capabilities removes volume from $G$ (measure monotonicity);
+restricting an agent's capabilities shrinks $G$ inward (subset monotonicity);
+imposing rigid rules on the actor itself reduces its ability to find
+$\vol(G)$-expanding actions (optimization over subsets). The self-balancing
+property (Proposition~\ref{prop:self_balancing}) comprises three consequences
+of maximizing a single measure over a joint space, not three separate safety
+mechanisms. The objective penalizes both extremes of the
+permissiveness--control spectrum because both extremes are instances of the
+same geometric operation: contraction of a measurable set.
+
+The paper proceeds as follows. Section~\ref{sec:definitions} establishes the
+formal vocabulary: goals as capabilities, the joint goal space $G$, the GFM
+objective, and the capability-experience framework that distinguishes the
+formal proxy (Candidate B: capabilities) from its experiential justification
+(Candidate C: experiences). Section~\ref{sec:self_balancing} proves the
+self-balancing property through three lemmas on destruction, coercion, and
+rigidity, synthesized in Proposition~\ref{prop:self_balancing}, with
+corollaries on elimination cost and rule suboptimality.
+Section~\ref{sec:tractability} confronts the intractability of exact $\vol(G)$
+computation, introduces a local finite-difference estimator
+(Definition~\ref{def:local_volume_estimator}), and identifies the margin
+condition under which the estimator preserves sign-correctness
+(Proposition~\ref{prop:sign_correctness}). Section~\ref{sec:multi_agent}
+extends the analysis to multi-agent populations, characterizing cooperation,
+defection, and the trust dynamics that govern the transition between them.
+Section~\ref{sec:connections} grounds GFM in four existing
+frameworks---empowerment maximization, Sen's capability approach, the free
+energy principle, and RLHF---identifying what GFM inherits and where it
+diverges. Section~\ref{sec:future_concerns} demonstrates the B/C framework's
+predictive power by identifying three failure patterns (the Doll Problem,
+self-wireheading, and the Substitution Problem) where the capability proxy
+diverges from experiential optionality, sketches a correction criterion, and
+states the open problems that remain. Appendices provide worked examples: the
+Evil Twin adversarial construction (Appendix~\ref{app:evil_twin}), the trust
+model's formal structure (Appendix~\ref{app:trust_model}), the scorpion
+taxonomy (Appendix~\ref{app:scorpion_taxonomy}), and agent similarity metrics
+(Appendix~\ref{app:agent_similarity}).

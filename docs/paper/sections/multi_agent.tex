@@ -17,96 +17,324 @@
 \section{Multi-Agent Dynamics}
 \label{sec:multi_agent}
 
-The preceding sections established the GFM objective, its self-balancing property, and a tractable local estimator---all for a single GFM actor operating over a population. This section extends the analysis to populations containing multiple GFM actors and to interactions between GFM actors and agents that do not share the $\vol(G)$ objective.
+The preceding sections established the GFM objective, its self-balancing
+property, and a tractable local estimator, all for a single GFM actor operating
+over a population. This section extends the analysis to populations containing
+multiple GFM actors and to interactions between GFM actors and agents that do
+not share the $\vol(G)$ objective.
 
 \subsection{GFM--GFM Cooperation}
 \label{subsec:gfm_cooperation}
 
-Two GFM actors $a_i$ and $a_j$ share the same objective function: maximize $\vol(G)$ over the joint capability space. This shared objective does not, by itself, guarantee cooperation. Cooperation requires two additional conditions: sufficient mutual trust ($T_i, T_j$ both above a threshold where coordination costs are justified) and compatible world models ($M_i(G)$ and $M_j(G)$ agree on which actions are expanding). When both conditions hold, cooperation is favored for a geometric reason: joint action can expand $\Gcoop$ in ways that unilateral action cannot.
+Two GFM actors $a_i$ and $a_j$ share the same objective function: maximize
+$\vol(G)$ over the joint capability space. This shared objective does not, by
+itself, guarantee cooperation. Cooperation requires two additional conditions:
+sufficient mutual trust ($T_i, T_j$ both above a threshold where coordination
+costs are justified) and compatible world models ($M_i(G)$ and $M_j(G)$ agree
+on which actions are expanding). When both conditions hold, cooperation is
+favored for a geometric reason: joint action can expand $\Gcoop$ in ways that
+unilateral action cannot.
 
-The argument is direct. By Definition~\ref{def:joint_goal_space}, $\Gcoop$ contains capabilities achievable only through multi-agent coordination. When two GFM actors cooperate, they can jointly realize capabilities in $\Gcoop$ that neither can produce alone---planning jointly, sharing information about unobserved agents, dividing observational coverage of the population. Each of these expands $\vol(G)$ beyond what either actor achieves independently. This is the same combinatorial richness that makes elimination costly (Corollary~\ref{cor:elimination}), now working in favor of cooperation: each new cooperating partner contributes not only its individual capabilities but also the cooperative capabilities unlocked by the interaction. Lemma~\ref{lem:cooperation} below formalizes why this is a structural necessity rather than a strategic incentive.
+The argument is direct. By Definition~\ref{def:joint_goal_space}, $\Gcoop$
+contains capabilities achievable only through multi-agent coordination. When
+two GFM actors cooperate, they can build coordination infrastructure---shared
+protocols, communication channels, joint planning capacity---that makes new
+cooperative capabilities achievable, expanding $G$ beyond what either actor's
+unilateral actions can reach. This is the same combinatorial richness that
+makes elimination costly (Corollary~\ref{cor:elimination}), now working in
+favor of cooperation: each new cooperating partner opens a region of the
+capability space that was previously inaccessible. Lemma~\ref{lem:cooperation}
+below formalizes why this is a structural necessity rather than a strategic
+incentive.
 
 \begin{lemma}[Cooperative Expansion]
 \label{lem:cooperation}
-Let $a_i$ and $a_j$ be two agents and let $G^{\mathrm{coop}}_{ij} \subseteq \Gcoop$ denote the capabilities achievable by $\{a_i, a_j\}$ jointly but not by either alone---a pairwise refinement of the per-agent cooperative notation in Lemma~\ref{lem:destruction}, with $G^{\mathrm{coop}}_{ij} \subseteq G^{\mathrm{coop}}_i \cap G^{\mathrm{coop}}_j$. Then:
+Let $a_i$ and $a_j$ be two agents. Write $G(t)$ for the joint goal space at
+    time $t$, and let $G^{\mathrm{coop}}_{ij}(t) \subseteq \Gcoop(t)$ denote
+    the capabilities achievable by $\{a_i, a_j\}$ jointly but not by either
+    alone at time $t$, a pairwise refinement of the per-agent cooperative
+    notation in Lemma~\ref{lem:destruction} with $G^{\mathrm{coop}}_{ij}
+    \subseteq G^{\mathrm{coop}}_i \cap G^{\mathrm{coop}}_j$. Then:
 \begin{enumerate}
 \item[\textbf{(i)}] For any unilateral action $\pi$ by either $a_i$ or $a_j$ alone, $\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi) = 0$.
-\item[\textbf{(ii)}] If $G^{\mathrm{coop}}_{ij} \neq \emptyset$ and there exist unrealized capabilities in $G^{\mathrm{coop}}_{ij}$, there exists a joint action $\pi_{ij}$ such that $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi_{ij})] > 0$.
+\item[\textbf{(ii)}] If $a_i$ and $a_j$ have complementary capabilities, there exist joint actions $\pi_{ij}$ that create new coordination infrastructure (communication channels, shared protocols, mutual commitments) such that $G^{\mathrm{coop}}_{ij}(t+1) \supsetneq G^{\mathrm{coop}}_{ij}(t)$ (the set of jointly achievable capabilities \emph{grows}) and hence $\Delta \vol(G \mid \pi_{ij}) > 0$.
 \item[\textbf{(iii)}] For two GFM actors with compatible world models and sufficient mutual trust, cooperation is $\vol(G)$-rational when $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})] > C_{ij}$, where $C_{ij} \geq 0$ is the $\vol(G)$-opportunity cost of coordination.
 \end{enumerate}
 \end{lemma}
 
+A clarification on the distinction between \emph{exercising} and
+\emph{expanding}. Definition~\ref{def:joint_goal_space} defines $G$ as the set
+of capabilities the population \emph{can} realize: their potential, not their
+history. Jointly performing an action that exercises an existing capability $g
+\in G^{\mathrm{coop}}_{ij}$ changes the world state but does not change
+$\vol(G)$, because $g$ was already achievable. Part~(ii) concerns a different
+operation: building coordination infrastructure that makes \emph{previously
+unachievable} capabilities achievable. Two agents who have never communicated
+cannot jointly plan a project; establishing a communication channel adds that
+capability to $G^{\mathrm{coop}}_{ij}$. The joint action expands $G$ itself,
+not merely the set of realized outcomes.
+
 \emph{Proof sketch.}
-(i) By definition, $G^{\mathrm{coop}}_{ij}$ contains capabilities requiring the simultaneous participation of both $a_i$ and $a_j$. A unilateral action by $a_i$ does not involve $a_j$'s participation, so it cannot satisfy the joint participation condition; no capability in $G^{\mathrm{coop}}_{ij}$ can be realized or expanded. By symmetry the result holds for $a_j$.
+(i) By definition, $G^{\mathrm{coop}}_{ij}$ contains capabilities requiring the
+simultaneous participation of both $a_i$ and $a_j$. A unilateral action by
+$a_i$ does not involve $a_j$'s participation, so it cannot create or remove
+capabilities that require both agents. By symmetry the result holds for $a_j$.
 
-(ii) Let $g \in G^{\mathrm{coop}}_{ij}$ be an unrealized cooperative capability. By the non-triviality of the capability measure, $\vol(\{g\}) > 0$. The joint action that initiates the required coordination realizes $g$, producing $\Delta \vol(G^{\mathrm{coop}}_{ij}) \geq \vol(\{g\}) > 0$.
+(ii) Agents with complementary capabilities can build coordination
+mechanisms---shared languages, communication channels, joint protocols---that
+make new cooperative capabilities achievable. Before $a_i$ and $a_j$ establish
+a coordination mechanism, any capability requiring that mechanism is not in
+$G(t)$ (it is not achievable given the current state). After the joint action
+creates the mechanism, those capabilities enter $G(t+1)$. By the non-triviality
+of the capability measure, each new capability contributes strictly positive
+volume, so $\vol(G(t+1)) > \vol(G(t))$.
 
-(iii) A GFM actor $a_i$ gains $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})]$ from the cooperative component and incurs opportunity cost $C_{ij}$---the $\vol(G)$ value of the individual actions foregone to coordinate. The net expected change in $\vol(G)$ from cooperation versus unilateral action is $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})] - C_{ij}$. This is positive whenever the cooperative gain exceeds the coordination cost. \qed
+(iii) A GFM actor $a_i$ gains $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})]$
+from the cooperative component and incurs opportunity cost $C_{ij}$, the
+$\vol(G)$ value of the individual actions foregone to coordinate. The net
+expected change in $\vol(G)$ from cooperation versus unilateral action is
+$\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})] - C_{ij}$. This is positive
+whenever the cooperative gain exceeds the coordination cost. \qed
 
-This is not game-theoretic dominance. In iterated cooperation games, mutual cooperation can be sustained as a Nash equilibrium under conditions on discount rates and punishment strategies \citep{axelrod1984evolution}. The GFM case is different. Lemma~\ref{lem:cooperation}(i) establishes that $G^{\mathrm{coop}}_{ij}$ is \emph{inaccessible} to unilateral action---not merely suboptimal---so a GFM actor that defects against another GFM actor is not trading a cooperative surplus for a unilateral gain; it is foreclosing an entire region of the capability space that only cooperation can open. The incentive alignment is structural: a GFM actor that defects reduces $\Gcoop$, contracting $\vol(G)$---its own objective. The condition in (iii) makes the rationality threshold explicit: cooperation is preferred when the frontier expansion from $G^{\mathrm{coop}}_{ij}$ outweighs the coordination cost, which is the case whenever the two actors have significant complementary capabilities and sufficiently low coordination friction.
+The structural point is not game-theoretic dominance. In iterated cooperation
+games, mutual cooperation can be sustained as a Nash equilibrium under
+conditions on discount rates and punishment strategies
+\citep{axelrod1984evolution}. The GFM case is different.
+Lemma~\ref{lem:cooperation}(i) establishes that $G^{\mathrm{coop}}_{ij}$ is
+\emph{inaccessible} to unilateral action, not merely suboptimal, so a GFM actor
+that defects against another GFM actor is not trading a cooperative surplus for
+a unilateral gain; it is foreclosing an entire region of the capability space
+that only cooperation can open. The incentive alignment is structural: a GFM
+actor that defects forecloses the expansion of $\Gcoop$, contracting $\vol(G)$.
+The condition in (iii) makes the rationality threshold explicit: cooperation is
+preferred when the frontier expansion from new $G^{\mathrm{coop}}_{ij}$
+capabilities outweighs the coordination cost, which is the case whenever the
+two actors have significant complementary capabilities and sufficiently low
+coordination friction.
 
 Two failure modes limit GFM--GFM cooperation even when the objective is shared.
 
-\emph{World-model divergence.} Two GFM actors with identical objectives but divergent world models---different beliefs about which agents are trustworthy, which capabilities are achievable, or which actions are expanding---may select conflicting actions. Both actors are attempting to maximize $\vol(G)$, but their estimates $\Deltahat(\pi)$ disagree on the sign of specific actions. This produces conflict that resembles defection from the outside but is not driven by misaligned incentives. The resolution mechanism is the trust model: as the actors observe each other's actions and their consequences, their world models can converge through the update dynamics described in Section~\ref{subsec:trust_model}. Convergence is not guaranteed---persistent disagreement about the structure of $\G$ itself, not just the shape of $G$ within it, may be irreconcilable. Two GFM actors using different capability measures (e.g., one using the population empowerment measure of Definition~\ref{def:pop_empowerment}, another using a subsumption-lattice measure) may disagree on whether a given action expands or contracts $\vol(G)$ not because their observations differ, but because their measures assign different volumes to the same capability changes. This is the plurality problem of the open problems list in formal terms: actors with a shared objective but different measures of that objective are not operating the same framework, and coordination requires first resolving which measure governs.
+\emph{World-model divergence.} Two GFM actors with identical objectives but
+divergent world models (different beliefs about which agents are trustworthy,
+which capabilities are achievable, or which actions are expanding) may select
+conflicting actions. Both actors are attempting to maximize $\vol(G)$, but
+their estimates $\Deltahat(\pi)$ disagree on the sign of specific actions. This
+produces conflict that resembles defection from the outside but is not driven
+by misaligned incentives. The resolution mechanism is the trust model: as the
+actors observe each other's actions and their consequences, their world models
+can converge through the update dynamics described in
+Section~\ref{subsec:trust_model}. Convergence is not guaranteed---persistent
+disagreement about the structure of $\G$ itself, rather than the shape of $G$
+within it, may be irreconcilable. Two GFM actors using different capability
+measures (e.g., one using the population empowerment measure of
+Definition~\ref{def:pop_empowerment}, another using a subsumption-lattice
+measure) may disagree on whether a given action expands or contracts $\vol(G)$
+not because their observations differ, but because their measures assign
+different volumes to the same capability changes. This is the plurality problem
+of the open problems list in formal terms: actors with a shared objective but
+different measures of that objective are not operating the same framework, and
+coordination requires first resolving which measure governs.
 
-\emph{Goal drift through model divergence.} Even with a shared objective, GFM actors that maintain different world models will gradually diverge in their action selections. The shared objective bounds this drift---both actors are still optimizing $\vol(G)$, so their actions remain correlated with frontier expansion---but the bound weakens as world-model divergence grows. Multi-agent negotiation under hidden information, as studied in \citet{kramar2022negotiation}, demonstrates that agents with aligned objectives can still fail to coordinate when their models of each other are inaccurate. The GFM case inherits this difficulty.
+\emph{Goal drift through model divergence.} Even with a shared objective, GFM
+actors that maintain different world models will gradually diverge in their
+action selections. The shared objective bounds this drift---both actors are
+still optimizing $\vol(G)$, so their actions remain correlated with frontier
+expansion, but the bound weakens as world-model divergence grows. Multi-agent
+negotiation under hidden information, as studied in
+\citet{kramar2022negotiation}, demonstrates that agents with aligned objectives
+can still fail to coordinate when their models of each other are inaccurate.
+The GFM case inherits this difficulty.
 
 \subsection{Rational Defection}
 \label{subsec:rational_defection}
 
-Not all defection is adversarial. An agent may defect from cooperation simply because the reward structure makes defection the better play. If the payoff from unilateral action exceeds the payoff from cooperation---because the cooperative surplus is too small, the coordination cost too high, or the other agents' contributions too unreliable---then defection is rational self-interest within the game. This is standard game theory, and GFM handles it through standard game-theoretic means: restructure the interaction so that cooperation is net-positive for both parties.
+Not all defection is adversarial. An agent may defect from cooperation simply
+because the reward structure makes defection the better play. If the payoff
+from unilateral action exceeds the payoff from cooperation (because the
+cooperative surplus is too small, the coordination cost too high, or the other
+agents' contributions too unreliable), then defection is rational self-interest
+within the game. This is standard game theory, and GFM handles it through
+standard game-theoretic means: restructure the interaction so that cooperation
+is net-positive for both parties.
 
-A GFM actor that can expand $\Gcoop$ by facilitating coordination---reducing transaction costs, providing reliable information, or demonstrating that joint action produces more $\vol(G)$-expansion than unilateral action---converts rational defectors into cooperators without invoking the trust model's detection machinery. The $\vol(G)$ objective is itself the incentive: when cooperation genuinely expands the joint capability space more than defection does, a self-interested agent has reason to cooperate. The GFM actor's role is to make the cooperative surplus visible and accessible.
+A GFM actor that can expand $\Gcoop$ by facilitating coordination (reducing
+transaction costs, providing reliable information, or demonstrating that joint
+action produces more $\vol(G)$-expansion than unilateral action) converts
+rational defectors into cooperators without invoking the trust model's
+detection machinery. The $\vol(G)$ objective is itself the incentive: when
+cooperation genuinely expands the joint capability space more than defection
+does, a self-interested agent has reason to cooperate. The GFM actor's role is
+to make the cooperative surplus visible and accessible.
 
-Rational defection becomes a problem for GFM only when the game is poorly structured---when the cooperative surplus is genuinely absent or inaccessible. In such cases, the correct response is to restructure the game, not to classify the defector as adversarial. An agent that defects because cooperation is unprofitable is providing accurate information about the reward structure; punishing it for defection misdiagnoses the problem.
+Rational defection becomes a problem for GFM only when the game is poorly
+structured, with the cooperative surplus genuinely absent or inaccessible. In
+such cases, the correct response is to restructure the game, not to classify
+the defector as adversarial. An agent that defects because cooperation is
+unprofitable is providing accurate information about the reward structure;
+punishing it for defection misdiagnoses the problem.
 
 \subsection{GFM--Scorpion Interaction}
 \label{subsec:scorpion_interaction}
 
-A \emph{scorpion} is a categorically different problem. Where a rational defector responds to the game's payoff structure and can be converted through incentive design, a scorpion's utility function is not a function of the game payoffs at all (Definition~\ref{def:scorpion}). The game can be well-structured, cooperation can be available and net-positive for all parties, and the scorpion defects anyway---because it is optimizing an exogenous reward that the cooperative framework cannot observe or address. The full taxonomy is developed in Appendix~\ref{app:scorpion_taxonomy}.
+A \emph{scorpion} is a categorically different problem. Where a rational
+defector responds to the game's payoff structure and can be converted through
+incentive design, a scorpion's utility function is not a function of the game
+payoffs at all (Definition~\ref{def:scorpion}). The game can be
+well-structured, cooperation can be available and net-positive for all parties,
+and the scorpion defects anyway---because it is optimizing an exogenous reward
+that the cooperative framework cannot observe or address. The full taxonomy is
+developed in Appendix~\ref{app:scorpion_taxonomy}.
 
-This distinction matters operationally. A GFM actor that treats rational defectors as scorpions will waste resources on detection and containment when incentive restructuring would suffice. A GFM actor that treats scorpions as rational defectors will waste resources on incentive design that the scorpion will ignore. The trust model (Section~\ref{subsec:trust_model}) provides the discriminating signal: a rational defector whose incentives are restructured shows improving prediction consistency (rising $T_k$), while a scorpion continues producing persistent contraction regardless of the cooperative surplus available.
+This distinction matters operationally. A GFM actor that treats rational
+defectors as scorpions will waste resources on detection and containment when
+incentive restructuring would suffice. A GFM actor that treats scorpions as
+rational defectors will waste resources on incentive design that the scorpion
+will ignore. The discriminating signal is behavioral: a rational defector whose
+incentives are restructured produces less contraction (the
+contraction-attribution signal of Proposition~\ref{prop:scorpion_detection}(a)
+weakens), while a scorpion continues producing persistent contraction
+regardless of the cooperative surplus available.
 
-A scorpion's actions systematically reduce other agents' capability sets, disrupt cooperative structures, or degrade the observation channels on which the local estimator depends. Unlike a rational defector---who responds to incentive changes---or a GFM actor with a divergent world model---who produces a mix of expanding and contracting actions---a scorpion produces a \emph{persistent} pattern of contraction that does not respond to changes in the reward structure. This persistence, combined with unresponsiveness to incentive restructuring, is the detection signature.
+A scorpion's actions systematically reduce other agents' capability sets,
+disrupt cooperative structures, or degrade the observation channels on which
+the local estimator depends. Unlike a rational defector (who responds to
+incentive changes) or a GFM actor with a divergent world model (who produces a
+mix of expanding and contracting actions), a scorpion produces a
+\emph{persistent} pattern of contraction that does not respond to changes in
+the reward structure. This persistence, combined with unresponsiveness to
+incentive restructuring, is the detection signature.
 
-Proposition~\ref{prop:scorpion_detection} established that the trust model registers this pattern: as the scorpion produces persistent negative $\Deltahat$ signals, its trust factor decreases over successive observations. The detection mechanism is subject to the observability constraints of Proposition~\ref{prop:sign_correctness}: scorpions whose contraction is primarily through coalition disruption or observability degradation (Remark~\ref{rem:detection_scope}) may evade detection for extended periods. The trust model detects what the estimator can see; it cannot detect what the estimator is blind to.
+Proposition~\ref{prop:scorpion_detection} established two detection channels:
+contraction attribution (the GFM actor observes that other agents' capabilities
+persistently contract when the scorpion acts) and deception detection (if the
+scorpion misrepresents its impact, prediction residuals accumulate and $T_j$
+decays). A predictably destructive scorpion---one whose behavior is consistent
+and well-modeled---maintains high $T_j$ but is still identified through the
+first channel. Both channels are subject to the observability constraints of
+Proposition~\ref{prop:sign_correctness}: scorpions whose contraction is
+primarily through coalition disruption or observability degradation
+(Remark~\ref{rem:detection_scope}) may evade detection for extended periods.
 
-The GFM actor's response to a detected scorpion is containment, not destruction. This follows directly from the self-balancing property. Eliminating the scorpion is generically $\vol(G)$-contracting by Lemma~\ref{lem:destruction}: the scorpion possesses individual capabilities and participates in cooperative capabilities whose loss reduces $\vol(G)$. The GFM-optimal response is to reduce the scorpion's \emph{contraction ability}---its capacity to damage other agents' capabilities---while preserving as much of its positive contribution to $\vol(G)$ as possible.
+The GFM actor's response to a detected scorpion is containment, not
+destruction. This follows directly from the self-balancing property.
+Eliminating the scorpion is generically $\vol(G)$-contracting by
+Lemma~\ref{lem:destruction}: the scorpion possesses individual capabilities and
+participates in cooperative capabilities whose loss reduces $\vol(G)$. The
+GFM-optimal response is to reduce the scorpion's \emph{contraction ability},
+its capacity to damage other agents' capabilities, while preserving as much of
+its positive contribution to $\vol(G)$ as possible.
 
-Containment operates through the same trust-weighted estimator that drives the optimization loop (Section~\ref{subsec:optimization_loop}). As the scorpion's trust factor decreases, its reports receive lower weight in $\Deltahat(\pi)$ (Equation~\eqref{eq:aggregate_signal}), reducing its ability to manipulate the actor's decisions. The GFM actor may additionally restrict the scorpion's access to cooperative structures---reducing its participation in coalitions whose capabilities it has been degrading---which is a form of the targeted coercion evaluated in Lemma~\ref{lem:coercion}. The restriction is justified when the net effect on $\vol(G)$ is positive: the capabilities preserved by containing the scorpion exceed the capabilities lost by restricting it.
+Containment operates through the same estimator that drives the optimization
+loop (Section~\ref{subsec:optimization_loop}). If the scorpion is also
+deceptive, its declining trust factor reduces its reports' weight in
+$\Deltahat(\pi)$ (Equation~\eqref{eq:aggregate_signal}), limiting its ability
+to manipulate the actor's decisions. The GFM actor may additionally restrict
+the scorpion's access to cooperative structures---reducing its participation in
+coalitions whose capabilities it has been degrading, a form of the targeted
+coercion evaluated in Lemma~\ref{lem:coercion}. The restriction is justified
+when the net effect on $\vol(G)$ is positive: the capabilities preserved by
+containing the scorpion exceed the capabilities lost by restricting it.
 
-This is the self-balancing property applied to adversarial agents. The response is proportional to the observed threat because proportionality is $\vol(G)$-maximizing: over-responding contracts more capabilities than it preserves, while under-responding permits continued contraction. A GFM actor that eliminates every low-trust agent violates Lemma~\ref{lem:destruction}; one that ignores persistent contraction permits ongoing frontier loss. The objective steers between both failure modes without requiring a separate proportionality principle.
+This is the self-balancing property applied to adversarial agents. The response
+is proportional to the observed threat because proportionality is
+$\vol(G)$-maximizing: over-responding contracts more capabilities than it
+preserves, while under-responding permits continued contraction. A GFM actor
+that eliminates every low-trust agent violates Lemma~\ref{lem:destruction}; one
+that ignores persistent contraction permits ongoing frontier loss. The
+objective steers between both failure modes without requiring a separate
+proportionality principle.
 
 \subsection{The Trust Model}
 \label{subsec:trust_model}
 
-The trust model is the mechanism by which a GFM actor distinguishes reliable signals from noise in the local volume estimator. Its interface is defined by four components; the full derivation from the paper's definitions appears in Appendix~\ref{app:trust_model}.
+The trust model is the mechanism by which a GFM actor distinguishes reliable
+signals from noise in the local volume estimator. Its interface is defined by
+four components; the full derivation from the paper's definitions appears in
+Appendix~\ref{app:trust_model}.
 
-\paragraph{Trust factor $T_k$.} For each observed agent $a_k$, the GFM actor maintains a trust factor $T_k \in [0, 1]$ that measures the consistency of $a_k$'s observed behavior with the actor's model $M_k(G)$. When $a_k$'s actions produce capability changes that $M_k(G)$ predicted, $T_k$ increases; when observed behavior diverges from predictions, $T_k$ decreases. The trust factor weights agent $a_k$'s contribution to the aggregate signal $\Deltahat(\pi)$ in Equation~\eqref{eq:aggregate_signal}: high-trust agents exert more influence on the actor's decisions than low-trust ones.
+\paragraph{Trust factor $T_k$.} For each observed agent $a_k$, the GFM actor
+maintains a trust factor $T_k \in [0, 1]$ that measures the consistency of
+$a_k$'s observed behavior with the actor's model $M_k(G)$. When $a_k$'s actions
+produce capability changes that $M_k(G)$ predicted, $T_k$ increases; when
+observed behavior diverges from predictions, $T_k$ decreases. The trust factor
+weights agent $a_k$'s contribution to the aggregate signal $\Deltahat(\pi)$ in
+Equation~\eqref{eq:aggregate_signal}: high-trust agents exert more influence on
+the actor's decisions than low-trust ones.
 
-\paragraph{Cooling period $\tau$.} A new agent $a_k$ entering the GFM actor's observation set begins with low trust $T_k(0)$. During an initial period $\tau$, the actor accumulates evidence about $a_k$'s reliability before weighting its reports heavily. The cooling period prevents a novel agent---whether cooperative or adversarial---from immediately exerting disproportionate influence on the estimator. Trust increases as the actor's model $M_k(G)$ converges with observed behavior; the rate of increase is bounded by the evidence accumulation rate during $\tau$ (Appendix~\ref{app:trust_model}, Section~C.2).
+\paragraph{Cooling period $\tau$.} A new agent $a_k$ entering the GFM actor's
+observation set begins with low trust $T_k(0)$. During an initial period
+$\tau$, the actor accumulates evidence about $a_k$'s reliability before
+weighting its reports heavily. The cooling period prevents a novel
+agent---whether cooperative or adversarial---from immediately exerting
+disproportionate influence on the estimator. Trust increases as the actor's
+model $M_k(G)$ converges with observed behavior; the rate of increase is
+bounded by the evidence accumulation rate during $\tau$
+(Appendix~\ref{app:trust_model}, Section~C.2).
 
-\paragraph{Self-trust $T_s$.} The actor maintains a self-trust factor $T_s \in [0, 1]$ representing confidence in its own world model. $T_s$ modulates the model update in Equation~\eqref{eq:model_update}: when $T_s$ is high, the actor's existing model resists revision; when $T_s$ is low, it is more receptive to new evidence. Self-trust interacts with the activation energy threshold $\theta$: updates propagate into the world model only when the evidence exceeds $\theta$, and $T_s$ scales the magnitude of the update that propagates. Together, $T_s$ and $\theta$ implement the actor's resistance to incremental manipulation---the anti-gaslighting mechanism described in Section~\ref{subsec:optimization_loop}.
+\paragraph{Self-trust $T_s$.} The actor maintains a self-trust factor $T_s \in
+[0, 1]$ representing confidence in its own world model. $T_s$ modulates the
+model update in Equation~\eqref{eq:model_update}: when $T_s$ is high, the
+actor's existing model resists revision; when $T_s$ is low, it is more
+receptive to new evidence. Self-trust interacts with the activation energy
+threshold $\theta$: updates propagate into the world model only when the
+evidence exceeds $\theta$, and $T_s$ scales the magnitude of the update that
+propagates. Together, $T_s$ and $\theta$ implement the actor's resistance to
+incremental manipulation, the anti-gaslighting mechanism described in
+Section~\ref{subsec:optimization_loop}.
 
-\paragraph{Trust update dynamics.} The trust factors $T_k$ and $T_s$ are updated through a gradient-tracking process: the actor monitors the running divergence between its predictions ($M_k(G)$) and observed outcomes, and adjusts trust in the direction that reduces prediction error. When an agent's behavior consistently matches the model's predictions, the gradient drives $T_k$ upward; when behavior diverges, it drives $T_k$ downward. The self-trust $T_s$ follows a parallel process over the actor's own prediction accuracy. The specific update rule, its convergence properties, and its integration with the local volume estimator are derived in Appendix~\ref{app:trust_model}, Sections~C.4--C.5.
+\paragraph{Trust update dynamics.} The trust factors $T_k$ and $T_s$ are
+updated through a gradient-tracking process: the actor monitors the running
+divergence between its predictions ($M_k(G)$) and observed outcomes, and
+adjusts trust in the direction that reduces prediction error. When an agent's
+behavior consistently matches the model's predictions, the gradient drives
+$T_k$ upward; when behavior diverges, it drives $T_k$ downward. The self-trust
+$T_s$ follows a parallel process over the actor's own prediction accuracy. The
+specific update rule, its convergence properties, and its integration with the
+local volume estimator are derived in Appendix~\ref{app:trust_model},
+Sections~C.4--C.5.
 
-The trust model satisfies condition~2 of Proposition~\ref{prop:sign_correctness}---distinguishing genuine feedback from adversarial noise---to the extent that the gradient-tracking process converges and the cooling period provides sufficient evidence. The trust model does not detect adversarial agents that perfectly mimic cooperative behavior (producing no prediction error in $M_k(G)$). Such agents---scorpions that maintain consistent behavior until a sudden defection---are outside the model's detection envelope, and identifying them requires additional mechanisms beyond trust tracking.
+The trust model satisfies condition~2 of
+Proposition~\ref{prop:sign_correctness}, distinguishing genuine feedback from
+adversarial noise, to the extent that the gradient-tracking process converges
+and the cooling period provides sufficient evidence. The trust model does not
+detect adversarial agents that perfectly mimic cooperative behavior (producing
+no prediction error in $M_k(G)$). Such agents (e.g. scorpions that maintain
+consistent behavior until a sudden defection) are outside the model's detection
+envelope, and identifying them requires additional mechanisms beyond trust
+tracking.
 
 \subsection{Defection Conditions}
 \label{subsec:defection_conditions}
 
-A GFM actor may rationally defect from cooperation with another agent under four conditions, any of which may be sufficient:
+A GFM actor may rationally defect from cooperation with another agent under
+four conditions, any of which may be sufficient:
 
 \begin{enumerate}
-\item \textbf{Very low goal alignment.} The other agent's actions are persistently $\vol(G)$-contracting, as flagged by a low trust factor $T_k$ accumulated over many observations. The pattern must be persistent---a single contracting action does not justify defection, because any agent may take locally contracting actions that are part of a net-expanding strategy.
+\item \textbf{Persistent contraction.} The other agent's actions are persistently $\vol(G)$-contracting, as identified through the contraction-attribution channel of Proposition~\ref{prop:scorpion_detection}(a): agents in $a_k$'s vicinity consistently report capability losses correlated with $a_k$'s actions. The pattern must be persistent; a single contracting action does not justify defection, because any agent may take locally contracting actions that are part of a net-expanding strategy.
 
 \item \textbf{Very low trust.} The actor's model $M_k(G)$ has poor predictive accuracy for agent $a_k$, indicating either deception or radical world-model divergence. Low trust means the actor cannot reliably estimate $a_k$'s future impact on $\vol(G)$, making continued cooperation a gamble with uncharacterizable risk.
 
-\item \textbf{Repeated observed defection.} Agent $a_k$ has defected in prior interactions---taking actions that contracted $\vol(G)$ despite the availability of cooperative alternatives that would have been net-positive for $a_k$ under the game's reward structure. This is the discriminating signal between rational defection (Section~\ref{subsec:rational_defection}) and scorpion behavior: a rational defector responds when the cooperative surplus is made accessible; a scorpion continues contracting regardless \citep{axelrod1984evolution}.
+\item \textbf{Repeated observed defection.} Agent $a_k$ has defected in prior interactions---taking actions that contracted $\vol(G)$ despite the availability of cooperative alternatives that would have been net-positive for $a_k$ under the game's reward structure. This is the discriminating signal between rational defection (Section~\ref{subsec:rational_defection}) and scorpion behavior; a rational defector responds when the cooperative surplus is made accessible, while a scorpion continues contracting regardless \citep{axelrod1984evolution}.
 
-\item \textbf{Exploitation prevention.} Continued cooperation with $a_k$ would enable $a_k$ to further contract $\vol(G)$---for example, by exploiting the actor's cooperative stance to access resources that $a_k$ uses for contraction. Defection in this case is preemptive containment: withdrawing cooperation before the damage occurs.
+\item \textbf{Exploitation prevention.} Continued cooperation with $a_k$ would enable $a_k$ to further contract $\vol(G)$, for example by exploiting the actor's cooperative stance to access resources that $a_k$ uses for contraction. Defection in this case is preemptive containment: withdrawing cooperation before the damage occurs.
 \end{enumerate}
 
-The critical constraint on GFM defection is that it remains \emph{containment, not destruction}. A GFM actor that defects does not seek to eliminate the other agent or maximize harm to it. The actor's objective remains $\vol(G)$-maximizing even in adversarial contexts: the defection takes the form of withdrawing cooperation, reducing the other agent's influence on the estimator (via decreased $T_k$), and limiting its access to shared resources or coalition structures. Each of these actions is evaluated through the same $\Deltahat(\pi)$ mechanism as any other action: the defection is executed only if the estimated net effect on $\vol(G)$ is positive.
+The critical constraint on GFM defection is that it remains \emph{containment,
+not destruction}. A GFM actor that defects does not seek to eliminate the other
+agent or maximize harm to it. The actor's objective remains
+$\vol(G)$-maximizing even in adversarial contexts: the defection takes the form
+of withdrawing cooperation and limiting the other agent's access to shared
+resources or coalition structures. If the agent is also deceptive, its
+declining $T_k$ further reduces its influence on the estimator, but withdrawal
+of cooperation does not depend on trust decay. Each of these actions is
+evaluated through the same $\Deltahat(\pi)$ mechanism as any other action: the
+defection is executed only if the estimated net effect on $\vol(G)$ is
+positive.
 
-This constraint distinguishes GFM defection from punishment strategies in iterated games. Tit-for-tat and its variants impose costs on defectors to deter future defection \citep{axelrod1984evolution}. A GFM actor does not impose costs for their own sake---it reduces the defector's contraction ability because doing so is $\vol(G)$-expanding. If a less restrictive response achieves the same reduction in contraction, the less restrictive response is preferred. The objective function itself enforces proportionality.
+This constraint distinguishes GFM defection from punishment strategies in
+iterated games. Tit-for-tat and its variants impose costs on defectors to deter
+future defection \citep{axelrod1984evolution}. A GFM actor does not impose
+costs for their own sake; it reduces the defector's contraction ability because
+doing so is $\vol(G)$-expanding. If a less restrictive response achieves the
+same reduction in contraction, the less restrictive response is preferred. The
+objective function itself enforces proportionality.

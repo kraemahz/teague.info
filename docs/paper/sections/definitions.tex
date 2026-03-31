@@ -29,20 +29,70 @@
 
 \begin{definition}[Goal]
 \label{def:goal}
-A \emph{goal} $g \in \G$ is a capability: something an agent or coalition of agents could do or be. A goal represents an option available to an agent---a degree of freedom, a functioning, a realizable possibility---not an outcome the agent has achieved or a state of the world.
+A \emph{goal} $g \in \G$ is a capability: something an agent or coalition of
+    agents could do or be. A goal represents an option available to an agent (a
+    degree of freedom, a functioning, a realizable possibility), not an outcome
+    the agent has achieved or a state of the world.
 \end{definition}
 
-The choice of capabilities as the formal interpretation of ``goal'' is deliberate and requires justification, because the word admits at least two other natural readings. One could define goals as world-states an agent is trying to reach, which maps cleanly onto reinforcement learning but leaves the goal space unstructured---two agents pursuing ``learn piano'' and ``learn guitar'' occupy unrelated points in a high-dimensional state space with no notion of similarity. Alternatively, one could define goals as experiences an agent can have---qualia, subjective outcomes, lived satisfactions---which is the most philosophically satisfying interpretation but the hardest to formalize, since it presupposes a theory of experience we do not yet possess.
+The choice of capabilities as the formal interpretation of ``goal'' is
+deliberate and requires justification, because the word admits at least two
+other natural readings. \emph{Candidate A} reads goals as world-states an agent
+is trying to reach, which maps cleanly onto reinforcement learning but leaves
+the goal space unstructured---two agents pursuing ``learn piano'' and ``learn
+guitar'' occupy unrelated points in a high-dimensional state space with no
+notion of similarity. \emph{Candidate C} reads goals as experiences an agent
+can have (qualia, subjective outcomes, lived satisfactions), the most
+philosophically satisfying interpretation but the hardest to formalize, since
+it presupposes a theory of experience we do not yet possess.
 
-Capabilities occupy the middle ground. They inherit formal structure from empowerment maximization \citep{klyubin2005empowerment}, where an agent's empowerment is the channel capacity between its actions and resulting states---a measure of how many distinguishable futures it can reach. They connect to Sen's capability approach \citep{sen1999development}, where human development is measured not by utility or income but by the substantive freedoms people can exercise. And they avoid the measurement problems of both alternatives: state spaces for real agents are astronomically high-dimensional, while experience spaces are not yet formalizable at all.
+\emph{Candidate B} as capabilities occupies the middle ground. Capabilities
+inherit formal structure from empowerment maximization
+\citep{klyubin2005empowerment}, where an agent's empowerment is the channel
+capacity between its actions and resulting states, measuring how many
+distinguishable futures it can reach. Capabilities connect to Sen's capability
+approach \citep{sen1999development}, where human development is measured not by
+utility or income but by the substantive freedoms people can exercise. And they
+avoid the measurement problems of both alternatives: state spaces for real
+agents are astronomically high-dimensional, while experience spaces are not yet
+formalizable at all.
 
-The deeper reason for choosing capabilities is instrumental. Agents ultimately care about experiences---the subjective quality of what it is like to pursue and achieve their goals. Capabilities are the preconditions for those experiences. Money, skills, social connection, health, and optionality are all capabilities that are instrumental to the experiences agents actually want. A framework that expands capabilities without prescribing which experiences agents pursue is maximally respectful of agent autonomy.
+The deeper reason for choosing capabilities is instrumental. Agents ultimately
+care about experiences: the subjective quality of what it is like to pursue and
+achieve their goals. Capabilities are the preconditions for those experiences.
+Money, skills, social connection, health, and optionality are all capabilities
+that are instrumental to the experiences agents actually want. A framework that
+expands capabilities without prescribing which experiences agents pursue is
+maximally respectful of agent autonomy.
 
-This gives us the paper's core philosophical move: \emph{GFM does not claim to know what experiences agents want. It maximizes the capabilities that let agents choose for themselves.} The formal proofs use capabilities for three reasons: (1) capabilities have the strongest existing formal bridge via empowerment maximization, (2) the self-balancing argument is most natural in capability space, where restricting capabilities is obviously $\vol(G)$-contracting without requiring a theory of experiences, and (3) capabilities avoid the measurement problems of state space (too high-dimensional) and experience space (not yet formalizable). But experiences remain the justification---without them, a critic could ask why expanding capabilities matters if nobody exercises them. The answer: because capabilities are what let agents reach the experiences they value. We return to this distinction in Section~\ref{sec:future_concerns}, where the experience interpretation does the heavy philosophical lifting for the Doll Problem and wireheading.
+This gives us the paper's core philosophical move: \emph{GFM does not claim to
+know what experiences agents want. It maximizes the capabilities that let
+agents choose for themselves.} The formal proofs use capabilities for three
+reasons: (1) capabilities have the strongest existing formal bridge via
+empowerment maximization, (2) the self-balancing argument is most natural in
+capability space, where restricting capabilities is obviously
+$\vol(G)$-contracting without requiring a theory of experiences, and (3)
+capabilities avoid the measurement problems of state space (too
+high-dimensional) and experience space (not yet formalizable). But experiences
+remain the justification---without them, a critic could ask why expanding
+capabilities matters if nobody exercises them. Capabilities are what let agents
+reach the experiences they value. We return to this distinction in
+Section~\ref{sec:future_concerns}, where the experience interpretation does the
+heavy philosophical lifting for the Doll Problem and wireheading.
 
 \medskip
 
-An open problem accompanies this choice. The capability space $\G$ requires structure---at minimum a $\sigma$-algebra equipped with a measure---for $\vol(G)$ to be well-defined. Capabilities are not naturally a vector space (what does it mean to ``add'' two capabilities?), so the measure must be defined over a structured set, possibly a lattice with partial order (``can run a mile'' subsumes ``can walk a mile'') or a topological space where nearby capabilities are similar. The choice of measure has downstream consequences for tractability (Section~\ref{sec:tractability}) and the precise form of the self-balancing lemmas. We return to this problem with a concrete instantiation after Definition~\ref{def:social_objective} establishes what the measure must satisfy.
+An open problem accompanies this choice. The capability space $\G$ requires
+structure (at minimum a $\sigma$-algebra equipped with a measure) for $\vol(G)$
+to be well-defined. Capabilities are not naturally a vector space (what does it
+mean to ``add'' two capabilities?), so the measure must be defined over a
+structured set, possibly a lattice with partial order (``can run a mile''
+subsumes ``can walk a mile'') or a topological space where nearby capabilities
+are similar. The choice of measure has downstream consequences for tractability
+(Section~\ref{sec:tractability}) and the precise form of the self-balancing
+lemmas. We return to this problem with a concrete instantiation after
+Definition~\ref{def:social_objective} establishes what the measure must
+satisfy.
 
 % ---------------------------------------------------------------------------
 % Definition 1: Capability Space, Agent, Individual Capability Set
@@ -52,8 +102,11 @@ An open problem accompanies this choice. The capability space $\G$ requires stru
 
 \begin{definition}[Capability Space, Agent, and Individual Capability Set]
 \label{def:capability_space}
-The \emph{capability space} $\G$ is the universe of all possible capabilities---everything any agent or coalition of agents could do or be. An \emph{agent} $a_k$ is an entity with an \emph{individual capability set} $\Gind{k} \subseteq \G$: the capabilities $a_k$ can realize unilaterally given its current resources, embodiment, and environment.
-
+The \emph{capability space} $\G$ is the universe of all possible capabilities:
+    everything any agent or coalition of agents could do or be. An \emph{agent}
+    $a_k$ is an entity with an \emph{individual capability set} $\Gind{k}
+    \subseteq \G$: the capabilities $a_k$ can realize unilaterally given its
+    current resources, embodiment, and environment.
 \end{definition}
 
 % ---------------------------------------------------------------------------
@@ -64,17 +117,35 @@ The \emph{capability space} $\G$ is the universe of all possible capabilities---
 
 \begin{definition}[Joint Goal Space]
 \label{def:joint_goal_space}
-The \emph{joint goal space} $G$ for a population of agents $\{a_1, \ldots, a_n\}$ is the set of all capabilities the population can realize through any combination of individual and coordinated action:
+The \emph{joint goal space} $G$ for a population of agents $\{a_1, \ldots,
+    a_n\}$ is the set of all capabilities the population can realize through
+    any combination of individual and coordinated action:
 \begin{equation}
 \label{eq:joint_goal_space}
 G = \bigcup_k \Gind{k} \;\cup\; \Gcoop
 \end{equation}
-where $\Gcoop \subseteq \G$ contains capabilities achievable only through multi-agent cooperation. By construction, $\Gind{k} \subseteq G \subseteq \G$ for all $k$.
+where $\Gcoop \subseteq \G$ contains capabilities achievable only through
+    multi-agent cooperation. By construction, $\Gind{k} \subseteq G \subseteq
+    \G$ for all $k$.
 \end{definition}
 
-The \emph{frontier} $\partial G$ is the boundary of $G$---the locus where expansion or contraction occurs. The \emph{canonical measure} is $\vol(G)$: the volume of the jointly achievable capability space. This is the quantity we optimize.
+The \emph{frontier} $\partial G$ is the boundary of $G$---the locus where
+expansion or contraction occurs. The \emph{canonical measure} is $\vol(G)$: the
+volume of the jointly achievable capability space. This is the quantity we
+optimize.
 
-A critical feature of Equation~\eqref{eq:joint_goal_space} is that $G$ generically exceeds $\bigcup_k \Gind{k}$. Cooperation creates capabilities no individual possesses. Two agents who can each carry 50\,kg individually can jointly carry 100\,kg---a capability in $\Gcoop$ that exists in neither $\Gind{1}$ nor $\Gind{2}$. A surgeon and an anesthesiologist can jointly perform an operation that neither can perform alone. This combinatorial richness is where the joint space gets its volume: each new agent contributes not only its individual capabilities but also the cooperative capabilities unlocked by its interactions with every existing agent. This is why eliminating an agent has super-linear cost (Section~\ref{sec:self_balancing})---the cooperative capabilities lost grow combinatorially with the number of interaction partners.
+A critical feature of Equation~\eqref{eq:joint_goal_space} is that $G$
+generically exceeds $\bigcup_k \Gind{k}$. Cooperation creates capabilities no
+individual possesses. Two agents who can each carry 50\,kg individually can
+jointly carry 100\,kg, a capability in $\Gcoop$ that exists in neither
+$\Gind{1}$ nor $\Gind{2}$. A surgeon and an anesthesiologist can jointly
+perform an operation that neither can perform alone. This combinatorial
+richness is where the joint space gets its volume: each new agent contributes
+not only its individual capabilities but also the cooperative capabilities
+unlocked by its interactions with every existing agent. This is why eliminating
+an agent has super-linear cost (Section~\ref{sec:self_balancing}): the
+cooperative capabilities lost grow combinatorially with the number of
+interaction partners.
 
 % ---------------------------------------------------------------------------
 % Definition 3: Goal-Frontier Maximizer (GFM)
@@ -82,14 +153,17 @@ A critical feature of Equation~\eqref{eq:joint_goal_space} is that $G$ generical
 
 \begin{definition}[Goal-Frontier Maximizer]
 \label{def:gfm}
-A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize the expected change in the volume of the joint goal space:
+A \emph{goal-frontier maximizer} (GFM) actor selects actions $\pi$ to maximize
+    the expected change in the volume of the joint goal space:
 \begin{equation}
 \label{eq:gfm_objective}
 \pi^* = \arg\max_\pi \;\mathbb{E}\bigl[\Delta \vol(G) \mid \pi\bigr]
 \end{equation}
 \end{definition}
 
-In practice, a GFM actor optimizes an estimate of Equation~\eqref{eq:gfm_objective} rather than the exact quantity (Section~\ref{sec:tractability}).
+In practice, a GFM actor optimizes an estimate of
+Equation~\eqref{eq:gfm_objective} rather than the exact quantity
+(Section~\ref{sec:tractability}).
 
 % ---------------------------------------------------------------------------
 % Definition 4: Contraction and Expansion
@@ -97,7 +171,12 @@ In practice, a GFM actor optimizes an estimate of Equation~\eqref{eq:gfm_objecti
 
 \begin{definition}[Contraction and Expansion]
 \label{def:contraction_expansion}
-An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$ and \emph{contracting} if $\mathbb{E}[\Delta \vol(G) \mid \pi] < 0$. Contraction includes both direct contraction (destroying an agent's capabilities) and indirect contraction (restricting agency through coercion, deception, or rigid rules that reduce the realizable portion of $\G$).
+An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] >
+    0$ and \emph{contracting} if $\mathbb{E}[\Delta \vol(G) \mid \pi] < 0$.
+    Contraction includes both direct contraction (destroying an agent's
+    capabilities) and indirect contraction (restricting agency through
+    coercion, deception, or rigid rules that reduce the realizable portion of
+    $\G$).
 \end{definition}
 
 % ---------------------------------------------------------------------------
@@ -107,7 +186,8 @@ An action $\pi$ is \emph{expanding} if $\mathbb{E}[\Delta \vol(G) \mid \pi] > 0$
 
 \begin{definition}[Social Objective]
 \label{def:social_objective}
-The social objective $V(G) = \vol(G)$ is a function of the joint goal space, not a sum of individual utilities.
+The social objective $V(G) = \vol(G)$ is a function of the joint goal space,
+    not a sum of individual utilities.
 \end{definition}
 
 This definition rests on two assumptions.
@@ -121,27 +201,83 @@ Cooperative capabilities $\Gcoop$ contribute additional volume beyond the indivi
 
 \emph{Tradeoff acknowledgment.} When expanding $\Gind{j}$ requires contracting $\Gind{k}$, the GFM actor must evaluate the \emph{net} change in $\vol(G)$. The framework makes the tradeoff explicit and measurable; it does not claim all tradeoffs are resolvable.
 
-Both assumptions carry weight and the argument depends on them. Superadditivity under independence (Equation~\ref{eq:additivity}) ensures that adding agents to a population cannot decrease $\vol(G)$ when their capabilities do not interfere---a minimal compositionality requirement without which the self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold, since eliminating an agent could then be volume-neutral or even volume-increasing. If independent agents could somehow reduce joint volume by their mere presence, the geometric argument against destruction collapses. The inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq \emptyset$: cooperation contributes volume that no individual possesses alone.
+Both assumptions carry weight and the argument depends on them. Superadditivity
+under independence (Equation~\ref{eq:additivity}) ensures that adding agents to
+a population cannot decrease $\vol(G)$ when their capabilities do not
+interfere---a minimal compositionality requirement without which the
+self-balancing property (Proposition~\ref{prop:self_balancing}) would not hold,
+since eliminating an agent could then be volume-neutral or even
+volume-increasing. If independent agents could somehow reduce joint volume by
+their mere presence, the geometric argument against destruction collapses. The
+inequality in Equation~\eqref{eq:additivity} is strict whenever $\Gcoop \neq
+\emptyset$: cooperation contributes volume that no individual possesses alone.
 
-Tradeoff acknowledgment is the assumption that prevents GFM from degenerating into naive expansion. Real conflicts exist: quarantining an infected agent restricts its capabilities to protect others, and the net effect on $\vol(G)$ depends on the magnitudes involved. Without explicit tradeoff evaluation, a GFM actor could either refuse all restrictions (permitting unbounded harm) or impose restrictions freely (becoming authoritarian). The framework does not resolve which tradeoffs are worth making---it provides the accounting system for evaluating them. Where other frameworks hide tradeoffs behind categorical rules or aggregate them into a scalar utility, GFM keeps them visible as geometric operations on the joint space.
+Tradeoff acknowledgment is the assumption that prevents GFM from degenerating
+into naive expansion. Real conflicts exist: quarantining an infected agent
+restricts its capabilities to protect others, and the net effect on $\vol(G)$
+depends on the magnitudes involved. Without explicit tradeoff evaluation, a GFM
+actor could either refuse all restrictions (permitting unbounded harm) or
+impose restrictions freely (becoming authoritarian). The framework does not
+resolve which tradeoffs are worth making; it provides the accounting system for
+evaluating them. Where other frameworks hide tradeoffs behind categorical rules
+or aggregate them into a scalar utility, GFM keeps them visible as geometric
+operations on the joint space.
 
-A standing assumption underlies both conditions and several subsequent proofs: the capability measure assigns strictly positive volume to any non-empty individual capability set. Formally, $\vol(\{g\}) > 0$ for any $g \in \G$---no atomic capability has zero measure at the granularity of interest. This is invoked in the proofs of Corollary~\ref{cor:elimination} (where it ensures $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) > 0$ when the uniqueness condition holds) and Lemma~\ref{lem:cooperation} (where it ensures unrealized cooperative capabilities contribute positive volume). The assumption fails if capabilities are defined at coarser granularity than the distinctions that matter---a further reason why the structure of $\G$ shapes the framework's formal guarantees.
+A standing assumption underlies both conditions and several subsequent proofs:
+the capability measure assigns strictly positive volume to any non-empty
+individual capability set. Formally, $\vol(\{g\}) > 0$ for any $g \in \G$: no
+atomic capability has zero measure at the granularity of interest. This is
+invoked in the proofs of Corollary~\ref{cor:elimination} (where it ensures
+$\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) > 0$ when the uniqueness
+condition holds) and Lemma~\ref{lem:cooperation} (where it ensures unrealized
+cooperative capabilities contribute positive volume). The assumption fails if
+capabilities are defined at coarser granularity than the distinctions that
+matter; a further reason why the structure of $\G$ shapes the framework's
+formal guarantees.
 
-We now exhibit one concrete measure satisfying these assumptions, showing that the framework is not vacuous while leaving open what the best or most natural measure is for any given domain.
+We now exhibit one concrete measure satisfying these assumptions, showing that
+the framework is not vacuous while leaving open what the best or most natural
+measure is for any given domain.
 
 \begin{definition}[Population Empowerment Measure]
 \label{def:pop_empowerment}
-Let each agent $a_k$ have an action space $A_k$ and let $S'$ be the joint successor state under the population's actions. The \emph{population empowerment measure} is:
+Let each agent $a_k$ have an action space $A_k$ and let $S'$ be the joint
+    successor state under the population's actions. The \emph{population
+    empowerment measure} is:
 \begin{equation}
 \label{eq:pop_empowerment}
 \vol_{\mathrm{PE}}(G) \;=\; \sup_{p(A)}\; I\!\bigl(A;\, S' \mid G\bigr)
 \end{equation}
-where $A = (A_1, \ldots, A_n)$ is the joint action profile, $I(\cdot\,;\cdot)$ is Shannon mutual information, and the supremum is taken over all input distributions $p(A)$ on the joint action space.
+where $A = (A_1, \ldots, A_n)$ is the joint action profile, $I(\cdot\,;\cdot)$
+    is Shannon mutual information, and the supremum is taken over all input
+    distributions $p(A)$ on the joint action space.
 \end{definition}
 
-$\vol_{\mathrm{PE}}(G)$ is the channel capacity between the population's joint actions and the resulting states---the maximum mutual information achievable by the population acting together. The conditioning on $G$ in Equation~\eqref{eq:pop_empowerment} constrains which joint actions are feasible: $p(S' \mid A, G)$ is the state-transition distribution restricted to actions that $G$ makes available, so $I(A; S' \mid G)$ measures only the channel capacity achievable through capabilities the population actually possesses. It satisfies both assumptions of Definition~\ref{def:social_objective}: measure monotonicity holds because enlarging $G$ admits additional action-outcome pairs, which can only increase channel capacity; superadditivity under independence holds with equality for independent agents and strictly when cooperation creates state outcomes neither agent can produce alone. For a single agent $a_k$, $\vol_{\mathrm{PE}}(\Gind{k}) = I(A_k; S'_k)$, recovering the single-agent empowerment of \citet{klyubin2005empowerment} as a special case (Section~\ref{sec:connections_empowerment}).
+$\vol_{\mathrm{PE}}(G)$ is the channel capacity between the population's joint
+actions and the resulting states: the maximum mutual information achievable by
+the population acting together. The conditioning on $G$ in
+Equation~\eqref{eq:pop_empowerment} constrains which joint actions are
+feasible: $p(S' \mid A, G)$ is the state-transition distribution restricted to
+actions that $G$ makes available, so $I(A; S' \mid G)$ measures only the
+channel capacity achievable through capabilities the population actually
+possesses. It satisfies both assumptions of
+Definition~\ref{def:social_objective}: measure monotonicity holds because
+enlarging $G$ admits additional action-outcome pairs, which can only increase
+channel capacity; superadditivity under independence holds with equality for
+independent agents and strictly when cooperation creates state outcomes neither
+agent can produce alone. For a single agent $a_k$,
+$\vol_{\mathrm{PE}}(\Gind{k}) = I(A_k; S'_k)$, recovering the single-agent
+empowerment of \citet{klyubin2005empowerment} as a special case
+(Section~\ref{sec:connections_empowerment}).
 
-The population empowerment measure requires specifying action and state spaces, which is implementation-dependent. Other measures---Lebesgue measure on a capability embedding, a weighted subsumption-lattice measure, a counting measure over enumerated capabilities---may be more natural in different settings and produce the same qualitative results under the same monotonicity conditions. The formal proofs of this paper require only that the measure satisfies Definition~\ref{def:social_objective}; $\vol_{\mathrm{PE}}$ is offered as an existence proof, not a prescription.
+The population empowerment measure requires specifying action and state spaces,
+which is implementation-dependent. Other measures (Lebesgue measure on a
+capability embedding, a weighted subsumption-lattice measure, a counting
+measure over enumerated capabilities) may be more natural in different settings
+and produce the same qualitative results under the same monotonicity
+conditions. The formal proofs of this paper require only that the measure
+satisfies Definition~\ref{def:social_objective}; $\vol_{\mathrm{PE}}$ is
+offered as an existence proof, not a prescription.
 
 % ---------------------------------------------------------------------------
 % Definition 6: Observable Goal Model
@@ -149,11 +285,39 @@ The population empowerment measure requires specifying action and state spaces, 
 
 \begin{definition}[Observable Goal Model]
 \label{def:observable_goal_model}
-A GFM actor maintains a model $M_k(G)$ of each observed agent $a_k$'s contribution to the joint goal space, inferred from communication, behavior, and environmental observation. Each model has an associated trust factor $T_k \in [0, 1]$ and confidence $C_k \in [0, 1]$.
+A GFM actor maintains a model $M_k(G)$ of each observed agent $a_k$'s
+    contribution to the joint goal space, inferred from communication,
+    behavior, and environmental observation. Each model has an associated trust
+    factor $T_k \in [0, 1]$ and confidence $C_k \in [0, 1]$.
 \end{definition}
 
-The model $M_k(G)$ is a reconstruction, not a given. No agent broadcasts its true capability set; the GFM actor must infer $\Gind{k}$ from observable evidence---what $a_k$ says, what $a_k$ does, and what the environment reveals about $a_k$'s options. The trust factor $T_k$ captures how reliably $a_k$'s stated goals reflect its actual capabilities and intentions: an agent that consistently acts in accordance with its stated goals earns high $T_k$, while one whose actions diverge from its claims earns low $T_k$. The confidence $C_k$ captures the GFM actor's uncertainty about $M_k(G)$ itself---how much evidence it has, how stable the estimate is, and how much weight the model should receive in decisions. Both $T_k$ and $C_k$ are learned quantities, updated through interaction, not hyperparameters set at design time. The trust model's formal structure is developed in Appendix~\ref{app:trust_model}.
+The model $M_k(G)$ is a reconstruction, not a given. No agent broadcasts its
+true capability set; the GFM actor must infer $\Gind{k}$ from observable
+evidence---what $a_k$ says, what $a_k$ does, and what the environment reveals
+about $a_k$'s options. The trust factor $T_k$ measures \emph{prediction
+consistency}, quantifying how well the model $M_k(G)$ tracks $a_k$'s observed
+behavior. An agent whose actions are well-predicted by the model earns high
+$T_k$; one whose actions persistently diverge from predictions earns low $T_k$.
+High trust indicates predictability, not alignment. A predictably destructive
+agent can maintain high $T_k$ (see Proposition~\ref{prop:scorpion_detection}
+for how such agents are detected through a separate channel). The confidence
+$C_k$ captures the GFM actor's uncertainty about $M_k(G)$ itself: how much
+evidence it has, how stable the estimate is, and how much weight the model
+should receive in decisions. Both $T_k$ and $C_k$ are learned quantities,
+updated through interaction, not hyperparameters set at design time. The trust
+model's formal structure is developed in Appendix~\ref{app:trust_model}.
 
 \medskip
 
-A closing observation on the geometric character of these definitions. The key distinction from standard utility maximization is that $G$ is a \emph{space} with volume, not a scalar. A utility function maps states to a single number; $\vol(G)$ measures the extent of a region in capability space. This geometric character is what gives GFM its self-balancing property: destroying capabilities removes volume from $G$, restricting capabilities shrinks $G$'s boundary inward, and both operations are $\vol(G)$-contracting for the same geometric reason---you cannot remove part of a measurable set and increase its measure. The single objective simultaneously penalizes both extremes not because it encodes two separate preferences, but because contraction and restriction are both instances of the same geometric operation: reducing the measure of a set.
+A closing observation on the geometric character of these definitions. The key
+distinction from standard utility maximization is that $G$ is a \emph{space}
+with volume, not a scalar. A utility function maps states to a single number;
+$\vol(G)$ measures the extent of a region in capability space. This geometric
+character is what gives GFM its self-balancing property: destroying
+capabilities removes volume from $G$, restricting capabilities shrinks $G$'s
+boundary inward, and both operations are $\vol(G)$-contracting for the same
+geometric reason: you cannot remove part of a measurable set and increase its
+measure. The single objective simultaneously penalizes both extremes not
+because it encodes two separate preferences, but because contraction and
+restriction are both instances of the same geometric operation: reducing the
+measure of a set.

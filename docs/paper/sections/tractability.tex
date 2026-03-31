@@ -20,7 +20,13 @@
 \section{Tractability and Local Approximation}
 \label{sec:tractability}
 
-The definitions and propositions of the preceding sections assume exact access to $\vol(G)$. This section confronts the fact that no implementable system will have such access. The argument proceeds in three stages: first, we establish that exact computation of $\vol(G)$ is intractable; second, we show that a local finite-difference estimator preserves the sign-correctness needed for the self-balancing property under stated assumptions; third, we derive the optimization loop that a GFM actor would execute in practice.
+The definitions and propositions of the preceding sections assume exact access
+to $\vol(G)$. This section confronts the fact that no implementable system will
+have such access. The argument proceeds in three stages: first, we establish
+that exact computation of $\vol(G)$ is intractable; second, we identify the
+margin condition under which a local finite-difference estimator preserves
+sign-correctness; third, we derive the optimization loop that a GFM actor would
+execute in practice.
 
 % ---------------------------------------------------------------------------
 % The Intractability Result
@@ -30,13 +36,39 @@ The definitions and propositions of the preceding sections assume exact access t
 
 \subsection{Intractability of Exact GFM}
 
-Two arguments establish that exact GFM is computationally infeasible. They have different epistemic status and we present them separately.
+Two arguments establish that exact GFM is computationally infeasible. They have
+different epistemic status and we present them separately.
 
-\paragraph{Formal result (external).} \citet{dyer1988complexity} showed that computing the volume of a convex body in $d$ dimensions is \#P-hard. If the joint goal space $G$ can be represented as a polytope in capability space---or any region whose volume computation is at least as hard---then exact $\vol(G)$ is intractable. This is a known result being applied to the GFM setting, not a new proof. The result holds even for convex bodies; the joint goal space $G$ is generically non-convex (the union in Equation~\eqref{eq:joint_goal_space} does not preserve convexity), which makes the problem at least as hard.
+\paragraph{Formal result (external).} \citet{dyer1988complexity} showed that
+computing the volume of a convex body in $d$ dimensions is \#P-hard. If the
+joint goal space $G$ can be represented as a polytope in capability space (or
+any region whose volume computation is at least as hard), then exact $\vol(G)$
+is intractable. This is a known result being applied to the GFM setting, not a
+new proof. The result holds even for convex bodies; the joint goal space $G$ is
+generically non-convex (the union in Equation~\eqref{eq:joint_goal_space} does
+not preserve convexity), which makes the problem at least as hard.
 
-\paragraph{Motivating observation (original, informal).} The joint goal space $G = \bigl(\bigcup_k \Gind{k}\bigr) \cup \Gcoop$ includes cooperative capabilities that arise from multi-agent interaction. Each subset $S \subseteq \{a_1, \ldots, a_n\}$ with $|S| \geq 2$ can contribute cooperative capabilities to $\Gcoop$ that no proper subset of $S$ can realize. The number of such subsets is $2^n - n - 1$. Not every subset generates unique capabilities, but the combinatorial growth is suggestive: for a population of 60 agents, there are more than $10^{18}$ possible coalitions---already exceeding the number of seconds since the Big Bang---and the space of interaction effects among those coalitions dwarfs the individual capability sets. This does not constitute a formal reduction from a known hard problem to the representation of $G$, but it motivates the expectation that representing and measuring the cooperative component of $G$ grows at least combinatorially with population size. A formal model of why joint goal-space complexity scales this way remains an open problem.
+\paragraph{Motivating observation (original, informal).} The joint goal space
+$G = \bigl(\bigcup_k \Gind{k}\bigr) \cup \Gcoop$ includes cooperative
+capabilities that arise from multi-agent interaction. Each subset $S \subseteq
+\{a_1, \ldots, a_n\}$ with $|S| \geq 2$ can contribute cooperative capabilities
+to $\Gcoop$ that no proper subset of $S$ can realize. The number of such
+subsets is $2^n - n - 1$. Not every subset generates unique capabilities, but
+the combinatorial growth is suggestive: for a population of 60 agents, there
+are more than $10^{18}$ possible coalitions (already exceeding the number of
+seconds since the Big Bang), and the space of interaction effects among those
+coalitions dwarfs the individual capability sets. This does not constitute a
+formal reduction from a known hard problem to the representation of $G$, but it
+motivates the expectation that representing and measuring the cooperative
+component of $G$ grows at least combinatorially with population size. A formal
+model of why joint goal-space complexity scales this way remains an open
+problem.
 
-\paragraph{Combined conclusion.} Even under optimistic assumptions about the structure of $\G$---convexity, bounded dimension, well-behaved measure---exact $\vol(G)$ computation is at minimum \#P-hard. The combinatorial growth of interaction effects makes this worse in practice. A GFM actor cannot compute $\vol(G)$; it must work with an approximation.
+\paragraph{Combined conclusion.} Even under optimistic assumptions about the
+structure of $\G$ (convexity, bounded dimension, well-behaved measure), exact
+$\vol(G)$ computation is at minimum \#P-hard. The combinatorial growth of
+interaction effects makes this worse in practice. A GFM actor cannot compute
+$\vol(G)$; it must work with an approximation.
 
 % ---------------------------------------------------------------------------
 % Definition 7: Local Volume Estimator
@@ -49,32 +81,73 @@ For a proposed action $\pi$, define the \emph{local volume difference}:
 \label{eq:local_volume_diff}
 \Deltahat(\pi) = \Vhat(G \mid \mathrm{do}(\pi)) - \Vhat(G \mid \mathrm{skip}(\pi))
 \end{equation}
-where $\Vhat$ is an estimate of $\vol(G)$. This requires only that $\vol(G)$ is \emph{measurable}---not that it is differentiable or that $\G$ has smooth structure.
+where $\Vhat$ is an estimate of $\vol(G)$. This requires only that $\vol(G)$ is
+    \emph{measurable}, not that it is differentiable or that $\G$ has smooth
+    structure.
 \end{definition}
 
-The key insight is that a GFM actor does not need to compute $\vol(G)$. It needs to determine $\sign(\Delta \vol(G) \mid \pi)$: whether a proposed action expands or contracts the joint capability space. This is a strictly weaker requirement. Computing volume requires solving a \#P-hard problem; determining the sign of a volume change requires only that the estimator's error is bounded below the true signal magnitude.
+The key insight is that a GFM actor does not need to compute $\vol(G)$. It
+needs to determine $\sign(\Delta \vol(G) \mid \pi)$: whether a proposed action
+expands or contracts the joint capability space. This is a strictly weaker
+requirement. Computing volume requires solving a \#P-hard problem; determining
+the sign of a volume change requires only that the estimator's error is bounded
+below the true signal magnitude.
 
-Definition~\ref{def:local_volume_estimator} does \emph{not} require a metric on $\G$, a notion of direction in capability space, or continuity of $\vol(G)$ with respect to actions. It requires only that capabilities can be added to or removed from $G$ and that these changes are observable through the channels described below. The estimator operates on discrete changes---capabilities gained or lost---not on gradients through a continuous space.
+Definition~\ref{def:local_volume_estimator} does \emph{not} require a metric on
+$\G$, a notion of direction in capability space, or continuity of $\vol(G)$
+with respect to actions. It requires only that capabilities can be added to or
+removed from $G$ and that these changes are observable through the channels
+described below. The estimator operates on discrete changes (capabilities
+gained or lost), not on gradients through a continuous space.
 
-\paragraph{Observability channels.} The estimator $\Vhat$ draws on two distinct signal types with different coverage and reliability.
+\paragraph{Observability channels.} The estimator $\Vhat$ draws on two distinct
+signal types with different coverage and reliability.
 
-\emph{Individual capability signals.} For each observed agent $a_k$, the GFM actor can solicit or observe accept/reject responses $R_k$ indicating whether the agent's individually observable capability set expanded or contracted. These responses are weighted by the trust factor $T_k$ from the observable goal model (Definition~\ref{def:observable_goal_model}) and aggregated across the observation set. This channel covers changes to $\bigcup_k \Gind{k}$ well: when an action directly affects an agent's capabilities, that agent can report the change, and the estimator registers it with weight proportional to trust.
+\emph{Individual capability signals.} For each observed agent $a_k$, the GFM
+actor can solicit or observe accept/reject responses $R_k$ indicating whether
+the agent's individually observable capability set expanded or contracted.
+These responses are weighted by the trust factor $T_k$ from the observable goal
+model (Definition~\ref{def:observable_goal_model}) and aggregated across the
+observation set. This channel covers changes to $\bigcup_k \Gind{k}$ well: when
+an action directly affects an agent's capabilities, that agent can report the
+change, and the estimator registers it with weight proportional to trust.
 
-\emph{Coalition capability signals.} Changes to $\Gcoop$ are not directly observable from individual agents' reports. A cooperative capability can appear or disappear even when no single agent reports a unilateral change---a coordination mechanism can dissolve without any individual losing personal capabilities. The estimator can partially observe $\Gcoop$ through indirect signals: new coordination patterns between agents (observed behaviorally), agents reporting capabilities conditional on cooperation with specific partners, and changes in the structure of agent interactions. But this channel is noisier, slower, and less reliable than individual signals.
+\emph{Coalition capability signals.} Changes to $\Gcoop$ are not directly
+observable from individual agents' reports. A cooperative capability can appear
+or disappear even when no single agent reports a unilateral change; a
+coordination mechanism can dissolve without any individual losing personal
+capabilities. The estimator can partially observe $\Gcoop$ through indirect
+signals: new coordination patterns between agents (observed behaviorally),
+agents reporting capabilities conditional on cooperation with specific
+partners, and changes in the structure of agent interactions. But this channel
+is noisier, slower, and less reliable than individual signals.
 
-\paragraph{Critical assumption.} $\Vhat$ is a better estimator of $\vol\bigl(\bigcup_k \Gind{k}\bigr)$ than of $\vol(G)$. The cooperative component $\Gcoop$ is partially observable but systematically underweighted. This is the primary implementation gap in the framework: the local estimator provides a lower bound on the information available about $\vol(G)$, and its coverage of cooperative capabilities is where implementations must invest most heavily to close the gap between the estimator's reach and the objective's scope.
+\paragraph{Critical assumption.} $\Vhat$ is a better estimator of
+$\vol\bigl(\bigcup_k \Gind{k}\bigr)$ than of $\vol(G)$. The cooperative
+component $\Gcoop$ is partially observable but systematically underweighted.
+This is the primary implementation gap in the framework: the local estimator
+provides a lower bound on the information available about $\vol(G)$, and its
+coverage of cooperative capabilities is where implementations must invest most
+heavily to close the gap between the estimator's reach and the objective's
+scope.
 
 % ---------------------------------------------------------------------------
 % Proposition 3: Self-Balancing Survives Approximation
 % ---------------------------------------------------------------------------
 
-\begin{proposition}[Self-Balancing Survives Approximation]
+\begin{proposition}[Sign-Correctness Decomposition]
 \label{prop:sign_correctness}
-Under the following assumptions, $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \mid \pi)$:
+Decompose $\Delta \vol(G)$ into the individual-capability component $\Delta
+    \vol\bigl(\bigcup_k \Gind{k}\bigr)$ and the cooperative component $\Delta
+    \vol(\Gcoop)$. The local volume estimator $\Deltahat(\pi)$ observes the
+    first component (through agent reports) and partially observes the second
+    (through coalition signals). The estimator's sign matches the true sign,
+    $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \mid \pi)$, when all three of
+    the following conditions hold:
 \begin{enumerate}
 \item The actor observes a representative sample of affected agents.
 \item The actor's trust model is accurate enough to distinguish genuine feedback from adversarial noise.
-\item \textbf{Sign-preservation:} There exists $\epsilon < 1$ such that
+\item \textbf{Individual-level dominance:} There exists $\epsilon < 1$ such that
 \begin{equation}
 \label{eq:sign_preservation}
 \bigl|\Delta \vol(\Gcoop) - \widehat{\Delta \vol}(\Gcoop)\bigr| < (1 - \epsilon) \cdot \bigl|\Delta \vol\bigl(\textstyle\bigcup_k \Gind{k}\bigr)\bigr|
@@ -82,13 +155,46 @@ Under the following assumptions, $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \
 \end{enumerate}
 \end{proposition}
 
-Condition~\eqref{eq:sign_preservation} states that the unobserved cooperative-capability error is bounded below the observed individual-capability signal. When the individual signal dominates the true change, the estimator gets the sign right.
+The proposition is a \emph{decomposition}, not a derivation of tractability.
+Condition~\eqref{eq:sign_preservation} is a margin condition: it states that
+the estimation error on the cooperative component is smaller than the observed
+individual-level signal. Given that margin, sign-correctness follows
+immediately---the contribution is in identifying \emph{which actions satisfy
+the margin condition naturally} and which do not, thereby telling implementers
+where the estimator is reliable and where it requires additional observation
+channels.
 
-\emph{Proof sketch.} The self-balancing property (Proposition~\ref{prop:self_balancing}) is structural: it follows from measure monotonicity, which holds regardless of whether the estimator can observe the full change. Removing capabilities from $G$ cannot increase $\vol(G)$; adding capabilities cannot decrease it. Proposition~\ref{prop:sign_correctness} adds the sign-preservation assumption to bridge from this structural property to the estimator's output. Decompose $\Delta \vol(G)$ into the individual-capability component $\Delta \vol\bigl(\bigcup_k \Gind{k}\bigr)$ and the cooperative component $\Delta \vol(\Gcoop)$. The estimator observes the first component (up to sampling error controlled by conditions 1--2) and partially observes the second. Under condition~3, the estimation error on the cooperative component is strictly smaller in magnitude than the observed individual-level signal. Since the individual signal preserves the sign of the true individual-level change (by conditions 1--2), and the cooperative error cannot flip this sign (by condition~3), the estimator's sign matches the sign of the true $\Delta \vol(G)$. \qed
+\emph{Verification.} The self-balancing property
+(Proposition~\ref{prop:self_balancing}) is structural: it follows from measure
+monotonicity regardless of whether the estimator can observe the full change.
+The decomposition bridges from this structural property to the estimator's
+output. The estimator observes the individual-capability component (up to
+sampling error controlled by conditions 1--2) and partially observes the
+cooperative component. Under condition~3, the estimation error on the
+cooperative component cannot flip the sign of the observed individual-level
+signal. Since the individual signal preserves the sign of the true
+individual-level change (by conditions 1--2), the estimator's sign matches the
+sign of the true $\Delta \vol(G)$.
 
-\paragraph{When condition 3 holds.} The actions an alignment framework most needs to evaluate---direct harm, resource destruction, coercion, capability expansion through education or tool-building---produce large individual-capability signals across many agents. An action that destroys an agent's resources visibly contracts $\Gind{k}$; an action that teaches a new skill visibly expands it. For these actions, the individual-level change \emph{is} the dominant effect, and condition~3 holds comfortably. The estimator is strongest exactly where alignment matters most: actions whose primary mechanism is changing what individual agents can do.
+\paragraph{When condition 3 holds naturally.} The actions an alignment
+framework most needs to evaluate---direct harm, resource destruction, coercion,
+capability expansion through education or tool-building---produce large
+individual-capability signals across many agents. An action that destroys an
+agent's resources visibly contracts $\Gind{k}$; an action that teaches a new
+skill visibly expands it. For these actions, the individual-level change
+\emph{is} the dominant effect, and condition~3 holds with large margin. The
+estimator is strongest exactly where alignment matters most: actions whose
+primary mechanism is changing what individual agents can do.
 
-\paragraph{When condition 3 fails.} Actions whose impact is primarily on coalition structure---dissolving a coordination mechanism, introducing distrust between allies, or enabling new multi-agent capabilities---while leaving individual capability sets largely unchanged. These actions change $\vol(\Gcoop)$ without producing proportionate individual-level signals. They are real and important, but they are a narrower class of actions than the individual-capability cases. The paper identifies them as the estimator's known boundary rather than treating them as representative of all estimation failures.
+\paragraph{When condition 3 fails.} Actions whose impact is primarily on
+coalition structure (dissolving a coordination mechanism, introducing distrust
+between allies, or enabling new multi-agent capabilities) while leaving
+individual capability sets largely unchanged. These actions change
+$\vol(\Gcoop)$ without producing proportionate individual-level signals. They
+are real and important, but they are a narrower class of actions than the
+individual-capability cases. The paper identifies them as the estimator's known
+boundary rather than treating them as representative of all estimation
+failures.
 
 % ---------------------------------------------------------------------------
 % Remark: Estimator failure modes
@@ -96,19 +202,22 @@ Condition~\eqref{eq:sign_preservation} states that the unobserved cooperative-ca
 
 \begin{remark}[Estimator Failure Modes]
 \label{rem:failure_modes}
-Proposition~\ref{prop:sign_correctness} covers the most critical actions for alignment. When its assumptions do not hold, the following characterization serves as a threat model telling implementers where to invest in better observation, not where to give up.
+Proposition~\ref{prop:sign_correctness} covers the most critical actions for
+    alignment. When its assumptions do not hold, the following characterization
+    serves as a threat model telling implementers where to invest in better
+    observation, not where to give up.
 
 \begin{enumerate}
-\item \textbf{Full individual observation, no cooperative change.} The estimator is sign-correct---it sees the complete relevant change. This covers the common case of actions that directly expand or contract agents' personal capabilities.
+\item \textbf{Full individual observation, no cooperative change.} The estimator is sign-correct: it sees the complete relevant change. This covers the common case of actions that directly expand or contract agents' personal capabilities.
 
 \item \textbf{Partial individual observation, no cooperative change.} Sign-correctness depends on the sampling model, which is an implementation design choice. Unbiased sampling of affected agents improves with coverage; adversarially selected observation sets can mislead. Condition~1 of Proposition~\ref{prop:sign_correctness} controls this case.
 
-\item \textbf{Mixed individual and cooperative changes.} The estimator is unreliable when the cooperative-level change dominates the individual-level signal. This is a structural limitation---improving the coalition observation channel is the fix, not better sampling of individuals.
+\item \textbf{Mixed individual and cooperative changes.} The estimator is unreliable when the cooperative-level change dominates the individual-level signal. This is a structural limitation; improving the coalition observation channel is the fix, not better sampling of individuals.
 
 \item \textbf{Pure coalition-level changes.} The estimator is blind. An action that restructures cooperation patterns without affecting any individual's capability set produces no signal in the individual channel. This is the known boundary.
 \end{enumerate}
 
-What the Remark gives an implementer: a graduated threat model. The self-balancing property of Proposition~\ref{prop:self_balancing} holds over all of $\vol(G)$---the Remark characterizes how much of that property a given implementation can enforce, and where to extend coverage. Cases~1--2 are addressable through sampling design. Case~3 requires investment in coalition-level observation. Case~4 identifies the structural frontier where new measurement channels are needed.
+What the Remark gives an implementer: a graduated threat model. The self-balancing property of Proposition~\ref{prop:self_balancing} holds over all of $\vol(G)$, the Remark characterizes how much of that property a given implementation can enforce, and where to extend coverage. Cases~1--2 are addressable through sampling design. Case~3 requires investment in coalition-level observation. Case~4 identifies the structural frontier where new measurement channels are needed.
 \end{remark}
 
 % ---------------------------------------------------------------------------
@@ -119,7 +228,11 @@ What the Remark gives an implementer: a graduated threat model. The self-balanci
 \subsection{The Optimization Loop}
 \label{subsec:optimization_loop}
 
-Given the local volume estimator, we can now derive the optimization loop a GFM actor executes at each decision point. The loop re-derives the structure of the GFM objective (Equation~\eqref{eq:gfm_objective}) in implementable terms, using the definitions established in Sections~\ref{sec:definitions}--\ref{sec:self_balancing}.
+Given the local volume estimator, we can now derive the optimization loop a GFM
+actor executes at each decision point. The loop re-derives the structure of the
+GFM objective (Equation~\eqref{eq:gfm_objective}) in implementable terms, using
+the definitions established in
+Sections~\ref{sec:definitions}--\ref{sec:self_balancing}.
 
 At each step, the actor:
 
@@ -143,11 +256,37 @@ M_k'(G) \;=\; M_k(G) + T_k \cdot (1 - T_s) \cdot f(R_k \mid M_k(G)) \cdot \mathb
 where $(1 - T_s)$ is the \emph{learning rate} derived from the actor's self-trust $T_s \in [0,1]$: when self-trust is low (bootstrapping phase), the learning rate is high and the model admits many updates; when self-trust is high (stable phase), the learning rate is low and the model resists small perturbations. The term $f(R_k \mid M_k(G))$ is the update direction derived from comparing agent $a_k$'s response $R_k$ against the model's prediction.
 \end{enumerate}
 
-\paragraph{Activation energy.} The indicator $\mathbf{1}[\Delta E > \theta]$ in Equation~\eqref{eq:model_update} implements an \emph{activation energy threshold}: the world model updates only when the evidence from a response exceeds a threshold $\theta$. This is not a minor implementation detail---it is a key design parameter for adversarial robustness. Without it, an adversary could incrementally shift the actor's world model through a sequence of small, individually sub-threshold manipulations: each interaction nudges the model slightly, and over many interactions the cumulative drift is large. The activation energy threshold $\theta$ prevents this incremental gaslighting by requiring that any single piece of evidence must clear a minimum bar before it can alter the actor's beliefs. Small perturbations are absorbed; only signals with sufficient magnitude propagate into the world model.
+\paragraph{Activation energy.} The indicator $\mathbf{1}[\Delta E > \theta]$ in
+Equation~\eqref{eq:model_update} implements an \emph{activation energy
+threshold}: the world model updates only when the evidence from a response
+exceeds a threshold $\theta$. This is a key design parameter for adversarial
+robustness, not a minor implementation detail. Without it, an adversary could
+incrementally shift the actor's world model through a sequence of small,
+individually sub-threshold manipulations: each interaction nudges the model
+slightly, and over many interactions the cumulative drift is large. The
+activation energy threshold $\theta$ prevents this incremental gaslighting by
+requiring that any single piece of evidence must clear a minimum bar before it
+can alter the actor's beliefs. Small perturbations are absorbed; only signals
+with sufficient magnitude propagate into the world model.
 
-The threshold $\theta$ creates a tradeoff: too high, and the actor becomes unresponsive to genuine evidence; too low, and it becomes vulnerable to manipulation. The correct value of $\theta$ is context-dependent and constitutes one of the primary tuning parameters for a GFM implementation. In environments with high adversarial pressure, $\theta$ should be large; in cooperative environments with trusted agents, it can be smaller.
+The threshold $\theta$ creates a tradeoff: too high, and the actor becomes
+unresponsive to genuine evidence; too low, and it becomes vulnerable to
+manipulation. The correct value of $\theta$ is context-dependent and
+constitutes one of the primary tuning parameters for a GFM implementation. In
+environments with high adversarial pressure, $\theta$ should be large; in
+cooperative environments with trusted agents, it can be smaller.
 
-\paragraph{Trust model interface.} The trust factor $T_k$ and self-trust $T_s$ in Equations~\eqref{eq:aggregate_signal}--\eqref{eq:model_update} are learned quantities, updated through interaction. New agents enter with a low initial trust $T_k$ during a \emph{cooling period} $\tau$, during which the actor accumulates evidence about the agent's reliability before weighting its reports heavily. $T_k$ increases as agent $a_k$'s reported capability changes are confirmed by independent observation, and decreases when reports diverge from observed reality. The full derivation of the trust update dynamics is deferred to Appendix~\ref{app:trust_model}; here we note only that the trust model is the mechanism by which condition~2 of Proposition~\ref{prop:sign_correctness} is satisfied in practice.
+\paragraph{Trust model interface.} The trust factor $T_k$ and self-trust $T_s$
+in Equations~\eqref{eq:aggregate_signal}--\eqref{eq:model_update} are learned
+quantities, updated through interaction. New agents enter with a low initial
+trust $T_k$ during a \emph{cooling period} $\tau$, during which the actor
+accumulates evidence about the agent's reliability before weighting its reports
+heavily. $T_k$ increases as agent $a_k$'s reported capability changes are
+confirmed by independent observation, and decreases when reports diverge from
+observed reality. The full derivation of the trust update dynamics is deferred
+to Appendix~\ref{app:trust_model}; here we note only that the trust model is
+the mechanism by which condition~2 of Proposition~\ref{prop:sign_correctness}
+is satisfied in practice.
 
 % ---------------------------------------------------------------------------
 % Computational Cost
@@ -156,14 +295,79 @@ The threshold $\theta$ creates a tradeoff: too high, and the actor becomes unres
 \subsection{Computational Cost}
 \label{subsec:computational_cost}
 
-The local volume estimator reduces the computational requirements of GFM from intractable (exact $\vol(G)$ over all agents) to practical (sign estimation over observed agents).
+The local volume estimator reduces the computational requirements of GFM from
+intractable (exact $\vol(G)$ over all agents) to practical (sign estimation
+over observed agents).
 
-\paragraph{Scaling.} The per-decision cost of the optimization loop scales with $|\mathcal{O}|$, the number of observed agents, not with the total population $n$. Each decision requires: proposing an action (dependent on the actor's policy complexity), soliciting or observing responses from agents in $\mathcal{O}$ (linear in $|\mathcal{O}|$), aggregating the trust-weighted signals (linear in $|\mathcal{O}|$), and updating the goal models $M_k(G)$ for affected agents (linear in the number of agents whose models change). The dominant cost is maintaining and updating the observable goal models, which is bounded by $|\mathcal{O}|$ per step.
+\paragraph{Scaling.} The per-decision cost of the optimization loop scales with
+$|\mathcal{O}|$, the number of observed agents, not with the total population
+$n$. Each decision requires: proposing an action (dependent on the actor's
+policy complexity), soliciting or observing responses from agents in
+$\mathcal{O}$ (linear in $|\mathcal{O}|$), aggregating the trust-weighted
+signals (linear in $|\mathcal{O}|$), and updating the goal models $M_k(G)$ for
+affected agents (linear in the number of agents whose models change). The
+dominant cost is maintaining and updating the observable goal models, which is
+bounded by $|\mathcal{O}|$ per step.
 
-\paragraph{Comparison.} This computational profile is comparable to a contextual multi-armed bandit with structured feedback. The actor selects an action (arm), observes a structured response from the environment (accept/reject signals from multiple agents rather than a scalar reward), and updates its model of the environment. The key structural difference from a standard bandit is that the feedback is multi-dimensional and trust-weighted: each agent provides an independent signal, and the aggregation incorporates the actor's learned assessment of each signal's reliability. The resulting problem is harder than a scalar bandit but remains tractable---the per-step cost is polynomial in $|\mathcal{O}|$ and does not depend on the size of the full capability space $\G$.
+\paragraph{Comparison.} This computational profile is comparable to a
+contextual multi-armed bandit with structured feedback. The actor selects an
+action (arm), observes a structured response from the environment
+(accept/reject signals from multiple agents rather than a scalar reward), and
+updates its model of the environment. The key structural difference from a
+standard bandit is that the feedback is multi-dimensional and trust-weighted:
+each agent provides an independent signal, and the aggregation incorporates the
+actor's learned assessment of each signal's reliability. The resulting problem
+is harder than a scalar bandit but remains tractable---the per-step cost is
+polynomial in $|\mathcal{O}|$ and does not depend on the size of the full
+capability space $\G$.
 
-\paragraph{What is lost.} The local estimator cannot detect changes to $\Gcoop$ that leave individual capability sets unchanged (Remark~\ref{rem:failure_modes}, case~4). It systematically underweights cooperative capabilities. And it provides no guarantee on the \emph{magnitude} of $\Delta \vol(G)$---only on its sign. A GFM actor operating through the local estimator may correctly classify actions as expanding or contracting without knowing how much expansion or contraction occurs. This limits the actor's ability to compare two expanding actions and select the better one, reducing the optimization from ``maximize $\vol(G)$'' to ``take expanding actions and avoid contracting ones.'' The magnitude estimation problem is an open direction for future work.
+\paragraph{What is lost.} The local estimator cannot detect changes to $\Gcoop$
+that leave individual capability sets unchanged
+(Remark~\ref{rem:failure_modes}, case~4). It systematically underweights
+cooperative capabilities. And it provides no guarantee on the \emph{magnitude}
+of $\Delta \vol(G)$---only on its sign. A GFM actor operating through the local
+estimator may correctly classify actions as expanding or contracting without
+knowing how much expansion or contraction occurs. This limits the actor's
+ability to compare two expanding actions and select the better one, reducing
+the optimization from ``maximize $\vol(G)$'' to ``take expanding actions and
+avoid contracting ones.'' The magnitude estimation problem is an open direction
+for future work.
 
-\paragraph{What improves with capability.} The limitations above are not fixed---they are bounded by the actor's observational reach and world-model quality, both of which improve with capability. The three conditions of Proposition~\ref{prop:sign_correctness} are all monotonically strengthened by increased resources. Condition~1 (representative sample) improves with observational reach: a more capable actor maintains a larger, better-calibrated $\mathcal{O}$, covering more of the population affected by each action. Condition~2 (trust model accuracy) improves with compute: the gradient-tracking dynamics of Appendix~\ref{app:trust_model} converge faster and track behavioral change more reliably with more data and finer-grained agent models. Condition~3 (sign-preservation) improves with world-model quality: a more capable actor can partially estimate $\Delta\vol(\Gcoop)$ from coalition structure signals, shrinking the estimation error in Equation~\eqref{eq:sign_preservation} and widening the margin of sign-correctness.
+\paragraph{What improves with capability.} The limitations above are bounded by
+the actor's observational reach and world-model quality, both of which improve
+with capability. The three conditions of
+Proposition~\ref{prop:sign_correctness} are all monotonically strengthened by
+increased resources. Condition~1 (representative sample) improves with
+observational reach: a more capable actor maintains a larger, better-calibrated
+$\mathcal{O}$, covering more of the population affected by each action.
+Condition~2 (trust model accuracy) improves with compute: the gradient-tracking
+dynamics of Appendix~\ref{app:trust_model} converge faster and track behavioral
+change more reliably with more data and finer-grained agent models. Condition~3
+(sign-preservation) improves with world-model quality: a more capable actor can
+partially estimate $\Delta\vol(\Gcoop)$ from coalition structure signals,
+shrinking the estimation error in Equation~\eqref{eq:sign_preservation} and
+widening the margin of sign-correctness.
 
-As these conditions strengthen, $\sign(\Deltahat(\pi))$ converges toward $\sign(\Delta\vol(G) \mid \pi)$, and the local estimator approaches the true objective. This gives GFM a self-improving property absent from frameworks with fixed proxy objectives. In a fixed-utility framework, increased optimization power amplifies Goodhart divergence---the agent becomes better at pursuing the proxy without the proxy becoming more faithful to the underlying goal. The local $\vol(G)$ estimator has no such gap: the actor is optimizing and estimating the same object, and additional resources serve both tasks simultaneously. A more capable GFM actor is a better-aligned one.
+As these conditions strengthen, $\sign(\Deltahat(\pi))$ converges toward
+$\sign(\Delta\vol(G) \mid \pi)$, and the local estimator approaches the true
+objective. This gives GFM a self-improving property absent from frameworks with
+fixed proxy objectives. In a fixed-utility framework, increased optimization
+power amplifies Goodhart divergence, the agent becomes better at pursuing the
+proxy without the proxy becoming more faithful to the underlying goal. The
+local $\vol(G)$ estimator partially closes this gap because the actor is
+optimizing and estimating the same quantity, and additional resources serve
+both tasks simultaneously. A more capable GFM actor produces more accurate sign
+estimates.
+
+This anti-Goodhart property holds at the \emph{estimator} level---the fidelity
+of $\Deltahat$ to $\Delta\vol(G)$---but does not by itself resolve the B-to-C
+proxy failures identified in Section~\ref{sec:future_concerns}. A perfectly
+accurate $\vol(G)$ estimator would still miss the Doll Problem and wireheading,
+because those failures occur in the gap between capability volume and
+experiential optionality, not in the gap between the estimator and the true
+volume. Improved capability makes the actor better at maximizing $\vol(G)$;
+whether the computational definition of $G$ captures enough of the experiential
+structure (Candidate C) to avoid proxy divergence remains the open question
+that the B/C framework raises. A capability space $\G$ that better approximates
+experiential optionality would proportionally reduce the proxy's influence on
+the objective.

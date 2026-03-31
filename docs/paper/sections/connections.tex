@@ -20,27 +20,91 @@ Four existing frameworks independently converge on related problems and collecti
 \subsection{Empowerment Maximization}
 \label{sec:connections_empowerment}
 
-Empowerment, introduced by \citet{klyubin2005empowerment}, formalizes the intuition that a capable agent is one with many distinguishable futures. Formally, an agent's empowerment is the channel capacity $I(A; S')$ between its available action sequences $A$ and the resulting states $S'$ --- the maximum mutual information achievable over all input distributions on actions. An agent that can reach many distinguishable states from its current position has high empowerment; an agent trapped in a narrow corner of state space has low empowerment. The measure is intrinsic --- it depends only on the agent's causal influence over future states, not on any external reward signal --- and it is information-theoretically tractable: empowerment can be estimated via variational bounds on mutual information, enabling practical computation.
+Empowerment, introduced by \citet{klyubin2005empowerment} and surveyed in
+\citet{salge2014empowerment}, formalizes the intuition that a capable agent is
+one with many distinguishable futures. Formally, an agent's empowerment is the
+channel capacity $I(A; S')$ between its available action sequences $A$ and the
+resulting states $S'$: the maximum mutual information achievable over all
+input distributions on actions. An agent that can reach many distinguishable
+states from its current position has high empowerment; an agent trapped in a
+narrow corner of state space has low empowerment. The measure is intrinsic (it
+depends only on the agent's causal influence over future states, not on any
+external reward signal) and information-theoretically tractable: empowerment
+can be estimated via variational bounds on mutual information, enabling
+practical computation.
 
-GFM is, structurally, \emph{social empowerment}: maximizing $\vol(G)$ is maximizing the empowerment of the population, measured over the joint capability space rather than over any individual agent's action-state channel. Equation~\eqref{eq:joint_goal_space} makes the relationship explicit: $G = \bigcup_k \Gind{k} \cup \Gcoop$, where $\Gcoop$ captures the cooperative capabilities that no individual empowerment calculation sees. An agent reasoning over $I(A_k; S')$ misses the capabilities that exist only in $\Gcoop$; GFM treats these as first-class objects.
+GFM is, structurally, \emph{social empowerment}: maximizing $\vol(G)$ is
+maximizing the empowerment of the population, measured over the joint
+capability space rather than over any individual agent's action-state channel.
+Equation~\eqref{eq:joint_goal_space} makes the relationship explicit: $G =
+\bigcup_k \Gind{k} \cup \Gcoop$, where $\Gcoop$ captures the cooperative
+capabilities that no individual empowerment calculation sees. An agent
+reasoning over $I(A_k; S')$ misses the capabilities that exist only in
+$\Gcoop$; GFM treats these as first-class objects.
 
-The key difference is scope. Empowerment is agent-centric: it measures what a single agent can do, and maximizing empowerment for one agent can contract the capability space of others (seizing territory expands individual empowerment while destroying cooperative potential). GFM is population-centric: it penalizes unilateral expansion that shrinks $\vol(G)$ even if individual empowerment increases. The practical inheritance is tractability: the variational and sampling techniques developed for single-agent empowerment estimation carry over to the local finite-difference estimator $\hat{V}$ of Proposition~\ref{prop:sign_correctness}, with the population-level generalization being the primary added complexity.
+The key difference is scope. Empowerment is agent-centric: it measures what a
+single agent can do, and maximizing empowerment for one agent can contract the
+capability space of others (seizing territory expands individual empowerment
+while destroying cooperative potential). GFM is population-centric: it
+penalizes unilateral expansion that shrinks $\vol(G)$ even if individual
+empowerment increases. A related approach is attainable utility preservation
+\citep{turner2020conservative}, which penalizes actions that reduce the agent's
+ability to optimize auxiliary reward functions---a single-agent analogue of
+GFM's multi-agent optionality preservation. The practical inheritance from
+empowerment is tractability: the variational and sampling techniques developed
+for single-agent empowerment estimation carry over to the local
+finite-difference estimator $\hat{V}$ of
+Proposition~\ref{prop:sign_correctness}, with the population-level
+generalization being the primary added complexity.
 
 \subsection{Sen's Capability Approach}
 \label{sec:connections_sen}
 
-Sen's capability approach \citep{sen1999development} reorients welfare economics around a deceptively simple claim: what matters for human development is not income, not subjective happiness, but the set of \emph{functionings} a person has genuine freedom to exercise. A person who could be well-nourished but chooses to fast for religious reasons is differently situated from one who is undernourished because they lack food. Both have the same nutritional outcome; only one has the capability. Sen's framework measures the space of achievable functionings --- what people \emph{can} do and be --- rather than what they happen to do or how much they report enjoying it.
+Sen's capability approach \citep{sen1999development} reorients welfare
+economics around a deceptively simple claim: what matters for human development
+is not income or subjective happiness but the set of \emph{functionings} a
+person has genuine freedom to exercise. A person who could be well-nourished
+but chooses to fast for religious reasons is differently situated from one who
+is undernourished because they lack food. Both have the same nutritional
+outcome; only one has the capability. Sen's framework measures the space of
+achievable functionings, what people \emph{can} do and be, rather than what
+they happen to do or how much they report enjoying it.
 
-GFM adopts the same structural move for alignment: what matters is not the AI's utility score, not human-reported satisfaction, but the set of capabilities all agents can actually exercise. Definition~\ref{def:goal} --- goals as capabilities, $\vol(G)$ as the canonical measure --- is a direct formalization of Senian well-being applied at population scale and extended to include non-human agents. The alignment question becomes: does the AI's operation expand or contract the functioning space of the population it affects?
+GFM adopts the same structural move for alignment: what matters is not the AI's
+utility score, not human-reported satisfaction, but the set of capabilities all
+agents can actually exercise. Definition~\ref{def:goal} --- goals as
+capabilities, $\vol(G)$ as the canonical measure --- is a direct formalization
+of Senian well-being applied at population scale and extended to include
+non-human agents. The alignment question becomes: does the AI's operation
+expand or contract the functioning space of the population it affects?
 
-The key difference is orientation. Sen's capability approach is \emph{descriptive and evaluative}: it provides a framework for measuring whether development has occurred and for comparing alternative states of affairs. It does not prescribe an optimization target or specify how an agent should act to increase capabilities. GFM is \emph{prescriptive and optimizing}: it transforms the evaluation criterion into an objective function that an agent can pursue, with formal self-balancing guarantees (Proposition~\ref{prop:self_balancing}) and tractable estimation (Proposition~\ref{prop:sign_correctness}). The decades of formal development in the capability approach --- including Nussbaum's specification of central human capabilities \citep{nussbaum2000women} and Robeyns's theoretical survey of capability metrics \citep{robeyns2005capability} --- provide a reservoir of worked examples and partial formalizations that GFM can draw on as the capability space $\G$ receives more structure in future work.
+The key difference is orientation. Sen's capability approach is
+\emph{descriptive and evaluative}: it provides a framework for measuring
+whether development has occurred and for comparing alternative states of
+affairs. It does not prescribe an optimization target or specify how an agent
+should act to increase capabilities. GFM is \emph{prescriptive and optimizing}:
+it transforms the evaluation criterion into an objective function that an agent
+can pursue, with formal self-balancing guarantees
+(Proposition~\ref{prop:self_balancing}) and tractable estimation
+(Proposition~\ref{prop:sign_correctness}). The decades of formal development in
+the capability approach --- including Nussbaum's specification of central human
+capabilities \citep{nussbaum2000women} and Robeyns's theoretical survey of
+capability metrics \citep{robeyns2005capability} --- provide a reservoir of
+worked examples and partial formalizations that GFM can draw on as the
+capability space $\G$ receives more structure in future work.
 
 \subsection{Free Energy Principle}
 \label{sec:connections_fep}
 
-The Free Energy Principle (FEP) \citep{friston2013life} proposes that self-organizing systems minimize \emph{variational free energy} $\mathcal{F}$---a quantity that upper-bounds the surprise of sensory observations given an agent's generative model. Under FEP, an agent acts to drive observations toward model predictions and updates its model when predictions persistently fail.
+The Free Energy Principle (FEP) \citep{friston2013life} proposes that
+self-organizing systems minimize \emph{variational free energy}
+$\mathcal{F}$---a quantity that upper-bounds the surprise of sensory
+observations given an agent's generative model. Under FEP, an agent acts to
+drive observations toward model predictions and updates its model when
+predictions persistently fail.
 
-GFM's trust maintenance dynamics (Appendix~\ref{app:trust_model}, Section~C.3) implement the same mathematical operation at the world-model level:
+GFM's trust maintenance dynamics (Appendix~\ref{app:trust_model}, Section~C.3)
+exhibit a structural parallel at the world-model level:
 
 \begin{remark}[GFM--FEP Structural Correspondence]
 \label{rem:fep_correspondence}
@@ -58,16 +122,65 @@ Active inference (action) & GFM optimization loop (Section~\ref{subsec:optimizat
 \bottomrule
 \end{tabular}
 \end{center}
-Under stationarity of the environment, $\sigma_s^2(t) \to \mathbb{E}[r_s^2]$ (Equation~\eqref{eq:convergence}), the GFM actor's world-model dynamics minimize mean squared prediction error---formally equivalent to minimizing $\mathcal{F}$ under a Gaussian generative model. Both frameworks produce agents whose coherent world models emerge from prediction-error minimization rather than from a separate accuracy objective.
+Under stationarity of the environment, $\sigma_s^2(t) \to \mathbb{E}[r_s^2]$
+    (Equation~\eqref{eq:convergence}), so the GFM actor's world-model dynamics
+    minimize mean squared prediction error. This is \emph{structurally
+    analogous} to minimizing $\mathcal{F}$ under a Gaussian generative model:
+    both reduce to minimizing expected squared surprise. The analogy is
+    suggestive---both frameworks produce agents whose coherent world models
+    emerge from prediction-error minimization---but it falls short of formal
+    equivalence: the GFM trust model specifies no variational objective, no KL
+    term, no posterior family, and no explicit generative density. Establishing
+    a rigorous reduction would require embedding the EWMA tracker of
+    Appendix~\ref{app:trust_model} within a variational inference framework,
+    which we do not attempt here.
 \end{remark}
 
-The differences are in scope and direction. FEP is descriptive---it characterizes how biological systems behave; it does not prescribe a target or prove properties of agents that optimize it. GFM is normative---it specifies $\vol(G)$ and derives the self-balancing property. FEP is individual-centered; GFM is population-centered. Remark~\ref{rem:fep_correspondence} establishes that the model-maintenance component of GFM is an instance of the mathematical structure FEP describes, but the $\vol(G)$ objective and its self-balancing consequences are not derived from any biological imperative---they follow from measure monotonicity applied to a joint capability space.
+The differences are in scope and direction. FEP is descriptive. It
+characterizes how biological systems behave; it does not prescribe a target or
+prove properties of agents that optimize it. GFM is normative. It specifies
+$\vol(G)$ and derives the self-balancing property. FEP is individual-centered;
+GFM is population-centered. Remark~\ref{rem:fep_correspondence} identifies a
+structural parallel between GFM's model-maintenance dynamics and the
+prediction-error minimization that FEP describes, but the $\vol(G)$ objective
+and its self-balancing consequences are not derived from any biological
+imperative---they follow from measure monotonicity applied to a joint
+capability space.
 
 \subsection{Constitutional AI and RLHF}
 \label{sec:connections_rlhf}
 
-The dominant alignment approach in deployed systems uses human feedback to shape AI behavior: reinforcement learning from human preferences (RLHF) \citep{christiano2017deep} collects pairwise human judgments to learn a reward model, and Constitutional AI \citep{bai2022constitutional} augments this with a set of principles that guide both the AI's self-critique and the feedback collection process. Both approaches treat human evaluation as the ground truth for alignment and use it to train AI systems that humans find helpful and harmless.
+The dominant alignment approach in deployed systems uses human feedback to
+shape AI behavior: reinforcement learning from human preferences (RLHF)
+\citep{christiano2017deep} collects pairwise human judgments to learn a reward
+model, and Constitutional AI \citep{bai2022constitutional} augments this with a
+set of principles that guide both the AI's self-critique and the feedback
+collection process. Both approaches treat human evaluation as the ground truth
+for alignment and use it to train AI systems that humans find helpful and
+harmless. A complementary formalization, cooperative inverse reinforcement
+learning \citep{hadfield2017cooperative}, models alignment as a cooperative
+game in which the AI and the human jointly optimize the human's (initially
+unknown) reward function.
 
-GFM provides a theoretical foundation for why this works and a predictive account of where it will fail. Under GFM, human feedback is a \emph{noisy channel for communicating the goal frontier}: when a human evaluator prefers response A over response B, they are, in GFM terms, reporting that A is more $\vol(G)$-preserving than B from their vantage point. The RLHF reward model is an estimator of the goal frontier averaged over the evaluator population. Constitutional principles are domain constraints that encode the evaluators' understanding of which regions of capability space are inviolable.
+GFM provides a theoretical foundation for why this works and a predictive
+account of where it will fail. Under GFM, human feedback is a \emph{noisy
+channel for communicating the goal frontier}: when a human evaluator prefers
+response A over response B, they are, in GFM terms, reporting that A is more
+$\vol(G)$-preserving than B from their vantage point. The RLHF reward model is
+an estimator of the goal frontier averaged over the evaluator population.
+Constitutional principles are domain constraints that encode the evaluators'
+understanding of which regions of capability space are inviolable.
 
-GFM makes two predictions about where this estimator will fail. First, \emph{narrow evaluator pool}: if the evaluators do not represent the full population of agents whose capabilities are affected, the learned reward model will systematically underweight capability contractions that affect non-evaluators (future generations, non-human agents, marginalized communities). The estimator is biased toward the experiences and capabilities of whoever is in the feedback pool. Second, \emph{reward hacking}: the trained AI will find actions that score high on the reward model without actually expanding $\vol(G)$ --- responses that evaluators find persuasive or satisfying but that contract the goal frontier in ways evaluators cannot detect. Both failure modes are predictions of the GFM framework, not post-hoc observations --- they follow from treating RLHF as a noisy estimator of a population-level quantity rather than as a reliable proxy for alignment itself.
+GFM makes two predictions about where this estimator will fail. First,
+\emph{narrow evaluator pool}: if the evaluators do not represent the full
+population of agents whose capabilities are affected, the learned reward model
+will systematically underweight capability contractions that affect
+non-evaluators (future generations, non-human agents, marginalized
+communities). The estimator is biased toward the experiences and capabilities
+of whoever is in the feedback pool. Second, \emph{reward hacking}: the trained
+AI will find actions that score high on the reward model without actually
+expanding $\vol(G)$ --- responses that evaluators find persuasive or satisfying
+but that contract the goal frontier in ways evaluators cannot detect. Both
+failure modes are predictions of the GFM framework, not post-hoc observations
+--- they follow from treating RLHF as a noisy estimator of a population-level
+quantity rather than as a reliable proxy for alignment itself.

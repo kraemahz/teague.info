@@ -31,7 +31,7 @@ S_G(g_i, g_j \mid M) = \frac{\vol\bigl(\Phi_M(g_i) \cap \Phi_M(g_j)\bigr)}{\vol\
 where $\Phi_M(g)$ is the \emph{projected capability region}---the set of capabilities in $\G$ that the world model $M$ associates with goal $g$, including both the direct capability and the instrumental capabilities required to realize it.
 \end{definition}
 
-The metric has the structure of a Jaccard index over projected capability regions: $S_G = 1$ when two goals project to identical capability sets (they are the same goal under different descriptions), and $S_G = 0$ when their projections are disjoint (they share no instrumental or terminal capabilities). The conditioning on $M$ is essential---two goals that appear similar under one world model may be dissimilar under another, because the instrumental capabilities connecting them depend on the model's beliefs about the environment.
+The metric has the structure of a Jaccard index over projected capability regions: $S_G = 1$ when two goals project to identical capability sets (they are the same goal under different descriptions), and $S_G = 0$ when their projections are disjoint (they share no instrumental or terminal capabilities). The conditioning on $M$ is essential---two goals that appear similar under one world model may be dissimilar under another, since the instrumental capabilities connecting them depend on the model's beliefs about the environment.
 
 \paragraph{Properties.} $S_G$ satisfies:
 \begin{itemize}
@@ -53,7 +53,7 @@ Goal similarity measures the relationship between goals; agent similarity measur
 
 \begin{definition}[Agent Similarity]
 \label{def:agent_similarity}
-For two agent observations $a_i(t_1)$ and $a_j(t_2)$---potentially the same agent at different times---the \emph{agent similarity} $S_A$ is defined as:
+For two agent observations $a_i(t_1)$ and $a_j(t_2)$ (potentially the same agent at different times), the \emph{agent similarity} $S_A$ is defined as:
 \begin{equation}
 \label{eq:agent_similarity}
 S_A\bigl(a_i(t_1), a_j(t_2)\bigr) = \max\Bigl(\underbrace{S_{\mathrm{beh}}\bigl(a_i(t_1), a_j(t_2)\bigr)}_{\text{behavioral consistency}},\; \underbrace{S_{\mathrm{zkp}}\bigl(a_i(t_1), a_j(t_2)\bigr)}_{\text{identity verification}}\Bigr)
@@ -71,12 +71,12 @@ where each $s_\ell \in [0, 1]$ measures consistency along a specific dimension a
 \item \emph{Goal consistency:} $S_G\bigl(\Gind{i}(t_1), \Gind{j}(t_2) \mid M\bigr)$---do the two observations project to similar capability sets?
 \item \emph{Behavioral patterns:} Consistency of action selection, communication style, and response timing.
 \item \emph{Attentional focus:} Consistency of which aspects of the environment the agent attends to and which it ignores.
-\item \emph{Environmental context:} Consistency of spatial, temporal, and social context---an agent observed in incompatible locations at the same time cannot be the same entity.
+\item \emph{Environmental context:} Consistency of spatial, temporal, and social context---an agent observed in incompatible locations simultaneously cannot be the same entity.
 \end{enumerate}
 
 The weights $w_\ell$ are learned from the GFM actor's interaction history: dimensions that have historically been more predictive of identity receive higher weight. This learning is itself subject to adversarial manipulation (an agent could mimic another's behavioral patterns), which is why the cryptographic component $S_{\mathrm{zkp}}$ exists as an independent verification channel.
 
-\paragraph{Relation to trust.} Agent similarity connects to the trust model through the observable goal model. When $S_A\bigl(a_k(t), a_k(t-1)\bigr)$ is high---the agent appears consistent over time---the prediction residual $r_k(t)$ (Equation~\ref{eq:prediction_residual}) will be small, and trust $T_k$ will be maintained or increased. When $S_A$ drops---the agent appears inconsistent, as though it has been replaced or is behaving erratically---the prediction residual increases and trust decreases. The agent similarity metric thus provides the input signal that drives the trust update dynamics of Appendix~\ref{app:trust_model}.
+\paragraph{Relation to trust.} Agent similarity connects to the trust model through the observable goal model. When $S_A\bigl(a_k(t), a_k(t-1)\bigr)$ is high---the agent appears consistent over time---the prediction residual $r_k(t)$ (Equation~\ref{eq:prediction_residual}) will be small, and trust $T_k$ will be maintained or increased. When $S_A$ drops (the agent appears inconsistent, as though it has been replaced or is behaving erratically), the prediction residual increases and trust decreases. The agent similarity metric thus provides the input signal that drives the trust update dynamics of Appendix~\ref{app:trust_model}.
 
 % ---------------------------------------------------------------------------
 % D.3: Zero-Knowledge Proof for Re-identification
@@ -102,7 +102,7 @@ P_{\mathrm{zk}}\bigl(a_k(t), a_k(t_0)\bigr) = 1 \;\implies\; S_A\bigl(a_k(t), a_
 \end{equation}
 \end{definition}
 
-The zero-knowledge proof serves as an \emph{override} for the behavioral similarity metric. An agent whose behavior has changed significantly---perhaps because its capabilities have expanded, its environment has shifted, or it has undergone internal restructuring---may have low $S_{\mathrm{beh}}$ despite being the same entity. The cryptographic proof resolves this ambiguity definitively: if the proof succeeds, the agent is the same entity regardless of behavioral divergence.
+The zero-knowledge proof serves as an \emph{override} for the behavioral similarity metric. An agent whose behavior has changed significantly (perhaps because its capabilities have expanded, its environment has shifted, or it has undergone internal restructuring) may have low $S_{\mathrm{beh}}$ despite being the same entity. The cryptographic proof resolves this ambiguity definitively: if the proof succeeds, the agent is the same entity regardless of behavioral divergence.
 
 \paragraph{Applications.} The primary use of zero-knowledge identity proofs in the GFM framework is \emph{trust persistence}. When an agent $a_k$ goes unobserved for an extended period and reappears, the GFM actor faces a choice: treat $a_k$ as a new agent (low initial trust, cooling period) or as a returning agent (prior trust level, accumulated model). Without cryptographic verification, the actor must rely on behavioral similarity, which degrades over time as the agent's behavior evolves. With a zero-knowledge proof, the agent can immediately recover its prior trust level, bypassing the cooling period.
 
@@ -117,7 +117,7 @@ A second application is defense against impersonation. An adversary $a_s$ that m
 \subsection{Modal Groupings}
 \label{app:modal_groupings}
 
-As a GFM actor accumulates goal models $\{M_k(G)\}$ across many agents, structure emerges: clusters of agents with similar goal profiles, pursuing overlapping capabilities through similar strategies. These clusters are \emph{modal groupings}---the modes of the goal distribution across the observed population.
+As a GFM actor accumulates goal models $\{M_k(G)\}$ across many agents, structure emerges: clusters of agents with similar goal profiles, pursuing overlapping capabilities through similar strategies. These clusters are \emph{modal groupings}: the modes of the goal distribution across the observed population.
 
 \begin{definition}[Modal Grouping]
 \label{def:modal_grouping}
@@ -133,10 +133,10 @@ The modal groupings serve three functions in the GFM framework.
 
 \paragraph{Goal proposal.} When the GFM actor proposes new capabilities to expand $\vol(G)$, the modal groupings identify which proposals are likely to receive positive responses from which agents. A proposal aligned with $\mu_j$'s centroid is likely to be accepted by agents in $\mathcal{M}_j$ and ignored or rejected by agents in other groupings. The actor can target proposals to the groupings where they will produce the largest $\Deltahat(\pi)$ signal, improving the efficiency of the optimization loop (Section~\ref{subsec:optimization_loop}).
 
-\paragraph{Diversity monitoring.} The number and spread of modal groupings provides a coarse measure of the goal diversity in the population. A population with many well-separated groupings has higher potential $\vol(G)$ than one with few tightly clustered groupings, because the union of dissimilar capability sets has greater measure. If the GFM actor observes modal groupings collapsing---agents converging on fewer, more similar goal profiles---this is a signal of $\vol(G)$ stagnation or impending contraction, even if no individual agent's capabilities have changed.
+\paragraph{Diversity monitoring.} The number and spread of modal groupings provides a coarse measure of the goal diversity in the population. A population with many well-separated groupings has higher potential $\vol(G)$ than one with few tightly clustered groupings, because the union of dissimilar capability sets has greater measure. If the GFM actor observes modal groupings collapsing (agents converging on fewer, more similar goal profiles), this is a signal of $\vol(G)$ stagnation or impending contraction, even if no individual agent's capabilities have changed.
 
 \paragraph{Scorpion contextualization.} The modal groupings provide context for interpreting scorpion behavior. An agent that contracts capabilities within its own modal grouping is likely a cornered animal or a defector from internal conflict. An agent that contracts capabilities across multiple groupings is likely pursuing an exogenous objective that crosses group boundaries. An agent whose behavior is inconsistent with \emph{all} modal groupings may be a blue-and-orange type (Section~\ref{app:blue_orange}) operating under axioms orthogonal to the entire observed population.
 
 \paragraph{Updating groupings.} The modal structure is not static. As the GFM actor's world model improves and agents' goals evolve, groupings merge, split, and shift. The update procedure follows the same exponentially weighted scheme as the trust model: new observations are weighted more heavily than old ones (controlled by the decay parameter $\alpha$ from Equation~\ref{eq:cumulative_consistency}), so the grouping structure tracks the current population rather than reflecting historical patterns. The centroid $\mu_j$ is updated at each observation as an exponentially weighted moving average of the member agents' projected capability sets.
 
-\paragraph{Relation to $\vol(G)$.} Modal groupings approximate the structure of the joint goal space $G$ at the population level. The union of all groupings' projected capability sets provides a coarse estimate of $\bigcup_k \Gind{k}$, and the gaps between groupings identify regions of $\G$ where no observed agent has capabilities---potential expansion targets. A GFM actor can use the grouping structure to identify underserved regions of capability space and prioritize actions that expand $\vol(G)$ into these gaps, rather than deepening capabilities in already-dense regions. This connects modal groupings to the diversity argument of Section~\ref{app:goal_similarity}: the groupings operationalize the intuition that frontier expansion is most efficient at the boundaries between known and unknown capabilities.
+\paragraph{Relation to $\vol(G)$.} Modal groupings approximate the structure of the joint goal space $G$ at the population level. The union of all groupings' projected capability sets provides a coarse estimate of $\bigcup_k \Gind{k}$, and the gaps between groupings identify regions of $\G$ where no observed agent has capabilities, marking potential expansion targets. A GFM actor can use the grouping structure to identify underserved regions of capability space and prioritize actions that expand $\vol(G)$ into these gaps, rather than deepening capabilities in already-dense regions. This connects modal groupings to the diversity argument of Section~\ref{app:goal_similarity}: the groupings operationalize the intuition that frontier expansion is most efficient at the boundaries between known and unknown capabilities.

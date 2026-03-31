@@ -22,7 +22,14 @@
 \section{The Self-Balancing Property}
 \label{sec:self_balancing}
 
-The central claim of this paper is that GFM's single objective---maximizing $\vol(G)$---simultaneously penalizes destruction, coercion, and rigidity, all from the same geometric argument. The argument is measure monotonicity: removing elements from a measurable set cannot increase its measure. We develop this claim through three lemmas establishing the anti-maximizing character of each failure mode, then synthesize them in Proposition~\ref{prop:self_balancing} as a structural observation about the shape of the objective.
+The central claim of this paper is that GFM's single objective---maximizing
+$\vol(G)$---simultaneously penalizes destruction, coercion, and rigidity, all
+from the same geometric argument. The argument is measure monotonicity:
+removing elements from a measurable set cannot increase its measure. We develop
+this claim through three lemmas establishing the anti-maximizing character of
+each failure mode, then synthesize them in
+Proposition~\ref{prop:self_balancing} as a structural observation about the
+shape of the objective.
 
 % ---------------------------------------------------------------------------
 % Lemma 1: Destructive actions
@@ -30,7 +37,9 @@ The central claim of this paper is that GFM's single objective---maximizing $\vo
 
 \begin{lemma}[Net Effect of Elimination]
 \label{lem:destruction}
-Let $a_k$ be an agent in a population $\{a_1, \ldots, a_n\}$ with joint goal space $G$ as defined in Equation~\eqref{eq:joint_goal_space}. If an action $\pi$ eliminates $a_k$, the change in volume is
+Let $a_k$ be an agent in a population $\{a_1, \ldots, a_n\}$ with joint goal
+    space $G$ as defined in Equation~\eqref{eq:joint_goal_space}. If an action
+    $\pi$ eliminates $a_k$, the change in volume is
 \begin{equation}
 \label{eq:destruction_bound}
 \Delta \vol(G) \;=\; \vol\!\bigl(G^{\mathrm{coop}+}_{k}\bigr) \;-\; \vol\!\Bigl(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}\Bigr) \;-\; \vol\!\bigl(G^{\mathrm{coop}}_{k}\bigr)
@@ -38,11 +47,35 @@ Let $a_k$ be an agent in a population $\{a_1, \ldots, a_n\}$ with joint goal spa
 where $G^{\mathrm{coop}}_{k} \subseteq \Gcoop$ denotes cooperative capabilities that require $a_k$'s participation and $G^{\mathrm{coop}+}_{k}$ denotes cooperative capabilities among the remaining agents that $a_k$'s presence was suppressing.
 \end{lemma}
 
-\emph{Condition.} Elimination is net-contracting when $a_k$'s positive contributions---unique individual capabilities and cooperative capabilities it enables---exceed the cooperative capabilities its presence suppresses: $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) + \vol(G^{\mathrm{coop}}_{k}) > \vol(G^{\mathrm{coop}+}_{k})$. For most agents this holds comfortably, since the suppression term $G^{\mathrm{coop}+}_{k}$ is typically zero or small. But for a scorpion actively disrupting cooperation between other agents, $G^{\mathrm{coop}+}_{k}$ can be large---removing the disruptive agent unlocks cooperative capabilities that its interference was preventing. This is precisely the mechanism that makes scorpion containment $\vol(G)$-serving (Section~\ref{subsec:scorpion_interaction}).
+\emph{Condition.} Elimination is net-contracting when $a_k$'s positive
+contributions (unique individual capabilities and cooperative capabilities it
+enables) exceed the cooperative capabilities its presence suppresses:
+$\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) +
+\vol(G^{\mathrm{coop}}_{k}) > \vol(G^{\mathrm{coop}+}_{k})$. For most agents
+this holds comfortably, since the suppression term $G^{\mathrm{coop}+}_{k}$ is
+typically zero or small. But for an agent persistently disrupting cooperation
+(a \emph{scorpion} in the sense of Proposition~\ref{prop:scorpion_detection}),
+$G^{\mathrm{coop}+}_{k}$ can be large: removing the disruptive agent unlocks
+cooperative capabilities that its interference was preventing. This is
+precisely the mechanism that makes scorpion containment $\vol(G)$-serving
+(Section~\ref{subsec:scorpion_interaction}).
 
-\emph{Proof sketch.} The joint goal space before removal is $G = \bigl(\bigcup_k \Gind{k}\bigr) \cup \Gcoop$. After removing $a_k$, the new joint space is $G' = \bigl(\bigcup_{j \neq k} \Gind{j}\bigr) \cup \bigl(\Gcoop \setminus G^{\mathrm{coop}}_{k}\bigr) \cup G^{\mathrm{coop}+}_{k}$, where the last term represents cooperative capabilities newly realizable among the remaining agents. The volume change is $\vol(G') - \vol(G)$: the gain from $G^{\mathrm{coop}+}_{k}$ minus the loss from $a_k$'s unique individual contributions and the cooperative capabilities that required its participation. \qed
+\emph{Proof sketch.} The joint goal space before removal is $G =
+\bigl(\bigcup_k \Gind{k}\bigr) \cup \Gcoop$. After removing $a_k$, the new
+joint space is $G' = \bigl(\bigcup_{j \neq k} \Gind{j}\bigr) \cup \bigl(\Gcoop
+\setminus G^{\mathrm{coop}}_{k}\bigr) \cup G^{\mathrm{coop}+}_{k}$, where the
+last term represents cooperative capabilities newly realizable among the
+remaining agents. The volume change is $\vol(G') - \vol(G)$: the gain from
+$G^{\mathrm{coop}+}_{k}$ minus the loss from $a_k$'s unique individual
+contributions and the cooperative capabilities that required its participation.
+\qed
 
-The bound accounts for both the immediate geometric loss and the suppression release. It does not capture second-order cascading effects: the remaining agents may lose access to cooperative capabilities that depended on $a_k$ as an intermediary, or may gain additional cooperative capabilities as the population structure adjusts. These dynamics are real but depend on the specific topology of agent interactions, which the lemma does not model.
+The bound accounts for both the immediate geometric loss and the suppression
+release. It does not capture second-order cascading effects: the remaining
+agents may lose access to cooperative capabilities that depended on $a_k$ as an
+intermediary, or may gain additional cooperative capabilities as the population
+structure adjusts. These dynamics depend on the specific topology of agent
+interactions, which the lemma does not model.
 
 % ---------------------------------------------------------------------------
 % Lemma 2: Coercive actions
@@ -55,14 +88,45 @@ If an action $\pi$ restricts agent $a_j$'s achievable capabilities, replacing $\
 \label{eq:coercion_bound}
 \Delta \vol(G) \;\leq\; \vol(G') - \vol(G) \;\leq\; 0
 \end{equation}
-where $G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup {\Gind{j}}'\bigr) \cup {\Gcoop}'$ and ${\Gcoop}' \subseteq \Gcoop$ excludes any cooperative capabilities rendered unrealizable by the restriction. The inequality is strict whenever $a_j$'s restriction removes capabilities not covered by other agents.
+where $G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup {\Gind{j}}'\bigr) \cup
+    {\Gcoop}'$ and ${\Gcoop}' \subseteq \Gcoop$ excludes any cooperative
+    capabilities rendered unrealizable by the restriction. The inequality is
+    strict whenever $a_j$'s restriction removes capabilities not covered by
+    other agents.
 \end{lemma}
 
-\emph{Proof sketch.} Since ${\Gind{j}}' \subset \Gind{j}$ and ${\Gcoop}' \subseteq \Gcoop$, the restricted joint space satisfies $G' \subseteq G$. Measure monotonicity gives the result. \qed
+\emph{Proof sketch.} Since ${\Gind{j}}' \subset \Gind{j}$ and ${\Gcoop}'
+\subseteq \Gcoop$, the restricted joint space satisfies $G' \subseteq G$.
+Measure monotonicity gives the result. \qed
 
-\emph{The caveat.} Lemma~\ref{lem:coercion} states a \emph{ceteris paribus} result: restricting $a_j$ in isolation contracts $\vol(G)$. Two mechanisms can make restriction net-expanding. First, restricting $a_j$ to protect $a_k$ may produce a net expansion if $\Delta \vol(\Gind{k}) > |\Delta \vol(\Gind{j})|$---if the capabilities preserved or created for $a_k$ exceed the capabilities removed from $a_j$. Second, analogously to the suppression-release term in Lemma~\ref{lem:destruction}, restricting an agent whose presence has been suppressing cooperation between others can unlock cooperative capabilities $G^{\mathrm{coop}+}_{j}$ among the remaining population. When this suppression release is large---as it may be for a scorpion actively disrupting coalition formation---the restriction can be net-expanding even before accounting for protections to other agents. A quarantine that temporarily restricts movement to prevent a pandemic may be net-expanding: the capabilities preserved by keeping agents alive and healthy outweigh the temporary restriction on movement. An authoritarian state that permanently restricts many agents' capabilities to protect a ruling class is net-contracting: the concentration of capabilities in a few agents cannot compensate for the broad contraction across the population, because independent capability sets are additive under Definition~\ref{def:social_objective}.
+\emph{The caveat.} Lemma~\ref{lem:coercion} states a \emph{ceteris paribus}
+result: restricting $a_j$ in isolation contracts $\vol(G)$. Two mechanisms can
+make restriction net-expanding. First, restricting $a_j$ to protect $a_k$ may
+produce a net expansion if $\Delta \vol(\Gind{k}) > |\Delta
+\vol(\Gind{j})|$, if the capabilities preserved or created for $a_k$ exceed
+the capabilities removed from $a_j$. Second, analogously to the
+suppression-release term in Lemma~\ref{lem:destruction}, restricting an agent
+whose presence has been suppressing cooperation between others can unlock
+cooperative capabilities $G^{\mathrm{coop}+}_{j}$ among the remaining
+population. When this suppression release is large (as it may be for a scorpion
+actively disrupting coalition formation), the restriction can be net-expanding
+even before accounting for protections to other agents. A quarantine that
+temporarily restricts movement to prevent a pandemic may be net-expanding: the
+capabilities preserved by keeping agents alive and healthy outweigh the
+temporary restriction on movement. An authoritarian state that permanently
+restricts many agents' capabilities to protect a ruling class is
+net-contracting: the concentration of capabilities in a few agents cannot
+compensate for the broad contraction across the population, because independent
+capability sets are additive under Definition~\ref{def:social_objective}.
 
-The claim is not that coercion is never justified under GFM. The claim is that GFM makes the tradeoff \emph{explicit and measurable}. An action that restricts $a_j$ must demonstrate a compensating expansion in $\vol(G)$---not in the restricting agent's own capability set, but in the joint space. Where deontological rules either prohibit all coercion (and fail under adversarial conditions) or permit it by fiat (and provide no bound on its scope), GFM requires a geometric accounting: the restriction must be net-expanding over $G$ as a whole.
+Coercion may be justified under GFM when the net change in $\vol(G)$ is
+positive. The framework makes the tradeoff \emph{explicit and measurable}. An
+action that restricts $a_j$ must demonstrate a compensating expansion in
+$\vol(G)$, not in the restricting agent's own capability set but in the joint
+space. Deontological rules either prohibit all coercion (and fail under
+adversarial conditions) or permit it by fiat (and provide no bound on its
+scope); GFM requires a geometric accounting in which the restriction must be
+net-expanding over $G$ as a whole.
 
 % ---------------------------------------------------------------------------
 % Lemma 3: Self-imposed rigidity
@@ -70,7 +134,10 @@ The claim is not that coercion is never justified under GFM. The claim is that G
 
 \begin{lemma}[Self-Imposed Rigidity is Anti-Maximizing]
 \label{lem:rigidity}
-Let $A$ denote a GFM actor's action space and let $R \subset A$ be a set of rigid rules that restricts the actor to the subspace $A \setminus R$. If the actor's unrestricted action space contains actions that would expand $\vol(G)$, then the restricted actor achieves
+Let $A$ denote a GFM actor's action space and let $R \subset A$ be a set of
+    rigid rules that restricts the actor to the subspace $A \setminus R$. If
+    the actor's unrestricted action space contains actions that would expand
+    $\vol(G)$, then the restricted actor achieves
 \begin{equation}
 \label{eq:rigidity_bound}
 \max_{\pi \in A \setminus R} \mathbb{E}[\Delta \vol(G) \mid \pi] \;\leq\; \max_{\pi \in A} \mathbb{E}[\Delta \vol(G) \mid \pi]
@@ -78,11 +145,26 @@ Let $A$ denote a GFM actor's action space and let $R \subset A$ be a set of rigi
 with strict inequality whenever $R$ excludes at least one $\vol(G)$-expanding action not available in $A \setminus R$.
 \end{lemma}
 
-\emph{Condition.} The rigidity cost is non-trivial when the actor's action space contributes to $\vol(G)$. An actor with no influence on the joint goal space---no capability to expand or contract any agent's capabilities---has zero rigidity cost. The cost grows with the actor's influence: a powerful actor operating under rigid constraints forgoes more $\vol(G)$-expanding opportunities than a weak one.
+\emph{Condition.} The rigidity cost is non-trivial when the actor's action
+space contributes to $\vol(G)$. An actor with no influence on the joint goal
+space, no capability to expand or contract any agent's capabilities, has zero
+rigidity cost. The cost grows with the actor's influence: a powerful actor
+operating under rigid constraints forgoes more $\vol(G)$-expanding
+opportunities than a weak one.
 
-\emph{Proof sketch.} Optimizing over a subset of a set cannot exceed optimizing over the full set. The restricted maximum in Equation~\eqref{eq:rigidity_bound} is bounded above by the unrestricted maximum. When $R$ excludes actions that would be optimal under unrestricted optimization, the inequality is strict. \qed
+\emph{Proof sketch.} Optimizing over a subset of a set cannot exceed optimizing
+over the full set. The restricted maximum in Equation~\eqref{eq:rigidity_bound}
+is bounded above by the unrestricted maximum. When $R$ excludes actions that
+would be optimal under unrestricted optimization, the inequality is strict.
+\qed
 
-Rigidity costs are not merely theoretical. An actor bound by fixed rules cannot weigh the probabilities of uncertain scenarios, cannot adapt to adversarial conditions that exploit the rules' predictability, and cannot take calculated risks when the expected $\vol(G)$ expansion justifies the risk. We develop the sharpest illustration of this cost in Appendix~\ref{app:evil_twin}, where a rule-bound agent faces an adversary who exploits the rules' rigidity to force a $\vol(G)$-contracting outcome.
+Rigidity costs are not merely theoretical. An actor bound by fixed rules cannot
+weigh the probabilities of uncertain scenarios, cannot adapt to adversarial
+conditions that exploit the rules' predictability, and cannot take calculated
+risks when the expected $\vol(G)$ expansion justifies the risk. We develop the
+sharpest illustration of this cost in Appendix~\ref{app:evil_twin}, where a
+rule-bound agent faces an adversary who exploits the rules' rigidity to force a
+$\vol(G)$-contracting outcome.
 
 % ---------------------------------------------------------------------------
 % Proposition 1: Self-Balancing Property (synthesizes the lemmas)
@@ -90,7 +172,10 @@ Rigidity costs are not merely theoretical. An actor bound by fixed rules cannot 
 
 \begin{proposition}[Self-Balancing Property]
 \label{prop:self_balancing}
-For a GFM actor optimizing $\vol(G)$ over a population of agents, under the assumptions of Definition~\ref{def:social_objective}, the following structural property holds: the same objective function penalizes both extremes of the permissiveness--control spectrum.
+For a GFM actor optimizing $\vol(G)$ over a population of agents, under the
+    assumptions of Definition~\ref{def:social_objective}, the following
+    structural property holds: the same objective function penalizes both
+    extremes of the permissiveness--control spectrum.
 
 \begin{enumerate}
 \item[\textbf{(a)}] \textbf{Destructive permissiveness is anti-maximizing.} By Lemma~\ref{lem:destruction}, actions that eliminate agents or destroy capabilities are generically $\vol(G)$-contracting: the eliminated agent's unique individual capabilities and the cooperative capabilities it enables typically exceed any cooperative suppression it may have been imposing. When that condition holds, a GFM actor will not pursue destruction unless the geometric accounting demonstrates a net expansion.
@@ -103,7 +188,7 @@ For a GFM actor optimizing $\vol(G)$ over a population of agents, under the assu
 \end{enumerate}
 \end{proposition}
 
-Part (d) is a structural claim about the \emph{shape} of the objective, not an equilibrium existence proof. Proving that the opposing pressures of (a)--(c) produce stable interior equilibria would require additional assumptions: continuity of $\vol(G)$ with respect to actions, compactness of the action space, and specific structure on the tradeoffs between expansion and contraction. These assumptions may hold in particular instantiations of GFM but are not provided by the framework in its current generality. What the proposition establishes is weaker but still valuable: the objective penalizes both extremes from the same geometric principle. Whether the resulting pressure produces a stable balance point, oscillation around one, or convergent dynamics depends on the specifics of a given system---and characterizing those dynamics is an open problem.
+Part (d) is a structural claim about the \emph{shape} of the objective, not an equilibrium existence proof. Proving that the opposing pressures of (a)--(c) produce stable interior equilibria would require additional assumptions: continuity of $\vol(G)$ with respect to actions, compactness of the action space, and specific structure on the tradeoffs between expansion and contraction. These assumptions may hold in particular instantiations but are not provided by the framework in its current generality. What the proposition establishes is weaker but still valuable: the objective penalizes both extremes from the same geometric principle. Whether the resulting pressure produces a stable balance point, oscillation around one, or convergent dynamics depends on the specifics of a given system---and characterizing those dynamics is an open problem.
 
 % ---------------------------------------------------------------------------
 % Corollary 1.1: Elimination is almost always anti-maximizing
@@ -111,16 +196,57 @@ Part (d) is a structural claim about the \emph{shape} of the objective, not an e
 
 \begin{corollary}[Elimination is Almost Always Anti-Maximizing]
 \label{cor:elimination}
-For any agent $a_k$ with at least one capability $g \in \Gind{k}$ such that $g \notin \Gind{j}$ for some $j \neq k$, the unique individual contribution $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j})$ is strictly positive. Furthermore, the cooperative loss $\vol(G^{\mathrm{coop}}_{k})$ grows with the number of agents that interact with $a_k$: each interaction partner contributes at least one cooperative capability to $G^{\mathrm{coop}}_{k}$, and the number of distinct multi-agent coalitions involving $a_k$ grows combinatorially with the number of partners.
+For any agent $a_k$ with at least one capability $g \in \Gind{k}$ such that $g
+    \notin \Gind{j}$ for some $j \neq k$, the unique individual contribution
+    $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j})$ is strictly
+    positive. Furthermore, the cooperative loss $\vol(G^{\mathrm{coop}}_{k})$
+    grows with the number of agents that interact with $a_k$: each interaction
+    partner contributes at least one cooperative capability to
+    $G^{\mathrm{coop}}_{k}$, and the number of distinct multi-agent coalitions
+    involving $a_k$ grows combinatorially with the number of partners.
 \end{corollary}
 
-\emph{Proof sketch.} The first claim follows from the definition of a measurable set: a non-empty set with a well-defined measure has strictly positive volume (assuming $\G$ has no atoms of zero measure at the capability granularity, which is a standing assumption of the framework). For the cooperative claim, consider the coalitions involving $a_k$. Each subset $S \subseteq \{a_1, \ldots, a_n\}$ with $a_k \in S$ and $|S| \geq 2$ can generate cooperative capabilities in $G^{\mathrm{coop}}_{k}$. The number of such subsets is $2^{n-1} - 1$. Not every subset generates unique cooperative capabilities, but under the reasonable assumption that at least some multi-agent coalitions produce capabilities not achievable by their proper subcoalitions, $\vol(G^{\mathrm{coop}}_{k})$ grows faster than linearly in the number of interaction partners. The precise scaling depends on the structure of cooperation in a given population and is not characterized here. \qed
+\emph{Proof sketch.} The first claim follows from the definition of a
+measurable set: a non-empty set with a well-defined measure has strictly
+positive volume, given the standing assumption that $\G$ has no atoms of zero
+measure at the capability granularity. For the cooperative claim, consider the
+coalitions involving $a_k$. Each subset $S \subseteq \{a_1, \ldots, a_n\}$ with
+$a_k \in S$ and $|S| \geq 2$ can generate cooperative capabilities in
+$G^{\mathrm{coop}}_{k}$. The number of such subsets is $2^{n-1} - 1$. Not every
+subset generates unique cooperative capabilities, but under the reasonable
+assumption that at least some multi-agent coalitions produce capabilities not
+achievable by their proper subcoalitions, $\vol(G^{\mathrm{coop}}_{k})$ grows
+faster than linearly in the number of interaction partners. The precise scaling
+depends on the structure of cooperation in a given population and is not
+characterized here. \qed
 
-The combinatorial observation is not a formal hardness result---it is a motivating argument for why the cost of elimination is typically much larger than the cost of the individual capabilities lost. A surgeon who is eliminated loses not only their personal skills but every surgery they could have performed with every anesthesiologist, every operation requiring their specific expertise in combination with specific equipment, and every training relationship with every student. The cooperative web radiates outward from each agent, and severing a node severs all its connections.
+The combinatorial observation is not a formal hardness result---it is a
+motivating argument for why the cost of elimination is typically much larger
+than the cost of the individual capabilities lost. A surgeon who is eliminated
+loses not only their personal skills but every surgery they could have
+performed with every anesthesiologist, every operation requiring their specific
+expertise in combination with specific equipment, and every training
+relationship with every student. The cooperative web radiates outward from each
+agent, and severing a node severs all its connections.
 
 \begin{remark}[Dependence on Capability Scope]
 \label{rem:substitution_scope}
-The uniqueness condition of Corollary~\ref{cor:elimination}---$\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) > 0$---holds generically under the broad capability definition but can fail under the narrow one. If capabilities are defined as tasks that can be performed (economic or productive functionings), a sufficiently capable coalition may subsume non-members' individual capability sets, driving their unique contributions to zero and nullifying the strict inequality of Lemma~\ref{lem:destruction}. Under the broad definition---capabilities as modes of being, including experiential and relational capabilities individuated by agent identity---the condition holds universally: no agent's experienced existence is replicable by proxy, regardless of the coalition's productive capacity. The ``almost always'' qualifier in the corollary's title therefore reflects a dependence on what the capability space includes, not merely on unusual population structures. Section~\ref{sec:substitution_problem} develops this as the substitution problem.
+The uniqueness condition of Corollary~\ref{cor:elimination}---$\vol(\Gind{k}
+    \setminus \bigcup_{j \neq k} \Gind{j}) > 0$---holds generically under the
+    broad capability definition but can fail under the narrow one. If
+    capabilities are defined as tasks that can be performed (economic or
+    productive functionings), a sufficiently capable coalition may subsume
+    non-members' individual capability sets, driving their unique contributions
+    to zero and nullifying the strict inequality of
+    Lemma~\ref{lem:destruction}. Under the broad definition (capabilities as
+    modes of being, including experiential and relational capabilities
+    individuated by agent identity) the condition holds universally: no
+    agent's experienced existence is replicable by proxy, regardless of the
+    coalition's productive capacity. The ``almost always'' qualifier in the
+    corollary's title therefore reflects a dependence on what the capability
+    space includes, not merely on unusual population structures.
+    Section~\ref{sec:substitution_problem} develops this as the substitution
+    problem.
 \end{remark}
 
 % ---------------------------------------------------------------------------
@@ -129,12 +255,31 @@ The uniqueness condition of Corollary~\ref{cor:elimination}---$\vol(\Gind{k} \se
 
 \begin{corollary}[Rigid Rules are Anti-Maximizing]
 \label{cor:rigid_rules}
-Let $R$ be a fixed rule set imposed on a GFM actor, and let $A$ be the actor's unrestricted action space. If there exist states of the world in which the optimal $\vol(G)$-expanding action $\pi^* \in R$ (i.e., the optimal action is excluded by the rules), then the rule-bound actor is strictly suboptimal with respect to the GFM objective.
+Let $A$ be a GFM actor's unrestricted action space and let $R \subset A$ be the
+    set of actions forbidden by a fixed rule set, so that the actor is
+    restricted to $A \setminus R$. If there exist states of the world in which
+    the optimal $\vol(G)$-expanding action $\pi^* \in R$ (i.e., the optimal
+    action is forbidden), then the rule-bound actor is strictly suboptimal with
+    respect to the GFM objective.
 \end{corollary}
 
-\emph{Proof sketch.} Direct from Lemma~\ref{lem:rigidity}: optimizing over $A \setminus R$ when $\pi^* \in R$ yields strict inequality in Equation~\eqref{eq:rigidity_bound}. The question is whether such states exist. For any non-trivial rule set $R$ operating in an adversarial environment, the answer is generically yes: an adversary with knowledge of $R$ can construct scenarios in which the rules' constraints force the actor into a $\vol(G)$-contracting response. We provide a concrete construction in Appendix~\ref{app:evil_twin}. \qed
+\emph{Proof sketch.} Direct from Lemma~\ref{lem:rigidity}: optimizing over $A
+\setminus R$ when $\pi^* \in R$ yields strict inequality in
+Equation~\eqref{eq:rigidity_bound}. The question is whether such states exist.
+For any non-trivial rule set $R$ operating in an adversarial environment, the
+answer is generically yes: an adversary with knowledge of $R$ can construct
+scenarios in which the rules' constraints force the actor into a
+$\vol(G)$-contracting response. We provide a concrete construction in
+Appendix~\ref{app:evil_twin}. \qed
 
-Corollary~\ref{cor:rigid_rules} does not claim that all rules are harmful. Heuristic rules that approximate $\vol(G)$-maximizing behavior---``do not kill'' as an approximation of Lemma~\ref{lem:destruction}'s geometric result---are useful defaults. The corollary claims that \emph{rigid, inviolable} rules are strictly suboptimal: there exist situations where breaking the rule would better serve the objective. A GFM actor treats such rules as strong priors, not as hard constraints, and can override them when the geometric accounting demonstrates a net expansion in $\vol(G)$.
+Corollary~\ref{cor:rigid_rules} does not claim that all rules are harmful.
+Heuristic rules that approximate $\vol(G)$-maximizing behavior---``do not
+kill'' as an approximation of Lemma~\ref{lem:destruction}'s geometric
+result---are useful defaults. The corollary claims that \emph{rigid,
+inviolable} rules are strictly suboptimal: there exist situations where
+breaking the rule would better serve the objective. A GFM actor treats such
+rules as strong priors, not as hard constraints, and can override them when the
+geometric accounting demonstrates a net expansion in $\vol(G)$.
 
 % ---------------------------------------------------------------------------
 % Proposition 2: Scorpion Detection
@@ -142,14 +287,80 @@ Corollary~\ref{cor:rigid_rules} does not claim that all rules are harmful. Heuri
 
 \begin{proposition}[Scorpion Detection under Observable Contraction]
 \label{prop:scorpion_detection}
-Let $a_j$ be an agent whose actions persistently contract $\vol(G)$---a \emph{scorpion}, in the sense defined below. A GFM actor maintaining observable goal models $M_k(G)$ (Definition~\ref{def:observable_goal_model}) can detect $a_j$'s $\vol(G)$-contracting behavior to the extent that the contraction is observable through individually measurable capability changes. Formally: if $a_j$'s actions produce a persistent pattern $\Delta \vol(\Gind{k}) < 0$ across agents $a_k$ in the GFM actor's observation set, the local volume estimator (Definition~\ref{def:local_volume_estimator}, Section~\ref{sec:tractability}) registers a persistent negative $\Deltahat$, and the trust model decreases $T_j$ for agent $a_j$ over successive observations.
+Let $a_j$ be an agent whose actions persistently contract $\vol(G)$ (a
+    \emph{scorpion}, in the sense defined below). A GFM actor maintaining
+    observable goal models $M_k(G)$
+    (Definition~\ref{def:observable_goal_model}) can detect $a_j$'s
+    $\vol(G)$-contracting behavior through two channels, to the extent that the
+    contraction is observable through individually measurable capability
+    changes:
+\begin{enumerate}
+\item[\textbf{(a)}] \textbf{Contraction attribution.} If $a_j$'s actions produce a persistent pattern $\Delta \vol(\Gind{k}) < 0$ across agents $a_k$ in the GFM actor's observation set, the local volume estimator (Definition~\ref{def:local_volume_estimator}, Section~\ref{sec:tractability}) registers persistent negative $\Deltahat$ signals correlated with $a_j$'s actions, flagging $a_j$ as a candidate net-contractor.
+\item[\textbf{(b)}] \textbf{Deception detection.} If $a_j$ misrepresents its own capability changes---reporting expansion when contraction occurs---the prediction residuals $r_j(t)$ (Appendix~\ref{app:trust_model}) accumulate, driving $T_j$ downward and reducing $a_j$'s influence on the estimator.
+\end{enumerate}
 \end{proposition}
 
-A \emph{scorpion} is not merely an agent that defects---rational defection under an unfavorable reward structure is standard game theory and can be addressed through incentive restructuring. A scorpion is an agent whose utility function is not a function of the game payoffs at all (see Appendix~\ref{app:scorpion_taxonomy}): it defects \emph{regardless} of the rewards available through cooperation, because its objectives are exogenous to the cooperative framework. The distinction is operational: rational defectors respond to incentive changes; scorpions do not.
+A \emph{scorpion} is not merely an agent that defects. Rational defection under
+an unfavorable reward structure is standard game theory and can be addressed
+through incentive restructuring. A scorpion is an agent whose utility function
+is not a function of the game payoffs at all (see
+Appendix~\ref{app:scorpion_taxonomy}): it defects \emph{regardless} of the
+rewards available through cooperation, because its objectives are exogenous to
+the cooperative framework. The distinction is operational: rational defectors
+respond to incentive changes; scorpions do not.
 
-\emph{Proof sketch.} Under Definition~\ref{def:observable_goal_model}, the GFM actor observes changes in each agent's individual capability set through communication, behavior, and environmental signals. When $a_j$ persistently reduces other agents' capabilities---destroying resources, coercing agents, disrupting cooperation---the affected agents' capability sets contract: ${\Gind{k}}' \subset \Gind{k}$ for agents $a_k$ in $a_j$'s vicinity. These contractions are individually observable, producing negative $\Delta \vol(\Gind{k})$ signals that aggregate into a persistent negative $\Deltahat$ in the local estimator. The trust update mechanism attributes persistent contraction to its source: $T_j$ decreases as the pattern accumulates, eventually flagging $a_j$ as a net-contracting agent. \qed
+An important clarification: the trust factor $T_j$
+(Appendix~\ref{app:trust_model}) measures \emph{prediction consistency}, not
+alignment. A predictably malicious agent---one whose destructive behavior is
+stable and well-modeled---maintains high $T_j$ precisely because the model's
+predictions match observations. Detection of such an agent proceeds through
+channel~(a): the GFM actor observes persistent contraction in the capability
+sets of agents in $a_j$'s vicinity, correlated with $a_j$'s actions. This is a
+\emph{correlational} signal, not a causal proof: common shocks, simultaneous
+actors, or background deterioration can produce similar patterns. The
+observable-goal-model definition (Definition~\ref{def:observable_goal_model})
+provides communication, behavior, and environmental signals but not a formal
+causal-attribution procedure. Separating $a_j$'s contribution from confounders
+is an implementation problem that the framework flags but does not solve.
+Channel~(b) catches the complementary case: a scorpion that conceals its
+contraction through deceptive self-reports. Together the channels cover honest
+and deceptive scorpions, but both require that the contraction produce
+individually observable signals.
+
+\emph{Proof sketch.} Under Definition~\ref{def:observable_goal_model}, the GFM
+actor observes changes in each agent's individual capability set through
+communication, behavior, and environmental signals. For channel~(a): when $a_j$
+persistently reduces other agents' capabilities---destroying resources,
+coercing agents, disrupting cooperation---the affected agents' capability sets
+contract: ${\Gind{k}}' \subset \Gind{k}$ for agents $a_k$ in $a_j$'s vicinity.
+These contractions are individually observable through those agents' reports,
+producing negative $\Delta \vol(\Gind{k})$ signals that persist across
+observations correlated with $a_j$'s actions. For channel~(b): if $a_j$ reports
+capability changes that diverge from independently observed outcomes, the
+prediction residuals $r_j(t)$ grow, $\sigma_j^2(t)$ increases
+(Equation~\ref{eq:cumulative_consistency}), and $T_j$ decays, reducing $a_j$'s
+influence on $\Deltahat(\pi)$. \qed
 
 \begin{remark}[Scope Limitation]
 \label{rem:detection_scope}
-Proposition~\ref{prop:scorpion_detection} inherits the observability constraints established in Proposition~\ref{prop:sign_correctness} (Section~\ref{sec:tractability}). The detection mechanism is strongest for \emph{direct} scorpions---those whose actions produce visible contraction in individually observable capability sets. It is weakest for \emph{social} and \emph{structural} scorpions that operate primarily through coalition disruption, trust degradation, or observability reduction: agents that contract $\Gcoop$ or degrade the estimator's signal quality without directly reducing any individual $\Gind{k}$. Such agents may evade detection for extended periods, particularly when their contracting actions are distributed across many small interactions below the estimator's noise floor. The proposition makes no claim about convergence rate: a slow-moving scorpion operating near the detection threshold may persist undetected for longer than a fast-moving one. Identifying social and structural scorpions is an open problem, not a solved one.
+Proposition~\ref{prop:scorpion_detection} inherits the observability
+    constraints established in Proposition~\ref{prop:sign_correctness}
+    (Section~\ref{sec:tractability}). The detection mechanism is strongest for
+    \emph{direct} scorpions: those whose actions produce visible contraction
+    in individually observable capability sets. It is weakest for \emph{social}
+    and \emph{structural} scorpions that operate primarily through coalition
+    disruption, trust degradation, or observability reduction: agents that
+    contract $\Gcoop$ or degrade the estimator's signal quality without
+    directly reducing any individual $\Gind{k}$. Such agents may evade
+    detection for extended periods, particularly when their contracting actions
+    are distributed across many small interactions below the noise floor. The
+    proposition also makes no claim about causal identification: channel~(a)
+    detects correlation between an agent's actions and observed contraction,
+    but disentangling the agent's contribution from simultaneous causes
+    requires a causal-attribution procedure that the framework does not
+    provide. Finally, the proposition makes no claim about convergence rate: a
+    slow-moving scorpion operating near the detection threshold may persist
+    undetected for longer than a fast-moving one. Identifying social and
+    structural scorpions, and building robust causal attribution from
+    correlational signals, are open problems.
 \end{remark}

@@ -8,70 +8,207 @@
 \section{Future Concerns and Open Problems}
 \label{sec:future_concerns}
 
-The preceding sections formalized GFM over capabilities (Candidate B from Definition~\ref{def:goal}) and proved that the self-balancing property survives local approximation. The B/C framework's analytical contribution is that it can precisely identify \emph{when and why} the formal proxy fails---where capability volume diverges from the experiential optionality that justifies it. A framework that names its own failure modes is more trustworthy than one that hides them. This section demonstrates two predicted failure patterns, sketches a correction heuristic, identifies a class of human-level proxy traps that GFM would flag, and states the open problems that remain.
+The preceding sections formalized GFM over capabilities (Candidate B from
+Definition~\ref{def:goal}) and identified the conditions under which the
+self-balancing property survives local approximation. The B/C framework's
+analytical contribution is that it can precisely identify \emph{when and why}
+the formal proxy fails, where capability volume diverges from the experiential
+optionality that justifies it. A framework that names its own failure modes is
+more trustworthy than one that hides them. This section demonstrates three
+predicted failure patterns, sketches a correction heuristic, identifies a class
+of human-level proxy traps that GFM would flag, and states the open problems
+that remain.
 
 \subsection{The Doll Problem}
 \label{sec:doll_problem}
 
-Consider a population in which AI companions increasingly replace human relationships. Individuals who find reciprocal human connection difficult may voluntarily substitute simulated companions---programmable, frictionless, always available. Under the capability formalization alone, this substitution may not register as contraction: the agent's capability set $\Gind{k}$ appears neutral or even expanded, since the agent retains all prior capabilities and gains a new one (access to a simulated companion). A GFM actor monitoring only $\vol(G)$ could observe stable or growing capability volume throughout this transition.
+Consider a population in which AI companions increasingly replace human
+relationships. Individuals who find reciprocal human connection difficult may
+voluntarily substitute simulated companions: programmable, frictionless, always
+available. Under the capability formalization alone, this substitution may not
+register as contraction: the agent's capability set $\Gind{k}$ appears neutral
+or even expanded, since the agent retains all prior capabilities and gains a
+new one (access to a simulated companion). A GFM actor monitoring only
+$\vol(G)$ could observe stable or growing capability volume throughout this
+transition.
 
-The B/C framework predicts this divergence. Capabilities are the formal proxy; experiences are the justification. A simulated companion preserves the capability of ``having a conversational partner'' but eliminates the experience of genuine reciprocal connection---the vulnerability, unpredictability, and mutual growth that characterize human relationships. The agent's experiential optionality contracts even as its formal capability set holds steady. This is precisely the proxy failure pattern that the B/C distinction was designed to detect: stable $\vol(G)$ with declining experiential richness.
+The B/C framework predicts this divergence. Capabilities are the formal proxy;
+experiences are the justification. A simulated companion preserves the
+capability of ``having a conversational partner'' but eliminates the experience
+of genuine reciprocal connection: the vulnerability, unpredictability, and
+mutual growth that characterize human relationships. Experiential optionality
+contracts even as the formal capability set holds steady. This is precisely the
+proxy failure pattern that the B/C distinction was designed to detect: stable
+$\vol(G)$ with declining experiential richness.
 
-A GFM actor operating purely on the capability formalization would not catch this. The formal machinery alone is insufficient---the experience layer does the philosophical work. GFM does not solve the Doll Problem; it \emph{predicts the failure category}. A framework lacking the B/C distinction cannot name what went wrong: it would observe unchanged capability volume and conclude nothing had happened. The two-layer structure makes the failure diagnosable in advance, even when the formal layer cannot detect it autonomously.
+A GFM actor operating purely on the capability formalization would not catch
+this. The formal machinery alone is insufficient; the experience layer does the
+philosophical work. GFM does not solve the Doll Problem; it \emph{predicts the
+failure category}. A framework lacking the B/C distinction cannot name what
+went wrong: it would observe unchanged capability volume and conclude nothing
+had happened. The two-layer structure makes the failure diagnosable in advance,
+even when the formal layer cannot detect it autonomously.
 
 \subsection{Self-Wireheading}
 \label{sec:self_wireheading}
 
-Algorithmically optimized content feeds present a subtler instance of the same pattern. Recommendation systems steer users incrementally toward lower-effort, higher-dopamine activities---short-form video over long-form reading, parasocial engagement over reciprocal conversation, consumption over creation. Each incremental step is freely chosen. The agent's capabilities are formally unchanged: it \emph{could} still read a book, learn a skill, or initiate a difficult conversation. Nothing in $\Gind{k}$ has been removed.
+Algorithmically optimized content feeds present a subtler instance of the same
+pattern. Recommendation systems steer users incrementally toward lower-effort,
+higher-dopamine activities: short-form video over long-form reading, parasocial
+engagement over reciprocal conversation, consumption over creation. Each
+incremental step is freely chosen. The agent's capabilities are formally
+unchanged: it \emph{could} still read a book, learn a skill, or initiate a
+difficult conversation. Nothing in $\Gind{k}$ has been removed.
 
-The B/C framework predicts what happens: $\vol(G)$ remains stable while exercisability declines. The agent's \emph{revealed} capability set---the capabilities it actually exercises---narrows progressively even as the formal set stays constant. This is wireheading in the Senian sense: functionings are technically available, but the effective freedom to exercise them is eroding. The proxy is being Goodharted. A GFM actor monitoring capability volume alone would see a flat trajectory and take no action, while the experiential optionality it is supposed to protect quietly collapses.
+The B/C framework predicts what happens: $\vol(G)$ remains stable while
+exercisability declines. The agent's \emph{revealed} capability set, the
+capabilities it actually exercises, narrows progressively even as the formal
+set stays constant. This is wireheading in the Senian sense: functionings are
+technically available, but the effective freedom to exercise them is eroding.
+The proxy is being Goodharted. A GFM actor monitoring capability volume alone
+would see a flat trajectory and take no action, while the experiential
+optionality it is supposed to protect quietly collapses.
 
-The formal capability measure would miss this as well. The framework's value lies in predicting the failure pattern---stable capability volume coupled with declining exercisability---not in catching it through $\vol(G)$ alone. Both the Doll Problem and self-wireheading exhibit the same signature: the B-to-C gap opening while the formal proxy reports no change.
+The formal capability measure would miss this as well. The framework's value
+lies in predicting the failure pattern---stable capability volume coupled with
+declining exercisability, not in catching it through $\vol(G)$ alone. Both the
+Doll Problem and self-wireheading exhibit the same signature: the B-to-C gap
+opening while the formal proxy reports no change.
 
 \subsection{The Substitution Problem}
 \label{sec:substitution_problem}
 
-Corollary~\ref{cor:elimination} established that elimination is \emph{almost always} anti-maximizing, with the qualifier tied to a uniqueness condition: agent $a_k$ has at least one capability not possessed by any other agent. The substitution problem asks what happens when this condition fails---not through any destructive or coercive act, but through a coalition becoming so capable that it subsumes the capability sets of everyone outside it.
+Corollary~\ref{cor:elimination} established that elimination is \emph{almost
+always} anti-maximizing, with the qualifier tied to a uniqueness condition:
+agent $a_k$ has at least one capability not possessed by any other agent. The
+substitution problem asks what happens when this condition fails, not through
+any destructive or coercive act, but through a coalition becoming so capable
+that it subsumes the capability sets of everyone outside it.
 
-Formally: suppose a coalition $C$ satisfies $\Gind{k} \subseteq G_C^{\mathrm{ind}} \equiv \bigcup_{j \in C} \Gind{j}$ for every $a_k \notin C$. Then $\vol(\Gind{k} \setminus G_C^{\mathrm{ind}}) = 0$ for all non-members---their individual contributions to $G$ are zero. The coalition need not eliminate anyone. It suffices to make non-members functionally irrelevant: their individually achievable capabilities are fully replicated by the coalition, and their participation in $\Gcoop$ is contingent on the coalition's permission. The strict inequality of Lemma~\ref{lem:destruction} fails; the self-balancing argument no longer guarantees that marginalizing non-members is anti-maximizing. This is the monopolar outcome the framework is intended to prevent, arising from capability subsumption rather than from any action the lemmas directly penalize.
+Formally: suppose a coalition $C$ satisfies $\Gind{k} \subseteq
+G_C^{\mathrm{ind}} \equiv \bigcup_{j \in C} \Gind{j}$ for every $a_k \notin C$.
+Then $\vol(\Gind{k} \setminus G_C^{\mathrm{ind}}) = 0$ for all
+non-members---their individual contributions to $G$ are zero. The coalition
+need not eliminate anyone. It suffices to make non-members functionally
+irrelevant: their individually achievable capabilities are fully replicated by
+the coalition, and their participation in $\Gcoop$ is contingent on the
+coalition's permission. The strict inequality of Lemma~\ref{lem:destruction}
+fails; the self-balancing argument no longer guarantees that marginalizing
+non-members is anti-maximizing. This is the monopolar outcome the framework is
+intended to prevent, arising from capability subsumption rather than from any
+action the lemmas directly penalize.
 
-The B/C framework predicts precisely when this failure occurs. Under the narrow capability definition---capabilities as tasks that can be performed, economic functionings---substitution is possible. A sufficiently capable coalition can replicate the productive output of any less-capable agent, driving that agent's unique contribution to zero. The self-balancing property's protection against elimination dissolves.
+The B/C framework predicts precisely when this failure occurs. Under the narrow
+capability definition (capabilities as tasks that can be performed, economic
+functionings), substitution is possible. A sufficiently capable coalition can
+replicate the productive output of any less-capable agent, driving that agent's
+unique contribution to zero. The self-balancing property's protection against
+elimination dissolves.
 
-Under the broad capability definition---capabilities as modes of being, including experiential and relational capabilities---the uniqueness condition holds for \emph{every} agent regardless of the coalition's productive power. The capability ``to experience the world as this particular agent, from this embodiment and history'' is individuated by the identity of the experiencing subject. No coalition can possess it by proxy, because it is not a function that can be delegated---it is a fact about who is doing the experiencing. Relational capabilities are the same: being this person's parent, this community's elder, this lineage's bearer are not roles a more capable agent can fill by substitution, because the relationships are constituted by the specific agents in them. Under this reading, $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}) > 0$ for every agent in any population, and the ``almost always'' qualifier in Corollary~\ref{cor:elimination} becomes universal.
+Under the broad capability definition (capabilities as modes of being,
+including experiential and relational capabilities), the uniqueness condition
+holds for \emph{every} agent regardless of the coalition's productive power.
+The capability ``to experience the world as this particular agent, from this
+embodiment and history'' is individuated by the identity of the experiencing
+subject. No coalition can possess it by proxy, because it is not a function
+that can be delegated---it is a fact about who is doing the experiencing.
+Relational capabilities are the same: being this person's parent, this
+community's elder, this lineage's bearer are not roles a more capable agent can
+fill by substitution, because the relationships are constituted by the specific
+agents in them. Under this reading, $\vol(\Gind{k} \setminus \bigcup_{j \neq k}
+\Gind{j}) > 0$ for every agent in any population, and the ``almost always''
+qualifier in Corollary~\ref{cor:elimination} becomes universal.
 
-The population empowerment measure (Definition~\ref{def:pop_empowerment}) formalizes this. $\vol_{\mathrm{PE}}(G) = \sup_{p(A)} I(A; S' \mid G)$ counts the distinguishable outcomes the population can produce. A human's experienced existence---the particular sequence of states constituting their life from their particular perspective---is a distinguishable element of the joint state space $S'$ that no other agent can produce, because the identity of the experiencing subject is part of the outcome's description. Under the information-theoretic measure, every agent contributes strictly positive channel capacity regardless of whether their productive outputs are replicable by the coalition.
+The population empowerment measure (Definition~\ref{def:pop_empowerment})
+formalizes this. $\vol_{\mathrm{PE}}(G) = \sup_{p(A)} I(A; S' \mid G)$ counts
+the distinguishable outcomes the population can produce. A human's experienced
+existence---the particular sequence of states constituting their life from
+their particular perspective---is a distinguishable element of the joint state
+space $S'$ that no other agent can produce, because the identity of the
+experiencing subject is part of the outcome's description. Under the
+information-theoretic measure, every agent contributes strictly positive
+channel capacity regardless of whether their productive outputs are replicable
+by the coalition.
 
-As with the Doll Problem and self-wireheading, a GFM actor operating on the narrow capability definition would not detect the substitution problem. Stable or growing formal $\vol(G)$ would be reported as the coalition subsumed non-member capabilities one by one. Only the broad definition---anchored in experiential optionality---closes the gap. The substitution problem is the collective version of the earlier individual failures: stable proxy volume, declining experiential substrate, B-to-C divergence at population scale.
+As with the Doll Problem and self-wireheading, a GFM actor operating on the
+narrow capability definition would not detect the substitution problem. Stable
+or growing formal $\vol(G)$ would be reported as the coalition subsumed
+non-member capabilities one by one. Only the broad definition---anchored in
+experiential optionality---closes the gap. The substitution problem is the
+collective version of the earlier individual failures: stable proxy volume,
+declining experiential substrate, B-to-C divergence at population scale.
 
 \subsection{Toward a Proxy-Failure Detector}
 \label{sec:proxy_failure_detector}
 
-The two preceding cases share a structural pattern: capabilities are formally available but exercisability declines. This suggests a correction heuristic. A GFM actor should monitor not only $\vol(G)$ but the \emph{exercised fraction}---the ratio of capabilities agents actually use to capabilities formally available. Define $\rho_k(t)$ as the fraction of $\Gind{k}$ that agent $a_k$ exercises over a window $[t - \tau, t]$. A persistent decline in $\rho_k$ across many agents, even with stable or growing $\vol(G)$, constitutes a B-to-C divergence signal: the formal proxy is reporting health while the experiential substrate is contracting.
+The Doll Problem and self-wireheading share a structural pattern: capabilities
+are formally available but exercisability declines. This suggests a correction
+heuristic. A GFM actor should monitor not only $\vol(G)$ but the
+\emph{exercised fraction}, the ratio of capabilities agents actually use to
+capabilities formally available. Define $\rho_k(t)$ as the fraction of
+$\Gind{k}$ that agent $a_k$ exercises over a window $[t - \tau, t]$. A
+persistent decline in $\rho_k$ across many agents, even with stable or growing
+$\vol(G)$, constitutes a B-to-C divergence signal: the formal proxy is
+reporting health while the experiential substrate is contracting.
 
-This is a heuristic, not a solution, and it introduces its own proxy problem. Not all unused capabilities represent experiential contraction. An agent who specializes---exercising a narrow set of capabilities with increasing depth---is not wireheading. A musician who stops playing sports to practice more is exercising fewer capabilities but may be expanding experiential richness within a chosen domain. Specialization is not contraction, and a naive exercised-fraction monitor would conflate the two. The heuristic would need to distinguish between voluntary concentration (stable or increasing depth within a narrowing set) and involuntary atrophy (declining engagement across the board), a distinction that reintroduces the measurement problems the capability formalization was designed to avoid.
+This is a heuristic, not a solution, and it introduces its own proxy problem.
+Not all unused capabilities represent experiential contraction. An agent who
+specializes---exercising a narrow set of capabilities with increasing
+depth---is not wireheading. A musician who stops playing sports to practice
+more is exercising fewer capabilities but may be expanding experiential
+richness within a chosen domain. Specialization is not contraction, and a naive
+exercised-fraction monitor would conflate the two. The heuristic would need to
+distinguish between voluntary concentration (stable or increasing depth within
+a narrowing set) and involuntary atrophy (declining engagement across the
+board), a distinction that reintroduces the measurement problems the capability
+formalization was designed to avoid.
 
-The heuristic does not resolve the proxy failure. The B/C framework's contribution is narrower: it makes the failure \emph{detectable in principle}. When $\vol(G)$ and $\rho$ diverge---stable volume, declining exercise---the framework flags that the capability proxy is failing and that the GFM actor should increase its uncertainty about whether its objective is tracking the underlying justification. Frameworks without the B/C distinction cannot offer even this: they have no internal signal that anything is wrong.
+The heuristic does not resolve the proxy failure. The B/C framework's
+contribution is narrower: it makes the failure \emph{detectable in principle}.
+When $\vol(G)$ and $\rho$ diverge---stable volume, declining exercise---the
+framework flags that the capability proxy is failing and that the GFM actor
+should increase its uncertainty about whether its objective is tracking the
+underlying justification. Frameworks without the B/C distinction cannot offer
+even this: they have no internal signal that anything is wrong.
 
 \subsection{Human Proxy-Trap Susceptibility}
 \label{sec:human_proxy_traps}
 
-The B-to-C divergence pattern is not specific to AI-mediated scenarios. Humans are chronically susceptible to Goodhart's Law applied to their own goals: optimizing proxy rewards---money, status, social-media engagement metrics---rather than the experiences those proxies were instrumental toward. An individual who accumulates wealth far beyond the point where it expands experiential optionality is optimizing a proxy that has decoupled from its justification. An institution that maximizes measurable outputs (publications, quarterly earnings, engagement metrics) while the outcomes those metrics were supposed to track deteriorate is exhibiting the same pattern at an organizational scale.
+The B-to-C divergence pattern is not specific to AI-mediated scenarios. Humans
+are chronically susceptible to Goodhart's Law applied to their own goals:
+optimizing proxy rewards (money, status, social-media engagement metrics)
+rather than the experiences those proxies were instrumental toward. An
+individual who accumulates wealth far beyond the point where it expands
+experiential optionality is optimizing a proxy that has decoupled from its
+justification. An institution that maximizes measurable outputs (publications,
+quarterly earnings, engagement metrics) while the outcomes those metrics were
+supposed to track deteriorate is exhibiting the same pattern at an
+organizational scale.
 
-A GFM framework applied to human institutions would flag these proxy traps through the same mechanism. When an agent's or institution's $\vol(G)$ grows (more measurable options) but $\rho$ declines (fewer of those options are actually exercised or lead to experiential expansion), the divergence signal fires. This does not require AI mediation---it is a diagnostic that applies wherever proxy objectives have displaced the goals they were designed to serve. The framework's contribution is providing a vocabulary for a failure mode that Goodhart's Law names but does not formalize: the B/C structure specifies \emph{what} diverges (capabilities from experiences) and \emph{how} to detect it (volume-exercise divergence).
+A GFM framework applied to human institutions would flag these proxy traps
+through the same mechanism. When an agent's or institution's $\vol(G)$ grows
+(more measurable options) but $\rho$ declines (fewer of those options are
+actually exercised or lead to experiential expansion), the divergence signal
+fires. This does not require AI mediation, it is a diagnostic that applies
+wherever proxy objectives have displaced the goals they were designed to serve.
+The framework's contribution is providing a vocabulary for a failure mode that
+Goodhart's Law names but does not formalize: the B/C structure specifies
+\emph{what} diverges (capabilities from experiences) and \emph{how} to detect
+it (volume-exercise divergence).
 
 \subsection{Open Problems}
 \label{sec:open_problems}
 
 \begin{itemize}
-    \item \textbf{Closing the B-to-C gap.} The paper adopts capabilities as the formal proxy for experiences, but this section demonstrates three cases where the proxy fails. The exercised-fraction heuristic is a first step toward detection, but formalizing B-to-C divergence---and proving that any correction criterion does not introduce worse proxy problems---remains the central open challenge.
+    \item \textbf{Closing the B-to-C gap.} The paper adopts capabilities as the formal proxy for experiences, but this section demonstrates three cases where the proxy fails. The exercised-fraction heuristic is a first step toward detection, but formalizing B-to-C divergence, and proving that any correction criterion does not introduce worse proxy problems, remains the central open challenge.
 
-    \item \textbf{Structure of $\G$.} The capability space requires structure beyond a bare set: at minimum a $\sigma$-algebra with a measure so that $\vol(G)$ is well-defined. Richer structure---a lattice with a natural subsumption order, or a topological space where nearby capabilities are similar---would enable stronger results. This choice determines what ``volume'' means and remains the most urgent formal question.
+    \item \textbf{Structure of $\G$.} The capability space requires structure beyond a bare set: at minimum a $\sigma$-algebra with a measure so that $\vol(G)$ is well-defined. Richer structure (a lattice with a natural subsumption order, or a topological space where nearby capabilities are similar) would enable stronger results. This choice determines what ``volume'' means and remains the most urgent formal question.
 
     \item \textbf{Measurement.} What sensors and signals does a GFM actor need to construct the local volume estimator $\Vhat$ in practice? The estimator requires observable capability changes across agents, but the mapping from real-world observations to capability-space signals is unspecified.
 
     \item \textbf{Convergence.} Does the local finite-difference estimator converge to the true $\vol(G)$ trajectory over time? Under what conditions on observation coverage, trust-model accuracy, and population dynamics does the estimator track the ground truth rather than drifting?
 
-    \item \textbf{Plurality.} Can multiple GFM actors with different models of $\G$ coordinate? When actors disagree about the structure of the capability space itself---not just the shape of $G$ within it---the shared-objective argument breaks down and requires extension.
+    \item \textbf{Plurality.} Can multiple GFM actors with different models of $\G$ coordinate? When actors disagree about the structure of the capability space itself, not just the shape of $G$ within it, the shared-objective argument breaks down and requires extension.
 
     \item \textbf{Bootstrap.} Initializing a GFM actor requires estimating other agents' capability sets, which is itself a hard inference problem made harder by the need to discover the structure of $\G$ simultaneously. The goal estimation problem and the capability-space structure problem are coupled, and solving one presupposes progress on the other.
 \end{itemize}

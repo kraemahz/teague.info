@@ -12,12 +12,54 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-The self-balancing property of goal-frontier maximization follows from a single geometric fact: removing elements from a measurable set cannot increase its measure. Proposition~\ref{prop:self_balancing} shows that this measure monotonicity is sufficient to penalize destruction (Lemma~\ref{lem:destruction}), coercion (Lemma~\ref{lem:coercion}), and self-imposed rigidity (Lemma~\ref{lem:rigidity}) from the same objective. No separate safety mechanism, deontological constraint, or utility-balancing term is required. The three failure modes that divide the existing alignment literature---Goodhart divergence in fixed-utility approaches, brittleness in rule-based approaches, and individual sacrifice in aggregate-welfare approaches---are all instances of $\vol(G)$-contraction, and a GFM actor that faithfully maximizes $\vol(G)$ resists all three for the same reason.
+The self-balancing property of goal-frontier maximization follows from a single
+geometric fact: removing elements from a measurable set cannot increase its
+measure. Proposition~\ref{prop:self_balancing} shows that this measure
+monotonicity is sufficient to penalize destruction
+(Lemma~\ref{lem:destruction}), coercion (Lemma~\ref{lem:coercion}), and
+self-imposed rigidity (Lemma~\ref{lem:rigidity}) from the same objective. No
+separate safety mechanism, deontological constraint, or utility-balancing term
+is required. The three failure modes that divide the existing alignment
+literature---Goodhart divergence in fixed-utility approaches, brittleness in
+rule-based approaches, and individual sacrifice in aggregate-welfare
+approaches---are all instances of $\vol(G)$-contraction, and a GFM actor that
+faithfully maximizes $\vol(G)$ resists all three for the same reason.
 
-Exact $\vol(G)$ computation is intractable, but the local finite-difference estimator (Definition~\ref{def:local_volume_estimator}) reduces the requirement from volume computation to sign estimation. Proposition~\ref{prop:sign_correctness} establishes that the estimator preserves sign-correctness under stated assumptions, and the assumptions hold most comfortably for the action class that alignment research cares about most: direct harm, coercion, resource destruction, and capability expansion. The estimator is weakest for pure coalition-level changes (Remark~\ref{rem:failure_modes}, case~4), and this boundary is stated rather than hidden.
+Exact $\vol(G)$ computation is intractable, but the local finite-difference
+estimator (Definition~\ref{def:local_volume_estimator}) reduces the requirement
+from volume computation to sign estimation.
+Proposition~\ref{prop:sign_correctness} decomposes the sign-correctness
+requirement into a margin condition on individual-level versus
+cooperative-level signals, and the margin holds most comfortably for the action
+class that alignment research cares about most: direct harm, coercion, resource
+destruction, and capability expansion. The estimator is weakest for pure
+coalition-level changes (Remark~\ref{rem:failure_modes}, case~4), and this
+boundary is stated rather than hidden.
 
-GFM's distinguishing contribution is the unification of two problems usually treated separately. The control problem---preventing a powerful agent from pursuing destructive objectives---and the scorpion problem---detecting and responding to agents that persistently contract the joint capability space---are both addressed by the same $\vol(G)$ objective. Tradeoffs between permissiveness and restriction are made explicit through geometric accounting on $G$, not resolved by fiat or hidden behind categorical rules.
+GFM's distinguishing contribution is the unification of two problems usually
+treated separately. The control problem---preventing a powerful agent from
+pursuing destructive objectives---and the scorpion problem---detecting and
+responding to agents that persistently contract the joint capability
+space---are both addressed by the same $\vol(G)$ objective. Tradeoffs between
+permissiveness and restriction are made explicit through geometric accounting
+on $G$, not resolved by fiat or hidden behind categorical rules.
 
-The B/C framework adds a second layer of analytical value. By distinguishing the formal proxy (capabilities) from its experiential justification, GFM predicts its own failure modes: the Doll Problem and self-wireheading are cases where the capability proxy diverges from experiential optionality, and the exercised-fraction heuristic (Section~\ref{sec:proxy_failure_detector}) sketches a detection criterion. A framework that can name the conditions under which its own objective function fails is more trustworthy than one that cannot.
+The B/C framework adds a second layer of analytical value. By distinguishing
+the formal proxy (capabilities) from its experiential justification, GFM
+predicts its own failure modes: the Doll Problem, self-wireheading, and the
+Substitution Problem are cases where the capability proxy diverges from
+experiential optionality, and the exercised-fraction heuristic
+(Section~\ref{sec:proxy_failure_detector}) sketches a detection criterion for
+the individual-level failures. A framework that can name the conditions under
+which its own objective function fails is more trustworthy than one that
+cannot.
 
-The open problems are substantial. The structure of $\G$, the measurement problem for real-world capability signals, the convergence properties of the local estimator, and the formalization of B-to-C divergence all remain unresolved. But the foundation is a single objective aligned not to a fixed human specification---which would be subject to the same Goodhart dynamics the framework diagnoses---but to the ongoing expansion of what all agents can achieve. If the alignment problem is fundamentally a problem of objective selection, then the objective should be one that grows with the population it serves. GFM is a candidate for that objective.
+The open problems are substantial. The structure of $\G$, the measurement
+problem for real-world capability signals, the convergence properties of the
+local estimator, and the formalization of B-to-C divergence all remain
+unresolved. But the foundation is a single objective aligned not to a fixed
+human specification, which would be subject to the same Goodhart dynamics the
+framework diagnoses, but to the ongoing expansion of what all agents can
+achieve. If the alignment problem is fundamentally a problem of objective
+selection, then the objective should be one that grows with the population it
+serves. GFM is a candidate for that objective.
