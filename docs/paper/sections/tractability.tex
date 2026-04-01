@@ -112,24 +112,32 @@ observation set. This channel covers changes to $\bigcup_k \Gind{k}$ well: when
 an action directly affects an agent's capabilities, that agent can report the
 change, and the estimator registers it with weight proportional to trust.
 
-\emph{Coalition capability signals.} Changes to $\Gcoop$ are not directly
-observable from individual agents' reports. A cooperative capability can appear
-or disappear even when no single agent reports a unilateral change; a
-coordination mechanism can dissolve without any individual losing personal
-capabilities. The estimator can partially observe $\Gcoop$ through indirect
-signals: new coordination patterns between agents (observed behaviorally),
-agents reporting capabilities conditional on cooperation with specific
-partners, and changes in the structure of agent interactions. But this channel
-is noisier, slower, and less reliable than individual signals.
+\emph{Coalition capability signals.} Agents who participate in cooperation
+have first-person access to their cooperative capabilities: a surgeon knows
+which anesthesiologists they can operate with, a communication channel
+participant knows the channel exists. When agents report not only individual
+capability changes but also changes to cooperative relationships they
+participate in, the individual channel partially covers $\Gcoop$. An
+observation worth noting: dissolution of cooperation (a channel going silent,
+a partnership ending) is typically more observable than creation, because
+absence of expected signals is easier to detect than presence of novel ones.
+This asymmetry serves the self-balancing property, since its primary function
+is detecting $\vol(G)$-contraction. The residual gap consists of cooperative
+capabilities invisible to all participants: emergent properties of the
+cooperation graph (e.g., network fragility) that no individual node can detect
+locally.
 
 \paragraph{Critical assumption.} $\Vhat$ is a better estimator of
-$\vol\bigl(\bigcup_k \Gind{k}\bigr)$ than of $\vol(G)$. The cooperative
-component $\Gcoop$ is partially observable but systematically underweighted.
-This is the primary implementation gap in the framework: the local estimator
-provides a lower bound on the information available about $\vol(G)$, and its
-coverage of cooperative capabilities is where implementations must invest most
-heavily to close the gap between the estimator's reach and the objective's
-scope.
+$\vol\bigl(\bigcup_k \Gind{k}\bigr)$ than of $\vol(G)$. Agents can report on
+cooperative capabilities they directly observe (their own pairwise
+relationships, coordination they participate in), which partially covers
+$\Gcoop$ through the individual reporting channel. The residual gap consists of
+cooperative capabilities that no agent in $\mathcal{O}$ can observe from its
+own position: multi-agent coordination effects visible only from outside the
+coalition, or structural changes to the cooperation graph that no participant
+detects locally. This residual gap narrows as $\mathcal{O}$ grows and as agents
+report on their cooperative relationships, but it does not close entirely
+without an external observation channel for coalition structure.
 
 % ---------------------------------------------------------------------------
 % Proposition 3: Self-Balancing Survives Approximation
@@ -142,39 +150,52 @@ Decompose $\Delta \vol(G)$ into the individual-capability component $\Delta
     \vol(\Gcoop)$. The local volume estimator $\Deltahat(\pi)$ observes the
     first component (through agent reports) and partially observes the second
     (through coalition signals). The estimator's sign matches the true sign,
-    $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \mid \pi)$, when all three of
-    the following conditions hold:
+    $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G) \mid \pi)$, when the
+    following conditions hold:
 \begin{enumerate}
-\item The actor observes a representative sample of affected agents.
-\item The actor's trust model is accurate enough to distinguish genuine feedback from adversarial noise.
-\item \textbf{Individual-level dominance:} There exists $\epsilon < 1$ such that
+\item The actor observes a representative sample of affected agents, with
+  sampling error ratio $\delta$ such that $|e_I| \leq \delta \cdot
+  |\Delta \vol(\bigcup_k \Gind{k})|$.
+\item The actor's trust model is accurate enough to distinguish genuine
+  feedback from adversarial noise (controlling $\delta$).
+\item \textbf{Individual-level dominance:} There exists $\epsilon > \delta$
+  such that
 \begin{equation}
 \label{eq:sign_preservation}
 \bigl|\Delta \vol(\Gcoop) - \widehat{\Delta \vol}(\Gcoop)\bigr| < (1 - \epsilon) \cdot \bigl|\Delta \vol\bigl(\textstyle\bigcup_k \Gind{k}\bigr)\bigr|
 \end{equation}
 \end{enumerate}
+When the individual and cooperative components change in the same direction,
+    conditions 1--3 suffice. When they change in opposite directions,
+    sign-correctness additionally requires that the cooperative-level
+    \emph{change} (not just the estimation error) satisfies
+    $|\Delta \vol(\Gcoop)| < (\epsilon - \delta) \cdot
+    |\Delta \vol(\bigcup_k \Gind{k})|$
+    (Appendix~\ref{app:proof_sign_correctness}).
 \end{proposition}
 
 The proposition is a \emph{decomposition}, not a derivation of tractability.
-Condition~\eqref{eq:sign_preservation} is a margin condition: it states that
-the estimation error on the cooperative component is smaller than the observed
-individual-level signal. Given that margin, sign-correctness follows
-immediately---the contribution is in identifying \emph{which actions satisfy
-the margin condition naturally} and which do not, thereby telling implementers
-where the estimator is reliable and where it requires additional observation
-channels.
+Conditions 1--3 identify a margin within which the estimator is sign-correct;
+the opposite-sign caveat identifies a narrower regime where the margin
+tightens. The contribution is in characterizing \emph{which actions satisfy
+the margin naturally} and which do not, telling implementers where the
+estimator is reliable and where it requires additional observation channels.
 
-\emph{Verification.} The self-balancing property
+\emph{Verification} (full proof in Appendix~\ref{app:proof_sign_correctness}).
+The self-balancing property
 (Proposition~\ref{prop:self_balancing}) is structural: it follows from measure
 monotonicity regardless of whether the estimator can observe the full change.
 The decomposition bridges from this structural property to the estimator's
 output. The estimator observes the individual-capability component (up to
-sampling error controlled by conditions 1--2) and partially observes the
-cooperative component. Under condition~3, the estimation error on the
-cooperative component cannot flip the sign of the observed individual-level
-signal. Since the individual signal preserves the sign of the true
-individual-level change (by conditions 1--2), the estimator's sign matches the
-sign of the true $\Delta \vol(G)$.
+sampling error ratio $\delta$ controlled by conditions 1--2) and partially
+observes the cooperative component. When the individual and cooperative
+components change in the same direction, condition~3 ensures the cooperative
+estimation error cannot flip the sign. When they change in opposite
+directions, the stronger bound on the cooperative-level change itself is
+required (Appendix~\ref{app:proof_sign_correctness}). The estimator is
+therefore most reliable for actions where both components move together, and
+weakest for actions that expand individual capabilities while contracting
+cooperative ones (or vice versa).
 
 \paragraph{When condition 3 holds naturally.} The actions an alignment
 framework most needs to evaluate---direct harm, resource destruction, coercion,
@@ -212,12 +233,12 @@ Proposition~\ref{prop:sign_correctness} covers the most critical actions for
 
 \item \textbf{Partial individual observation, no cooperative change.} Sign-correctness depends on the sampling model, which is an implementation design choice. Unbiased sampling of affected agents improves with coverage; adversarially selected observation sets can mislead. Condition~1 of Proposition~\ref{prop:sign_correctness} controls this case.
 
-\item \textbf{Mixed individual and cooperative changes.} The estimator is unreliable when the cooperative-level change dominates the individual-level signal. This is a structural limitation; improving the coalition observation channel is the fix, not better sampling of individuals.
+\item \textbf{Mixed individual and cooperative changes.} Agents who participate in cooperation have first-person access to their cooperative capabilities and can report changes to them through $R_k$. The estimator covers cooperative changes to the extent that at least one participant in the affected cooperation is in $\mathcal{O}$. The estimator is unreliable only when the cooperative-level change involves agents entirely outside $\mathcal{O}$ or when the cooperative change dominates the individual-level signal from agents whose cooperative reports are noisy.
 
-\item \textbf{Pure coalition-level changes.} The estimator is blind. An action that restructures cooperation patterns without affecting any individual's capability set produces no signal in the individual channel. This is the known boundary.
+\item \textbf{Pure coalition-level changes with no participant in $\mathcal{O}$.} The estimator has no signal for cooperative restructuring among agents entirely outside the observation set, or for emergent graph-level properties of the cooperation structure that no individual participant can detect locally (e.g., a coordination topology becoming fragile without any single link breaking). This is the residual boundary.
 \end{enumerate}
 
-What the Remark gives an implementer: a graduated threat model. The self-balancing property of Proposition~\ref{prop:self_balancing} holds over all of $\vol(G)$, the Remark characterizes how much of that property a given implementation can enforce, and where to extend coverage. Cases~1--2 are addressable through sampling design. Case~3 requires investment in coalition-level observation. Case~4 identifies the structural frontier where new measurement channels are needed.
+What the Remark gives an implementer: a graduated threat model. The self-balancing property of Proposition~\ref{prop:self_balancing} holds over all of $\vol(G)$; the Remark characterizes how much of that property a given implementation can enforce. Cases~1--2 are addressable through sampling design. Case~3 is largely addressable by ensuring agents report on their cooperative relationships, not only their individual capabilities. Case~4 identifies the residual frontier: graph-level cooperation properties invisible to all participants, addressable only through external structural observation.
 \end{remark}
 
 % ---------------------------------------------------------------------------
@@ -244,7 +265,26 @@ At each step, the actor:
 \label{eq:aggregate_signal}
 \Deltahat(\pi) \;=\; \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi)
 \end{equation}
-where $\mathcal{O}$ is the actor's observation set, $R_k(\pi) \in \{-1, 0, +1\}$ represents agent $a_k$'s reported capability change under $\pi$, and $T_k \in [0, 1]$ is the trust factor from Definition~\ref{def:observable_goal_model}. The sign of $\Deltahat(\pi)$ determines whether $\pi$ is classified as expanding or contracting.
+where $\mathcal{O}$ is the actor's observation set, $R_k(\pi) \in \{-1, 0, +1\}$ is agent $a_k$'s reported \emph{net direction} of capability change under $\pi$ (including cooperative capabilities $a_k$ can observe from its own vantage point), and $T_k \in [0, 1]$ is the trust factor from Definition~\ref{def:observable_goal_model}. The sign of $\Deltahat(\pi)$ determines whether $\pi$ is classified as expanding or contracting.
+
+The ternary signal $R_k$ is deliberately coarse: each agent compresses its
+observed individual and cooperative capability changes into a single net
+direction ($-1$, $0$, or $+1$). An agent that simultaneously gains one
+cooperative capability and loses another reports only the net sign, not the
+decomposition. This makes $\Deltahat(\pi)$ a trust-weighted directional vote,
+not a volume estimator, consistent with the paper's reduction from magnitude
+estimation to sign estimation (Definition~\ref{def:local_volume_estimator}).
+Coalition-level changes enter through this same coarse channel: an agent $a_k$
+that observes a change in its cooperative relationship with $a_j$ folds the
+change into $R_k(\pi)$, and the GFM actor weights the report by $T_k$. If
+$a_k$ relays information originally obtained from $a_j$, the actor trusts
+$a_k$'s editorial judgment in passing it along; $T_k$ absorbs the reliability
+of $a_k$'s sources through the prediction-residual dynamics of the trust
+model. The coverage of $\Gcoop$ is accordingly coarse: agents report the
+direction of their cooperative capability changes, not the magnitude or the
+individual components. The remaining coverage gap is for cooperative
+capabilities that no agent in $\mathcal{O}$ can observe from its own position,
+which narrows as $\mathcal{O}$ grows.
 
 \item \textbf{Act or abstain.} Execute $\pi$ if $\Deltahat(\pi) > 0$ (estimated expansion). Abstain or seek alternatives if $\Deltahat(\pi) \leq 0$ (estimated contraction or neutral). In the marginal case where $|\Deltahat(\pi)|$ is small, the actor may defer pending additional evidence.
 
@@ -253,7 +293,7 @@ where $\mathcal{O}$ is the actor's observation set, $R_k(\pi) \in \{-1, 0, +1\}$
 \label{eq:model_update}
 M_k'(G) \;=\; M_k(G) + T_k \cdot (1 - T_s) \cdot f(R_k \mid M_k(G)) \cdot \mathbf{1}\bigl[\Delta E(R_k, M_k(G)) > \theta\bigr]
 \end{equation}
-where $(1 - T_s)$ is the \emph{learning rate} derived from the actor's self-trust $T_s \in [0,1]$: when self-trust is low (bootstrapping phase), the learning rate is high and the model admits many updates; when self-trust is high (stable phase), the learning rate is low and the model resists small perturbations. The term $f(R_k \mid M_k(G))$ is the update direction derived from comparing agent $a_k$'s response $R_k$ against the model's prediction.
+where $(1 - T_s)$ is the \emph{learning rate} derived from the actor's self-trust $T_s \in [0,1]$: when self-trust is low (bootstrapping phase), the learning rate is high and the model admits many updates; when self-trust is high (stable phase), the learning rate is low and the model resists small perturbations. The \emph{update direction} $f(R_k \mid M_k(G)) = R_k - \hat{R}_k(M_k(G))$ is the prediction residual: the difference between agent $a_k$'s observed response $R_k$ and the model's predicted response $\hat{R}_k$. The \emph{evidence magnitude} $\Delta E(R_k, M_k(G)) = |f(R_k \mid M_k(G))|$ is the absolute size of this residual, gating whether the update propagates.
 \end{enumerate}
 
 \paragraph{Activation energy.} The indicator $\mathbf{1}[\Delta E > \theta]$ in
@@ -321,11 +361,12 @@ is harder than a scalar bandit but remains tractable---the per-step cost is
 polynomial in $|\mathcal{O}|$ and does not depend on the size of the full
 capability space $\G$.
 
-\paragraph{What is lost.} The local estimator cannot detect changes to $\Gcoop$
-that leave individual capability sets unchanged
-(Remark~\ref{rem:failure_modes}, case~4). It systematically underweights
-cooperative capabilities. And it provides no guarantee on the \emph{magnitude}
-of $\Delta \vol(G)$---only on its sign. A GFM actor operating through the local
+\paragraph{What is lost.} The local estimator cannot detect cooperative
+changes invisible to all participants in $\mathcal{O}$
+(Remark~\ref{rem:failure_modes}, case~4): emergent graph-level properties of
+the cooperation structure that no individual agent can observe locally. It
+also provides no guarantee on the \emph{magnitude} of
+$\Delta \vol(G)$, only on its sign. A GFM actor operating through the local
 estimator may correctly classify actions as expanding or contracting without
 knowing how much expansion or contraction occurs. This limits the actor's
 ability to compare two expanding actions and select the better one, reducing

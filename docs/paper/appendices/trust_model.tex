@@ -15,7 +15,7 @@ This appendix derives the trust model from the definitions and propositions of t
 % C.1: Trust Factor T_k
 % ---------------------------------------------------------------------------
 
-\subsection{Trust Factor $T_k$}
+\subsection{Trust Factor \texorpdfstring{$T_k$}{T\_k}}
 \label{app:trust_factor}
 
 The observable goal model $M_k(G)$ (Definition~\ref{def:observable_goal_model}) represents the GFM actor's belief about agent $a_k$'s contribution to the joint goal space. At each interaction, the actor observes $a_k$'s behavior---the capability changes $a_k$ produces or reports---and compares this against $M_k(G)$'s prediction.
@@ -53,7 +53,7 @@ where $\beta > 0$ is a sensitivity parameter controlling how rapidly trust decay
 % C.2: Cooling Period
 % ---------------------------------------------------------------------------
 
-\subsection{Cooling Period $\tau$}
+\subsection{Cooling Period \texorpdfstring{$\tau$}{tau}}
 \label{app:cooling_period}
 
 A new agent $a_k$ entering the GFM actor's observation set has no prediction history: $\sigma_k^2(0)$ is undefined. The cooling period $\tau$ addresses this by initializing the trust factor at a conservative value and requiring evidence accumulation before trust can reach levels that significantly influence the estimator.
@@ -80,7 +80,7 @@ The cost of the cooling period is reduced responsiveness to genuinely reliable n
 % C.3: Self-Trust and Activation Energy
 % ---------------------------------------------------------------------------
 
-\subsection{Self-Trust $T_s$ and Activation Energy $\theta$}
+\subsection{Self-Trust \texorpdfstring{$T_s$}{T\_s} and Activation Energy \texorpdfstring{$\theta$}{theta}}
 \label{app:self_trust}
 
 The GFM actor maintains a model not only of other agents but of the world as a whole. The self-trust factor $T_s \in [0, 1]$ represents the actor's confidence in its own world model---how well its predictions about the consequences of its actions match observed outcomes.
@@ -103,7 +103,9 @@ where $\alpha_s$ and $\beta_s$ are the self-trust decay and sensitivity paramete
 \item $T_s$ controls \emph{how much} influence accepted evidence has on the model (scaling).
 \end{itemize}
 
-The model update (Equation~\eqref{eq:model_update}) combines both:
+The model update (Equation~\eqref{eq:model_update}) combines both, where
+$f(R_k \mid M_k(G)) = R_k - \hat{R}_k(M_k(G))$ is the prediction residual and
+$\Delta E(R_k, M_k(G)) = |f(R_k \mid M_k(G))|$ is the evidence magnitude:
 \[
 M_k'(G) = M_k(G) + T_k \cdot (1 - T_s) \cdot f(R_k \mid M_k(G)) \cdot \mathbf{1}[\Delta E(R_k, M_k(G)) > \theta]
 \]
@@ -155,9 +157,31 @@ The trust model interfaces with the local volume estimator (Definition~\ref{def:
 \]
 The trust weights $T_k$ serve two functions in this aggregation: they improve the estimator's accuracy (by upweighting reliable reports) and they provide adversarial robustness (by downweighting deceptive reports). A crucial distinction: $T_k$ measures \emph{prediction consistency}---how well $M_k(G)$ tracks $a_k$'s observed behavior---not alignment with the $\vol(G)$ objective. A predictably malicious agent whose destructive behavior is well-modeled will maintain high $T_k$. Detection of such agents proceeds through the contraction-attribution channel of Proposition~\ref{prop:scorpion_detection}(a), not through trust decay.
 
-\paragraph{Effect on sign-correctness.} Proposition~\ref{prop:sign_correctness} requires that the trust model is accurate enough to distinguish genuine feedback from adversarial noise (condition~2). The trust factor achieves this under the following condition: for each agent $a_k$ in the observation set, the trust factor $T_k$ is positively correlated with $a_k$'s report accuracy. Formally, define an agent's \emph{report accuracy} as the probability that $\sign(R_k(\pi)) = \sign(\Delta \vol(\Gind{k}) \mid \pi)$. If $T_k$ is higher for agents with higher report accuracy, then the trust-weighted aggregate $\Deltahat(\pi)$ is a better estimator of $\sign(\Delta \vol(G))$ than the unweighted aggregate.
+\paragraph{Effect on sign-correctness.} Proposition~\ref{prop:sign_correctness}
+requires that the trust model is accurate enough to distinguish genuine
+feedback from adversarial noise (condition~2). The trust factor achieves this
+under the following condition: for each agent $a_k$ in the observation set,
+$T_k$ is positively correlated with $a_k$'s report accuracy. Since $R_k$ now
+carries both individual-capability changes and cooperative-relationship changes
+that $a_k$ can observe (Section~\ref{subsec:optimization_loop}), define an
+agent's \emph{report accuracy} as the probability that $\sign(R_k(\pi)) =
+\sign(\Delta \vol(G_k) \mid \pi)$, where $G_k = \Gind{k} \cup
+\{g \in \Gcoop : a_k \text{ participates in } g\}$ is the portion of the
+joint space that $a_k$ has first-person access to. If $T_k$ is higher for
+agents with higher report accuracy over $G_k$, then the trust-weighted
+aggregate $\Deltahat(\pi)$ is a better estimator of $\sign(\Delta \vol(G))$
+than the unweighted aggregate.
 
-The trust factor defined in Section~\ref{app:trust_factor} satisfies this condition under a regularity assumption: agents whose reports are accurate produce small prediction residuals $r_k$, which produce small $\sigma_k^2$, which produce high $T_k$. Agents whose reports are inaccurate---whether through incompetence or deception---produce large prediction residuals, large $\sigma_k^2$, and low $T_k$. The regularity assumption is that prediction residuals correlate with report inaccuracy, which holds when the actor's model $M_k(G)$ is accurate enough to detect discrepancies between reported and actual capability changes.
+The trust factor defined in Section~\ref{app:trust_factor} satisfies this
+condition under a regularity assumption: agents whose reports are accurate
+(over both their individual and participant-observable cooperative capabilities)
+produce small prediction residuals $r_k$, which produce small $\sigma_k^2$,
+which produce high $T_k$. Agents whose reports are inaccurate produce large
+residuals and low $T_k$. The regularity assumption is that prediction
+residuals correlate with report inaccuracy over $G_k$, which holds when the
+actor's model $M_k(G)$ is accurate enough to detect discrepancies between
+reported and actual capability changes across both individual and cooperative
+components.
 
 \paragraph{Adversarial robustness.} Consider an adversarial agent $a_j$ that reports false capability changes to manipulate the estimator. The false reports produce prediction residuals: the actor observes (through independent channels or subsequent observations) that $a_j$'s reported changes do not match actual capability changes. These residuals accumulate in $\sigma_j^2$, driving $T_j$ downward and reducing $a_j$'s influence on $\Deltahat(\pi)$.
 

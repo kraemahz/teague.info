@@ -50,10 +50,19 @@ penalizes unilateral expansion that shrinks $\vol(G)$ even if individual
 empowerment increases. A related approach is attainable utility preservation
 \citep{turner2020conservative}, which penalizes actions that reduce the agent's
 ability to optimize auxiliary reward functions---a single-agent analogue of
-GFM's multi-agent optionality preservation. The practical inheritance from
-empowerment is tractability: the variational and sampling techniques developed
-for single-agent empowerment estimation carry over to the local
-finite-difference estimator $\hat{V}$ of
+GFM's multi-agent optionality preservation. A natural question is why GFM introduces the set-theoretic construction $G =
+\bigcup_k \Gind{k} \cup \Gcoop$ rather than defining social empowerment
+directly as $\sup_{p(A)} I(A; S')$ over the joint action space. The answer is
+structural: the decomposition of $G$ into individual and cooperative components
+is what enables Lemmas~\ref{lem:destruction}--\ref{lem:rigidity}. Social
+empowerment as a scalar channel capacity does not decompose the same way; it
+cannot distinguish whether a volume change came from destroying an agent's
+individual capabilities, restricting cooperation, or imposing rigid rules on
+the actor. The set-theoretic construction buys the self-balancing property at
+the cost of requiring structure on $\G$ that a channel-capacity formulation
+avoids. The practical inheritance from empowerment is tractability: the
+variational and sampling techniques developed for single-agent empowerment
+estimation carry over to the local finite-difference estimator $\hat{V}$ of
 Proposition~\ref{prop:sign_correctness}, with the population-level
 generalization being the primary added complexity.
 
@@ -86,11 +95,17 @@ should act to increase capabilities. GFM is \emph{prescriptive and optimizing}:
 it transforms the evaluation criterion into an objective function that an agent
 can pursue, with formal self-balancing guarantees
 (Proposition~\ref{prop:self_balancing}) and tractable estimation
-(Proposition~\ref{prop:sign_correctness}). The decades of formal development in
-the capability approach --- including Nussbaum's specification of central human
-capabilities \citep{nussbaum2000women} and Robeyns's theoretical survey of
-capability metrics \citep{robeyns2005capability} --- provide a reservoir of
-worked examples and partial formalizations that GFM can draw on as the
+(Proposition~\ref{prop:sign_correctness}). GFM also inherits a structural advantage from the capability framing: by
+measuring the volume of a capability set rather than aggregating individual
+preference orderings, it sidesteps the impossibility results that constrain
+social choice theory \citep{arrow1951social}. The problem of ranking
+opportunity sets by the freedom they offer has been studied formally by
+\citet{pattanaik1990ranking}, and $\vol(G)$ can be read as a specific answer to
+their question: rank opportunity sets by measure. The decades of formal
+development in the capability approach, including Nussbaum's specification of
+central human capabilities \citep{nussbaum2000women} and Robeyns's theoretical
+survey of capability metrics \citep{robeyns2005capability}, provide a reservoir
+of worked examples and partial formalizations that GFM can draw on as the
 capability space $\G$ receives more structure in future work.
 
 \subsection{Free Energy Principle}

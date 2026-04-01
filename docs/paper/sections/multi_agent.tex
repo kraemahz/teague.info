@@ -57,7 +57,7 @@ Let $a_i$ and $a_j$ be two agents. Write $G(t)$ for the joint goal space at
     \subseteq G^{\mathrm{coop}}_i \cap G^{\mathrm{coop}}_j$. Then:
 \begin{enumerate}
 \item[\textbf{(i)}] For any unilateral action $\pi$ by either $a_i$ or $a_j$ alone, $\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi) = 0$.
-\item[\textbf{(ii)}] If $a_i$ and $a_j$ have complementary capabilities, there exist joint actions $\pi_{ij}$ that create new coordination infrastructure (communication channels, shared protocols, mutual commitments) such that $G^{\mathrm{coop}}_{ij}(t+1) \supsetneq G^{\mathrm{coop}}_{ij}(t)$ (the set of jointly achievable capabilities \emph{grows}) and hence $\Delta \vol(G \mid \pi_{ij}) > 0$.
+\item[\textbf{(ii)}] If $a_i$ and $a_j$ have complementary capabilities, there exist joint actions $\pi_{ij}$ that create new coordination infrastructure (communication channels, shared protocols, mutual commitments) such that $G^{\mathrm{coop}}_{ij}(t+1) \supsetneq G^{\mathrm{coop}}_{ij}(t)$ (the set of jointly achievable capabilities \emph{grows}) and hence $\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi_{ij}) > 0$. Whether this cooperative gain produces a net expansion in $\vol(G)$ depends on the opportunity cost of coordination (part~(iii)).
 \item[\textbf{(iii)}] For two GFM actors with compatible world models and sufficient mutual trust, cooperation is $\vol(G)$-rational when $\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})] > C_{ij}$, where $C_{ij} \geq 0$ is the $\vol(G)$-opportunity cost of coordination.
 \end{enumerate}
 \end{lemma}
@@ -74,7 +74,7 @@ cannot jointly plan a project; establishing a communication channel adds that
 capability to $G^{\mathrm{coop}}_{ij}$. The joint action expands $G$ itself,
 not merely the set of realized outcomes.
 
-\emph{Proof sketch.}
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_cooperation}).
 (i) By definition, $G^{\mathrm{coop}}_{ij}$ contains capabilities requiring the
 simultaneous participation of both $a_i$ and $a_j$. A unilateral action by
 $a_i$ does not involve $a_j$'s participation, so it cannot create or remove
@@ -153,9 +153,13 @@ because the reward structure makes defection the better play. If the payoff
 from unilateral action exceeds the payoff from cooperation (because the
 cooperative surplus is too small, the coordination cost too high, or the other
 agents' contributions too unreliable), then defection is rational self-interest
-within the game. This is standard game theory, and GFM handles it through
-standard game-theoretic means: restructure the interaction so that cooperation
-is net-positive for both parties.
+within the game. This is standard game theory, and GFM handles it through standard
+game-theoretic means: restructure the interaction so that cooperation is
+net-positive for both parties. The mechanism design literature
+\citep{hurwicz1972informationally, myerson1981optimal} formalizes this problem
+as implementation under private information; the GFM actor's task is to design
+the interaction so that truthful reporting and cooperative action are
+incentive-compatible.
 
 A GFM actor that can expand $\Gcoop$ by facilitating coordination (reducing
 transaction costs, providing reliable information, or demonstrating that joint

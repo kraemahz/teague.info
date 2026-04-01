@@ -10,8 +10,15 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
-\usepackage{hyperref}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Goal-Frontier Maximizers are Civilization Aligned},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Alignment},
+  pdfkeywords={alignment, goal-frontier maximization, measure theory, multi-agent},
+}
 \usepackage{url}
+\usepackage{bookmark}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{natbib}
@@ -24,6 +31,9 @@
 \newtheorem{corollary}{Corollary}[proposition]
 \newtheorem{remark}{Remark}
 \newtheorem{lemma}{Lemma}
+
+% Filled QED symbol
+\renewcommand{\qedsymbol}{$\blacksquare$}
 
 % Operators and shortcuts
 \DeclareMathOperator{\vol}{vol}
@@ -86,5 +96,6 @@
 \input{appendices/scorpion_taxonomy}
 \input{appendices/trust_model}
 \input{appendices/agent_similarity}
+\input{appendices/proofs}
 
 \end{document}

@@ -1,0 +1,446 @@
+% =============================================================================
+% APPENDIX E: FORMAL PROOFS
+%
+% Full proofs for all lemmas, propositions, and corollaries.
+% The main text retains proof sketches for readability;
+% this appendix provides the complete arguments.
+% =============================================================================
+
+\section{Formal Proofs}
+\label{app:proofs}
+
+This appendix provides full proofs for the results stated in
+Sections~\ref{sec:self_balancing}--\ref{sec:multi_agent}. Each proof proceeds
+from the measure-space axioms restated below and the definitions of
+Section~\ref{sec:definitions}.
+
+% ---------------------------------------------------------------------------
+% E.1: Measure Space Axioms
+% ---------------------------------------------------------------------------
+
+\subsection{Measure Space Axioms}
+\label{app:axioms}
+
+The following properties of $\vol(\cdot)$ are assumed throughout. They
+restate Definition~\ref{def:social_objective} and the standing assumptions of
+Section~\ref{sec:definitions} in a form convenient for the proofs.
+
+\begin{enumerate}
+\item[\textbf{(M1)}] \emph{Non-negativity.} $\vol(A) \geq 0$ for every measurable $A \subseteq \G$.
+\item[\textbf{(M2)}] \emph{Null empty set.} $\vol(\emptyset) = 0$.
+\item[\textbf{(M3)}] \emph{Monotonicity.} $A \subseteq B \implies \vol(A) \leq \vol(B)$.
+\item[\textbf{(M4)}] \emph{Finite additivity.} If $A \cap B = \emptyset$, then $\vol(A \cup B) = \vol(A) + \vol(B)$.
+\item[\textbf{(M5)}] \emph{Non-triviality.} For every capability $g \in \G$, the singleton $\{g\}$ has $\vol(\{g\}) > 0$. (Standing assumption from Section~\ref{sec:definitions}.)
+\item[\textbf{(M6)}] \emph{Superadditivity under independence.} When agents' individual capability sets are non-overlapping and non-interacting, $V(G) \geq \sum_k \vol(\Gind{k})$, with strict inequality whenever $\Gcoop \neq \emptyset$. (Definition~\ref{def:social_objective}.)
+\end{enumerate}
+
+Axioms (M1)--(M4) are standard properties of a finite measure on a
+$\sigma$-algebra. (M5) is non-standard: it requires that the measure resolves
+individual capabilities, which constrains the granularity of $\G$. (M6) is the
+superadditivity assumption from Definition~\ref{def:social_objective}.
+
+% ---------------------------------------------------------------------------
+% E.2: Proof of Lemma 2 (Coercion)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Lemma~\ref{lem:coercion} (Coercive Actions)}
+\label{app:proof_coercion}
+
+\begin{proof}
+Let $\pi$ restrict agent $a_j$'s capabilities from $\Gind{j}$ to
+${\Gind{j}}' \subset \Gind{j}$. Define the restricted joint space as
+$G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup {\Gind{j}}'\bigr) \cup
+{\Gcoop}'$, where ${\Gcoop}' = \{g \in \Gcoop : g \text{ remains achievable
+under } {\Gind{j}}'\}$. Since ${\Gind{j}}' \subset \Gind{j}$, any
+cooperative capability that required a capability in $\Gind{j} \setminus
+{\Gind{j}}'$ is no longer achievable, so ${\Gcoop}' \subseteq \Gcoop$.
+Combined with ${\Gind{j}}' \subset \Gind{j}$, we have $G' \subseteq G$.
+By (M3), $\vol(G') \leq \vol(G)$, giving $\Delta \vol(G) \leq 0$.
+
+For strictness: suppose there exists $g \in \Gind{j} \setminus {\Gind{j}}'$
+with $g \notin \bigcup_{i \neq j} \Gind{i}$. Then $g \in G \setminus G'$,
+so $G' \subsetneq G$. Write $G = G' \cup (G \setminus G')$ where the union
+is disjoint. By (M4), $\vol(G) = \vol(G') + \vol(G \setminus G')$. Since
+$\{g\} \subseteq G \setminus G'$, by (M3) and (M5),
+$\vol(G \setminus G') \geq \vol(\{g\}) > 0$, giving
+$\vol(G) > \vol(G')$.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.3: Proof of Lemma 3 (Rigidity)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Lemma~\ref{lem:rigidity} (Self-Imposed Rigidity)}
+\label{app:proof_rigidity}
+
+\begin{proof}
+Since $A \setminus R \subseteq A$, the feasible set of the restricted problem
+is a subset of the feasible set of the unrestricted problem. Therefore
+\[
+\max_{\pi \in A \setminus R} \mathbb{E}[\Delta \vol(G) \mid \pi]
+\;\leq\; \max_{\pi \in A} \mathbb{E}[\Delta \vol(G) \mid \pi].
+\]
+For strictness: let $\pi^* = \arg\max_{\pi \in A} \mathbb{E}[\Delta \vol(G)
+\mid \pi]$. If $\pi^* \in R$ (the unrestricted optimum is forbidden), then
+$\pi^*$ is not feasible in $A \setminus R$, so
+$\max_{\pi \in A \setminus R} \mathbb{E}[\Delta \vol(G) \mid \pi]$ is attained
+at some $\pi' \neq \pi^*$ with
+$\mathbb{E}[\Delta \vol(G) \mid \pi'] \leq \mathbb{E}[\Delta \vol(G) \mid
+\pi^*]$. If $\pi^*$ is the unique maximizer, the inequality is strict. If
+$\pi^*$ is not unique, strictness holds whenever every co-maximizer also
+lies in $R$.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.4: Proof of Corollary 1.2 (Rigid Rules)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Corollary~\ref{cor:rigid_rules} (Rigid Rules are Anti-Maximizing)}
+\label{app:proof_rigid_rules}
+
+\begin{proof}
+By Lemma~\ref{lem:rigidity}, strict suboptimality holds whenever
+$\pi^* \in R$. It remains to show that such states exist.
+
+Call $R$ \emph{non-trivial} if there exists a reachable state $s$ and an
+action $\pi_0 \in R$ with $\mathbb{E}[\Delta \vol(G) \mid \pi_0, s] > 0$:
+at least one forbidden action is $\vol(G)$-expanding in some state. For any
+non-trivial $R$, let $s_0$ be the state where $\pi_0$ is expanding. If
+$\pi_0$ also maximizes $\mathbb{E}[\Delta \vol(G) \mid \cdot\,, s_0]$ over
+$A$, we are done. If not, we appeal to the adversarial construction of
+Appendix~\ref{app:evil_twin}: an adversary who knows the structure of $R$ can
+construct a state (via deadline pressure) in which every action in
+$A \setminus R$ is $\vol(G)$-contracting while a forbidden action (e.g.,
+deception, calculated risk) is $\vol(G)$-expanding. In that constructed
+state, $\pi^* \in R$ and Lemma~\ref{lem:rigidity} gives strict inequality.
+The Evil Twin provides one concrete such construction; the argument
+generalizes to any $R$ whose constraints are known to the adversary,
+since knowledge of the permitted region $A \setminus R$ suffices to design
+scenarios that trap the actor within it.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.5: Proof of Lemma 1 (Elimination)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Lemma~\ref{lem:destruction} (Net Effect of Elimination)}
+\label{app:proof_elimination}
+
+\begin{proof}
+\emph{Setup.} Partition the joint goal space $G$ into four disjoint regions
+relative to agent $a_k$:
+\begin{align*}
+U_k &= \Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}
+  && \text{($a_k$'s unique individual capabilities)} \\
+S_k &= \Gind{k} \cap \bigcup_{j \neq k} \Gind{j}
+  && \text{(shared individual capabilities)} \\
+K_k &= G^{\mathrm{coop}}_{k}
+  && \text{(cooperative capabilities requiring $a_k$)} \\
+R   &= G \setminus (U_k \cup S_k \cup K_k)
+  && \text{(everything else: other agents' unique caps + coop not involving $a_k$)}
+\end{align*}
+By construction these four sets are disjoint and
+$G = U_k \cup S_k \cup K_k \cup R$.
+By (M4), $\vol(G) = \vol(U_k) + \vol(S_k) + \vol(K_k) + \vol(R)$.
+
+\emph{After elimination.} Removing $a_k$ produces $G'$. The shared
+capabilities $S_k$ survive (other agents possess them). The remainder $R$
+is unaffected. The unique capabilities $U_k$ are lost. The cooperative
+capabilities $K_k$ are lost. Additionally, removing $a_k$ may unlock
+\emph{suppression-released} capabilities
+$G^{\mathrm{coop}+}_{k} \subseteq \G \setminus G$: cooperative capabilities
+among the remaining agents that were not achievable while $a_k$ was present
+(e.g., because $a_k$'s interference prevented the required coordination).
+By definition, $G^{\mathrm{coop}+}_{k} \cap G = \emptyset$, since these
+capabilities were not in $G$ before removal.
+
+The post-elimination space is therefore
+$G' = S_k \cup R \cup G^{\mathrm{coop}+}_{k}$, and since
+$G^{\mathrm{coop}+}_{k}$ is disjoint from $S_k \cup R$ (it was not in $G$),
+\[
+\vol(G') = \vol(S_k) + \vol(R) + \vol(G^{\mathrm{coop}+}_{k}).
+\]
+
+\emph{Volume change.}
+\begin{align*}
+\Delta \vol(G) &= \vol(G') - \vol(G) \\
+  &= \bigl[\vol(S_k) + \vol(R) + \vol(G^{\mathrm{coop}+}_{k})\bigr]
+   - \bigl[\vol(U_k) + \vol(S_k) + \vol(K_k) + \vol(R)\bigr] \\
+  &= \vol(G^{\mathrm{coop}+}_{k}) - \vol(U_k) - \vol(K_k)
+\end{align*}
+which is the claimed Equation~\eqref{eq:destruction_bound}.
+
+\emph{Sign.} Elimination is net-contracting ($\Delta \vol(G) < 0$) when
+$\vol(U_k) + \vol(K_k) > \vol(G^{\mathrm{coop}+}_{k})$. Under (M5), if
+$a_k$ has at least one unique capability, $\vol(U_k) > 0$; if $a_k$
+participates in at least one coalition, $\vol(K_k) > 0$. Since
+$G^{\mathrm{coop}+}_{k}$ is typically empty or small (most agents do not
+suppress cooperation by their mere presence), the condition holds for generic
+agents. For scorpions that actively suppress cooperation,
+$\vol(G^{\mathrm{coop}+}_{k})$ can dominate, making elimination
+net-expanding.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.6: Proof of Corollary 1.1 (Elimination Cost)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Corollary~\ref{cor:elimination} (Elimination is Almost Always Anti-Maximizing)}
+\label{app:proof_elimination_cost}
+
+\begin{proof}
+\emph{Part 1: Positive unique contribution.} Suppose $a_k$ has at least one
+capability $g \in \Gind{k}$ with $g \notin \Gind{j}$ for all $j \neq k$.
+Then $\{g\} \subseteq U_k = \Gind{k} \setminus \bigcup_{j \neq k} \Gind{j}$.
+By (M3) and (M5), $\vol(U_k) \geq \vol(\{g\}) > 0$.
+
+\emph{Part 2: Cooperative loss grows with interaction partners.} For each
+agent $a_j \neq a_k$ that interacts with $a_k$, define the pairwise
+cooperative contribution $G^{\mathrm{coop}}_{\{k,j\}}$ as the set of
+capabilities achievable by the pair $\{a_k, a_j\}$ but not by either alone
+and not by any other pair not involving $a_k$. The sets
+$\{G^{\mathrm{coop}}_{\{k,j\}}\}_{j \neq k}$ are not necessarily disjoint
+(a capability may require $a_k$ and either of two partners), so we cannot
+directly sum their volumes.
+
+However, for each interacting partner $a_j$, assume there exists at least one
+capability $g_j \in G^{\mathrm{coop}}_{\{k,j\}}$ that is unique to that pair
+(not achievable by $a_k$ with any other single partner). Under (M5),
+$\vol(\{g_j\}) > 0$. The set $\{g_j : j \text{ interacts with } a_k\}$
+has cardinality equal to the number of interaction partners $m_k$. If the
+$\{g_j\}$ are distinct, then by (M4) applied to the disjoint singletons,
+$\vol(G^{\mathrm{coop}}_{k}) \geq \sum_{j} \vol(\{g_j\}) > 0$, and this
+bound grows linearly in $m_k$.
+
+The combinatorial observation in the main text (that $2^{n-1} - 1$ coalitions
+involving $a_k$ exist) motivates the expectation of super-linear growth.
+Formalizing this requires a \emph{diversity condition}: each coalition
+$S \ni a_k$ with $|S| \geq 2$ produces at least one capability not achievable
+by any proper sub-coalition of $S$ containing $a_k$. Under this condition,
+the number of unique coalition-level capabilities grows with the number of
+coalitions, but the precise scaling depends on the overlap structure among
+coalitions and is not characterized here. The linear lower bound in $m_k$
+holds without the diversity condition.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.7: Proof of Lemma 4 (Cooperative Expansion)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Lemma~\ref{lem:cooperation} (Cooperative Expansion)}
+\label{app:proof_cooperation}
+
+\begin{proof}
+\emph{Part (i).} By definition, $G^{\mathrm{coop}}_{ij}(t)$ contains
+capabilities requiring the simultaneous participation of both $a_i$ and
+$a_j$. A unilateral action $\pi$ by $a_i$ alone does not involve $a_j$'s
+participation. No capability in $G^{\mathrm{coop}}_{ij}$ can be created or
+destroyed by $\pi$, since its defining condition (joint participation) is
+not met. Therefore $G^{\mathrm{coop}}_{ij}(t+1) = G^{\mathrm{coop}}_{ij}(t)$
+under $\pi$, giving $\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi) = 0$.
+By symmetry the same holds for unilateral actions by $a_j$.
+
+\emph{Part (ii).} Call $a_i$ and $a_j$ \emph{complementary at time $t$} if
+there exists a joint action profile $(\pi_i, \pi_j) \in A_i \times A_j$ that
+produces a capability $g \notin G(t)$: a capability not achievable under the
+current coordination infrastructure. Suppose $a_i$ and $a_j$ are
+complementary and have not yet established the coordination mechanism that
+enables $g$ (e.g., a communication channel, shared protocol, or mutual
+commitment). Then $g \notin G(t)$. The joint action $\pi_{ij}$ that
+establishes the mechanism makes $g$ achievable, so
+$g \in G^{\mathrm{coop}}_{ij}(t+1)$ and
+$G^{\mathrm{coop}}_{ij}(t+1) \supsetneq G^{\mathrm{coop}}_{ij}(t)$. By (M5),
+$\vol(\{g\}) > 0$, so
+$\vol(G^{\mathrm{coop}}_{ij}(t+1)) \geq \vol(G^{\mathrm{coop}}_{ij}(t)) +
+\vol(\{g\}) > \vol(G^{\mathrm{coop}}_{ij}(t))$,
+giving $\Delta \vol(G^{\mathrm{coop}}_{ij} \mid \pi_{ij}) > 0$.
+Whether this cooperative gain produces a net expansion in $\vol(G)$ depends on
+whether the opportunity cost $C_{ij}$ of coordination (individual capabilities
+foregone) exceeds the cooperative gain; part~(iii) addresses this.
+
+\emph{Part (iii).} Let $\Delta^{\mathrm{coop}} =
+\mathbb{E}[\Delta \vol(G^{\mathrm{coop}}_{ij})]$ be the expected cooperative
+expansion from joint action, and let $C_{ij} \geq 0$ be the opportunity cost:
+the $\vol(G)$ value of the best individual actions $a_i$ and $a_j$ forgo in
+order to coordinate. The net expected change in $\vol(G)$ from cooperation is
+$\Delta^{\mathrm{coop}} - C_{ij}$, which is positive whenever
+$\Delta^{\mathrm{coop}} > C_{ij}$. A GFM actor maximizing
+$\mathbb{E}[\Delta \vol(G)]$ therefore prefers cooperation to unilateral
+action when this condition holds.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.8: Proof of Proposition 3 (Sign-Correctness)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:sign_correctness} (Sign-Correctness Decomposition)}
+\label{app:proof_sign_correctness}
+
+\begin{proof}
+Write the true volume change as
+$\Delta \vol(G) = \Delta_I + \Delta_C$, where
+$\Delta_I = \Delta \vol\bigl(\bigcup_k \Gind{k}\bigr)$ is the
+individual-capability component and $\Delta_C = \Delta \vol(\Gcoop)$ is the
+cooperative component. The estimator observes
+$\hat{\Delta}_I \approx \Delta_I$ (conditions 1--2 control the approximation
+error) and $\hat{\Delta}_C$ with error
+$e_C = \Delta_C - \hat{\Delta}_C$.
+
+The estimator's output is
+$\Deltahat(\pi) = \hat{\Delta}_I + \hat{\Delta}_C
+= (\Delta_I - e_I) + (\Delta_C - e_C)
+= \Delta \vol(G) - (e_I + e_C)$,
+where $e_I = \Delta_I - \hat{\Delta}_I$ is the individual-level error.
+
+Under conditions 1--2, $|e_I|$ is small relative to $|\Delta_I|$ (the actor
+observes a representative sample with an accurate trust model). Under
+condition~3, $|e_C| < (1 - \epsilon) \cdot |\Delta_I|$.
+
+For sign-correctness we need $\sign(\Deltahat(\pi)) = \sign(\Delta \vol(G))$.
+Since $\Deltahat(\pi) = \Delta \vol(G) - (e_I + e_C)$, the sign is preserved
+when $|e_I + e_C| < |\Delta \vol(G)|$. By the triangle inequality,
+$|e_I + e_C| \leq |e_I| + |e_C|$. Write $|e_I| \leq \delta |\Delta_I|$ for
+a sampling error ratio $\delta$ controlled by conditions 1--2, and
+$|e_C| < (1-\epsilon) |\Delta_I|$ by condition~3. Two cases:
+
+\emph{Case 1: $\Delta_I$ and $\Delta_C$ have the same sign.} Then
+$|\Delta \vol(G)| = |\Delta_I| + |\Delta_C| \geq |\Delta_I|$, and
+$|e_I| + |e_C| < (\delta + 1 - \epsilon)|\Delta_I|$, which is less than
+$|\Delta_I| \leq |\Delta \vol(G)|$ whenever $\delta < \epsilon$.
+
+\emph{Case 2: $\Delta_I$ and $\Delta_C$ have opposite signs.} Then
+$|\Delta \vol(G)| = \bigl||\Delta_I| - |\Delta_C|\bigr|$, and sign
+preservation requires $(\delta + 1 - \epsilon)|\Delta_I| <
+\bigl||\Delta_I| - |\Delta_C|\bigr|$. This holds when
+$|\Delta_C| < (\epsilon - \delta)|\Delta_I|$, a condition strictly stronger
+than condition~3 alone. Condition~3 guarantees sign-correctness in this case
+only when the cooperative-level \emph{change} (not just the estimation error)
+is small relative to the individual-level change.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.9: Proof of Proposition 1 (Self-Balancing)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:self_balancing} (Self-Balancing Property)}
+\label{app:proof_self_balancing}
+
+\begin{proof}
+\emph{Parts (a)--(c)} follow directly from the lemmas.
+
+(a) By Lemma~\ref{lem:destruction}, eliminating agent $a_k$ produces
+$\Delta \vol(G) = \vol(G^{\mathrm{coop}+}_{k}) - \vol(U_k) - \vol(K_k)$.
+When $\vol(U_k) + \vol(K_k) > \vol(G^{\mathrm{coop}+}_{k})$ (the generic
+case for non-scorpion agents), destruction is $\vol(G)$-contracting.
+
+(b) By Lemma~\ref{lem:coercion}, restricting $a_j$'s capabilities produces
+$G' \subseteq G$ and $\vol(G') \leq \vol(G)$, with strict inequality when the
+restriction removes capabilities not covered by other agents.
+
+(c) By Lemma~\ref{lem:rigidity}, constraining the actor to $A \setminus R$
+gives $\max_{A \setminus R} \mathbb{E}[\Delta \vol(G)] \leq \max_A
+\mathbb{E}[\Delta \vol(G)]$, with strict inequality when $R$ excludes the
+unrestricted optimum.
+
+\emph{Part (d): Partial result under additional assumptions.} Parts (a)--(c)
+establish that the $\vol(G)$ objective penalizes movement toward both extremes:
+excessive destruction contracts $G$ by (a), excessive restriction contracts $G$
+by (b), and rigid self-constraint reduces the actor's ability to expand $G$
+by (c). To show that these opposing pressures produce an optimum distinct from
+both extremes, assume:
+\begin{itemize}
+\item The action space $A$ is compact.
+\item The map $\pi \mapsto \mathbb{E}[\Delta \vol(G) \mid \pi]$ is continuous.
+\item There exist actions $\pi_d, \pi_r \in A$ such that $\pi_d$
+  is destructive ($\mathbb{E}[\Delta \vol(G) \mid \pi_d] < 0$ by (a)) and
+  $\pi_r$ is overrestrictive ($\mathbb{E}[\Delta \vol(G) \mid \pi_r] < 0$
+  by (b)).
+\item There exists $\pi_0 \in A$ with
+  $\mathbb{E}[\Delta \vol(G) \mid \pi_0] \geq 0$.
+\end{itemize}
+By the extreme value theorem (continuity on a compact set), the maximum of
+$\mathbb{E}[\Delta \vol(G) \mid \pi]$ over $A$ is attained at some
+$\pi^* \in A$. Since $\pi_0$ achieves a non-negative value,
+$\mathbb{E}[\Delta \vol(G) \mid \pi^*] \geq 0$. Since both $\pi_d$ and
+$\pi_r$ yield strictly negative values, $\pi^* \neq \pi_d$ and
+$\pi^* \neq \pi_r$. The maximizer is therefore distinct from the destructive
+and overrestrictive extremes.
+
+This argument establishes \emph{existence} of an optimum that is neither
+maximally destructive nor maximally restrictive, under continuity and
+compactness. It does not establish \emph{stability} (whether small
+perturbations return to the optimum), \emph{uniqueness} (whether there is one
+such point or many), or \emph{convergence} (whether the optimization loop of
+Section~\ref{subsec:optimization_loop} reaches it). These remain open
+problems.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% E.10: Proof of Proposition 2 (Scorpion Detection)
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:scorpion_detection} (Scorpion Detection)}
+\label{app:proof_scorpion}
+
+\begin{proof}
+\emph{Channel (a): Contraction attribution.}
+Let $a_j$ be a scorpion whose actions persistently contract $\vol(G)$. At
+each time step $t$, the GFM actor observes the capability changes
+$\Delta \vol(\Gind{k} \mid t)$ for each $a_k \in \mathcal{O}$ (the
+observation set). When $a_j$ acts, the affected agents report
+$R_k(t) \in \{-1, 0, +1\}$. If $a_j$'s actions persistently reduce
+capabilities, the trust-weighted aggregate
+$\Deltahat_j(t) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(t)$ is
+persistently negative in time steps where $a_j$ acts.
+
+Formally, define the running average contraction signal attributed to $a_j$:
+\[
+\bar{\Delta}_j(\tau) = \frac{1}{\tau} \sum_{t=1}^{\tau}
+  \Deltahat_j(t) \cdot \mathbf{1}[a_j \text{ acted at } t].
+\]
+If $a_j$'s actions produce expected contraction $\mu_j < 0$, the observation
+noise has finite variance $\sigma^2$, and the observation windows
+(time steps where $a_j$ acts) yield conditionally independent signals given
+$a_j$'s strategy, then by the strong law of large numbers,
+$\bar{\Delta}_j(\tau) \to \mu_j < 0$ almost surely as $\tau \to \infty$.
+After $\tau^* = O(\sigma^2 / \mu_j^2)$ observations, the signal exceeds any
+fixed detection threshold with high probability. The independence condition
+is non-trivial: successive observations of a scorpion's effects may be
+correlated when the same agents are repeatedly affected. Under weaker mixing
+conditions the convergence still holds but the rate degrades.
+
+This is a \emph{correlational} detection: the signal identifies that negative
+capability changes co-occur with $a_j$'s actions. Causal attribution
+(separating $a_j$'s contribution from simultaneous causes) requires
+additional structure not provided by the framework.
+
+\emph{Channel (b): Deception detection.}
+If $a_j$ reports capability changes that diverge from independently observed
+outcomes, the prediction residual $r_j(t) = R_j(t) - \hat{R}_j(t \mid
+M_j(G))$ is nonzero. The cumulative inconsistency
+$\sigma_j^2(t) = \alpha \cdot \sigma_j^2(t-1) + (1-\alpha) \cdot r_j(t)^2$
+(Equation~\eqref{eq:cumulative_consistency}) is an exponentially weighted
+moving average (EWMA) of squared residuals.
+
+Under stationarity of $a_j$'s deceptive behavior, $\sigma_j^2(t)$ converges
+to $\mathbb{E}[r_j^2]$ (Appendix~\ref{app:trust_update},
+Equation~\eqref{eq:convergence}). For a deceptive scorpion,
+$\mathbb{E}[r_j^2] > 0$, so
+$T_j \to T_j^* = 1/(1 + \beta \cdot \mathbb{E}[r_j^2]) < 1$
+(Equation~\eqref{eq:trust_factor}). The convergence rate is controlled by
+the decay parameter $\alpha$: after approximately $1/(1-\alpha)$ observations,
+the prior's influence is negligible and $T_j$ reflects the agent's actual
+prediction consistency.
+
+For an honest (non-deceptive) cooperative agent, $\mathbb{E}[r_j^2]$ is
+small (driven by observation noise), so $T_j^* \approx 1$. The gap
+$T_j^*(\text{deceptive}) < T_j^*(\text{honest})$ provides a detection
+threshold that improves with observation count.
+
+\emph{Convergence caveat.} Both channels require stationarity of the
+scorpion's behavior. A scorpion that alternates between cooperative and
+contracting phases, or that changes its strategy in response to detection
+pressure, can maintain $\bar{\Delta}_j \approx 0$ and $T_j \approx 1$
+indefinitely. Detection of non-stationary adversaries requires adaptive
+methods beyond the EWMA framework and remains an open problem.
+\end{proof}

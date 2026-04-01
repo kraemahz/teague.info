@@ -16,7 +16,7 @@ The observable goal model $M_k(G)$ (Definition~\ref{def:observable_goal_model}) 
 % D.1: Goal Similarity Metric S_G
 % ---------------------------------------------------------------------------
 
-\subsection{Goal Similarity Metric $S_G$}
+\subsection{Goal Similarity Metric \texorpdfstring{$S_G$}{S\_G}}
 \label{app:goal_similarity}
 
 A GFM actor proposing actions to expand $\vol(G)$ must determine which goals are similar---close in the capability space---and which are distant. Without a similarity metric, the actor cannot generalize from observed goals to unobserved ones, cannot identify redundant capabilities, and cannot efficiently allocate effort across the population.
@@ -46,7 +46,7 @@ The metric has the structure of a Jaccard index over projected capability region
 % D.2: Agent Similarity Metric S_A
 % ---------------------------------------------------------------------------
 
-\subsection{Agent Similarity Metric $S_A$}
+\subsection{Agent Similarity Metric \texorpdfstring{$S_A$}{S\_A}}
 \label{app:agent_similarity_metric}
 
 Goal similarity measures the relationship between goals; agent similarity measures the relationship between the entities pursuing them. The GFM actor needs agent similarity for a different purpose: to determine whether two observations correspond to the same agent (re-identification), whether an agent's behavior is consistent over time (stability), and how much weight to assign an agent's reports in the estimator (trust).

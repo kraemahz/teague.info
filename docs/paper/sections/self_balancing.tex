@@ -60,7 +60,8 @@ cooperative capabilities that its interference was preventing. This is
 precisely the mechanism that makes scorpion containment $\vol(G)$-serving
 (Section~\ref{subsec:scorpion_interaction}).
 
-\emph{Proof sketch.} The joint goal space before removal is $G =
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_elimination}).
+The joint goal space before removal is $G =
 \bigl(\bigcup_k \Gind{k}\bigr) \cup \Gcoop$. After removing $a_k$, the new
 joint space is $G' = \bigl(\bigcup_{j \neq k} \Gind{j}\bigr) \cup \bigl(\Gcoop
 \setminus G^{\mathrm{coop}}_{k}\bigr) \cup G^{\mathrm{coop}+}_{k}$, where the
@@ -95,7 +96,8 @@ where $G' = \bigl(\bigcup_{i \neq j} \Gind{i} \cup {\Gind{j}}'\bigr) \cup
     other agents.
 \end{lemma}
 
-\emph{Proof sketch.} Since ${\Gind{j}}' \subset \Gind{j}$ and ${\Gcoop}'
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_coercion}).
+Since ${\Gind{j}}' \subset \Gind{j}$ and ${\Gcoop}'
 \subseteq \Gcoop$, the restricted joint space satisfies $G' \subseteq G$.
 Measure monotonicity gives the result. \qed
 
@@ -142,7 +144,7 @@ Let $A$ denote a GFM actor's action space and let $R \subset A$ be a set of
 \label{eq:rigidity_bound}
 \max_{\pi \in A \setminus R} \mathbb{E}[\Delta \vol(G) \mid \pi] \;\leq\; \max_{\pi \in A} \mathbb{E}[\Delta \vol(G) \mid \pi]
 \end{equation}
-with strict inequality whenever $R$ excludes at least one $\vol(G)$-expanding action not available in $A \setminus R$.
+with strict inequality whenever every maximizer of $\mathbb{E}[\Delta \vol(G) \mid \pi]$ over $A$ lies in $R$.
 \end{lemma}
 
 \emph{Condition.} The rigidity cost is non-trivial when the actor's action
@@ -152,8 +154,8 @@ rigidity cost. The cost grows with the actor's influence: a powerful actor
 operating under rigid constraints forgoes more $\vol(G)$-expanding
 opportunities than a weak one.
 
-\emph{Proof sketch.} Optimizing over a subset of a set cannot exceed optimizing
-over the full set. The restricted maximum in Equation~\eqref{eq:rigidity_bound}
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_rigidity}).
+Optimizing over a subset of a set cannot exceed optimizing over the full set. The restricted maximum in Equation~\eqref{eq:rigidity_bound}
 is bounded above by the unrestricted maximum. When $R$ excludes actions that
 would be optimal under unrestricted optimization, the inequality is strict.
 \qed
@@ -188,7 +190,9 @@ For a GFM actor optimizing $\vol(G)$ over a population of agents, under the
 \end{enumerate}
 \end{proposition}
 
-Part (d) is a structural claim about the \emph{shape} of the objective, not an equilibrium existence proof. Proving that the opposing pressures of (a)--(c) produce stable interior equilibria would require additional assumptions: continuity of $\vol(G)$ with respect to actions, compactness of the action space, and specific structure on the tradeoffs between expansion and contraction. These assumptions may hold in particular instantiations but are not provided by the framework in its current generality. What the proposition establishes is weaker but still valuable: the objective penalizes both extremes from the same geometric principle. Whether the resulting pressure produces a stable balance point, oscillation around one, or convergent dynamics depends on the specifics of a given system---and characterizing those dynamics is an open problem.
+Full proof in Appendix~\ref{app:proof_self_balancing}. For part~(d), the appendix shows under continuity and compactness that an optimum exists which is distinct from the destructive and overrestrictive extremes; this is an existence-of-optimum result, not an equilibrium proof.
+
+Part (d) is a structural claim about the \emph{shape} of the objective. Proving that the opposing pressures of (a)--(c) produce stable interior equilibria would require additional assumptions: continuity of $\vol(G)$ with respect to actions, compactness of the action space, and specific structure on the tradeoffs between expansion and contraction. These assumptions may hold in particular instantiations but are not provided by the framework in its current generality. What the proposition establishes is weaker but still valuable: the objective penalizes both extremes from the same geometric principle. Whether the resulting pressure produces a stable balance point, oscillation around one, or convergent dynamics depends on the specifics of a given system---and characterizing those dynamics is an open problem.
 
 % ---------------------------------------------------------------------------
 % Corollary 1.1: Elimination is almost always anti-maximizing
@@ -199,14 +203,18 @@ Part (d) is a structural claim about the \emph{shape} of the objective, not an e
 For any agent $a_k$ with at least one capability $g \in \Gind{k}$ such that $g
     \notin \Gind{j}$ for some $j \neq k$, the unique individual contribution
     $\vol(\Gind{k} \setminus \bigcup_{j \neq k} \Gind{j})$ is strictly
-    positive. Furthermore, the cooperative loss $\vol(G^{\mathrm{coop}}_{k})$
-    grows with the number of agents that interact with $a_k$: each interaction
-    partner contributes at least one cooperative capability to
-    $G^{\mathrm{coop}}_{k}$, and the number of distinct multi-agent coalitions
-    involving $a_k$ grows combinatorially with the number of partners.
+    positive. Furthermore, if each interacting pair $\{a_k, a_j\}$ produces at least one
+    cooperative capability unique to that pair (not achievable by $a_k$ with
+    any other single partner), then the cooperative loss
+    $\vol(G^{\mathrm{coop}}_{k})$ grows at least linearly with the number of
+    interaction partners $m_k$. The number of distinct multi-agent coalitions
+    involving $a_k$ grows combinatorially ($2^{m_k} - 1$), suggesting
+    super-linear growth under a stronger diversity condition
+    (Appendix~\ref{app:proof_elimination_cost}).
 \end{corollary}
 
-\emph{Proof sketch.} The first claim follows from the definition of a
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_elimination_cost}).
+The first claim follows from the definition of a
 measurable set: a non-empty set with a well-defined measure has strictly
 positive volume, given the standing assumption that $\G$ has no atoms of zero
 measure at the capability granularity. For the cooperative claim, consider the
@@ -263,7 +271,8 @@ Let $A$ be a GFM actor's unrestricted action space and let $R \subset A$ be the
     respect to the GFM objective.
 \end{corollary}
 
-\emph{Proof sketch.} Direct from Lemma~\ref{lem:rigidity}: optimizing over $A
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_rigid_rules}).
+Direct from Lemma~\ref{lem:rigidity}: optimizing over $A
 \setminus R$ when $\pi^* \in R$ yields strict inequality in
 Equation~\eqref{eq:rigidity_bound}. The question is whether such states exist.
 For any non-trivial rule set $R$ operating in an adversarial environment, the
@@ -288,16 +297,20 @@ geometric accounting demonstrates a net expansion in $\vol(G)$.
 \begin{proposition}[Scorpion Detection under Observable Contraction]
 \label{prop:scorpion_detection}
 Let $a_j$ be an agent whose actions persistently contract $\vol(G)$ (a
-    \emph{scorpion}, in the sense defined below). A GFM actor maintaining
+    \emph{scorpion}, in the sense defined below), with expected contraction
+    $\mu_j < 0$ and finite-variance observation noise. A GFM actor maintaining
     observable goal models $M_k(G)$
     (Definition~\ref{def:observable_goal_model}) can detect $a_j$'s
     $\vol(G)$-contracting behavior through two channels, to the extent that the
     contraction is observable through individually measurable capability
-    changes:
+    changes and the scorpion's strategy is stationary:
 \begin{enumerate}
-\item[\textbf{(a)}] \textbf{Contraction attribution.} If $a_j$'s actions produce a persistent pattern $\Delta \vol(\Gind{k}) < 0$ across agents $a_k$ in the GFM actor's observation set, the local volume estimator (Definition~\ref{def:local_volume_estimator}, Section~\ref{sec:tractability}) registers persistent negative $\Deltahat$ signals correlated with $a_j$'s actions, flagging $a_j$ as a candidate net-contractor.
-\item[\textbf{(b)}] \textbf{Deception detection.} If $a_j$ misrepresents its own capability changes---reporting expansion when contraction occurs---the prediction residuals $r_j(t)$ (Appendix~\ref{app:trust_model}) accumulate, driving $T_j$ downward and reducing $a_j$'s influence on the estimator.
+\item[\textbf{(a)}] \textbf{Contraction attribution.} If $a_j$'s actions produce a persistent pattern $\Delta \vol(\Gind{k}) < 0$ across agents $a_k$ in the GFM actor's observation set, and the observation windows are conditionally independent given $a_j$'s strategy, the local volume estimator (Definition~\ref{def:local_volume_estimator}, Section~\ref{sec:tractability}) registers persistent negative $\Deltahat$ signals correlated with $a_j$'s actions, flagging $a_j$ as a candidate net-contractor after $O(\sigma^2 / \mu_j^2)$ observations.
+\item[\textbf{(b)}] \textbf{Deception detection.} If $a_j$ misrepresents its own capability changes (reporting expansion when contraction occurs), the prediction residuals $r_j(t)$ (Appendix~\ref{app:trust_model}) accumulate under stationarity, driving $T_j$ toward $T_j^* = 1/(1 + \beta \cdot \mathbb{E}[r_j^2]) < 1$ and reducing $a_j$'s influence on the estimator.
 \end{enumerate}
+A non-stationary scorpion that adapts its strategy in response to detection
+    pressure can evade both channels indefinitely
+    (Appendix~\ref{app:proof_scorpion}).
 \end{proposition}
 
 A \emph{scorpion} is not merely an agent that defects. Rational defection under
@@ -327,7 +340,8 @@ contraction through deceptive self-reports. Together the channels cover honest
 and deceptive scorpions, but both require that the contraction produce
 individually observable signals.
 
-\emph{Proof sketch.} Under Definition~\ref{def:observable_goal_model}, the GFM
+\emph{Proof sketch} (full proof in Appendix~\ref{app:proof_scorpion}).
+Under Definition~\ref{def:observable_goal_model}, the GFM
 actor observes changes in each agent's individual capability set through
 communication, behavior, and environmental signals. For channel~(a): when $a_j$
 persistently reduces other agents' capabilities---destroying resources,

@@ -288,23 +288,23 @@ offered as an existence proof, not a prescription.
 A GFM actor maintains a model $M_k(G)$ of each observed agent $a_k$'s
     contribution to the joint goal space, inferred from communication,
     behavior, and environmental observation. Each model has an associated trust
-    factor $T_k \in [0, 1]$ and confidence $C_k \in [0, 1]$.
+    factor $T_k \in [0, 1]$.
 \end{definition}
 
 The model $M_k(G)$ is a reconstruction, not a given. No agent broadcasts its
 true capability set; the GFM actor must infer $\Gind{k}$ from observable
-evidence---what $a_k$ says, what $a_k$ does, and what the environment reveals
+evidence: what $a_k$ says, what $a_k$ does, and what the environment reveals
 about $a_k$'s options. The trust factor $T_k$ measures \emph{prediction
 consistency}, quantifying how well the model $M_k(G)$ tracks $a_k$'s observed
 behavior. An agent whose actions are well-predicted by the model earns high
 $T_k$; one whose actions persistently diverge from predictions earns low $T_k$.
 High trust indicates predictability, not alignment. A predictably destructive
 agent can maintain high $T_k$ (see Proposition~\ref{prop:scorpion_detection}
-for how such agents are detected through a separate channel). The confidence
-$C_k$ captures the GFM actor's uncertainty about $M_k(G)$ itself: how much
-evidence it has, how stable the estimate is, and how much weight the model
-should receive in decisions. Both $T_k$ and $C_k$ are learned quantities,
-updated through interaction, not hyperparameters set at design time. The trust
+for how such agents are detected through a separate channel). $T_k$ is a
+learned quantity, updated through interaction, not a hyperparameter set at
+design time; the actor's uncertainty about $M_k(G)$ is captured implicitly
+through $T_k$'s convergence dynamics during the cooling period
+(Appendix~\ref{app:trust_model}, Section~\ref{app:cooling_period}). The trust
 model's formal structure is developed in Appendix~\ref{app:trust_model}.
 
 \medskip
