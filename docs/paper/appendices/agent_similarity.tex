@@ -7,10 +7,30 @@
 % agent identity, and groups agents by goal profile.
 % =============================================================================
 
-\section{Agent Similarity and Goal Estimation}
+\section{Observation Channel: Agent Identity and Goal Estimation}
 \label{app:agent_similarity}
 
-The observable goal model $M_k(G)$ (Definition~\ref{def:observable_goal_model}) requires the GFM actor to infer each agent's contribution to the joint goal space from observable evidence. This appendix develops the machinery for that inference: a goal similarity metric that determines when two goals are similar, an agent similarity metric that determines when two observed entities are the same agent, a zero-knowledge proof mechanism for the strongest form of identity verification, and a clustering procedure that groups agents into modal categories by goal profile. Together, these provide the substrate on which the trust model (Appendix~\ref{app:trust_model}) and the local volume estimator (Definition~\ref{def:local_volume_estimator}) operate.
+The trust factor $T_k$ (Definition~\ref{def:observable_goal_model}) and the
+aggregate signal $\Deltahat(\pi)$ (Equation~\eqref{eq:aggregate_signal})
+presuppose that the GFM actor can attach persistent identity to the agents it
+observes: the actor must know that the $a_k$ reporting today is the same $a_k$
+whose prediction residuals it has been tracking. Without a mechanism for
+re-identification, $T_k$ cannot accumulate across interactions, and the trust
+model collapses. This appendix sketches the observation-channel infrastructure
+that makes persistent identity and goal estimation possible. The material is an
+implementation sketch rather than a formal extension of the measure-theoretic
+framework; it addresses the engineering question of \emph{how} the observation
+set $\mathcal{O}$ is maintained, not the formal question of what $\vol(G)$
+measures.
+
+The appendix develops four components: a goal similarity metric that determines
+when two goals are close in capability space, an agent similarity metric that
+determines when two observations correspond to the same agent, a
+zero-knowledge proof mechanism for the strongest form of identity verification,
+and a clustering procedure that groups agents into modal categories by goal
+profile. Together, these provide the substrate on which the trust model
+(Appendix~\ref{app:trust_model}) and the local volume estimator
+(Definition~\ref{def:local_volume_estimator}) operate.
 
 % ---------------------------------------------------------------------------
 % D.1: Goal Similarity Metric S_G

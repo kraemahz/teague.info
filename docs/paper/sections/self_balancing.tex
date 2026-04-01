@@ -190,7 +190,16 @@ For a GFM actor optimizing $\vol(G)$ over a population of agents, under the
 \end{enumerate}
 \end{proposition}
 
-Full proof in Appendix~\ref{app:proof_self_balancing}. For part~(d), the appendix shows under continuity and compactness that an optimum exists which is distinct from the destructive and overrestrictive extremes; this is an existence-of-optimum result, not an equilibrium proof.
+The term ``self-balancing'' refers to the shape of the objective, not to
+dynamic behavior: the single measure penalizes movement toward either extreme
+without requiring separate mechanisms for safety and freedom. It does not
+entail convergence to an equilibrium, stability under perturbation, or
+uniqueness of the balance point.
+
+Full proof in Appendix~\ref{app:proof_self_balancing}. For part~(d), the
+appendix shows under continuity and compactness that an optimum exists which
+is distinct from the destructive and overrestrictive extremes; this is an
+existence-of-optimum result, not an equilibrium proof.
 
 Part (d) is a structural claim about the \emph{shape} of the objective. Proving that the opposing pressures of (a)--(c) produce stable interior equilibria would require additional assumptions: continuity of $\vol(G)$ with respect to actions, compactness of the action space, and specific structure on the tradeoffs between expansion and contraction. These assumptions may hold in particular instantiations but are not provided by the framework in its current generality. What the proposition establishes is weaker but still valuable: the objective penalizes both extremes from the same geometric principle. Whether the resulting pressure produces a stable balance point, oscillation around one, or convergent dynamics depends on the specifics of a given system---and characterizing those dynamics is an open problem.
 
@@ -220,11 +229,14 @@ positive volume, given the standing assumption that $\G$ has no atoms of zero
 measure at the capability granularity. For the cooperative claim, consider the
 coalitions involving $a_k$. Each subset $S \subseteq \{a_1, \ldots, a_n\}$ with
 $a_k \in S$ and $|S| \geq 2$ can generate cooperative capabilities in
-$G^{\mathrm{coop}}_{k}$. The number of such subsets is $2^{n-1} - 1$. Not every
-subset generates unique cooperative capabilities, but under the reasonable
-assumption that at least some multi-agent coalitions produce capabilities not
-achievable by their proper subcoalitions, $\vol(G^{\mathrm{coop}}_{k})$ grows
-faster than linearly in the number of interaction partners. The precise scaling
+$G^{\mathrm{coop}}_{k}$. The number of such subsets is $2^{n-1} - 1$. The pair-uniqueness condition is
+strong: many real pairs of agents produce redundant cooperative capabilities
+(two interchangeable collaborators contribute overlapping cooperative sets),
+so the linear bound holds tightly only when cooperation is genuinely diverse.
+Under the stronger diversity condition that at least some multi-agent coalitions
+produce capabilities not achievable by their proper subcoalitions,
+$\vol(G^{\mathrm{coop}}_{k})$ grows faster than linearly in the number of
+interaction partners. The precise scaling
 depends on the structure of cooperation in a given population and is not
 characterized here. \qed
 

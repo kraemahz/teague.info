@@ -15,7 +15,9 @@
 \section{Connections to Existing Frameworks}
 \label{sec:connections}
 
-Four existing frameworks independently converge on related problems and collectively supply the tools, intuitions, and empirical track record that GFM inherits and extends.
+Four existing frameworks independently converge on related problems and
+collectively supply the tools, intuitions, and empirical track record that GFM
+inherits and extends.
 
 \subsection{Empowerment Maximization}
 \label{sec:connections_empowerment}
@@ -50,19 +52,20 @@ penalizes unilateral expansion that shrinks $\vol(G)$ even if individual
 empowerment increases. A related approach is attainable utility preservation
 \citep{turner2020conservative}, which penalizes actions that reduce the agent's
 ability to optimize auxiliary reward functions---a single-agent analogue of
-GFM's multi-agent optionality preservation. A natural question is why GFM introduces the set-theoretic construction $G =
-\bigcup_k \Gind{k} \cup \Gcoop$ rather than defining social empowerment
-directly as $\sup_{p(A)} I(A; S')$ over the joint action space. The answer is
-structural: the decomposition of $G$ into individual and cooperative components
-is what enables Lemmas~\ref{lem:destruction}--\ref{lem:rigidity}. Social
-empowerment as a scalar channel capacity does not decompose the same way; it
-cannot distinguish whether a volume change came from destroying an agent's
-individual capabilities, restricting cooperation, or imposing rigid rules on
-the actor. The set-theoretic construction buys the self-balancing property at
-the cost of requiring structure on $\G$ that a channel-capacity formulation
-avoids. The practical inheritance from empowerment is tractability: the
-variational and sampling techniques developed for single-agent empowerment
-estimation carry over to the local finite-difference estimator $\hat{V}$ of
+GFM's multi-agent optionality preservation. A natural question is why GFM
+introduces the set-theoretic construction $G = \bigcup_k \Gind{k} \cup \Gcoop$
+rather than defining social empowerment directly as $\sup_{p(A)} I(A; S')$ over
+the joint action space. The answer is structural: the decomposition of $G$ into
+individual and cooperative components is what enables
+Lemmas~\ref{lem:destruction}--\ref{lem:rigidity}. Social empowerment as a
+scalar channel capacity does not decompose the same way; it cannot distinguish
+whether a volume change came from destroying an agent's individual
+capabilities, restricting cooperation, or imposing rigid rules on the actor.
+The set-theoretic construction buys the self-balancing property at the cost of
+requiring structure on $\G$ that a channel-capacity formulation avoids. The
+practical inheritance from empowerment is tractability: the variational and
+sampling techniques developed for single-agent empowerment estimation carry
+over to the local finite-difference estimator $\hat{V}$ of
 Proposition~\ref{prop:sign_correctness}, with the population-level
 generalization being the primary added complexity.
 
@@ -112,11 +115,10 @@ capability space $\G$ receives more structure in future work.
 \label{sec:connections_fep}
 
 The Free Energy Principle (FEP) \citep{friston2013life} proposes that
-self-organizing systems minimize \emph{variational free energy}
-$\mathcal{F}$---a quantity that upper-bounds the surprise of sensory
-observations given an agent's generative model. Under FEP, an agent acts to
-drive observations toward model predictions and updates its model when
-predictions persistently fail.
+self-organizing systems minimize \emph{variational free energy} $\mathcal{F}$,
+a quantity that upper-bounds the surprise of sensory observations given an
+agent's generative model. Under FEP, an agent acts to drive observations toward
+model predictions and updates its model when predictions persistently fail.
 
 GFM's trust maintenance dynamics (Appendix~\ref{app:trust_model}, Section~C.3)
 exhibit a structural parallel at the world-model level:
@@ -159,7 +161,7 @@ GFM is population-centered. Remark~\ref{rem:fep_correspondence} identifies a
 structural parallel between GFM's model-maintenance dynamics and the
 prediction-error minimization that FEP describes, but the $\vol(G)$ objective
 and its self-balancing consequences are not derived from any biological
-imperative---they follow from measure monotonicity applied to a joint
+imperative; they follow from measure monotonicity applied to a joint
 capability space.
 
 \subsection{Constitutional AI and RLHF}
@@ -194,8 +196,8 @@ non-evaluators (future generations, non-human agents, marginalized
 communities). The estimator is biased toward the experiences and capabilities
 of whoever is in the feedback pool. Second, \emph{reward hacking}: the trained
 AI will find actions that score high on the reward model without actually
-expanding $\vol(G)$ --- responses that evaluators find persuasive or satisfying
+expanding $\vol(G)$, responses that evaluators find persuasive or satisfying
 but that contract the goal frontier in ways evaluators cannot detect. Both
-failure modes are predictions of the GFM framework, not post-hoc observations
---- they follow from treating RLHF as a noisy estimator of a population-level
-quantity rather than as a reliable proxy for alignment itself.
+failure modes are predictions of the GFM framework they follow from treating
+RLHF as a noisy estimator of a population-level quantity rather than as a
+reliable proxy for alignment itself.

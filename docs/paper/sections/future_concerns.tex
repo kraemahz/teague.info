@@ -133,8 +133,8 @@ by the coalition.
 As with the Doll Problem and self-wireheading, a GFM actor operating on the
 narrow capability definition would not detect the substitution problem. Stable
 or growing formal $\vol(G)$ would be reported as the coalition subsumed
-non-member capabilities one by one. Only the broad definition---anchored in
-experiential optionality---closes the gap. The substitution problem is the
+non-member capabilities one by one. Only the broad definition anchored in
+experiential optionality closes the gap. The substitution problem is the
 collective version of the earlier individual failures: stable proxy volume,
 declining experiential substrate, B-to-C divergence at population scale.
 
@@ -142,26 +142,53 @@ declining experiential substrate, B-to-C divergence at population scale.
 \label{sec:proxy_failure_detector}
 
 The Doll Problem and self-wireheading share a structural pattern: capabilities
-are formally available but exercisability declines. This suggests a correction
-heuristic. A GFM actor should monitor not only $\vol(G)$ but the
-\emph{exercised fraction}, the ratio of capabilities agents actually use to
-capabilities formally available. Define $\rho_k(t)$ as the fraction of
-$\Gind{k}$ that agent $a_k$ exercises over a window $[t - \tau, t]$. A
-persistent decline in $\rho_k$ across many agents, even with stable or growing
-$\vol(G)$, constitutes a B-to-C divergence signal: the formal proxy is
-reporting health while the experiential substrate is contracting.
+are formally available but exercisability declines. A GFM actor monitoring
+$\vol(G)$ alone is blind to this decline. We sketch a composite
+proxy-failure signal built from three components that address each other's
+weaknesses, progressing from early warning to late-stage detection.
 
-This is a heuristic, not a solution, and it introduces its own proxy problem.
-Not all unused capabilities represent experiential contraction. An agent who
-specializes---exercising a narrow set of capabilities with increasing
-depth---is not wireheading. A musician who stops playing sports to practice
-more is exercising fewer capabilities but may be expanding experiential
-richness within a chosen domain. Specialization is not contraction, and a naive
-exercised-fraction monitor would conflate the two. The heuristic would need to
-distinguish between voluntary concentration (stable or increasing depth within
-a narrowing set) and involuntary atrophy (declining engagement across the
-board), a distinction that reintroduces the measurement problems the capability
-formalization was designed to avoid.
+\paragraph{Component 1: Exercised fraction $\rho_k$.} Define $\rho_k(t)$ as
+the fraction of $\Gind{k}$ that agent $a_k$ exercises over a window
+$[t - \tau, t]$. A persistent decline in $\rho_k$ across many agents, with
+stable or growing $\vol(G)$, constitutes a B-to-C divergence signal: the
+formal proxy reports health while exercisability contracts. Taken alone,
+$\rho_k$ produces false positives: an agent who specializes (exercising a
+narrow set of capabilities with increasing depth) has declining $\rho_k$ but
+is not wireheading. A musician who stops playing sports to practice more is
+expanding experiential richness within a chosen domain.
+
+\paragraph{Component 2: Capability rarity $\bar{\nu}_k$.} Define the
+\emph{rarity} of a capability $g$ as $\nu(g) = 1 - |\{k : g \in
+\Gind{k}\}|/n$, measuring how few agents in the population share it. The mean
+rarity of an agent's exercised capabilities,
+$\bar{\nu}_k = \mathbb{E}_{g \in \mathrm{exercised}}[\nu(g)]$, distinguishes
+specialization from atrophy. Declining $\rho_k$ with stable or increasing
+$\bar{\nu}_k$ indicates specialization: the agent exercises fewer capabilities,
+but the ones it retains are distinctive. Declining $\rho_k$ with declining
+$\bar{\nu}_k$ indicates retreat toward common, low-effort capabilities.
+Combined, $(\rho_k, \bar{\nu}_k)$ separate the atrophy signal from the
+specialization signal that $\rho_k$ alone conflates.
+
+\paragraph{Component 3: Cooperative deterioration.} Both the Doll Problem and
+self-wireheading are voluntary in the same sense that starting an addiction is
+voluntary: after the addiction takes hold it becomes involuntary and degrades
+the agent's ability to express functional capability. As the process advances,
+cooperative relationships deteriorate. This produces a $\vol(G)$-contraction
+signal detectable through the standard estimator channel
+(Section~\ref{subsec:optimization_loop}), because cooperative capabilities
+that depended on the affected agent are lost. The proxy-failure detector thus
+connects back to the formal framework at late stage: advanced B-to-C
+divergence eventually leaks into the estimator as genuine $\vol(G)$ loss, even
+though the early stages are invisible to it.
+
+\paragraph{Composite signal.} The three components form a progression. Early
+divergence (stable $\vol(G)$, declining $\rho_k$, declining $\bar{\nu}_k$)
+is detectable only through the heuristic. Late-stage divergence additionally
+produces $\vol(G)$-contraction through cooperative loss, bringing it within
+the formal estimator's reach. The composite signal
+$(\rho_k, \bar{\nu}_k, \Deltahat)$ gives the GFM actor a graduated response:
+flag uncertainty when $\rho_k$ and $\bar{\nu}_k$ diverge, escalate when
+$\Deltahat$ confirms cooperative contraction.
 
 The heuristic does not resolve the proxy failure. The B/C framework's
 contribution is narrower: it makes the failure \emph{detectable in principle}.
