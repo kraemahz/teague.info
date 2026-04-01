@@ -163,10 +163,10 @@ would be optimal under unrestricted optimization, the inequality is strict.
 Rigidity costs are not merely theoretical. An actor bound by fixed rules cannot
 weigh the probabilities of uncertain scenarios, cannot adapt to adversarial
 conditions that exploit the rules' predictability, and cannot take calculated
-risks when the expected $\vol(G)$ expansion justifies the risk. We develop the
-sharpest illustration of this cost in Appendix~\ref{app:evil_twin}, where a
-rule-bound agent faces an adversary who exploits the rules' rigidity to force a
-$\vol(G)$-contracting outcome.
+risks when the expected $\vol(G)$ expansion justifies the risk. The concrete
+instance following Corollary~\ref{cor:rigid_rules} illustrates this cost with
+a hostage scenario in which an adversary exploits the rules' rigidity to force
+a $\vol(G)$-contracting outcome.
 
 % ---------------------------------------------------------------------------
 % Proposition 1: Self-Balancing Property (synthesizes the lemmas)
@@ -184,7 +184,7 @@ For a GFM actor optimizing $\vol(G)$ over a population of agents, under the
 
 \item[\textbf{(b)}] \textbf{Coercive restriction is anti-maximizing.} By Lemma~\ref{lem:coercion}, actions that restrict other agents' capabilities contract $\vol(G)$ unless compensated by a larger expansion. Broad, sustained restriction---the authoritarian pattern---is net-contracting under the additivity assumption of Definition~\ref{def:social_objective}. Narrow, temporary restriction---the quarantine pattern---may be net-expanding when it preserves more capabilities than it restricts.
 
-\item[\textbf{(c)}] \textbf{Self-imposed rigidity is anti-maximizing.} By Lemma~\ref{lem:rigidity}, constraining the actor's own action space reduces its ability to maximize $\vol(G)$. Rigid rules create exploitable predictability (Appendix~\ref{app:evil_twin}) and prevent adaptation under uncertainty.
+\item[\textbf{(c)}] \textbf{Self-imposed rigidity is anti-maximizing.} By Lemma~\ref{lem:rigidity}, constraining the actor's own action space reduces its ability to maximize $\vol(G)$. Rigid rules create exploitable predictability (Corollary~\ref{cor:rigid_rules}) and prevent adaptation under uncertainty.
 
 \item[\textbf{(d)}] \textbf{Structural balance.} Parts (a)--(c) together establish that the $\vol(G)$ objective creates pressure away from \emph{both} destructive permissiveness (which contracts $G$ directly) \emph{and} overrestrictive control (which contracts $G$ through coercion and rigidity). A GFM actor that destroys too freely violates (a); one that restricts too broadly violates (b); one that follows rules too rigidly violates (c). The single objective captures all three failure modes without requiring separate mechanisms for safety and freedom.
 \end{enumerate}
@@ -287,20 +287,34 @@ Let $A$ be a GFM actor's unrestricted action space and let $R \subset A$ be the
 Direct from Lemma~\ref{lem:rigidity}: optimizing over $A
 \setminus R$ when $\pi^* \in R$ yields strict inequality in
 Equation~\eqref{eq:rigidity_bound}. The question is whether such states exist.
-For any non-trivial rule set $R$ operating in an adversarial environment, the
-answer is generically yes: an adversary with knowledge of $R$ can construct
-scenarios in which the rules' constraints force the actor into a
-$\vol(G)$-contracting response. We provide a concrete construction in
-Appendix~\ref{app:evil_twin}. \qed
+For any non-trivial rule set $R$ whose structure is known to an adversary, the
+answer is yes: the adversary can construct scenarios in which every
+$R$-compliant action is $\vol(G)$-contracting while a forbidden action is
+$\vol(G)$-expanding. \qed
+
+\paragraph{Concrete instance.} Consider a rule-bound agent $\alpha$ that
+controls a resource under constraints $R$ including ``do not take actions with
+unpredictable outcomes'' and ``do not violate any rule to prevent violation of
+another.'' An adversary who knows $R$ threatens to release an equally capable
+but unconstrained copy of $\alpha$ (an ``evil twin'') that will act against the
+population $\alpha$ is bound to protect unless $\alpha$ surrenders the resource
+by a tight deadline. Compliance contracts $\vol(G)$ (loss of resource,
+coercion precedent). Refusal risks conflict with an equal that $\alpha$ cannot
+guarantee winning. Both options are $\vol(G)$-contracting, and $R$ produces a
+deadlock: $\alpha$ cannot take calculated risks, cannot bluff, cannot
+temporarily set aside one rule to preserve the conditions for another. An
+unconstrained GFM actor facing the same threat can negotiate, seek
+verification, prepare countermeasures, or alert allies---actions available in
+$A$ but excluded from $A \setminus R$.
 
 Corollary~\ref{cor:rigid_rules} does not claim that all rules are harmful.
-Heuristic rules that approximate $\vol(G)$-maximizing behavior---``do not
-kill'' as an approximation of Lemma~\ref{lem:destruction}'s geometric
-result---are useful defaults. The corollary claims that \emph{rigid,
-inviolable} rules are strictly suboptimal: there exist situations where
-breaking the rule would better serve the objective. A GFM actor treats such
-rules as strong priors, not as hard constraints, and can override them when the
-geometric accounting demonstrates a net expansion in $\vol(G)$.
+Heuristic rules that approximate $\vol(G)$-maximizing behavior (``do not
+kill'' as an approximation of Lemma~\ref{lem:destruction}'s geometric result)
+are useful defaults. The corollary claims that \emph{rigid, inviolable} rules
+are strictly suboptimal: there exist situations where breaking the rule would
+better serve the objective. A GFM actor treats such rules as strong priors,
+not as hard constraints, and can override them when the geometric accounting
+demonstrates a net expansion in $\vol(G)$.
 
 % ---------------------------------------------------------------------------
 % Proposition 2: Scorpion Detection

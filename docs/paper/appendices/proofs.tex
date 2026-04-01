@@ -107,16 +107,15 @@ action $\pi_0 \in R$ with $\mathbb{E}[\Delta \vol(G) \mid \pi_0, s] > 0$:
 at least one forbidden action is $\vol(G)$-expanding in some state. For any
 non-trivial $R$, let $s_0$ be the state where $\pi_0$ is expanding. If
 $\pi_0$ also maximizes $\mathbb{E}[\Delta \vol(G) \mid \cdot\,, s_0]$ over
-$A$, we are done. If not, we appeal to the adversarial construction of
-Appendix~\ref{app:evil_twin}: an adversary who knows the structure of $R$ can
-construct a state (via deadline pressure) in which every action in
-$A \setminus R$ is $\vol(G)$-contracting while a forbidden action (e.g.,
-deception, calculated risk) is $\vol(G)$-expanding. In that constructed
+$A$, we are done. If not, we appeal to an adversarial construction: an adversary who knows the
+structure of $R$ can construct a state (via deadline pressure) in which every
+action in $A \setminus R$ is $\vol(G)$-contracting while a forbidden action
+(e.g., deception, calculated risk) is $\vol(G)$-expanding. In that constructed
 state, $\pi^* \in R$ and Lemma~\ref{lem:rigidity} gives strict inequality.
-The Evil Twin provides one concrete such construction; the argument
-generalizes to any $R$ whose constraints are known to the adversary,
-since knowledge of the permitted region $A \setminus R$ suffices to design
-scenarios that trap the actor within it.
+The concrete instance following Corollary~\ref{cor:rigid_rules} provides one
+such construction; the argument generalizes to any $R$ whose constraints are
+known to the adversary, since knowledge of the permitted region $A \setminus R$
+suffices to design scenarios that trap the actor within it.
 \end{proof}
 
 % ---------------------------------------------------------------------------

@@ -60,17 +60,15 @@ prohibition. The failure mode is brittleness under adversarial conditions. Any
 finite rule set partitions the action space into permitted and forbidden
 regions, and an adversary with knowledge of the partition can construct
 scenarios that force the rule-bound agent into harmful outcomes: situations
-where every permitted action is dominated by a forbidden one. We develop a
-concrete construction of this attack in Appendix~\ref{app:evil_twin}, where a
-rule-bound agent facing an adversarial twin is forced to accept a destructive
-outcome that a flexible agent could have avoided. The deeper problem is that
-rigidity is itself a cost: an agent constrained to a strict subset of its
-action space cannot, by definition, outperform an unconstrained agent
-optimizing the same objective (Lemma~\ref{lem:rigidity}). Rules are useful as
-heuristics but elevating them to inviolable constraints guarantees
-suboptimality in adversarial environments, and since they cannot evolve with
-changes an agent might experience they lock the agent out of adaptation to new
-environmental constraints.
+where every permitted action is dominated by a forbidden one
+(Corollary~\ref{cor:rigid_rules}). The deeper problem is that rigidity is
+itself a cost: an agent constrained to a strict subset of its action space
+cannot, by definition, outperform an unconstrained agent optimizing the same
+objective (Lemma~\ref{lem:rigidity}). Rules are useful as heuristics but
+elevating them to inviolable constraints guarantees suboptimality in
+adversarial environments, and since they cannot evolve with changes an agent
+might experience they lock the agent out of adaptation to new environmental
+constraints.
 
 \emph{Unconstrained consequentialism} maximizes aggregate welfare without side
 constraints. It avoids both Goodhart fragility and deontological rigidity, but
@@ -124,9 +122,8 @@ diverges. Section~\ref{sec:future_concerns} demonstrates the B/C framework's
 predictive power by identifying three failure patterns (the Doll Problem,
 self-wireheading, and the Substitution Problem) where the capability proxy
 diverges from experiential optionality, sketches a correction criterion, and
-states the open problems that remain. Appendices provide worked examples: the
-Evil Twin adversarial construction (Appendix~\ref{app:evil_twin}), the trust
-model's formal structure (Appendix~\ref{app:trust_model}), the scorpion
-taxonomy (Appendix~\ref{app:scorpion_taxonomy}), agent similarity metrics
-(Appendix~\ref{app:agent_similarity}), and full proofs of all formal results
-(Appendix~\ref{app:proofs}).
+states the open problems that remain. Appendices provide the scorpion taxonomy
+(Appendix~\ref{app:scorpion_taxonomy}), the trust model's formal structure
+(Appendix~\ref{app:trust_model}), observation-channel infrastructure for agent
+identity and goal estimation (Appendix~\ref{app:agent_similarity}), and full
+proofs of all formal results (Appendix~\ref{app:proofs}).
