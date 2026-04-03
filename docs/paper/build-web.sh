@@ -258,7 +258,7 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
     {
       "author": "Teague Lasser",
       "authorURL": "https://teague.info",
-      "affiliations": [{"name": "Independent"}]
+      "affiliations": [{"name": "Subseq"}]
     },
     {
       "author": "Claude Opus 4.6",

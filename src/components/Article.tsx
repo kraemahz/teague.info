@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex';
 
 import "./Article.css";
 import MetaTags from "./MetaTags";
+import BlurImage from "./BlurImage";
 
 interface ArticleProps {
   filePath: string;
@@ -52,12 +53,16 @@ const Article: React.FC<ArticleProps> = ({ filePath }) => {
       .then((text) => setContent(text))
       .catch((error) => console.error(error));
   }, [id, filePath]);
+  const imageName = article.image?.replace(/\.\w+$/, "");
   const image = `/images/${article.image}`;
+  const thumb = `/images/thumbs/${imageName}.jpg`;
 
   return (
     <div className="Article">
       <MetaTags article={article} />
-      <img src={image} />
+      {article.image && (
+        <BlurImage src={image} thumbSrc={thumb} alt={article.title} />
+      )}
       <ReactMarkdown
         children={content}
         remarkPlugins={[gfm, remarkMath]}
