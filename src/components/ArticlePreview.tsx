@@ -7,6 +7,16 @@ interface ArticleMeta {
     title: string;
     excerpt: string;
     image: string;
+    date: string;
+}
+
+function formatDate(iso: string): string {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
 }
 
 const ArticlePreview: React.FC = () => {
@@ -20,7 +30,11 @@ const ArticlePreview: React.FC = () => {
                 }
                 return response.json();
             })
-            .then((data) => setArticles(data))
+            .then((data: ArticleMeta[]) =>
+                setArticles(data.sort((a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                ))
+            )
             .catch((error) => console.error(error));
     }, []);
 
@@ -41,6 +55,9 @@ const ArticlePreview: React.FC = () => {
                     <Link to={`/article/${article.id}`}>
                         <h2>{article.title}</h2>
                     </Link>
+                    {article.date && (
+                        <time className="article-date">{formatDate(article.date)}</time>
+                    )}
                     <p>{article.excerpt}</p>
                 </div>
             ))}

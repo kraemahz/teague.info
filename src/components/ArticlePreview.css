@@ -87,6 +87,13 @@
   color: var(--accent);
 }
 
+.ArticleItem .article-date {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.3rem;
+}
+
 .ArticleItem p {
   font-size: 0.9rem;
   color: var(--text-secondary);
