@@ -1,0 +1,18 @@
+\begin{abstract}
+Goal-frontier maximization (GFM) aligns an agent by maximizing $\vol(G)$, the
+    volume of the jointly achievable capability space across all agents. The
+    foundational paper \citep{lasser2026gfm} proved structural alignment
+    properties conditional on a measure satisfying certain axioms, but left the
+    capability space abstract and the measure intractable. We construct a
+    concrete, computable capability space as a weighted lattice discovered
+    through dual-channel discovery: agent communication and behavioral
+    observation. Capabilities are ordered by subsumption and weighted by the
+    information content of their benchmarks. We define a lattice measure
+    $\volL$ via M\"{o}bius inversion, prove it satisfies the required axioms,
+    and show that $\volL(G)$ is computable in polynomial time on finite
+    lattices. The lattice construction also upgrades the local volume estimator
+    from ternary sign estimation to real-valued magnitude estimation, resolving
+    an acknowledged limitation of the original framework. We demonstrate the
+    construction with a worked example showing self-balancing decisions on a
+    concrete lattice of benchmarked capabilities.
+\end{abstract}

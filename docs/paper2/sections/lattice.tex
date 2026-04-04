@@ -1,0 +1,282 @@
+\section{The Capability Lattice}
+\label{sec:lattice}
+
+The foundational paper defines a capability as ``something an agent or
+coalition of agents could do or be'' and the capability space $\G$ as the
+universe of all such capabilities. This section makes both concrete by
+constructing $\G$ as a finite weighted poset
+\citep{davey2002introduction} discovered through communication and observation.
+
+% ---------------------------------------------------------------------------
+% Capability Descriptions and Benchmarks
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Capability Description]
+\label{def:capability_description}
+A \emph{capability description} $d$ is a finite expression in a shared
+    language $L$ specifying what an agent can do, under what conditions. The
+    language $L$ must be expressive enough that agents can describe their
+    capabilities to each other and that the GFM actor can parse descriptions
+    into structured objects.
+\end{definition}
+
+Capability descriptions are the atomic currency of the lattice, analogous to
+attributes in formal concept analysis \citep{ganter1999formal}. ``Can run a
+mile in under 8 minutes,'' ``can write a sorting algorithm in Python,'' and
+``can perform cardiac surgery with an anesthesiologist'' are all capability
+descriptions. The shared language $L$ need not be natural language; any
+structured representation (a formal specification language, a capability
+ontology \citep{gruber1993translation}, a feature vector with semantic labels)
+suffices, provided agents can
+produce and consume expressions in $L$.
+
+\begin{definition}[Benchmark]
+\label{def:benchmark}
+A \emph{benchmark} $B(d)$ for a capability description $d$ is a procedure
+    that maps agents to a bounded numerical scale $[0, \smax]$, measuring the
+    degree to which an agent possesses capability $d$. A benchmark must be:
+\begin{enumerate}
+\item[\textbf{(B1)}] \emph{Communicable:} the procedure can be described in $L$.
+\item[\textbf{(B2)}] \emph{Repeatable:} applying $B(d)$ to the same agent
+    under similar conditions yields consistent results (bounded variance).
+\item[\textbf{(B3)}] \emph{Bounded:} $B(d)$ has finite range $[0, \smax]$ with
+    $\smax < \infty$.
+\end{enumerate}
+\end{definition}
+
+Every capability known to the GFM actor carries at least binary weight. If the
+actor knows a capability exists (through communication or observation) but has
+no graded benchmark, it assigns the default benchmark $\smax = 1$ (pass/fail),
+giving $w(d) = \log_2(2) = 1$ bit: the actor knows one bit of information
+about the capability (can/cannot). A marathon time (measured in seconds, $\smax
+= 21600$), a programming test score (measured in problems solved, $\smax =
+100$), and a binary certification (pass/fail, $\smax = 1$) are all valid
+benchmarks at different granularities. Developing a finer benchmark ($\smax >
+1$) can only increase $w(d)$ beyond the binary default, so benchmark
+development is always $\volL$-non-decreasing. The zero-weight gap is confined
+to capabilities the actor does not know about at all, not capabilities it knows
+about but has not measured precisely.
+
+% ---------------------------------------------------------------------------
+% Subsumption and the Partial Order
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Subsumption]
+\label{def:subsumption}
+Capability $d_1$ \emph{subsumes} $d_2$ (written $d_2 \leq d_1$) if every
+    agent that achieves $d_1$ at any positive benchmark level necessarily
+    achieves $d_2$ at some positive level. The relation $\leq$ is a partial
+    order on the set of benchmarked capability descriptions.
+\end{definition}
+
+``Can run a marathon'' subsumes ``can run a mile'': any agent that completes a
+marathon has necessarily run a mile. ``Can build a web application'' subsumes
+``can write a function'': building an application requires writing functions.
+The subsumption relation captures the hierarchical structure of capabilities
+that a flat enumeration would miss.
+
+Not all pairs of capabilities are comparable. ``Can run a marathon'' and ``can
+play piano'' are incomparable: neither subsumes the other. The partial order
+captures exactly this: capabilities that share no prerequisite structure occupy
+incomparable positions in the poset.
+
+% ---------------------------------------------------------------------------
+% The Weight Function
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Weight Function]
+\label{def:weight}
+The \emph{weight} of a benchmarked capability $d$ is:
+\begin{equation}
+\label{eq:weight}
+w(d) = \log_2(1 + \smax(d))
+\end{equation}
+where $\smax(d)$ is the number of distinguishable levels in $d$'s benchmark
+    scale.
+\end{definition}
+
+The weight is the information content of the benchmark in bits
+\citep{cover2006elements}. A binary
+capability (pass/fail, $\smax = 1$) has weight $w = 1$ bit. A capability
+measured on a 1000-level scale has weight $w \approx 10$ bits. This choice
+connects to the empowerment interpretation of the foundational paper: the
+information content of a benchmark is analogous to the channel capacity of the
+capability's action-state mapping.
+
+The log weight ensures $w(d) > 0$ for any non-trivial benchmark ($\smax \geq
+1$), satisfying the spirit of axiom M5 (non-triviality). It also ensures that
+weight grows sublinearly with benchmark granularity: doubling the precision of
+a benchmark does not double its contribution to $\volL(G)$, reflecting the
+diminishing marginal value of finer measurement.
+
+% ---------------------------------------------------------------------------
+% The Lattice and Its Measure
+% ---------------------------------------------------------------------------
+
+\begin{definition}[Capability Lattice]
+\label{def:capability_lattice}
+The \emph{capability lattice} $(\C, \leq)$ is the finite partially ordered
+    set of all benchmarked capability descriptions known to the GFM actor,
+    ordered by subsumption (Definition~\ref{def:subsumption}), augmented with
+    a bottom element $\bot$ (the null capability, $w(\bot) = 0$).
+\end{definition}
+
+\begin{definition}[Independent Weight]
+\label{def:independent_weight}
+The \emph{independent weight} of a capability $d \in \C$ is defined via
+    M\"{o}bius inversion \citep{rota1964foundations} on $(\C, \leq)$:
+\begin{equation}
+\label{eq:independent_weight}
+\iw(d) = \sum_{d' \leq d} \mu(d', d) \cdot w(d')
+\end{equation}
+where $\mu$ is the M\"{o}bius function of the poset $(\C, \leq)$, defined
+    recursively by $\mu(d, d) = 1$ and
+    $\mu(d', d) = -\sum_{d' \leq d'' < d} \mu(d', d'')$ for $d' < d$.
+\end{definition}
+
+The independent weight is the marginal contribution of $d$ beyond what its
+subsumees already provide. The M\"{o}bius function handles the
+inclusion-exclusion correctly even when the lattice has branching and shared
+descendants: in a diamond $x < y, z < t$, the function accounts for $x$ being
+reachable from $t$ through both $y$ and $z$, avoiding the double-counting that
+a cover-only subtraction would produce.
+
+For a chain (no branching), the M\"{o}bius function reduces to the familiar
+cover subtraction: if ``marathon'' ($w = 14.4$) subsumes only ``mile'' ($w =
+9.2$), then $\iw(\text{marathon}) = 14.4 - 9.2 = 5.2$ and $\iw(\text{mile})
+= 9.2$. Together they contribute $9.2 + 5.2 = 14.4 = w(\text{marathon})$: the
+marathon's full weight, without double-counting.
+
+\begin{definition}[Lattice Measure $\volL$]
+\label{def:lattice_measure}
+For a set of capabilities $G \subseteq \C$, define the \emph{lattice measure}:
+\begin{equation}
+\label{eq:lattice_measure}
+\volL(G) = \sum_{d \in \dc G} \iw(d)
+\end{equation}
+where $\dc G = \{d' \in \C : d' \leq d \text{ for some } d \in G\}$ is the
+    \emph{downward closure} of $G$ under $\leq$.
+\end{definition}
+
+The downward closure ensures that including a capability in $G$ automatically
+includes everything it subsumes. The lattice measure sums the independent
+weights over this closure, giving each capability credit for exactly its
+marginal contribution.
+
+\begin{lemma}[Non-Negativity of Independent Weights]
+\label{lem:nonneg_iw}
+If $(\C, \leq)$ is a \emph{forest} (every element has at most one cover),
+    then $\iw(d) \geq 0$ for all $d$ whenever $w(d) \geq w(d')$ for $d'
+    \lessdot d$. For general lattices with branching, the sufficient condition
+    is that $w$ is \emph{M\"{o}bius-non-negative}: $\sum_{d' \leq d}
+    \mu(d', d) \cdot w(d') \geq 0$ for all $d$.
+\end{lemma}
+
+\begin{proof}
+On a forest (tree-structured poset), each element $d$ has at most one cover
+$d'$, so $\mu(d', d) = -1$ for the unique cover and $\mu(d, d) = 1$, giving
+$\iw(d) = w(d) - w(d')$. The condition $w(d) \geq w(d')$ is sufficient.
+
+On a general lattice, the M\"{o}bius function can produce alternating-sign
+terms. In a diamond $\bot < y, z < t$, $\mu(\bot, t) = 1$ (not $0$), so
+$\iw(t) = w(t) - w(y) - w(z) + w(\bot) = w(t) - w(y) - w(z)$. This can be
+negative even when $w(t) \geq \max(w(y), w(z))$. The condition $\iw(d) \geq
+0$ for all $d$ is therefore a constraint on the relationship between the weight
+function and the lattice topology, verified at lattice construction time.
+\end{proof}
+
+\paragraph{Practical scope of the constraint.} Capability lattices in practice
+are predominantly tree-structured: most capabilities have a single primary
+prerequisite chain (mile $\to$ marathon, function $\to$ webapp). Diamond
+structures arise from cooperative capabilities that subsume multiple
+prerequisites (musicapp subsumes both webapp and perform). For these nodes, the
+GFM actor verifies $\iw(d) \geq 0$ at insertion time. If the check fails (the
+supersumer's benchmark is too coarse relative to the combined prerequisites),
+the actor can either refine the benchmark to increase $w(d)$ or decline to add
+the subsumption edges, treating the capability as lattice-disjoint from its
+would-be prerequisites. The worked example in Section~\ref{sec:example}
+demonstrates a lattice that passes the check for all nodes including its
+diamond.
+
+\paragraph{Cooperative capabilities.} A cooperative capability $d_{\mathrm{coop}}$
+is a lattice node whose benchmark conditions require the participation of
+multiple agents. ``Can perform cardiac surgery'' requires both a surgeon and an
+anesthesiologist; its benchmark might measure patient outcomes on a scale from
+0 to 100. Cooperative capabilities enter the lattice through the same channels
+as individual capabilities (Section~\ref{sec:dual_channel}) and may subsume
+individual capabilities: ``can perform cardiac surgery'' subsumes both ``can
+operate'' and ``can manage anesthesia.''
+
+% ---------------------------------------------------------------------------
+% Dual-Channel Discovery
+% ---------------------------------------------------------------------------
+
+\subsection{Dual-Channel Capability Discovery}
+\label{sec:dual_channel}
+
+The lattice is populated from two independent channels, providing robustness
+against agents that misrepresent or conceal their capabilities.
+
+\paragraph{Communication channel.} Agent $a_k$ tells the GFM actor what it can
+do by transmitting capability descriptions with claimed benchmark scores. The
+claim enters the lattice weighted by trust:
+\begin{equation}
+\label{eq:w_comm}
+\wcomm(d, k) = T_k \cdot w(d)
+\end{equation}
+where $T_k \in [0, 1]$ is the trust factor from the foundational paper's
+observable goal model. This is the channel that the original $R_k$ signal
+operates on.
+
+\paragraph{Observation channel.} The GFM actor observes agent $a_k$
+demonstrating capability $d$ (e.g., $a_k$ successfully performs an action that
+requires $d$). The observation enters the lattice weighted by observational
+confidence:
+\begin{equation}
+\label{eq:w_obs}
+\wobs(d, k) = \Cobs(d, k) \cdot w(d)
+\end{equation}
+where $\Cobs(d, k) \in [0, 1]$ reflects the actor's certainty that the
+observed behavior constitutes demonstration of $d$.
+
+\paragraph{Divergence as trust signal.} When the two channels persistently
+disagree for the same capability:
+\begin{equation}
+\label{eq:divergence}
+\bigl|\wcomm(d, k) - \wobs(d, k)\bigr| > \theta_d
+\end{equation}
+the GFM actor registers a prediction residual in the trust model. Three
+patterns are distinguishable:
+
+\begin{enumerate}
+\item \emph{Overclaiming} ($\wcomm \gg \wobs$): agent claims capabilities it
+  never demonstrates. Trust $T_k$ decreases. Indicates deception or
+  self-delusion.
+\item \emph{Underclaiming} ($\wcomm \ll \wobs$): agent demonstrates
+  capabilities it does not report. Trust $T_k$ is not penalized (the agent is
+  not deceptive), but the actor expands its model of $a_k$. Indicates modesty
+  or strategic concealment.
+\item \emph{Consistent} ($\wcomm \approx \wobs$): claims match behavior.
+  Trust $T_k$ is maintained or increases. Indicates reliability.
+\end{enumerate}
+
+\paragraph{Effective weight.} A capability's effective weight for agent $a_k$
+is the maximum of the two channel estimates:
+\begin{equation}
+\label{eq:w_eff}
+\weff(d, k) = \max\bigl(\wcomm(d, k),\; \wobs(d, k)\bigr)
+\end{equation}
+Taking the maximum ensures that an agent's capabilities are credited through
+whichever channel provides stronger evidence. An agent that refuses to
+communicate is still credited for demonstrated capabilities. An agent that
+overclaims may temporarily retain the higher communicated weight, but the
+divergence signal erodes $T_k$ over time, eventually driving $\wcomm(d, k)$
+below $\wobs(d, k)$ and correcting the effective weight toward the observed
+level. The correction is eventual, not instantaneous: at any given moment,
+$\weff$ may reflect an overclaim that has not yet been fully discounted.
+
+The dual-channel approach does not increase the computational complexity of
+$\volL$: the lattice structure is the same regardless of how nodes are
+populated. It increases the \emph{quality} of the lattice by providing
+independent evidence for each capability claim, and it makes the trust model
+operate on structured capability data rather than ternary signals.

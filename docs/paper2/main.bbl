@@ -1,0 +1,52 @@
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Cover and Thomas(2006)]{cover2006elements}
+Thomas~M Cover and Joy~A Thomas.
+\newblock \emph{Elements of Information Theory}.
+\newblock Wiley-Interscience, 2nd edition, 2006.
+
+\bibitem[Davey and Priestley(2002)]{davey2002introduction}
+Brian~A Davey and Hilary~A Priestley.
+\newblock \emph{Introduction to Lattices and Order}.
+\newblock Cambridge University Press, 2nd edition, 2002.
+
+\bibitem[Dyer and Frieze(1988)]{dyer1988complexity}
+Martin~E Dyer and Alan~M Frieze.
+\newblock On the complexity of computing the volume of a polyhedron.
+\newblock \emph{SIAM Journal on Computing}, 17\penalty0 (5):\penalty0 967--974,
+  1988.
+
+\bibitem[Ganter and Wille(1999)]{ganter1999formal}
+Bernhard Ganter and Rudolf Wille.
+\newblock \emph{Formal Concept Analysis: Mathematical Foundations}.
+\newblock Springer, 1999.
+
+\bibitem[Gruber(1993)]{gruber1993translation}
+Thomas~R Gruber.
+\newblock A translation approach to portable ontology specifications.
+\newblock \emph{Knowledge Acquisition}, 5\penalty0 (2):\penalty0 199--220,
+  1993.
+
+\bibitem[Lasser(2026)]{lasser2026gfm}
+Teague Lasser.
+\newblock Goal-frontier maximizers are civilization aligned.
+\newblock \url{https://teague.info/papers/gfm/}, 2026.
+
+\bibitem[Rota(1964)]{rota1964foundations}
+Gian-Carlo Rota.
+\newblock On the foundations of combinatorial theory {I}: Theory of
+  {M\"{o}bius} functions.
+\newblock \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und verwandte
+  Gebiete}, 2\penalty0 (4):\penalty0 340--368, 1964.
+
+\bibitem[Stanley(1997)]{stanley1997enumerative}
+Richard~P Stanley.
+\newblock \emph{Enumerative Combinatorics}, volume~1.
+\newblock Cambridge University Press, 1997.
+
+\end{thebibliography}

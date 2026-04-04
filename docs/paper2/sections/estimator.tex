@@ -1,0 +1,90 @@
+\section{Weighted Estimator on the Lattice}
+\label{sec:estimator}
+
+The foundational paper's local volume estimator uses ternary signals $R_k \in
+\{-1, 0, +1\}$ because magnitudes are unavailable on an abstract capability
+space. On the lattice, each capability has a known weight, enabling an upgrade
+to real-valued signals.
+
+\subsection{Real-Valued Agent Reports}
+
+When the GFM actor evaluates an action $\pi$, each agent $a_k$ in the
+observation set $\mathcal{O}$ reports the net weighted change in its
+observable capabilities:
+\begin{equation}
+\label{eq:weighted_report}
+R_k(\pi) = \sum_{d \in D_k^+(\pi)} \iw(d) - \sum_{d \in D_k^-(\pi)} \iw(d)
+\end{equation}
+where $D_k^+(\pi)$ is the set of capabilities gained by $a_k$ under $\pi$ and
+$D_k^-(\pi)$ is the set lost. This includes both individual and cooperative
+capabilities that $a_k$ can observe from its own vantage point.
+
+An agent that loses a high-weight capability (e.g., memory capacity: $w =
+9.97$ bits) and gains a low-weight one (e.g., a binary certification: $w = 1$
+bit) reports $R_k \approx -8.97$, correctly reflecting contraction. The
+ternary estimator from the foundational paper would report $R_k = 0$ (one
+gain, one loss), missing the asymmetry entirely.
+
+\subsection{Aggregate Estimator}
+
+The trust-weighted aggregate is structurally identical to the foundational
+paper's Equation~10, but now carries magnitude:
+\begin{equation}
+\label{eq:weighted_estimator}
+\Deltahat(\pi) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi)
+\end{equation}
+This estimates $\Delta \volL(G \mid \pi)$ directly, not just its sign.
+
+\begin{proposition}[Upgraded Sign-Correctness]
+\label{prop:sign_correctness}
+On the lattice, the estimator $\Deltahat(\pi)$ is sign-correct under the
+    same conditions as the foundational paper's Proposition~3 (representative
+    sample, accurate trust model, individual-level dominance). In the
+    same-sign case, conditions 1--3 suffice. In the opposite-sign case,
+    sign-correctness additionally requires $|\Delta_C| < (\epsilon -
+    \delta)|\Delta_I|$, as in the foundational paper. The lattice upgrade
+    reduces the individual-level estimation error $|e_I|$ (and thus $\delta$)
+    by preserving magnitude asymmetries that the ternary estimator would lose,
+    widening the margin within which the opposite-sign condition holds.
+\end{proposition}
+
+\begin{proof}[Proof sketch (full proof in Appendix~\ref{app:proof_sign_correctness})]
+The decomposition $\Delta \volL = \Delta_I + \Delta_C$ into
+individual and cooperative components carries through from the foundational
+paper because $\volL$ satisfies M1--M6 (Proposition~\ref{prop:axioms}). The
+individual component $\Delta_I$ is estimated by $\hat{\Delta}_I = \sum_k T_k
+\cdot R_k^{\mathrm{ind}}(\pi)$ with error controlled by conditions 1--2. The
+cooperative component $\Delta_C$ is partially estimated through participant
+reports. Because $R_k$ is real-valued, both components are measured in the same
+units (independent weight), and the margin condition simplifies: sign-correctness
+holds whenever $|\hat{\Delta}_I + \hat{\Delta}_C - (\Delta_I + \Delta_C)| <
+|\Delta_I + \Delta_C|$, which the trust-weighted aggregation ensures under the
+stated conditions.
+\end{proof}
+
+\subsection{Magnitude Bounds}
+
+The lattice estimator provides the first magnitude guarantee for $\vol(G)$
+changes. Write the true volume change as the sum over all agents:
+$\Delta \volL(G \mid \pi) = \sum_k R_k^{\mathrm{true}}(\pi)$,
+where $R_k^{\mathrm{true}}$ is agent $a_k$'s actual weighted capability change.
+The estimator observes $\Deltahat(\pi) = \sum_{k \in \mathcal{O}} T_k \cdot
+R_k(\pi)$, where $R_k(\pi)$ is $a_k$'s reported change. For observed agents,
+the report equals the truth ($R_k = R_k^{\mathrm{true}}$) under an accurate
+trust model; the trust weight introduces a discounting error
+$|T_k \cdot R_k - R_k| = (1 - T_k)|R_k|$. For unobserved agents, the entire
+change is missed. Summing:
+\begin{equation}
+\label{eq:magnitude_bound}
+\bigl|\Deltahat(\pi) - \Delta \volL(G \mid \pi)\bigr|
+  \;\leq\; \underbrace{\sum_{k \in \mathcal{O}} (1 - T_k) \cdot |R_k(\pi)|}_{\text{trust-discounting error}}
+  \;+\; \underbrace{\sum_{k \notin \mathcal{O}} |R_k^{\mathrm{true}}(\pi)|}_{\text{unobserved-agent error}}
+\end{equation}
+As $T_k \to 1$ for reliable agents and $\mathcal{O}$ covers more of the
+affected population, both terms shrink.
+
+This resolves the foundational paper's acknowledged limitation: ``the estimator
+provides no guarantee on the magnitude of $\Delta \vol(G)$, only on its sign.''
+On the lattice, magnitudes are computable and the estimator can compare two
+expanding actions and select the better one, restoring the optimization from
+``take expanding actions'' to ``maximize $\vol(G)$.''

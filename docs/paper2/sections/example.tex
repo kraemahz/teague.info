@@ -1,0 +1,142 @@
+\section{Worked Example}
+\label{sec:example}
+
+We demonstrate the lattice construction on a population of three agents with
+seven capabilities, with all numbers computed explicitly. The computation is
+reproduced by \texttt{compute\_example.py} (Appendix~\ref{app:code}).
+
+\subsection{Setup}
+
+Three agents: $a_1$ (runner), $a_2$ (programmer), $a_3$ (musician).
+
+\paragraph{Capabilities and benchmarks.}
+
+\begin{center}
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+\textbf{Capability $d$} & \textbf{Agent(s)} & $\smax$ & $w(d)$ & \textbf{Subsumes} \\
+\midrule
+Run a mile        & $a_1$         & 600       & 9.23  & --- \\
+Run a marathon    & $a_1$         & 21600     & 14.40 & mile \\
+Write a function  & $a_2$         & 100       & 6.66  & --- \\
+Build a web app   & $a_2$         & 1000      & 9.97  & function \\
+Play scales       & $a_3$         & 50        & 5.67  & --- \\
+Perform a concert & $a_3$         & 1000      & 9.97  & scales \\
+Build a music app & $a_2, a_3$    & 2000000   & 20.93 & webapp, perform \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The subsumption ordering follows the natural prerequisite structure. The
+individual chains are straightforward: running a marathon requires running a
+mile; building a web app requires writing functions; performing a concert
+requires playing scales. In each chain, the supersumer has a richer benchmark.
+
+The cooperative ``build a music app'' forms a diamond in the lattice: it
+subsumes both ``build a web app'' and ``perform a concert.'' By
+Lemma~\ref{lem:nonneg_iw}, its benchmark must satisfy $w(\text{musicapp}) \geq
+w(\text{webapp}) + w(\text{perform}) \approx 19.93$, requiring $\smax \geq
+1{,}002{,}000$. We use $\smax = 2{,}000{,}000$, reflecting that evaluating a
+cooperative product (an application with both technical and musical quality
+dimensions) has combinatorial measurement depth: the benchmark must
+distinguish quality along both the software and the music axes simultaneously.
+
+\subsection{Computing Independent Weights}
+
+Processing the lattice in topological order, applying
+Definition~\ref{def:independent_weight} (M\"{o}bius inversion):
+
+\begin{center}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Capability} & $\iw(d)$ & $\sum_{d' \leq d} \mu(d', d) \cdot w(d')$ \\
+\midrule
+Run a mile        & 9.23 & $+w(\text{mile}) = 9.23$ \\
+Write a function  & 6.66 & $+w(\text{function}) = 6.66$ \\
+Play scales       & 5.67 & $+w(\text{scales}) = 5.67$ \\
+Run a marathon    & 5.17 & $+w(\text{marathon}) - w(\text{mile}) = 14.40 - 9.23$ \\
+Perform a concert & 4.29 & $+w(\text{perform}) - w(\text{scales}) = 9.97 - 5.67$ \\
+Build a web app   & 3.31 & $+w(\text{webapp}) - w(\text{function}) = 9.97 - 6.66$ \\
+Build a music app & 1.00 & $+w(\text{musicapp}) - w(\text{webapp}) - w(\text{perform}) = 20.93 - 9.97 - 9.97$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All independent weights are non-negative. For chain-structured capabilities
+(marathon, concert, webapp), the M\"{o}bius function has $\mu(d', d) = -1$ for
+the unique cover and $+1$ for $d$ itself, reducing to subtraction of the
+cover's full weight. For the diamond node (musicapp), the M\"{o}bius function
+gives $\mu(\text{webapp}, \text{musicapp}) = -1$ and $\mu(\text{perform},
+\text{musicapp}) = -1$, but $\mu(\text{function}, \text{musicapp}) = 0$ and
+$\mu(\text{scales}, \text{musicapp}) = 0$: the atoms below the covers cancel
+out in the inclusion-exclusion and do not appear in the sum.
+
+\subsection{Computing $\volL(G)$}
+
+The full population's joint goal space $G$ contains all seven capabilities.
+Since $G$ is the entire lattice, $\dc G = G$:
+\[
+\volL(G) = \sum_{d \in G} \iw(d)
+= 9.23 + 6.66 + 5.67 + 5.17 + 4.29 + 3.31 + 1.00
+= 35.33
+\]
+
+The individual agents' capability sets, computed separately:
+
+\begin{center}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Agent} & $\volL(\Gind{k})$ & \textbf{Capabilities} \\
+\midrule
+$a_1$ (runner)     & 14.40 & mile, marathon \\
+$a_2$ (programmer) &  9.97 & function, webapp \\
+$a_3$ (musician)   &  9.97 & scales, perform \\
+\midrule
+$\sum_k \volL(\Gind{k})$ & 34.33 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The individual sets are pairwise lattice-disjoint, so $\volL(\bigcup_k
+\Gind{k}) = 34.33$ by axiom M4. The cooperative music app contributes
+$\volL(G) - 34.33 = 1.00 = \iw(\text{musicapp})$, confirming axiom M6 with
+strict inequality.
+
+\subsection{Self-Balancing Demonstration}
+
+\paragraph{Action 1: Eliminate $a_3$ (destruction).} Removing the musician
+eliminates three capabilities from $G$: play scales ($\iw = 5.67$), perform a
+concert ($\iw = 4.29$), and the cooperative music app ($\iw = 1.00$). The
+volume change is:
+\[
+\Delta \volL = -(5.67 + 4.29 + 1.00) = -10.96
+\]
+This is strongly contracting. The loss exceeds $a_3$'s individual volume
+($9.97$) because the cooperative music app is also destroyed, illustrating the
+super-linear elimination cost from Corollary~1.1 of \citet{lasser2026gfm}:
+$10.96 > 9.97$.
+
+\paragraph{Action 2: Expand $a_1$'s capabilities (expansion).} Teaching $a_1$
+a new capability ``swim'' ($\smax = 300$, $\iw = 8.23$) that was not
+previously in $G$:
+\[
+\Delta \volL = +8.23
+\]
+This is expanding. The new atom adds its full weight because it is
+lattice-disjoint from everything in $G$.
+
+\paragraph{Action 3: Restrict $a_2$ (coercion).} Removing $a_2$'s access to
+``build a web app'' also eliminates the cooperative ``music app'' (which
+subsumes webapp). Volume change:
+\[
+\Delta \volL = -(3.31 + 1.00) = -4.31
+\]
+This is contracting, and the contraction exceeds the individual capability lost
+($3.31$) because the cooperative dependency amplifies the restriction. This
+illustrates Lemma~2 of \citet{lasser2026gfm}: coercion contracts $\vol(G)$
+through both direct and cooperative channels.
+
+\paragraph{Summary.} The $\volL$-maximizing actor avoids Actions 1 and 3 and
+prefers Action 2. Destruction and coercion are penalized; expansion is
+rewarded. All three decisions follow from the same measure without separate
+safety mechanisms.

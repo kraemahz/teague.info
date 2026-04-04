@@ -1,0 +1,145 @@
+\section{Bootstrap}
+\label{sec:bootstrap}
+
+Initializing a GFM actor requires discovering the capability lattice from
+scratch. The lattice and the actor's ability to reason about $\volL(G)$ are
+coupled: the actor cannot evaluate actions without a lattice, and the lattice
+is populated through the actor's interactions. This section describes a
+four-phase bootstrap procedure that uses both communication and observation
+channels.
+
+\subsection{Phase 1: Listen and Observe}
+
+The actor begins with an empty lattice ($\C = \{\bot\}$) and low self-trust
+$T_s$. It receives capability reports through the communication channel and
+observes agent behavior through the observation channel. Each report or
+observation that introduces a benchmarked capability adds a node to $\C$ with
+weight $w(d) = \log_2(1 + \smax(d))$. All claims are initially weighted by
+low trust $T_k$ (the cooling period from the foundational paper).
+
+\subsection{Phase 2: Cross-Validate}
+
+As reports accumulate, the actor compares the two channels. Agents whose
+communicated capabilities match observed behavior build trust quickly
+(consistent pattern from Section~\ref{sec:dual_channel}). Overclaiming agents
+lose trust. Underclaiming agents trigger model expansion: the actor adds
+observed capabilities that the agent did not report. The cross-validation phase
+improves the quality of $\weff(d, k)$ and calibrates $T_k$ across the
+population.
+
+\subsection{Phase 3: Discover Structure}
+
+The actor discovers subsumption relationships through two mechanisms:
+
+\emph{Logical analysis.} If capability descriptions in $L$ have compositional
+structure, the actor can infer subsumption from the descriptions themselves.
+``Can run a marathon in under 4 hours'' logically implies ``can run a mile.''
+The shared language $L$ must be expressive enough for this inference; formal
+specification languages or capability ontologies support it directly.
+
+\emph{Empirical observation.} If every agent observed to have capability $d_1$
+also demonstrates $d_2$, the actor infers $d_2 \leq d_1$ (with confidence
+proportional to the number of confirming observations and the diversity of
+agents observed). This is inductive: a sufficiently large and diverse
+observation set makes the inference reliable.
+
+As subsumption edges are added, the actor recomputes independent weights
+$\iw(d)$ via full M\"{o}bius inversion ($O(|\C|^3)$ for general lattices,
+$O(|\C| \cdot k)$ for trees; Proposition~\ref{prop:tractability}).
+
+\subsection{Phase 4: Expand}
+
+With a populated lattice and calibrated trust, the actor begins proposing
+actions and evaluating them via $\Deltahat(\pi)$
+(Equation~\eqref{eq:weighted_estimator}). Self-trust $T_s$ increases as the
+actor's predictions ($\Deltahat$) match observed outcomes ($\Delta \volL$
+computed post-action). Both channels continue refining the lattice throughout
+the actor's operation: new capabilities are discovered, benchmark scores are
+updated, and subsumption relationships are confirmed or revised.
+
+\subsection{Convergence}
+
+\begin{proposition}[Lattice Growth]
+\label{prop:bootstrap_convergence}
+Under assumptions of positive communication frequency and non-zero observation
+    coverage:
+\begin{enumerate}
+\item[\textbf{(a)}] The lattice node set grows monotonically: $\C(t) \subseteq
+    \C(t+1)$ for all $t$.
+\item[\textbf{(b)}] Adding new capabilities to $G$ (without changing
+    subsumption structure) is $\volL$-non-decreasing.
+\item[\textbf{(c)}] Discovering subsumption edges can \emph{decrease}
+    $\volL(G)$: if $d_1$ and $d_2$ were treated as unrelated and the edge
+    $d_1 \leq d_2$ is later discovered, the downward closure $\dc G$ does not
+    change but the M\"{o}bius-inverted weights redistribute, and $\volL(G)$
+    may drop from $w(d_1) + w(d_2)$ to $w(d_2)$.
+\item[\textbf{(d)}] Updating a benchmark to a finer scale ($\smax' > \smax$)
+    is $\volL$-non-decreasing: $\volL$ increases if $d$ is maximal in $\dc G$
+    and is unchanged otherwise.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) Nodes and edges are never removed from $\C$.
+
+(b) If $G(t+1) = G(t) \cup \{d\}$ for a new capability $d$ with no new
+subsumption edges, then $\dc G(t+1) \supseteq \dc G(t)$ and all independent
+weights are unchanged. By M3, $\volL(G(t+1)) \geq \volL(G(t))$.
+
+(c) Counterexample: let $d_1$ = ``write a function'' ($w = 6.66$) and $d_2$ =
+``build a web app'' ($w = 9.97$). Before discovering $d_1 \leq d_2$, the
+capabilities are lattice-disjoint: $\volL(\{d_1, d_2\}) = 6.66 + 9.97 =
+16.63$. After adding the edge, M\"{o}bius inversion gives $\iw(d_1) = 6.66$,
+$\iw(d_2) = 9.97 - 6.66 = 3.31$, and $\volL(\{d_1, d_2\}) = 6.66 + 3.31 =
+9.97 = w(d_2)$. The volume decreased by $6.66$. This is epistemically correct:
+the actor previously overcounted because it did not know that $d_1$'s
+measurement content was already captured by $d_2$. Structural refinement
+corrects the overcount.
+
+(d) Increasing $\smax(d)$ increases $w(d) = \log_2(1 + \smax(d))$ and therefore
+increases $\iw(d)$. However, for any ancestor $d' > d$ in $\dc G$, the
+M\"{o}bius sum for $\iw(d')$ includes $w(d)$ with coefficient $\mu(d, d')$,
+which may be negative, decreasing $\iw(d')$. The net effect on $\volL(G)$
+depends on whether $d$ is maximal in $\dc G$: if $d$ has no descendant in
+$\dc G$ above it, $\volL$ increases by $\Delta w(d)$; if $d$ is non-maximal,
+the increase in $\iw(d)$ is absorbed by offsetting decreases in ancestors'
+independent weights, and $\volL(G)$ is unchanged
+(Appendix~\ref{app:proof_bootstrap}).
+\end{proof}
+
+\paragraph{Interpretation.} Part (b) shows that discovering new capabilities
+always increases $\volL$. Part (d) shows that refining benchmarks increases
+$\volL$ when the refined capability is maximal in the closure, and leaves it
+unchanged otherwise (the increase is absorbed by ancestors). Part (c) shows
+that discovering structure (subsumption) can decrease $\volL$ by correcting
+overcounting. The net trajectory of $\volL$ during bootstrap depends on the
+balance between capability discovery (expanding) and structural refinement
+(potentially contracting). In practice, early bootstrap is dominated by (b)
+(rapid discovery of new capabilities), while later phases are dominated by (c)
+(structural refinement that tightens the measure). The long-run $\volL$
+converges toward the correct volume given the actor's full structural
+knowledge, which may be lower than the naive estimate from the early
+structureless phase.
+
+\paragraph{Binary default and deferred structure.} Every capability that
+enters the lattice through communication or observation immediately receives
+the binary default weight $w(d) = 1$ bit ($\smax = 1$): the actor knows the
+capability exists. The capability enters as an \emph{unstructured atom} with no
+subsumption edges, contributing $\iw(d) = w(d) = 1$ to $\volL(G)$ immediately.
+
+Subsumption edges are added in a separate step (Phase~3) only after the
+non-negativity check passes: for a proposed edge set making $d$ a multi-cover
+node, the actor verifies $\iw(d) \geq 0$ under M\"{o}bius inversion before
+committing the edges. If the check fails (e.g., a diamond node with two
+binary-default prerequisites gives $\iw = 1 - 1 - 1 < 0$), the edges are
+deferred until the capability's benchmark is refined to a level where the check
+passes. The capability continues contributing as a lattice-disjoint atom in the
+interim.
+
+This sequencing ensures two properties simultaneously: (1) every discovered
+capability contributes to $\volL(G)$ from the moment of discovery, and (2)
+$\iw(d) \geq 0$ is maintained for all nodes at all times. Developing a finer
+benchmark ($\smax > 1$) increases $w(d)$ beyond the binary default, eventually
+enabling deferred edges to be added. The remaining zero-weight gap consists
+only of capabilities the actor has not yet learned about through either
+channel.

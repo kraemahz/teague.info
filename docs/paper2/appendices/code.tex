@@ -1,0 +1,49 @@
+\raggedbottom
+\section{Computation Script}
+\label{app:code}
+
+The following Python script reproduces all computations in
+Section~\ref{sec:example}. It implements full M\"{o}bius inversion on the
+capability poset, computes independent weights and $\volL(G)$, and evaluates
+the three self-balancing actions. Running the script verifies every number in
+the worked example.
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\tiny,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red!60!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  breaklines=true,
+  frame=single,
+  framesep=3pt,
+  xleftmargin=1.5em,
+  xrightmargin=0.5em,
+  columns=flexible,
+  showstringspaces=false,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=
+    {→}{{$\to$}}1
+    {←}{{$\gets$}}1
+    {≥}{{$\geq$}}1
+    {≤}{{$\leq$}}1
+    {≈}{{$\approx$}}1
+    {∪}{{$\cup$}}1
+    {∈}{{$\in$}}1
+    {↓}{{$\downarrow$}}1
+    {μ}{{$\mu$}}1
+    {Σ}{{$\Sigma$}}1
+    {ö}{{\"o}}1
+    {─}{{-}}1
+    {✓}{{$\checkmark$}}1
+    {✗}{{$\times$}}1
+    {—}{{---}}1
+    {·}{{$\cdot$}}1
+    {Δ}{{$\Delta$}}1,
+}
+
+\lstinputlisting{compute_example.py}

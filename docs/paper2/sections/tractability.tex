@@ -1,0 +1,58 @@
+\section{Tractability}
+\label{sec:tractability}
+
+The foundational paper establishes that exact $\vol(G)$ computation is
+\#P-hard on continuous capability spaces \citep{dyer1988complexity}. The
+lattice construction replaces this with a finite, structured computation.
+
+\begin{proposition}[Polynomial-Time Computation of $\volL$]
+\label{prop:tractability}
+For a finite capability lattice $(\C, \leq)$ with $|\C| = n$ nodes,
+    $\volL(G)$ is computable in $O(n^3)$ time via the standard M\"{o}bius
+    recurrence, or $O(n^{2.37})$ via matrix methods
+    \citep{stanley1997enumerative}. For tree-structured lattices (no node has
+    multiple covers), the cost reduces to $O(n \cdot k)$ where $k$ is the
+    maximum in-degree.
+\end{proposition}
+
+\begin{proof}
+The computation proceeds in three passes (full algorithm in
+Appendix~\ref{app:proof_tractability}):
+
+\emph{Pass 1: Compute the M\"{o}bius function.} Process the lattice in
+topological order. For each pair $d' \leq d$, compute $\mu(d', d)$ recursively:
+$\mu(d, d) = 1$ and $\mu(d', d) = -\sum_{d' \leq d'' < d} \mu(d', d'')$. There
+are $O(n^2)$ comparable pairs, and each inner sum iterates over up to $O(n)$
+intermediate elements, giving $O(n^3)$ total. On a tree (each node has at most
+one cover), $\mu$ is nonzero only between covers, reducing to $O(n \cdot k)$.
+
+\emph{Pass 2: Compute independent weights.} For each node $d$:
+$\iw(d) = \sum_{d' \leq d} \mu(d', d) \cdot w(d')$. Each sum has at most $n$
+terms. Total: $O(n^2)$.
+
+\emph{Pass 3: Sum over downward closure.} Given $G \subseteq \C$, compute
+$\dc G$ by traversing downward from each element of $G$. Then $\volL(G) =
+\sum_{d \in \dc G} \iw(d)$. Cost: $O(n)$.
+
+The total is $O(n^3)$, dominated by Pass~1. For tree-structured lattices,
+the total is $O(n \cdot k)$. In practice, capability lattices are sparse
+(most capabilities have few comparable elements), and the effective cost is
+much closer to $O(n^2)$ than $O(n^3)$.
+\end{proof}
+
+\begin{corollary}
+\label{cor:sign_tractable}
+The sign of $\Delta \volL(G \mid \pi)$ for a proposed action $\pi$ is
+    computable in $O(n^3)$ time ($O(n \cdot k)$ for trees), making the full
+    optimization loop of the foundational paper (Section~4.2 of
+    \citet{lasser2026gfm}) tractable on the lattice.
+\end{corollary}
+
+\paragraph{Contrast with \#P-hardness.} The continuous volume problem is hard
+because it requires integrating over an arbitrary region of high-dimensional
+space. The lattice construction avoids this by discretizing the capability
+space: $\volL$ is a finite sum, not an integral. The tradeoff is
+expressiveness: the lattice cannot represent arbitrary capability regions, only
+collections of discrete, benchmarked capabilities. This is the right tradeoff
+for an implementable system, since the GFM actor can only reason about
+capabilities it has learned about through communication and observation.

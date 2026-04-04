@@ -1,0 +1,64 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Goal-frontier maximization (GFM) proposes that an aligned agent should maximize
+$\vol(G)$, the volume of the jointly achievable capability space across all
+agents in a population \citep{lasser2026gfm}. The foundational paper proves
+that this objective has a self-balancing property: destruction, coercion, and
+self-imposed rigidity are all anti-maximizing under a single
+measure-monotonicity argument. It provides a local finite-difference estimator
+that reduces the requirement from volume computation to sign estimation, and
+identifies conditions under which the estimator is sign-correct.
+
+These results are conditional. They hold for any measure satisfying axioms
+M1--M6 (non-negativity, null empty set, monotonicity, finite additivity,
+non-triviality, superadditivity under independence), but the paper provides
+only one concrete measure: the population empowerment measure $\vol_{\mathrm{PE}}$,
+defined as the channel capacity of the population's joint action-state mapping.
+This measure is itself intractable for the same combinatorial reasons that make
+exact $\vol(G)$ computation \#P-hard \citep{dyer1988complexity}. The gap
+between the theoretical framework and any implementable system is the
+structure-of-$\G$ problem: what is the capability space, what measure does it
+carry, and can that measure be computed?
+
+This paper provides a constructive answer. We build $\G$ as a weighted lattice
+of capabilities ordered by subsumption, discovered through two independent
+channels: agent communication (what agents say they can do) and behavioral
+observation (what agents are seen doing). Each capability carries a weight
+derived from the information content of its benchmark. The lattice measure
+$\volL$, defined via M\"{o}bius inversion, satisfies axioms M1--M6 and is
+computable in polynomial time on finite lattices.
+
+The communication boundary is the natural epistemological boundary for GFM.
+Capabilities the actor cannot learn about through any channel are capabilities
+it cannot reason about; treating them as zero-weight is not a limitation but an
+honest accounting of the actor's epistemic position. The dual-channel design is
+robust to adversarial agents: an agent that refuses to communicate its
+capabilities is still observable, and an agent that overclaims is detectable
+through the divergence between communicated and observed weights.
+
+The lattice construction also upgrades the local volume estimator. On an
+abstract capability space, agent reports are ternary ($R_k \in \{-1, 0, +1\}$)
+because magnitudes are unavailable. On the lattice, each capability has a known
+weight, so reports carry real-valued volume changes. This resolves the
+acknowledged limitation that the original estimator provides no magnitude
+guarantee, and strengthens the sign-correctness conditions for cases where
+individual and cooperative changes have opposite signs.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item A concrete construction of $\G$ as a finite weighted poset with
+  subsumption ordering (Section~\ref{sec:lattice}).
+\item Dual-channel lattice discovery via communication and observation, with
+  divergence as a trust signal (Section~\ref{sec:dual_channel}).
+\item Proof that the lattice measure $\volL$ satisfies axioms M1--M6
+  (Section~\ref{sec:axioms}).
+\item A polynomial-time algorithm for $\volL(G)$ on finite lattices
+  (Section~\ref{sec:tractability}).
+\item An upgraded estimator with real-valued signals and magnitude bounds
+  (Section~\ref{sec:estimator}).
+\item A bootstrap procedure for lattice discovery from scratch
+  (Section~\ref{sec:bootstrap}).
+\item A worked example demonstrating self-balancing on a concrete lattice
+  (Section~\ref{sec:example}).
+\end{enumerate}

@@ -1,0 +1,167 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+The lattice construction makes four structural tradeoffs, the last of which is
+new to this paper rather than inherited from the foundational framework.
+
+\paragraph{Epistemological boundary.} The lattice is bounded by what agents
+communicate and what the actor observes. Capabilities that are never described
+and never demonstrated have zero weight. This is honest (the actor should not
+claim to measure what it cannot observe) but it means $\volL$ is a lower bound
+on the ``true'' capability volume, not an exact measure. The bound tightens as
+observation coverage grows, but it never fully closes for capabilities that are
+inherently private or unobservable.
+
+\paragraph{Benchmark granularity and the B-to-C tension.} The binary default
+($w = 1$ bit for every discovered capability) ensures that no known capability
+has zero weight: the actor credits ``being a good friend'' or ``maintaining a
+community'' with at least one bit the moment it learns the capability exists.
+This narrows the zero-weight gap to capabilities the actor has not yet
+encountered through either channel. However, the binary default
+\emph{understates} the information content of capabilities with latent
+gradations. A capability like ``tie a shoe'' appears binary but has
+developmental gradations visible in early childhood; ``maintain a community''
+has gradations from a small group to a city. These latent gradations carry
+information content that the binary default does not capture until a finer
+benchmark is developed. Developing such benchmarks is always
+$\volL$-non-decreasing (since $\smax > 1$ gives $w > 1.0$), aligning the
+actor's incentives with measurement improvement.
+
+The foundational paper's B/C framework identifies relational and experiential
+capabilities as the source of proxy failures (the Doll Problem, wireheading).
+The lattice construction gives these capabilities binary weight rather than
+zero weight, which is an improvement, but the actor is still structurally
+biased toward capabilities with developed benchmarks (higher $\smax$, higher
+$w$) over those with only the binary default. The productive tension remains:
+the theory says what matters most is experiential optionality; the
+implementation credits experiential capabilities but understates them. Closing
+this gap requires developing richer benchmarks for experiential capabilities,
+not just acknowledging their existence.
+
+\paragraph{Context-dependent subsumption.} The subsumption relation may depend
+on context. ``Can run a marathon'' subsumes ``can run a mile'' for fitness
+assessment but not for time-constrained tasks where the mile time matters
+independently. The lattice as defined does not model context-dependent
+subsumption; extending it to do so (e.g., with multiple subsumption relations
+indexed by context) is future work.
+
+\paragraph{Lattice manipulation.} The non-negativity constraint
+(Lemma~\ref{lem:nonneg_iw}) gives the GFM actor latitude to shape its own
+lattice: when $\iw(d) < 0$ for a proposed diamond node, the actor can either
+refine the benchmark (increasing $w(d)$) or decline to add the subsumption
+edges (treating the capability as lattice-disjoint from its prerequisites).
+This means the lattice topology is partly \emph{chosen} by the actor, not
+purely discovered. A strategically motivated actor could exploit this latitude
+to manipulate $\volL(G)$ in favor of preferred actions, in the same way that
+the foundational paper's GFM actor could manipulate its own world model. The
+dual-channel design partially mitigates this: subsumption edges inferred from
+observation are less manipulable than those derived from communication alone.
+But a full analysis of lattice manipulation as a failure mode, analogous to the
+foundational paper's treatment of scorpion behavior, is future work.
+
+\paragraph{Structural-avoidance incentive.} Proposition~\ref{prop:bootstrap_convergence}(b)
+shows that discovering new capabilities always increases $\volL$, while
+Proposition~\ref{prop:bootstrap_convergence}(c) shows that discovering
+subsumption structure can decrease it. A naive $\volL$-maximizer therefore has a
+perverse incentive to seek breadth over depth: meeting new agents (capability
+discovery, always expanding) is preferred over understanding existing agents
+better (structural refinement, potentially contracting). Ignorance of
+redundancy inflates the estimate, and the actor is rewarded for maintaining
+that ignorance.
+
+Three mechanisms partially mitigate this. First, subsumption discovered through
+the observation channel is not optional: if the actor observes that every agent
+with capability $d_1$ also demonstrates $d_2$, the inductive inference fires
+whether the actor seeks it or not. The avoidance incentive applies primarily to
+logical analysis of capability descriptions, not to empirical observation.
+Second, the foundational paper's self-trust dynamics
+\citep{lasser2026gfm} penalize an actor whose predictions are inaccurate: an
+actor that avoids structural knowledge will make poor predictions about
+cooperative capabilities, producing high self-prediction error and low $T_s$,
+which in turn increases the learning rate and drives model refinement. Third,
+the contraction from structural discovery is epistemically correct: the
+actor was previously double-counting, and the deflation brings $\volL$ closer
+to the true volume. An actor that optimizes its \emph{converged} estimate
+(full structural knowledge) rather than its current estimate would value
+structural discovery instrumentally, but computing the converged estimate
+requires knowing all subsumption edges, which is the bootstrap problem itself.
+The structural-avoidance incentive is a genuine tension in the construction
+that future work should address, potentially through a regularization term
+that penalizes structural uncertainty or rewards information gain independently
+of its effect on $\volL$.
+
+\paragraph{Subsumption correction.} The paper provides no mechanism for
+removing a mistakenly added subsumption edge. Incorrect edges permanently
+redistribute independent weights through M\"{o}bius inversion in ways that
+may be difficult to undo. A correction mechanism (e.g., maintaining confidence
+scores on edges and removing those whose confidence drops below a threshold)
+would improve robustness but introduces the complication that $\volL$ can
+increase when edges are removed, potentially allowing the actor to inflate
+its volume estimate by selectively forgetting structure. Balancing structural
+correction against strategic edge removal is an open design problem.
+
+\subsection{Open Problems Addressed}
+
+From the foundational paper's open problems list:
+\begin{itemize}
+\item \textbf{Structure of $\G$:} Resolved. $\G$ is a finite weighted poset
+  with subsumption ordering and M\"{o}bius-inverted weights.
+\item \textbf{Measurement:} Constructively addressed. The dual-channel protocol
+  (communication + observation) provides the signals; the binary default
+  ensures every discovered capability carries at least 1 bit of weight.
+  Graded benchmarks refine this to higher precision. The remaining gap is
+  not zero-weight capabilities but \emph{understated} capabilities: those
+  known at binary resolution whose latent gradations have not yet been
+  measured.
+\item \textbf{Bootstrap:} Resolved. The four-phase procedure discovers the
+  lattice incrementally from both channels.
+\item \textbf{Convergence:} Partially addressed. Capability discovery
+  increases $\volL$; benchmark refinement is non-decreasing (increasing only
+  when the refined capability is maximal in $\dc G$); discovering subsumption
+  structure can decrease $\volL$ by correcting overcounts
+  (Proposition~\ref{prop:bootstrap_convergence}). This contraction is
+  epistemically desirable: the actor's previous estimate was wrong, and
+  structural discovery corrects it toward the true volume given full structural
+  knowledge. The long-run trajectory converges toward this corrected value, but
+  the convergence rate is not characterized.
+\end{itemize}
+
+\subsection{Open Problems Remaining}
+
+\begin{itemize}
+\item \textbf{Plurality:} Can GFM actors with different lattices (different
+  capability descriptions, different benchmarks, different subsumption
+  relations) coordinate? The lattice construction makes this more concrete:
+  lattice reconciliation is a well-studied problem in knowledge representation
+  \citep{ganter1999formal}.
+\item \textbf{B-to-C gap:} The lattice measures capabilities (Candidate B)
+  at binary-or-better resolution. The gap between capability volume and
+  experiential optionality (Candidate C) is narrowed by the binary default
+  (no known capability has zero weight) but not closed: the actor still
+  understates capabilities whose latent gradations are unmeasured. Closing
+  the gap requires developing richer benchmarks for experiential and
+  relational capabilities.
+\item \textbf{Continuous refinement:} As benchmark granularity increases ($\smax
+  \to \infty$), does $\volL$ converge to a continuous measure? Under what
+  conditions does the lattice discretization introduce errors that vanish in
+  the limit?
+\item \textbf{Lattice scaling:} The $O(n^3)$ computation is polynomial in
+  $|\C|$, but $|\C|$ grows with population size, observation duration, and
+  communication volume. A formal characterization of how $n$ scales with
+  population parameters, and when sparsity reduces the effective cost, would
+  strengthen the tractability claim.
+\item \textbf{Automated benchmark refinement:} Can the GFM actor propose
+  graded benchmarks for capabilities currently at the binary default ($w = 1$)?
+  Richer benchmarks increase $w(d)$ and may enable deferred subsumption edges
+  to pass the non-negativity check, integrating previously unstructured atoms
+  into the lattice hierarchy.
+\item \textbf{Subsumption correction:} Can mistakenly added edges be removed
+  without enabling strategic lattice manipulation?
+\item \textbf{Structural-avoidance incentive:} Can the objective be augmented
+  to reward structural discovery independently of its effect on $\volL$? A
+  regularization term penalizing structural uncertainty, or an information-gain
+  bonus for subsumption discovery, would counteract the breadth-over-depth bias
+  without abandoning $\volL$ as the primary objective.
+\end{itemize}

@@ -1,0 +1,168 @@
+\section{Proofs}
+\label{app:proofs}
+
+Proposition~\ref{prop:axioms} (axiom verification) is proved in the main text
+(Section~\ref{sec:axioms}). This appendix provides full proofs for the
+remaining results.
+
+% ---------------------------------------------------------------------------
+% A.1: Tractability
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:tractability} (Polynomial-Time Computation)}
+\label{app:proof_tractability}
+
+\begin{proof}
+We describe the algorithm explicitly, then verify its correctness and
+complexity.
+
+\paragraph{Algorithm.}
+
+\emph{Input:} A finite capability lattice $(\C, \leq)$ with $|\C| = n$ nodes,
+weight function $w$, and a set $G \subseteq \C$.
+
+\emph{Output:} $\volL(G)$.
+
+\begin{enumerate}
+\item \textbf{Topological sort.} Compute a topological ordering of $(\C,
+  \leq)$ from $\bot$ upward. Cost: $O(n + e)$ where $e$ is the number of
+  edges in the Hasse diagram. Since $e \leq n \cdot k$ (each node has at most
+  $k$ covers), this is $O(n \cdot k)$.
+
+\item \textbf{Compute M\"{o}bius function and independent weights.} Compute
+  $\mu(d', d)$ for all pairs $d' \leq d$ by processing in topological order.
+  For each node $d$ and each $d' \leq d$:
+  $\mu(d', d) = -\sum_{d' \leq d'' < d} \mu(d', d'')$.
+  Then $\iw(d) = \sum_{d' \leq d} \mu(d', d) \cdot w(d')$.
+  There are $O(n^2)$ comparable pairs, each requiring a sum over up to
+  $O(n)$ intermediate elements: total $O(n^3)$. For tree-structured lattices
+  (no diamonds), $\mu$ is nonzero only between covers, reducing to
+  $O(n \cdot k)$.
+
+\item \textbf{Compute downward closure.} Initialize $\dc G = \emptyset$.
+  For each $d \in G$, perform a depth-first traversal downward in the Hasse
+  diagram, adding all visited nodes to $\dc G$. Each node is visited at most
+  once (mark visited). Total: $O(n)$ (each node in $\C$ is visited at most
+  once across all traversals).
+
+\item \textbf{Sum.} Compute $\volL(G) = \sum_{d \in \dc G} \iw(d)$. Cost:
+  $O(|\dc G|) \leq O(n)$.
+\end{enumerate}
+
+\emph{Total cost:} $O(n^3)$ for general lattices, dominated by the full
+M\"{o}bius computation in step~2. For tree-structured lattices (each node
+has at most one cover), $\mu$ is nonzero only between covers, reducing the
+cost to $O(n \cdot k)$ where $k$ is the maximum in-degree.
+
+\paragraph{Correctness.} Step~2 computes $\iw(d)$ by M\"{o}bius inversion on
+the poset $(\C, \leq)$, which is well-defined for any finite poset
+\citep{rota1964foundations}. Step~3 computes $\dc G$ by the standard downward
+closure algorithm on a DAG. Step~4 sums non-negative terms (by the design
+constraint $\iw(d) \geq 0$) over the closure, yielding $\volL(G)$ by
+Definition~\ref{def:lattice_measure}.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% A.2: Sign-Correctness
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:sign_correctness} (Upgraded Sign-Correctness)}
+\label{app:proof_sign_correctness}
+
+\begin{proof}
+The structure parallels Appendix~D.8 of \citet{lasser2026gfm}, with the key
+difference that $R_k(\pi)$ is now real-valued rather than ternary.
+
+\paragraph{Setup.} Decompose the true volume change as
+$\Delta \volL(G) = \Delta_I + \Delta_C$, where
+$\Delta_I = \sum_k \sum_{d \in D_k(\pi)} \iw(d)$ sums over all agents'
+gained and lost capabilities (the individual component) and $\Delta_C$ is the
+cooperative component.
+
+The estimator observes:
+\[
+\Deltahat(\pi) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi)
+\]
+where $R_k(\pi) = \sum_{d \in D_k^+(\pi)} \iw(d) - \sum_{d \in D_k^-(\pi)}
+\iw(d)$ (Equation~\eqref{eq:weighted_report}).
+
+Define the individual estimation error $e_I = \Delta_I - \hat{\Delta}_I$ and
+the cooperative estimation error $e_C = \Delta_C - \hat{\Delta}_C$.
+
+\paragraph{Error decomposition.} Under conditions 1--2 (representative sample,
+accurate trust model), the individual error satisfies $|e_I| \leq \delta \cdot
+|\Delta_I|$ for a sampling error ratio $\delta$ controlled by the
+observation coverage $|\mathcal{O}|$ and trust calibration.
+
+Because $R_k$ carries real-valued weights in the same units as $\iw(d)$, the
+cooperative error $e_C$ accounts for cooperative capabilities whose
+participants are outside $\mathcal{O}$. For cooperative capabilities with at
+least one participant in $\mathcal{O}$, the participant's report includes the
+cooperative change (Section~2.1 of the main text), so $e_C$ is bounded by the
+volume of cooperative capabilities involving only unobserved agents.
+
+\paragraph{Sign-correctness.} We need $\sign(\Deltahat) = \sign(\Delta
+\volL)$.
+
+\emph{Same-sign case:} When $\Delta_I$ and $\Delta_C$ have the same sign,
+$|\Delta \volL| = |\Delta_I| + |\Delta_C| \geq |\Delta_I|$. The total error
+$|e_I + e_C| \leq |e_I| + |e_C| < (\delta + 1 - \epsilon)|\Delta_I| \leq
+|\Delta \volL|$ whenever $\delta < \epsilon$. Sign is preserved.
+
+\emph{Opposite-sign case:} When $\Delta_I$ and $\Delta_C$ have opposite
+signs, $|\Delta \volL| = \bigl||\Delta_I| - |\Delta_C|\bigr|$. Sign
+preservation requires $|e_I + e_C| < \bigl||\Delta_I| - |\Delta_C|\bigr|$.
+This holds when $|\Delta_C| < (\epsilon - \delta)|\Delta_I|$.
+
+\paragraph{Improvement over ternary estimator.} With ternary signals, an
+agent that gains a high-weight capability and loses a low-weight one reports
+$R_k = 0$ (one gain, one loss), losing the magnitude asymmetry. With
+real-valued signals, the same agent reports
+$R_k = \iw(d_{\mathrm{gained}}) - \iw(d_{\mathrm{lost}})$, preserving the
+net direction. This strictly reduces $|e_I|$ for any action that produces
+asymmetric capability changes, widening the sign-correctness margin.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% A.3: Bootstrap Convergence
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:bootstrap_convergence} (Lattice Growth)}
+\label{app:proof_bootstrap}
+
+\begin{proof}
+We verify each part of the proposition.
+
+\paragraph{(a) Node set monotonicity.} The lattice operations (add node, add
+edge, update benchmark) never remove nodes or edges. Therefore $\C(t)
+\subseteq \C(t+1)$ for all $t$.
+
+\paragraph{(b) Capability addition is $\volL$-non-decreasing.} Adding a new
+capability $d$ to $G$ without changing the subsumption structure gives
+$G(t+1) \supseteq G(t)$ and $\dc G(t+1) \supseteq \dc G(t)$. Since all
+independent weights are unchanged and non-negative, $\volL(G(t+1)) \geq
+\volL(G(t))$ by M3.
+
+\paragraph{(c) Edge discovery can decrease $\volL$.} Suppose $d_1, d_2 \in G$
+were initially incomparable, with $\volL(\{d_1, d_2\}) = w(d_1) + w(d_2)$ by
+M4 (lattice-disjointness). Discovering $d_1 \leq d_2$ triggers M\"{o}bius
+recomputation: $\iw(d_2)$ decreases from $w(d_2)$ to $w(d_2) - w(d_1)$, and
+$\volL(\{d_1, d_2\}) = w(d_1) + (w(d_2) - w(d_1)) = w(d_2) < w(d_1) +
+w(d_2)$. The decrease reflects the correction of an overcount: the actor
+previously credited $d_1$ and $d_2$ independently when $d_1$'s content was
+already captured by $d_2$.
+
+\paragraph{(d) Benchmark refinement is $\volL$-non-decreasing.} Increasing
+$\smax(d)$ increases $w(d)$. In the M\"{o}bius sum for $\iw(d)$, $w(d)$
+appears with coefficient $\mu(d, d) = +1$, so $\iw(d)$ increases by the same
+amount. For any $d' > d$ whose M\"{o}bius sum includes $w(d)$, the coefficient
+$\mu(d, d')$ may be positive or negative, so $\iw(d')$ may increase or
+decrease. However, the net effect on $\volL(G)$ is non-negative: $\volL(G) =
+\sum_{d'' \in \dc G} \iw(d'') = \sum_{d'' \in \dc G} \sum_{d' \leq d''}
+\mu(d', d'') \cdot w(d')$. Rearranging the double sum by $d'$, the coefficient
+of $w(d)$ in $\volL(G)$ is $\sum_{d'' \geq d, d'' \in \dc G} \mu(d, d'')$,
+which equals $1$ if $d$ is maximal in $\dc G$ and $0$ otherwise (by the
+defining property of the M\"{o}bius function). Therefore increasing $w(d)$
+increases $\volL(G)$ by $\Delta w(d)$ if $d$ is maximal in $\dc G$, and leaves
+it unchanged otherwise.
+\end{proof}
