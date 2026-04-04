@@ -1,7 +1,7 @@
 \section{Worked Example}
 \label{sec:example}
 
-We demonstrate the lattice construction on a population of three agents with
+We demonstrate the poset construction on a population of three agents with
 seven capabilities, with all numbers computed explicitly. The computation is
 reproduced by \texttt{compute\_example.py} (Appendix~\ref{app:code}).
 
@@ -32,7 +32,7 @@ individual chains are straightforward: running a marathon requires running a
 mile; building a web app requires writing functions; performing a concert
 requires playing scales. In each chain, the supersumer has a richer benchmark.
 
-The cooperative ``build a music app'' forms a diamond in the lattice: it
+The cooperative ``build a music app'' forms a diamond in the poset: it
 subsumes both ``build a web app'' and ``perform a concert.'' By
 Lemma~\ref{lem:nonneg_iw}, its benchmark must satisfy $w(\text{musicapp}) \geq
 w(\text{webapp}) + w(\text{perform}) \approx 19.93$, requiring $\smax \geq
@@ -43,7 +43,7 @@ distinguish quality along both the software and the music axes simultaneously.
 
 \subsection{Computing Independent Weights}
 
-Processing the lattice in topological order, applying
+Processing the poset in topological order, applying
 Definition~\ref{def:independent_weight} (M\"{o}bius inversion):
 
 \begin{center}
@@ -74,7 +74,7 @@ out in the inclusion-exclusion and do not appear in the sum.
 \subsection{Computing $\volL(G)$}
 
 The full population's joint goal space $G$ contains all seven capabilities.
-Since $G$ is the entire lattice, $\dc G = G$:
+Since $G$ is the entire poset, $\dc G = G$:
 \[
 \volL(G) = \sum_{d \in G} \iw(d)
 = 9.23 + 6.66 + 5.67 + 5.17 + 4.29 + 3.31 + 1.00
@@ -97,7 +97,7 @@ $\sum_k \volL(\Gind{k})$ & 34.33 & \\
 \end{tabular}
 \end{center}
 
-The individual sets are pairwise lattice-disjoint, so $\volL(\bigcup_k
+The individual sets are pairwise poset-disjoint, so $\volL(\bigcup_k
 \Gind{k}) = 34.33$ by axiom M4. The cooperative music app contributes
 $\volL(G) - 34.33 = 1.00 = \iw(\text{musicapp})$, confirming axiom M6 with
 strict inequality.
@@ -123,7 +123,7 @@ previously in $G$:
 \Delta \volL = +8.23
 \]
 This is expanding. The new atom adds its full weight because it is
-lattice-disjoint from everything in $G$.
+poset-disjoint from everything in $G$.
 
 \paragraph{Action 3: Restrict $a_2$ (coercion).} Removing $a_2$'s access to
 ``build a web app'' also eliminates the cooperative ``music app'' (which
@@ -140,3 +140,57 @@ through both direct and cooperative channels.
 prefers Action 2. Destruction and coercion are penalized; expansion is
 rewarded. All three decisions follow from the same measure without separate
 safety mechanisms.
+
+\subsection{Leverage Demonstration}
+
+Suppose the actor has observed the population over several time steps and
+estimated leverage for each capability. The musician $a_3$ teaches scales to
+other agents, expanding their capability sets; the programmer $a_2$ builds
+tools that enable new cooperative capabilities. Their estimated leverages:
+
+\begin{center}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Capability} & $\hat{\lambda}$ & \textbf{Rationale} \\
+\midrule
+Run a mile        & 0.0 & static; does not accelerate $\volL$ growth \\
+Run a marathon    & 0.0 & static \\
+Write a function  & 0.5 & enables building other capabilities \\
+Build a web app   & 1.0 & creates cooperative infrastructure \\
+Play scales       & 0.8 & teaches others; expands individual sets \\
+Perform a concert & 0.3 & modest cooperative contribution \\
+Build a music app & 2.0 & cooperative output that enables further apps \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+With $\alpha = 1$, the leverage bonus $\alpha \hat{\lambda}(d) \cdot \iw(d)$
+for each capability is:
+
+\begin{center}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{Capability} & $\iw(d)$ & $\hat{\lambda}$ & Leverage bonus & Total score contribution \\
+\midrule
+Run a mile        & 9.23 & 0.0 & 0.00 & 9.23 \\
+Run a marathon    & 5.17 & 0.0 & 0.00 & 5.17 \\
+Write a function  & 6.66 & 0.5 & 3.33 & 9.99 \\
+Build a web app   & 3.31 & 1.0 & 3.31 & 6.62 \\
+Play scales       & 5.67 & 0.8 & 4.54 & 10.21 \\
+Perform a concert & 4.29 & 0.3 & 1.29 & 5.58 \\
+Build a music app & 1.00 & 2.0 & 2.00 & 3.00 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The score contribution column ($\iw(d) + \alpha \hat{\lambda}(d) \cdot
+\iw(d)$) shows how leverage reshapes the actor's investment priorities. Under
+the base measure alone, ``run a mile'' ($\iw = 9.23$) dominates ``play
+scales'' ($\iw = 5.67$). Under the leverage-adjusted score, ``play scales''
+(total $= 10.21$) overtakes ``run a mile'' (total $= 9.23$) because the
+musician's teaching capability accelerates $\volL$ growth for the whole
+population. An action that expands ``play scales'' for a new agent scores
+higher than an action that expands ``run a mile,'' even though the base
+volume contribution is smaller. This illustrates
+Proposition~\ref{prop:leverage_cooperation}: cooperation with high-leverage
+agents is disproportionately rewarded in the action-selection score.

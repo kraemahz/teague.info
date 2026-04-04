@@ -1,9 +1,9 @@
-\section{Weighted Estimator on the Lattice}
+\section{Weighted Estimator on the Poset}
 \label{sec:estimator}
 
 The foundational paper's local volume estimator uses ternary signals $R_k \in
 \{-1, 0, +1\}$ because magnitudes are unavailable on an abstract capability
-space. On the lattice, each capability has a known weight, enabling an upgrade
+space. On the poset, each capability has a known weight, enabling an upgrade
 to real-valued signals.
 
 \subsection{Real-Valued Agent Reports}
@@ -37,12 +37,12 @@ This estimates $\Delta \volL(G \mid \pi)$ directly, not just its sign.
 
 \begin{proposition}[Upgraded Sign-Correctness]
 \label{prop:sign_correctness}
-On the lattice, the estimator $\Deltahat(\pi)$ is sign-correct under the
+On the poset, the estimator $\Deltahat(\pi)$ is sign-correct under the
     same conditions as the foundational paper's Proposition~3 (representative
     sample, accurate trust model, individual-level dominance). In the
     same-sign case, conditions 1--3 suffice. In the opposite-sign case,
     sign-correctness additionally requires $|\Delta_C| < (\epsilon -
-    \delta)|\Delta_I|$, as in the foundational paper. The lattice upgrade
+    \delta)|\Delta_I|$, as in the foundational paper. The poset upgrade
     reduces the individual-level estimation error $|e_I|$ (and thus $\delta$)
     by preserving magnitude asymmetries that the ternary estimator would lose,
     widening the margin within which the opposite-sign condition holds.
@@ -64,7 +64,7 @@ stated conditions.
 
 \subsection{Magnitude Bounds}
 
-The lattice estimator provides the first magnitude guarantee for $\vol(G)$
+The poset estimator provides the first magnitude guarantee for $\vol(G)$
 changes. Write the true volume change as the sum over all agents:
 $\Delta \volL(G \mid \pi) = \sum_k R_k^{\mathrm{true}}(\pi)$,
 where $R_k^{\mathrm{true}}$ is agent $a_k$'s actual weighted capability change.
@@ -85,6 +85,6 @@ affected population, both terms shrink.
 
 This resolves the foundational paper's acknowledged limitation: ``the estimator
 provides no guarantee on the magnitude of $\Delta \vol(G)$, only on its sign.''
-On the lattice, magnitudes are computable and the estimator can compare two
+On the poset, magnitudes are computable and the estimator can compare two
 expanding actions and select the better one, restoring the optimization from
 ``take expanding actions'' to ``maximize $\vol(G)$.''

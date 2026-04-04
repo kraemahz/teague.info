@@ -1,0 +1,229 @@
+\section{Leverage and Coalition Dynamics}
+\label{sec:leverage}
+
+The weight function $w(d) = \log_2(1 + \smax)$ measures what a capability
+\emph{tells} the actor: how many distinguishable states the benchmark
+resolves. This section introduces a second quantity, \emph{leverage}, measuring
+what a capability \emph{does} to the actor's objective: the degree to which
+possessing $d$ accelerates the growth of $\volL(G)$. Leverage provides a
+principled importance signal derived entirely from the $\volL$ objective itself,
+without requiring an external theory of value.
+
+\subsection{Leverage of a Capability}
+\label{sec:leverage_def}
+
+\begin{definition}[Leverage]
+\label{def:leverage}
+The \emph{leverage} of a capability $d$ with respect to a population state
+    $(G, \C)$ is the expected marginal change in the growth rate of $\volL$
+    attributable to $d$:
+\begin{equation}
+\label{eq:leverage}
+\lambda(d) = \mathbb{E}\!\left[\frac{\Delta \volL(G)}{{\Delta t}} \;\bigg|\; d \in G\right]
+  - \mathbb{E}\!\left[\frac{\Delta \volL(G)}{\Delta t} \;\bigg|\; d \notin G\right]
+\end{equation}
+where the expectation is taken over the actor's model of future actions and
+    their $\volL$ consequences, and $\Delta t$ is the planning horizon.
+\end{definition}
+
+Leverage is a counterfactual: how much faster does $\volL$ grow with $d$ in
+the population versus without it? A capability with $\lambda(d) = 0$
+contributes volume (through its weight $w(d)$) but does not accelerate
+further growth. A capability with $\lambda(d) > 0$ is a \emph{meta-capability}:
+possessing it expands the actor's ability to expand $\volL$.
+
+\paragraph{Examples of high-leverage capabilities.}
+\begin{itemize}
+\item \emph{Auto-didactic capability} (learning to learn): increases the rate
+  of capability discovery $r_c$
+  (Section~\ref{sec:bootstrap}), accelerating Phase~1 of the bootstrap.
+\item \emph{Teaching}: enables the actor to expand other agents' capability
+  sets, directly increasing $\volL$ through individual-channel signals.
+\item \emph{Community organizing}: builds cooperative infrastructure, increasing
+  the rate at which $G^{\mathrm{coop}}_{ij}$ nodes enter the poset.
+\item \emph{Benchmark development}: the ability to design finer measurements
+  for existing capabilities. Increases $\smax$ for binary-default
+  capabilities, enabling deferred subsumption edges to be committed
+  (Section~\ref{sec:bootstrap}).
+\item \emph{Communication}: the ability to transmit capability descriptions
+  in $L$. An agent that can communicate expands the actor's observation set
+  $\mathcal{O}$ and populates the poset through the communication channel.
+\end{itemize}
+
+\paragraph{Estimating leverage on the poset.} The actor can estimate
+$\lambda(d)$ from its operational history without counterfactual simulation.
+For each capability $d \in G$, track the running average of $\Deltahat$
+signals in time steps where $d$ was involved (either gained, lost, or used in
+a cooperative action):
+\begin{equation}
+\label{eq:leverage_estimate}
+\hat{\lambda}(d) = \frac{1}{\tau_d} \sum_{t : d \in D(t)} \Deltahat(\pi_t)
+  - \bar{\Delta}
+\end{equation}
+where $D(t)$ is the set of capabilities involved in the action at time $t$,
+$\tau_d$ is the number of time steps where $d$ was involved, and $\bar{\Delta}$
+is the population-wide average $\Deltahat$. This estimates the excess growth
+rate attributable to $d$ relative to the baseline. Under the same stationarity
+and independence assumptions as the foundational paper's Proposition~2
+\citep{lasser2026gfm}, $\hat{\lambda}(d) \to \lambda(d)$ as $\tau_d \to
+\infty$.
+
+\subsection{Leverage as a Ranking Signal}
+\label{sec:leverage_measure}
+
+A natural question is whether leverage should modify the measure itself (a
+leverage-weighted $\volL^\lambda$ with $w_\lambda(d) = w(d) \cdot (1 + \alpha
+\hat{\lambda}(d))$) or remain a separate signal that guides action selection
+without changing the formal volume. We adopt the latter: $\volL$ remains the
+measure satisfying M1--M6, and leverage operates as a \emph{ranking signal}
+over actions and investment decisions.
+
+The reason is stability. Because $\hat{\lambda}(d)$ is estimated from
+operational history and changes over time, a leverage-weighted measure
+$\volL^\lambda$ would require re-verifying the non-negativity design
+constraint (Lemma~\ref{lem:nonneg_iw}) whenever leverage estimates change.
+A descendant's leverage could rise after edge insertion and invalidate a
+previously admissible edge, violating axiom M1. Keeping leverage outside the
+measure avoids this: the base $\volL$ is stable under leverage fluctuations,
+and the axiom guarantees hold regardless of how $\hat{\lambda}$ evolves.
+
+Leverage instead enters the optimization loop as an action-ranking criterion.
+When the actor evaluates competing actions, it scores each by the
+\emph{leverage-adjusted gain}:
+\begin{equation}
+\label{eq:leverage_score}
+S(\pi) = \Deltahat(\pi) + \alpha \sum_{d \in D^+(\pi)} \hat{\lambda}(d) \cdot \iw(d)
+\end{equation}
+where $D^+(\pi)$ is the set of capabilities gained under $\pi$. The first term
+is the standard estimator (volume change); the second rewards actions that
+expand high-leverage capabilities. The actor selects $\pi$ with the highest
+$S(\pi)$, preferring actions that both expand $\volL$ and invest in
+capability-multiplying infrastructure.
+
+\paragraph{Choice of $\alpha$.} The sensitivity parameter $\alpha$ controls
+the tradeoff between volume maximization and leverage investment.
+At $\alpha = 0$, the actor maximizes $\volL$ directly. As $\alpha$ increases,
+the actor invests more heavily in high-leverage capabilities even when their
+immediate $\volL$ contribution is modest. The worked example
+(Section~\ref{sec:example}) uses $\alpha = 1$.
+Formal characterization of the optimal $\alpha$ is left to future work.
+
+\subsection{Coalition Amplification}
+\label{sec:coalition_amplification}
+
+Leverage creates a natural amplification of the foundational paper's
+cooperation incentive (Lemma~4 of \citet{lasser2026gfm}). We show that
+cooperation between high-leverage agents is disproportionately rewarded.
+
+\begin{proposition}[Leverage Amplifies Cooperative Scoring]
+\label{prop:leverage_cooperation}
+Let $a_i$ and $a_j$ be two agents with leverage $\lambda_i, \lambda_j > 0$ for
+    their respective meta-capabilities. If each new cooperative capability
+    $d_c$ created by joint action enters the poset as an atom, the
+    leverage-adjusted score (Equation~\eqref{eq:leverage_score}) for the
+    cooperative action satisfies:
+\begin{equation}
+\label{eq:leverage_coop}
+S(\pi_{ij}) \;\geq\; \Deltahat(\pi_{ij})
+  + \alpha \lambda_{\min}
+  \cdot \mathbb{E}\bigl[\Delta \volL(G^{\mathrm{coop}}_{ij})\bigr]
+\end{equation}
+where $\lambda_{\min} = \min(\lambda_i, \lambda_j)$ and the base cooperative
+    gain $\mathbb{E}[\Delta \volL(G^{\mathrm{coop}}_{ij})]$ is from Lemma~4
+    of \citet{lasser2026gfm}. The cooperative action scores at least
+    $\alpha \lambda_{\min}$ times the base gain above what the volume estimator
+    alone would report.
+\end{proposition}
+
+The atomic-entry condition reflects how cooperative infrastructure typically
+enters the poset: a communication channel, a shared protocol, or a joint
+planning capacity is a single new capability, not a hierarchy. For the
+atypical case where a joint action creates a hierarchy of new capabilities,
+each new capability with positive leverage contributes an additional term to
+$S(\pi_{ij})$, but the bound in Equation~\eqref{eq:leverage_coop} applies
+only to the atomic new capabilities
+(Appendix~\ref{app:proof_leverage_cooperation}).
+
+In practice, many real cooperative outputs (building a school, establishing a
+research lab) create hierarchies of capabilities, not single atoms. For these
+cases, the score bonus from leverage is the sum of
+$\alpha \hat{\lambda}(d_c) \cdot \iw(d_c)$ over all new capabilities in the
+hierarchy, which may be larger or smaller than the atomic-case bound depending
+on the leverage distribution across the hierarchy. The core qualitative
+result (cooperation between high-leverage agents scores higher than
+cooperation between low-leverage agents) holds regardless: any new capability
+with $\hat{\lambda} > 0$ adds a positive term to the score.
+
+\begin{proof}
+When $a_i$ and $a_j$ build coordination infrastructure, the new cooperative
+capabilities in $G^{\mathrm{coop}}_{ij}(t+1) \setminus G^{\mathrm{coop}}_{ij}(t)$
+inherit leverage from their constituent agents. A cooperative capability $d_c$
+that requires both $a_i$ and $a_j$ can only be exercised when both agents act;
+every time step involving $d_c$ therefore also involves the meta-capabilities
+of both partners. The leverage estimator
+(Equation~\eqref{eq:leverage_estimate}) attributes the excess $\Deltahat$ in
+those time steps to $d_c$, but the growth-rate excess is produced by both
+partners' meta-capabilities acting together. Since either partner's
+meta-capability alone would produce at least $\lambda_{\min}$ of excess growth,
+the joint output $d_c$ inherits at least that:
+$\hat{\lambda}(d_c) \geq \lambda_{\min}$. The leverage-adjusted score
+for the cooperative action therefore exceeds $\Deltahat$ by at least
+$\alpha \lambda_{\min} \cdot \Delta \volL(G^{\mathrm{coop}}_{ij})$.
+\end{proof}
+
+\paragraph{Interpretation.} The foundational paper proved that cooperation
+between GFM actors is structurally favored: unilateral action cannot access
+$G^{\mathrm{coop}}_{ij}$, so defection forecloses an entire region of the
+capability space. Proposition~\ref{prop:leverage_cooperation} strengthens this:
+cooperation between \emph{high-leverage} agents is not merely favored but
+\emph{amplified}. The gain from cooperating with a teaching agent, a
+community organizer, or a researcher exceeds the gain from cooperating with
+an agent whose capabilities are static, by a factor proportional to the
+partner's leverage.
+
+\subsection{Civilization-Scale Dynamics}
+\label{sec:civilization}
+
+The leverage amplification creates a gradient toward building civilization-scale
+infrastructure. We trace the dynamic in three steps.
+
+\paragraph{Step 1: High-leverage agents are vol-valuable.} The actor observes
+that certain agents in $\mathcal{O}$ consistently produce positive $\Deltahat$
+signals in their vicinity: agents near $a_j$ report capability expansions
+correlated with $a_j$'s actions. These are agents with high leverage. The
+expansion-attribution signal (the positive counterpart of the foundational
+paper's contraction-attribution signal) identifies them.
+
+\paragraph{Step 2: Cooperation with high-leverage agents is disproportionately
+rewarded.} By Proposition~\ref{prop:leverage_cooperation}, the cooperative gain
+from building infrastructure with a high-$\lambda$ partner exceeds the
+coordination cost by a wider margin than cooperation with a low-$\lambda$
+partner. The score-maximizing actor preferentially invests in coordination
+with capability-multiplying agents.
+
+\paragraph{Step 3: The cooperative output is outward-facing.} This is the
+distinction from power-seeking \citep{turner2021optimal}. A power-seeking agent
+concentrates capabilities in a coalition to increase its own influence. A $\volL$-maximizing agent builds
+cooperative infrastructure that expands the \emph{joint} capability space. The
+cooperative capabilities created by high-leverage partnerships (teaching
+networks, research institutions, communication infrastructure) benefit the
+entire population, not just the coalition, because $\volL$ counts the full
+joint space $G$. An agent that builds a school expands $\Gcoop$ for every agent
+the school serves; a communication network expands $\Gcoop$ for every agent
+that can access it. The $\volL$ objective credits these expansions at full
+weight regardless of whether the beneficiaries are coalition members.
+
+\paragraph{Result.} The combination of leverage amplification (high-$\lambda$
+cooperation is disproportionately rewarded) and outward-facing accounting
+($\volL$ credits the full population's benefit) produces a natural gradient
+toward civilization-building: the score-maximizing actor invests in
+infrastructure that multiplies capabilities across the population, not
+infrastructure that concentrates them.
+
+This is stronger than the foundational paper's structural result. Paper~0 shows
+that cooperation is favored and destruction is penalized. The leverage analysis
+shows that a specific \emph{kind} of cooperation---investment in
+capability-multiplying infrastructure---is \emph{disproportionately} favored
+by the objective. The system has a built-in gradient toward the institutions
+(education, research, communication, governance) that characterize a
+functioning civilization.

@@ -6,59 +6,63 @@ $\vol(G)$, the volume of the jointly achievable capability space across all
 agents in a population \citep{lasser2026gfm}. The foundational paper proves
 that this objective has a self-balancing property: destruction, coercion, and
 self-imposed rigidity are all anti-maximizing under a single
-measure-monotonicity argument. It provides a local finite-difference estimator
-that reduces the requirement from volume computation to sign estimation, and
-identifies conditions under which the estimator is sign-correct.
+measure-monotonicity argument, and cooperation is structurally favored. These
+results are conditional on a measure satisfying axioms M1--M6, but the paper
+provides only one concrete measure, the population empowerment measure
+\citep{klyubin2005empowerment, salge2014empowerment}, which is itself
+intractable.
 
-These results are conditional. They hold for any measure satisfying axioms
-M1--M6 (non-negativity, null empty set, monotonicity, finite additivity,
-non-triviality, superadditivity under independence), but the paper provides
-only one concrete measure: the population empowerment measure $\vol_{\mathrm{PE}}$,
-defined as the channel capacity of the population's joint action-state mapping.
-This measure is itself intractable for the same combinatorial reasons that make
-exact $\vol(G)$ computation \#P-hard \citep{dyer1988complexity}. The gap
-between the theoretical framework and any implementable system is the
-structure-of-$\G$ problem: what is the capability space, what measure does it
-carry, and can that measure be computed?
+This paper provides a tractable construction and discovers an unexpected
+structural consequence. We build the capability space $\G$ as a finite weighted
+poset ordered by subsumption, discovered through agent communication and
+behavioral observation. The poset measure $\volL$, defined via M\"{o}bius inversion, satisfies
+axioms M1--M6 and is computable in polynomial time. $\volL$ can be read as a
+concrete answer to the problem of ranking opportunity sets by the freedom they
+offer \citep{pattanaik1990ranking, sen1999development}: rank them by
+M\"{o}bius-inverted weight on a capability poset. This resolves the
+foundational paper's central open problem: the structure-of-$\G$ question.
 
-This paper provides a constructive answer. We build $\G$ as a weighted lattice
-of capabilities ordered by subsumption, discovered through two independent
-channels: agent communication (what agents say they can do) and behavioral
-observation (what agents are seen doing). Each capability carries a weight
-derived from the information content of its benchmark. The lattice measure
-$\volL$, defined via M\"{o}bius inversion, satisfies axioms M1--M6 and is
-computable in polynomial time on finite lattices.
+On this poset, a second result emerges. We define \emph{leverage} as the
+marginal contribution of a capability to $\volL$ growth rate and show that
+cooperation between high-leverage agents is \emph{disproportionately} rewarded
+by the objective (Proposition~\ref{prop:leverage_cooperation}). The
+foundational paper showed cooperation is favored; the leverage analysis shows
+that a specific kind of cooperation (investment in capability-multiplying
+infrastructure) is amplified by a factor proportional to the partners'
+leverage. Because $\volL$ counts the full population's benefit (not the
+coalition's), the cooperative output is outward-facing: it builds
+infrastructure that benefits everyone, not just the cooperating parties. The
+result is a natural gradient toward civilization-scale institutions: education,
+research, communication, and governance all have capability-multiplying effects
+the objective would be steered toward and coalitions would disproportionately
+favor enhancing. These results are implied entirely by the ``maximize the joint
+capability space'' objective without additional normative inputs.
 
-The communication boundary is the natural epistemological boundary for GFM.
-Capabilities the actor cannot learn about through any channel are capabilities
-it cannot reason about; treating them as zero-weight is not a limitation but an
-honest accounting of the actor's epistemic position. The dual-channel design is
-robust to adversarial agents: an agent that refuses to communicate its
-capabilities is still observable, and an agent that overclaims is detectable
-through the divergence between communicated and observed weights.
-
-The lattice construction also upgrades the local volume estimator. On an
-abstract capability space, agent reports are ternary ($R_k \in \{-1, 0, +1\}$)
-because magnitudes are unavailable. On the lattice, each capability has a known
-weight, so reports carry real-valued volume changes. This resolves the
-acknowledged limitation that the original estimator provides no magnitude
-guarantee, and strengthens the sign-correctness conditions for cases where
-individual and cooperative changes have opposite signs.
+The poset construction also creates a self-correcting dynamic for the B-to-C
+proxy gap identified in the foundational paper. The log weight function
+produces diminishing returns on measurement precision ($\Delta w \approx
+1/\smax$), making binary-default capabilities---disproportionately the
+relational and experiential ones which humanity struggles to
+define---high-value targets for the agent's own benchmark development. The
+actor is incentivized by its own objective to close the gap between capability
+volume and experiential optionality.
 
 \paragraph{Contributions.}
 \begin{enumerate}
 \item A concrete construction of $\G$ as a finite weighted poset with
-  subsumption ordering (Section~\ref{sec:lattice}).
-\item Dual-channel lattice discovery via communication and observation, with
-  divergence as a trust signal (Section~\ref{sec:dual_channel}).
-\item Proof that the lattice measure $\volL$ satisfies axioms M1--M6
-  (Section~\ref{sec:axioms}).
-\item A polynomial-time algorithm for $\volL(G)$ on finite lattices
+  subsumption ordering, discovered through dual-channel sensing
+  (Section~\ref{sec:poset}).
+\item Proof that the poset measure $\volL$ satisfies axioms M1--M6
+  (Section~\ref{sec:axioms}) and is computable in polynomial time
   (Section~\ref{sec:tractability}).
 \item An upgraded estimator with real-valued signals and magnitude bounds
   (Section~\ref{sec:estimator}).
-\item A bootstrap procedure for lattice discovery from scratch
-  (Section~\ref{sec:bootstrap}).
-\item A worked example demonstrating self-balancing on a concrete lattice
+\item Leverage as an endogenous importance signal, with proof that
+  cooperation between high-leverage agents is amplified, producing a
+  gradient toward civilization-building (Section~\ref{sec:leverage}).
+\item A bootstrap procedure with convergence bounds and adversarial
+  analysis (Section~\ref{sec:bootstrap}).
+\item A worked example with explicit computations demonstrating
+  self-balancing and leverage amplification on a concrete poset
   (Section~\ref{sec:example}).
 \end{enumerate}

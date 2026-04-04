@@ -18,7 +18,7 @@ complexity.
 
 \paragraph{Algorithm.}
 
-\emph{Input:} A finite capability lattice $(\C, \leq)$ with $|\C| = n$ nodes,
+\emph{Input:} A finite capability poset $(\C, \leq)$ with $|\C| = n$ nodes,
 weight function $w$, and a set $G \subseteq \C$.
 
 \emph{Output:} $\volL(G)$.
@@ -35,7 +35,7 @@ weight function $w$, and a set $G \subseteq \C$.
   $\mu(d', d) = -\sum_{d' \leq d'' < d} \mu(d', d'')$.
   Then $\iw(d) = \sum_{d' \leq d} \mu(d', d) \cdot w(d')$.
   There are $O(n^2)$ comparable pairs, each requiring a sum over up to
-  $O(n)$ intermediate elements: total $O(n^3)$. For tree-structured lattices
+  $O(n)$ intermediate elements: total $O(n^3)$. For tree-structured posets
   (no diamonds), $\mu$ is nonzero only between covers, reducing to
   $O(n \cdot k)$.
 
@@ -49,8 +49,8 @@ weight function $w$, and a set $G \subseteq \C$.
   $O(|\dc G|) \leq O(n)$.
 \end{enumerate}
 
-\emph{Total cost:} $O(n^3)$ for general lattices, dominated by the full
-M\"{o}bius computation in step~2. For tree-structured lattices (each node
+\emph{Total cost:} $O(n^3)$ for general posets, dominated by the full
+M\"{o}bius computation in step~2. For tree-structured posets (each node
 has at most one cover), $\mu$ is nonzero only between covers, reducing the
 cost to $O(n \cdot k)$ where $k$ is the maximum in-degree.
 
@@ -59,7 +59,7 @@ the poset $(\C, \leq)$, which is well-defined for any finite poset
 \citep{rota1964foundations}. Step~3 computes $\dc G$ by the standard downward
 closure algorithm on a DAG. Step~4 sums non-negative terms (by the design
 constraint $\iw(d) \geq 0$) over the closure, yielding $\volL(G)$ by
-Definition~\ref{def:lattice_measure}.
+Definition~\ref{def:poset_measure}.
 \end{proof}
 
 % ---------------------------------------------------------------------------
@@ -124,16 +124,54 @@ asymmetric capability changes, widening the sign-correctness margin.
 \end{proof}
 
 % ---------------------------------------------------------------------------
-% A.3: Bootstrap Convergence
+% A.3: Leverage Amplifies Cooperative Scoring
 % ---------------------------------------------------------------------------
 
-\subsection{Proof of Proposition~\ref{prop:bootstrap_convergence} (Lattice Growth)}
+\subsection{Proof of Proposition~\ref{prop:leverage_cooperation} (Leverage Amplifies Cooperation)}
+\label{app:proof_leverage_cooperation}
+
+\begin{proof}
+Let $d_c \in G^{\mathrm{coop}}_{ij}(t+1) \setminus G^{\mathrm{coop}}_{ij}(t)$
+be a new cooperative capability created by joint action $\pi_{ij}$, entering
+the poset as an atom. The leverage-adjusted score
+(Equation~\eqref{eq:leverage_score}) for the cooperative action is:
+\begin{align*}
+S(\pi_{ij}) &= \Deltahat(\pi_{ij}) + \alpha \sum_{d_c \in D^+(\pi_{ij})}
+  \hat{\lambda}(d_c) \cdot \iw(d_c)
+\end{align*}
+
+Since $d_c$ requires both $a_i$ and $a_j$, every time step involving $d_c$
+also involves both agents' meta-capabilities. The leverage estimator attributes
+the excess $\Deltahat$ in those time steps to $d_c$: since either partner's
+meta-capability alone produces at least $\lambda_{\min}$ excess growth,
+$\hat{\lambda}(d_c) \geq \lambda_{\min}$.
+
+For new atoms, $\iw(d_c) = w(d_c)$ (no M\"{o}bius subtraction), so the
+leverage bonus is at least $\alpha \lambda_{\min} \cdot \iw(d_c) = \alpha
+\lambda_{\min} \cdot \Delta \volL(G^{\mathrm{coop}}_{ij})$ (summing over all
+new atoms). Therefore:
+\[
+S(\pi_{ij}) \geq \Deltahat(\pi_{ij}) + \alpha \lambda_{\min} \cdot
+\Delta \volL(G^{\mathrm{coop}}_{ij})
+\]
+
+Because leverage operates as a ranking signal rather than a measure
+modification, this result does not require verifying non-negativity of any
+leverage-weighted independent weights. The base measure $\volL$ is unchanged;
+only the action-selection criterion is modified.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% A.4: Bootstrap Convergence
+% ---------------------------------------------------------------------------
+
+\subsection{Proof of Proposition~\ref{prop:bootstrap_convergence} (Poset Growth)}
 \label{app:proof_bootstrap}
 
 \begin{proof}
 We verify each part of the proposition.
 
-\paragraph{(a) Node set monotonicity.} The lattice operations (add node, add
+\paragraph{(a) Node set monotonicity.} The poset operations (add node, add
 edge, update benchmark) never remove nodes or edges. Therefore $\C(t)
 \subseteq \C(t+1)$ for all $t$.
 
@@ -145,24 +183,36 @@ independent weights are unchanged and non-negative, $\volL(G(t+1)) \geq
 
 \paragraph{(c) Edge discovery can decrease $\volL$.} Suppose $d_1, d_2 \in G$
 were initially incomparable, with $\volL(\{d_1, d_2\}) = w(d_1) + w(d_2)$ by
-M4 (lattice-disjointness). Discovering $d_1 \leq d_2$ triggers M\"{o}bius
+M4 (poset-disjointness). Discovering $d_1 \leq d_2$ triggers M\"{o}bius
 recomputation: $\iw(d_2)$ decreases from $w(d_2)$ to $w(d_2) - w(d_1)$, and
 $\volL(\{d_1, d_2\}) = w(d_1) + (w(d_2) - w(d_1)) = w(d_2) < w(d_1) +
 w(d_2)$. The decrease reflects the correction of an overcount: the actor
 previously credited $d_1$ and $d_2$ independently when $d_1$'s content was
 already captured by $d_2$.
 
-\paragraph{(d) Benchmark refinement is $\volL$-non-decreasing.} Increasing
-$\smax(d)$ increases $w(d)$. In the M\"{o}bius sum for $\iw(d)$, $w(d)$
-appears with coefficient $\mu(d, d) = +1$, so $\iw(d)$ increases by the same
-amount. For any $d' > d$ whose M\"{o}bius sum includes $w(d)$, the coefficient
-$\mu(d, d')$ may be positive or negative, so $\iw(d')$ may increase or
-decrease. However, the net effect on $\volL(G)$ is non-negative: $\volL(G) =
-\sum_{d'' \in \dc G} \iw(d'') = \sum_{d'' \in \dc G} \sum_{d' \leq d''}
-\mu(d', d'') \cdot w(d')$. Rearranging the double sum by $d'$, the coefficient
-of $w(d)$ in $\volL(G)$ is $\sum_{d'' \geq d, d'' \in \dc G} \mu(d, d'')$,
-which equals $1$ if $d$ is maximal in $\dc G$ and $0$ otherwise (by the
-defining property of the M\"{o}bius function). Therefore increasing $w(d)$
-increases $\volL(G)$ by $\Delta w(d)$ if $d$ is maximal in $\dc G$, and leaves
-it unchanged otherwise.
+\paragraph{(d) Benchmark refinement: position-dependent.} Increasing
+$\smax(d)$ increases $w(d)$. The effect on $\volL(G)$ is determined by the
+coefficient of $w(d)$ in the expanded double sum. Write $\volL(G) =
+\sum_{d'' \in \dc G} \sum_{d' \leq d''} \mu(d', d'') \cdot w(d')$ and
+rearrange by $d'$: the coefficient of $w(d)$ is
+$c(d) = \sum_{d'' \geq d,\, d'' \in \dc G} \mu(d, d'')$.
+
+\emph{Case 1: $d$ is maximal in $\dc G$.} Then $c(d) = \mu(d, d) = 1$, so
+$\volL$ increases by $\Delta w(d)$.
+
+\emph{Case 2: $d$ has a single ancestor $d'$ in $\dc G$.} Then $c(d) =
+\mu(d, d) + \mu(d, d') = 1 + (-1) = 0$, so $\volL$ is unchanged.
+
+\emph{Case 3: $d$ is a shared prerequisite of $m > 1$ elements in $\dc G$.}
+Counterexample: let $d < y$ and $d < z$ with $G = \{y, z\}$. Then
+$\dc G = \{d, y, z\}$ and $c(d) = \mu(d, d) + \mu(d, y) + \mu(d, z) =
+1 - 1 - 1 = -1 < 0$. Increasing $w(d)$ \emph{decreases} $\volL(G)$. This is
+epistemically correct: the shared prerequisite's information content is
+counted once in $\volL$ regardless of how many capabilities depend on it, and
+increasing the prerequisite's weight increases the subtraction in multiple
+ancestors' independent weights, reducing total volume.
+
+In general, $c(d)$ can take any integer value depending on the structure of
+$\dc G$ above $d$. Benchmark refinement is therefore not monotone on
+branched posets.
 \end{proof}

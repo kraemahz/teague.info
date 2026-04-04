@@ -1,16 +1,16 @@
 \section{Bootstrap}
 \label{sec:bootstrap}
 
-Initializing a GFM actor requires discovering the capability lattice from
-scratch. The lattice and the actor's ability to reason about $\volL(G)$ are
-coupled: the actor cannot evaluate actions without a lattice, and the lattice
+Initializing a GFM actor requires discovering the capability poset from
+scratch. The poset and the actor's ability to reason about $\volL(G)$ are
+coupled: the actor cannot evaluate actions without a poset, and the poset
 is populated through the actor's interactions. This section describes a
 four-phase bootstrap procedure that uses both communication and observation
 channels.
 
 \subsection{Phase 1: Listen and Observe}
 
-The actor begins with an empty lattice ($\C = \{\bot\}$) and low self-trust
+The actor begins with an empty poset ($\C = \{\bot\}$) and low self-trust
 $T_s$. It receives capability reports through the communication channel and
 observes agent behavior through the observation channel. Each report or
 observation that introduces a benchmarked capability adds a node to $\C$ with
@@ -44,27 +44,27 @@ agents observed). This is inductive: a sufficiently large and diverse
 observation set makes the inference reliable.
 
 As subsumption edges are added, the actor recomputes independent weights
-$\iw(d)$ via full M\"{o}bius inversion ($O(|\C|^3)$ for general lattices,
+$\iw(d)$ via full M\"{o}bius inversion ($O(|\C|^3)$ for general posets,
 $O(|\C| \cdot k)$ for trees; Proposition~\ref{prop:tractability}).
 
 \subsection{Phase 4: Expand}
 
-With a populated lattice and calibrated trust, the actor begins proposing
+With a populated poset and calibrated trust, the actor begins proposing
 actions and evaluating them via $\Deltahat(\pi)$
 (Equation~\eqref{eq:weighted_estimator}). Self-trust $T_s$ increases as the
 actor's predictions ($\Deltahat$) match observed outcomes ($\Delta \volL$
-computed post-action). Both channels continue refining the lattice throughout
+computed post-action). Both channels continue refining the poset throughout
 the actor's operation: new capabilities are discovered, benchmark scores are
 updated, and subsumption relationships are confirmed or revised.
 
 \subsection{Convergence}
 
-\begin{proposition}[Lattice Growth]
+\begin{proposition}[Poset Growth]
 \label{prop:bootstrap_convergence}
 Under assumptions of positive communication frequency and non-zero observation
     coverage:
 \begin{enumerate}
-\item[\textbf{(a)}] The lattice node set grows monotonically: $\C(t) \subseteq
+\item[\textbf{(a)}] The poset node set grows monotonically: $\C(t) \subseteq
     \C(t+1)$ for all $t$.
 \item[\textbf{(b)}] Adding new capabilities to $G$ (without changing
     subsumption structure) is $\volL$-non-decreasing.
@@ -74,8 +74,9 @@ Under assumptions of positive communication frequency and non-zero observation
     change but the M\"{o}bius-inverted weights redistribute, and $\volL(G)$
     may drop from $w(d_1) + w(d_2)$ to $w(d_2)$.
 \item[\textbf{(d)}] Updating a benchmark to a finer scale ($\smax' > \smax$)
-    is $\volL$-non-decreasing: $\volL$ increases if $d$ is maximal in $\dc G$
-    and is unchanged otherwise.
+    increases $\volL$ if $d$ is maximal in $\dc G$, leaves it unchanged if $d$
+    has exactly one ancestor in $\dc G$, and can \emph{decrease} $\volL$ if $d$
+    is a shared prerequisite of multiple elements in $\dc G$.
 \end{enumerate}
 \end{proposition}
 
@@ -88,7 +89,7 @@ weights are unchanged. By M3, $\volL(G(t+1)) \geq \volL(G(t))$.
 
 (c) Counterexample: let $d_1$ = ``write a function'' ($w = 6.66$) and $d_2$ =
 ``build a web app'' ($w = 9.97$). Before discovering $d_1 \leq d_2$, the
-capabilities are lattice-disjoint: $\volL(\{d_1, d_2\}) = 6.66 + 9.97 =
+capabilities are poset-disjoint: $\volL(\{d_1, d_2\}) = 6.66 + 9.97 =
 16.63$. After adding the edge, M\"{o}bius inversion gives $\iw(d_1) = 6.66$,
 $\iw(d_2) = 9.97 - 6.66 = 3.31$, and $\volL(\{d_1, d_2\}) = 6.66 + 3.31 =
 9.97 = w(d_2)$. The volume decreased by $6.66$. This is epistemically correct:
@@ -96,22 +97,25 @@ the actor previously overcounted because it did not know that $d_1$'s
 measurement content was already captured by $d_2$. Structural refinement
 corrects the overcount.
 
-(d) Increasing $\smax(d)$ increases $w(d) = \log_2(1 + \smax(d))$ and therefore
-increases $\iw(d)$. However, for any ancestor $d' > d$ in $\dc G$, the
-M\"{o}bius sum for $\iw(d')$ includes $w(d)$ with coefficient $\mu(d, d')$,
-which may be negative, decreasing $\iw(d')$. The net effect on $\volL(G)$
-depends on whether $d$ is maximal in $\dc G$: if $d$ has no descendant in
-$\dc G$ above it, $\volL$ increases by $\Delta w(d)$; if $d$ is non-maximal,
-the increase in $\iw(d)$ is absorbed by offsetting decreases in ancestors'
-independent weights, and $\volL(G)$ is unchanged
-(Appendix~\ref{app:proof_bootstrap}).
+(d) Increasing $\smax(d)$ increases $w(d)$. The effect on $\volL(G)$ depends on
+$d$'s position in $\dc G$. Write $\volL(G) = \sum_{d'' \in \dc G} \sum_{d'
+\leq d''} \mu(d', d'') \cdot w(d')$ and rearrange by $d'$: the coefficient of
+$w(d)$ in $\volL(G)$ is $c(d) = \sum_{d'' \geq d,\, d'' \in \dc G} \mu(d,
+d'')$. If $d$ is maximal in $\dc G$, $c(d) = \mu(d, d) = 1$, so $\volL$
+increases. If $d$ has exactly one ancestor in $\dc G$, $c(d) = 1 + (-1) = 0$,
+so $\volL$ is unchanged. If $d$ is a shared prerequisite with $m > 1$ ancestors
+in $\dc G$, the M\"{o}bius sum can produce $c(d) < 0$: for example, in a
+V-shaped poset $d < y, d < z$ with $G = \{y, z\}$, $c(d) = \mu(d, d) +
+\mu(d, y) + \mu(d, z) = 1 - 1 - 1 = -1$, so increasing $w(d)$
+\emph{decreases} $\volL(G)$ (Appendix~\ref{app:proof_bootstrap}).
 \end{proof}
 
 \paragraph{Interpretation.} Part (b) shows that discovering new capabilities
-always increases $\volL$. Part (d) shows that refining benchmarks increases
-$\volL$ when the refined capability is maximal in the closure, and leaves it
-unchanged otherwise (the increase is absorbed by ancestors). Part (c) shows
-that discovering structure (subsumption) can decrease $\volL$ by correcting
+always increases $\volL$. Part (d) shows that benchmark refinement is
+position-dependent: it increases $\volL$ for maximal capabilities, is neutral
+for capabilities with a single ancestor, and can \emph{decrease} $\volL$ for
+shared prerequisites of multiple elements in the closure. Part (c) shows that
+discovering structure (subsumption) can also decrease $\volL$ by correcting
 overcounting. The net trajectory of $\volL$ during bootstrap depends on the
 balance between capability discovery (expanding) and structural refinement
 (potentially contracting). In practice, early bootstrap is dominated by (b)
@@ -121,8 +125,41 @@ converges toward the correct volume given the actor's full structural
 knowledge, which may be lower than the naive estimate from the early
 structureless phase.
 
+\paragraph{Convergence bounds.} Let $N$ be the total number of capabilities in
+the population (unknown to the actor), $E$ the total number of subsumption
+edges, and suppose the actor discovers capabilities at rate $r_c$ and edges at
+rate $r_e$ per time step. The poset volume trajectory can be bounded:
+
+\emph{Upper bound (structureless).} Before any edges are discovered, each
+capability is an atom with $\iw(d) = w(d)$. The structureless volume is
+$\volL^{\max}(t) = \sum_{d \in \C(t)} w(d)$, which grows monotonically with
+discovery. After $t$ steps with $\min(r_c t, N)$ capabilities discovered, this
+is at most $\sum_{d \in \C} w(d)$.
+
+\emph{Lower bound (full structure).} With all edges discovered, M\"{o}bius
+inversion redistributes weight and the volume is
+$\volL^*(G) = \sum_{d \in \dc G} \iw(d) \leq \volL^{\max}$. The maximum
+contraction from structural discovery is bounded by:
+\begin{equation}
+\label{eq:max_contraction}
+\volL^{\max} - \volL^* \leq \sum_{d' < d} |w(d')|
+\end{equation}
+summing over all comparable pairs, which is finite for finite posets.
+
+\emph{Convergence trajectory.} The volume trajectory $\volL(t)$ rises during
+early capability discovery (Phase~1--2), then tightens toward $\volL^*$ as
+structural refinement progresses (Phase~3). The time to convergence is bounded
+by $\tau_c = N/r_c + E/r_e$: the time to discover all capabilities plus the
+time to discover all edges. Under adversarial conditions (a scorpion
+withholding information about its capabilities or providing false subsumption
+claims), $r_c$ and $r_e$ degrade, and convergence may stall for capabilities
+and edges the adversary controls. The dual-channel design partially mitigates
+this: the observation channel discovers capabilities and infers edges
+independently of the communication channel, so a silent adversary slows
+convergence but does not halt it as long as its capabilities are observable.
+
 \paragraph{Binary default and deferred structure.} Every capability that
-enters the lattice through communication or observation immediately receives
+enters the poset through communication or observation immediately receives
 the binary default weight $w(d) = 1$ bit ($\smax = 1$): the actor knows the
 capability exists. The capability enters as an \emph{unstructured atom} with no
 subsumption edges, contributing $\iw(d) = w(d) = 1$ to $\volL(G)$ immediately.
@@ -133,7 +170,7 @@ node, the actor verifies $\iw(d) \geq 0$ under M\"{o}bius inversion before
 committing the edges. If the check fails (e.g., a diamond node with two
 binary-default prerequisites gives $\iw = 1 - 1 - 1 < 0$), the edges are
 deferred until the capability's benchmark is refined to a level where the check
-passes. The capability continues contributing as a lattice-disjoint atom in the
+passes. The capability continues contributing as a poset-disjoint atom in the
 interim.
 
 This sequencing ensures two properties simultaneously: (1) every discovered
@@ -143,3 +180,45 @@ benchmark ($\smax > 1$) increases $w(d)$ beyond the binary default, eventually
 enabling deferred edges to be added. The remaining zero-weight gap consists
 only of capabilities the actor has not yet learned about through either
 channel.
+
+\subsection{Adversarial Bootstrap}
+\label{sec:adversarial_bootstrap}
+
+The foundational paper's scorpion taxonomy \citep{lasser2026gfm} classifies
+agents that persistently contract $\vol(G)$. During bootstrap, scorpions
+interact with each phase differently:
+
+\paragraph{Phase 1 (Listen and Observe).} A scorpion can overclaim
+capabilities to inflate the poset with nodes the population does not
+actually possess. These nodes enter at the binary default ($w = 1$) and
+inflate $\volL(G)$. \emph{Defense:} the cooling period assigns low $T_k$ to
+new agents' claims, limiting the inflation to $1 \cdot T_k \approx 0$ bits
+per overclaimed capability until trust builds. The observation channel
+independently verifies or falsifies claims during Phase~2.
+
+\paragraph{Phase 2 (Cross-Validate).} Overclaiming scorpions are caught by
+the divergence signal ($\wcomm \gg \wobs$), driving $T_k$ downward. A
+scorpion that conceals capabilities (underclaiming) does not harm the poset;
+it merely slows discovery. The cross-validation phase is where the
+dual-channel design provides its strongest adversarial defense.
+
+\paragraph{Phase 3 (Discover Structure).} This is the most vulnerable phase.
+A scorpion could assert false subsumption relationships through the
+communication channel, causing the actor to add incorrect edges. Incorrect
+edges redistribute independent weights through M\"{o}bius inversion and may
+be difficult to undo (Section~\ref{sec:discussion}). \emph{Defense:} the
+deterministic insertion policy (Section~\ref{sec:poset}) requires the
+non-negativity check before committing edges, which catches some false claims
+(a claimed subsumption between capabilities that would produce $\iw < 0$).
+The empirical observation mechanism of Phase~3 provides independent
+verification: if every observed agent with $d_1$ also demonstrates $d_2$, the
+edge is confirmed regardless of what the scorpion claims. Edges inferred
+solely from a single agent's communication and not confirmed by observation
+should be treated with the same trust discount as the agent's other claims.
+
+\paragraph{Phase 4 (Expand).} Once the poset is populated and the
+optimization loop begins, scorpion detection proceeds through the standard
+channels of the foundational paper (Proposition~2 of \citet{lasser2026gfm}):
+contraction attribution and deception detection. The poset construction
+does not introduce new scorpion vulnerabilities in this phase; it inherits the
+foundational paper's detection capabilities and limitations.

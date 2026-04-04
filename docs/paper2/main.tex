@@ -11,7 +11,7 @@
 \usepackage{mathtools}
 \usepackage[bookmarksnumbered]{hyperref}
 \hypersetup{
-  pdftitle={Computable Goal Frontiers via Communication Lattices},
+  pdftitle={Computable Goal Frontiers and the Gradient Toward Civilization-Building},
   pdfauthor={Teague Lasser},
   pdfsubject={AI Alignment},
   pdfkeywords={alignment, goal-frontier maximization, capability lattice, measure theory},
@@ -44,7 +44,7 @@
 \newcommand{\Gcoop}{G^{\mathrm{coop}}}
 \newcommand{\Vhat}{\hat{V}}
 \newcommand{\Deltahat}{\hat{\Delta}}
-\newcommand{\volL}{\vol_{\mathrm{L}}}  % lattice measure
+\newcommand{\volL}{\vol_{\mathrm{P}}}  % poset measure
 \newcommand{\weff}{w_{\mathrm{eff}}}   % effective weight
 \newcommand{\wcomm}{w_{\mathrm{comm}}} % communicated weight
 \newcommand{\wobs}{w_{\mathrm{obs}}}   % observed weight
@@ -52,7 +52,7 @@
 \newcommand{\smax}{s_{\mathrm{max}}}   % benchmark scale maximum
 \newcommand{\dc}{\downarrow}           % downward closure
 
-\title{Computable Goal Frontiers via Communication Lattices}
+\title{Computable Goal Frontiers and the Gradient Toward Civilization-Building}
 
 \author{
   Teague Lasser \\
@@ -74,7 +74,7 @@
 \input{sections/introduction}
 
 % --- The Capability Lattice ---
-\input{sections/lattice}
+\input{sections/poset}
 
 % --- Axiom Verification ---
 \input{sections/axioms}
@@ -84,6 +84,9 @@
 
 % --- Weighted Estimator ---
 \input{sections/estimator}
+
+% --- Leverage and Coalition Dynamics ---
+\input{sections/leverage}
 
 % --- Bootstrap ---
 \input{sections/bootstrap}

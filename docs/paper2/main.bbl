@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -32,10 +32,23 @@ Thomas~R Gruber.
 \newblock \emph{Knowledge Acquisition}, 5\penalty0 (2):\penalty0 199--220,
   1993.
 
+\bibitem[Klyubin et~al.(2005)Klyubin, Polani, and
+  Nehaniv]{klyubin2005empowerment}
+Alexander~S Klyubin, Daniel Polani, and Chrystopher~L Nehaniv.
+\newblock Empowerment: A universal agent-centric measure of control.
+\newblock In \emph{2005 IEEE Congress on Evolutionary Computation}, volume~1,
+  pages 128--135. IEEE, 2005.
+
 \bibitem[Lasser(2026)]{lasser2026gfm}
 Teague Lasser.
 \newblock Goal-frontier maximizers are civilization aligned.
 \newblock \url{https://teague.info/papers/gfm/}, 2026.
+
+\bibitem[Pattanaik and Xu(1990)]{pattanaik1990ranking}
+Prasanta~K Pattanaik and Yongsheng Xu.
+\newblock On ranking opportunity sets in terms of freedom of choice.
+\newblock \emph{Recherches {\'E}conomiques de Louvain}, 56:\penalty0 383--390,
+  1990.
 
 \bibitem[Rota(1964)]{rota1964foundations}
 Gian-Carlo Rota.
@@ -44,9 +57,28 @@ Gian-Carlo Rota.
 \newblock \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und verwandte
   Gebiete}, 2\penalty0 (4):\penalty0 340--368, 1964.
 
+\bibitem[Salge et~al.(2014)Salge, Glackin, and Polani]{salge2014empowerment}
+Christoph Salge, Cornelius Glackin, and Daniel Polani.
+\newblock Empowerment---an introduction.
+\newblock In Mikhail Prokopenko, editor, \emph{Guided Self-Organization:
+  Inception}, pages 67--114. Springer, 2014.
+
+\bibitem[Sen(1999)]{sen1999development}
+Amartya Sen.
+\newblock \emph{Development as Freedom}.
+\newblock Oxford University Press, 1999.
+
 \bibitem[Stanley(1997)]{stanley1997enumerative}
 Richard~P Stanley.
 \newblock \emph{Enumerative Combinatorics}, volume~1.
 \newblock Cambridge University Press, 1997.
+
+\bibitem[Turner et~al.(2021)Turner, Smith, Shah, Critch, and
+  Tadepalli]{turner2021optimal}
+Alexander~Matt Turner, Logan Smith, Rohin Shah, Andrew Critch, and Prasad
+  Tadepalli.
+\newblock Optimal policies tend to seek power.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~34, 2021.
 
 \end{thebibliography}

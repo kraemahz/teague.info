@@ -5,32 +5,32 @@ The foundational paper's structural results (self-balancing, scorpion
 detection, cooperative expansion) hold for any measure satisfying axioms
 M1--M6. This section proves that $\volL$ satisfies all six.
 
-\begin{proposition}[Lattice Measure Satisfies M1--M6]
+\begin{proposition}[Poset Measure Satisfies M1--M6]
 \label{prop:axioms}
-The lattice measure $\volL$ (Definition~\ref{def:lattice_measure}) satisfies
+The poset measure $\volL$ (Definition~\ref{def:poset_measure}) satisfies
     the following axioms for all measurable $G, A, B \subseteq \C$:
 \begin{enumerate}
 \item[\textbf{(M1)}] $\volL(G) \geq 0$.
 \item[\textbf{(M2)}] $\volL(\emptyset) = 0$.
 \item[\textbf{(M3)}] $A \subseteq B \implies \volL(A) \leq \volL(B)$.
-\item[\textbf{(M4)}] If $A$ and $B$ are \emph{lattice-disjoint}
-    (Definition~\ref{def:lattice_disjoint}), then
+\item[\textbf{(M4)}] If $A$ and $B$ are \emph{poset-disjoint}
+    (Definition~\ref{def:poset_disjoint}), then
     $\volL(A \cup B) = \volL(A) + \volL(B)$.
 \item[\textbf{(M5)}] For every benchmarked $d \in \C$ with $\smax(d) \geq 1$,
     $\volL(\{d\}) > 0$.
 \item[\textbf{(M6)}] When agents' individual capability sets occupy
-    incomparable regions of the lattice, $\volL(G) \geq \sum_k
+    incomparable regions of the poset, $\volL(G) \geq \sum_k
     \volL(\Gind{k})$, with strict inequality when cooperative capabilities
     exist.
 \end{enumerate}
 \end{proposition}
 
 Before proving the proposition, we define the disjointness condition that M4
-requires on the lattice.
+requires on the poset.
 
-\begin{definition}[Lattice-Disjoint]
-\label{def:lattice_disjoint}
-Two sets $A, B \subseteq \C$ are \emph{lattice-disjoint} if no element of $A$
+\begin{definition}[Poset-Disjoint]
+\label{def:poset_disjoint}
+Two sets $A, B \subseteq \C$ are \emph{poset-disjoint} if no element of $A$
     subsumes or is subsumed by any element of $B$: for all $a \in A$ and $b
     \in B$, neither $a \leq b$ nor $b \leq a$. Equivalently, $A$ and $B$
     occupy incomparable regions of the poset, and their downward closures
@@ -39,13 +39,13 @@ Two sets $A, B \subseteq \C$ are \emph{lattice-disjoint} if no element of $A$
 
 This is stronger than set-disjointness ($A \cap B = \emptyset$). Two
 capabilities can be set-disjoint (they are different nodes) but not
-lattice-disjoint (one subsumes the other). Lattice-disjointness ensures that
+poset-disjoint (one subsumes the other). Poset-disjointness ensures that
 the capabilities in $A$ and $B$ are structurally independent in the
 subsumption hierarchy.
 
 \begin{proof}[Proof of Proposition~\ref{prop:axioms}]
 \emph{(M1) Non-negativity.} By the design constraint on $w$
-(Section~\ref{sec:lattice}), $\iw(d) \geq 0$ for all $d \in \C$. Since
+(Section~\ref{sec:poset}), $\iw(d) \geq 0$ for all $d \in \C$. Since
 $\volL(G) = \sum_{d \in \dc G} \iw(d)$ is a sum of non-negative terms,
 $\volL(G) \geq 0$.
 
@@ -60,8 +60,8 @@ every term in the sum $\volL(A) = \sum_{d \in \dc A} \iw(d)$ also appears in
 $\volL(B) = \sum_{d \in \dc B} \iw(d)$, and all terms are non-negative by
 (M1), $\volL(A) \leq \volL(B)$.
 
-\emph{(M4) Finite additivity under lattice-disjointness.} If $A$ and $B$ are
-lattice-disjoint, then $\dc A \cap \dc B = \{\bot\}$. The downward closure of
+\emph{(M4) Finite additivity under poset-disjointness.} If $A$ and $B$ are
+poset-disjoint, then $\dc A \cap \dc B = \{\bot\}$. The downward closure of
 the union satisfies $\dc(A \cup B) = \dc A \cup \dc B$. Since the only shared
 element is $\bot$ (with $\iw(\bot) = 0$):
 \[
@@ -71,7 +71,7 @@ element is $\bot$ (with $\iw(\bot) = 0$):
   = \volL(A) + \volL(B).
 \]
 
-\emph{(M5) Non-triviality.} For any atom $d$ of the lattice (a minimal
+\emph{(M5) Non-triviality.} For any atom $d$ of the poset (a minimal
 non-$\bot$ element), $\iw(d) = w(d) - w(\bot) = w(d) > 0$ since $\smax(d)
 \geq 1$ implies $w(d) = \log_2(1 + \smax(d)) \geq \log_2(2) = 1$. For
 non-atoms, $\volL(\{d\}) = \sum_{d' \in \dc\{d\}} \iw(d')$. By M1
@@ -81,8 +81,8 @@ $\iw > 0$, so $\volL(\{d\}) > 0$.
 
 \emph{(M6) Superadditivity under independence.} When agents' individual
 capability sets $\Gind{1}, \ldots, \Gind{n}$ occupy pairwise incomparable
-regions of the lattice (no agent's capability subsumes another agent's
-capability), the sets are pairwise lattice-disjoint. By (M4) applied
+regions of the poset (no agent's capability subsumes another agent's
+capability), the sets are pairwise poset-disjoint. By (M4) applied
 iteratively, $\volL(\bigcup_k \Gind{k}) = \sum_k \volL(\Gind{k})$. Adding
 cooperative capabilities $\Gcoop$ to form $G = \bigcup_k \Gind{k} \cup
 \Gcoop$: since $\Gcoop$ contains capabilities not in any individual set,
@@ -95,10 +95,10 @@ $d_c \notin \dc(\bigcup_k \Gind{k})$, and $\iw(d_c) > 0$ by (M5), giving
 strict inequality: $\volL(G) > \sum_k \volL(\Gind{k})$.
 \end{proof}
 
-\begin{theorem}[Self-Balancing on Finite Lattices]
-\label{thm:self_balancing_lattice}
+\begin{theorem}[Self-Balancing on Finite Posets]
+\label{thm:self_balancing_poset}
 The self-balancing property (Proposition~1 of \citet{lasser2026gfm}) holds for
-    $\volL$ on finite weighted lattices. Specifically: destructive
+    $\volL$ on finite weighted posets. Specifically: destructive
     permissiveness, coercive restriction, and self-imposed rigidity are all
     $\volL$-contracting under the conditions of Lemmas~1--3 of the foundational
     paper.

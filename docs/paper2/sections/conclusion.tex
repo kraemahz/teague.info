@@ -1,29 +1,40 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-The capability lattice provides the first tractable instantiation of
+The capability poset provides the first tractable instantiation of
 goal-frontier maximization. By constructing the capability space as a finite
-weighted poset discovered through dual-channel discovery, the lattice resolves
+weighted poset discovered through dual-channel sensing, the poset resolves
 the structure-of-$\G$ problem that the foundational paper identified as its
-most urgent open question. The lattice measure $\volL$, defined via Möbius
+most urgent open question. The poset measure $\volL$, defined via M\"{o}bius
 inversion, satisfies the axioms that unlock all of the foundational paper's
 structural results: self-balancing, scorpion detection, and cooperative
-expansion hold on finite lattices exactly as they do on abstract capability
+expansion hold on finite posets exactly as they do on abstract capability
 spaces.
 
-The construction also advances the estimator. On the lattice, agent reports
-carry real-valued weighted changes rather than ternary signs, resolving the
-foundational paper's magnitude-estimation limitation and strengthening the
-sign-correctness conditions for mixed-sign capability changes. The bootstrap
-procedure shows how a GFM actor can discover the lattice incrementally through
-communication and observation, with cross-validation between the two channels
-providing a structured trust signal.
+The construction also advances the estimator and introduces leverage. On the
+poset, agent reports carry real-valued weighted changes rather than ternary
+signs, resolving the foundational paper's magnitude-estimation limitation and
+strengthening the sign-correctness conditions for mixed-sign capability
+changes. Leverage, defined as the marginal contribution of a capability to
+$\volL$ growth rate, acts as a ranking signal that guides action selection
+toward capability-multiplying partnerships: cooperation between high-leverage
+agents is disproportionately rewarded, creating a natural gradient toward
+civilization-scale infrastructure (education, research, communication)
+derived entirely from the $\volL$ objective.
 
-The lattice is bounded by what can be communicated and observed. Every
+The bootstrap procedure shows how a GFM actor can discover the poset
+incrementally through communication and observation, with convergence bounds
+and adversarial analysis for each phase. The binary default ensures every
+discovered capability contributes immediately; deferred structure maintains
+non-negativity at all times.
+
+The poset is bounded by what can be communicated and observed. Every
 discovered capability carries at least binary weight (1 bit); graded benchmarks
-refine this upward. Capabilities the actor has not encountered remain outside
-the lattice, but no known capability is invisible. The gap between lattice
-volume and experiential optionality narrows under the binary default but does
-not close: capabilities with latent gradations are understated rather than
-ignored. Developing richer benchmarks for experiential and relational
-capabilities remains the central challenge for the research program.
+and leverage amplification refine this upward. The B-to-C tension partially self-corrects: the log weight function creates
+diminishing returns on measurement precision, making maximal-position
+binary-default capabilities the best targets for benchmark refinement. The
+leverage ranking signal further directs investment toward high-leverage
+binary-default capabilities (disproportionately the relational and
+experiential ones). The residual gap narrows to capabilities whose value is
+purely intrinsic: neither instrumental to $\volL$ growth nor expressible on any
+graded scale.

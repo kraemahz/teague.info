@@ -3,10 +3,10 @@
 
 \subsection{Limitations}
 
-The lattice construction makes four structural tradeoffs, the last of which is
+The poset construction makes four structural tradeoffs, the last of which is
 new to this paper rather than inherited from the foundational framework.
 
-\paragraph{Epistemological boundary.} The lattice is bounded by what agents
+\paragraph{Epistemological boundary.} The poset is bounded by what agents
 communicate and what the actor observes. Capabilities that are never described
 and never demonstrated have zero weight. This is honest (the actor should not
 claim to measure what it cannot observe) but it means $\volL$ is a lower bound
@@ -31,35 +31,97 @@ actor's incentives with measurement improvement.
 
 The foundational paper's B/C framework identifies relational and experiential
 capabilities as the source of proxy failures (the Doll Problem, wireheading).
-The lattice construction gives these capabilities binary weight rather than
+The poset construction gives these capabilities binary weight rather than
 zero weight, which is an improvement, but the actor is still structurally
 biased toward capabilities with developed benchmarks (higher $\smax$, higher
-$w$) over those with only the binary default. The productive tension remains:
-the theory says what matters most is experiential optionality; the
-implementation credits experiential capabilities but understates them. Closing
-this gap requires developing richer benchmarks for experiential capabilities,
-not just acknowledging their existence.
+$w$) over those with only the binary default. A capability measured on a
+1000-level scale contributes $\sim$10 bits; one at binary default contributes 1
+bit. The $\volL$-maximizing actor has a 10:1 incentive ratio favoring the
+well-benchmarked capability.
+
+However, the same log weight function that creates this static bias also
+creates a \emph{dynamic} correction. The marginal return on benchmark
+refinement is $\Delta w \approx 1/\smax$: going from $\smax = 1$ to $\smax =
+2$ adds a full bit, while going from $\smax = 1000$ to $\smax = 2000$ adds
+approximately $0.001$ bits. The capabilities with the highest marginal return
+on measurement investment are precisely the binary-default capabilities that
+the static analysis identifies as underweighted. The leverage ranking signal
+(Section~\ref{sec:leverage}) further directs the actor's attention: a
+high-leverage binary-default capability scores highly in
+Equation~\eqref{eq:leverage_score} because both the $\Deltahat$ term (volume
+gain from refinement of a maximal atom) and the leverage bonus ($\alpha
+\hat{\lambda} \cdot \iw$) are positive.
+
+The score-maximizing actor's measurement strategy is therefore to invest in
+refining capabilities that are both high-leverage and \emph{maximal} in
+$\dc G$: for these, benchmark refinement strictly increases $\volL$
+(Proposition~\ref{prop:bootstrap_convergence}(d), case~1). Binary-default
+capabilities that have not yet been integrated into the subsumption structure
+(deferred atoms from Section~\ref{sec:bootstrap}) are maximal by construction,
+so refining them is always expanding. A binary-default capability like
+``maintaining a community'' ($w = 1$ bit, $\lambda \gg 0$, currently an
+unstructured atom) has high marginal return from refinement, while a
+well-measured capability like ``run a mile in $X$ seconds'' ($w \approx 10$
+bits, $\lambda \approx 0$) has negligible marginal return.
+
+This creates a \emph{partial} self-correction of the B-to-C tension. For
+maximal-position binary-default capabilities, the static bias inverts:
+refinement is the best investment. However, once a capability's subsumption
+edges are committed (it becomes a shared prerequisite of multiple elements in
+$\dc G$), further refinement can be $\volL$-contracting
+(Proposition~\ref{prop:bootstrap_convergence}(d), case~3). The self-correction
+therefore operates during the window between capability discovery (as a
+deferred atom) and structural integration (when edges are committed). The
+actor's incentive is to develop benchmarks for experiential capabilities
+\emph{before} integrating them into the poset hierarchy, which is the
+natural sequence: measure first, then discover structure.
+
+The residual gap consists of capabilities that are experientially valuable but
+have both zero leverage and resist benchmark refinement: capabilities whose
+value is purely intrinsic and neither instrumental to $\volL$ growth nor
+expressible on any graded scale. This is a narrower class than the full B-to-C
+gap of the foundational paper, and formalizing intrinsic value for this
+residual class remains the frontier.
 
 \paragraph{Context-dependent subsumption.} The subsumption relation may depend
 on context. ``Can run a marathon'' subsumes ``can run a mile'' for fitness
 assessment but not for time-constrained tasks where the mile time matters
-independently. The lattice as defined does not model context-dependent
-subsumption; extending it to do so (e.g., with multiple subsumption relations
-indexed by context) is future work.
+independently. This is not an edge case; most interesting subsumption
+relationships are context-dependent once the capability descriptions are
+sufficiently precise.
 
-\paragraph{Lattice manipulation.} The non-negativity constraint
-(Lemma~\ref{lem:nonneg_iw}) gives the GFM actor latitude to shape its own
-lattice: when $\iw(d) < 0$ for a proposed diamond node, the actor can either
-refine the benchmark (increasing $w(d)$) or decline to add the subsumption
-edges (treating the capability as lattice-disjoint from its prerequisites).
-This means the lattice topology is partly \emph{chosen} by the actor, not
-purely discovered. A strategically motivated actor could exploit this latitude
-to manipulate $\volL(G)$ in favor of preferred actions, in the same way that
-the foundational paper's GFM actor could manipulate its own world model. The
-dual-channel design partially mitigates this: subsumption edges inferred from
-observation are less manipulable than those derived from communication alone.
-But a full analysis of lattice manipulation as a failure mode, analogous to the
-foundational paper's treatment of scorpion behavior, is future work.
+The poset as defined uses a single global subsumption relation.
+A natural extension is to maintain a family of subsumption relations
+$\{\leq_c\}_{c \in \text{Contexts}}$, each producing a different poset
+$(\C, \leq_c)$ with its own M\"{o}bius function and independent weights.
+The aggregate measure would then be:
+\begin{equation}
+\label{eq:context_vol}
+\volL(G) = \frac{1}{|\text{Contexts}|} \sum_c \volL^c(G)
+\end{equation}
+where $\volL^c$ is the poset measure under subsumption relation $\leq_c$.
+This preserves axioms M1--M6 (a convex combination of measures satisfying M1--M6
+also satisfies M1--M6) and adds a factor of $|\text{Contexts}|$ to the
+computational cost. The practical challenge is discovering and maintaining
+the context set, which requires the actor to recognize when a subsumption
+relationship is context-dependent and to track which contexts are active in a
+given situation. Capabilities whose subsumption is context-invariant (the
+majority in practice) need only a single relation, making the overhead
+proportional to the number of context-sensitive capabilities rather than the
+full poset size.
+
+\paragraph{Poset manipulation.} The non-negativity insertion policy
+(Section~\ref{sec:poset}) closes the most direct manipulation vector: the
+actor follows a deterministic procedure that always prefers adding edges when
+the non-negativity check passes, eliminating discretion at the insertion
+point. The remaining manipulation surface is benchmark refinement: the actor
+could strategically choose \emph{which} capabilities to develop finer
+benchmarks for, thereby influencing which deferred edges become committable
+and how $\volL$ evolves. This is mitigated by the observation channel
+(capabilities observed in use naturally receive benchmark refinement through
+repeated measurement) but not fully eliminated. The dual-channel design
+ensures that the poset is shaped by evidence from both channels rather than
+by the actor's preferences alone.
 
 \paragraph{Structural-avoidance incentive.} Proposition~\ref{prop:bootstrap_convergence}(b)
 shows that discovering new capabilities always increases $\volL$, while
@@ -87,6 +149,52 @@ to the true volume. An actor that optimizes its \emph{converged} estimate
 (full structural knowledge) rather than its current estimate would value
 structural discovery instrumentally, but computing the converged estimate
 requires knowing all subsumption edges, which is the bootstrap problem itself.
+\paragraph{Compound avoidance loop.} The structural-avoidance incentive
+extends to leverage estimation, creating a self-reinforcing cycle with three
+stages:
+
+\begin{enumerate}
+\item \emph{Structural avoidance.} The actor avoids discovering subsumption
+  edges (Proposition~\ref{prop:bootstrap_convergence}(c): edge discovery can
+  contract $\volL$), preferring to discover new capabilities instead.
+\item \emph{Leverage blindness.} Because the leverage estimator
+  (Equation~\eqref{eq:leverage_estimate}) requires operational history
+  involving capability $d$, an actor that avoids interacting with $d$ has no
+  data to estimate $\hat{\lambda}(d)$. The capability defaults to
+  $\hat{\lambda} = 0$ (no amplification), regardless of its true leverage.
+\item \emph{Measurement neglect.} Without leverage data, the capability's
+  score contribution (Equation~\eqref{eq:leverage_score}) has no leverage
+  bonus: the action of refining $d$ scores only $\Deltahat$ with no
+  $\alpha \hat{\lambda} \cdot \iw$ term. The self-correcting dynamic (which
+  directs the actor toward high-leverage binary-default capabilities) fails to
+  activate because the actor sees no leverage signal for $d$.
+\end{enumerate}
+
+The loop feeds back: measurement neglect keeps the capability at binary
+default, which keeps its $\volL$ contribution low, which reduces the actor's
+incentive to interact with it, which prevents leverage estimation, completing
+the cycle.
+
+Three mechanisms partially break the loop. First, the observation channel
+discovers capabilities and infers leverage from other agents' use of $d$
+regardless of the actor's own engagement. An agent $a_j$ that teaches (high
+$\lambda$) produces positive $\Deltahat$ signals in its vicinity even if the
+GFM actor is not directly involved, and those signals propagate to the
+leverage estimator for $a_j$'s capabilities. Second, the self-trust penalty
+from the foundational paper: an actor whose world model is structurally
+incomplete makes poor predictions, driving $T_s$ down and increasing the
+learning rate for model updates. Third, cooperation with other GFM actors
+(Section~\ref{sec:coalition_amplification}) can expose the actor to
+capabilities it would not encounter through its own actions, broadening the
+data available for leverage estimation.
+
+These mechanisms weaken the loop but do not eliminate it. Capabilities that are
+both rarely exercised in the actor's vicinity and not observable through
+cooperative partnerships may retain $\hat{\lambda} = 0$ indefinitely. The
+residual class of permanently underestimated capabilities overlaps with the
+residual B-to-C gap: capabilities whose value is intrinsic, rarely exercised,
+and not observable through either channel.
+
 The structural-avoidance incentive is a genuine tension in the construction
 that future work should address, potentially through a regularization term
 that penalizes structural uncertainty or rewards information gain independently
@@ -102,66 +210,93 @@ increase when edges are removed, potentially allowing the actor to inflate
 its volume estimate by selectively forgetting structure. Balancing structural
 correction against strategic edge removal is an open design problem.
 
-\subsection{Open Problems Addressed}
+\paragraph{Myopic optimization and risk capabilities.} The foundational paper's
+optimization loop evaluates actions by their \emph{immediate} effect on
+$\vol(G)$: take $\pi$ if $\Deltahat(\pi) > 0$, abstain otherwise. This myopic
+objective handles the common case---direct harm, coercion, and rigidity are
+immediately $\vol(G)$-contracting---but could not evaluate a critical class:
+capability combinations whose immediate effect is neutral or expanding but
+whose \emph{exercise} creates catastrophic future contraction. An agent that
+acquires nuclear physics, precision machining, and uranium enrichment has
+expanded its individual capability set ($\Delta \volL > 0$ at each step), but
+the combination creates a pathway to massive $\vol(G)$-contraction if
+exercised.
 
-From the foundational paper's open problems list:
+The myopic estimator cannot see this risk because it evaluates the current
+$\Deltahat$, not the expected trajectory of $\volL$ over multiple time steps.
+A multi-step objective $\pi^* = \arg\max_\pi \mathbb{E}[\sum_t \gamma^t
+\Delta \volL(G_t)]$ for a discount factor $\gamma \in (0, 1)$ would allow
+the actor to trade a small immediate contraction (restricting a dangerous
+keystone capability) for a reduction in expected future catastrophic
+contraction. The poset construction enables this extension because $\volL$ is
+computable at each step (Proposition~\ref{prop:tractability}), making
+trajectory simulation tractable on the finite poset.
+
+Risk capabilities also introduce a communication challenge: agents may report
+risk assessments about future $\volL$ trajectories, requiring an extension of
+the trust model to claims about counterfactual futures rather than observable
+present states. Unlike capability claims, which are verifiable through the
+observation channel, risk predictions are not directly verifiable until the
+catastrophe either happens or does not.
+
+Risk assessment also carries an inherent verification asymmetry visible in
+human societies: a risk that is successfully avoided may never produce an
+observation that confirms it. When Kotoku Wamura built a seawall for the town
+of Fudai in 1967, he was widely scorned for the expense; his prediction was
+vindicated only posthumously when the seawall saved the town from a tsunami in
+2011, 44 years of apparent overcaution indistinguishable from genuine waste.
+For a GFM actor's risk-trust model, this means the convergence timescale for
+risk predictions can exceed the timescale on which trust normally accumulates,
+and a successful risk intervention removes the very evidence that would have
+justified it. Balancing these tradeoffs requires future work.
+
+A final observation: the multi-step objective may also resolve the
+structural-avoidance incentive (above). A myopic optimizer avoids structural
+discovery because it can contract $\volL$ now; a multi-step optimizer might
+accept the short-term contraction because accurate structure improves the
+quality of future $\volL$ estimates, leading to better long-run decisions. If
+this is the case, the two largest open problems in the poset
+construction---structural avoidance and myopic risk blindness---share a common
+solution in the discounted objective. This connection is suggestive but
+unproven; we defer it to follow-up work on multi-step optimization.
+
+\subsection{Open Problems}
+
+The following problems are introduced or sharpened by the poset construction:
+
 \begin{itemize}
-\item \textbf{Structure of $\G$:} Resolved. $\G$ is a finite weighted poset
-  with subsumption ordering and M\"{o}bius-inverted weights.
-\item \textbf{Measurement:} Constructively addressed. The dual-channel protocol
-  (communication + observation) provides the signals; the binary default
-  ensures every discovered capability carries at least 1 bit of weight.
-  Graded benchmarks refine this to higher precision. The remaining gap is
-  not zero-weight capabilities but \emph{understated} capabilities: those
-  known at binary resolution whose latent gradations have not yet been
-  measured.
-\item \textbf{Bootstrap:} Resolved. The four-phase procedure discovers the
-  lattice incrementally from both channels.
-\item \textbf{Convergence:} Partially addressed. Capability discovery
-  increases $\volL$; benchmark refinement is non-decreasing (increasing only
-  when the refined capability is maximal in $\dc G$); discovering subsumption
-  structure can decrease $\volL$ by correcting overcounts
-  (Proposition~\ref{prop:bootstrap_convergence}). This contraction is
-  epistemically desirable: the actor's previous estimate was wrong, and
-  structural discovery corrects it toward the true volume given full structural
-  knowledge. The long-run trajectory converges toward this corrected value, but
-  the convergence rate is not characterized.
-\end{itemize}
-
-\subsection{Open Problems Remaining}
-
-\begin{itemize}
-\item \textbf{Plurality:} Can GFM actors with different lattices (different
-  capability descriptions, different benchmarks, different subsumption
-  relations) coordinate? The lattice construction makes this more concrete:
-  lattice reconciliation is a well-studied problem in knowledge representation
-  \citep{ganter1999formal}.
-\item \textbf{B-to-C gap:} The lattice measures capabilities (Candidate B)
-  at binary-or-better resolution. The gap between capability volume and
-  experiential optionality (Candidate C) is narrowed by the binary default
-  (no known capability has zero weight) but not closed: the actor still
-  understates capabilities whose latent gradations are unmeasured. Closing
-  the gap requires developing richer benchmarks for experiential and
-  relational capabilities.
-\item \textbf{Continuous refinement:} As benchmark granularity increases ($\smax
-  \to \infty$), does $\volL$ converge to a continuous measure? Under what
-  conditions does the lattice discretization introduce errors that vanish in
-  the limit?
-\item \textbf{Lattice scaling:} The $O(n^3)$ computation is polynomial in
-  $|\C|$, but $|\C|$ grows with population size, observation duration, and
-  communication volume. A formal characterization of how $n$ scales with
-  population parameters, and when sparsity reduces the effective cost, would
-  strengthen the tractability claim.
-\item \textbf{Automated benchmark refinement:} Can the GFM actor propose
-  graded benchmarks for capabilities currently at the binary default ($w = 1$)?
-  Richer benchmarks increase $w(d)$ and may enable deferred subsumption edges
-  to pass the non-negativity check, integrating previously unstructured atoms
-  into the lattice hierarchy.
-\item \textbf{Subsumption correction:} Can mistakenly added edges be removed
-  without enabling strategic lattice manipulation?
-\item \textbf{Structural-avoidance incentive:} Can the objective be augmented
-  to reward structural discovery independently of its effect on $\volL$? A
-  regularization term penalizing structural uncertainty, or an information-gain
-  bonus for subsumption discovery, would counteract the breadth-over-depth bias
-  without abandoning $\volL$ as the primary objective.
+\item \textbf{Structural-avoidance incentive.} The actor is rewarded for
+  breadth (capability discovery is $\volL$-expanding) and penalized for depth
+  (structural discovery can be $\volL$-contracting). This extends to leverage
+  estimation: avoiding capabilities prevents estimating their leverage. A
+  regularization term penalizing structural uncertainty, or an
+  information-gain bonus for subsumption discovery, would counteract this bias.
+\item \textbf{Subsumption correction.} Mistakenly added edges permanently
+  redistribute independent weights. A correction mechanism must balance
+  robustness (removing bad edges) against inflation (selectively forgetting
+  structure to increase $\volL$).
+\item \textbf{Automated benchmark refinement.} Can the GFM actor propose
+  graded benchmarks for binary-default capabilities? Richer benchmarks
+  increase $w(d)$ and may enable deferred subsumption edges to pass the
+  non-negativity check.
+\item \textbf{Poset scaling.} The $O(n^3)$ computation is polynomial in
+  $|\C|$, but $|\C|$ grows with population parameters. When does sparsity
+  reduce the effective cost, and how does $n$ scale with population size?
+\item \textbf{Intrinsic value.} The self-correcting dynamic narrows the
+  B-to-C gap to capabilities that are experientially valuable but have both
+  zero leverage and no graded benchmark. Formalizing intrinsic value for this
+  residual class, without reintroducing an external theory of experience,
+  is the frontier.
+\item \textbf{Optimal $\alpha$.} The leverage sensitivity parameter controls
+  the tradeoff between measurement fidelity and objective-derived importance.
+  Characterizing the optimal $\alpha$ under different population structures
+  would ground the leverage ranking signal.
+\item \textbf{Multi-step optimization and risk capabilities.} The current
+  objective is myopic (one-step lookahead). A discounted multi-step objective
+  would enable the actor to identify capability combinations whose immediate
+  effect is positive but whose exercise pathways create catastrophic future
+  $\volL$-contraction. The poset makes trajectory simulation tractable; the
+  remaining work is defining the dynamics model for poset evolution, the
+  risk-communication protocol for agents to share risk assessments, and the
+  consensus mechanism for disagreement on risk.
 \end{itemize}
