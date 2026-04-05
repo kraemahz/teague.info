@@ -96,6 +96,17 @@ $\tau_D > \tau_D^*$. The honest summary: under the linearized model with
 strategy-independent $r_K$, diversity dominates. Whether this approximation
 holds is an empirical question the theory cannot answer.
 
+\paragraph{Mixed strategies and partial subsumption.}
+The trajectory comparison models a binary choice: full domination versus
+full diversity maintenance. A more sophisticated coalition could pursue
+partial subsumption: absorb low-leverage non-members (whose
+$r_{\mathrm{ext}}$ contribution is negligible) while preserving
+high-leverage ones. This mixed strategy captures some $\Delta_0$ while
+retaining most $r_{\mathrm{ext}}$, and likely dominates both pure
+strategies for a wide parameter range. The binary framing overstates the
+diversity advantage relative to the optimal mixed strategy. Characterizing
+the optimal partial-subsumption policy is an open problem.
+
 \paragraph{Observational individuation as a modeling choice.}
 The static protection of Corollary~\ref{cor:a1_from_oi} depends on the
 framework treating observation-channel outputs as first-class capabilities
@@ -130,7 +141,11 @@ risk assessments for the same capability tuple, the actor's aggregation
 is appropriate for catastrophic risks but can lead to excessive caution if
 high-trust agents consistently overestimate risk. A more nuanced aggregation
 (e.g., trust-weighted average rather than maximum) would reduce
-overcaution but increase the probability of missing real threats. The $\max$ operator also interacts with the
+overcaution but increase the probability of missing real threats. Additionally, during bootstrap when $T_j^{\mathrm{risk}}$ starts at a
+neutral prior, external risk claims are automatically discounted,
+creating a strong bias toward the actor's own assessment that may
+undermine social risk-learning until sufficient structural verification
+has occurred. The $\max$ operator also interacts with the
 causal-counterfactual trust updates: a structurally plausible but
 probability-uncertain risk claim keeps the reporting agent's risk-trust
 high, and the $\max$ aggregation can produce persistent overcaution in the

@@ -9,15 +9,21 @@ which point Lemma~1's protection against elimination dissolves. Under the
 narrow capability definition (capabilities as tasks), the self-balancing
 property no longer guarantees that marginalizing non-members is
 anti-maximizing. The substitution problem is the formal version of the
-singleton superintelligence scenario: a coalition so capable that no other
-agent's existence contributes to the objective.
+singleton superintelligence scenario
+\citep{bostrom2014superintelligence}: a coalition so capable that no other
+agent's existence contributes to the objective. The instrumental-convergence
+thesis \citep{omohundro2008basic} predicts that sufficiently capable agents
+converge on resource acquisition and self-preservation, making the singleton
+outcome a default trajectory. This section shows that under the $\volL$
+objective, the convergence runs in the opposite direction.
 
 This section shows that the combined machinery of the discounted objective
 (Theorem~\ref{thm:discounted_self_balancing}), the poset measure
 \citep{lasser2026poset}, and the leverage ranking signal (Section~6 of
-\citet{lasser2026poset}) addresses the substitution problem under a
-diversity condition that holds generically for populations with
-heterogeneous agents.
+\citet{lasser2026poset}) addresses the substitution problem under a diversity condition that holds
+in the regime where the coalition has not yet achieved the capability to
+internally replicate all external discovery. The protection degrades as
+the coalition approaches this threshold.
 
 \subsection{The Problem: Static Domination}
 
@@ -84,8 +90,12 @@ capabilities are fully subsumed. We show that a property of the observation
 channel provides \emph{static} protection: each distinguishable agent
 contributes at least one irreplaceable poset node whose removal contracts
 $\volL$. This does not discharge the dynamic assumption (A1), which
-requires ongoing novel capability contributions, but it restores the
-per-elimination cost that the substitution problem appeared to dissolve.
+requires ongoing novel capability contributions, and the static cost is
+quantitatively modest (1 bit per distinguishable agent under the binary
+default). The dynamic protection of
+Proposition~\ref{prop:anti_monopolar} carries the primary anti-monopolar
+load; observational individuation provides a floor ensuring elimination is
+never strictly free.
 
 \begin{definition}[Distinguishable Agent]
 \label{def:distinguishable}
@@ -455,7 +465,10 @@ agent eliminated costs at least 1 bit. Second, if the population satisfies
 Corollary~\ref{cor:gradual}) shows that the diversity trajectory dominates
 the domination trajectory over the planning horizon. Neither protection is
 a safety constraint imposed from outside the objective. Both emerge from
-$\volL$-maximization itself.
+$\volL$-maximization itself. The result is structurally analogous to
+\citeauthor{drexler2019reframing}'s argument that a services ecosystem is
+preferable to a singleton agent \citep{drexler2019reframing}, but derived
+from the objective rather than from an architectural preference.
 
 \paragraph{Scope of the two protections.} Observational individuation
 provides \emph{unconditional} static protection for distinguishable agents:

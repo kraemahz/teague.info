@@ -85,6 +85,17 @@ $\Delta \volL(G_0 \mid \text{edge}) \leq 0$, this is positive when
 $I(d_1 \leq d_2) > |\Delta \volL(G_0 \mid \text{edge})|$.
 \end{proof}
 
+\paragraph{Scope: existence result, not decision procedure.}
+Proposition~\ref{prop:structure_value} is an existence result: it identifies
+the condition under which structural discovery is value-positive, showing
+that the structural-avoidance incentive \emph{can} be overcome. It is not a
+decision procedure, because evaluating $I$ requires comparing optimal
+policies under two world models, which is itself a planning problem at least
+as hard as the one the actor is trying to solve. A computable proxy for $I$
+(e.g., an information-gain heuristic or a rollout-based estimate) is needed
+for practical use; this is listed as an open problem in
+Section~\ref{sec:discussion}.
+
 \paragraph{When the condition holds.} The information value $I$ grows with
 the planning horizon $H$ (more future decisions benefit from accurate
 structure), the frequency of decisions involving the capabilities $d_1$ and
