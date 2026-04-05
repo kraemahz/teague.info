@@ -2249,17 +2249,24 @@ capability claims, which are verifiable through the observation channel,
 risk predictions are not directly verifiable until the catastrophe
 either happens or does not.</p>
 <p>Risk assessment also carries an inherent verification asymmetry
-visible in human societies: a risk that is successfully avoided may
-never produce an observation that confirms it. When Kotoku Wamura built
-a seawall for the town of Fudai in 1967, he was widely scorned for the
-expense; his prediction was vindicated only posthumously when the
-seawall saved the town from a tsunami in 2011, 44 years of apparent
-overcaution indistinguishable from genuine waste. For a GFM actor’s
-risk-trust model, this means the convergence timescale for risk
-predictions can exceed the timescale on which trust normally
-accumulates, and a successful risk intervention removes the very
-evidence that would have justified it. Balancing these tradeoffs
-requires future work.</p>
+visible in human societies, which we call the <em>Wamura problem</em>
+<d-cite key="fackler2011fudai"></d-cite>. When mayor
+Kotoku Wamura built a 15.5-meter floodgate for the town of Fudai in the
+1960s, he was widely scorned for the excess: the standard seawall height
+at the time was 10 meters, and the nearby town of Taro built to that
+standard. Wamura’s insistence on 15.5 meters was seen as wasteful
+overcaution. He was vindicated only posthumously: in the 2011 tsunami,
+Fudai suffered one death (a resident outside the gate’s protection),
+while Taro’s 10-meter wall was overtopped and multiple residents were
+killed. The risk that Wamura correctly estimated was invisible for 44
+years; during that time, his assessment was indistinguishable from
+genuine waste. A GFM actor faces the same problem: a risk that is
+successfully prevented produces no observation confirming the prevention
+was necessary, and the convergence timescale for risk-trust can exceed
+the timescale on which trust normally accumulates. Addressing the Wamura
+problem requires extending the trust model to evaluate risk claims by
+causal-structural plausibility rather than observed outcomes; we defer
+this to future work.</p>
 <p>A final observation: the multi-step objective may also resolve the
 structural-avoidance incentive (above). A myopic optimizer avoids
 structural discovery because it can contract <span
@@ -2998,7 +3005,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <d-bibliography>
 <script type="text/bibtex">
 % =============================================================================
-% References for "Computable Goal Frontiers via Communication Lattices"
+% References for "Computable Goal Frontiers and the Gradient Toward Civilization-Building"
 % =============================================================================
 
 % --- Paper 0 ---
@@ -3010,7 +3017,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
   howpublished={\url{https://teague.info/papers/gfm/}}
 }
 
-% --- Lattice Theory and Combinatorics ---
+% --- Order Theory and Combinatorics ---
 
 @article{rota1964foundations,
   title={On the Foundations of Combinatorial Theory {I}: Theory of {M\"{o}bius} Functions},
@@ -3117,6 +3124,17 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
   author={Ganter, Bernhard and Wille, Rudolf},
   year={1999},
   publisher={Springer}
+}
+
+% --- Historical Examples ---
+
+@misc{fackler2011fudai,
+  title={Tsunami Warning, Written in Stone},
+  author={Fackler, Martin},
+  year={2011},
+  howpublished={\url{https://www.nytimes.com/2011/04/21/world/asia/21stones.html}},
+  note={{The New York Times}, April 20, 2011. Reporting on Fudai's floodgate
+        and Mayor Kotoku Wamura's legacy following the 2011 T\={o}hoku tsunami}
 }
 
 % --- Ontology and Knowledge Representation ---
