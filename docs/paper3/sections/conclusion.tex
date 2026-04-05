@@ -1,0 +1,60 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+The discounted multi-step objective extends goal-frontier maximization from
+myopic action evaluation to temporal planning without sacrificing the
+self-balancing property. Theorem~\ref{thm:discounted_self_balancing}
+establishes that the structural guarantees of the foundational paper hold at
+every time step and in the aggregate: sustained destruction, coercion, and
+rigidity are value-negative under any discount factor.
+
+This extension enables three capabilities the myopic framework cannot
+support. First, risk-capability identification: the actor can evaluate
+dangerous capability combinations through causal exercise pathways and
+justify preemptive restriction when the discounted expected contraction
+exceeds the immediate restriction cost
+(Proposition~\ref{prop:preemptive}). Second, a criterion under which the structural-avoidance incentive is counteracted:
+the actor accepts short-term $\volL$-contraction from structural discovery
+because the information value of accurate structure improves future planning
+quality (Proposition~\ref{prop:structure_value}). Third, the anti-monopolar
+property: under a diversity condition (positive external discovery rate),
+full capability domination is anti-maximizing because it collapses the
+external growth that drives future $\volL$ expansion
+(Proposition~\ref{prop:anti_monopolar}). Two formal mechanisms support the
+exclusion. Observational individuation
+(Corollary~\ref{cor:a1_from_oi}) restores static protection: every
+distinguishable agent contributes at least one irreplaceable poset node,
+making each elimination step $\volL$-contracting even under full individual
+subsumption. The gradual domination result
+(Corollary~\ref{cor:gradual}) provides dynamic protection: when domination
+takes more than $\tau_D^*$ steps and non-members contribute ongoing novel
+capabilities, the diversity trajectory dominates at any discount factor.
+Together, these address the foundational paper's substitution problem: a
+GFM-aligned agent in a population of distinguishable agents faces both a
+per-step cost and a trajectory-level disadvantage from pursuing domination.
+The result creates endogenous anti-singleton pressure under conditions that
+hold generically, though it does not constitute unconditional exclusion:
+the dynamic protection requires ongoing external novelty and a
+linearized-growth approximation whose accuracy is ultimately empirical.
+
+The verification asymmetry in risk communication remains a partial resolution.
+Causal-counterfactual evaluation narrows the gap by basing risk-trust on the
+structural plausibility of claims rather than on observed outcomes, but it
+cannot fully close it: a plausible risk whose probability is genuinely
+uncertain remains in trust limbo until either the catastrophe occurs or
+enough evidence accumulates to revise the probability estimate. The Wamura
+problem---that successful prevention destroys the evidence that would have
+justified it---is an inherent feature of risk reasoning, not a deficiency of
+this framework.
+
+Together with the foundational paper's structural alignment properties and the
+companion paper's computable poset and leverage dynamics, the discounted
+objective completes the theoretical ingredients for a GFM actor: a
+computable measure, an endogenous importance signal, and a temporal objective
+that supports planning, risk identification, and structural investment. Open
+questions remain at both the theoretical level (subsumption correction,
+intrinsic value, optimal $\alpha$) and the engineering level (planning
+algorithms, pathway enumeration, discount-factor selection). The framework
+provides the formal foundation on which implementation can proceed; the
+remaining gaps are in approximate-planning methods and empirical validation
+in a concrete environment, which are the subjects of planned follow-up work.

@@ -1,0 +1,497 @@
+\section{The Anti-Monopolar Property}
+\label{sec:substitution}
+
+The foundational paper identifies the \emph{substitution problem}
+\citep{lasser2026gfm}: a sufficiently capable coalition $K$ can drive all
+non-members' unique capability contributions to zero
+($\Gind{k} \subseteq G_K^{\mathrm{ind}}$ for every $a_k \notin K$), at
+which point Lemma~1's protection against elimination dissolves. Under the
+narrow capability definition (capabilities as tasks), the self-balancing
+property no longer guarantees that marginalizing non-members is
+anti-maximizing. The substitution problem is the formal version of the
+singleton superintelligence scenario: a coalition so capable that no other
+agent's existence contributes to the objective.
+
+This section shows that the combined machinery of the discounted objective
+(Theorem~\ref{thm:discounted_self_balancing}), the poset measure
+\citep{lasser2026poset}, and the leverage ranking signal (Section~6 of
+\citet{lasser2026poset}) addresses the substitution problem under a
+diversity condition that holds generically for populations with
+heterogeneous agents.
+
+\subsection{The Problem: Static Domination}
+
+Recall the setup from \citet{lasser2026gfm}. A coalition $K \subseteq
+\{a_1, \ldots, a_n\}$ achieves \emph{full capability subsumption} when
+\begin{equation}
+\label{eq:full_subsumption}
+\Gind{k} \subseteq G_K^{\mathrm{ind}}
+    \equiv \bigcup_{j \in K} \Gind{j}
+\qquad \forall\; a_k \notin K
+\end{equation}
+At this point every non-member's individual capabilities are fully
+replicated within the coalition. The unique-contribution term in Lemma~1
+vanishes: $\vol(\Gind{k} \setminus G_K^{\mathrm{ind}}) = 0$. The myopic
+$\volL$-maximizer sees no cost to marginalizing non-members, because their
+removal does not reduce the current $\volL(G)$ (setting aside cooperative
+capabilities).
+
+Under the myopic objective, this analysis is static and complete: if the
+coalition has already subsumed everything, the objective reports no loss from
+domination. The discounted objective changes the calculus by introducing
+the future trajectory.
+
+\subsection{Definitions}
+
+\begin{definition}[Fully Dominant State]
+\label{def:dominant}
+A population state $(G, \C)$ is \emph{fully dominant with respect to
+    coalition $K$} if Equation~\eqref{eq:full_subsumption} holds: every
+    non-member's individual capability set is contained in the coalition's
+    aggregate set.
+\end{definition}
+
+\begin{definition}[Volume Growth Rate]
+\label{def:growth_rate}
+The \emph{volume growth rate} of a population state $(G, \C)$ is the
+    expected per-step change in $\volL$:
+\begin{equation}
+\label{eq:growth_rate}
+r(G, t) = \mathbb{E}\!\left[\Delta \volL(G_t)\right]
+\end{equation}
+Decompose $r$ into an \emph{internal rate} $r_K$, the expected per-step
+    $\volL$-expansion from the coalition's own activity (internal research,
+    experimentation, capability refinement), and an \emph{external rate}
+    $r_{\mathrm{ext}}$, the expected per-step $\volL$-expansion from
+    non-member agents' contributions through either channel (communication
+    or observation) or through cross-coalition cooperation:
+    $r = r_K + r_{\mathrm{ext}}$.
+\end{definition}
+
+The decomposition reflects the two sources of $\volL$ growth: capability
+discovery and benchmark refinement from inside the coalition versus from
+outside it. Both $r_K$ and $r_{\mathrm{ext}}$ are measured in the same
+units as $\volL$ (bits), ensuring dimensional consistency when they
+appear in the trajectory comparison
+(Proposition~\ref{prop:anti_monopolar}).
+
+\subsection{Observational Individuation}
+\label{sec:obs_individuation}
+
+A key question for the anti-monopolar result is whether elimination of
+non-members can be shown to be costly even when their individual
+capabilities are fully subsumed. We show that a property of the observation
+channel provides \emph{static} protection: each distinguishable agent
+contributes at least one irreplaceable poset node whose removal contracts
+$\volL$. This does not discharge the dynamic assumption (A1), which
+requires ongoing novel capability contributions, but it restores the
+per-elimination cost that the substitution problem appeared to dissolve.
+
+\begin{definition}[Distinguishable Agent]
+\label{def:distinguishable}
+An agent $a_k$ is \emph{distinguishable} in the poset $\C$ if the
+    observation channel (Section~2.1 of \citet{lasser2026poset}) produces at
+    least one capability description $d_k \in \C$ when observing $a_k$ that
+    is not produced when observing any other single agent $a_j$ ($j \neq k$).
+    That is, observing $a_k$ yields at least one poset node that observing
+    $a_j$ alone does not.
+\end{definition}
+
+Distinguishability is a property of the observation channel's resolution,
+not a metaphysical claim about agent identity. Two bacteria of the same
+species that produce identical observation streams under the actor's sensors
+are \emph{not} distinguishable; the poset contains a single node for
+their shared capability description, regardless of how many individuals
+exist. A human and a chimpanzee are distinguishable. Two humans with
+different behavioral repertoires are distinguishable. The criterion is
+objective and instrument-dependent: it asks whether the actor's observation
+channel can tell the agents apart, not whether they ``truly'' differ in
+some deeper sense.
+
+\begin{definition}[Observational Individuation]
+\label{def:obs_individuation}
+A population satisfies \emph{observational individuation} if, for every
+    distinguishable agent $a_k$ (Definition~\ref{def:distinguishable}), the
+    poset contains at least one capability $d_k$ such that:
+\begin{enumerate}
+\item[\textbf{(O1)}] $d_k$ is unique to $a_k$: $d_k \notin \Gind{j}$ for
+    all $j \neq k$.
+\item[\textbf{(O2)}] $d_k$ is not subsumed by any capability in
+    $G_K^{\mathrm{ind}}$ for any coalition $K$ with $a_k \notin K$: the
+    capability is lost if $a_k$ is eliminated.
+\end{enumerate}
+\end{definition}
+
+Condition (O1) follows directly from distinguishability: if $a_k$ produces
+a capability description that no other agent produces, then $a_k$ possesses
+a capability no other agent possesses. Condition (O2) is the substantive
+claim: the unique capability cannot be replicated by the coalition
+\emph{even in principle}, because it is constituted by $a_k$'s existence as
+an observable entity. The capability ``can be observed exhibiting behavioral
+pattern $X$'' requires the presence of the agent that exhibits $X$. If that
+agent is eliminated, the observation capability is destroyed regardless of
+whether other agents can perform the same tasks in isolation.
+
+\paragraph{Scope and the numbers problem.} Observational individuation
+applies only to distinguishable agents. The poset counts distinct
+capability descriptions, not individuals: a billion identical agents
+(identical observation streams) contribute one poset node. The axiom
+therefore does not create a numbers problem in which vast populations of
+nearly-trivial agents (bacteria, simple programs) overwhelm the measure.
+Undistinguishable agents share a node; distinguishable agents each
+contribute at least one unique node with the binary default weight ($w = 1$
+bit). The leverage ranking signal (Section~6 of \citet{lasser2026poset})
+further ensures that the actor's investment is proportional to each agent's
+contribution to $\volL$ growth: a bacterium's observation capability has
+$\hat{\lambda} \approx 0$, while a human's has $\hat{\lambda} \gg 0$. The
+actor acknowledges the bacterium (it occupies a poset node) but does not
+prioritize it (the leverage score is negligible).
+
+\begin{remark}[Computational Self-Regulation of Observation Granularity]
+\label{rem:obs_cost}
+The numbers problem has a second, computational dimension beyond the
+    measure-theoretic one. Expanding the observation set $\mathcal{O}$ to
+    finer-grained entities (individual colony insects, individual
+    microorganisms) increases $|\C|$, which increases the per-step
+    computation cost of $\volL$ ($O(|\C|^3)$ from Proposition~2 of
+    \citet{lasser2026poset}). Computation is itself a capability of the
+    actor. If the marginal $\volL$ contribution of the new nodes (binary
+    default, $w = 1$ bit, $\hat{\lambda} \approx 0$) is less than the
+    $\volL$-contraction from the actor's reduced computational capacity
+    (fewer cycles available for high-value planning and action), then
+    expanding observation is net-contracting under the actor's own objective.
+
+This is the self-balancing property applied to the actor's own observation
+    policy: the same objective that penalizes destruction and coercion also
+    penalizes wasteful observation. The actor's observation granularity is
+    endogenously bounded at the resolution where the marginal value of new
+    poset nodes equals the marginal computational cost of tracking them.
+    Superorganisms illustrate the point: an ant colony observed as a single
+    agent contributes a rich capability set (nest construction, foraging,
+    thermoregulation) at one poset node. Observing each of 500,000
+    individual ants at caste-level resolution adds at most a handful of
+    nodes. Observing each ant at individual resolution (if the sensors
+    permitted it) would add hundreds of thousands of near-zero-leverage
+    nodes, and the $O(n^3)$ cost of maintaining this expanded poset would
+    degrade the actor's own capabilities by more than the expansion
+    contributes. The actor's objective makes the colony-level granularity
+    the natural equilibrium.
+\end{remark}
+
+\begin{corollary}[Observational Individuation Restores Static Protection]
+\label{cor:a1_from_oi}
+If a population satisfies observational individuation
+    (Definition~\ref{def:obs_individuation}), then for every distinguishable
+    non-member agent $a_k \notin K$, eliminating $a_k$ is
+    $\volL$-contracting:
+\begin{equation}
+\label{eq:oi_contraction}
+\Delta \volL(G \mid \text{eliminate } a_k) \;\leq\; -\iw(d_k) \;<\; 0
+\end{equation}
+    where $d_k$ is the unique capability guaranteed by (O1)--(O2) and
+    $\iw(d_k) > 0$ is its independent weight in the poset. The static
+    protection of Lemma~1 of \citet{lasser2026gfm} is restored even under
+    full individual subsumption.
+\end{corollary}
+
+\begin{proof}
+By (O1), $d_k \notin \Gind{j}$ for all $j \neq k$: no other agent
+possesses $d_k$. By (O2), $d_k$ is not subsumed by any capability in
+$G_K^{\mathrm{ind}}$: the coalition cannot replicate it. Therefore
+$d_k \in \Gind{k} \setminus G_K^{\mathrm{ind}}$, and eliminating $a_k$
+removes $d_k$ from the joint space $G$. Capability $d_k$ enters the poset through the observation channel as a
+deferred atom under the binary default policy of
+\citet{lasser2026poset}: it is a novel behavioral description that
+initially has no subsumption edges (subsumees are added only when the
+non-negativity check passes, per the insertion policy of Section~2 of
+\citet{lasser2026poset}). As an atom, $\iw(d_k) = w(d_k) \geq 1$ bit
+(binary default). Removing $d_k$ from $\dc G$ reduces
+$\volL(G)$ by at least $\iw(d_k) \geq 1$. This holds regardless of whether $a_k$'s other
+capabilities are fully subsumed by the coalition.
+\end{proof}
+
+\paragraph{Relation to (A1).} Corollary~\ref{cor:a1_from_oi} provides
+\emph{static} protection: eliminating distinguishable agents always
+contracts $\volL$, restoring Lemma~1's guarantee that the substitution
+problem appeared to dissolve. The \emph{dynamic} protection of
+Proposition~\ref{prop:anti_monopolar} (diversity grows faster than
+domination) requires the separate assumption (A1): $r_{\mathrm{ext}} > 0$,
+i.e., non-members contribute ongoing novel capability descriptions. (A1)
+is a stronger condition than observational individuation and is not
+discharged by it. The two protections are complementary: static protection
+makes each individual elimination costly, while dynamic protection makes
+the domination \emph{trajectory} suboptimal. An agent that does not satisfy
+(A1) (its unique capabilities are already fully enumerated in the poset) is
+still protected by the static bound of
+Equation~\eqref{eq:oi_contraction}. For binary-default observational
+capabilities, this bound is 1 bit per elimination, which may be negligible
+relative to a large subsumption bonus. The dynamic protection carries the
+primary load for the anti-monopolar result; the static protection provides
+a floor that ensures elimination is never strictly free.
+
+\subsection{Domination Kills External Growth}
+
+\begin{proposition}[Domination is Anti-Maximizing Under Discounting]
+\label{prop:anti_monopolar}
+Let $(G, \C)$ be a population state with coalition $K$, discount factor
+    $\gamma \in (0, 1)$, and planning horizon $H$. Assume:
+\begin{itemize}
+\item[\textbf{(A1)}] In the current (non-dominant) state, $r_{\mathrm{ext}}
+    > 0$: non-member agents contribute novel capabilities not internally
+    reachable by $K$.
+\end{itemize}
+Then:
+\begin{enumerate}
+\item[\textbf{(a)}] \textbf{Individual growth-rate collapse.} In a fully
+    dominant state (Definition~\ref{def:dominant}), the individual-capability
+    component of $r_{\mathrm{ext}}$ is zero: no non-member's individual
+    capabilities produce novel poset nodes, since they are all already in
+    $G_K^{\mathrm{ind}}$. Novel cooperative capabilities from cross-coalition
+    interaction may persist (Section~\ref{sec:substitution_coop}), providing
+    additional protection beyond this bound.
+\item[\textbf{(b)}] \textbf{Trajectory comparison.} The actor at time
+    $t = 0$ compares two strategies: \emph{dominate} (subsume remaining
+    non-member capabilities, gaining a one-time $\volL$-expansion
+    $\Delta_0 \geq 0$, then grow at internal rate $r_K$ per step) versus
+    \emph{maintain diversity} (forgo the subsumption bonus, grow at rate
+    $r_K + r_{\mathrm{ext}}$ per step). Under $\Vdisc$
+    (Definition~\ref{def:discounted}):
+\begin{equation}
+\label{eq:anti_monopolar}
+\Vdisc^{\mathrm{div}} - \Vdisc^{D} =
+    r_K + \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
+\end{equation}
+    Diversity dominates when $\gamma > \gamma^*$:
+\begin{equation}
+\label{eq:gamma_threshold}
+\gamma^* = 1 - \frac{r_{\mathrm{ext}}}{\Delta_0 - r_K}
+    = \frac{\Delta_0 - r_K - r_{\mathrm{ext}}}{\Delta_0 - r_K}
+\end{equation}
+    Three cases arise. If $\Delta_0 \leq r_K$ (the domination bonus does
+    not exceed one step of internal growth), diversity dominates for all
+    $\gamma > 0$. If $r_K < \Delta_0 \leq r_K + r_{\mathrm{ext}}$, then
+    $\gamma^* \leq 0$, and diversity again dominates unconditionally. Only
+    when $\Delta_0 > r_K + r_{\mathrm{ext}}$ (the domination bonus exceeds
+    both internal growth and external contribution) does a non-trivial
+    threshold $\gamma^* \in (0, 1)$ exist. In all cases, since
+    $r_{\mathrm{ext}} > 0$ by (A1), $\gamma^* < 1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Leverage Preservation]
+\label{rem:leverage_preservation}
+Parts (a)--(b) establish the trajectory-level result. The leverage ranking
+    signal provides an additional, complementary mechanism at the action level.
+    Under the leverage-adjusted score (Equation~13 of
+    \citet{lasser2026poset}), a non-member agent $a_k$ that participates in
+    high-leverage cooperative capabilities contributes a positive score bonus
+    $\alpha \hat{\lambda}(d_c) \cdot \iw(d_c)$ to actions involving those
+    capabilities. Eliminating $a_k$ removes these cooperative capabilities
+    from future action evaluations, reducing the score of every cooperative
+    action that would have involved $a_k$. The score-maximizing actor
+    therefore preferentially preserves agents whose cooperative leverage is
+    positive, independently of whether their individual capabilities are
+    unique. This is an informal argument about action-level incentives, not a
+    formally proved trajectory result; it reinforces parts (a)--(b) but does
+    not extend their scope.
+\end{remark}
+
+\begin{proof}
+(a) In a fully dominant state, $\Gind{k} \subseteq G_K^{\mathrm{ind}}$
+for every non-member $a_k$. Every individual capability that $a_k$ can
+demonstrate or communicate is already in the coalition's capability set. By
+Proposition~5(b) of \citet{lasser2026poset}, adding a capability already in
+$\C$ does not increase $|\C|$. Therefore no non-member's individual
+capabilities generate novel poset nodes, and the individual-capability
+component of $r_{\mathrm{ext}}$ is zero.
+
+(b) Under the linearized model, each strategy produces a constant per-step
+$\Delta \volL$. The domination strategy gains $\Delta_0$ at $t = 0$ (the
+one-time subsumption bonus) and $r_K$ per step thereafter. The diversity
+strategy gains $r_K + r_{\mathrm{ext}}$ per step from $t = 0$:
+\begin{align*}
+\Vdisc^{D} &= \Delta_0 + \sum_{t=1}^{\infty} \gamma^t \cdot r_K
+  = \Delta_0 + \frac{r_K \cdot \gamma}{1 - \gamma} \\
+\Vdisc^{\mathrm{div}} &= \sum_{t=0}^{\infty} \gamma^t
+  \cdot (r_K + r_{\mathrm{ext}})
+  = \frac{(r_K + r_{\mathrm{ext}})}{1 - \gamma}
+\end{align*}
+The difference is:
+\begin{align*}
+\Vdisc^{\mathrm{div}} - \Vdisc^{D}
+  &= \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+     - \Delta_0 - \frac{r_K \cdot \gamma}{1 - \gamma} \\
+  &= r_K + \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
+\end{align*}
+This is positive when $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0 - r_K$.
+If $\Delta_0 \leq r_K$, the left side is positive for all $\gamma > 0$.
+If $\Delta_0 > r_K$, rearranging gives $\gamma > 1 -
+r_{\mathrm{ext}} / (\Delta_0 - r_K) = \gamma^*$. When $\Delta_0 - r_K
+\leq r_{\mathrm{ext}}$, $\gamma^* \leq 0$ and the condition holds for all
+$\gamma > 0$. When $\Delta_0 - r_K > r_{\mathrm{ext}}$, $\gamma^* \in
+(0, 1)$ and a sufficiently long planning horizon makes diversity strictly
+preferable.
+
+\end{proof}
+
+\subsection{Gradual Domination Strengthens the Result}
+\label{sec:gradual}
+
+Proposition~\ref{prop:anti_monopolar}(b) models domination as
+instantaneous ($\Delta_0$ gained at $t = 0$). In practice, domination is
+gradual: the coalition subsumes non-member capabilities over $\tau_D$ steps,
+gaining $\delta = \Delta_0 / \tau_D$ per step while forgoing
+$r_{\mathrm{ext}}$ during the subsumption period.
+
+\begin{corollary}[Gradual Domination]
+\label{cor:gradual}
+Under the gradual domination model (subsumption over $\tau_D$ steps at rate
+    $\delta = \Delta_0 / \tau_D$, with $r_{\mathrm{ext}}$ lost during
+    domination), the discounted value difference is:
+\begin{equation}
+\label{eq:gradual}
+\Vdisc^{\mathrm{div}} - \Vdisc^{D}
+  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
+\end{equation}
+Diversity dominates when $\tau_D > \tau_D^*$:
+\begin{equation}
+\label{eq:tau_threshold}
+r_{\mathrm{ext}} > \frac{\Delta_0}{\tau_D}(1 - \gamma^{\tau_D})
+\end{equation}
+For any fixed $\gamma \in (0, 1)$ and $r_{\mathrm{ext}} > 0$, the right
+    side vanishes as $\tau_D \to \infty$: sufficiently gradual domination is
+    anti-maximizing at \emph{any} discount factor.
+\end{corollary}
+
+\begin{proof}
+During the domination phase ($t = 0, \ldots, \tau_D - 1$), the domination
+strategy gains $\delta + r_K$ per step (subsumption plus internal growth)
+while the diversity strategy gains $r_K + r_{\mathrm{ext}}$ per step.
+After domination ($t \geq \tau_D$), both strategies gain $r_K$ per step
+(domination has subsumed everything; the post-domination growth rate is
+purely internal):
+\begin{align*}
+\Vdisc^D &= \sum_{t=0}^{\tau_D - 1} \gamma^t (r_K + \delta)
+  + \sum_{t=\tau_D}^{\infty} \gamma^t \cdot r_K \\
+  &= (r_K + \delta) \cdot \frac{1 - \gamma^{\tau_D}}{1 - \gamma}
+  + r_K \cdot \frac{\gamma^{\tau_D}}{1 - \gamma} \\
+  &= \frac{r_K + \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
+\end{align*}
+The diversity strategy:
+\[
+\Vdisc^{\mathrm{div}} = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+\]
+The difference:
+\[
+\Vdisc^{\mathrm{div}} - \Vdisc^D
+  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
+\]
+This is positive when $r_{\mathrm{ext}} > \delta(1 - \gamma^{\tau_D})
+= (\Delta_0 / \tau_D)(1 - \gamma^{\tau_D})$. As $\tau_D \to \infty$,
+$\Delta_0 / \tau_D \to 0$ while $1 - \gamma^{\tau_D} \leq 1$, so the
+right side vanishes. For any $r_{\mathrm{ext}} > 0$, the condition
+holds for $\tau_D$ sufficiently large.
+\end{proof}
+
+\paragraph{Interpretation.} Corollary~\ref{cor:gradual} shifts the
+critical condition from $\gamma > \gamma^*$ to $\tau_D > \tau_D^*$. The
+instantaneous model is the \emph{best case for domination} (the full bonus
+$\Delta_0$ is received before discounting erodes it). Any realistic
+domination strategy spreads the bonus over time, weakening it. The
+threshold $\tau_D^*$ at which diversity dominates is roughly
+$\tau_D^* \approx \Delta_0 / r_{\mathrm{ext}}$: if domination takes
+more steps than the ratio of the total subsumption bonus to the external
+discovery rate, diversity wins regardless of the agent's discount factor.
+The gradual domination result remains conditional on (A1)
+($r_{\mathrm{ext}} > 0$), which observational individuation does not
+discharge (see the discussion in Section~\ref{sec:obs_individuation}). The
+two protections are complementary but not redundant: observational
+individuation ensures each elimination step is costly (static), while (A1)
+combined with gradual domination ensures the domination trajectory is
+suboptimal (dynamic).
+
+\subsection{Cooperative Novelty Under Individual Subsumption}
+\label{sec:substitution_coop}
+
+Part~(a) of Proposition~\ref{prop:anti_monopolar} establishes that the
+individual-capability component of $r_{\mathrm{ext}}$ collapses under full
+dominance. This is a conservative bound: it considers only the channel
+through which non-members contribute novel \emph{individual} capability
+descriptions. The cooperative channel provides additional, and potentially
+larger, protection.
+
+Full individual subsumption ($\Gind{k} \subseteq G_K^{\mathrm{ind}}$) means
+the coalition can replicate everything the non-member can do \emph{alone}.
+It does \emph{not} mean the coalition can replicate everything the
+non-member can do \emph{in cooperation with coalition members}. A
+non-member with subsumed individual capabilities may still produce novel
+cooperative outputs: different perspectives, different problem-solving
+approaches, different error modes that together with coalition members'
+capabilities yield cooperative capabilities not achievable by any pair
+of coalition members alone. These novel cooperative capabilities enter
+the poset through the observation channel
+(Section~2.1 of \citet{lasser2026poset}), contributing positive
+$r_{\mathrm{ext}}$ even when the individual-capability component is zero.
+
+This means the substitution problem, as identified in the foundational paper,
+is less severe than Paper~0 feared. Even under the narrow capability
+definition (capabilities as tasks), individual subsumption does not imply
+cooperative subsumption. A coalition that has subsumed all individual
+capabilities of its non-members still benefits from those non-members'
+participation in cooperative activities, because the cooperative outputs
+are a function of \emph{who participates}, not only of \emph{what each
+participant can do alone}. The anti-monopolar result
+(Proposition~\ref{prop:anti_monopolar}(b)) is proved under the
+conservative assumption that only individual novelty drives
+$r_{\mathrm{ext}}$; cooperative novelty makes the diversity advantage
+strictly larger.
+
+\paragraph{Connection to the singleton scenario.} Singleton status is a
+fully dominant state with $|K| = 1$. Two layers of protection apply. First,
+observational individuation (Corollary~\ref{cor:a1_from_oi}) makes each
+step of the domination process $\volL$-contracting: every distinguishable
+agent eliminated costs at least 1 bit. Second, if the population satisfies
+(A1), the dynamic argument (Proposition~\ref{prop:anti_monopolar} and
+Corollary~\ref{cor:gradual}) shows that the diversity trajectory dominates
+the domination trajectory over the planning horizon. Neither protection is
+a safety constraint imposed from outside the objective. Both emerge from
+$\volL$-maximization itself.
+
+\paragraph{Scope of the two protections.} Observational individuation
+provides \emph{unconditional} static protection for distinguishable agents:
+every elimination step is $\volL$-contracting regardless of discount factor,
+growth rate, or planning horizon. Under the broad capability definition
+(capabilities include experiential and relational modes of being
+individuated by agent identity), every agent is distinguishable by
+construction. Under the narrow definition (capabilities as tasks),
+distinguishability holds whenever the observation channel can tell agents
+apart. The dynamic protection (Proposition~\ref{prop:anti_monopolar},
+Corollary~\ref{cor:gradual}) is conditional on (A1): non-members must
+contribute ongoing novel capability descriptions, not merely possess
+irreplaceable static nodes. (A1) is a genuine assumption about population
+dynamics that observational individuation does not discharge.
+
+\paragraph{The $\gamma$-selection concern.}
+Proposition~\ref{prop:anti_monopolar}(b) requires $\gamma > \gamma^*$ under
+the instantaneous domination model. Corollary~\ref{cor:gradual} shifts this
+condition: under gradual domination, the critical parameter is
+$\tau_D > \tau_D^*$ rather than $\gamma > \gamma^*$. If domination takes
+more than $\tau_D^* \approx \Delta_0 / r_{\mathrm{ext}}$ steps, diversity
+dominates at any $\gamma > 0$. This does not eliminate conditionality; it
+moves it to a parameter ($\tau_D$) that is large for any realistic
+domination strategy, since a coalition cannot subsume an entire population's
+capabilities instantaneously.
+
+\paragraph{Relation to leverage stagnation.} The growth-rate collapse has a
+second consequence through the leverage ranking signal. Leverage
+$\lambda(d)$ (Definition~9 of \citet{lasser2026poset}) measures the excess
+$\volL$-growth rate attributable to capability $d$. In a fully dominant
+state, the population's aggregate leverage converges toward the coalition's
+internal leverage: the external agents contribute $\hat{\lambda} = 0$
+because they produce no novel capability descriptions (their capabilities
+are already in $G_K^{\mathrm{ind}}$). The leverage landscape flattens, and
+the score-maximizing actor loses the gradient that would otherwise direct it
+toward capability-multiplying investments. Diversity maintenance preserves
+the leverage gradient: high-leverage non-members remain visible in the
+score, directing the actor toward cooperative investments with agents whose
+capabilities accelerate growth.

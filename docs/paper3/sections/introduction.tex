@@ -1,0 +1,62 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Goal-frontier maximization (GFM) proposes alignment through a single
+objective: maximize $\volL(G)$, the volume of the jointly achievable
+capability space \citep{lasser2026gfm}. The foundational paper proves that
+this objective penalizes destruction, coercion, and rigidity from the same
+measure-monotonicity argument. Its companion \citep{lasser2026poset}
+constructs a computable capability poset, defines leverage as an endogenous
+importance signal, and argues that the objective produces a gradient toward
+civilization-scale infrastructure.
+
+Both papers optimize a \emph{myopic} objective: the actor evaluates each
+action by its immediate effect on $\volL$ and selects the one with the
+highest estimated expansion. This one-step lookahead is sufficient for
+detecting direct harm, coercion, and capability expansion, but it cannot
+handle two classes of problems that require reasoning about the future.
+
+\paragraph{Risk capabilities.} Some capability combinations are individually
+$\volL$-expanding but collectively create catastrophic contraction potential
+\citep{bostrom2013existential, ord2020precipice}.
+``Nuclear physics'' ($w = 10$ bits), ``uranium enrichment'' ($w = 8$ bits),
+and ``precision machining'' ($w = 9$ bits) each expand the capability space
+when acquired. But their co-occurrence in a single agent with low trust
+creates an exercise pathway to massive $\volL$-contraction. The myopic
+estimator $\Deltahat(\pi)$ evaluates each acquisition as positive; it cannot
+see the future contraction that the combination enables.
+
+\paragraph{Structural avoidance.} The companion paper identifies a perverse
+incentive: discovering subsumption structure can decrease $\volL$
+(Proposition~5(c) of \citet{lasser2026poset}), so a myopic $\volL$-maximizer
+is rewarded for staying structurally ignorant. A multi-step optimizer can
+accept the short-term contraction because accurate structure improves the
+quality of future decisions.
+
+This paper extends GFM to multi-step planning. We introduce a discounted
+value function $\Vdisc(\pi) = \mathbb{E}[\sum_t \gamma^t \Delta \volL(G_t)
+\mid \pi]$ and prove that the self-balancing property transfers to the
+discounted sum. On this foundation, we develop risk-capability identification
+through causal counterfactual models and analyze the verification asymmetry
+in risk communication: successful prevention destroys the evidence that would
+have justified it.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item A discounted multi-step objective for GFM that preserves the
+  self-balancing property at every time step and in the aggregate
+  (Section~\ref{sec:discounted}).
+\item Risk-capability identification via causal exercise pathways, with
+  a formal criterion for when preemptive restriction is value-positive
+  (Section~\ref{sec:risk}).
+\item Analysis of the verification asymmetry in risk communication, with
+  a causal-counterfactual resolution for risk-trust convergence
+  (Section~\ref{sec:communication}).
+\item A criterion under which the discounted objective counteracts the
+  structural-avoidance incentive from the companion paper
+  (Section~\ref{sec:avoidance}).
+\item The anti-monopolar property: under a diversity condition, full
+  capability domination is anti-maximizing under the discounted objective,
+  creating endogenous pressure against the singleton scenario
+  (Section~\ref{sec:substitution}).
+\end{enumerate}

@@ -1,0 +1,168 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+\paragraph{World-model dependence.} The discounted objective's quality depends
+entirely on the actor's world model $\WorldModel$
+\citep{amodei2016concrete}. A world model that fails to identify exercise
+pathways produces zero risk estimates for genuinely dangerous
+capability combinations; one that hallucinates pathways produces false risk
+that could justify unnecessary restrictions. The formal results
+(Theorem~\ref{thm:discounted_self_balancing},
+Proposition~\ref{prop:preemptive}) are properties of the objective under the
+actor's model, not properties of the objective under ground truth. An actor
+with a bad model makes bad plans, but makes them on an objective that is
+structurally sound.
+
+\paragraph{Computational cost of planning.} The myopic objective evaluates
+one action at a time: $O(n^3)$ for a single $\volL$ computation on the poset
+\citep{lasser2026poset}. The discounted objective evaluates action
+\emph{sequences}: the state space is the set of all poset configurations,
+and the branching factor is the number of available actions at each step.
+Exhaustive planning is intractable for realistic populations. Practical implementations will require approximate planning
+\citep{sutton2018reinforcement} (Monte Carlo tree search, rollout policies,
+heuristic pruning), which introduces approximation error
+on top of the estimation error already present in $\Deltahat$. The formal
+results hold for the exact objective; the quality of approximate planning is
+an empirical question. Risk-capability identification
+(Section~\ref{sec:risk}) adds a further computational demand: enumerating
+exercise pathways scales with the number of dangerous capability tuples and
+the depth of causal chains in the world model. No formal complexity bound is
+provided for pathway enumeration.
+
+\paragraph{Risk-trust partial resolution.} The causal-counterfactual
+evaluation (Section~\ref{sec:communication}) narrows the verification
+asymmetry but does not close it. A risk claim whose pathway is plausible in
+the actor's model but whose probability is genuinely uncertain remains in
+trust limbo. The convergence timescale for such claims depends on how quickly
+the actor can accumulate structural evidence about the pathway, which may be
+slow for rare and novel threats.
+
+\paragraph{Partial pathway coverage.} The preemptive restriction criterion
+(Proposition~\ref{prop:preemptive}) evaluates restriction of a single
+keystone capability $d_j$ against the risk from pathways that require $d_j$.
+If a dangerous capability tuple admits exercise pathways through alternate
+keystones, a single restriction may leave residual risk. Full elimination
+requires identifying and evaluating each keystone independently, which
+compounds the world-model dependence: the actor must enumerate all exercise
+pathways, not just one.
+
+\paragraph{Proxy failures under discounting.} The foundational paper
+identifies three proxy failure modes (the Doll Problem, self-wireheading,
+and the substitution problem) where capability volume diverges from
+experiential optionality. The substitution problem is addressed structurally
+in Section~\ref{sec:substitution}. The other two are partially addressed by
+the discounted objective through world-model projection. For the Doll
+Problem, a discounted actor whose world model incorporates the
+exercised-fraction signal $\rho_k$ from the foundational paper can project
+the cooperative-decay trajectory: declining $\rho_k$ across many agents,
+with stable $\volL$, predicts future cooperative atrophy and eventual
+$\volL$-contraction. The B-to-C divergence becomes detectable as a leading
+indicator of future loss. For self-wireheading, the same trajectory
+structure applies: the wireheading signature (declining $\rho_k$ combined
+with declining capability rarity $\bar{\nu}_k$) is distinguishable from
+specialization (declining $\rho_k$ with stable or rising $\bar{\nu}_k$)
+within the world model, and predicts future cooperative contraction. In both
+cases, the detection is \emph{model-dependent}: the actor must correctly
+project the causal chain from declining exercisability to future cooperative
+loss. The discounted objective makes the proxy failure actionable but does
+not make it structurally detectable in the way that the anti-monopolar
+property (Proposition~\ref{prop:anti_monopolar}) addresses the substitution
+problem.
+
+\paragraph{Linearization in the anti-monopolar result.}
+Proposition~\ref{prop:anti_monopolar}(b) and Corollary~\ref{cor:gradual}
+compare domination and diversity trajectories under a linearized model:
+constant per-step $\Delta\volL$, strategy-independent $r_K$, and (in the
+gradual model) independent $\delta$ and $r_{\mathrm{ext}}$. Four
+relaxations would change the threshold behavior. First,
+$r_{\mathrm{ext}}$ may decay as the coalition grows more capable internally.
+The qualitative conclusion survives if $r_{\mathrm{ext}}(t)$ decays slower
+than $\gamma^t$. Second, $r_K$ may differ between strategies:
+post-domination $r_K$ could increase (resource concentration, elimination of
+coordination overhead) or decrease (loss of external intellectual pressure,
+monoculture effects). If post-domination $r_K$ rises sufficiently, the
+domination trajectory can dominate even with the lost external contribution.
+Third, the gradual model treats $\delta$ (subsumption gain per step) and the
+loss of $r_{\mathrm{ext}}$ as independent, but they are causally linked: the
+coalition loses $r_{\mathrm{ext}}$ \emph{because} it is converting
+non-member capabilities into $\delta$. A coupled model would narrow the
+diversity advantage, though the qualitative conclusion persists as long as
+the conversion is not perfectly efficient. Fourth,
+Corollary~\ref{cor:gradual} addresses the instantaneous-vs-gradual
+distinction, shifting the critical condition from $\gamma > \gamma^*$ to
+$\tau_D > \tau_D^*$. The honest summary: under the linearized model with
+strategy-independent $r_K$, diversity dominates. Whether this approximation
+holds is an empirical question the theory cannot answer.
+
+\paragraph{Observational individuation as a modeling choice.}
+The static protection of Corollary~\ref{cor:a1_from_oi} depends on the
+framework treating observation-channel outputs as first-class capabilities
+in the poset. The capability ``can be observed exhibiting behavioral pattern
+$X$'' is a real poset node only because the framework defines capabilities
+to include such observations. This is a reasonable modeling choice grounded
+in Paper~2's dual-channel design, but it should be recognized as a
+\emph{choice}: the anti-monopolar result's static layer depends on the
+capability space being defined broadly enough to include observational
+capabilities. Under a narrower definition that excludes observations-of-agents,
+observational individuation does not apply, and the static protection
+dissolves. The dynamic protection (Proposition~\ref{prop:anti_monopolar},
+conditional on (A1)) remains available but requires the stronger assumption
+of ongoing novel capability contributions.
+
+\paragraph{Cooperative novelty formalization.}
+Section~\ref{sec:substitution_coop} argues that individual capability
+subsumption does not imply cooperative subsumption: non-members may produce
+novel cooperative outputs even when their individual capabilities are fully
+replicated. This argument is qualitative. The formal result
+(Proposition~\ref{prop:anti_monopolar}) is proved under the conservative
+assumption that only individual novelty drives $r_{\mathrm{ext}}$. If
+cooperative novelty is the primary mechanism protecting against singleton
+outcomes when individual capabilities are fully subsumed, it deserves its
+own formal treatment: a definition of cooperative novelty rate, an
+assumption weaker than (A1), and a trajectory comparison using the
+cooperative rate alone. This formalization is deferred to future work.
+
+\paragraph{Disagreement on risk.} When multiple agents report conflicting
+risk assessments for the same capability tuple, the actor's aggregation
+(Equation~\eqref{eq:risk_aggregate}) takes the conservative maximum. This
+is appropriate for catastrophic risks but can lead to excessive caution if
+high-trust agents consistently overestimate risk. A more nuanced aggregation
+(e.g., trust-weighted average rather than maximum) would reduce
+overcaution but increase the probability of missing real threats. The $\max$ operator also interacts with the
+causal-counterfactual trust updates: a structurally plausible but
+probability-uncertain risk claim keeps the reporting agent's risk-trust
+high, and the $\max$ aggregation can produce persistent overcaution in the
+absence of disconfirming evidence. The right aggregation depends on the
+risk-tolerance profile of the population, which the paper does not specify.
+
+\subsection{Open Problems}
+
+\begin{itemize}
+\item \textbf{Planning algorithms for $\Vdisc$.} Which approximate planning
+  methods (MCTS, model-predictive control, policy gradient) are best suited
+  to the $\volL$ poset structure? Can the poset's finite, discrete nature be
+  exploited for planning efficiency?
+
+\item \textbf{Risk-claim consensus.} When agents disagree on exercise
+  probabilities for the same pathway, what mechanism produces convergence?
+  The causal-counterfactual evaluation provides structural verification but
+  not probability calibration across agents with different world models.
+
+\item \textbf{Information value estimation.} The information value of
+  structure (Definition~\ref{def:info_value}) requires comparing planning
+  quality under true and false world models, which is itself a planning
+  problem. Can it be estimated without full trajectory simulation?
+
+\item \textbf{Discount factor selection.} Should $\gamma$ be fixed, adaptive,
+  or agent-specific? An agent in a rapidly changing environment may need a
+  shorter planning horizon (lower $\gamma$) than one in a stable environment.
+
+\item \textbf{Emergent risk.} Can exercise pathways emerge from capability
+  combinations that the actor's world model has not considered? This is the
+  unknown-unknown problem: risks from novel capability combinations that no
+  agent has modeled. The dual-channel observation mechanism may detect
+  emergent exercise pathways empirically, but theoretical guarantees are
+  lacking.
+\end{itemize}

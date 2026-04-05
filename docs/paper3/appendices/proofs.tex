@@ -1,0 +1,163 @@
+\section{Proofs}
+\label{app:proofs}
+
+Theorem~\ref{thm:discounted_self_balancing} (Self-Balancing Under Discounting)
+is proved in the main text (Section~\ref{sec:discounted}). This appendix
+provides full proofs for the remaining results.
+
+\subsection{Proof of Proposition~\ref{prop:preemptive} (Preemptive Restriction Criterion)}
+\label{app:proof_preemptive}
+
+\begin{proof}
+The actor evaluates two action sequences from state $G_t$:
+
+\emph{Sequence 1: Inaction.} The capability tuple remains intact. At each
+future time step $t' > t$, there is probability $p(\Pathway \mid a_k, G_{t'},
+\WorldModel)$ that the exercise pathway is executed, producing contraction
+$-|\Delta \volL(\Pathway)|$. The expected future contraction is:
+\[
+\Vdisc(\text{inaction}) = -\sum_{t'=t+1}^{H} \gamma^{t'-t} \cdot
+p(\Pathway \mid a_k, G_{t'}, \WorldModel) \cdot |\Delta \volL(\Pathway)|
+\]
+Under the simplifying assumption that the exercise probability is constant
+($p$ does not change with time) and the pathway is a one-shot event (once
+exercised, it does not repeat):
+\[
+\Vdisc(\text{inaction}) \geq -\Risk(d_1, \ldots, d_m; a_k, t)
+\]
+where $\Risk$ is the concentration risk
+(Definition~\ref{def:concentration_risk}).
+
+\emph{Sequence 2: Restrict.} The actor removes keystone capability $d_j$
+from $a_k$ at time $t$, producing immediate contraction
+$\Delta \volL(G_t \mid \text{restrict } d_j) < 0$ (by Lemma~2 of
+\citet{lasser2026gfm}). All exercise pathways requiring $d_j$ are
+eliminated; pathways not requiring $d_j$ persist under both sequences:
+\[
+\Vdisc(\text{restrict}) =
+    -|\Delta \volL(G_t \mid \text{restrict } d_j)|
+    + \text{(residual risk from non-}d_j\text{ pathways)}
+\]
+
+The residual risk term is identical under both sequences and cancels
+in the comparison.  Restriction is value-positive
+($\Vdisc(\text{restrict}) > \Vdisc(\text{inaction})$) when:
+\[
+-|\Delta \volL(G_t \mid \text{restrict } d_j)| >
+-\Risk_j(d_1, \ldots, d_m; a_k, t)
+\]
+i.e., when $\Risk_j > |\Delta \volL|$, where $\Risk_j$ sums only over
+pathways whose prerequisite set includes $d_j$.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:structure_value} (Structural Discovery Value)}
+\label{app:proof_structure_value}
+
+\begin{proof}
+The actor compares the expected discounted return of two strategies from
+state $G_0$.
+
+\emph{Strategy 1: Discover edge $d_1 \leq d_2$.} At $t = 0$, the actor
+commits the subsumption edge, producing immediate contraction
+$\Delta \volL(G_0 \mid \text{edge}) \leq 0$ (by Proposition~5(c) of
+\citet{lasser2026poset}). For $t > 0$, the actor plans under the correct
+world model $\WorldModel_{\text{true}}$:
+\[
+\Vdisc(\text{discover}) = \Delta \volL(G_0 \mid \text{edge}) +
+\mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
+\sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)\right]
+\]
+
+\emph{Strategy 2: Avoid discovery.} At $t = 0$, no action is taken
+($\Delta \volL = 0$). For $t > 0$, the actor plans under the incorrect
+model $\WorldModel_{\text{false}}$:
+\[
+\Vdisc(\text{avoid}) = 0 +
+\mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
+\sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)\right]
+\]
+
+Each expectation is taken over the trajectory distribution induced by its
+respective policy. The difference is:
+\begin{align*}
+&\Vdisc(\text{discover}) - \Vdisc(\text{avoid}) \\
+&\quad = \Delta \volL(G_0 \mid \text{edge})
+    + I(d_1 \leq d_2)
+\end{align*}
+where $I(d_1 \leq d_2)$ is the information value of structure
+(Definition~\ref{def:info_value}). Since
+$\Delta \volL(G_0 \mid \text{edge}) \leq 0$, the difference is positive
+when $I(d_1 \leq d_2) > |\Delta \volL(G_0 \mid \text{edge})|$.
+
+The information value $I$ is non-negative in expectation: the policy
+optimized under the correct model achieves at least as high an expected
+return as the policy optimized under the incorrect model, because the
+correct model produces unbiased $\volL$ estimates while the incorrect
+model systematically overestimates the volume of capability sets with
+shared prerequisites.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:anti_monopolar} (Anti-Monopolar Property)}
+\label{app:proof_anti_monopolar}
+
+\begin{proof}
+We prove each part in sequence.
+
+\emph{Part (a): Individual growth-rate collapse.} In a fully dominant state
+(Definition~\ref{def:dominant}), $\Gind{k} \subseteq G_K^{\mathrm{ind}}$
+for every non-member $a_k$. Consider a non-member interaction at time $t$:
+$a_k$ communicates a capability description $d$ or demonstrates $d$ through
+the observation channel. Since $d \in \Gind{k} \subseteq G_K^{\mathrm{ind}}
+\subseteq \C(t)$, the capability is already a node in the poset.
+By Proposition~5(b) of \citet{lasser2026poset}, adding a capability already
+in $\C$ does not increase $|\C(t)|$. Therefore no non-member's individual
+capabilities generate novel poset nodes, and the individual-capability
+component of $r_{\mathrm{ext}}$ is zero. Novel cooperative capabilities
+from cross-coalition interaction may persist
+(Section~\ref{sec:substitution_coop}), making this a conservative bound.
+
+\emph{Part (b): Trajectory comparison.} The actor at $t = 0$ compares two
+strategies, each evaluated by $\Vdisc = \sum_t \gamma^t \Delta\volL(G_t)$
+(Definition~\ref{def:discounted}). Under the linearized model, each
+strategy produces a constant per-step $\Delta\volL$. We compare the
+discounted sums $\Vdisc$ for $\gamma \in (0, 1)$.
+
+\emph{Strategy D (dominate):} At $t = 0$, subsume remaining non-member
+capabilities, gaining $\Delta\volL = \Delta_0 \geq 0$. For $t \geq 1$,
+grow at internal rate: $\Delta\volL = r_K$ per step.
+\[
+\Vdisc^D = \Delta_0 + \frac{r_K \cdot \gamma}{1 - \gamma}
+\]
+\emph{Strategy Div (maintain diversity):} No subsumption bonus. For
+$t \geq 0$, grow at full rate: $\Delta\volL = r_K + r_{\mathrm{ext}}$
+per step.
+\[
+\Vdisc^{\mathrm{div}} = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+\]
+The difference:
+\begin{align*}
+\Vdisc^{\mathrm{div}} - \Vdisc^D
+  &= \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+     - \Delta_0 - \frac{r_K \gamma}{1 - \gamma} \\
+  &= r_K + \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
+\end{align*}
+This is positive when $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0 - r_K$.
+\emph{Case 1:} If $\Delta_0 \leq r_K$, the left side is positive for all
+$\gamma > 0$. \emph{Case 2:} If $\Delta_0 > r_K$, rearranging:
+$1 - \gamma < r_{\mathrm{ext}} / (\Delta_0 - r_K)$, i.e.,
+\[
+\gamma > \gamma^* = 1 - \frac{r_{\mathrm{ext}}}{\Delta_0 - r_K}
+    = \frac{\Delta_0 - r_K - r_{\mathrm{ext}}}{\Delta_0 - r_K}
+\]
+When $\Delta_0 - r_K \leq r_{\mathrm{ext}}$, $\gamma^* \leq 0$ and the
+condition holds for all $\gamma > 0$. When $\Delta_0 - r_K >
+r_{\mathrm{ext}}$, $\gamma^* \in (0, 1)$ and a sufficiently long planning
+horizon makes diversity strictly preferable.
+
+\end{proof}
+
+Corollary~\ref{cor:a1_from_oi} (Static Protection from Observational
+Individuation) and Corollary~\ref{cor:gradual} (Gradual Domination) are
+proved in the main text (Sections~\ref{sec:obs_individuation}
+and~\ref{sec:gradual} respectively), as their proofs are short and
+self-contained.

@@ -1,0 +1,105 @@
+\section{Addressing the Structural-Avoidance Incentive}
+\label{sec:avoidance}
+
+The companion paper \citep{lasser2026poset} identifies a perverse incentive
+under the myopic objective: discovering subsumption structure can decrease
+$\volL$ (Proposition~5(c)), so the actor is rewarded for breadth over depth.
+This section shows that the discounted objective addresses this incentive
+under a criterion that holds when the planning horizon is long relative to
+the frequency of affected decisions.
+
+\subsection{The Incentive Under the Myopic Objective}
+
+Under the myopic objective $\pi^* = \arg\max \mathbb{E}[\Delta \volL(G) \mid
+\pi]$, structural discovery has expected value:
+\begin{equation}
+\label{eq:myopic_structure}
+\mathbb{E}[\Delta \volL \mid \text{discover edge } d_1 \leq d_2]
+= \volL(G_{\text{after}}) - \volL(G_{\text{before}})
+\leq 0
+\end{equation}
+by Proposition~5(c) of \citet{lasser2026poset}. The inequality can be strict
+when $d_1$ is a shared prerequisite. The myopic actor sees only the immediate
+contraction and avoids structural discovery.
+
+\subsection{The Incentive Under the Discounted Objective}
+
+Under $\Vdisc$, the actor evaluates structural discovery by its effect on the
+\emph{entire future trajectory}, not just the current step. Structural
+knowledge improves the quality of future $\volL$ estimates and planning
+decisions. Define the \emph{information value of structure}:
+
+\begin{definition}[Information Value of Structure]
+\label{def:info_value}
+The \emph{information value} of discovering subsumption edge $d_1 \leq d_2$
+    is the difference in expected discounted return between planning with the
+    correct poset structure and planning without it:
+\begin{equation}
+\label{eq:info_value}
+I(d_1 \leq d_2) = \mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
+    \sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)
+\right]
+- \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
+    \sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)
+\right]
+\end{equation}
+where $\pi^*_{\text{true}}$ is the optimal policy under the correct world
+    model (with the edge), $\pi^*_{\text{false}}$ is the optimal policy under
+    the incorrect model (without it), and each expectation is taken over the
+    state trajectory $\tau = (G_1, G_2, \ldots)$ induced by its respective
+    policy.
+\end{definition}
+
+The information value is the discounted sum of improvements in action quality
+that come from having accurate structure. An actor with the wrong model
+makes decisions that are systematically suboptimal: it overestimates the
+volume of capability sets that share prerequisites (because it doesn't know
+about the subsumption) and therefore overinvests in redundant capabilities.
+
+\begin{proposition}[Structural Discovery is Value-Positive Under Discounting]
+\label{prop:structure_value}
+Under the discounted objective $\Vdisc$, structural discovery is
+    value-positive when the information value of the discovered edge exceeds
+    the immediate $\volL$-contraction:
+\begin{equation}
+\label{eq:structure_criterion}
+I(d_1 \leq d_2) > |\Delta \volL(G \mid \text{discover } d_1 \leq d_2)|
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The expected discounted return of each strategy, starting from state $G_0$:
+\begin{align*}
+\Vdisc(\text{discover}) &= \Delta \volL(G_0 \mid \text{edge}) +
+    \mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
+    \sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)\right] \\
+\Vdisc(\text{avoid}) &= 0 +
+    \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
+    \sum_{t=1}^{H} \gamma^t \Delta \volL(G_t)\right]
+\end{align*}
+Each expectation is taken over the trajectory distribution induced by its
+respective policy, so the two $G_t$ sequences are generally different. The
+difference is $\Vdisc(\text{discover}) - \Vdisc(\text{avoid}) =
+\Delta \volL(G_0 \mid \text{edge}) + I(d_1 \leq d_2)$. Since
+$\Delta \volL(G_0 \mid \text{edge}) \leq 0$, this is positive when
+$I(d_1 \leq d_2) > |\Delta \volL(G_0 \mid \text{edge})|$.
+\end{proof}
+
+\paragraph{When the condition holds.} The information value $I$ grows with
+the planning horizon $H$ (more future decisions benefit from accurate
+structure), the frequency of decisions involving the capabilities $d_1$ and
+$d_2$ (more relevant decisions means more improvement), and the degree of
+suboptimality of the incorrect model (larger model errors produce larger
+action-quality gaps). The immediate contraction $|\Delta \volL|$ is bounded by
+the weight of the shared prerequisite. For edges between frequently-used
+capabilities with substantial subsumption, the information value
+dominates after a modest number of planning steps.
+
+\paragraph{Connection to the compound avoidance loop.} The companion paper
+identifies a compound loop: structural avoidance prevents leverage estimation,
+which prevents the self-correcting B-to-C dynamic from activating. The
+discounted objective breaks the first link in this chain: the actor accepts
+structural contraction because the information value is positive over the
+planning horizon. Once the structural-avoidance incentive is counteracted,
+leverage estimation can proceed (the actor interacts with capabilities it
+previously avoided), and the self-correction activates.

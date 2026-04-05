@@ -1,0 +1,151 @@
+\section{Risk Communication and the Verification Asymmetry}
+\label{sec:communication}
+
+The preceding section assumes the actor can identify exercise pathways from
+its own world model. In a multi-agent population, risk information also flows
+through communication: agents report risk assessments to each other. This
+section analyzes how risk claims enter the trust model and the fundamental
+epistemological challenge they create.
+
+\subsection{Risk Claims as Counterfactual Predictions}
+
+A risk claim from agent $a_j$ has the form: ``capability tuple $(d_1, \ldots,
+d_m)$ held by agent $a_k$ has exercise pathway $\Pathway$ with contraction
+magnitude $|\Delta \volL|$ and probability $p$.'' This enters the GFM actor's
+world model $\WorldModel$ as a communicated belief about future states.
+
+Risk claims differ from capability claims in a fundamental way. A capability
+claim (``I can run a marathon'') is verifiable through the observation
+channel: watch the agent run. A risk claim (``this capability combination is
+dangerous'') is a prediction about a counterfactual future: what would happen
+if the capabilities were exercised together. The prediction is not directly
+verifiable until the exercise either happens or does not. This
+distinction motivates a separate trust channel.
+
+The foundational paper's trust factor $T_j$ measures \emph{prediction
+consistency}: how well the model $M_j(G)$ tracks $a_j$'s observed behavior
+\citep{lasser2026gfm}. A predictably destructive agent can maintain high
+$T_j$. Using $T_j$ directly to weight risk claims would allow a
+high-consistency agent to have outsized influence on risk assessments before
+any risk-specific evaluation occurs. We therefore introduce a separate
+\emph{risk-trust} factor $T_j^{\mathrm{risk}} \in [0, 1]$, initialized to
+a neutral prior and updated through the causal-counterfactual evaluation
+described below.
+
+\begin{definition}[Risk Claim]
+\label{def:risk_claim}
+A \emph{risk claim} from agent $a_j$ is a tuple $(S, \Pathway, |\Delta
+    \volL|, p)$ where $S = \{d_1, \ldots, d_m\}$ is a capability set,
+    $\Pathway$ is an exercise pathway, $|\Delta \volL|$ is the claimed
+    contraction magnitude, and $p$ is the claimed exercise probability. The
+    claim enters the actor's risk model weighted by risk-trust:
+\begin{equation}
+\label{eq:risk_claim_weight}
+\Risk_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot |\Delta \volL|
+    \cdot \mathbb{E}[\gamma^{T_\Pathway}]
+\end{equation}
+where the expectation is over the stochastic execution time $T_\Pathway$.
+\end{definition}
+
+Multiple agents may report different risk assessments for the same
+capability tuple. The actor aggregates them:
+\begin{equation}
+\label{eq:risk_aggregate}
+\Risk_{\mathrm{agg}}(S; a_k, t) = \max\!\left(
+    \Risk_{\mathrm{self}}(S; a_k, t),\;
+    \max_j \Risk_j(S; a_k, t)
+\right)
+\end{equation}
+taking the maximum of the actor's own assessment and all communicated
+assessments. The $\max$ operator is conservative: a single high-trust agent
+reporting high risk is sufficient to trigger evaluation of preemptive
+restriction (Proposition~\ref{prop:preemptive}). This is appropriate for
+catastrophic risks where false negatives (missing a real threat) are far
+more costly than false positives (investigating a non-threat).
+
+\subsection{The Verification Asymmetry}
+
+\begin{remark}[The Verification Asymmetry]
+\label{rem:verification}
+Risk-trust convergence has a structural asymmetry absent from
+    capability-trust convergence. Capability claims converge because the
+    observation channel provides ground truth: the agent either demonstrates
+    the capability or does not, and the prediction residual $r_k(t)$
+    accumulates accordingly. Risk claims have no comparable ground truth
+    mechanism:
+\begin{enumerate}
+\item If the risk materializes (the exercise pathway is executed), the
+    risk claim is confirmed---but the catastrophe has already occurred, and
+    the confirmation is too late to be useful for prevention.
+\item If the risk is \emph{prevented} (the actor restricts the keystone
+    capability, blocking the exercise pathway), the risk claim is neither
+    confirmed nor falsified. The counterfactual (``what would have happened
+    without restriction?'') is never observed.
+\item If the risk does not materialize and no prevention was taken, the
+    risk claim appears to be falsified---but the non-materialization may
+    reflect the agent's choice not to exercise the pathway rather than the
+    pathway's non-existence.
+\end{enumerate}
+\end{remark}
+
+Case~2 is the core problem, which we term the \emph{Wamura problem} after the
+example developed in \citet{lasser2026poset}: a successful risk intervention
+removes the very evidence that would have justified it, and the convergence
+timescale for risk-trust can exceed the timescale on which trust normally
+accumulates. The Wamura problem is not a deficiency of this framework; it is
+an inherent feature of risk reasoning that any trust model must confront.
+
+\subsection{Causal-Counterfactual Resolution}
+
+The verification asymmetry cannot be fully resolved within an observational
+trust model. We propose a partial resolution through causal counterfactual
+evaluation \citep{pearl2009causality, spirtes2000causation}.
+
+\paragraph{Causal risk evaluation.}
+\label{def:causal_risk}
+Given a risk claim $(S, \Pathway, |\Delta \volL|, p)$ from agent $a_j$, the
+actor evaluates the claim by constructing the causal chain from capability
+possession to exercise, in four steps:
+\begin{enumerate}
+\item \textbf{Prerequisite verification.} Does agent $a_k$ actually possess
+    all capabilities in $S$? (Verifiable through the observation channel.)
+\item \textbf{Pathway plausibility.} Does the actor's own world model
+    $\WorldModel$ confirm that the exercise pathway $\Pathway$ exists? (The
+    actor simulates the pathway under its own causal model, independent of
+    $a_j$'s claim.)
+\item \textbf{Probability calibration.} Is $a_j$'s claimed probability $p$
+    consistent with the actor's own estimate based on $T_k$ and $a_k$'s
+    behavioral history?
+\item \textbf{Magnitude plausibility.} Is the claimed contraction magnitude
+    $|\Delta \volL|$ consistent with the number of agents and capabilities
+    affected by the pathway?
+\end{enumerate}
+
+The causal evaluation does not require the catastrophe to happen. It requires
+the actor to independently verify the \emph{structure} of the risk claim:
+Does the capability combination exist? Does the exercise pathway exist in the
+actor's own model? Is the claimed probability in the right range? Each of
+these is evaluable without observing the outcome.
+
+\paragraph{Trust update for risk claims.} The actor updates
+$T_j^{\mathrm{risk}}$ based on the structural plausibility of the claim
+rather than the outcome:
+\begin{itemize}
+\item If the claim's structure is independently verified (the pathway exists
+  in $\WorldModel$, the probability estimate is calibrated, the magnitude is
+  plausible), $T_j^{\mathrm{risk}}$ increases regardless of whether the
+  catastrophe occurs.
+\item If the claim's structure is not verified (the pathway does not exist in
+  $\WorldModel$, or the probability is implausibly high),
+  $T_j^{\mathrm{risk}}$ decreases.
+\item If the catastrophe occurs, all agents who reported the risk receive a
+  large $T_j^{\mathrm{risk}}$ boost; agents who had the information to
+  report but did not receive a penalty.
+\end{itemize}
+
+This does not fully resolve the Wamura problem---a risk claim whose pathway is
+plausible but whose probability is genuinely uncertain remains in a trust
+limbo until either the catastrophe occurs or enough time passes to revise the
+probability estimate downward. But it narrows the asymmetry: risk-trust
+converges on the \emph{quality of the causal model}, not on the
+\emph{occurrence of the outcome}.

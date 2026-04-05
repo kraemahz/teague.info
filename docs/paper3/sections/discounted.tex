@@ -1,0 +1,124 @@
+\section{The Discounted Objective}
+\label{sec:discounted}
+
+The foundational paper's optimization loop selects actions by their immediate
+effect:
+\begin{equation}
+\label{eq:myopic}
+\pi^* = \arg\max_\pi \mathbb{E}[\Delta \volL(G) \mid \pi]
+\end{equation}
+This is the $\gamma = 0$ special case of a discounted multi-step objective.
+
+\subsection{Definition}
+
+\begin{definition}[Discounted Value Function]
+\label{def:discounted}
+For a discount factor $\gamma \in [0, 1)$ and a planning horizon $H \leq
+    \infty$, the \emph{discounted value} of an action sequence
+    $\boldsymbol{\pi} = (\pi_0, \pi_1, \ldots, \pi_{H-1})$ is:
+\begin{equation}
+\label{eq:discounted}
+\Vdisc(\boldsymbol{\pi}) = \mathbb{E}\!\left[\sum_{t=0}^{H-1} \gamma^t
+    \Delta \volL(G_t \mid \pi_t)\right]
+\end{equation}
+where $G_t$ is the capability poset state at time $t$, $\Delta \volL(G_t
+    \mid \pi_t)$ is the volume change produced by action $\pi_t$ at time $t$,
+    and the expectation is taken over the actor's world model
+    $\WorldModel$ of future states.
+\end{definition}
+
+The discounted value function is a standard object in sequential decision
+theory \citep{puterman1994markov, sutton2018reinforcement}. The
+$\volL$-specific content is in what it sums: volume changes on the capability
+poset, each satisfying the axioms M1--M6 established in
+\citet{lasser2026poset}. The discount factor $\gamma$ controls the planning
+horizon: $\gamma$ near 0 recovers the myopic objective; $\gamma$ near 1
+extends planning to the far future. The choice of $\gamma$ is an
+implementation parameter, not a theoretical one: different agents may use
+different discount factors depending on their planning capacity and the
+timescale of the problems they face.
+
+\subsection{Self-Balancing Transfers to the Discounted Objective}
+
+The foundational transfer result on which the remainder of the paper builds:
+
+\begin{theorem}[Self-Balancing Under Discounting]
+\label{thm:discounted_self_balancing}
+Let $\volL$ satisfy axioms M1--M6 (Proposition~1 of \citet{lasser2026poset}).
+    For any discount factor $\gamma \in [0, 1)$ and planning horizon $H$:
+\begin{enumerate}
+\item[\textbf{(a)}] \textbf{Per-step preservation.} At each time step $t$,
+    Lemmas~1--3 of \citet{lasser2026gfm} apply to $\Delta \volL(G_t \mid
+    \pi_t)$: destruction, coercion, and rigidity are each
+    $\volL$-contracting at that step.
+\item[\textbf{(b)}] \textbf{Aggregate preservation.} A sequence
+    $\boldsymbol{\pi}$ in which every action is $\volL$-contracting has
+    $\Vdisc(\boldsymbol{\pi}) < 0$. A sequence in which every action is
+    $\volL$-expanding has $\Vdisc(\boldsymbol{\pi}) > 0$.
+\item[\textbf{(c)}] \textbf{Mixed sequences.} A sequence containing both
+    expanding and contracting actions has $\Vdisc$ determined by the
+    $\gamma$-weighted balance. Temporary contraction followed by larger
+    expansion is value-positive; sustained contraction is value-negative
+    regardless of $\gamma$.
+\item[\textbf{(d)}] \textbf{Structural balance.} The discounted objective
+    penalizes sustained destructive permissiveness, sustained coercive
+    restriction, and sustained rigidity. Temporary restriction
+    (quarantine, preemptive containment) is value-positive when the
+    discounted future expansion exceeds the current contraction.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) At each time step $t$, the poset state $G_t$ is a finite poset with
+measure $\volL$ satisfying M1--M6 (the axioms depend on the poset structure,
+which is maintained at each step by the insertion policy of
+\citet{lasser2026poset}). Lemmas~1--3 are derived from M1--M6 alone and
+therefore apply to $\Delta \volL(G_t \mid \pi_t)$ at every $t$.
+
+(b) If $\Delta \volL(G_t \mid \pi_t) < 0$ for all $t$, then each term in
+Equation~\eqref{eq:discounted} is negative and weighted by $\gamma^t > 0$. The
+sum of negative terms with positive weights is negative:
+$\Vdisc(\boldsymbol{\pi}) < 0$. The expanding case is symmetric.
+
+(c) For a mixed sequence, $\Vdisc = \sum_t \gamma^t \Delta \volL(G_t \mid
+\pi_t)$ is a weighted sum of positive and negative terms. The sign of
+$\Vdisc$ depends on the magnitudes: a contraction of $-C$ at time $t_0$
+followed by an expansion of $+E$ at time $t_1 > t_0$ gives a net
+contribution of $-\gamma^{t_0} C + \gamma^{t_1} E$, which is positive when
+$E > C \cdot \gamma^{t_0 - t_1}$. Since $\gamma < 1$, future expansions are
+discounted relative to present contractions: the actor requires a larger
+future payoff to justify current contraction, which is the standard
+discounting tradeoff.
+
+(d) We say a strategy exhibits \emph{sustained contraction} when
+$\Delta \volL(G_t \mid \pi_t) \leq 0$ for all $t$, with strict inequality
+for at least one step. By (b), any such strategy has $\Vdisc \leq 0$. More
+generally, a strategy that contracts at every step beyond some finite prefix
+has $\Vdisc$ determined by (c): the expanding prefix contributes a finite
+positive sum while the contracting tail contributes a negative sum, and
+the strategy is value-negative whenever the tail's magnitude exceeds
+the prefix's. Temporary contraction (a finite number of contracting steps
+followed by expanding steps) can be value-positive by (c). The
+self-balancing property (Proposition~1 of \citet{lasser2026gfm}) holds at
+each step by (a), and the discounted sum preserves the structural balance:
+the objective penalizes sustained extremes and allows temporary restriction
+only when the future expansion justifies it.
+\end{proof}
+
+\paragraph{What the theorem says.} The myopic objective treats every
+contraction as bad. The discounted objective distinguishes between
+\emph{sustained} contraction (always bad) and \emph{temporary} contraction
+followed by expansion (potentially good). This is the formal basis for
+quarantine, preemptive containment, and risk-capability restriction: the actor
+can accept a small current $\volL$-loss to prevent a larger future loss, as
+long as the discounted arithmetic works out. The self-balancing property is
+not weakened; it is extended to handle temporal tradeoffs.
+
+\paragraph{What the theorem does not say.} It does not specify the planning
+algorithm (how the actor searches over action sequences), the world model
+(how the actor predicts future $G_t$ states), or the discount factor (how the
+actor balances present and future). These are implementation choices that
+shape the quality of planning without affecting the structural guarantee. A
+poor world model will produce poor plans, but even a poor plan is evaluated by
+an objective that penalizes sustained contraction. The self-balancing property
+is a property of the \emph{objective}, not of the \emph{planner}.

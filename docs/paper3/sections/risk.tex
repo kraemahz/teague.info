@@ -1,0 +1,140 @@
+\section{Risk-Capability Identification}
+\label{sec:risk}
+
+The discounted objective enables the actor to reason about future
+$\volL$-contraction. This section develops the machinery for identifying
+which capability combinations create contraction risk and when preemptive
+restriction is value-positive.
+
+\subsection{Exercise Pathways}
+
+\begin{definition}[Exercise Pathway]
+\label{def:exercise_pathway}
+An \emph{exercise pathway} for a capability tuple $(d_1, \ldots, d_m)$ held
+    by agent $a_k$ is a sequence of actions $(\pi_1, \ldots, \pi_L)$
+    available to $a_k$ that, if executed, would produce a $\volL$-contraction
+    $\Delta \volL < 0$ affecting agents beyond $a_k$. The pathway has:
+\begin{itemize}
+\item A \emph{prerequisite set}: the capabilities $\{d_1, \ldots, d_m\}$
+    that $a_k$ must possess for the pathway to be available.
+\item A \emph{contraction magnitude}: the expected $|\Delta \volL|$ if the
+    pathway is fully executed.
+\item An \emph{exercise probability}: $p(\Pathway \mid a_k, G_t,
+    \WorldModel)$, estimated from the actor's world model $\WorldModel$.
+\end{itemize}
+\end{definition}
+
+Exercise pathways are the causal chains from capability possession to
+capability destruction. ``Agent $a_k$ has nuclear physics, enrichment, and
+machining capabilities'' is a state. ``Agent $a_k$ builds and detonates a
+weapon'' is an exercise pathway from that state, with a contraction magnitude
+proportional to the number of agents destroyed and a probability conditioned
+on $a_k$'s trust factor $T_k$ and behavioral history.
+
+Not every capability combination has a dangerous exercise pathway. Most
+combinations are benign: the pathways from ``can cook'' + ``can drive'' lead
+only to $\volL$-neutral or expanding outcomes (meals delivered, mobility
+preserved). The risk lies in combinations whose exercise pathways include
+branches with large negative $\Delta \volL$.
+
+\subsection{Risk of a Capability Distribution}
+
+\begin{definition}[Concentration Risk]
+\label{def:concentration_risk}
+The \emph{concentration risk} of a capability tuple $(d_1, \ldots, d_m)$
+    held by agent $a_k$ at time $t$ is the expected future $\volL$-contraction
+    from all exercise pathways available to $a_k$:
+\begin{equation}
+\label{eq:concentration_risk}
+\Risk(d_1, \ldots, d_m; a_k, t) = \sum_{\Pathway}
+    p(\Pathway \mid a_k, G_t, \WorldModel) \cdot |\Delta \volL(\Pathway)|
+    \cdot \mathbb{E}[\gamma^{T_\Pathway}]
+\end{equation}
+where the sum is over all exercise pathways for the tuple, $T_\Pathway$ is
+    the stochastic time to execution, and $\mathbb{E}[\gamma^{T_\Pathway}]$
+    is the expected discount factor (not $\gamma^{\mathbb{E}[T_\Pathway]}$,
+    which would underweight tail risk from heavy-tailed execution-time
+    distributions).
+\end{definition}
+
+Concentration risk is zero for benign capability combinations (no dangerous
+pathways exist) and large for combinations with high-probability, high-magnitude
+exercise pathways in agents with low trust. The discount factor $\gamma$
+ensures that distant risks are weighted less than imminent ones, preventing
+the actor from being paralyzed by arbitrarily unlikely catastrophes in the
+far future.
+
+\paragraph{Risk depends on distribution, not possession.} Concentration of
+capabilities in a single agent is itself a risk factor, related to the
+power-seeking dynamics analyzed by \citet{turner2021optimal}. The same
+capability tuple distributed across multiple agents who must cooperate to
+exercise it has lower concentration risk than the same tuple in a single
+agent, because cooperative exercise requires coordination that is observable
+through the dual-channel mechanism of \citet{lasser2026poset}. Formally:
+if executing pathway $\Pathway$ requires agents $a_i, a_j, a_k$ to
+coordinate, the exercise probability $p(\Pathway)$ includes a factor
+for coordination feasibility that is bounded by the minimum trust among
+the participants and the observability of their coordination.
+
+\subsection{When Preemptive Restriction is Value-Positive}
+
+\begin{proposition}[Preemptive Restriction Criterion]
+\label{prop:preemptive}
+Under the discounted objective $\Vdisc$, restricting agent $a_k$'s access to
+    a keystone capability $d_j$ in a dangerous tuple is value-positive when
+    the expected future contraction from pathways requiring $d_j$ exceeds the
+    immediate restriction cost:
+\begin{equation}
+\label{eq:preemptive}
+\Risk_j(d_1, \ldots, d_m; a_k, t) > |\Delta \volL(G_t \mid \text{restrict } d_j)|
+\end{equation}
+where $\Risk_j$ denotes the concentration risk summed only over exercise
+    pathways whose prerequisite set includes $d_j$:
+\begin{equation}
+\label{eq:risk_j}
+\Risk_j(S; a_k, t) = \sum_{\Pathway : d_j \in \mathrm{prereq}(\Pathway)}
+    p(\Pathway \mid a_k, G_t, \WorldModel) \cdot |\Delta \volL(\Pathway)|
+    \cdot \mathbb{E}[\gamma^{T_\Pathway}]
+\end{equation}
+and the right side is the immediate $\volL$-contraction from restricting
+    $d_j$ (Lemma~2 of \citet{lasser2026gfm}).
+\end{proposition}
+
+\begin{proof}
+Under $\Vdisc$, the actor compares two action sequences: (1) do nothing
+and face the full exercise risk; (2) restrict $d_j$ now, producing immediate
+contraction $-|\Delta \volL|$ but eliminating all exercise pathways that
+require $d_j$ as a prerequisite. The residual risk from pathways that do not
+require $d_j$ is present under both sequences and cancels. The value of
+restriction exceeds the value of inaction when
+$-|\Delta \volL| > -\Risk_j$, i.e., when $\Risk_j > |\Delta \volL|$.
+\end{proof}
+
+\paragraph{Connection to Lemma 2.} The foundational paper's
+Lemma~2 says restriction is always $\volL$-contracting in isolation. The
+discounted objective adds the temporal dimension: the immediate contraction
+is weighed against the avoided future contraction. The preemptive restriction
+criterion is the quantitative version of the quarantine pattern from
+Proposition~1(b) of \citet{lasser2026gfm}, now with an explicit threshold
+derived from the risk model.
+
+\paragraph{Partial pathway coverage.} If the dangerous capability tuple has
+exercise pathways that do not require $d_j$ (i.e., alternate routes through
+other keystone capabilities), restricting $d_j$ does not eliminate those
+pathways. $\Risk_j$ captures only the risk attributable to pathways through
+$d_j$. Full risk elimination may require restricting multiple keystones,
+each evaluated by its own instance of
+Equation~\eqref{eq:preemptive}.
+
+\paragraph{What the actor needs.} To evaluate
+Equation~\eqref{eq:preemptive}, the actor needs: (1) a world model
+$\WorldModel$ that can identify exercise pathways and estimate their
+probabilities; (2) trust factors $T_k$ for the agents holding dangerous
+capability tuples; and (3) a contraction-magnitude estimate for the
+exercise pathway. The world model is the most demanding requirement: it must
+support causal counterfactual reasoning \citep{pearl2009causality} (``what
+would happen if $a_k$ exercised this pathway?''), not just correlation
+tracking. The companion
+paper's leverage estimator (Equation~12 of \citet{lasser2026poset}) provides
+a basis---leverage is already a counterfactual quantity---but extending it to
+full exercise-pathway simulation is a significant computational step.
