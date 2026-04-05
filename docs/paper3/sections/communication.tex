@@ -41,9 +41,12 @@ A \emph{risk claim} from agent $a_j$ is a tuple $(S, \Pathway, |\Delta
     claim enters the actor's risk model weighted by risk-trust:
 \begin{equation}
 \label{eq:risk_claim_weight}
-\Risk_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot |\Delta \volL|
+\hat{\Risk}_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot |\Delta \volL|
     \cdot \mathbb{E}[\gamma^{T_\Pathway}]
 \end{equation}
+where $\hat{\Risk}_j$ denotes a \emph{communicated} risk estimate from
+    agent $a_j$, distinct from $\Risk_j$ in Section~\ref{sec:risk} which
+    denotes the keystone-specific concentration risk for capability $d_j$.
 where the expectation is over the stochastic execution time $T_\Pathway$.
 \end{definition}
 
@@ -53,13 +56,14 @@ capability tuple. The actor aggregates them:
 \label{eq:risk_aggregate}
 \Risk_{\mathrm{agg}}(S; a_k, t) = \max\!\left(
     \Risk_{\mathrm{self}}(S; a_k, t),\;
-    \max_j \Risk_j(S; a_k, t)
+    \max_j \hat{\Risk}_j(S; a_k, t)
 \right)
 \end{equation}
 taking the maximum of the actor's own assessment and all communicated
-assessments. The $\max$ operator is conservative: a single high-trust agent
-reporting high risk is sufficient to trigger evaluation of preemptive
-restriction (Proposition~\ref{prop:preemptive}). This is appropriate for
+assessments. The $\max$ operator is conservative: a single agent with high
+$T_j^{\mathrm{risk}}$ reporting high risk is sufficient to trigger
+evaluation of preemptive restriction
+(Proposition~\ref{prop:preemptive}). This is appropriate for
 catastrophic risks where false negatives (missing a real threat) are far
 more costly than false positives (investigating a non-threat).
 

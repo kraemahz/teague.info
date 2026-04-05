@@ -46,7 +46,13 @@ The foundational transfer result on which the remainder of the paper builds:
 
 \begin{theorem}[Self-Balancing Under Discounting]
 \label{thm:discounted_self_balancing}
-Let $\volL$ satisfy axioms M1--M6 (Proposition~1 of \citet{lasser2026poset}).
+Let $\volL$ satisfy axioms M1--M6 (Proposition~1 of
+    \citet{lasser2026poset}).\footnote{The poset paper's M4 uses
+    poset-disjointness (a stronger condition than the foundational paper's
+    set-disjointness). The transfer holds because on a poset with
+    non-negative independent weights, removing nodes from $\dc G$ can only
+    reduce the sum, regardless of whether M4-additivity holds for the
+    specific partition used in the foundational proofs.}
     For any discount factor $\gamma \in [0, 1)$ and planning horizon $H$:
 \begin{enumerate}
 \item[\textbf{(a)}] \textbf{Per-step preservation.} At each time step $t$,

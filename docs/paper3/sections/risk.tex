@@ -35,7 +35,13 @@ Not every capability combination has a dangerous exercise pathway. Most
 combinations are benign: the pathways from ``can cook'' + ``can drive'' lead
 only to $\volL$-neutral or expanding outcomes (meals delivered, mobility
 preserved). The risk lies in combinations whose exercise pathways include
-branches with large negative $\Delta \volL$.
+branches with large negative $\Delta \volL$. The ``beyond $a_k$''
+qualifier restricts exercise pathways to externalities: self-destructive
+pathways are excluded. An agent that catastrophically destroys its own
+capabilities without affecting others is not captured by $\Risk$, even if
+its capabilities were high-leverage or cooperative-critical. Extending
+Definition~\ref{def:exercise_pathway} to include self-harm is
+straightforward but deferred.
 
 \subsection{Risk of a Capability Distribution}
 
@@ -105,7 +111,11 @@ Under $\Vdisc$, the actor compares two action sequences: (1) do nothing
 and face the full exercise risk; (2) restrict $d_j$ now, producing immediate
 contraction $-|\Delta \volL|$ but eliminating all exercise pathways that
 require $d_j$ as a prerequisite. The residual risk from pathways that do not
-require $d_j$ is present under both sequences and cancels. The value of
+require $d_j$ is present under both sequences and cancels, under the
+assumption that restricting $d_j$ does not change the probability of
+exercise through other keystones. In practice, restriction is an observable
+action that may alter $a_k$'s behavioral disposition, changing residual
+pathway probabilities. The clean cancellation is an approximation. The value of
 restriction exceeds the value of inaction when
 $-|\Delta \volL| > -\Risk_j$, i.e., when $\Risk_j > |\Delta \volL|$.
 \end{proof}

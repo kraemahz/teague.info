@@ -11,22 +11,19 @@ provides full proofs for the remaining results.
 \begin{proof}
 The actor evaluates two action sequences from state $G_t$:
 
-\emph{Sequence 1: Inaction.} The capability tuple remains intact. At each
-future time step $t' > t$, there is probability $p(\Pathway \mid a_k, G_{t'},
-\WorldModel)$ that the exercise pathway is executed, producing contraction
-$-|\Delta \volL(\Pathway)|$. The expected future contraction is:
+\emph{Sequence 1: Inaction.} The capability tuple remains intact. Each
+exercise pathway $\Pathway$ has stochastic execution time $T_\Pathway$ and
+contraction magnitude $|\Delta \volL(\Pathway)|$. The expected discounted
+future contraction from all pathways is:
 \[
-\Vdisc(\text{inaction}) = -\sum_{t'=t+1}^{H} \gamma^{t'-t} \cdot
-p(\Pathway \mid a_k, G_{t'}, \WorldModel) \cdot |\Delta \volL(\Pathway)|
-\]
-Under the simplifying assumption that the exercise probability is constant
-($p$ does not change with time) and the pathway is a one-shot event (once
-exercised, it does not repeat):
-\[
-\Vdisc(\text{inaction}) \geq -\Risk(d_1, \ldots, d_m; a_k, t)
+\Vdisc(\text{inaction}) = -\sum_{\Pathway}
+    p(\Pathway \mid a_k, G_t, \WorldModel) \cdot
+    |\Delta \volL(\Pathway)| \cdot \mathbb{E}[\gamma^{T_\Pathway}]
+    = -\Risk(d_1, \ldots, d_m; a_k, t)
 \]
 where $\Risk$ is the concentration risk
-(Definition~\ref{def:concentration_risk}).
+(Definition~\ref{def:concentration_risk}), with the expectation taken over
+the stochastic execution time as specified in the definition.
 
 \emph{Sequence 2: Restrict.} The actor removes keystone capability $d_j$
 from $a_k$ at time $t$, producing immediate contraction
@@ -89,12 +86,16 @@ where $I(d_1 \leq d_2)$ is the information value of structure
 $\Delta \volL(G_0 \mid \text{edge}) \leq 0$, the difference is positive
 when $I(d_1 \leq d_2) > |\Delta \volL(G_0 \mid \text{edge})|$.
 
-The information value $I$ is non-negative in expectation: the policy
-optimized under the correct model achieves at least as high an expected
-return as the policy optimized under the incorrect model, because the
-correct model produces unbiased $\volL$ estimates while the incorrect
-model systematically overestimates the volume of capability sets with
-shared prerequisites.
+The information value $I$ is non-negative in expectation under the
+following argument. Both policies are evaluated against the \emph{same
+ground-truth dynamics}: the actual $\Delta\volL$ at each step depends on
+the true poset state, not on either model's prediction. The policy
+$\pi^*_{\text{true}}$, being optimal for the true dynamics, achieves at
+least as high an expected return under those dynamics as any other policy,
+including $\pi^*_{\text{false}}$. Therefore
+$\mathbb{E}_{\tau \sim \pi^*_{\text{true}}}[\sum \gamma^t \Delta\volL]
+\geq \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}[\sum \gamma^t \Delta\volL]$
+and $I \geq 0$.
 \end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:anti_monopolar} (Anti-Monopolar Property)}
@@ -122,41 +123,35 @@ strategies, each evaluated by $\Vdisc = \sum_t \gamma^t \Delta\volL(G_t)$
 strategy produces a constant per-step $\Delta\volL$. We compare the
 discounted sums $\Vdisc$ for $\gamma \in (0, 1)$.
 
-\emph{Strategy D (dominate):} At $t = 0$, subsume remaining non-member
-capabilities, gaining $\Delta\volL = \Delta_0 \geq 0$. For $t \geq 1$,
-grow at internal rate: $\Delta\volL = r_K$ per step.
+\emph{Strategy D (dominate):} Both strategies produce internal growth
+$r_K$ at every step. Domination additionally gains $\Delta_0$ at $t = 0$:
+$\Delta\volL = r_K + \Delta_0$ at $t = 0$, then $r_K$ for $t \geq 1$.
 \[
-\Vdisc^D = \Delta_0 + \frac{r_K \cdot \gamma}{1 - \gamma}
+\Vdisc^D = (r_K + \Delta_0) + \sum_{t=1}^{\infty} \gamma^t \cdot r_K
+  = \Delta_0 + \frac{r_K}{1 - \gamma}
 \]
-\emph{Strategy Div (maintain diversity):} No subsumption bonus. For
-$t \geq 0$, grow at full rate: $\Delta\volL = r_K + r_{\mathrm{ext}}$
-per step.
+\emph{Strategy Div (maintain diversity):} No subsumption bonus. Growth at
+$r_K + r_{\mathrm{ext}}$ per step for all $t \geq 0$.
 \[
 \Vdisc^{\mathrm{div}} = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
 \]
 The difference:
-\begin{align*}
-\Vdisc^{\mathrm{div}} - \Vdisc^D
-  &= \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
-     - \Delta_0 - \frac{r_K \gamma}{1 - \gamma} \\
-  &= r_K + \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
-\end{align*}
-This is positive when $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0 - r_K$.
-\emph{Case 1:} If $\Delta_0 \leq r_K$, the left side is positive for all
-$\gamma > 0$. \emph{Case 2:} If $\Delta_0 > r_K$, rearranging:
-$1 - \gamma < r_{\mathrm{ext}} / (\Delta_0 - r_K)$, i.e.,
 \[
-\gamma > \gamma^* = 1 - \frac{r_{\mathrm{ext}}}{\Delta_0 - r_K}
-    = \frac{\Delta_0 - r_K - r_{\mathrm{ext}}}{\Delta_0 - r_K}
+\Vdisc^{\mathrm{div}} - \Vdisc^D
+  = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+    - \Delta_0 - \frac{r_K}{1 - \gamma}
+  = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
 \]
-When $\Delta_0 - r_K \leq r_{\mathrm{ext}}$, $\gamma^* \leq 0$ and the
-condition holds for all $\gamma > 0$. When $\Delta_0 - r_K >
-r_{\mathrm{ext}}$, $\gamma^* \in (0, 1)$ and a sufficiently long planning
-horizon makes diversity strictly preferable.
+This is positive when $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0$, i.e.,
+$\gamma > 1 - r_{\mathrm{ext}} / \Delta_0 = \gamma^*$. When $\Delta_0
+\leq r_{\mathrm{ext}}$, $\gamma^* \leq 0$ and the condition holds for all
+$\gamma > 0$. Otherwise $\gamma^* \in (0, 1)$ and a sufficiently long
+planning horizon makes diversity strictly preferable. At $\tau_D = 1$,
+Corollary~\ref{cor:gradual} recovers this result.
 
 \end{proof}
 
-Corollary~\ref{cor:a1_from_oi} (Static Protection from Observational
+Corollary~\ref{cor:a1_from_oi} (Static Floor from Observational
 Individuation) and Corollary~\ref{cor:gradual} (Gradual Domination) are
 proved in the main text (Sections~\ref{sec:obs_individuation}
 and~\ref{sec:gradual} respectively), as their proofs are short and
