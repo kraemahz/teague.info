@@ -120,6 +120,40 @@ restriction exceeds the value of inaction when
 $-|\Delta \volL| > -\Risk_j$, i.e., when $\Risk_j > |\Delta \volL|$.
 \end{proof}
 
+\paragraph{Endogenous execution timing and residual redirection.} The
+clean cancellation in the proof above assumes that residual pathway
+probabilities---those not routed through $d_j$---are independent of
+whether $d_j$ is restricted. In adversarial settings this assumption is
+suspect: removing the $d_j$-pathway can redirect $a_k$'s effort toward
+alternative keystones, raising the residual exercise probability
+$p(\Pathway')$ for pathways $\Pathway' \not\ni d_j$. Equivalently, the
+execution timing $T_{\Pathway'}$ becomes a function of the actor's
+restriction policy rather than a state property, so the
+$\mathbb{E}[\gamma^{T_{\Pathway'}}]$ term in
+Equation~\eqref{eq:concentration_risk} is no longer computable from
+$G_t$ alone. A worst-case version of
+Proposition~\ref{prop:preemptive} replaces
+the clean cancellation with a minimax over residual redirections:
+\begin{equation}
+\label{eq:preemptive_worst_case}
+\Risk_j - \sup_{\delta p'} \sum_{\Pathway' \not\ni d_j} \delta p'
+    \cdot |\Delta \volL(\Pathway')| \cdot
+    \mathbb{E}[\gamma^{T_{\Pathway'}}]
+    \;>\; |\Delta \volL(G_t \mid \text{restrict } d_j)|
+\end{equation}
+where $\delta p'$ ranges over feasible redirections consistent with the
+actor's world model of $a_k$'s alternative-pathway capacity. The
+worst-case criterion is strictly harder to satisfy than
+Equation~\eqref{eq:preemptive}---restriction is value-positive only if
+the $d_j$-pathway risk exceeds both the immediate cost
+\emph{and} the worst-case redirection penalty. The clean criterion is a
+practical approximation; the adversarial setting demands the
+worst-case form. Full treatment of residual redirection is deferred to
+the dependency-risk framework of
+Section~\ref{sec:dependency_risk}, where adversarial targeting is
+modelled as a minimax over attack surfaces rather than as an
+independent-pathway assumption.
+
 \paragraph{Connection to Lemma 2 and the precautionary principle.} The
 foundational paper's Lemma~2 says restriction is always
 $\volL$-contracting in isolation. The discounted objective adds the temporal
@@ -143,6 +177,32 @@ pathways. $\Risk_j$ captures only the risk attributable to pathways through
 $d_j$. Full risk elimination may require restricting multiple keystones,
 each evaluated by its own instance of
 Equation~\eqref{eq:preemptive}.
+
+\paragraph{Interaction with structural avoidance.} The preemptive
+restriction criterion of Equation~\eqref{eq:preemptive} interacts
+non-trivially with the structural-avoidance result of
+Section~\ref{sec:avoidance}. Aggressive restriction increases the
+discounted-future contraction term that the actor anticipates from
+\emph{discovering} new dangerous capabilities or new exercise pathways:
+each newly discovered pathway is, in expectation, a target for further
+restriction, and therefore an additional immediate $\volL$-cost the actor
+pays at the moment of discovery. A risk-restriction policy that is
+calibrated too aggressively---restricting whenever
+$\hat{\Risk} \cdot |\Delta\hat{\volL}| > 0$ rather than at the value-positive
+threshold---reintroduces the avoidance pathology in a different form: the
+actor avoids structural discovery in domains adjacent to dangerous
+capabilities, because each discovery commits future restriction cost. The
+information-value condition of
+Proposition~\ref{prop:structure_value} continues to support discovery only
+when the discounted information benefit
+exceeds the discounted restriction cost; when restriction is calibrated
+above its value-positive threshold, the inequality flips and structural
+ignorance becomes locally optimal. The two sections are therefore
+complementary constraints, not independent results: the discounted
+objective only counteracts structural avoidance if risk restriction itself
+respects the value-positive criterion. Restriction calibrated to
+Equation~\eqref{eq:preemptive} preserves the discovery incentive;
+restriction calibrated more aggressively destroys it.
 
 \paragraph{What the actor needs.} To evaluate
 Equation~\eqref{eq:preemptive}, the actor needs: (1) a world model

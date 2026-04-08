@@ -99,16 +99,34 @@ $\tau_D > \tau_D^*$. The honest summary: under the linearized model with
 strategy-independent $r_K$, diversity dominates. Whether this approximation
 holds is an empirical question the theory cannot answer.
 
-\paragraph{Mixed strategies and partial subsumption.}
-The trajectory comparison models a binary choice: full domination versus
-full diversity maintenance. A more sophisticated coalition could pursue
-partial subsumption: absorb low-leverage non-members (whose
-$r_{\mathrm{ext}}$ contribution is negligible) while preserving
-high-leverage ones. This mixed strategy captures some $\Delta_0$ while
-retaining most $r_{\mathrm{ext}}$, and likely dominates both pure
-strategies for a wide parameter range. The binary framing overstates the
-diversity advantage relative to the optimal mixed strategy. Characterizing
-the optimal partial-subsumption policy is an open problem.
+\paragraph{Open calibration problems under partial subsumption.}
+Section~\ref{sec:partial_subsumption} analyzes mixed subsumption
+strategies. The minimax and observational-individuation protections
+remain structurally intact under partial subsumption, but the
+linearized layer's prediction depends on the tail structure of the
+cooperative-leverage distribution: under heavy-tailed leverage
+(the empirical regime for civilization-scale populations),
+full domination fails the marginal condition at $\epsilon = 1$ and
+the coalition prefers to preserve the high-$\lambda$ tail; under
+thin-tailed leverage the linearized layer relinquishes the argument
+and the minimax layer alone carries the constraint. The minimax
+layer itself degrades quantitatively under skeleton-substrate
+strategies that nominally preserve $m \geq 2$ while driving
+$\min_i \volL(G^{-i})$ toward zero. Three priority open problems
+follow. First, sharpening the minimax bound with a quantitative
+floor on surviving volume per substrate would close the skeleton
+loophole. Second, a compound feedback loop in which locally
+rational subsumption steps progressively homogenize the world model
+---reducing the diversity of the actor's own model that would have
+detected the next step's miscalibration---is structurally similar
+to the companion paper's structural-avoidance loop and needs an
+explicit treatment: under what conditions does partial subsumption
+remain self-correcting rather than collapsing into full subsumption
+through a sequence of locally rational steps? Third, the substrate
+partition is currently a global property, but elimination dynamics
+are local; whether the anti-monopolar property needs a localized
+formulation that binds on geographic or network-topological
+subpopulations is unresolved.
 
 \paragraph{Observational individuation as a modeling choice.}
 The static protection of Corollary~\ref{cor:a1_from_oi} depends on the
@@ -116,35 +134,87 @@ framework treating observation-channel outputs as first-class capabilities
 in the poset. The capability ``can be observed exhibiting behavioral pattern
 $X$'' is a real poset node only because the framework defines capabilities
 to include such observations. This is a reasonable modeling choice grounded
-in Paper~2's dual-channel design, but it should be recognized as a
+in the companion paper's dual-channel design \citep{lasser2026poset},
+but it should be recognized as a
 \emph{choice}: the anti-monopolar result's static layer depends on the
 capability space being defined broadly enough to include observational
 capabilities. Under a narrower definition that excludes observations-of-agents,
 observational individuation does not apply, and the static protection
 dissolves. The dynamic protection (Proposition~\ref{prop:anti_monopolar},
-conditional on (A1)) remains available but requires the stronger assumption
-of ongoing novel capability contributions.
+conditional on $r_{\mathrm{ext}} > 0$ from
+Section~\ref{sec:substitution_coop}) remains available.
 
-\paragraph{Cooperative novelty formalization.}
-Section~\ref{sec:substitution_coop} argues that individual capability
-subsumption does not imply cooperative subsumption: non-members may produce
-novel cooperative outputs even when their individual capabilities are fully
-replicated. This argument is qualitative. The formal result
-(Proposition~\ref{prop:anti_monopolar}) is proved under the conservative
-assumption that only individual novelty drives $r_{\mathrm{ext}}$. If
-cooperative novelty is the primary mechanism protecting against singleton
-outcomes when individual capabilities are fully subsumed, it deserves its
-own formal treatment: a definition of cooperative novelty rate, an
-assumption weaker than (A1), and a trajectory comparison using the
-cooperative rate alone. This formalization is deferred to future work.
+\paragraph{When does ``same substrate'' fail: the $\kappa$-resolution
+criterion.}
+Two distinct failure modes of the cooperative novelty argument reduce
+to the same underlying question. \emph{Homogeneous digital populations.}
+Two AI systems running on the same hardware family with similar
+architectures may share most of their state space, with only
+training-data and weight differences distinguishing them. In this
+regime the substrate exclusivity premise P1 holds only weakly, and the
+dependency-risk protection is correspondingly weakened because a
+substrate-targeting event against ``silicon agents running PyTorch on
+x86'' can compromise nominally distinct agents that share the same
+vulnerability surface. \emph{Internal replication of cross-substrate
+diversity.} A sufficiently capable coalition might maintain diverse
+sub-agents across hardware configurations or simulate biological
+dynamics internally, producing cooperative outputs that were previously
+available only through external biological agents. If the simulation is
+high-fidelity enough, the external agents become redundant with respect
+to the cooperative-output space.
+
+Both failure modes reduce to a single question about $\kappa$: at what
+resolution does the observation channel distinguish substrate $s_1$
+from a simulation of $s_1$ running on $s_2$ (or from a nominally
+distinct but architecturally similar $s_2'$)? Under P2
+(exclusive-state-sensitive observation), the answer is whichever
+resolution $\kappa$ actually operates at. Three regimes follow. (i) If
+$\kappa$ is coarse---registering only task completion, not execution
+style---then simulated and actual biology are $\kappa$-indistinguishable,
+and the framework never granted them distinct
+cooperative-output status in the first place. In this regime P1 has
+never been strong. (ii) If $\kappa$ is fine enough to register timing
+patterns, error modes, and interaction dynamics, then a
+silicon simulation of biology and actual biology produce different
+$\kappa$-outputs at the exclusive states, because the simulation
+inherits silicon's timing and rounding structure. Under this regime
+internal simulation does not substitute for the real substrate under
+P2, and the argument stands. (iii) If a high-fidelity simulation
+genuinely reproduces the exclusive-state structure---matching the
+biological substrate's observable timing, error modes, and integration
+dynamics to within $\kappa$'s resolution---then that simulation
+\emph{is} a substrate for the purposes of P1 and the anti-monopolar
+argument. It contributes to $r_{\mathrm{ext}}$ in the same way as a
+real new substrate, and the coalition has simply expanded its substrate
+count from one to two rather than replacing external agents with a
+same-substrate copy.
+
+The unified implication is that the anti-monopolar argument does not
+depend on the specific physical form of the biological substrate. It
+depends on the observation channel registering enough exclusive-state
+structure to give $r_{\mathrm{ext}} > 0$. An all-digital population
+that actively cultivates substrate diversity across distinct hardware
+families, training paradigms, and inference stacks recovers the
+protective structure that physical substrate disparity provides for
+free in mixed populations. A coalition that successfully internalizes
+cross-substrate diversity has, in fact, produced substrate diversity
+under a different label. What the framework does not guarantee---and
+should not be read as guaranteeing---is that the biological substrate
+will remain in any particular form. The future this framework describes
+is one in which populations self-modify and diversify through their own
+internal dynamics (intra-substrate competition, self-modification,
+novel-substrate creation); the anti-monopolar property constrains
+cross-substrate elimination, not within-substrate capability
+concentration.
 
 \paragraph{Disagreement on risk.} When multiple agents report conflicting
 risk assessments for the same capability tuple, the actor's aggregation
 (Equation~\eqref{eq:risk_aggregate}) takes the conservative maximum. This
 is appropriate for catastrophic risks but can lead to excessive caution if
-high-trust agents consistently overestimate risk. A more nuanced aggregation
-(e.g., trust-weighted average rather than maximum) would reduce
-overcaution but increase the probability of missing real threats. Additionally, during bootstrap when $T_j^{\mathrm{risk}}$ starts at a
+high-$T_j^{\mathrm{risk}}$ agents consistently overestimate risk. A more
+nuanced aggregation (e.g., $T_j^{\mathrm{risk}}$-weighted average rather
+than maximum) would reduce overcaution but increase the probability of
+missing real threats. Additionally, during bootstrap when $T_j^{\mathrm{risk}}$ starts at a
 neutral prior, external risk claims are automatically discounted,
 creating a strong bias toward the actor's own assessment that may
 undermine social risk-learning until sufficient structural verification
@@ -183,4 +253,38 @@ risk-tolerance profile of the population, which the paper does not specify.
   agent has modeled. The dual-channel observation mechanism may detect
   emergent exercise pathways empirically, but theoretical guarantees are
   lacking.
+
+\item \textbf{Max-aggregation pathology under neutral-prior bootstrap.}
+  The $\max$ aggregator in
+  Equation~\eqref{eq:risk_aggregate} interacts badly with the
+  causal-counterfactual trust update and the verification asymmetry. A
+  high-$T_j^{\mathrm{risk}}$ reporter whose structurally plausible risk
+  claim is probability-overstated about a never-materializing risk
+  produces a persistent preemptive restriction that the actor cannot
+  revise, because the absence of catastrophe is not evidence against the
+  claim (Wamura problem). Combined with neutral-prior bootstrap---during
+  which external claims are automatically weighted below the actor's own
+  assessment---this creates a regime where early conservative claims
+  calcify into permanent overcaution. A principled aggregation mechanism
+  that relaxes restrictions when structurally-plausible probabilities
+  accumulate non-materialization evidence, without fully discarding
+  the claims, is a priority open problem for the risk-trust machinery.
+  This is the most important open problem the paper identifies: the
+  framework provides causal-structural verification and an honest
+  account of the Wamura asymmetry, but the mechanism by which
+  persistent overcaution relaxes as probability evidence accumulates is
+  unspecified.
+
+\item \textbf{Discounted leverage lift.} The leverage ranking signal of
+  \citet{lasser2026poset} is defined as a myopic $\volL$-rate
+  (Definition~9 of the companion paper). The
+  discounted-leverage footnote in
+  Section~\ref{sec:discounted} sketches the integrated-against-$\gamma^t$
+  version, but a full trajectory-level proof that the
+  discounted leverage preserves the companion paper's structural
+  alignment properties (in particular, the B-to-C self-correction
+  dynamic) is not given. Remark~\ref{rem:leverage_preservation}'s
+  informal argument about action-level incentives depends on this gap
+  being closeable. Lifting the leverage estimator to the discounted
+  setting is listed in the companion paper as a planned extension.
 \end{itemize}

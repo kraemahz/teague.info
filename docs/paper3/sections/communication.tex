@@ -45,9 +45,9 @@ A \emph{risk claim} from agent $a_j$ is a tuple $(S, \Pathway, |\Delta
     \cdot \mathbb{E}[\gamma^{T_\Pathway}]
 \end{equation}
 where $\hat{\Risk}_j$ denotes a \emph{communicated} risk estimate from
-    agent $a_j$, distinct from $\Risk_j$ in Section~\ref{sec:risk} which
-    denotes the keystone-specific concentration risk for capability $d_j$.
-where the expectation is over the stochastic execution time $T_\Pathway$.
+    agent $a_j$ (distinct from $\Risk_j$ in Section~\ref{sec:risk}, which
+    denotes the keystone-specific concentration risk for capability $d_j$),
+    and the expectation is over the stochastic execution time $T_\Pathway$.
 \end{definition}
 
 Multiple agents may report different risk assessments for the same
@@ -131,6 +131,27 @@ Does the capability combination exist? Does the exercise pathway exist in the
 actor's own model? Is the claimed probability in the right range? Each of
 these is evaluable without observing the outcome.
 
+\paragraph{Warrant by mechanism, not by outcome.} The four-step procedure
+is best understood as a shift in what the trust update is measuring. The
+foundational paper's behavioral $T_k$ is \emph{outcome-conditioned}: trust
+updates on the residual between predicted and observed behavior, and
+requires the predicted event (or its non-occurrence) to be observable. The
+risk-claim setting denies this entirely---successful prevention removes
+the very observation a behavioral update would condition on. The causal
+procedure replaces outcome-conditioning with \emph{mechanism-conditioning}:
+the warrant for trusting (or distrusting) a claim is the
+structural-plausibility residual between the claimant's stated pathway and
+the actor's own causal model, evaluated at the time of the claim. This
+distinction matters because the two warrants have different failure modes.
+Outcome-conditioned trust fails silently when outcomes are not observed
+(the Wamura problem). Mechanism-conditioned trust fails when the actor's
+own causal model is wrong, which is at least diagnosable: the actor can
+detect that its model disagrees with multiple independent reporters and
+treat the disagreement as evidence about its own model rather than about
+the reporters. Causal evaluation is therefore not a stronger version of
+behavioral trust but a complementary mode that operates exactly where
+behavioral trust degenerates.
+
 \paragraph{Trust update for risk claims.} The actor updates
 $T_j^{\mathrm{risk}}$ based on the structural plausibility of the claim
 rather than the outcome:
@@ -153,9 +174,36 @@ is described qualitatively. A formal update equation analogous to the
 foundational paper's EWMA dynamics would strengthen the risk-communication
 mechanism but is deferred to future work.
 
-This does not fully resolve the Wamura problem---a risk claim whose pathway is
-plausible but whose probability is genuinely uncertain remains in a trust
-limbo until either the catastrophe occurs or enough time passes to revise the
-probability estimate downward. But it narrows the asymmetry: risk-trust
+\paragraph{Honest and dishonest equilibria.} The causal evaluation
+procedure does not by itself produce a unique equilibrium over reporting
+strategies. If most reporters in the population are structurally honest
+(claims align with their actual best estimate of pathway and probability),
+the procedure rewards alignment with the actor's model and a population of
+honest reporters is self-stabilizing: the actor's
+$\WorldModel$ converges to the consensus of plausible reports, and
+deviating reporters incur trust penalties. If most reporters
+collude on a structurally consistent but factually false story---reporting
+the same fabricated pathway with the same fabricated probability
+distribution---the structural-plausibility residual is small for every
+collaborator, and $T_j^{\mathrm{risk}}$ does not distinguish them from
+honest reporters. The procedure narrows the verification asymmetry without
+eliminating it: it converts an outcome-observability problem into a
+\emph{world-model-correctness} problem. The dishonest equilibrium is
+breakable when at least one reporter (or the actor's own
+$\WorldModel$) provides a structurally inconsistent counter-report,
+because the causal residual then becomes informative again. This caveat
+mirrors the limitation in the foundational paper's behavioral trust model:
+trust updates depend on the observed signal being informative about the
+underlying disposition, and coordinated misreporting can in principle
+defeat any local update rule.
+
+\paragraph{What remains unresolved.} The causal procedure does not fully
+resolve the Wamura problem: a risk claim whose pathway is plausible but
+whose probability is genuinely uncertain remains in a trust limbo until
+either the catastrophe occurs or enough time passes to revise the
+probability estimate downward. Combined with the dishonest-equilibrium
+caveat above, the procedure's guarantee is narrower than it first appears.
+What it does provide is a shift in where convergence happens: risk-trust
 converges on the \emph{quality of the causal model}, not on the
-\emph{occurrence of the outcome}.
+\emph{occurrence of the outcome}, which is the meaningful gain over the
+purely behavioral trust factor.

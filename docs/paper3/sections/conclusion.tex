@@ -13,37 +13,64 @@ support. First, risk-capability identification: the actor can evaluate
 dangerous capability combinations through causal exercise pathways and
 justify preemptive restriction when the discounted expected contraction
 exceeds the immediate restriction cost
-(Proposition~\ref{prop:preemptive}). Second, a criterion under which the structural-avoidance incentive is counteracted:
-the actor accepts short-term $\volL$-contraction from structural discovery
-because the information value of accurate structure improves future planning
-quality (Proposition~\ref{prop:structure_value}). Third, the anti-monopolar
-property: under a diversity condition (positive external discovery rate),
-full capability domination is anti-maximizing under strategy-independent
-growth because it collapses the external contribution that drives future
-$\volL$ expansion
-(Proposition~\ref{prop:anti_monopolar}). Three formal results support this pressure. Observational individuation
-(Corollary~\ref{cor:a1_from_oi}) restores static protection: every
-distinguishable agent contributes at least one irreplaceable poset node,
-making each elimination step $\volL$-contracting even under full individual
-subsumption. The gradual domination result
-(Corollary~\ref{cor:gradual}) provides dynamic protection: when domination
-takes more than $\tau_D^*$ steps and non-members contribute ongoing novel
-capabilities, the diversity trajectory dominates at any discount factor.
-Third, a minimax analysis of dependency risk
-(Proposition~\ref{prop:minimax}) proves that domination concentrates
-substrate-correlated adversarial exposure: cross-substrate populations
-have strictly lower worst-case contraction, and the substrate
-diversification advantage highly constrains the conditions under which
-domination can be value-positive. Together, these
-address the foundational paper's substitution problem: a GFM-aligned agent
-faces a per-step cost, a trajectory-level disadvantage, and increased
-adversarial exposure from pursuing domination.
-The result creates endogenous anti-singleton pressure under conditions
-(positive external discovery rate, strategy-independent $r_K$, and either
-$\gamma > \gamma^*$ or $\tau_D > \tau_D^*$) that are plausible but not
-vacuous. It does not constitute unconditional exclusion:
-the dynamic protection requires ongoing external novelty and a
-linearized-growth approximation whose accuracy is ultimately empirical.
+(Proposition~\ref{prop:preemptive}). Second, a criterion under which the
+structural-avoidance incentive is counteracted: the actor accepts
+short-term $\volL$-contraction from structural discovery because the
+information value of accurate structure improves future planning quality
+(Proposition~\ref{prop:structure_value}). Third, the anti-monopolar
+property (Proposition~\ref{prop:anti_monopolar}): under a linearized
+growth model with strategy-independent internal rate, full capability
+domination is anti-maximizing because it destroys the cross-substrate
+cooperative outputs that drive future $\volL$ expansion.
+
+The anti-monopolar argument is supported by four interlocking results.
+\emph{Cooperative novelty}
+(Propositions~\ref{prop:segmentation}--\ref{prop:cross_substrate_novelty})
+derives $r_{\mathrm{ext}} > 0$ from substrate physics: agents on
+substrates with mutually exclusive state regions produce exclusive
+capabilities and irreplaceable cross-substrate cooperative outputs,
+consistent with the pattern of mutualistic symbiosis observed between cognitively
+complete species. \emph{Observational individuation}
+(Corollary~\ref{cor:a1_from_oi}) provides a static elimination cost: every
+distinguishable agent contributes at least one irreplaceable poset node.
+\emph{Gradual domination} (Corollary~\ref{cor:gradual}) shifts the
+critical condition from the discount factor to the domination timescale:
+sufficiently gradual domination is anti-maximizing at any $\gamma$ under
+the same linearized model.
+\emph{Dependency risk} (Proposition~\ref{prop:minimax}) shows that
+domination concentrates substrate-correlated adversarial exposure,
+constraining the conditions under which domination can be value-positive.
+Together they ground the anti-monopolar pressure in physical and empirical
+properties of multi-substrate populations rather than in exogenous
+behavioral assumptions, while remaining honest about the residual
+empirical dependence on strategy-independent $r_K$ and the
+linearized-growth approximation. Under partial subsumption
+(Section~\ref{sec:partial_subsumption}), the minimax and
+observational-individuation layers continue to bind as long as the
+substrate partition remains non-trivial, and the linearized layer's
+marginal condition at $\epsilon = 1$
+(Equation~\eqref{eq:partial_subsumption_marginal}) shows that
+full domination fails to be a local maximum of the coalition's value
+under heavy-tailed cooperative-leverage distributions---the empirical
+regime for civilization-scale populations. The framework constrains
+cross-substrate elimination; it does not promise any particular
+intra-substrate composition, which is shaped by its own dynamics.
+Partial subsumption also exposes two residual concerns the framework
+does not fully close: quantitative degradation of the minimax bound
+under skeleton-substrate strategies (where $m \geq 2$ is nominally
+preserved but $\min_i \volL(G^{-i})$ is driven toward zero), and a
+compound feedback loop in which locally rational subsumption steps
+progressively homogenize the world model that would have detected
+the next step's miscalibration. Both are priority open problems
+for follow-up work.
+
+The anti-monopolar argument is bidirectional. If domination is
+anti-maximizing because it destroys cross-substrate cooperative outputs
+and concentrates dependency risk, the converse---preserving and creating
+substrates---is maximizing for the same reason. Ecological restoration,
+substrate diversification, and cross-substrate cooperation infrastructure
+follow as core $\volL$-maximizing activities rather than as ethical
+add-ons layered on top of the objective.
 
 The verification asymmetry in risk communication remains a partial resolution.
 Causal-counterfactual evaluation narrows the gap by basing risk-trust on the
@@ -60,11 +87,12 @@ companion paper's computable poset and leverage dynamics, the discounted
 objective provides the theoretical ingredients for a GFM actor: a computable
 measure, an endogenous importance signal, and a temporal objective that
 supports planning, risk identification, and structural investment. Open
-questions remain at both the theoretical level (subsumption correction,
-intrinsic value, optimal $\alpha$, and a completed causal risk model for
-adversarial capability removal) and the engineering level (planning
-algorithms, pathway enumeration, discount-factor selection). Implementation
-requires in particular a causal attribution model for dependency risk
+questions remain at both the theoretical level (information-value
+estimation, risk-claim consensus across heterogeneous world models, and a
+completed causal risk model for adversarial capability removal) and the
+engineering level (planning algorithms for $\Vdisc$, exercise-pathway
+enumeration, and discount-factor selection). Implementation requires in
+particular a causal attribution model for dependency risk
 (Section~\ref{sec:dependency_risk}) that can evaluate substrate-correlated
 threats in a given environment; the minimax analysis
 (Proposition~\ref{prop:minimax}) provides worst-case bounds but a

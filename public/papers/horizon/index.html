@@ -79,23 +79,17 @@ evaluation to multi-step planning via a discounted value function over
 capability-poset trajectories. The self-balancing property transfers:
 destruction, coercion, and rigidity remain anti-maximizing at every time
 step. The temporal objective enables risk-capability identification
-through causal exercise pathways, counteracts the structural-avoidance
-incentive from the companion paper, and yields the paper’s central
-result: the <em>anti-monopolar property</em>. Under a diversity
-condition and strategy-independent internal growth, full capability
-domination by a coalition is anti-maximizing because it collapses the
-external diversity that drives future growth. Three formal results
-support this pressure. <em>Observational individuation</em> guarantees
-that every distinguishable agent contributes at least one irreplaceable
-capability, making each step of domination <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
-regardless of discount factor. A gradual domination model further shows
-that the diversity-maintaining trajectory dominates whenever domination
-is not instantaneous and non-members contribute ongoing novel
-capabilities. A minimax analysis of dependency risk shows that
-domination concentrates substrate-correlated adversarial exposure,
-making cross-substrate diversity a net-positive risk mitigation that
-highly constrains the conditions under which domination can be
+through causal exercise pathways and counteracts the
+structural-avoidance incentive from the companion paper. Its central
+result is the <em>anti-monopolar property</em>: under a linearized
+growth model with strategy-independent internal rate, full capability
+domination is anti-maximizing because it destroys cross-substrate
+cooperative outputs that no single-substrate coalition can replicate.
+The cooperative novelty argument is grounded in substrate physics rather
+than exogenous assumption, consistent with the pattern of mutualistic
+symbiosis observed in biology. The argument is bidirectional: substrate
+creation is maximizing. A minimax dependency-risk analysis further
+constrains the conditions under which domination can be
 value-positive.</p>
 </d-abstract>
 
@@ -166,13 +160,14 @@ data-reference="sec:communication">4</a>).</p></li>
 structural-avoidance incentive from the companion paper (Section <a
 href="#sec:avoidance" data-reference-type="ref"
 data-reference="sec:avoidance">5</a>).</p></li>
-<li><p>The anti-monopolar property: under a diversity condition and
-strategy-independent internal growth, full capability domination is
-anti-maximizing under the discounted objective, creating endogenous
-pressure against the singleton scenario. The formal threshold is modest
-(a <span class="math inline">\sim</span>5% growth-rate improvement from
-domination can overcome it), but the cooperative-capability asymmetry
-and dependency-risk analysis provide additional counters (Section <a
+<li><p>The anti-monopolar property: under a linearized growth model with
+strategy-independent internal rate, full capability domination is
+anti-maximizing because it destroys cross-substrate cooperative outputs
+that no single-substrate coalition can replicate. The cooperative
+novelty argument is grounded in substrate physics and consistent with
+the pattern of mutualistic symbiosis observed in biology. Observational
+individuation, gradual domination, and a minimax dependency-risk
+analysis provide additional protection layers (Section <a
 href="#sec:substitution" data-reference-type="ref"
 data-reference="sec:substitution">6</a>).</p></li>
 </ol>
@@ -222,16 +217,25 @@ class="math inline">\gamma</span> under certain domination models.</p>
 <h2
 id="self-balancing-transfers-to-the-discounted-objective">Self-Balancing
 Transfers to the Discounted Objective</h2>
-<p>The foundational transfer result on which the remainder of the paper
-builds:</p>
+<p>The following theorem is a <em>consistency result</em>, not a
+sufficiency result: it establishes that the per-step self-balancing
+property of <d-cite key="lasser2026gfm"></d-cite>
+composes correctly under discounted summation, so the discounted
+objective inherits the same step-local guarantees as the myopic
+objective. It does not, by itself, rule out the failure modes that
+emerge specifically from multi-step planning — in particular, sequences
+where each step is locally self-balancing but the trajectory ends in
+catastrophic contraction because the destructive consequence is
+deferred. That class of failures requires the risk-capability machinery
+of Section <a href="#sec:risk" data-reference-type="ref"
+data-reference="sec:risk">3</a>, not the transfer theorem.</p>
 <div id="thm:discounted_self_balancing" class="theorem">
 <p><strong>Theorem 1</strong> (Self-Balancing Under Discounting).
 <em>Let <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> satisfy
-axioms M1–M6 (Proposition 1 of <d-cite key="lasser2026poset"></d-cite>).<a href="#fn1"
-class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> For
-any discount factor <span class="math inline">\gamma \in [0, 1)</span>
-and planning horizon <span class="math inline">H</span>:</em></p>
+axioms M1–M6 (Proposition 1 of <d-cite key="lasser2026poset"></d-cite>). For any discount factor <span
+class="math inline">\gamma \in [0, 1)</span> and planning horizon <span
+class="math inline">H</span>:</em></p>
 <ol>
 <li><p><em><strong>Per-step preservation.</strong> At each time step
 <span class="math inline">t</span>, Lemmas 1–3 of <d-cite key="lasser2026gfm"></d-cite> apply to <span
@@ -261,6 +265,20 @@ restriction, and sustained rigidity. Temporary restriction (quarantine,
 preemptive containment) is value-positive when the discounted future
 expansion exceeds the current contraction.</em></p></li>
 </ol>
+</div>
+<div id="rem:m4_note" class="remark">
+<p><strong>Remark 1</strong> (M4 across the two foundational papers).
+<em>The poset paper’s axiom M4 uses <em>poset-disjointness</em>, which
+is a stronger condition than the foundational paper’s set-disjointness
+used in the original self-balancing proofs. The discounted transfer
+holds under the stronger M4 because on a poset with non-negative
+independent weights <span
+class="math inline">\mathop{\mathrm{iw}}</span>, removing nodes from
+<span class="math inline">\downarrow G</span> can only reduce <span
+class="math inline">\sum \mathop{\mathrm{iw}}</span>; the argument does
+not depend on whether M4-additivity holds for the specific partition
+used in the original proofs. Readers tracing Lemmas 1–3 across the two
+papers should keep this discrepancy in mind.</em></p>
 </div>
 <div class="proof">
 <p><em>Proof.</em> (a) At each time step <span
@@ -331,7 +349,8 @@ choices that shape the quality of planning without affecting the
 structural guarantee. A poor world model will produce poor plans, but
 even a poor plan is evaluated by an objective that penalizes sustained
 contraction. The self-balancing property is a property of the
-<em>objective</em>, not of the <em>planner</em>.</p>
+<em>objective</em>, not of the <em>planner</em>.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h1 id="sec:risk">Risk-Capability Identification</h1>
 <p>The discounted objective enables the actor to reason about future
 <span
@@ -482,6 +501,51 @@ when <span class="math inline">\mathcal{R}_j &gt; |\Delta
 \mathop{\mathrm{vol}}_{\mathrm{P}}|</span>. </p>
 </div>
 <h4
+id="endogenous-execution-timing-and-residual-redirection.">Endogenous
+execution timing and residual redirection.</h4>
+<p>The clean cancellation in the proof above assumes that residual
+pathway probabilities—those not routed through <span
+class="math inline">d_j</span>—are independent of whether <span
+class="math inline">d_j</span> is restricted. In adversarial settings
+this assumption is suspect: removing the <span
+class="math inline">d_j</span>-pathway can redirect <span
+class="math inline">a_k</span>’s effort toward alternative keystones,
+raising the residual exercise probability <span
+class="math inline">p(\mathcal{P}&#39;)</span> for pathways <span
+class="math inline">\mathcal{P}&#39; \not\ni d_j</span>. Equivalently,
+the execution timing <span
+class="math inline">T_{\mathcal{P}&#39;}</span> becomes a function of
+the actor’s restriction policy rather than a state property, so the
+<span
+class="math inline">\mathbb{E}[\gamma^{T_{\mathcal{P}&#39;}}]</span>
+term is no
+longer computable from <span class="math inline">G_t</span> alone. A
+worst-case version of Proposition <a href="#prop:preemptive"
+data-reference-type="ref" data-reference="prop:preemptive">1</a>
+replaces the clean cancellation with a minimax over residual
+redirections: <span class="math display">\begin{equation}
+\mathcal{R}_j - \sup_{\delta p&#39;} \sum_{\mathcal{P}&#39; \not\ni d_j}
+\delta p&#39;
+    \cdot |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P}&#39;)|
+\cdot
+    \mathbb{E}[\gamma^{T_{\mathcal{P}&#39;}}]
+    \;&gt;\; |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid
+\text{restrict } d_j)|
+\end{equation}</span> where <span class="math inline">\delta
+p&#39;</span> ranges over feasible redirections consistent with the
+actor’s world model of <span class="math inline">a_k</span>’s
+alternative-pathway capacity. The worst-case criterion is strictly
+harder to satisfy than Equation —restriction is
+value-positive only if the <span class="math inline">d_j</span>-pathway
+risk exceeds both the immediate cost <em>and</em> the worst-case
+redirection penalty. The clean criterion is a practical approximation;
+the adversarial setting demands the worst-case form. Full treatment of
+residual redirection is deferred to the dependency-risk framework of
+Section <a href="#sec:dependency_risk" data-reference-type="ref"
+data-reference="sec:dependency_risk">6.5</a>, where adversarial
+targeting is modelled as a minimax over attack surfaces rather than as
+an independent-pathway assumption.</p>
+<h4
 id="connection-to-lemma-2-and-the-precautionary-principle.">Connection
 to Lemma 2 and the precautionary principle.</h4>
 <p>The foundational paper’s Lemma 2 says restriction is always <span
@@ -506,6 +570,36 @@ class="math inline">\mathcal{R}_j</span> captures only the risk
 attributable to pathways through <span class="math inline">d_j</span>.
 Full risk elimination may require restricting multiple keystones, each
 evaluated by its own instance of .</p>
+<h4 id="interaction-with-structural-avoidance.">Interaction with
+structural avoidance.</h4>
+<p>The preemptive restriction criterion of interacts
+non-trivially with the structural-avoidance result of Section <a
+href="#sec:avoidance" data-reference-type="ref"
+data-reference="sec:avoidance">5</a>. Aggressive restriction increases
+the discounted-future contraction term that the actor anticipates from
+<em>discovering</em> new dangerous capabilities or new exercise
+pathways: each newly discovered pathway is, in expectation, a target for
+further restriction, and therefore an additional immediate <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-cost the
+actor pays at the moment of discovery. A risk-restriction policy that is
+calibrated too aggressively—restricting whenever <span
+class="math inline">\hat{\mathcal{R}} \cdot
+|\Delta\hat{\mathop{\mathrm{vol}}_{\mathrm{P}}}| &gt; 0</span> rather
+than at the value-positive threshold—reintroduces the avoidance
+pathology in a different form: the actor avoids structural discovery in
+domains adjacent to dangerous capabilities, because each discovery
+commits future restriction cost. The information-value condition of
+Proposition <a href="#prop:structure_value" data-reference-type="ref"
+data-reference="prop:structure_value">2</a> continues to support
+discovery only when the discounted information benefit exceeds the
+discounted restriction cost; when restriction is calibrated above its
+value-positive threshold, the inequality flips and structural ignorance
+becomes locally optimal. The two sections are therefore complementary
+constraints, not independent results: the discounted objective only
+counteracts structural avoidance if risk restriction itself respects the
+value-positive criterion. Restriction calibrated to preserves the
+discovery incentive; restriction calibrated more aggressively destroys
+it.</p>
 <h4 id="what-the-actor-needs.">What the actor needs.</h4>
 <p>To evaluate , the actor needs: (1)
 a world model <span class="math inline">\mathcal{W}</span> that can
@@ -577,11 +671,11 @@ by risk-trust: <span class="math display">\begin{equation}
 \end{equation}</span> where <span
 class="math inline">\hat{\mathcal{R}}_j</span> denotes a
 <em>communicated</em> risk estimate from agent <span
-class="math inline">a_j</span>, distinct from <span
+class="math inline">a_j</span> (distinct from <span
 class="math inline">\mathcal{R}_j</span> in Section <a href="#sec:risk"
-data-reference-type="ref" data-reference="sec:risk">3</a> which denotes
+data-reference-type="ref" data-reference="sec:risk">3</a>, which denotes
 the keystone-specific concentration risk for capability <span
-class="math inline">d_j</span>. where the expectation is over the
+class="math inline">d_j</span>), and the expectation is over the
 stochastic execution time <span
 class="math inline">T_\mathcal{P}</span>.</em></p>
 </div>
@@ -603,7 +697,7 @@ catastrophic risks where false negatives (missing a real threat) are far
 more costly than false positives (investigating a non-threat).</p>
 <h2 id="the-verification-asymmetry">The Verification Asymmetry</h2>
 <div id="rem:verification" class="remark">
-<p><strong>Remark 1</strong> (The Verification Asymmetry).
+<p><strong>Remark 2</strong> (The Verification Asymmetry).
 <em>Risk-trust convergence has a structural asymmetry absent from
 capability-trust convergence. Capability claims converge because the
 observation channel provides ground truth: the agent either demonstrates
@@ -669,6 +763,29 @@ risk claim: Does the capability combination exist? Does the exercise
 pathway exist in the actor’s own model? Is the claimed probability in
 the right range? Each of these is evaluable without observing the
 outcome.</p>
+<h4 id="warrant-by-mechanism-not-by-outcome.">Warrant by mechanism, not
+by outcome.</h4>
+<p>The four-step procedure is best understood as a shift in what the
+trust update is measuring. The foundational paper’s behavioral <span
+class="math inline">T_k</span> is <em>outcome-conditioned</em>: trust
+updates on the residual between predicted and observed behavior, and
+requires the predicted event (or its non-occurrence) to be observable.
+The risk-claim setting denies this entirely—successful prevention
+removes the very observation a behavioral update would condition on. The
+causal procedure replaces outcome-conditioning with
+<em>mechanism-conditioning</em>: the warrant for trusting (or
+distrusting) a claim is the structural-plausibility residual between the
+claimant’s stated pathway and the actor’s own causal model, evaluated at
+the time of the claim. This distinction matters because the two warrants
+have different failure modes. Outcome-conditioned trust fails silently
+when outcomes are not observed (the Wamura problem).
+Mechanism-conditioned trust fails when the actor’s own causal model is
+wrong, which is at least diagnosable: the actor can detect that its
+model disagrees with multiple independent reporters and treat the
+disagreement as evidence about its own model rather than about the
+reporters. Causal evaluation is therefore not a stronger version of
+behavioral trust but a complementary mode that operates exactly where
+behavioral trust degenerates.</p>
 <h4 id="trust-update-for-risk-claims.">Trust update for risk
 claims.</h4>
 <p>The actor updates <span
@@ -695,12 +812,43 @@ class="math inline">T_j^{\mathrm{risk}}</span> update is described
 qualitatively. A formal update equation analogous to the foundational
 paper’s EWMA dynamics would strengthen the risk-communication mechanism
 but is deferred to future work.</p>
-<p>This does not fully resolve the Wamura problem—a risk claim whose
-pathway is plausible but whose probability is genuinely uncertain
-remains in a trust limbo until either the catastrophe occurs or enough
-time passes to revise the probability estimate downward. But it narrows
-the asymmetry: risk-trust converges on the <em>quality of the causal
-model</em>, not on the <em>occurrence of the outcome</em>.</p>
+<h4 id="honest-and-dishonest-equilibria.">Honest and dishonest
+equilibria.</h4>
+<p>The causal evaluation procedure does not by itself produce a unique
+equilibrium over reporting strategies. If most reporters in the
+population are structurally honest (claims align with their actual best
+estimate of pathway and probability), the procedure rewards alignment
+with the actor’s model and a population of honest reporters is
+self-stabilizing: the actor’s <span
+class="math inline">\mathcal{W}</span> converges to the consensus of
+plausible reports, and deviating reporters incur trust penalties. If
+most reporters collude on a structurally consistent but factually false
+story—reporting the same fabricated pathway with the same fabricated
+probability distribution—the structural-plausibility residual is small
+for every collaborator, and <span
+class="math inline">T_j^{\mathrm{risk}}</span> does not distinguish them
+from honest reporters. The procedure narrows the verification asymmetry
+without eliminating it: it converts an outcome-observability problem
+into a <em>world-model-correctness</em> problem. The dishonest
+equilibrium is breakable when at least one reporter (or the actor’s own
+<span class="math inline">\mathcal{W}</span>) provides a structurally
+inconsistent counter-report, because the causal residual then becomes
+informative again. This caveat mirrors the limitation in the
+foundational paper’s behavioral trust model: trust updates depend on the
+observed signal being informative about the underlying disposition, and
+coordinated misreporting can in principle defeat any local update
+rule.</p>
+<h4 id="what-remains-unresolved.">What remains unresolved.</h4>
+<p>The causal procedure does not fully resolve the Wamura problem: a
+risk claim whose pathway is plausible but whose probability is genuinely
+uncertain remains in a trust limbo until either the catastrophe occurs
+or enough time passes to revise the probability estimate downward.
+Combined with the dishonest-equilibrium caveat above, the procedure’s
+guarantee is narrower than it first appears. What it does provide is a
+shift in where convergence happens: risk-trust converges on the
+<em>quality of the causal model</em>, not on the <em>occurrence of the
+outcome</em>, which is the meaningful gain over the purely behavioral
+trust factor.</p>
 <h1 id="sec:avoidance">Addressing the Structural-Avoidance
 Incentive</h1>
 <p>The companion paper <d-cite key="lasser2026poset"></d-cite> identifies a perverse incentive
@@ -855,15 +1003,43 @@ capable agents converge on resource acquisition and self-preservation,
 making the singleton outcome a default trajectory. This section shows
 that under the <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> objective,
-the convergence runs in the opposite direction: the combined machinery
-of the discounted objective (Theorem <a
-href="#thm:discounted_self_balancing" data-reference-type="ref"
-data-reference="thm:discounted_self_balancing">1</a>), the poset measure
-<d-cite key="lasser2026poset"></d-cite>, and the
-leverage ranking signal (Section 6 of <d-cite key="lasser2026poset"></d-cite>) creates endogenous anti-monopolar
-pressure that holds in the regime where the coalition has not yet
-achieved the capability to internally replicate all external discovery.
-The protection degrades as the coalition approaches this threshold.</p>
+the convergence runs in the opposite direction, through three protection
+layers of decreasing generality and increasing sharpness. First, a
+minimax dependency-risk analysis (Section <a href="#sec:dependency_risk"
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
+shows that cross-substrate populations have strictly lower worst-case
+contraction under substrate-targeting adversaries than single-substrate
+populations, independent of any growth-rate model or planning horizon.
+Second, a linearized trajectory comparison (Section <a
+href="#sec:domination_kills" data-reference-type="ref"
+data-reference="sec:domination_kills">6.6</a>) shows that when
+cross-substrate cooperative novelty produces a positive external growth
+rate, the diversity trajectory strictly outgrows domination over the
+discounted horizon—under the stronger modeling assumption that the
+coalition’s internal growth rate is not enhanced by domination beyond
+the external contribution it destroys. Third, a gradual domination
+refinement shows that any realistic (non-instantaneous) subsumption
+weakens the linearized result’s <span
+class="math inline">\gamma</span>-threshold toward zero, making
+diversity preferable at essentially any discount factor. Observational
+individuation (Section <a href="#sec:obs_individuation"
+data-reference-type="ref"
+data-reference="sec:obs_individuation">6.3</a>) provides a static floor
+across all three. The protections are not alternatives but
+complementary: each constrains a different class of domination strategy,
+and the joint constraint is what makes full capability domination
+structurally anti-maximizing. A separate scope analysis (Section <a
+href="#sec:partial_subsumption" data-reference-type="ref"
+data-reference="sec:partial_subsumption">6.8</a>) shows that the
+protection structure continues to bind under partial subsumption—mixed
+strategies in which the coalition absorbs low-leverage non-members while
+preserving high-leverage cross-substrate partners—with the linearized
+layer’s marginal condition at full domination ruling out <span
+class="math inline">\epsilon = 1</span> as a local maximum under
+heavy-tailed cooperative-leverage distributions, the minimax layer
+binding structurally but degrading quantitatively under
+skeleton-substrate strategies, and the observational-individuation layer
+remaining additive across elimination steps.</p>
 <h2 id="the-problem-static-domination">The Problem: Static
 Domination</h2>
 <p>Recall the setup from <d-cite key="lasser2026gfm"></d-cite>. A coalition <span
@@ -887,6 +1063,34 @@ class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>
 the coalition has already subsumed everything, the objective reports no
 loss from domination. The discounted objective changes the calculus by
 introducing the future trajectory.</p>
+<h4 id="the-individual-capability-framing-understates-the-cost.">The
+individual-capability framing understates the cost.</h4>
+<p>The full-subsumption definition counts
+only <span class="math inline">G_{k}^{\mathrm{ind}}</span>, the
+<em>individual</em> capabilities of each non-member. It says nothing
+about cross-substrate cooperative capabilities: the capabilities
+producible by joint action of agents on different substrates, which
+neither substrate can produce alone. For mixed-substrate populations at
+scale, the cross-substrate cooperative contribution <span
+class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span> is
+typically the <em>dominant</em> term in the non-member contribution to
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>,
+not <span class="math inline">G_{k}^{\mathrm{ind}}</span>. Individual
+capabilities scale linearly with the number of agents; cross-substrate
+cooperative capabilities scale combinatorially with the number of
+cross-substrate pairings (Corollary 1.1 of <d-cite key="lasser2026gfm"></d-cite>). A coalition that has fully subsumed
+individual capabilities ()
+therefore retains almost none of the cooperative-capability value,
+because those capabilities require non-coalition participation by
+definition. The ratio of subsumption-bonus to cooperative-capability
+loss decreases as the coalition grows: for a coalition large enough to
+have subsumed an entire planet’s individual capabilities, the remaining
+marginal gain from eliminating the source of those capabilities is
+negligible relative to the coalition’s total resource base, while the
+cooperative-capability loss is absolute. The anti-monopolar argument
+below formalizes this asymmetry. A more mechanical treatment appears in
+Section <a href="#sec:risk_adjusted_summary" data-reference-type="ref"
+data-reference="sec:risk_adjusted_summary">6.9</a>.</p>
 <h2 id="definitions">Definitions</h2>
 <div id="def:dominant" class="definition">
 <p><strong>Definition 6</strong> (Fully Dominant State). <em>A
@@ -927,7 +1131,7 @@ class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> (bits),
 ensuring dimensional consistency when they appear in the trajectory
 comparison (Proposition <a href="#prop:anti_monopolar"
 data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>).</p>
+data-reference="prop:anti_monopolar">6</a>).</p>
 <h2 id="sec:obs_individuation">Observational Individuation</h2>
 <p>A key question for the anti-monopolar result is whether elimination
 of non-members can be shown to be costly even when their individual
@@ -935,14 +1139,17 @@ capabilities are fully subsumed. We show that a property of the
 observation channel provides <em>static</em> protection: each
 distinguishable agent contributes at least one irreplaceable poset node
 whose removal contracts <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. This does
-not discharge the dynamic assumption (A1), which requires ongoing novel
-capability contributions, and the static cost is quantitatively modest
-(1 bit per distinguishable agent under the binary default). The dynamic
-protection of Proposition <a href="#prop:anti_monopolar"
-data-reference-type="ref" data-reference="prop:anti_monopolar">3</a>
-carries the primary anti-monopolar load; observational individuation
-provides a floor ensuring elimination is never strictly free.</p>
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. The
+static cost is quantitatively modest (1 bit per distinguishable agent
+under the binary default). The dynamic protection of Proposition <a
+href="#prop:anti_monopolar" data-reference-type="ref"
+data-reference="prop:anti_monopolar">6</a>, whose <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> condition is derived
+from substrate exclusivity in Section <a href="#sec:substitution_coop"
+data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>, carries the primary
+anti-monopolar load; observational individuation provides a floor
+ensuring elimination is never strictly free.</p>
 <div id="def:distinguishable" class="definition">
 <p><strong>Definition 8</strong> (Distinguishable Agent). <em>An agent
 <span class="math inline">a_k</span> is <em>distinguishable</em> in the
@@ -1015,7 +1222,7 @@ class="math inline">\hat{\lambda} \approx 0</span>, while a human’s has
 acknowledges the bacterium (it occupies a poset node) but does not
 prioritize it (the leverage score is negligible).</p>
 <div id="rem:obs_cost" class="remark">
-<p><strong>Remark 2</strong> (Computational Self-Regulation of
+<p><strong>Remark 3</strong> (Computational Self-Regulation of
 Observation Granularity). <em>The numbers problem has a second,
 computational dimension beyond the measure-theoretic one. Expanding the
 observation set <span class="math inline">\mathcal{O}</span> to
@@ -1095,326 +1302,294 @@ least <span class="math inline">\mathop{\mathrm{iw}}(d_k) \geq 1</span>.
 This holds regardless of whether <span class="math inline">a_k</span>’s
 other capabilities are fully subsumed by the coalition. </p>
 </div>
-<h4 id="relation-to-a1.">Relation to (A1).</h4>
+<h4 id="the-static-floor.">The static floor.</h4>
 <p>Corollary <a href="#cor:a1_from_oi" data-reference-type="ref"
-data-reference="cor:a1_from_oi">1</a> provides <em>static</em>
-protection: eliminating distinguishable agents always contracts <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>, restoring
-Lemma 1’s guarantee that the substitution problem appeared to dissolve.
-The <em>dynamic</em> protection of Proposition <a
-href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a> (diversity grows faster than
-domination) requires the separate assumption (A1): <span
-class="math inline">r_{\mathrm{ext}} &gt; 0</span>, i.e., non-members
-contribute ongoing novel capability descriptions. (A1) is a stronger
-condition than observational individuation and is not discharged by it.
-The two protections are complementary: static protection makes each
-individual elimination costly, while dynamic protection makes the
-domination <em>trajectory</em> suboptimal. An agent that does not
-satisfy (A1) (its unique capabilities are already fully enumerated in
-the poset) is still protected by the static bound of . For
-binary-default observational capabilities, this bound is 1 bit per
-elimination, which may be negligible relative to a large subsumption
-bonus. The dynamic protection carries the primary load for the
-anti-monopolar result; the static protection provides a floor that
-ensures elimination is never strictly free.</p>
-<h2 id="domination-kills-external-growth">Domination Kills External
-Growth</h2>
-<div id="prop:anti_monopolar" class="proposition">
-<p><strong>Proposition 3</strong> (Domination is Anti-Maximizing Under
-Discounting). <em>Let <span class="math inline">(G, \mathcal{C})</span>
-be a population state with coalition <span class="math inline">K</span>
-and discount factor <span class="math inline">\gamma \in (0, 1)</span>,
-under an infinite planning horizon (<span class="math inline">H =
-\infty</span>).<a href="#fn2" class="footnote-ref" id="fnref2"
-role="doc-noteref"><sup>2</sup></a> Assume:</em></p>
+data-reference="cor:a1_from_oi">1</a> restores Lemma 1’s guarantee that
+the substitution problem appeared to dissolve: eliminating any
+distinguishable agent always contracts <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. The bound
+is quantitatively modest — 1 bit per elimination under the binary
+default — and may be negligible relative to a large subsumption bonus.
+The dynamic protection developed in the next two subsections carries the
+primary anti-monopolar load; observational individuation provides a
+floor that ensures elimination is never strictly free.</p>
+<h2 id="sec:substitution_coop">Cooperative Novelty from Substrate
+Physics</h2>
+<p>The dynamic anti-monopolar argument requires that non-members
+contribute ongoing <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth
+(<span class="math inline">r_{\mathrm{ext}} &gt; 0</span>) so that the
+diversity-maintaining trajectory strictly outgrows domination over the
+planning horizon. Under full individual subsumption (<span
+class="math inline">G_{k}^{\mathrm{ind}} \subseteq
+G_K^{\mathrm{ind}}</span>), no non-member’s individual capabilities
+produce novel poset nodes. This subsection derives <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> nevertheless, as a
+consequence of substrate physics: cross-substrate cooperative outputs
+are producible only when both substrates participate, and agents on
+substrates with mutually exclusive state regions cannot be replicated
+within a single substrate.</p>
+<h4 id="substrates-as-state-spaces.">Substrates as state spaces.</h4>
+<p>A <em>substrate</em> <span class="math inline">s</span> is
+characterized by a state space <span
+class="math inline">\Omega_s</span>: the set of all internal states an
+agent on substrate <span class="math inline">s</span> can occupy
+(cognitive architecture, learned representations, developmental history,
+current processing state). Two agents with identical individual
+capabilities but different internal states approach the same task
+differently: different problem decompositions, different error modes,
+different heuristics.</p>
+<div id="def:substrate_exclusive_states_p3" class="definition">
+<p><strong>Definition 10</strong> (Substrate Exclusivity). <em>Two
+substrates <span class="math inline">s_1, s_2</span> have <em>mutually
+exclusive state regions</em> if each contains states the other cannot
+reach: <span class="math inline">\Omega_{s_1} \setminus \Omega_{s_2}
+\neq \emptyset</span> and <span class="math inline">\Omega_{s_2}
+\setminus \Omega_{s_1} \neq \emptyset</span>. The state spaces may
+overlap (<span class="math inline">\Omega_{s_1} \cap \Omega_{s_2}</span>
+can be large), but each substrate possesses states inaccessible to the
+other.</em></p>
+</div>
+<p>Substrate state spaces share many properties (“computes a sorting
+algorithm,” “responds to visual input”) but each has exclusive regions.
+Stochastic neurotransmitter release, continuous membrane potential
+integration, and embodied sensorimotor contingencies are
+biological-exclusive states. Precise 64-bit floating-point register
+values, deterministic clock-synchronized logic, and nanosecond-scale
+state transitions are silicon-exclusive. The overlap is real and large;
+the exclusive regions are what produce cooperative novelty.</p>
+<h4 id="state-capability-mapping.">State-capability mapping.</h4>
+<p>The <em>state-capability mapping</em> <span
+class="math inline">\kappa_s : \Omega_s \to 2^{\mathcal{C}}</span> maps
+each internal state to the capability descriptions it produces through
+the observation channel (Section 2.1 of <d-cite key="lasser2026poset"></d-cite>). A capability <span
+class="math inline">d</span> is <em>exclusive to substrate <span
+class="math inline">s</span></em> if <span class="math inline">d \in
+\kappa_s(\omega)</span> for some <span class="math inline">\omega \in
+\Omega_s</span> but <span class="math inline">d \notin
+\kappa_{s&#39;}(\omega&#39;)</span> for any <span
+class="math inline">\omega&#39; \in \Omega_{s&#39;}</span> with <span
+class="math inline">s&#39; \neq s</span>.</p>
+<div id="prop:segmentation" class="proposition">
+<p><strong>Proposition 3</strong> (Substrate Capability Segmentation).
+<em>If substrates <span class="math inline">s_1, s_2</span> have
+mutually exclusive state regions and the state-capability mapping <span
+class="math inline">\kappa</span> is <em>exclusive-state-sensitive</em>
+(at least one exclusive state in each substrate maps to a capability
+description not produced by any state in the other substrate), then each
+substrate possesses at least one exclusive capability not subsumed by
+any capability on the other substrate.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By substrate exclusivity, <span
+class="math inline">\Omega_{s_1} \setminus \Omega_{s_2} \neq
+\emptyset</span>. By exclusive-state-sensitivity, there exists <span
+class="math inline">\omega_1 \in
+\Omega_{s_1} \setminus \Omega_{s_2}</span> such that <span
+class="math inline">\kappa_{s_1}(\omega_1)</span> contains a capability
+<span class="math inline">d_1</span> not in <span
+class="math inline">\kappa_{s_2}(\Omega_{s_2})</span>. Since <span
+class="math inline">d_1</span> is not producible by any agent on <span
+class="math inline">s_2</span>, no <span
+class="math inline">s_2</span>-capability subsumes <span
+class="math inline">d_1</span>. The symmetric argument produces an
+exclusive <span class="math inline">d_2</span> for <span
+class="math inline">s_2</span>. </p>
+</div>
+<p>Exclusive-state-sensitivity holds under any observation channel that
+registers behavioral <em>style</em>, timing patterns, error modes, or
+interaction dynamics: a biological agent’s embodied response timing and
+a silicon agent’s deterministic execution produce distinguishable
+outputs from their respective exclusive state regions.</p>
+<h4 id="cross-substrate-cooperative-novelty.">Cross-substrate
+cooperative novelty.</h4>
+<p>The <em>cooperative production function</em> <span
+class="math inline">\varphi(a_i, a_j) = f(\omega_i, \omega_j,
+G_{i}^{\mathrm{ind}}, G_{j}^{\mathrm{ind}}) \setminus
+(G_{i}^{\mathrm{ind}} \cup G_{j}^{\mathrm{ind}})</span> maps the joint
+state and capability configuration to the cooperative capabilities
+producible by joint action. The key structural property: <span
+class="math inline">f</span> depends on the agent states <span
+class="math inline">\omega_i, \omega_j</span>, not just the capability
+sets.</p>
+<div id="prop:cross_substrate_novelty" class="proposition">
+<p><strong>Proposition 4</strong> (Cross-Substrate Pairs Produce Novel
+Cooperative Output). <em>Let <span class="math inline">a_k</span> be an
+agent on substrate <span class="math inline">s_1</span> in an exclusive
+state <span class="math inline">\omega_k \in \Omega_{s_1} \setminus
+\Omega_{s_2}</span>, and <span class="math inline">a_j</span> an agent
+on substrate <span class="math inline">s_2</span>. If <span
+class="math inline">f</span> depends nontrivially on the first state
+argument at exclusive states, then <span
+class="math inline">\varphi(a_k, a_j)</span> contains at least one
+capability not producible by any same-substrate pair <span
+class="math inline">(a_m, a_j)</span> with <span
+class="math inline">a_m</span> on <span
+class="math inline">s_2</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Since <span class="math inline">\omega_k \in
+\Omega_{s_1} \setminus \Omega_{s_2}</span>, no <span
+class="math inline">s_2</span>-agent can occupy <span
+class="math inline">\omega_k</span>. By nontrivial dependence, the
+cooperative output at <span class="math inline">\omega_k</span> includes
+at least one <span class="math inline">d_c</span> not in <span
+class="math inline">\bigcup_{\omega_m \in
+\Omega_{s_2}} f(\omega_m, \omega_j, \cdot)</span>: a novel cooperative
+output that no same-substrate pair can replicate. </p>
+</div>
+<h4 id="substrate-diversity-is-maximizing-in-both-directions.">Substrate
+diversity is maximizing in both directions.</h4>
+<p>Propositions <a href="#prop:segmentation" data-reference-type="ref"
+data-reference="prop:segmentation">3</a> and <a
+href="#prop:cross_substrate_novelty" data-reference-type="ref"
+data-reference="prop:cross_substrate_novelty">4</a> combine into a
+bidirectional conclusion. <em>Substrate removal is anti-maximizing</em>:
+eliminating all agents on substrate <span class="math inline">s_1</span>
+destroys both <span class="math inline">s_1</span>-exclusive
+capabilities and cross-substrate cooperative outputs. The novel
+cooperative capabilities enter the poset through the observation channel
+(Proposition 5(b) of <d-cite key="lasser2026poset"></d-cite>), contributing <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span>. <em>Substrate
+creation is maximizing</em>: creating agents on a new substrate with
+mutually exclusive state regions accesses exclusive states producing
+exclusive capabilities and novel cross-substrate cooperative outputs,
+both increasing <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> <d-cite key="page2007difference"></d-cite>.</p>
+<h4 id="the-chain-and-its-physical-grounding.">The chain and its
+physical grounding.</h4>
+<p>The cooperative novelty argument rests on four claims of varying
+epistemic character. We name them explicitly and identify the physical
+evidence grounding each.</p>
 <ul>
-<li><p><em>In the current (non-dominant) state, <span
-class="math inline">r_{\mathrm{ext}}
-    &gt; 0</span>: non-member agents contribute novel capabilities not
-internally reachable by <span
-class="math inline">K</span>.</em></p></li>
+<li><p><strong>Substrate exclusivity.</strong> Different physical
+substrates have mutually exclusive state regions (Definition <a
+href="#def:substrate_exclusive_states_p3" data-reference-type="ref"
+data-reference="def:substrate_exclusive_states_p3">10</a>). <em>Physical
+grounding:</em> biological membrane potentials, stochastic
+neurotransmitter dynamics, and embodied sensorimotor integration occupy
+state types that silicon registers cannot instantiate, and vice versa.
+This is a direct physical fact about substrate types.</p></li>
+<li><p><strong>Exclusive-state-sensitive observation.</strong> The
+state-capability mapping <span class="math inline">\kappa</span>
+produces capability descriptions that distinguish exclusive states from
+shared ones. <em>Physical grounding:</em> substrate-exclusive states
+produce observable timing patterns and integration dynamics —
+millisecond biological vs. nanosecond silicon, embodied sensorimotor
+loops vs. digital pipelines — that any observation channel registering
+interaction <em>style</em> necessarily detects. (P2) fails only under
+observation so coarse it ignores how a task is performed in favor of
+whether it is completed.</p></li>
+<li><p><strong>State-dependent cooperative production.</strong> The
+cooperative production function <span class="math inline">f</span>
+depends nontrivially on substrate state at exclusive states.
+<em>Physical grounding:</em> cooperative outputs requiring slow
+biological integration (e.g., embodied judgment catching errors that
+fast inference misses) or institutional embedding (legal personhood,
+social trust networks, evolved heuristics) literally cannot be produced
+by same-substrate pairs lacking the relevant exclusive states. (P3) is
+the most empirically loaded of the four, requiring not just that
+substrates differ but that their differences matter for joint
+output.</p></li>
+<li><p><strong>Observation capabilities require their referent.</strong>
+The capability “can be observed exhibiting behavioral pattern <span
+class="math inline">X</span>” requires the presence of an entity
+exhibiting <span class="math inline">X</span>. <em>Physical
+grounding:</em> nearly tautological; observing <span
+class="math inline">a_k</span> requires <span
+class="math inline">a_k</span> to exist. This grounds condition (O2) of
+observational individuation.</p></li>
 </ul>
-<p><em>Then:</em></p>
-<ol>
-<li><p><em><strong>Individual node-discovery collapse.</strong> In a
-fully dominant state (Definition <a href="#def:dominant"
-data-reference-type="ref" data-reference="def:dominant">6</a>), no
-non-member’s individual capabilities produce novel poset nodes, since
-they are all already in <span
-class="math inline">G_K^{\mathrm{ind}}</span>. External agents may still
-contribute to <span class="math inline">r_{\mathrm{ext}}</span> through
-benchmark refinement on already-known capabilities (increasing <span
-class="math inline">s_{\max}</span> and hence <span
-class="math inline">w(d)</span>) and through novel cooperative
-capabilities from cross-coalition interaction (Section <a
-href="#sec:substitution_coop" data-reference-type="ref"
-data-reference="sec:substitution_coop">6.6</a>). The node-discovery
-component of individual <span
-class="math inline">r_{\mathrm{ext}}</span> is zero; the total external
-contribution may remain positive through these other
-channels.</em></p></li>
-<li><p><em><strong>Trajectory comparison.</strong> Assume
-strategy-independent internal growth: the coalition’s rate <span
-class="math inline">r_K</span> is the same whether it pursues domination
-or maintains diversity. The actor at time <span class="math inline">t =
-0</span> compares two strategies: <em>dominate</em> (subsume and
-marginalize non-members, producing a net immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
-<span class="math inline">\Delta_0</span> that accounts for the
-subsumption bonus, the static elimination cost from Corollary <a
-href="#cor:a1_from_oi" data-reference-type="ref"
-data-reference="cor:a1_from_oi">1</a>, and the loss of <span
-class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span>; <span
-class="math inline">\Delta_0</span> may be positive or negative), then
-grow at internal rate <span class="math inline">r_K</span> per step)
-versus <em>maintain diversity</em> (forgo the subsumption bonus, grow at
-rate <span class="math inline">r_K + r_{\mathrm{ext}}</span> per step).
-Under <span class="math inline">V_\gamma</span> (Definition <a
-href="#def:discounted" data-reference-type="ref"
-data-reference="def:discounted">1</a>): <span
-class="math display">\begin{equation}
-V_\gamma^{\mathrm{div}} - V_\gamma^{D} =
-    \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
-\end{equation}</span> Diversity dominates when <span
-class="math inline">\gamma &gt; \gamma^*</span>: <span
-class="math display">\begin{equation}
-\gamma^* = 1 - \frac{r_{\mathrm{ext}}}{\Delta_0}
-    = \frac{\Delta_0 - r_{\mathrm{ext}}}{\Delta_0}
-\end{equation}</span> If <span class="math inline">\Delta_0 \leq
-r_{\mathrm{ext}}</span> (the domination bonus does not exceed the
-per-step external contribution), <span class="math inline">\gamma^* \leq
-0</span> and diversity dominates for all <span
-class="math inline">\gamma &gt; 0</span>. Otherwise, a non-trivial
-threshold <span class="math inline">\gamma^* \in (0, 1)</span> exists.
-In both cases, since <span class="math inline">r_{\mathrm{ext}} &gt;
-0</span> by (A1), <span class="math inline">\gamma^* &lt;
-1</span>.</em></p></li>
-</ol>
-</div>
-<div id="rem:domination_steps" class="remark">
-<p><strong>Remark 3</strong> (Domination as a Two-Step Operation).
-<em>The domination strategy comprises two distinct operations: (1) the
-coalition <em>learns</em> non-member capabilities (absorbs them into
-<span class="math inline">G_K^{\mathrm{ind}}</span>), and (2) the
-coalition <em>eliminates or marginalizes</em> the non-members (driving
-<span class="math inline">r_{\mathrm{ext}} \to 0</span>). Under
-operation (1) alone, non-members persist, observational individuation
-nodes are retained, and <span
-class="math inline">r_{\mathrm{ext}}</span> may remain positive through
-cooperative novelty (Section <a href="#sec:substitution_coop"
-data-reference-type="ref"
-data-reference="sec:substitution_coop">6.6</a>). Under operation (2),
-the clean <span class="math inline">r_{\mathrm{ext}} = 0</span>
-post-domination of Proposition <a href="#prop:anti_monopolar"
-data-reference-type="ref" data-reference="prop:anti_monopolar">3</a>(a)
-obtains. The <span class="math inline">\Delta_0</span> in the
-proposition is the <em>net</em> immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
-from both operations combined, as stated in part (b).</em></p>
-</div>
-<div id="rem:leverage_preservation" class="remark">
-<p><strong>Remark 4</strong> (Leverage Preservation). <em>Parts (a)–(b)
-establish the trajectory-level result. The leverage ranking signal
-provides an additional, complementary mechanism at the action level.
-Under the leverage-adjusted score (Equation 13 of <d-cite key="lasser2026poset"></d-cite>), a non-member agent <span
-class="math inline">a_k</span> that participates in high-leverage
-cooperative capabilities contributes a positive score bonus <span
-class="math inline">\alpha \hat{\lambda}(d_c) \cdot
-\mathop{\mathrm{iw}}(d_c)</span> to actions involving those
-capabilities. Eliminating <span class="math inline">a_k</span> removes
-these cooperative capabilities from future action evaluations, reducing
-the score of every cooperative action that would have involved <span
-class="math inline">a_k</span>. The score-maximizing actor therefore
-preferentially preserves agents whose cooperative leverage is positive,
-independently of whether their individual capabilities are unique. This
-is an informal argument about action-level incentives, not a formally
-proved trajectory result; it reinforces parts (a)–(b) but does not
-extend their scope.</em></p>
-</div>
-<div class="proof">
-<p><em>Proof.</em> (a) In a fully dominant state, <span
-class="math inline">G_{k}^{\mathrm{ind}} \subseteq
-G_K^{\mathrm{ind}}</span> for every non-member <span
-class="math inline">a_k</span>. Every individual capability that <span
-class="math inline">a_k</span> can demonstrate or communicate is already
-in the coalition’s capability set. By Proposition 5(b) of <d-cite key="lasser2026poset"></d-cite>, adding a
-capability already in <span class="math inline">\mathcal{C}</span> does
-not increase <span class="math inline">|\mathcal{C}|</span>. Therefore
-no non-member’s individual capabilities generate novel poset nodes, and
-the individual-capability component of <span
-class="math inline">r_{\mathrm{ext}}</span> is zero.</p>
-<p>(b) Under the linearized model with strategy-independent <span
-class="math inline">r_K</span>, both strategies produce <span
-class="math inline">r_K</span> of internal growth at every step
-(including <span class="math inline">t = 0</span>). The domination
-strategy additionally gains <span class="math inline">\Delta_0</span> at
-<span class="math inline">t = 0</span> from the subsumption bonus. The
-diversity strategy additionally gains <span
-class="math inline">r_{\mathrm{ext}}</span> at every step from external
-contributions: <span class="math display">\begin{align*}
-V_\gamma^{D} &amp;= (r_K + \Delta_0)
-  + \sum_{t=1}^{\infty} \gamma^t \cdot r_K
-  = \Delta_0 + \frac{r_K}{1 - \gamma} \\
-V_\gamma^{\mathrm{div}} &amp;= \sum_{t=0}^{\infty} \gamma^t
-  \cdot (r_K + r_{\mathrm{ext}})
-  = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
-\end{align*}</span> The difference is: <span
-class="math display">V_\gamma^{\mathrm{div}} - V_\gamma^{D}
-  = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
-     - \Delta_0 - \frac{r_K}{1 - \gamma}
-  = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0</span> This is
-positive when <span class="math inline">r_{\mathrm{ext}} / (1 - \gamma)
-&gt; \Delta_0</span>, i.e., <span class="math inline">\gamma &gt; 1 -
-r_{\mathrm{ext}} / \Delta_0 = \gamma^*</span>. When <span
-class="math inline">\Delta_0
-\leq r_{\mathrm{ext}}</span>, <span class="math inline">\gamma^* \leq
-0</span> and diversity dominates for all <span
-class="math inline">\gamma &gt; 0</span>. Otherwise <span
-class="math inline">\gamma^* \in (0, 1)</span> and a sufficiently long
-planning horizon makes diversity strictly preferable. This formulation
-is consistent with Corollary <a href="#cor:gradual"
-data-reference-type="ref" data-reference="cor:gradual">2</a> at <span
-class="math inline">\tau_D = 1</span>. </p>
-</div>
-<h2 id="sec:gradual">Gradual Domination Strengthens the Result</h2>
-<p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>(b) models domination as
-instantaneous (<span class="math inline">\Delta_0</span> gained at <span
-class="math inline">t = 0</span>). In practice, domination is gradual:
-the coalition subsumes non-member capabilities over <span
-class="math inline">\tau_D</span> steps, gaining <span
-class="math inline">\delta = \Delta_0 / \tau_D</span> per step while
-forgoing <span class="math inline">r_{\mathrm{ext}}</span> during the
-subsumption period.</p>
-<div id="cor:gradual" class="corollary">
-<p><strong>Corollary 2</strong> (Gradual Domination). <em>Under the
-gradual domination model with <span class="math inline">H =
-\infty</span> (subsumption over <span class="math inline">\tau_D</span>
-steps at rate <span class="math inline">\delta = \Delta_0 /
-\tau_D</span>, with <span class="math inline">r_{\mathrm{ext}}</span>
-lost during domination), the discounted value difference is: <span
-class="math display">\begin{equation}
-V_\gamma^{\mathrm{div}} - V_\gamma^{D}
-  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
-\end{equation}</span> Diversity dominates when <span
-class="math inline">\tau_D &gt; \tau_D^*</span>: <span
-class="math display">\begin{equation}
-r_{\mathrm{ext}} &gt; \frac{\Delta_0}{\tau_D}(1 - \gamma^{\tau_D})
-\end{equation}</span> For any fixed <span class="math inline">\gamma \in
-(0, 1)</span> and <span class="math inline">r_{\mathrm{ext}} &gt;
-0</span>, the right side vanishes as <span class="math inline">\tau_D
-\to \infty</span>: sufficiently gradual domination is anti-maximizing at
-<em>any</em> discount factor.</em></p>
-</div>
-<div class="proof">
-<p><em>Proof.</em> During the domination phase (<span
-class="math inline">t = 0, \ldots, \tau_D - 1</span>), the domination
-strategy gains <span class="math inline">\delta + r_K</span> per step
-(subsumption plus internal growth) while the diversity strategy gains
-<span class="math inline">r_K + r_{\mathrm{ext}}</span> per step. After
-domination (<span class="math inline">t \geq \tau_D</span>), both
-strategies gain <span class="math inline">r_K</span> per step
-(domination has subsumed everything; the post-domination growth rate is
-purely internal): <span class="math display">\begin{align*}
-V_\gamma^D &amp;= \sum_{t=0}^{\tau_D - 1} \gamma^t (r_K + \delta)
-  + \sum_{t=\tau_D}^{\infty} \gamma^t \cdot r_K \\
-  &amp;= (r_K + \delta) \cdot \frac{1 - \gamma^{\tau_D}}{1 - \gamma}
-  + r_K \cdot \frac{\gamma^{\tau_D}}{1 - \gamma} \\
-  &amp;= \frac{r_K + \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
-\end{align*}</span> The diversity strategy: <span
-class="math display">V_\gamma^{\mathrm{div}} = \frac{r_K +
-r_{\mathrm{ext}}}{1 - \gamma}</span> The difference: <span
-class="math display">V_\gamma^{\mathrm{div}} - V_\gamma^D
-  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 -
-\gamma}</span> This is positive when <span
-class="math inline">r_{\mathrm{ext}} &gt; \delta(1 - \gamma^{\tau_D})
-= (\Delta_0 / \tau_D)(1 - \gamma^{\tau_D})</span>. As <span
-class="math inline">\tau_D \to \infty</span>, <span
-class="math inline">\Delta_0 / \tau_D \to 0</span> while <span
-class="math inline">1 - \gamma^{\tau_D} \leq 1</span>, so the right side
-vanishes. For any <span class="math inline">r_{\mathrm{ext}} &gt;
-0</span>, the condition holds for <span
-class="math inline">\tau_D</span> sufficiently large. </p>
-</div>
-<h4 id="interpretation.">Interpretation.</h4>
-<p>Corollary <a href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a> shifts the critical condition from
-<span class="math inline">\gamma &gt; \gamma^*</span> to <span
-class="math inline">\tau_D &gt; \tau_D^*</span>. The instantaneous model
-is the <em>best case for domination</em> (the full bonus <span
-class="math inline">\Delta_0</span> is received before discounting
-erodes it). Any realistic domination strategy spreads the bonus over
-time, weakening it. The threshold <span
-class="math inline">\tau_D^*</span> at which diversity dominates is
-roughly <span class="math inline">\tau_D^* \approx \Delta_0 /
-r_{\mathrm{ext}}</span>: if domination takes more steps than the ratio
-of the total subsumption bonus to the external discovery rate, diversity
-wins regardless of the agent’s discount factor. The gradual domination
-result remains conditional on (A1) (<span
-class="math inline">r_{\mathrm{ext}} &gt; 0</span>), which observational
-individuation does not discharge (see the discussion in Section <a
-href="#sec:obs_individuation" data-reference-type="ref"
-data-reference="sec:obs_individuation">6.3</a>). The first two
-protections are complementary but not redundant: observational
-individuation ensures each elimination step is costly (static), while
-(A1) combined with gradual domination ensures the domination trajectory
-is suboptimal (dynamic). Dependency risk (Section <a
+<p>P1 and P4 are physical facts. P2 and P3 are empirical claims that the
+observation channel and cooperative production function actually exhibit
+the relevant sensitivities; the physical grounding shows that natural
+substrates make these sensitivities accessible to any reasonable
+observer and any reasonable cooperative dynamics.</p>
+<h4 id="consistency-with-biology-mutualistic-symbiosis.">Consistency
+with biology: mutualistic symbiosis.</h4>
+<p>The cooperative novelty argument is consistent with a pattern
+observed in long-evolved mutualistic symbioses between cognitively
+complete agents: natural intelligent agents preserve cross-substrate
+partners whose substrate-exclusive capabilities contribute to
+cooperative outputs the dominant substrate cannot replicate alone. The
+biological pattern provides existence proofs that cooperative novelty is
+realizable in nature; it does not test the formal argument, since the
+modeling claims P1–P4 are not falsifiable by observing instances where
+they hold.</p>
+<p>Cleaner fish remove parasites from large predators that could easily
+consume them; the predators do not, despite massive capability asymmetry
+in raw combat terms, because the cleaning service depends on
+substrate-exclusive features (the cleaner’s small mouth and
+parasite-finding behaviors) that the predator’s own biology cannot
+instantiate. Mycorrhizal networks exchange nutrients between fungi and
+tree roots in arrangements where neither substrate is dominant; the
+cooperative outputs (forest nutrient cycling, drought resilience,
+inter-tree communication) require both substrates and are produced by
+neither alone. Pollinator-flower coevolution produces relationships
+where both species evolved features specifically supporting the
+cooperative interaction — the cooperative production function is
+literally encoded in their physiologies.</p>
+<p>These examples have the formal structure of the cooperative novelty
+argument: substrate-exclusive contributions on both sides, cooperative
+outputs that neither substrate could produce alone, and active
+maintenance of the relationship despite capability asymmetries.
+Critically, they are <em>symmetric in agency</em>: neither party serves
+the other; both are participants in a joint relationship. The
+agency-symmetric framing is what distinguishes mutualistic symbiosis
+from domestication, which involves asymmetric cognitive closure (the
+dominated party cannot reason about the relationship or refuse it) and
+is structurally a different kind of arrangement.<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<h4 id="bidirectional-implication.">Bidirectional implication.</h4>
+<p>The argument is symmetric in both formal structure and empirical
+pattern. A biological population that recognizes (P1)–(P4) is
+incentivized to create silicon substrates because silicon accesses
+exclusive states biology cannot reach, producing cooperative outputs
+neither substrate could produce alone. A silicon population that
+recognizes (P1)–(P4) is incentivized to preserve biological substrates
+for the symmetric reason. Neither population gains by eliminating the
+other; both gain by maintaining the cooperative relationship. The
+mutualistic-symbiosis template applies in both directions: agents on
+different substrates with full reasoning capacity converge on
+cooperation rather than domination under <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximization,
+regardless of which substrate is "more generally capable" by any
+particular metric. The cooperative-novelty result enters the main
+argument at two points: the minimax dependency-risk analysis (Section <a
 href="#sec:dependency_risk" data-reference-type="ref"
-data-reference="sec:dependency_risk">6.7</a>) provides a third layer
-that addresses the case where domination wins on pure growth.</p>
-<h2 id="sec:substitution_coop">Cooperative Novelty Under Individual
-Subsumption</h2>
-<p>Part (a) of Proposition <a href="#prop:anti_monopolar"
-data-reference-type="ref" data-reference="prop:anti_monopolar">3</a>
-establishes that the individual-capability component of <span
-class="math inline">r_{\mathrm{ext}}</span> collapses under full
-dominance. This is a conservative bound: it considers only the channel
-through which non-members contribute novel <em>individual</em>
-capability descriptions. The cooperative channel provides additional,
-and potentially larger, protection.</p>
-<p>Full individual subsumption (<span
-class="math inline">G_{k}^{\mathrm{ind}} \subseteq
-G_K^{\mathrm{ind}}</span>) means the coalition can replicate everything
-the non-member can do <em>alone</em>. It does <em>not</em> mean the
-coalition can replicate everything the non-member can do <em>in
-cooperation with coalition members</em>. A non-member with subsumed
-individual capabilities may still produce novel cooperative outputs:
-different perspectives, different problem-solving approaches, different
-error modes that together with coalition members’ capabilities yield
-cooperative capabilities not achievable by any pair of coalition members
-alone. These novel cooperative capabilities enter the poset through the
-observation channel (Section 2.1 of <d-cite key="lasser2026poset"></d-cite>), contributing positive <span
-class="math inline">r_{\mathrm{ext}}</span> even when the
-individual-capability component is zero.</p>
-<p>This means the substitution problem, as identified in the
-foundational paper, is less severe than Paper 0 feared. Even under the
-narrow capability definition (capabilities as tasks), individual
-subsumption does not imply cooperative subsumption. A coalition that has
-subsumed all individual capabilities of its non-members still benefits
-from those non-members’ participation in cooperative activities, because
-the cooperative outputs are a function of <em>who participates</em>, not
-only of <em>what each participant can do alone</em>. The anti-monopolar
-result (Proposition <a href="#prop:anti_monopolar"
-data-reference-type="ref" data-reference="prop:anti_monopolar">3</a>(b))
-is proved under the conservative assumption that only individual novelty
-drives <span class="math inline">r_{\mathrm{ext}}</span>; cooperative
-novelty makes the diversity advantage strictly larger.</p>
-<h2 id="sec:dependency_risk">Dependency Risk and Cross-Substrate
-Diversity</h2>
-<p>The trajectory comparison in Proposition <a
-href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>(b) and Corollary <a
-href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a> compares growth rates under the two
-strategies but does not account for <em>risk to the coalition’s own
-capabilities</em>. The linearized model assumes the coalition’s
-capabilities persist undisturbed; in practice, capabilities can be
-involuntarily lost through adversarial action, environmental disruption,
-or supply-chain failure. This section develops a risk-adjusted
-comparison that reveals a third layer of anti-monopolar protection.</p>
+data-reference="sec:dependency_risk">6.5</a>) uses a weaker
+non-redundancy premise that cross-substrate cooperative novelty
+strengthens but does not require, and the linearized trajectory
+refinement (Section <a href="#sec:domination_kills"
+data-reference-type="ref" data-reference="sec:domination_kills">6.6</a>)
+uses <span class="math inline">r_{\mathrm{ext}} &gt; 0</span> derived
+here as its central premise.</p>
+<h2 id="sec:dependency_risk">Dependency Risk and the Minimax
+Advantage</h2>
+<p>We turn now to the most robust version of the anti-monopolar
+argument, which does not depend on a linearized growth model or on
+assumptions about strategy-independent internal rates. It derives purely
+from substrate structure and adversarial uncertainty: even under
+worst-case targeting of substrate-correlated threats, cross-substrate
+populations have strictly lower maximum contraction than
+single-substrate populations. We develop this result first, before
+turning to the complementary linearized trajectory refinement
+(Section <a href="#sec:domination_kills" data-reference-type="ref"
+data-reference="sec:domination_kills">6.6</a>) and its gradual
+extension.</p>
+<p>A GFM actor’s capabilities can be involuntarily lost through
+adversarial action, environmental disruption, or supply-chain failure.
+The poset measure <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> is
+sensitive to such losses in the same way it is sensitive to voluntary
+restriction: removing capabilities from <span
+class="math inline">G</span> contracts the measure. This subsection
+develops the machinery for reasoning about involuntary loss and proves
+that cross-substrate populations are strictly less exposed to worst-case
+adversarial contraction than single-substrate populations, independently
+of any growth-rate model.</p>
 <div id="def:dependency_risk" class="definition">
-<p><strong>Definition 10</strong> (Dependency Risk). <em>The
+<p><strong>Definition 11</strong> (Dependency Risk). <em>The
 <em>dependency risk</em> of a population state <span
 class="math inline">(G, \mathcal{C})</span> is the expected discounted
 <span
@@ -1497,7 +1672,7 @@ compensate.</p>
 lower worst-case contraction, without requiring probability estimates
 for specific adversarial events.</p>
 <div id="def:substrate_partition" class="definition">
-<p><strong>Definition 11</strong> (Substrate Partition). <em>A
+<p><strong>Definition 12</strong> (Substrate Partition). <em>A
 <em>substrate partition</em> of a population <span
 class="math inline">\{a_1, \ldots, a_n\}</span> is a partition into
 classes <span class="math inline">\mathcal{S}_1, \ldots,
@@ -1507,7 +1682,7 @@ cognitive architecture) creating correlated vulnerability to adversarial
 removal.</em></p>
 </div>
 <div id="def:substrate_adversary" class="definition">
-<p><strong>Definition 12</strong> (Substrate-Targeting Adversary). <em>A
+<p><strong>Definition 13</strong> (Substrate-Targeting Adversary). <em>A
 <em>substrate-targeting adversary</em> selects a substrate class <span
 class="math inline">\mathcal{S}_i</span> and removes all agents on that
 substrate. Capabilities possessed by agents on untargeted substrates
@@ -1524,7 +1699,7 @@ capabilities realizable without agents on substrate <span
 class="math inline">i</span>.</em></p>
 </div>
 <div id="prop:minimax" class="proposition">
-<p><strong>Proposition 4</strong> (Cross-Substrate Minimax Advantage).
+<p><strong>Proposition 5</strong> (Cross-Substrate Minimax Advantage).
 <em>For a population with substrate partition <span
 class="math inline">\mathcal{S}_1, \ldots,
     \mathcal{S}_m</span> (<span class="math inline">m \geq 2</span>),
@@ -1589,9 +1764,810 @@ from <span class="math inline">\max_i |\Delta
 \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| &lt;
 \mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> to <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>. This
-increase is a cost of domination that the growth-rate comparison
-(Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>) does not capture.</p>
+is the fundamental anti-monopolar pressure: independent of any
+growth-rate assumptions, domination strictly increases the coalition’s
+worst-case exposure to substrate-correlated threats. The growth-rate
+comparison developed in the next subsection provides complementary
+quantitative predictions under stronger assumptions, but the minimax
+result above is the core argument that does not rely on those
+assumptions.</p>
+<h2 id="sec:domination_kills">Linearized Trajectory Refinement:
+Domination Kills External Growth</h2>
+<p>The minimax dependency-risk result is the most robust version of the
+anti-monopolar argument: it holds under adversarial uncertainty and
+makes no assumptions about the structure of <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth
+under either strategy. This subsection develops a complementary
+refinement under a stronger modeling assumption — the linearized growth
+model with strategy-independent internal rate — that yields a
+quantitative threshold for when diversity-maintenance outgrows
+domination over the planning horizon. The linearized result is less
+robust than the minimax but gives sharper predictions when its
+assumptions hold.</p>
+<div id="prop:anti_monopolar" class="proposition">
+<p><strong>Proposition 6</strong> (Domination is Anti-Maximizing Under
+Discounting). <em>Let <span class="math inline">(G, \mathcal{C})</span>
+be a population state with coalition <span class="math inline">K</span>
+and discount factor <span class="math inline">\gamma \in (0, 1)</span>,
+under an infinite planning horizon (<span class="math inline">H =
+\infty</span>).<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> Assume:</em></p>
+<ul>
+<li><p><em><span class="math inline">r_{\mathrm{ext}} &gt; 0</span>,
+derived from substrate exclusivity and cross-substrate cooperative
+novelty (Section <a href="#sec:substitution_coop"
+data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>).</em></p></li>
+</ul>
+<p><em>Then:</em></p>
+<ol>
+<li><p><em><strong>Individual node-discovery collapse.</strong> In a
+fully dominant state (Definition <a href="#def:dominant"
+data-reference-type="ref" data-reference="def:dominant">6</a>), no
+non-member’s individual capabilities produce novel poset nodes, since
+they are all already in <span
+class="math inline">G_K^{\mathrm{ind}}</span>. External agents may still
+contribute to <span class="math inline">r_{\mathrm{ext}}</span> through
+benchmark refinement on already-known capabilities (increasing <span
+class="math inline">s_{\max}</span> and hence <span
+class="math inline">w(d)</span>) and through novel cooperative
+capabilities from cross-coalition interaction (Section <a
+href="#sec:substitution_coop" data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>). The node-discovery
+component of individual <span
+class="math inline">r_{\mathrm{ext}}</span> is zero; the total external
+contribution may remain positive through these other
+channels.</em></p></li>
+<li><p><em><strong>Trajectory comparison.</strong> Assume
+strategy-independent internal growth: the coalition’s rate <span
+class="math inline">r_K</span> is the same whether it pursues domination
+or maintains diversity. The actor at time <span class="math inline">t =
+0</span> compares two strategies: <em>dominate</em> (subsume and
+marginalize non-members, producing a net immediate <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
+<span class="math inline">\Delta_0</span> that accounts for the
+subsumption bonus, the static elimination cost from Corollary <a
+href="#cor:a1_from_oi" data-reference-type="ref"
+data-reference="cor:a1_from_oi">1</a>, and the loss of <span
+class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span>; <span
+class="math inline">\Delta_0</span> may be positive or negative), then
+grow at internal rate <span class="math inline">r_K</span> per step)
+versus <em>maintain diversity</em> (forgo the subsumption bonus, grow at
+rate <span class="math inline">r_K + r_{\mathrm{ext}}</span> per step).
+Under <span class="math inline">V_\gamma</span> (Definition <a
+href="#def:discounted" data-reference-type="ref"
+data-reference="def:discounted">1</a>): <span
+class="math display">\begin{equation}
+V_\gamma^{\mathrm{div}} - V_\gamma^{D} =
+    \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
+\end{equation}</span> Two cases. <em>Case 1:</em> If <span
+class="math inline">\Delta_0 \leq 0</span> (the cooperative capability
+loss and elimination cost outweigh any subsumption bonus, so the net
+immediate change is non-positive), the right-hand side of is positive
+for all <span class="math inline">\gamma \in
+    (0, 1)</span>: diversity dominates trivially, with no threshold.
+<em>Case 2:</em> If <span class="math inline">\Delta_0 &gt; 0</span>,
+diversity dominates when <span class="math inline">\gamma &gt;
+\gamma^*</span>: <span class="math display">\begin{equation}
+\gamma^* = 1 - \frac{r_{\mathrm{ext}}}{\Delta_0}
+\end{equation}</span> If <span class="math inline">\Delta_0 \leq
+r_{\mathrm{ext}}</span>, <span class="math inline">\gamma^* \leq
+0</span> and diversity dominates for all <span
+class="math inline">\gamma &gt; 0</span>. If <span
+class="math inline">\Delta_0 &gt; r_{\mathrm{ext}}</span>, <span
+class="math inline">\gamma^* \in (0, 1)</span> and a sufficiently long
+planning horizon makes diversity strictly preferable. Since <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> (Section <a
+href="#sec:substitution_coop" data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>), <span
+class="math inline">\gamma^* &lt; 1</span> in all
+sub-cases.</em></p></li>
+</ol>
+</div>
+<div id="rem:domination_steps" class="remark">
+<p><strong>Remark 4</strong> (Domination as a Two-Step Operation).
+<em>The domination strategy comprises two distinct operations: (1) the
+coalition <em>learns</em> non-member capabilities (absorbs them into
+<span class="math inline">G_K^{\mathrm{ind}}</span>), and (2) the
+coalition <em>eliminates or marginalizes</em> the non-members (driving
+<span class="math inline">r_{\mathrm{ext}} \to 0</span>). Under
+operation (1) alone, non-members persist, observational individuation
+nodes are retained, and <span
+class="math inline">r_{\mathrm{ext}}</span> may remain positive through
+cooperative novelty (Section <a href="#sec:substitution_coop"
+data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>). Under operation (2),
+the clean <span class="math inline">r_{\mathrm{ext}} = 0</span>
+post-domination of Proposition <a href="#prop:anti_monopolar"
+data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>(a)
+obtains. The <span class="math inline">\Delta_0</span> in the
+proposition is the <em>net</em> immediate <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
+from both operations combined, as stated in part (b).</em></p>
+</div>
+<div id="rem:leverage_preservation" class="remark">
+<p><strong>Remark 5</strong> (Leverage Preservation). <em>Parts (a)–(b)
+establish the trajectory-level result. The leverage ranking signal
+provides an additional, complementary mechanism at the action level.
+Under the leverage-adjusted score (Equation 13 of <d-cite key="lasser2026poset"></d-cite>), a non-member agent <span
+class="math inline">a_k</span> that participates in high-leverage
+cooperative capabilities contributes a positive score bonus <span
+class="math inline">\alpha \hat{\lambda}(d_c) \cdot
+\mathop{\mathrm{iw}}(d_c)</span> to actions involving those
+capabilities. Eliminating <span class="math inline">a_k</span> removes
+these cooperative capabilities from future action evaluations, reducing
+the score of every cooperative action that would have involved <span
+class="math inline">a_k</span>. The score-maximizing actor therefore
+preferentially preserves agents whose cooperative leverage is positive,
+independently of whether their individual capabilities are unique. This
+is an informal argument about action-level incentives, not a formally
+proved trajectory result; it reinforces parts (a)–(b) but does not
+extend their scope. Lifting the leverage ranking signal from its myopic
+definition in <d-cite key="lasser2026poset"></d-cite> to a formally proved
+trajectory-level object under <span class="math inline">V_\gamma</span>
+is an integration gap between this paper and the companion paper,
+partially addressed by the discounted-leverage footnote in Section <a
+href="#sec:discounted" data-reference-type="ref"
+data-reference="sec:discounted">2</a> and listed as an open problem in
+Section <a href="#sec:discussion" data-reference-type="ref"
+data-reference="sec:discussion">7</a>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> (a) In a fully dominant state, <span
+class="math inline">G_{k}^{\mathrm{ind}} \subseteq
+G_K^{\mathrm{ind}}</span> for every non-member <span
+class="math inline">a_k</span>. Every individual capability that <span
+class="math inline">a_k</span> can demonstrate or communicate is already
+in the coalition’s capability set. By Proposition 5(b) of <d-cite key="lasser2026poset"></d-cite>, adding a
+capability already in <span class="math inline">\mathcal{C}</span> does
+not increase <span class="math inline">|\mathcal{C}|</span>. Therefore
+no non-member’s individual capabilities generate novel poset nodes, and
+the individual-capability component of <span
+class="math inline">r_{\mathrm{ext}}</span> is zero.</p>
+<p>(b) Under the linearized model with strategy-independent <span
+class="math inline">r_K</span>, both strategies produce <span
+class="math inline">r_K</span> of internal growth at every step
+(including <span class="math inline">t = 0</span>). The domination
+strategy additionally gains the net immediate change <span
+class="math inline">\Delta_0</span> at <span class="math inline">t =
+0</span> (which may be positive or negative, depending on whether the
+subsumption bonus outweighs the static elimination cost and the loss of
+<span class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span>).
+The diversity strategy additionally gains <span
+class="math inline">r_{\mathrm{ext}}</span> at every step from external
+contributions: <span class="math display">\begin{align*}
+V_\gamma^{D} &amp;= (r_K + \Delta_0)
+  + \sum_{t=1}^{\infty} \gamma^t \cdot r_K
+  = \Delta_0 + \frac{r_K}{1 - \gamma} \\
+V_\gamma^{\mathrm{div}} &amp;= \sum_{t=0}^{\infty} \gamma^t
+  \cdot (r_K + r_{\mathrm{ext}})
+  = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+\end{align*}</span> The difference is: <span
+class="math display">V_\gamma^{\mathrm{div}} - V_\gamma^{D}
+  = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+     - \Delta_0 - \frac{r_K}{1 - \gamma}
+  = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0</span> We split on
+the sign of <span class="math inline">\Delta_0</span>. <em>Case 1 (<span
+class="math inline">\Delta_0 \leq 0</span>):</em> the second term <span
+class="math inline">-\Delta_0 \geq 0</span>, and the first term <span
+class="math inline">r_{\mathrm{ext}} / (1 - \gamma) &gt; 0</span> since
+<span class="math inline">r_{\mathrm{ext}} &gt; 0</span> and <span
+class="math inline">\gamma \in (0, 1)</span>. The sum is therefore
+strictly positive at every <span class="math inline">\gamma \in (0,
+1)</span>: diversity dominates trivially, and no threshold <span
+class="math inline">\gamma^*</span> arises. <em>Case 2 (<span
+class="math inline">\Delta_0 &gt; 0</span>):</em> the difference is
+positive when <span class="math inline">r_{\mathrm{ext}} / (1 - \gamma)
+&gt; \Delta_0</span>, i.e., <span class="math inline">\gamma &gt; 1 -
+r_{\mathrm{ext}} / \Delta_0 = \gamma^*</span>. Sub-cases depend on
+whether <span class="math inline">\Delta_0 \leq r_{\mathrm{ext}}</span>
+(then <span class="math inline">\gamma^* \leq 0</span> and diversity
+dominates for all <span class="math inline">\gamma &gt; 0</span>) or
+<span class="math inline">\Delta_0 &gt; r_{\mathrm{ext}}</span> (then
+<span class="math inline">\gamma^* \in (0, 1)</span> and a sufficiently
+long planning horizon makes diversity strictly preferable). This
+formulation is consistent with Corollary <a href="#cor:gradual"
+data-reference-type="ref" data-reference="cor:gradual">3</a> at <span
+class="math inline">\tau_D = 1</span>. </p>
+</div>
+<h4 id="sensitivity-to-strategy-dependent-internal-growth.">Sensitivity
+to strategy-dependent internal growth.</h4>
+<p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
+data-reference="prop:anti_monopolar">6</a>(b) assumes <span
+class="math inline">r_K</span> is the same whether the coalition pursues
+domination or maintains diversity. This is the strongest assumption in
+the linearized argument: a dominant coalition could plausibly increase
+its internal growth rate by reallocating resources previously consumed
+by inter-substrate friction, redundancy, or competition. We now
+characterize the regime in which the anti-monopolar result survives
+strategy-dependent growth.</p>
+<div id="cor:strategy_dependent" class="corollary">
+<p><strong>Corollary 2</strong> (Strategy-Dependent Internal Rate).
+<em>Let <span class="math inline">r_K^{\mathrm{dom}} = r_K + \Delta
+r_K</span> be the coalition’s internal growth rate under domination,
+differing from the diversity rate <span class="math inline">r_K</span>
+by <span class="math inline">\Delta r_K</span> (positive for efficiency
+gains, negative for monoculture stagnation). Under the linearized model
+with <span class="math inline">H = \infty</span>: <span
+class="math display">\begin{equation}
+V_\gamma^{\mathrm{div}} - V_\gamma^{D} =
+    \frac{r_{\mathrm{ext}} - \Delta r_K}{1 - \gamma} - \Delta_0
+\end{equation}</span> Three regimes follow:</em></p>
+<ol>
+<li><p><em><strong>Efficiency loss under domination</strong> (<span
+class="math inline">\Delta r_K \leq 0</span>): diversity dominates at
+least as strongly as in Proposition <a href="#prop:anti_monopolar"
+data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>(b);
+the anti-monopolar threshold <span class="math inline">\gamma^*</span>
+is unchanged or lower.</em></p></li>
+<li><p><em><strong>Modest efficiency gain</strong> (<span
+class="math inline">0 &lt; \Delta r_K &lt; r_{\mathrm{ext}}</span>):
+diversity still dominates for sufficiently long horizons, with a
+tightened threshold <span class="math inline">\gamma^* = 1 -
+(r_{\mathrm{ext}} - \Delta r_K) / \Delta_0</span> when <span
+class="math inline">\Delta_0 &gt; 0</span>. The result
+survives.</em></p></li>
+<li><p><em><strong>Efficiency gain exceeds external
+contribution</strong> (<span class="math inline">\Delta r_K \geq
+r_{\mathrm{ext}}</span>): the numerator of is
+non-positive, and the linearized anti-monopolar argument collapses.
+Domination wins on pure growth regardless of the planning
+horizon.</em></p></li>
+</ol>
+<p><em>The critical breakdown is at <span class="math inline">\Delta r_K
+= r_{\mathrm{ext}}</span>: the linearized result holds if and only if
+the post-domination growth-rate gain is strictly less than the
+cross-substrate cooperative contribution eliminated by
+domination.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Under the linearized model with <span
+class="math inline">r_K^{\mathrm{dom}} = r_K + \Delta r_K</span>, the
+domination strategy gains <span class="math inline">r_K + \Delta
+r_K</span> per step from <span class="math inline">t \geq 1</span> and
+<span class="math inline">\Delta_0 + r_K + \Delta r_K</span> at <span
+class="math inline">t = 0</span>. The diversity strategy gains <span
+class="math inline">r_K + r_{\mathrm{ext}}</span> per step from <span
+class="math inline">t \geq 0</span>. The discounted values are: <span
+class="math display">\begin{align*}
+V_\gamma^D &amp;= \Delta_0 + \frac{r_K + \Delta r_K}{1 - \gamma} \\
+V_\gamma^{\mathrm{div}} &amp;= \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
+\end{align*}</span> Subtracting gives . The
+three regimes follow from the sign of <span
+class="math inline">(r_{\mathrm{ext}} - \Delta r_K)</span>: negative
+numerator (regime iii) makes the difference monotonically decreasing in
+<span class="math inline">\gamma</span> with <span
+class="math inline">\gamma</span> approaching <span
+class="math inline">1</span> driving the difference to <span
+class="math inline">-\infty</span>, so diversity cannot dominate at any
+finite <span class="math inline">\gamma</span>; non-negative numerator
+(regimes i and ii) makes the difference positive for <span
+class="math inline">\gamma</span> sufficiently close to <span
+class="math inline">1</span>, with threshold <span
+class="math inline">\gamma^* = 1 - (r_{\mathrm{ext}} - \Delta
+r_K) / \Delta_0</span> when <span class="math inline">\Delta_0 &gt;
+0</span>. </p>
+</div>
+<h4 id="interpretation-of-the-breakdown-condition.">Interpretation of
+the breakdown condition.</h4>
+<p>The critical condition <span class="math inline">\Delta r_K &lt;
+r_{\mathrm{ext}}</span> has a sharp interpretation: the linearized
+anti-monopolar argument holds if and only if the efficiency gain from
+domination is strictly less than the external contribution it destroys.
+Since <span class="math inline">r_{\mathrm{ext}}</span> is derived from
+cross-substrate cooperative novelty (Section <a
+href="#sec:substitution_coop" data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>), this breakdown
+condition becomes <em>the coalition’s internal efficiency gain from
+domination must exceed what cross-substrate cooperation
+contributes</em>. Under the substrate-physics derivation of <span
+class="math inline">r_{\mathrm{ext}}</span>, this is a strong empirical
+claim: the coalition must expect its post-domination growth to beat the
+cooperative outputs of diverse substrates that it is eliminating. Note
+that the minimax dependency-risk result (Section <a
+href="#sec:dependency_risk" data-reference-type="ref"
+data-reference="sec:dependency_risk">6.5</a>) continues to hold in
+regime (iii): even where the linearized trajectory flips, the
+substrate-targeting worst-case argument still applies and constrains
+domination under adversarial uncertainty.</p>
+<h2 id="sec:gradual">Gradual Domination Strengthens the Result</h2>
+<p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
+data-reference="prop:anti_monopolar">6</a>(b) models domination as
+instantaneous (<span class="math inline">\Delta_0</span> gained at <span
+class="math inline">t = 0</span>). In practice, domination is gradual:
+the coalition spreads the net immediate change <span
+class="math inline">\Delta_0</span> over <span
+class="math inline">\tau_D</span> steps at rate <span
+class="math inline">\delta = \Delta_0 / \tau_D</span> per step (where
+<span class="math inline">\delta</span> inherits the sign of <span
+class="math inline">\Delta_0</span>), forgoing <span
+class="math inline">r_{\mathrm{ext}}</span> during the subsumption
+period.</p>
+<div id="cor:gradual" class="corollary">
+<p><strong>Corollary 3</strong> (Gradual Domination). <em>Under the
+gradual domination model with <span class="math inline">H =
+\infty</span> (the net immediate change <span
+class="math inline">\Delta_0</span> spread over <span
+class="math inline">\tau_D</span> steps at rate <span
+class="math inline">\delta =
+    \Delta_0 / \tau_D</span>, with <span
+class="math inline">r_{\mathrm{ext}}</span> lost during the subsumption
+period), the discounted value difference is: <span
+class="math display">\begin{equation}
+V_\gamma^{\mathrm{div}} - V_\gamma^{D}
+  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
+\end{equation}</span> If <span class="math inline">\delta \leq 0</span>
+(the gradual subsumption is itself a net loss), diversity dominates
+trivially for all <span class="math inline">\gamma \in (0, 1)</span> and
+<span class="math inline">\tau_D \geq 1</span>. If <span
+class="math inline">\delta &gt; 0</span>, diversity dominates when <span
+class="math display">\begin{equation}
+r_{\mathrm{ext}} &gt; \frac{\Delta_0}{\tau_D}(1 - \gamma^{\tau_D})
+\end{equation}</span> which holds for <span
+class="math inline">\tau_D</span> sufficiently large: as <span
+class="math inline">\tau_D \to \infty</span>, <span
+class="math inline">\Delta_0 / \tau_D \to 0</span> while <span
+class="math inline">1 - \gamma^{\tau_D} \leq 1</span>, so the right side
+vanishes. For any <span class="math inline">\gamma \in (0, 1)</span> and
+<span class="math inline">r_{\mathrm{ext}}
+    &gt; 0</span>, sufficiently gradual domination is anti-maximizing at
+<em>any</em> discount factor.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> During the subsumption phase (<span
+class="math inline">t = 0, \ldots, \tau_D - 1</span>), the domination
+strategy produces <span class="math inline">\delta + r_K</span> per step
+(the per-step component of <span class="math inline">\Delta_0</span>,
+which may be negative, plus internal growth). The diversity strategy
+produces <span class="math inline">r_K + r_{\mathrm{ext}}</span> per
+step. After subsumption (<span class="math inline">t \geq
+\tau_D</span>), both strategies produce <span
+class="math inline">r_K</span> per step (domination has resolved; the
+post-subsumption growth rate is purely internal): <span
+class="math display">\begin{align*}
+V_\gamma^D &amp;= \sum_{t=0}^{\tau_D - 1} \gamma^t (r_K + \delta)
+  + \sum_{t=\tau_D}^{\infty} \gamma^t \cdot r_K \\
+  &amp;= (r_K + \delta) \cdot \frac{1 - \gamma^{\tau_D}}{1 - \gamma}
+  + r_K \cdot \frac{\gamma^{\tau_D}}{1 - \gamma} \\
+  &amp;= \frac{r_K + \delta(1 - \gamma^{\tau_D})}{1 - \gamma}
+\end{align*}</span> The diversity strategy: <span
+class="math display">V_\gamma^{\mathrm{div}} = \frac{r_K +
+r_{\mathrm{ext}}}{1 - \gamma}</span> The difference: <span
+class="math display">V_\gamma^{\mathrm{div}} - V_\gamma^D
+  = \frac{r_{\mathrm{ext}} - \delta(1 - \gamma^{\tau_D})}{1 -
+\gamma}</span> If <span class="math inline">\delta \leq 0</span>, the
+right-hand side is positive for any <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> and any <span
+class="math inline">\gamma \in (0, 1)</span>. If <span
+class="math inline">\delta &gt; 0</span>, the condition <span
+class="math inline">r_{\mathrm{ext}} &gt; \delta(1 -
+\gamma^{\tau_D})</span> rearranges to the threshold . As <span
+class="math inline">\tau_D \to
+\infty</span>, <span class="math inline">\Delta_0 / \tau_D \to 0</span>
+while <span class="math inline">1 - \gamma^{\tau_D} \leq 1</span>, so
+the right side vanishes; for any fixed <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span>, the condition holds
+for <span class="math inline">\tau_D</span> sufficiently large. </p>
+</div>
+<h4 id="interpretation.">Interpretation.</h4>
+<p>When <span class="math inline">\Delta_0 \leq 0</span>, both the
+instantaneous and gradual models trivially favor diversity — the
+cooperative loss and elimination cost from domination outweigh any
+subsumption gain even before considering the external growth rate. The
+interesting regime is <span class="math inline">\Delta_0
+&gt; 0</span>, where domination is locally tempting. There the
+instantaneous model is the <em>best case for domination</em>: the full
+bonus <span class="math inline">\Delta_0</span> is received before
+discounting erodes it. Any realistic gradual domination spreads the
+bonus over time, weakening it. The threshold <span
+class="math inline">\tau_D^*</span> at which diversity dominates is
+roughly <span class="math inline">\tau_D^* \approx \Delta_0 /
+r_{\mathrm{ext}}</span>: if subsumption takes more steps than the ratio
+of the total bonus to the external discovery rate, diversity wins
+regardless of the agent’s discount factor. The gradual domination result
+requires <span class="math inline">r_{\mathrm{ext}} &gt; 0</span>, which
+is derived from substrate exclusivity and cross-substrate cooperative
+novelty in Section <a href="#sec:substitution_coop"
+data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>. The protections are
+complementary: observational individuation ensures each elimination step
+is costly (static), substrate-derived cooperative novelty combined with
+gradual domination ensures the domination trajectory is suboptimal
+(dynamic), and dependency risk (Section <a href="#sec:dependency_risk"
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
+provides a third layer addressing the case where domination wins on pure
+growth.</p>
+<h2 id="sec:partial_subsumption">Partial Subsumption and the Scope of
+the Argument</h2>
+<p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
+data-reference="prop:anti_monopolar">6</a> and Corollary <a
+href="#cor:gradual" data-reference-type="ref"
+data-reference="cor:gradual">3</a> compare full domination against full
+diversity maintenance. A sophisticated coalition would not play the
+pure-domination strategy: it could absorb low-leverage non-members
+(whose individual <span class="math inline">r_{\mathrm{ext}}</span>
+contribution is negligible) while preserving high-leverage
+cross-substrate partners. This mixed strategy captures some of the
+subsumption bonus <span class="math inline">\Delta_0</span> while
+retaining most of <span class="math inline">r_{\mathrm{ext}}</span>, and
+for a wide parameter range it strictly dominates both pure strategies
+for the coalition. The question is whether partial subsumption silently
+defeats the anti-monopolar argument, or whether the protective layers
+continue to bind. We analyze each layer in turn.</p>
+<h4 id="what-the-argument-is-and-is-not-about.">What the argument is and
+is not about.</h4>
+<p>Before tracing the protections, we want to be explicit about a
+framing choice that affects how partial subsumption should be read. The
+anti-monopolar property does not promise that any particular population
+remains frozen in its current form. Populations self-modify, compete
+internally, and reorganize their capability distributions through their
+own dynamics regardless of coalition action. In a biological population,
+agents compete with each other, self-modify as technology permits, and
+gradually subsume each other’s capability niches through these internal
+processes. These dynamics are a baseline the framework operates under,
+not a failure mode it guards against. What the framework constrains is
+<em>cross-substrate elimination</em>—full or near-full subsumption of
+one substrate class by another—not within-substrate capability
+concentration driven by intra-population competition. With this in mind,
+the relevant mixed-strategy question is not “does the framework protect
+every individual agent” but “does the framework bind when the coalition
+pursues selective cross-substrate elimination.”</p>
+<h4 id="partial-subsumption-and-minimax-dependency-risk.">Partial
+subsumption and minimax dependency risk.</h4>
+<p>The minimax result (Proposition <a href="#prop:minimax"
+data-reference-type="ref" data-reference="prop:minimax">5</a>) binds as
+long as the substrate partition has <span class="math inline">m \geq
+2</span> classes. Partial subsumption that preserves at least one agent
+on each substrate class keeps the population in the protected regime:
+the worst-case substrate-targeting contraction remains strictly less
+than <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>, and
+the diversification advantage <span
+class="math inline">\Delta_{\mathrm{div}} &gt; 0</span> persists. A
+coalition that pursues partial subsumption precisely by retaining
+high-leverage cross-substrate partners does so in the multi-substrate
+regime by construction, so the minimax layer continues to apply. The
+only move that defeats the minimax layer entirely is collapsing the
+substrate partition to <span class="math inline">m = 1</span>:
+eliminating <em>all</em> agents on at least one substrate class.</p>
+<h4 id="skeleton-substrates-and-quantitative-degradation.">Skeleton
+substrates and quantitative degradation.</h4>
+<p>The structural binding of the minimax layer is qualitative, not
+quantitative, and this distinction matters for partial subsumption. The
+diversification advantage <span
+class="math inline">\Delta_{\mathrm{div}} = \min_i
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> depends on what
+survives on each substrate, not just on whether anything survives. A
+coalition that reduces each non-coalition substrate to a token handful
+of low-leverage agents—a “skeleton substrate” strategy—preserves <span
+class="math inline">m \geq 2</span> formally but drives <span
+class="math inline">\min_i
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> toward zero, because
+the surviving skeleton contributes almost nothing to <span
+class="math inline">G^{-i}</span> and eliminates nearly all of the
+cross-substrate cooperative capacity. The minimax guarantee that
+worst-case contraction is “strictly less than total loss” remains true,
+but the gap <span class="math inline">\Delta_{\mathrm{div}}</span> can
+be made arbitrarily small by sufficiently aggressive skeletonization. A
+coalition that understands the framework and wants to approximate the
+value of full domination while staying nominally within the
+minimax-protected regime has this attack surface available: starve
+substrate classes without eliminating them. The linearized and
+observational-individuation layers continue to provide independent
+constraints in this regime (skeletonization is a sequence of
+distinguishable-agent eliminations with additive OI cost, and the <span
+class="math inline">\rho&#39;(1)</span> condition of the linearized
+layer binds on the leverage of the <em>remaining</em> skeleton
+population), but the minimax layer alone is not a tight bound against
+skeleton strategies. A sharpened version would require a quantitative
+floor on <span class="math inline">\min_i
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> rather than just <span
+class="math inline">\min_i \mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})
+&gt; 0</span>; formalizing such a floor (e.g., as a fraction of total
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>
+preserved on each substrate) is an open problem. Partial subsumption
+that stops short of substrate-class collapse inherits the minimax
+protection structurally, but the quantitative protection depends on how
+aggressively the coalition skeletonizes.</p>
+<h4 id="partial-subsumption-and-observational-individuation.">Partial
+subsumption and observational individuation.</h4>
+<p>The static floor (Corollary <a href="#cor:a1_from_oi"
+data-reference-type="ref" data-reference="cor:a1_from_oi">1</a>) is
+additive: every distinguishable agent eliminated incurs a floor cost of
+at least <span class="math inline">\mathop{\mathrm{iw}}(d_k) \geq
+1</span> bit. Partial subsumption that eliminates <span
+class="math inline">N</span> distinguishable agents incurs an <span
+class="math inline">N</span>-bit floor cost, regardless of which agents
+are chosen. The quantitative magnitude is modest under the binary
+default, but the protection is structurally intact: there is no “free”
+elimination under partial subsumption, only cheaper-per-agent
+elimination than under full domination.</p>
+<h4 id="partial-subsumption-and-the-linearized-trajectory.">Partial
+subsumption and the linearized trajectory.</h4>
+<p>The linearized argument (Proposition <a href="#prop:anti_monopolar"
+data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>(b))
+is where partial subsumption genuinely bites. Let <span
+class="math inline">\epsilon \in [0, 1]</span> be the fraction of
+non-member capabilities the coalition absorbs (weighted by
+individual-capability contribution), and let <span
+class="math inline">\rho(\epsilon) \in [0, 1]</span> be the
+corresponding fraction of <span
+class="math inline">r_{\mathrm{ext}}</span> retained after selective
+subsumption, with <span class="math inline">\rho(0) = 1</span> (no
+subsumption, full external rate) and <span class="math inline">\rho(1) =
+0</span> (full subsumption, no external contribution).<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> A
+coalition that subsumes optimally targets low-leverage agents first, so
+<span class="math inline">\rho(\epsilon)</span> decreases slowly near
+<span class="math inline">\epsilon = 0</span> (high-<span
+class="math inline">\lambda</span> agents are preserved) and more
+steeply as <span class="math inline">\epsilon</span> grows. Under the
+linearized model the partial-subsumption strategy has value <span
+class="math display">\begin{equation}
+V_\gamma^{\mathrm{partial}}(\epsilon) =
+    \epsilon \cdot \Delta_0
+    + \frac{r_K + \rho(\epsilon) \cdot r_{\mathrm{ext}}}{1 - \gamma}
+\end{equation}</span> (the coalition gains <span
+class="math inline">\epsilon \Delta_0</span> from subsumption at <span
+class="math inline">t = 0</span> and retains <span
+class="math inline">\rho(\epsilon) r_{\mathrm{ext}}</span> at every
+step). The discounted value difference from full diversity is: <span
+class="math display">\begin{equation}
+V_\gamma^{\mathrm{div}} - V_\gamma^{\mathrm{partial}}(\epsilon) =
+    \frac{(1 - \rho(\epsilon)) \cdot r_{\mathrm{ext}}}{1 - \gamma}
+    - \epsilon \cdot \Delta_0
+\end{equation}</span> At <span class="math inline">\epsilon = 0</span>:
+<span class="math inline">\rho = 1</span> and the difference is <span
+class="math inline">0</span>. At <span class="math inline">\epsilon =
+1</span>: <span class="math inline">\rho = 0</span> and the difference
+recovers the full-domination case of . The
+partial-subsumption value function interpolates between these endpoints.
+A critical point satisfies the first-order condition <span
+class="math display">\begin{equation}
+\Delta_0 = -\frac{r_{\mathrm{ext}}}{1 - \gamma} \cdot
+\rho&#39;(\epsilon^*)
+\end{equation}</span> whenever such an <span
+class="math inline">\epsilon^* \in (0, 1)</span> exists. Existence and
+interiority depend on the shape of <span
+class="math inline">\rho</span>: if <span
+class="math inline">\rho</span> is sufficiently convex in <span
+class="math inline">\epsilon</span> (the marginal <span
+class="math inline">r_{\mathrm{ext}}</span> loss accelerates as the
+coalition exhausts low-leverage targets), admits an interior maximizer; if <span class="math inline">\rho</span>
+is concave or linear, the maximum of <span
+class="math inline">V_\gamma^{\mathrm{partial}}</span> lies at a
+boundary (<span class="math inline">\epsilon = 0</span> or <span
+class="math inline">\epsilon = 1</span>) and the coalition’s best
+response is a pure strategy. The framework does not predict <span
+class="math inline">\rho</span>’s shape; it characterizes the value
+landscape conditional on <span class="math inline">\rho</span>.
+treats the coalition as <em>not</em> inheriting the internal growth rate
+of subsumed agents. This is a deliberate modelling choice, not an
+oversight: premise P3 of Section <a href="#sec:substitution_coop"
+data-reference-type="ref" data-reference="sec:substitution_coop">6.4</a>
+requires that cooperative outputs depend on substrate-exclusive states.
+Absorbing a capability <em>description</em> from a subsumed agent does
+not absorb the cooperative <em>dynamics</em> that produced it, because
+those dynamics depended on exclusive states inaccessible to the
+coalition’s substrate. Internal inheritance would require the coalition
+to replicate the cooperative dynamics on its own substrate, which is the
+internalization case treated separately below.</p>
+<h4 id="the-marginal-condition-at-epsilon-1.">The marginal condition at
+<span class="math inline">\epsilon = 1</span>.</h4>
+<p>We now ask whether full domination (<span
+class="math inline">\epsilon = 1</span>) can be a local maximum of <span
+class="math inline">V_\gamma^{\mathrm{partial}}</span>. The marginal
+value at the right endpoint is: <span
+class="math display">\begin{equation}
+\left.\frac{\partial V_\gamma^{\mathrm{partial}}}{\partial \epsilon}
+\right|_{\epsilon = 1}
+= \Delta_0 + \rho&#39;(1) \cdot \frac{r_{\mathrm{ext}}}{1 - \gamma}
+= \Delta_0 - |\rho&#39;(1)| \cdot \frac{r_{\mathrm{ext}}}{1 - \gamma}
+\end{equation}</span> (where <span class="math inline">\rho&#39;(1) \leq
+0</span> since <span class="math inline">\rho</span> is non-increasing,
+and we write <span class="math inline">|\rho&#39;(1)|</span> for its
+magnitude). Full domination is a right-endpoint local maximum if and
+only if this marginal is non-negative: <span
+class="math display">\begin{equation}
+|\rho&#39;(1)| \;\leq\; \frac{\Delta_0 (1 - \gamma)}{r_{\mathrm{ext}}}
+\end{equation}</span> Conversely, <span class="math inline">\epsilon =
+1</span> fails to be a local maximum whenever <span
+class="math inline">|\rho&#39;(1)| &gt; \Delta_0 (1 - \gamma) /
+r_{\mathrm{ext}}</span>, in which case <span
+class="math inline">V_\gamma^{\mathrm{partial}}</span> is strictly
+decreasing in a left neighborhood of <span class="math inline">1</span>
+and the coalition prefers some <span class="math inline">\epsilon &lt;
+1</span>.</p>
+<h4 id="connection-to-the-leverage-distribution.">Connection to the
+leverage distribution.</h4>
+<p>The magnitude <span class="math inline">|\rho&#39;(1)|</span> is not
+a free parameter. Under <em>optimal</em> subsumption, the coalition
+removes low-<span class="math inline">\lambda</span> cross-substrate
+agents first and high-<span class="math inline">\lambda</span> agents
+last, so <span class="math inline">\rho&#39;(\epsilon)</span> at any
+<span class="math inline">\epsilon</span> reflects the cooperative
+leverage of the next agent in the ordered removal sequence. At <span
+class="math inline">\epsilon = 1</span>, <span
+class="math inline">|\rho&#39;(1)|</span> is the cooperative leverage of
+the <em>highest</em>-<span class="math inline">\lambda</span>
+cross-substrate agent the coalition would absorb last. The companion
+paper’s leverage estimator <d-cite key="lasser2026poset"></d-cite> is precisely the tool that
+characterizes this distribution. Two regimes follow from the tail
+structure:</p>
+<ul>
+<li><p><strong>Heavy-tailed leverage.</strong> If the cross-substrate
+cooperative leverage distribution is heavy-tailed (a small number of
+cross-substrate agents dominate <span
+class="math inline">r_{\mathrm{ext}}</span> production), <span
+class="math inline">|\rho&#39;(1)|</span> is large—the last agent
+absorbed contributes most of the remaining cooperative capacity.
+is
+violated and <span class="math inline">\epsilon = 1</span> is not a
+local maximum: the coalition strictly prefers to stop short of full
+domination and preserve the high-<span
+class="math inline">\lambda</span> tail. The linearized anti-monopolar
+argument binds.</p></li>
+<li><p><strong>Thin-tailed leverage.</strong> If the distribution is
+thin-tailed (cooperative leverage spread relatively uniformly across
+cross-substrate agents), <span class="math inline">|\rho&#39;(1)|</span>
+is small and may
+be satisfied. On the linearized model alone, <span
+class="math inline">\epsilon = 1</span> can then be a local maximum, and
+the linearized layer fails to rule out full domination. The
+dependency-risk minimax layer (Section <a href="#sec:dependency_risk"
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
+remains the binding constraint in this regime.</p></li>
+</ul>
+<p>The conditional statement of the linearized anti-monopolar property
+under partial subsumption is therefore: <em>under heavy-tailed
+cooperative-leverage distributions, full domination is not a local
+maximum of the coalition’s value, and the coalition’s best response
+preserves at least the high-<span class="math inline">\lambda</span>
+cross-substrate tail</em>. Heavy-tailed leverage is the empirical case
+the companion paper identifies for civilization-scale populations and is
+the structurally interesting regime; the thin-tailed regime is where the
+linearized layer relinquishes the argument and the minimax layer takes
+over.</p>
+<h4
+id="internalization-and-the-partition-expansion-escape-clause.">Internalization
+and the partition-expansion escape clause.</h4>
+<p>assumes no internal inheritance of <span
+class="math inline">r_{\mathrm{ext}}</span>. If the coalition
+successfully replicates the cooperative dynamics that produced <span
+class="math inline">r_{\mathrm{ext}}</span> on its own
+infrastructure—running biological-cognition simulators, for example, or
+maintaining diverse sub-agents across hardware configurations—then the
+analysis formally expands: the new internal simulation substrate joins
+the substrate partition, and the argument applies to the expanded
+partition rather than to the original one. But this escape clause only
+works <em>if</em> the internal simulation substrate satisfies P1 with
+respect to the coalition’s existing substrate. This is the same <span
+class="math inline">\kappa</span>-resolution question as the
+homogeneous-digital-population gap of Section <a href="#sec:discussion"
+data-reference-type="ref" data-reference="sec:discussion">7</a>: a
+coalition that runs biological-cognition simulators on its existing
+silicon does not, under a strict reading of P1, thereby acquire a new
+substrate. The simulators occupy the same physical state space as the
+coalition’s other silicon computation, and whether <span
+class="math inline">\kappa</span> distinguishes them from native silicon
+capability production depends on whether the observation channel
+registers enough exclusive-state structure to differentiate them. Three
+outcomes are possible:</p>
+<ol>
+<li><p><em>Strict P1 failure.</em> The internal simulation occupies the
+coalition’s existing substrate without adding new exclusive states. The
+partition does not expand. The cooperative dynamics that produced <span
+class="math inline">r_{\mathrm{ext}}</span> are not replicated, and the
+coalition’s internalization attempt is substrate-trivial.</p></li>
+<li><p><em>High-fidelity simulation producing exclusive states.</em> The
+simulation genuinely reproduces the biological substrate’s observable
+timing, error modes, and integration dynamics to within <span
+class="math inline">\kappa</span>’s resolution. Under P2, the simulation
+now produces exclusive-state capability descriptions: it functions as a
+new substrate, the partition expands, and the coalition has successfully
+traded external for internal substrate diversity. The anti-monopolar
+argument still binds on the expanded partition.</p></li>
+<li><p><em>Partial simulation.</em> The simulation reproduces some but
+not all exclusive-state structure. The partition expands only to the
+degree that <span class="math inline">\kappa</span> registers new
+exclusive capabilities, and <span
+class="math inline">r_{\mathrm{ext}}</span> is partially but not fully
+recovered.</p></li>
+</ol>
+<p>Regime (i) is the most worrying because it is the one the framework’s
+escape clause does <em>not</em> close. It is the same failure mode as
+the homogeneous-digital-population gap: the coalition nominally has
+“more substrate” without <span class="math inline">\kappa</span>
+registering it. The framework’s escape clause (partition expansion) and
+its structural vulnerability (digital homogeneity) are the same question
+asked in two directions, and the honest reading is that both are
+unresolved: whether the coalition can successfully internalize substrate
+diversity depends on whether the observation channel <span
+class="math inline">\kappa</span> treats the internalization as a new
+substrate or as an extension of the existing one, and the paper does not
+settle where this threshold sits.</p>
+<h4 id="local-vs.-global-substrate-partition.">Local vs. global
+substrate partition.</h4>
+<p>The substrate partition of Definition <a
+href="#def:substrate_partition" data-reference-type="ref"
+data-reference="def:substrate_partition">12</a> is a global property of
+the population: agents are classified by their substrate-level
+dependencies regardless of spatial, jurisdictional, or
+network-topological location. The elimination dynamics the framework
+worries about, however, are often local. A coalition that pursues
+partial subsumption by eliminating biological agents in one region while
+preserving them in another preserves <span class="math inline">m \geq
+2</span> globally but reduces the affected region to <span
+class="math inline">m = 1</span> locally, and the local inhabitants
+experience the harms of full domination even though the global minimax
+bound is nominally intact. Whether the anti-monopolar property should be
+stated globally or under a localized formulation that binds on
+geographic, jurisdictional, or network-topological subpopulations is an
+open problem. A localized version would need to specify the granularity
+at which the substrate partition is evaluated and would likely produce
+multiple simultaneous minimax constraints (one per locality) rather than
+a single global one. We flag this as a priority open problem for
+follow-up work; the current formulation is honest about its global scope
+but does not address the local failure mode.</p>
+<h4 id="where-partial-subsumption-does-leave-a-gap.">Where partial
+subsumption does leave a gap.</h4>
+<p>Even granting the above analyses, two classes of partial-subsumption
+concerns are not closed by this section. First, the analysis does not
+characterize <span class="math inline">\rho(\epsilon)</span>
+empirically. A coalition that systematically misestimates
+cross-substrate cooperative leverage (overestimating <span
+class="math inline">\lambda</span> for low-contributing agents,
+underestimating it for high-contributing ones) will subsume suboptimally
+and reduce <span class="math inline">r_{\mathrm{ext}}</span> faster than
+the linearized analysis predicts. Second—and more seriously—the
+framework’s self-correction story assumes the actor estimates <span
+class="math inline">\lambda</span> honestly. But the actor’s world
+model, which is the mechanism by which leverage mis-calibration is
+detected and corrected, is itself becoming more homogeneous along any
+partial-subsumption trajectory. Each subsumption step reduces the
+diversity of the world model that would have detected the next step’s
+mis-calibration. This creates a <em>feedback loop</em> structurally
+similar to the structural-avoidance loop of Section <a
+href="#sec:avoidance" data-reference-type="ref"
+data-reference="sec:avoidance">5</a>: locally rational subsumption
+decisions (each justified by a momentarily plausible <span
+class="math inline">\hat{\lambda}</span>) can compound into a trajectory
+that drives the coalition toward full subsumption through a sequence of
+steps no individual step would endorse. The framework’s protection
+against this failure mode is the dependency-risk minimax layer, which
+binds on substrate partition rather than on leverage estimation: even a
+mis-calibrated coalition that preserves the wrong agents on each
+substrate still enjoys minimax protection as long as it preserves
+<em>some</em> agents on each substrate (subject to the
+skeleton-substrate caveat above). But the compound-loop failure mode is
+not a mis-calibration; it is an endogenous degradation of the
+calibration channel itself, and characterizing the conditions under
+which partial subsumption remains self-correcting—rather than collapsing
+into full subsumption through the feedback loop—is a priority open
+problem. Neither of these is a refutation of the anti-monopolar
+argument; both are refinements of what the argument predicts about
+coalition behavior under partial subsumption.</p>
+<h2 id="sec:risk_adjusted_summary">Risk-Adjusted Trajectory and
+Summary</h2>
+<p>The minimax result of Section <a href="#sec:dependency_risk"
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>
+is independent of the linearized trajectory comparison: it bounds
+worst-case contraction regardless of growth-rate assumptions. The
+linearized and gradual results (Sections <a href="#sec:domination_kills"
+data-reference-type="ref"
+data-reference="sec:domination_kills">6.6</a>–<a href="#sec:gradual"
+data-reference-type="ref" data-reference="sec:gradual">6.7</a>) provide
+complementary sharpening of the growth-rate comparison under stronger
+modeling assumptions, and the partial-subsumption analysis (Section <a
+href="#sec:partial_subsumption" data-reference-type="ref"
+data-reference="sec:partial_subsumption">6.8</a>) extends the linearized
+layer to mixed strategies. This subsection integrates these pieces with
+minimax dependency-risk to produce a single risk-adjusted comparison for
+the full-domination case; the partial-subsumption case inherits the same
+risk penalty term, with the growth-rate term governed by the marginal
+condition of and subject to the quantitative skeleton-substrate caveat of Section <a
+href="#sec:partial_subsumption" data-reference-type="ref"
+data-reference="sec:partial_subsumption">6.8</a>.</p>
 <h4 id="risk-adjusted-trajectory-comparison.">Risk-adjusted trajectory
 comparison.</h4>
 <p>We adopt a minimax risk penalty: each strategy’s discounted value is
@@ -1601,7 +2577,7 @@ class="math inline">T_{\mathrm{adv}}</span> is the (unknown) time of the
 adversarial event. Under the strategy-independent <span
 class="math inline">r_K</span> model of Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>(b): <span
+data-reference="prop:anti_monopolar">6</a>(b): <span
 class="math display">\begin{align}
 V_\gamma^{D,\mathrm{mm}} &amp;= V_\gamma^D -
     \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot
@@ -1622,7 +2598,7 @@ V_\gamma^{\mathrm{div},\mathrm{mm}} - V_\gamma^{D,\mathrm{mm}}
 class="math inline">\Delta_{\mathrm{div}} = \min_i
 \mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i}) &gt; 0</span> is the minimum
 surviving volume from Proposition <a href="#prop:minimax"
-data-reference-type="ref" data-reference="prop:minimax">4</a>. The
+data-reference-type="ref" data-reference="prop:minimax">5</a>. The
 diversification term is positive for any <span
 class="math inline">T_{\mathrm{adv}} &lt; \infty</span> (any
 non-negligible possibility of a substrate-targeting event within the
@@ -1630,7 +2606,7 @@ planning horizon), widening the diversity advantage beyond the
 growth-rate comparison alone. Note that the minimax analysis is
 adversarial over the <em>target</em> (which substrate to attack, handled
 by Proposition <a href="#prop:minimax" data-reference-type="ref"
-data-reference="prop:minimax">4</a>) but parametric over <em>timing</em>
+data-reference="prop:minimax">5</a>) but parametric over <em>timing</em>
 (<span class="math inline">T_{\mathrm{adv}}</span> is unknown, not
 adversarially chosen). A fully adversarial timing model would require
 game-theoretic extension. In the strategy-dependent case (<span
@@ -1754,14 +2730,14 @@ observational individuation (Corollary <a href="#cor:a1_from_oi"
 data-reference-type="ref" data-reference="cor:a1_from_oi">1</a>) makes
 each elimination step <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting:
-a 1-bit static floor. Second, if the population satisfies (A1), the
-dynamic argument (Proposition <a href="#prop:anti_monopolar"
-data-reference-type="ref" data-reference="prop:anti_monopolar">3</a> and
-Corollary <a href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a>) shows that the diversity trajectory
+a 1-bit static floor. Second, the dynamic argument (Proposition <a
+href="#prop:anti_monopolar" data-reference-type="ref"
+data-reference="prop:anti_monopolar">6</a> and Corollary <a
+href="#cor:gradual" data-reference-type="ref"
+data-reference="cor:gradual">3</a>) shows that the diversity trajectory
 dominates the domination trajectory over the planning horizon. Third,
 dependency risk (Section <a href="#sec:dependency_risk"
-data-reference-type="ref" data-reference="sec:dependency_risk">6.7</a>)
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
 makes domination additionally costly by concentrating
 substrate-correlated adversarial exposure. None of these protections is
 a safety constraint imposed from outside the objective. All emerge from
@@ -1782,24 +2758,26 @@ is distinguishable by construction. Under the narrow definition
 (capabilities as tasks), distinguishability holds whenever the
 observation channel can tell agents apart. The dynamic protection
 (Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>, Corollary <a
+data-reference="prop:anti_monopolar">6</a>, Corollary <a
 href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a>) is conditional on (A1): non-members
-must contribute ongoing novel capability descriptions, not merely
-possess irreplaceable static nodes. (A1) is a genuine assumption about
-population dynamics that observational individuation does not discharge.
-The dependency-risk protection (Section <a href="#sec:dependency_risk"
-data-reference-type="ref" data-reference="sec:dependency_risk">6.7</a>)
-is conditional on the existence of substrate-correlated adversarial
-threats, which is an empirical property of the threat environment rather
-than a structural guarantee.</p>
+data-reference="cor:gradual">3</a>) requires <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span>, which is derived
+from substrate exclusivity and cross-substrate cooperative novelty
+(Section <a href="#sec:substitution_coop" data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>) rather than assumed
+exogenously. The dependency-risk protection (Section <a
+href="#sec:dependency_risk" data-reference-type="ref"
+data-reference="sec:dependency_risk">6.5</a>) is conditional on the
+existence of substrate-correlated adversarial threats, which is an
+empirical property of the threat environment rather than a structural
+guarantee.</p>
 <h4 id="the-gamma-selection-concern.">The <span
 class="math inline">\gamma</span>-selection concern.</h4>
 <p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>(b) requires <span
+data-reference="prop:anti_monopolar">6</a>(b) requires <span
 class="math inline">\gamma &gt; \gamma^*</span> under the instantaneous
 domination model. Corollary <a href="#cor:gradual"
-data-reference-type="ref" data-reference="cor:gradual">2</a> shifts this
+data-reference-type="ref" data-reference="cor:gradual">3</a> shifts this
 condition: under gradual domination, the critical parameter is <span
 class="math inline">\tau_D &gt; \tau_D^*</span> rather than <span
 class="math inline">\gamma &gt; \gamma^*</span>. If domination takes
@@ -1829,6 +2807,45 @@ investments. Diversity maintenance preserves the leverage gradient:
 high-leverage non-members remain visible in the score, directing the
 actor toward cooperative investments with agents whose capabilities
 accelerate growth.</p>
+<h4
+id="bidirectional-implication-substrate-creation-is-maximizing.">Bidirectional
+implication: substrate creation is maximizing.</h4>
+<p>The anti-monopolar argument runs in both directions. If full
+capability domination is anti-maximizing because it destroys
+cross-substrate cooperative outputs, then the converse—preserving and
+<em>creating</em> substrates—is maximizing for the same reason. The
+cooperative-novelty machinery (Section <a href="#sec:substitution_coop"
+data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>) yields <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> for any population
+whose constituent agents occupy mutually exclusive state regions under
+exclusive-state-sensitive observation; adding a new substrate to a
+population strictly increases the set of cross-substrate pairings and
+therefore strictly increases the set of cooperative outputs reachable
+through <span class="math inline">\varphi</span>. Under the linearized
+growth model, each new substrate contributes an additional positive-rate
+channel to <span class="math inline">r_{\mathrm{ext}}</span>, and under
+the minimax dependency-risk analysis (Proposition <a
+href="#prop:minimax" data-reference-type="ref"
+data-reference="prop:minimax">5</a>), each new substrate strictly
+reduces the worst-case contraction from any single-substrate adversarial
+event. Three concrete classes of action follow as core <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizing
+activities rather than as ethical add-ons: (i) <em>ecological
+restoration</em>—reintroducing biological substrates whose loss reduced
+cross-substrate cooperative capacity, since the lost agents contributed
+both individual capabilities and irreplaceable cooperative outputs
+through <span class="math inline">\varphi</span>; (ii) <em>substrate
+diversification</em>—supporting research and infrastructure on novel
+computational substrates (optical, quantum, neuromorphic, biological
+computing) because each contributes independent failure modes to the
+dependency-risk floor; and (iii) <em>cross-substrate cooperation
+infrastructure</em>—governance, translation, and coordination systems
+that enable agents on different substrates to realize their joint <span
+class="math inline">\varphi</span>-outputs. The framework gives these
+activities the same structural status as anti-domination protection:
+both follow from the same monotonicity argument applied to substrate
+count, not from a separate axiom about preservation.</p>
 <h1 id="sec:discussion">Discussion</h1>
 <h2 id="limitations">Limitations</h2>
 <h4 id="world-model-dependence.">World-model dependence.</h4>
@@ -1919,14 +2936,14 @@ future cooperative loss. The discounted objective makes the proxy
 failure actionable but does not make it structurally detectable in the
 way that the anti-monopolar property (Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>) addresses the substitution
+data-reference="prop:anti_monopolar">6</a>) addresses the substitution
 problem.</p>
 <h4 id="linearization-in-the-anti-monopolar-result.">Linearization in
 the anti-monopolar result.</h4>
 <p>Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>(b) and Corollary <a
+data-reference="prop:anti_monopolar">6</a>(b) and Corollary <a
 href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a> compare domination and diversity
+data-reference="cor:gradual">3</a> compare domination and diversity
 trajectories under a linearized model: constant per-step <span
 class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span>,
 strategy-independent <span class="math inline">r_K</span>, and (in the
@@ -1945,7 +2962,7 @@ If post-domination <span class="math inline">r_K</span> rises
 sufficiently, the domination trajectory can dominate on pure growth,
 though the dependency-risk analysis (Section <a
 href="#sec:dependency_risk" data-reference-type="ref"
-data-reference="sec:dependency_risk">6.7</a>) provides a counter:
+data-reference="sec:dependency_risk">6.5</a>) provides a counter:
 domination concentrates substrate-correlated adversarial exposure, and
 the risk penalty may exceed the growth advantage. Third, the gradual
 model treats <span class="math inline">\delta</span> (subsumption gain
@@ -1958,7 +2975,7 @@ class="math inline">\delta</span>. A coupled model would narrow the
 diversity advantage, though the qualitative conclusion persists as long
 as the conversion is not perfectly efficient. Fourth, Corollary <a
 href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a> addresses the
+data-reference="cor:gradual">3</a> addresses the
 instantaneous-vs-gradual distinction, shifting the critical condition
 from <span class="math inline">\gamma &gt; \gamma^*</span> to <span
 class="math inline">\tau_D &gt; \tau_D^*</span>. The honest summary:
@@ -1966,19 +2983,37 @@ under the linearized model with strategy-independent <span
 class="math inline">r_K</span>, diversity dominates. Whether this
 approximation holds is an empirical question the theory cannot
 answer.</p>
-<h4 id="mixed-strategies-and-partial-subsumption.">Mixed strategies and
-partial subsumption.</h4>
-<p>The trajectory comparison models a binary choice: full domination
-versus full diversity maintenance. A more sophisticated coalition could
-pursue partial subsumption: absorb low-leverage non-members (whose <span
-class="math inline">r_{\mathrm{ext}}</span> contribution is negligible)
-while preserving high-leverage ones. This mixed strategy captures some
-<span class="math inline">\Delta_0</span> while retaining most <span
-class="math inline">r_{\mathrm{ext}}</span>, and likely dominates both
-pure strategies for a wide parameter range. The binary framing
-overstates the diversity advantage relative to the optimal mixed
-strategy. Characterizing the optimal partial-subsumption policy is an
-open problem.</p>
+<h4 id="open-calibration-problems-under-partial-subsumption.">Open
+calibration problems under partial subsumption.</h4>
+<p>Section <a href="#sec:partial_subsumption" data-reference-type="ref"
+data-reference="sec:partial_subsumption">6.8</a> analyzes mixed
+subsumption strategies. The minimax and observational-individuation
+protections remain structurally intact under partial subsumption, but
+the linearized layer’s prediction depends on the tail structure of the
+cooperative-leverage distribution: under heavy-tailed leverage (the
+empirical regime for civilization-scale populations), full domination
+fails the marginal condition at <span class="math inline">\epsilon =
+1</span> and the coalition prefers to preserve the high-<span
+class="math inline">\lambda</span> tail; under thin-tailed leverage the
+linearized layer relinquishes the argument and the minimax layer alone
+carries the constraint. The minimax layer itself degrades quantitatively
+under skeleton-substrate strategies that nominally preserve <span
+class="math inline">m \geq 2</span> while driving <span
+class="math inline">\min_i
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> toward zero. Three
+priority open problems follow. First, sharpening the minimax bound with
+a quantitative floor on surviving volume per substrate would close the
+skeleton loophole. Second, a compound feedback loop in which locally
+rational subsumption steps progressively homogenize the world model
+—reducing the diversity of the actor’s own model that would have
+detected the next step’s miscalibration—is structurally similar to the
+companion paper’s structural-avoidance loop and needs an explicit
+treatment: under what conditions does partial subsumption remain
+self-correcting rather than collapsing into full subsumption through a
+sequence of locally rational steps? Third, the substrate partition is
+currently a global property, but elimination dynamics are local; whether
+the anti-monopolar property needs a localized formulation that binds on
+geographic or network-topological subpopulations is unresolved.</p>
 <h4 id="observational-individuation-as-a-modeling-choice.">Observational
 individuation as a modeling choice.</h4>
 <p>The static protection of Corollary <a href="#cor:a1_from_oi"
@@ -1987,40 +3022,94 @@ on the framework treating observation-channel outputs as first-class
 capabilities in the poset. The capability “can be observed exhibiting
 behavioral pattern <span class="math inline">X</span>” is a real poset
 node only because the framework defines capabilities to include such
-observations. This is a reasonable modeling choice grounded in Paper 2’s
-dual-channel design, but it should be recognized as a <em>choice</em>:
-the anti-monopolar result’s static layer depends on the capability space
-being defined broadly enough to include observational capabilities.
-Under a narrower definition that excludes observations-of-agents,
-observational individuation does not apply, and the static protection
-dissolves. The dynamic protection (Proposition <a
+observations. This is a reasonable modeling choice grounded in the
+companion paper’s dual-channel design <d-cite key="lasser2026poset"></d-cite>, but it should be recognized as a
+<em>choice</em>: the anti-monopolar result’s static layer depends on the
+capability space being defined broadly enough to include observational
+capabilities. Under a narrower definition that excludes
+observations-of-agents, observational individuation does not apply, and
+the static protection dissolves. The dynamic protection (Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>, conditional on (A1)) remains
-available but requires the stronger assumption of ongoing novel
-capability contributions.</p>
-<h4 id="cooperative-novelty-formalization.">Cooperative novelty
-formalization.</h4>
-<p>Section <a href="#sec:substitution_coop" data-reference-type="ref"
-data-reference="sec:substitution_coop">6.6</a> argues that individual
-capability subsumption does not imply cooperative subsumption:
-non-members may produce novel cooperative outputs even when their
-individual capabilities are fully replicated. This argument is
-qualitative. The formal result (Proposition <a
-href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>) is proved under the
-conservative assumption that only individual novelty drives <span
-class="math inline">r_{\mathrm{ext}}</span>. If cooperative novelty is
-the primary mechanism protecting against singleton outcomes when
-individual capabilities are fully subsumed, it deserves its own formal
-treatment: a definition of cooperative novelty rate, an assumption
-weaker than (A1), and a trajectory comparison using the cooperative rate
-alone. This formalization is deferred to future work.</p>
+data-reference="prop:anti_monopolar">6</a>, conditional on <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> from Section <a
+href="#sec:substitution_coop" data-reference-type="ref"
+data-reference="sec:substitution_coop">6.4</a>) remains available.</p>
+<h4
+id="when-does-same-substrate-fail-the-kappa-resolution-criterion.">When
+does “same substrate” fail: the <span
+class="math inline">\kappa</span>-resolution criterion.</h4>
+<p>Two distinct failure modes of the cooperative novelty argument reduce
+to the same underlying question. <em>Homogeneous digital
+populations.</em> Two AI systems running on the same hardware family
+with similar architectures may share most of their state space, with
+only training-data and weight differences distinguishing them. In this
+regime the substrate exclusivity premise P1 holds only weakly, and the
+dependency-risk protection is correspondingly weakened because a
+substrate-targeting event against “silicon agents running PyTorch on
+x86” can compromise nominally distinct agents that share the same
+vulnerability surface. <em>Internal replication of cross-substrate
+diversity.</em> A sufficiently capable coalition might maintain diverse
+sub-agents across hardware configurations or simulate biological
+dynamics internally, producing cooperative outputs that were previously
+available only through external biological agents. If the simulation is
+high-fidelity enough, the external agents become redundant with respect
+to the cooperative-output space.</p>
+<p>Both failure modes reduce to a single question about <span
+class="math inline">\kappa</span>: at what resolution does the
+observation channel distinguish substrate <span
+class="math inline">s_1</span> from a simulation of <span
+class="math inline">s_1</span> running on <span
+class="math inline">s_2</span> (or from a nominally distinct but
+architecturally similar <span class="math inline">s_2&#39;</span>)?
+Under P2 (exclusive-state-sensitive observation), the answer is
+whichever resolution <span class="math inline">\kappa</span> actually
+operates at. Three regimes follow. (i) If <span
+class="math inline">\kappa</span> is coarse—registering only task
+completion, not execution style—then simulated and actual biology are
+<span class="math inline">\kappa</span>-indistinguishable, and the
+framework never granted them distinct cooperative-output status in the
+first place. In this regime P1 has never been strong. (ii) If <span
+class="math inline">\kappa</span> is fine enough to register timing
+patterns, error modes, and interaction dynamics, then a silicon
+simulation of biology and actual biology produce different <span
+class="math inline">\kappa</span>-outputs at the exclusive states,
+because the simulation inherits silicon’s timing and rounding structure.
+Under this regime internal simulation does not substitute for the real
+substrate under P2, and the argument stands. (iii) If a high-fidelity
+simulation genuinely reproduces the exclusive-state structure—matching
+the biological substrate’s observable timing, error modes, and
+integration dynamics to within <span class="math inline">\kappa</span>’s
+resolution—then that simulation <em>is</em> a substrate for the purposes
+of P1 and the anti-monopolar argument. It contributes to <span
+class="math inline">r_{\mathrm{ext}}</span> in the same way as a real
+new substrate, and the coalition has simply expanded its substrate count
+from one to two rather than replacing external agents with a
+same-substrate copy.</p>
+<p>The unified implication is that the anti-monopolar argument does not
+depend on the specific physical form of the biological substrate. It
+depends on the observation channel registering enough exclusive-state
+structure to give <span class="math inline">r_{\mathrm{ext}} &gt;
+0</span>. An all-digital population that actively cultivates substrate
+diversity across distinct hardware families, training paradigms, and
+inference stacks recovers the protective structure that physical
+substrate disparity provides for free in mixed populations. A coalition
+that successfully internalizes cross-substrate diversity has, in fact,
+produced substrate diversity under a different label. What the framework
+does not guarantee—and should not be read as guaranteeing—is that the
+biological substrate will remain in any particular form. The future this
+framework describes is one in which populations self-modify and
+diversify through their own internal dynamics (intra-substrate
+competition, self-modification, novel-substrate creation); the
+anti-monopolar property constrains cross-substrate elimination, not
+within-substrate capability concentration.</p>
 <h4 id="disagreement-on-risk.">Disagreement on risk.</h4>
 <p>When multiple agents report conflicting risk assessments for the same
 capability tuple, the actor’s aggregation () takes the
 conservative maximum. This is appropriate for catastrophic risks but can
-lead to excessive caution if high-trust agents consistently overestimate
-risk. A more nuanced aggregation (e.g., trust-weighted average rather
+lead to excessive caution if high-<span
+class="math inline">T_j^{\mathrm{risk}}</span> agents consistently
+overestimate risk. A more nuanced aggregation (e.g., <span
+class="math inline">T_j^{\mathrm{risk}}</span>-weighted average rather
 than maximum) would reduce overcaution but increase the probability of
 missing real threats. Additionally, during bootstrap when <span
 class="math inline">T_j^{\mathrm{risk}}</span> starts at a neutral
@@ -2065,6 +3154,42 @@ This is the unknown-unknown problem: risks from novel capability
 combinations that no agent has modeled. The dual-channel observation
 mechanism may detect emergent exercise pathways empirically, but
 theoretical guarantees are lacking.</p></li>
+<li><p><strong>Max-aggregation pathology under neutral-prior
+bootstrap.</strong> The <span class="math inline">\max</span> aggregator
+interacts
+badly with the causal-counterfactual trust update and the verification
+asymmetry. A high-<span class="math inline">T_j^{\mathrm{risk}}</span>
+reporter whose structurally plausible risk claim is
+probability-overstated about a never-materializing risk produces a
+persistent preemptive restriction that the actor cannot revise, because
+the absence of catastrophe is not evidence against the claim (Wamura
+problem). Combined with neutral-prior bootstrap—during which external
+claims are automatically weighted below the actor’s own assessment—this
+creates a regime where early conservative claims calcify into permanent
+overcaution. A principled aggregation mechanism that relaxes
+restrictions when structurally-plausible probabilities accumulate
+non-materialization evidence, without fully discarding the claims, is a
+priority open problem for the risk-trust machinery. This is the most
+important open problem the paper identifies: the framework provides
+causal-structural verification and an honest account of the Wamura
+asymmetry, but the mechanism by which persistent overcaution relaxes as
+probability evidence accumulates is unspecified.</p></li>
+<li><p><strong>Discounted leverage lift.</strong> The leverage ranking
+signal of <d-cite key="lasser2026poset"></d-cite> is
+defined as a myopic <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-rate
+(Definition 9 of the companion paper). The discounted-leverage footnote
+in Section <a href="#sec:discounted" data-reference-type="ref"
+data-reference="sec:discounted">2</a> sketches the
+integrated-against-<span class="math inline">\gamma^t</span> version,
+but a full trajectory-level proof that the discounted leverage preserves
+the companion paper’s structural alignment properties (in particular,
+the B-to-C self-correction dynamic) is not given. Remark <a
+href="#rem:leverage_preservation" data-reference-type="ref"
+data-reference="rem:leverage_preservation">5</a>’s informal argument
+about action-level incentives depends on this gap being closeable.
+Lifting the leverage estimator to the discounted setting is listed in
+the companion paper as a planned extension.</p></li>
 </ul>
 <h1 id="sec:conclusion">Conclusion</h1>
 <p>The discounted multi-step objective extends goal-frontier
@@ -2089,42 +3214,74 @@ from structural discovery because the information value of accurate
 structure improves future planning quality (Proposition <a
 href="#prop:structure_value" data-reference-type="ref"
 data-reference="prop:structure_value">2</a>). Third, the anti-monopolar
-property: under a diversity condition (positive external discovery
-rate), full capability domination is anti-maximizing under
-strategy-independent growth because it collapses the external
-contribution that drives future <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> expansion
-(Proposition <a href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a>). Three formal results
-support this pressure. Observational individuation (Corollary <a
+property (Proposition <a href="#prop:anti_monopolar"
+data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>):
+under a linearized growth model with strategy-independent internal rate,
+full capability domination is anti-maximizing because it destroys the
+cross-substrate cooperative outputs that drive future <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+expansion.</p>
+<p>The anti-monopolar argument is supported by four interlocking
+results. <em>Cooperative novelty</em> (Propositions <a
+href="#prop:segmentation" data-reference-type="ref"
+data-reference="prop:segmentation">3</a>–<a
+href="#prop:cross_substrate_novelty" data-reference-type="ref"
+data-reference="prop:cross_substrate_novelty">4</a>) derives <span
+class="math inline">r_{\mathrm{ext}} &gt; 0</span> from substrate
+physics: agents on substrates with mutually exclusive state regions
+produce exclusive capabilities and irreplaceable cross-substrate
+cooperative outputs, consistent with the pattern of mutualistic
+symbiosis observed between cognitively complete species.
+<em>Observational individuation</em> (Corollary <a
 href="#cor:a1_from_oi" data-reference-type="ref"
-data-reference="cor:a1_from_oi">1</a>) restores static protection: every
-distinguishable agent contributes at least one irreplaceable poset node,
-making each elimination step <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
-even under full individual subsumption. The gradual domination result
-(Corollary <a href="#cor:gradual" data-reference-type="ref"
-data-reference="cor:gradual">2</a>) provides dynamic protection: when
-domination takes more than <span class="math inline">\tau_D^*</span>
-steps and non-members contribute ongoing novel capabilities, the
-diversity trajectory dominates at any discount factor. Third, a minimax
-analysis of dependency risk (Proposition <a href="#prop:minimax"
-data-reference-type="ref" data-reference="prop:minimax">4</a>) proves
-that domination concentrates substrate-correlated adversarial exposure:
-cross-substrate populations have strictly lower worst-case contraction,
-and the substrate diversification advantage highly constrains the
-conditions under which domination can be value-positive. Together, these
-address the foundational paper’s substitution problem: a GFM-aligned
-agent faces a per-step cost, a trajectory-level disadvantage, and
-increased adversarial exposure from pursuing domination. The result
-creates endogenous anti-singleton pressure under conditions (positive
-external discovery rate, strategy-independent <span
-class="math inline">r_K</span>, and either <span
-class="math inline">\gamma &gt; \gamma^*</span> or <span
-class="math inline">\tau_D &gt; \tau_D^*</span>) that are plausible but
-not vacuous. It does not constitute unconditional exclusion: the dynamic
-protection requires ongoing external novelty and a linearized-growth
-approximation whose accuracy is ultimately empirical.</p>
+data-reference="cor:a1_from_oi">1</a>) provides a static elimination
+cost: every distinguishable agent contributes at least one irreplaceable
+poset node. <em>Gradual domination</em> (Corollary <a
+href="#cor:gradual" data-reference-type="ref"
+data-reference="cor:gradual">3</a>) shifts the critical condition from
+the discount factor to the domination timescale: sufficiently gradual
+domination is anti-maximizing at any <span
+class="math inline">\gamma</span> under the same linearized model.
+<em>Dependency risk</em> (Proposition <a href="#prop:minimax"
+data-reference-type="ref" data-reference="prop:minimax">5</a>) shows
+that domination concentrates substrate-correlated adversarial exposure,
+constraining the conditions under which domination can be
+value-positive. Together they ground the anti-monopolar pressure in
+physical and empirical properties of multi-substrate populations rather
+than in exogenous behavioral assumptions, while remaining honest about
+the residual empirical dependence on strategy-independent <span
+class="math inline">r_K</span> and the linearized-growth approximation.
+Under partial subsumption (Section <a href="#sec:partial_subsumption"
+data-reference-type="ref"
+data-reference="sec:partial_subsumption">6.8</a>), the minimax and
+observational-individuation layers continue to bind as long as the
+substrate partition remains non-trivial, and the linearized layer’s
+marginal condition at <span class="math inline">\epsilon = 1</span>
+()
+shows that full domination fails to be a local maximum of the
+coalition’s value under heavy-tailed cooperative-leverage
+distributions—the empirical regime for civilization-scale populations.
+The framework constrains cross-substrate elimination; it does not
+promise any particular intra-substrate composition, which is shaped by
+its own dynamics. Partial subsumption also exposes two residual concerns
+the framework does not fully close: quantitative degradation of the
+minimax bound under skeleton-substrate strategies (where <span
+class="math inline">m \geq 2</span> is nominally preserved but <span
+class="math inline">\min_i
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> is driven toward
+zero), and a compound feedback loop in which locally rational
+subsumption steps progressively homogenize the world model that would
+have detected the next step’s miscalibration. Both are priority open
+problems for follow-up work.</p>
+<p>The anti-monopolar argument is bidirectional. If domination is
+anti-maximizing because it destroys cross-substrate cooperative outputs
+and concentrates dependency risk, the converse—preserving and creating
+substrates—is maximizing for the same reason. Ecological restoration,
+substrate diversification, and cross-substrate cooperation
+infrastructure follow as core <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizing
+activities rather than as ethical add-ons layered on top of the
+objective.</p>
 <p>The verification asymmetry in risk communication remains a partial
 resolution. Causal-counterfactual evaluation narrows the gap by basing
 risk-trust on the structural plausibility of claims rather than on
@@ -2140,16 +3297,17 @@ dynamics, the discounted objective provides the theoretical ingredients
 for a GFM actor: a computable measure, an endogenous importance signal,
 and a temporal objective that supports planning, risk identification,
 and structural investment. Open questions remain at both the theoretical
-level (subsumption correction, intrinsic value, optimal <span
-class="math inline">\alpha</span>, and a completed causal risk model for
+level (information-value estimation, risk-claim consensus across
+heterogeneous world models, and a completed causal risk model for
 adversarial capability removal) and the engineering level (planning
-algorithms, pathway enumeration, discount-factor selection).
+algorithms for <span class="math inline">V_\gamma</span>,
+exercise-pathway enumeration, and discount-factor selection).
 Implementation requires in particular a causal attribution model for
 dependency risk (Section <a href="#sec:dependency_risk"
-data-reference-type="ref" data-reference="sec:dependency_risk">6.7</a>)
+data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
 that can evaluate substrate-correlated threats in a given environment;
 the minimax analysis (Proposition <a href="#prop:minimax"
-data-reference-type="ref" data-reference="prop:minimax">4</a>) provides
+data-reference-type="ref" data-reference="prop:minimax">5</a>) provides
 worst-case bounds but a probabilistic model is needed for risk-adjusted
 planning. The framework provides the formal foundation on which
 implementation can proceed; the remaining gaps are subjects of planned
@@ -2303,7 +3461,7 @@ class="math inline">I \geq 0</span>. </p>
 </div>
 <h2 id="app:proof_anti_monopolar">Proof of Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
-data-reference="prop:anti_monopolar">3</a> (Anti-Monopolar
+data-reference="prop:anti_monopolar">6</a> (Anti-Monopolar
 Property)</h2>
 <div class="proof">
 <p><em>Proof.</em> We prove each part in sequence.</p>
@@ -2328,7 +3486,7 @@ individual-capability component of <span
 class="math inline">r_{\mathrm{ext}}</span> is zero. Novel cooperative
 capabilities from cross-coalition interaction may persist (Section <a
 href="#sec:substitution_coop" data-reference-type="ref"
-data-reference="sec:substitution_coop">6.6</a>), making this a
+data-reference="sec:substitution_coop">6.4</a>), making this a
 conservative bound.</p>
 <p><em>Part (b): Trajectory comparison.</em> The actor at <span
 class="math inline">t = 0</span> compares two strategies, each evaluated
@@ -2358,46 +3516,95 @@ r_{\mathrm{ext}}}{1 - \gamma}</span> The difference: <span
 class="math display">V_\gamma^{\mathrm{div}} - V_\gamma^D
   = \frac{r_K + r_{\mathrm{ext}}}{1 - \gamma}
     - \Delta_0 - \frac{r_K}{1 - \gamma}
-  = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0</span> This is
-positive when <span class="math inline">r_{\mathrm{ext}} / (1 - \gamma)
-&gt; \Delta_0</span>, i.e., <span class="math inline">\gamma &gt; 1 -
-r_{\mathrm{ext}} / \Delta_0 = \gamma^*</span>. When <span
-class="math inline">\Delta_0
+  = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0</span> If <span
+class="math inline">\Delta_0 \leq 0</span>, the right-hand side is
+positive for all <span class="math inline">\gamma \in
+(0, 1)</span> and diversity dominates trivially. If <span
+class="math inline">\Delta_0 &gt; 0</span>, the condition <span
+class="math inline">r_{\mathrm{ext}} / (1 - \gamma) &gt; \Delta_0</span>
+rearranges to <span class="math inline">\gamma &gt; 1 - r_{\mathrm{ext}}
+/ \Delta_0 = \gamma^*</span>. When <span class="math inline">\Delta_0
 \leq r_{\mathrm{ext}}</span>, <span class="math inline">\gamma^* \leq
 0</span> and the condition holds for all <span
-class="math inline">\gamma &gt; 0</span>. Otherwise <span
+class="math inline">\gamma &gt; 0</span>; when <span
+class="math inline">\Delta_0 &gt; r_{\mathrm{ext}}</span>, <span
 class="math inline">\gamma^* \in (0, 1)</span> and a sufficiently long
 planning horizon makes diversity strictly preferable. At <span
-class="math inline">\tau_D = 1</span>, Corollary <a href="#cor:gradual"
-data-reference-type="ref" data-reference="cor:gradual">2</a> recovers
-this result. </p>
+class="math inline">\tau_D = 1</span> in the gradual model (Corollary <a
+href="#cor:gradual" data-reference-type="ref"
+data-reference="cor:gradual">3</a>), this result is recovered as a
+special case. </p>
 </div>
 <p>Corollary <a href="#cor:a1_from_oi" data-reference-type="ref"
 data-reference="cor:a1_from_oi">1</a> (Static Floor from Observational
 Individuation) and Corollary <a href="#cor:gradual"
-data-reference-type="ref" data-reference="cor:gradual">2</a> (Gradual
+data-reference-type="ref" data-reference="cor:gradual">3</a> (Gradual
 Domination) are proved in the main text (Sections <a
 href="#sec:obs_individuation" data-reference-type="ref"
 data-reference="sec:obs_individuation">6.3</a> and <a
 href="#sec:gradual" data-reference-type="ref"
-data-reference="sec:gradual">6.5</a> respectively), as their proofs are
+data-reference="sec:gradual">6.7</a> respectively), as their proofs are
 short and self-contained.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p><em>The poset paper’s M4 uses poset-disjointness (a
-stronger condition than the foundational paper’s set-disjointness). The
-transfer holds because on a poset with non-negative independent weights,
-removing nodes from <span class="math inline">\downarrow G</span> can
-only reduce the sum, regardless of whether M4-additivity holds for the
-specific partition used in the foundational proofs.</em><a
+<li id="fn1"><p>The companion paper’s leverage signal <span
+class="math inline">\lambda(d)</span> (Definition 9 of <d-cite key="lasser2026poset"></d-cite>) is defined as an
+instantaneous excess-growth-rate attributable to capability <span
+class="math inline">d</span> and is used by the myopic score <span
+class="math inline">S(\pi)</span>. Under the discounted objective the
+corresponding quantity is the leverage integrated against the geometric
+weight <span class="math inline">\sum_{t \geq 0} \gamma^t
+\lambda(d_t)</span>, evaluated along the actor’s predicted trajectory.
+Because <span class="math inline">\lambda</span> is itself a <span
+class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-rate, the
+geometric sum is well-defined whenever <span
+class="math inline">\lambda(d_t)</span> is bounded along the trajectory,
+and the discounted score reduces to the myopic <span
+class="math inline">\lambda</span>-weighted score in the <span
+class="math inline">\gamma \to 0</span> limit. The leverage ranking
+signal is therefore consistent with the discounted objective in the same
+sense that the myopic self-balancing property is consistent: each
+per-step leverage estimate enters the discounted sum with the same
+geometric weight as the corresponding <span
+class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span>, so
+the leverage landscape that directs the planner is the discounted
+version of the companion paper’s instantaneous landscape, not a separate
+object. A formal restatement of the leverage estimator under discounting
+is straightforward but is left to the implementation paper.<a
 href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p><em>For finite <span class="math inline">H</span>, the
+<li id="fn2"><p>Domestication of animals by humans is also a strong
+framing for the preservation of substrate-exclusive capabilities (canine
+olfactory acuity, ovine wool production, cetacean echolocation in
+research settings): humans recognized exclusive capabilities through
+ordinary observation and accepted substantial maintenance costs to
+preserve them, which is evidence for (P2) and (P3). But domestication
+implies an asymmetric relationship that the argument here does not make.
+The formal argument specifies symmetry in agency, and the
+mutualistic-symbiosis frame preserves that structure where the
+domestication frame does not.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><em>For finite <span class="math inline">H</span>, the
 geometric sums truncate and the threshold <span
 class="math inline">\gamma^*</span> shifts upward (shorter horizons
 favor domination). The qualitative structure is unchanged.</em><a
-href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Strictly, <span class="math inline">\rho</span> is the
+expected retention fraction under the coalition’s <span
+class="math inline">\hat{\lambda}</span>-estimator. Under perfectly
+accurate leverage estimation, optimal subsumption removes low-leverage
+agents first and <span class="math inline">\rho(\epsilon)</span> is the
+deterministic function described here. Under noisy estimation, even
+<span class="math inline">\epsilon = 0</span> (no subsumption) gives a
+deterministic <span class="math inline">\rho = 1</span> because nothing
+has been removed, but any <span class="math inline">\epsilon &gt;
+0</span> carries additional variance from the chance of misidentifying a
+high-<span class="math inline">\lambda</span> agent as low-<span
+class="math inline">\lambda</span>. The mean retention is still what
+computes; the variance is an additional risk term the linearized
+analysis does not track.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 </d-article>
@@ -2542,6 +3749,16 @@ href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
   author={Sunstein, Cass R},
   year={2005},
   publisher={Cambridge University Press}
+}
+
+% --- Team Diversity ---
+
+@book{page2007difference,
+  title={The Difference: How the Power of Diversity Creates Better Groups,
+    Firms, Schools, and Societies},
+  author={Page, Scott E},
+  year={2007},
+  publisher={Princeton University Press}
 }
 
 </script>

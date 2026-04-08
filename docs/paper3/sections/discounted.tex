@@ -42,17 +42,21 @@ on $\gamma$ under certain domination models.
 
 \subsection{Self-Balancing Transfers to the Discounted Objective}
 
-The foundational transfer result on which the remainder of the paper builds:
+The following theorem is a \emph{consistency result}, not a sufficiency
+result: it establishes that the per-step self-balancing property of
+\citet{lasser2026gfm} composes correctly under discounted summation, so
+the discounted objective inherits the same step-local guarantees as the
+myopic objective. It does not, by itself, rule out the failure modes that
+emerge specifically from multi-step planning --- in particular, sequences
+where each step is locally self-balancing but the trajectory ends in
+catastrophic contraction because the destructive consequence is deferred.
+That class of failures requires the risk-capability machinery of
+Section~\ref{sec:risk}, not the transfer theorem.
 
 \begin{theorem}[Self-Balancing Under Discounting]
 \label{thm:discounted_self_balancing}
 Let $\volL$ satisfy axioms M1--M6 (Proposition~1 of
-    \citet{lasser2026poset}).\footnote{The poset paper's M4 uses
-    poset-disjointness (a stronger condition than the foundational paper's
-    set-disjointness). The transfer holds because on a poset with
-    non-negative independent weights, removing nodes from $\dc G$ can only
-    reduce the sum, regardless of whether M4-additivity holds for the
-    specific partition used in the foundational proofs.}
+    \citet{lasser2026poset}).
     For any discount factor $\gamma \in [0, 1)$ and planning horizon $H$:
 \begin{enumerate}
 \item[\textbf{(a)}] \textbf{Per-step preservation.} At each time step $t$,
@@ -75,6 +79,19 @@ Let $\volL$ satisfy axioms M1--M6 (Proposition~1 of
     discounted future expansion exceeds the current contraction.
 \end{enumerate}
 \end{theorem}
+
+\begin{remark}[M4 across the two foundational papers]
+\label{rem:m4_note}
+The poset paper's axiom M4 uses \emph{poset-disjointness}, which is a
+    stronger condition than the foundational paper's set-disjointness used
+    in the original self-balancing proofs. The discounted transfer holds
+    under the stronger M4 because on a poset with non-negative independent
+    weights $\iw$, removing nodes from $\dc G$ can only reduce
+    $\sum \iw$; the argument does not depend on whether M4-additivity
+    holds for the specific partition used in the original proofs. Readers
+    tracing Lemmas~1--3 across the two papers should keep this
+    discrepancy in mind.
+\end{remark}
 
 \begin{proof}
 (a) At each time step $t$, the poset state $G_t$ is a finite poset with
@@ -129,4 +146,22 @@ actor balances present and future). These are implementation choices that
 shape the quality of planning without affecting the structural guarantee. A
 poor world model will produce poor plans, but even a poor plan is evaluated by
 an objective that penalizes sustained contraction. The self-balancing property
-is a property of the \emph{objective}, not of the \emph{planner}.
+is a property of the \emph{objective}, not of the \emph{planner}.\footnote{The
+companion paper's leverage signal $\lambda(d)$
+(Definition~9 of \citet{lasser2026poset}) is defined as an instantaneous
+excess-growth-rate attributable to capability $d$ and is used by the
+myopic score $S(\pi)$. Under the discounted objective the corresponding
+quantity is the leverage integrated against the geometric weight
+$\sum_{t \geq 0} \gamma^t \lambda(d_t)$, evaluated along the actor's
+predicted trajectory. Because $\lambda$ is itself a $\volL$-rate, the
+geometric sum is well-defined whenever $\lambda(d_t)$ is bounded along the
+trajectory, and the discounted score reduces to the myopic
+$\lambda$-weighted score in the $\gamma \to 0$ limit. The leverage
+ranking signal is therefore consistent with the discounted objective in
+the same sense that the myopic self-balancing property is consistent: each
+per-step leverage estimate enters the discounted sum with the same
+geometric weight as the corresponding $\Delta\volL$, so the leverage
+landscape that directs the planner is the discounted version of the
+companion paper's instantaneous landscape, not a separate object. A
+formal restatement of the leverage estimator under discounting is
+straightforward but is left to the implementation paper.}

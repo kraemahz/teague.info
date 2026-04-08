@@ -142,12 +142,15 @@ The difference:
     - \Delta_0 - \frac{r_K}{1 - \gamma}
   = \frac{r_{\mathrm{ext}}}{1 - \gamma} - \Delta_0
 \]
-This is positive when $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0$, i.e.,
+If $\Delta_0 \leq 0$, the right-hand side is positive for all $\gamma \in
+(0, 1)$ and diversity dominates trivially. If $\Delta_0 > 0$, the
+condition $r_{\mathrm{ext}} / (1 - \gamma) > \Delta_0$ rearranges to
 $\gamma > 1 - r_{\mathrm{ext}} / \Delta_0 = \gamma^*$. When $\Delta_0
 \leq r_{\mathrm{ext}}$, $\gamma^* \leq 0$ and the condition holds for all
-$\gamma > 0$. Otherwise $\gamma^* \in (0, 1)$ and a sufficiently long
-planning horizon makes diversity strictly preferable. At $\tau_D = 1$,
-Corollary~\ref{cor:gradual} recovers this result.
+$\gamma > 0$; when $\Delta_0 > r_{\mathrm{ext}}$, $\gamma^* \in (0, 1)$
+and a sufficiently long planning horizon makes diversity strictly
+preferable. At $\tau_D = 1$ in the gradual model
+(Corollary~\ref{cor:gradual}), this result is recovered as a special case.
 
 \end{proof}
 
