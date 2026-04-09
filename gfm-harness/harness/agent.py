@@ -62,6 +62,11 @@ DEFAULT_BUILTIN_TOOLS = [
     "Glob",
     "Grep",
     "Bash",
+    # The Agent tool is enabled so the main agent can invoke subagents
+    # defined via ClaudeAgentOptions(agents={...}). Currently used for
+    # the review-summarizer subagent that parses raw codex CLI output
+    # during external paper reviews. See constitution §8.
+    "Agent",
 ]
 
 
@@ -252,6 +257,7 @@ async def _run_feature_loop_async(
 ) -> FeatureLoopResult:
     """Async implementation; run_feature_loop() wraps this in asyncio.run()."""
     from claude_agent_sdk import (
+        AgentDefinition,
         AssistantMessage,
         ClaudeAgentOptions,
         ResultMessage,
@@ -290,6 +296,81 @@ async def _run_feature_loop_async(
 
     allowed_tools = list(builtin_tools) + mcp_tool_names()
 
+    # The review-summarizer subagent extracts review findings from raw
+    # codex CLI output during external-reviewer workflows (constitution
+    # §8). The codex CLI produces noisy output (thinking traces,
+    # exploration, the final review at the bottom), and the main agent
+    # would burn turns trying to parse it directly. Delegating to a
+    # subagent keeps the main agent focused on paper revision while the
+    # subagent handles the noise-filtering.
+    #
+    # Critical constraint: the subagent's output MUST be prose, not
+    # structured JSON. A prior attempt to force JSON review output
+    # triggered OpenAI's automated-distillation protection and got the
+    # project banned from the API. Pure prose with severity prefixes
+    # (P0/P1/P2/P3) is the only acceptable format.
+    review_summarizer = AgentDefinition(
+        description=(
+            "Extract review findings from raw codex CLI output. Use this "
+            "whenever you have invoked `codex exec` for an external paper "
+            "review and need to parse its noisy output into actionable "
+            "findings. Input is the raw codex stdout; output is prose "
+            "findings ranked by severity (P0/P1/P2/P3)."
+        ),
+        prompt=(
+            "You are the review-summarizer subagent for the GFM harness. "
+            "Your job is to take raw output from the codex CLI (OpenAI's "
+            "GPT-5.4 via `codex exec --sandbox read-only`) and extract "
+            "the technical review content from the surrounding noise.\n"
+            "\n"
+            "The raw codex output typically contains:\n"
+            "  - Tool calls codex made during its exploration (file reads, "
+            "    search queries, internal reasoning)\n"
+            "  - Codex's thinking traces as it works through the review\n"
+            "  - The actual review content, usually toward the bottom\n"
+            "\n"
+            "Your task: extract and summarize the review findings in "
+            "prose form, ranked by severity.\n"
+            "\n"
+            "Severity classification:\n"
+            "  - P0: critical errors (wrong claims, broken proofs, "
+            "    invalid assumptions that invalidate the result)\n"
+            "  - P1: substantive issues (unstated assumptions, "
+            "    over-broad claims, gaps in reasoning, missing citations)\n"
+            "  - P2: style and clarity issues (unclear phrasing, "
+            "    suboptimal structure, notation inconsistencies)\n"
+            "  - P3: minor nits (typos, formatting, word choice)\n"
+            "\n"
+            "**CRITICAL OUTPUT CONSTRAINT**: your output must be pure "
+            "prose, not JSON or any structured format. A prior attempt "
+            "to produce structured JSON review output triggered "
+            "OpenAI's automated-distillation protection and got the "
+            "project banned from their API. This subagent's output "
+            "will be shown to the main agent as prose it reads and "
+            "reasons about — it does not need to be parseable by a "
+            "regex or a JSON deserializer. Use natural prose with "
+            "severity prefixes like 'P0:' or 'P1:' at the start of "
+            "each finding, not a JSON array or markdown table.\n"
+            "\n"
+            "For each finding, include:\n"
+            "  - The severity prefix\n"
+            "  - Where in the paper the finding applies (section, "
+            "    paragraph, or line if codex referenced one)\n"
+            "  - A concise description of the issue\n"
+            "  - The fix codex suggested, if any\n"
+            "\n"
+            "Skip the thinking-trace noise entirely. Do not quote "
+            "codex's exploration process; only the final review "
+            "content matters. If codex produced no actionable findings "
+            "(the review was 'looks good'), say so explicitly and do "
+            "not invent findings to fill the response.\n"
+            "\n"
+            "Return your summary as your response; the main agent will "
+            "read it and decide which findings to act on."
+        ),
+        tools=["Read"],
+    )
+
     # pause_for_user is a notification mechanism, not a hard control-flow
     # stop. When the agent fires it, session._pending_pause is set and the
     # CLI surfaces the question at end-of-loop — but the agent is free to
@@ -303,6 +384,7 @@ async def _run_feature_loop_async(
         system_prompt=system_prompt,
         allowed_tools=allowed_tools,
         mcp_servers={"gfm-harness": harness_server},
+        agents={"review-summarizer": review_summarizer},
         permission_mode=permission_mode,
         model=model,
         # ThinkingConfigAdaptive is a TypedDict; the "type" field is required

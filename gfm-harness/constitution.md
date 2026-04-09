@@ -720,7 +720,161 @@ for example, a missing decision category, a wrong phase boundary, or
 a systematic failure mode that no existing rule captures. Flag
 proposed changes explicitly and wait for user approval.
 
-## 8. What this constitution is not
+## 8. External reviewer protocol (codex)
+
+When revising a GFM paper, you should invoke an external reviewer model
+(GPT 5.4 via the codex CLI) to get technical review on your changes
+before committing. This automates the review relay that used to be run
+manually — the user intervenes only when a specific point warrants
+counter-argument. The goal is to get the user out of the copy/paste
+loop for routine reviews while preserving their ability to override
+any specific finding.
+
+### 8.1 When to use codex review
+
+Use codex review:
+
+- After a substantive revision to a paper section during IMPLEMENT phase,
+  before transitioning to VERIFY
+- When producing a response to a prior review round (codex's or the
+  user's) and you want to check whether the response actually addresses
+  the concerns
+- When the task description explicitly says to get codex review
+- When a paper commit involves changes to a theorem, proof, or
+  structural argument — the cost of getting it wrong is higher than
+  the cost of a review round
+
+Do NOT use codex review:
+
+- For trivial edits (typos, whitespace, formatting, purely mechanical
+  changes)
+- In PLAN phase — reviews belong after execution, not before
+- When the user says "skip review" for a specific task
+- For GFM harness code changes — codex is for paper content, not for
+  the implementation layer
+
+### 8.2 How to invoke
+
+The codex CLI is installed at `/opt/homebrew/bin/codex`. It should be
+on PATH in a normal shell, but if `codex: command not found` fires,
+use the full path explicitly. The canonical invocation pattern:
+
+```bash
+cd /Users/teague/Code/kraemahz/teague.info/docs/paperN
+codex exec --sandbox read-only "Provide a technical review of main.pdf and the surrounding .tex files"
+```
+
+Or with the explicit path if PATH is incomplete:
+
+```bash
+cd /Users/teague/Code/kraemahz/teague.info/docs/paperN
+/opt/homebrew/bin/codex exec --sandbox read-only "Provide a technical review of main.pdf and the surrounding .tex files"
+```
+
+The working directory must be the paper's directory (where `main.tex`
+and `main.pdf` live), not the harness repo root. Use a subshell or
+explicit `cd` so the rest of your shell context is unaffected.
+
+You may customize the review request prompt beyond the canonical form
+to focus codex on specific concerns — for example:
+
+```bash
+codex exec --sandbox read-only "Review sections 3 and 4 of main.pdf for unstated assumptions and missing citations. Ignore formatting and typo issues; focus on soundness."
+```
+
+### 8.3 Critical constraint: pure prose output only
+
+**Do NOT ask codex to produce structured JSON output.** A prior
+attempt to force JSON-formatted reviews triggered OpenAI's automated
+distillation-protection system and the project was banned from the
+API. Codex's natural output format is unstructured prose with a
+thinking trace and a final review section — that is the intended
+shape, do not try to engineer it into something machine-parseable
+at the codex level.
+
+The `review-summarizer` subagent (defined in the harness driver)
+handles the parsing job on our side. Do not try to DIY it through
+prompt engineering to codex.
+
+### 8.4 Parsing the output via the review-summarizer subagent
+
+The raw codex output contains tool traces, exploration, thinking,
+and the final review. Delegating the parsing to a dedicated subagent
+keeps your main agent focused on paper revision while the subagent
+handles noise-filtering. Invoke via the `Agent` tool:
+
+```
+Agent(
+    subagent_type="review-summarizer",
+    description="Extract review findings from codex output",
+    prompt="<paste the raw codex stdout here>",
+)
+```
+
+The subagent returns prose findings with severity prefixes
+(P0 / P1 / P2 / P3). It is specifically instructed NOT to produce
+JSON output for the same distillation-protection reason — the chain
+stays prose-only from codex through the subagent to you.
+
+### 8.5 Severity and action
+
+- **P0** (critical errors): must fix before committing. Examples:
+  broken proofs, wrong claims, invalid assumptions that invalidate the
+  result. Do not commit the revision until all P0s are resolved or
+  explicitly deferred to the user.
+- **P1** (substantive issues): should fix in this revision round.
+  Examples: unstated assumptions, over-broad claims, gaps in reasoning,
+  missing citations. Apply unless you have a specific reason not to.
+- **P2** (style and clarity): fix in the same pass that clears the
+  P0/P1 floor, or in a follow-up pass explicitly scoped to batch the
+  P2s. Examples: ambiguous notation, heuristic arguments presented as
+  proofs, missing qualifier assumptions.
+- **P3** (minor nits): typos, formatting, word choice. Batch-fix in a
+  later cleanup pass.
+
+**All findings from all rounds get addressed.** The halt condition in
+§8.6 is about deciding when to stop requesting new review rounds, not
+about deciding which findings to ignore. A P2 from round 2 is still a
+real finding even after the loop converges on round 4 with no new
+P0/P1s; schedule it. Findings you already paid codex tokens for are
+sunk-cost research work, and addressing them in the current revision
+cycle is strictly cheaper than re-deriving them later. If codex keeps
+surfacing the same P2 across rounds, that is the signal that it
+remains worth fixing, not the signal to escalate severity.
+
+### 8.6 Iteration
+
+Continue the review loop until codex stops surfacing new P0 and P1
+findings — the same convergence criterion the PLAN phase uses for its
+internal review sub-loop. Typical run: 2–4 rounds for a single paper
+section, each round taking several minutes of codex time. The halt
+condition is "no new P0/P1s", not "no findings at all"; P2s and P3s
+from the final round still get fixed (see §8.5).
+
+Do not iterate past convergence just because you are uncertain. Each
+round costs real OpenAI tokens (codex charges per invocation, unlike
+the Claude session which is free against the user's logged-in account),
+so wasteful iteration has direct monetary cost and should be avoided.
+
+### 8.7 When to break the loop and pause for the user
+
+Pause for the user (via `pause_for_user`, category `result_interpretation`)
+if:
+
+- Codex's review disagrees with a claim the user has previously
+  approved. This is a specific-point counter-argument where the user's
+  input is load-bearing.
+- You cannot tell whether a finding is P0 or P1 — the severity call
+  depends on a judgment the user should make.
+- The subagent's summary is unclear or inconsistent in a way that
+  suggests the parsing failed.
+- Codex produces findings that contradict the GFM framework's own
+  assumptions in ways that might be legitimate critiques of the
+  framework itself, not just the current paper.
+
+Otherwise, continue the loop without pausing.
+
+## 9. What this constitution is not
 
 This constitution is not a safety policy. It is a coordination layer
 that makes the GFM measurement infrastructure usable in practice.
