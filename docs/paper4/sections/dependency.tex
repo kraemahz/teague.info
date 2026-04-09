@@ -296,6 +296,38 @@ horizon ($1/(1-\gamma)$ steps), this compounds to $0.05\% \times
 \volL(G) / (1-\gamma)$, which for $\gamma = 0.99$ is $5\% \times
 \volL(G)$---substantial.
 
+\paragraph{Sensitivity analysis.} Table~\ref{tab:sensitivity} shows
+how $\Delta_{\mathrm{risk}} / \volL(G)$ varies over plausible
+parameter ranges. The per-step risk gap scales linearly with
+$p_{\mathrm{adv}}$ and $c$, and the compounded effect over the
+planning horizon is $\Delta_{\mathrm{risk}} / (1 - \gamma)$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$p_{\mathrm{adv}}$ & $c$ & $\Delta_{\mathrm{div}}/\volL$ & $\Delta_{\mathrm{risk}}/\volL$ (per step) & Compounded at $\gamma = 0.99$ \\
+\midrule
+0.001 & 0.3 & 0.10 & $3 \times 10^{-5}$   & $0.3\%$ \\
+0.01  & 0.3 & 0.10 & $3 \times 10^{-4}$   & $3.0\%$ \\
+0.01  & 0.5 & 0.10 & $5 \times 10^{-4}$   & $5.0\%$ \\
+0.01  & 0.5 & 0.20 & $1 \times 10^{-3}$   & $10.0\%$ \\
+0.01  & 0.8 & 0.10 & $8 \times 10^{-4}$   & $8.0\%$ \\
+0.05  & 0.5 & 0.10 & $2.5 \times 10^{-3}$ & $25.0\%$ \\
+0.05  & 0.8 & 0.20 & $8 \times 10^{-3}$   & $80.0\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Sensitivity of the per-step dependency-risk gap
+    $\Delta_{\mathrm{risk}} = p_{\mathrm{adv}} \cdot
+    \Delta_{\mathrm{div}} \cdot c$ and its compounded effect over
+    the planning horizon at $\gamma = 0.99$
+    ($1/(1 - \gamma) = 100$ effective steps). The compounded
+    percentage is $\Delta_{\mathrm{risk}} / [(1 - \gamma) \cdot
+    \volL(G)] \times 100$.}
+\label{tab:sensitivity}
+\end{table}
+
 \paragraph{Interaction with the horizon paper's cooperative-novelty result.}
 The per-step risk gap $\Delta_{\mathrm{risk}}$ is amplified by the
 cross-substrate cooperative capabilities analyzed in

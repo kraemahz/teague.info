@@ -59,6 +59,41 @@ problem, including the calibration procedure and its interaction
 with the behavioral and capability channels, is deferred to a
 companion paper.
 
+\paragraph{Coordinated multi-agent attacks and non-additive
+interactions.} The one-at-a-time causal attribution
+$\CausalAttr(a_j, t)$ (Definition~\ref{def:causal_attribution})
+decomposes the total $\volL$-change exactly only under additive SCM
+structure (Equation~\eqref{eq:additive_scm}). In multi-agent
+populations, coordinated attacks produce non-additive interactions:
+an attack requiring $m$ agents to cooperate has
+$\Delta \volL$ that depends on their joint action, and the
+one-at-a-time intervention $\mathrm{do}(\pi_j = \mathrm{skip})$
+produces non-unique individual attributions: under pure
+complementarities ($\Delta \volL = \pi_1 \cdot \pi_2$), marginal
+attribution may over-count or double-count each coordinator's
+contribution; under other non-additive structures the attribution
+allocates the interaction term arbitrarily across agents. The
+fundamental issue is that the one-at-a-time decomposition is not
+well-defined when the structural equation is non-additive, and no
+single-agent marginal faithfully represents the joint effect. The exact fix is
+Shapley-style attribution
+\citep{shapley1953value} that averages over all orderings of agent
+inclusion; developing this within the GFM SCM, including its
+computational cost (exponential in coalition size without
+structure-exploiting approximations) and its interaction with the
+SPRT detection rule, is deferred to a companion paper on joint
+attribution. In the interim, the multi-channel attribution
+architecture (Section~\ref{sec:multi_channel}) provides the
+structural defense: coordinated attacks that evade the causal
+channel are still detectable through capability gating --- which
+constrains the set of agents that \emph{could} have caused the
+contraction regardless of interaction structure --- and through
+behavioral prediction residuals, which detect individual
+coordinators whose actions diverge from their predictive models.
+The causal channel's failure under non-additivity degrades one
+channel's contribution; the multi-channel aggregate reweights
+toward the structurally-grounded channels, as designed.
+
 \paragraph{Risk-trust residual dependence on the actor's model.} The
 pathway-conditional structural verification residual
 (Definition~\ref{def:risk_residual}) measures divergence between the
@@ -73,6 +108,31 @@ model has low $T_s$ and high learning rate, which accelerates model
 correction. But during the correction period, risk-trust assessments
 may be unreliable.
 
+\paragraph{Exogenous orthogonality as the most fragile assumption.}
+Of the three structural assumptions underlying
+Proposition~\ref{prop:causal_dominates}(c), exogenous orthogonality
+is the most likely to fail in deployment. Shared environmental
+shocks --- power grid state, information broadcasts, market
+movements, weather, time-of-day effects on a shared population ---
+induce covariance between agents' contributions even under a
+correctly specified causal DAG. Conditioning on $G_t$ does not
+remove time-localized shocks that affect multiple agents' actions
+simultaneously. When the assumption fails, the variance reduction
+$\sigma_{\mathrm{do}}^2 \leq \sigma^2$ no longer holds and the
+causal detector may perform worse than the correlational baseline
+(as acknowledged in Proposition~\ref{prop:causal_dominates}(c)).
+The residual-covariance diagnostic described above provides
+detection: empirically elevated
+$\mathrm{Cov}(\CausalAttr(a_j), \CausalAttr(a_k) \mid G_t)$
+signals orthogonality failure, and the SCM-confidence scalar
+$c_{\SCM}(t)$ should down-weight the causal channel accordingly.
+The multi-channel aggregate then shifts weight toward capability
+gating and behavioral channels, which do not depend on exogenous
+orthogonality. Characterizing the populations and environments in
+which exogenous orthogonality approximately holds --- and deriving
+a partial-independence correction for the variance reduction when
+it does not --- is an open problem.
+
 \paragraph{Log-odds aggregation and reporter correlation.} The
 trust-weighted log-linear opinion pool (Definition~\ref{def:logodds})
 recovers Bayesian updating in the no-tempering limit under conditional
@@ -86,4 +146,128 @@ and the log-linear pool is an approximation whose error grows with
 the correlation. Characterizing the approximation error under partial
 independence, and deriving a correction term from a reporter-network
 model, is deferred to future work.
+
+\paragraph{Adversarial parameter exposure.} Three of this paper's
+mechanisms share a common vulnerability: the adversary can observe
+and exploit fixed defense parameters.
+
+\emph{Verification-gate denial of service} (Section~\ref{sec:attention_not_action}).
+The salience gate is cheap (aggregate and threshold); the
+verification gate is computationally expensive (forward causal
+evaluation on the actor's own SCM). An adversary who floods the
+actor with structurally plausible false risk claims can exhaust the
+verification budget without any single claim bypassing independent
+verification. The two-gate architecture defends against coordinated
+amplification of false claims into \emph{action} but does not
+defend against attention exhaustion via structurally plausible
+decoys. The defense direction is prioritization: the verification
+gate should process candidates in order of $\Trisk_j$-weighted
+expected contraction magnitude, so high-trust reporters' claims are
+verified first and low-trust flooding imposes only queue delay, not
+budget exhaustion. Formalizing the verification-gate capacity model
+and its interaction with the salience threshold is deferred.
+
+\emph{The adversary knows $\epsilon$} (Section~\ref{sec:scorpion}).
+The SPRT design parameter $\epsilon$ sets the minimum detectable
+contraction magnitude. A well-informed adversary who can infer
+$\epsilon$ from the actor's behavior --- by probing with small
+contractions and observing flag rates --- will calibrate
+$|\mu_j|$ just below $\epsilon$ and sit in the undetected regime
+permanently. The evasion-bandwidth bound's ``undetected contraction
+rate bounded by $|\mu_j|$'' is only informative if $|\mu_j|$ is
+bounded by something other than the design parameter itself.
+Defense directions include randomized $\epsilon$ (the actor varies
+its design parameter unpredictably across epochs), adaptive
+$\epsilon$ (tighten in regimes where cautious adversaries are
+suspected from auxiliary behavioral signals), and Bayesian
+$\epsilon$ (treat as a nuisance parameter and marginalize). None
+are developed here; the current treatment characterizes the
+adversary's trade-off under a fixed, known $\epsilon$.
+
+\emph{$T_j$ / $\Trisk_j$ independence}
+(Section~\ref{sec:risk_trust}). The behavioral trust $T_j$ and
+risk-trust $\Trisk_j$ evolve independently by design, optimizing
+for the case of honest specialists (good capability reporter, poor
+risk forecaster, or vice versa). A strategic reporter can exploit
+the independence: operating as a known-unreliable capability
+reporter (low $T_j$) while generating structurally plausible risk
+claims that accumulate high $\Trisk_j$, thereby driving the
+verification-gate queue despite a poor behavioral track record. A
+coupling floor $\Trisk_j \leq f(T_j)$ for some monotone $f$ would
+cap risk-claim influence at a level commensurate with behavioral
+reliability, at the cost of penalizing honest specialists. The
+design choice between full decoupling and a coupled floor is a
+robustness-versus-fairness trade-off that the current paper
+identifies but does not resolve.
+
+The unifying theme is that fixed, observable parameters of the
+defense create an adversarial surface. The structural defense
+direction across all three is \emph{randomization and coupling}:
+randomize the parameters the adversary needs to know (gate
+priority, $\epsilon$, channel weights) and couple the trust
+channels so that gaming one does not leave the others unaffected.
+
+\paragraph{Shared-prior $\pi_0$ as an adversarial surface.}
+The log-odds aggregation (Definition~\ref{def:logodds}) requires
+every reporter to calibrate against a shared prior $\pi_0$, and
+the paper notes this requires a coordination protocol. The choice
+of $\pi_0$ is itself a manipulation surface: a reporter who can
+influence $\pi_0$ --- by proposing it, by coordinating on a biased
+value, or by exploiting a protocol weakness --- can tilt the
+aggregation without submitting a false report. This paper does not
+develop a prior-robust solution; the adversarial robustness of
+$\pi_0$ establishment is an open problem that interacts with the
+adversarial parameter exposure pattern above.
+
+\paragraph{Structural verification residual norm weights.}
+The structural verification residual
+(Definition~\ref{def:risk_residual}) uses the Euclidean norm on a
+two-dimensional vector (probability difference, normalized magnitude
+difference), which implicitly treats both components as equally
+important. A probability error of $0.1$ and a magnitude error of
+$0.1 \cdot \volL(G_t)$ enter symmetrically into the trust update
+but represent different kinds of miscalibration. A weighted norm
+with weights tuned to the actor's utility over probability-versus-magnitude
+errors would be more principled, but would require the actor to
+specify a preference ordering over error types that the framework
+does not assume. The equal-weight Euclidean norm is a neutral
+default; domain-specific actors with a preference for probability
+accuracy over magnitude accuracy (or vice versa) should adjust the
+norm accordingly.
+
+\paragraph{Cascade confinement and cross-substrate propagation.}
+The dependency-risk analysis (Section~\ref{sec:dependency}) assumes
+cascade fractions $c_i$ measure only within-substrate propagation,
+with cross-substrate cascades outside the scope of the current
+bound. In the motivating threat classes --- memetic attacks,
+financial contagion, supply-chain disruption --- cross-substrate
+propagation is exactly the concerning pathway: a memetic attack on
+silicon agents that triggers panic-driven behavior in biological
+agents through inter-substrate communication channels is precisely a
+cross-substrate cascade, and the adversarial balance condition does
+not cover it. Modeling cross-substrate cascade propagation requires
+extending the SCM's structural equations to include inter-substrate
+edges, which produces a coupled cascade model whose analysis is
+substantially more complex than the within-substrate case. This
+extension is identified as an open problem.
+
+\paragraph{Epoch-boundary gaming.}
+Proposition~\ref{prop:evasion_bandwidth}'s SPRT bounds are
+per-epoch, and an epoch boundary resets the SPRT statistic.
+The epoch-declaration protocol is a structural vulnerability:
+if the actor declares epoch boundaries based on detected
+non-stationarity, an adversary can trigger epoch resets by inducing
+structural transitions. If epoch boundaries are time-based (every
+$\tau$ steps), an adversary can synchronize strategy shifts to epoch
+boundaries so the SPRT never accumulates sufficient evidence.
+The defensive direction is a hybrid protocol: time-based epoch
+boundaries provide a baseline accumulation window that the adversary
+cannot shorten, while non-stationarity detection triggers auxiliary
+monitoring (e.g., a parallel SPRT with carry-over statistics) rather
+than resetting the primary accumulator. This mitigates the most
+direct epoch-manipulation attacks but does not eliminate the
+vulnerability, since any fixed-window protocol still gives the
+adversary a known accumulation budget to calibrate against.
+Formalizing this hybrid protocol and its adversarial robustness
+is deferred.
 

@@ -3,8 +3,10 @@
 
 The preceding GFM papers define what to maximize ($\volL(G)$), prove
 structural safety properties, and establish anti-monopolar pressure. This
-paper addresses how the actor \emph{reasons about other agents}: upgrading
-every evaluation mechanism from statistical to causal.
+paper addresses how the actor \emph{reasons about other agents}: providing
+a causal model that upgrades scorpion detection and risk evaluation from
+statistical to causal identification and sharpens the remaining
+evaluation mechanisms.
 
 Causal attribution (Section~\ref{sec:causal}) upgrades the foundational
 paper's correlational scorpion detection to causal identification through
@@ -18,8 +20,8 @@ contraction rate.
 Risk-trust dynamics (Section~\ref{sec:risk_trust}) provide formal EWMA
 update equations for $\Trisk_j$, with a two-gate architecture separating
 attention allocation (log-odds aggregation) from action decisions (the
-actor's own causal verification). This prevents coordinated report-bombing
-while preserving sensitivity to genuine independent agreement. Probabilistic
+actor's own causal verification). This prevents coordinated report-bombing from being amplified into
+action while preserving sensitivity to genuine independent agreement. Probabilistic
 dependency risk (Section~\ref{sec:dependency}) converts minimax substrate
 bounds into per-step expected costs that compound at the same rate as
 growth, providing the quantitative risk model needed for risk-adjusted
@@ -29,18 +31,23 @@ Together with the foundational framework \citep{lasser2026gfm}, the
 computable poset \citep{lasser2026poset}, and the horizon-aware objective
 \citep{lasser2026horizon}, these results narrow the gap between the GFM
 framework's structural guarantees and the mechanisms a concrete agent
-would need to realize them. The results here are conditional: the
-causal convergence advantage
-(Proposition~\ref{prop:causal_dominates}(c)) relies on causal
-sufficiency, additive structure, and exogenous orthogonality of the
-SCM; the Bayesian interpretation of log-odds aggregation
-(Definition~\ref{def:logodds}) relies on conditional independence
-given a shared prior; the dependency-risk gap
-(Proposition~\ref{prop:expected_risk}) relies on cascade confinement
-within substrates and the adversarial balance condition; and the
-evasion bound (Proposition~\ref{prop:evasion_bandwidth}) relies on a
-stationary-epoch adversary model. Each
-assumption is explicit, falsifiable, and load-bearing. The remaining
+would need to realize them. The results here are conditional on seven load-bearing assumptions:
+causal sufficiency, additive SCM structure, and exogenous
+orthogonality (Proposition~\ref{prop:causal_dominates}(c));
+conditional independence of reporters given a shared prior
+(Definition~\ref{def:logodds});
+cascade confinement within substrates and the adversarial balance
+condition (Proposition~\ref{prop:expected_risk}); and a
+stationary-epoch adversary model
+(Proposition~\ref{prop:evasion_bandwidth}). Each
+assumption is explicit, falsifiable, and load-bearing.
+As implementation machinery, these results do not affect the
+framework's structural guarantees: a flaw in any mechanism here
+degrades the actor's evaluation accuracy but does not compromise
+the self-balancing, anti-monopolar, or structural alignment
+properties established in Papers~1--3
+\citep{lasser2026gfm, lasser2026poset, lasser2026horizon}.
+The remaining
 work is both theoretical (relaxing each assumption and characterizing
 what happens when it fails) and empirical: instantiating these
 computations in a concrete environment and checking whether the

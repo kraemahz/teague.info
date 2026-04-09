@@ -29,12 +29,18 @@ When the variance-reduction results of this paper are invoked
     (Proposition~\ref{prop:causal_dominates}(c) and downstream), we
     additionally assume \textbf{exogenous orthogonality}: the
     exogenous noise components entering different agents' structural
-    equations are mutually independent conditional on $G_t$. That is,
+    equations, and the residual $h$, are mutually independent
+    conditional on $G_t$. That is,
     if $U_j \subseteq U$ are the exogenous variables appearing in
-    $a_j$'s structural equation and $U_k \subseteq U$ those appearing
-    in $a_k$'s, then $U_j \perp\!\!\!\perp U_k \mid G_t$ for $j \neq k$.
+    $a_j$'s structural equation, $U_k \subseteq U$ those appearing
+    in $a_k$'s, and $U_h \subseteq U$ those appearing in the
+    residual $h(G_t, U)$
+    (Equation~\eqref{eq:additive_scm}), then
+    $U_j \perp\!\!\!\perp U_k \mid G_t$ for $j \neq k$ and
+    $U_j \perp\!\!\!\perp U_h \mid G_t$ for all $j$.
     This rules out shared exogenous shocks that would induce
-    covariance between agents' contributions even under a correct
+    covariance between agents' contributions (or between an agent's
+    contribution and the environment residual) even under a correct
     causal DAG.
 
 The GFM actor's world model $\WorldModel$
@@ -217,31 +223,52 @@ $\mathrm{do}(\pi_j = \mathrm{skip})$. The variance of this signal is
 $\sigma_{\mathrm{do}}^2 = \mathrm{Var}(\CausalAttr(a_j, t))$, which
 excludes the confounding variance.
 
-(c) Under the additive-SCM assumption
+(c) The three assumptions do distinct work; we separate them.
+
+\emph{Step 1: Additive SCM $\Rightarrow$ $\CausalAttr(a_j) = g_j$
+exactly.} Under the additive-SCM assumption
 (Equation~\eqref{eq:additive_scm}), the continuous $\volL$-change
 decomposes as
 $\Delta \volL_{\mathrm{total}}(t) = \CausalAttr(a_j, t) +
     \mathrm{confounders}(t)$,
 where the confounder term aggregates all other agents' contributions
-and the residual $h(G_t, U)$. By the variance identity for sums:
+$\{g_k\}_{k \neq j}$ and the residual $h(G_t, U)$, and
+$\CausalAttr(a_j, t) = g_j(\pi_j^{\mathrm{obs}}, G_t, U) -
+g_j(\mathrm{skip}, G_t, U)$ is exactly $a_j$'s separable
+contribution. Without additivity, $\CausalAttr(a_j)$ captures only
+the diagonal term and misses interaction effects. By the variance
+identity for sums:
 \[
 \sigma^2 = \mathrm{Var}(\CausalAttr(a_j))
     + \mathrm{Var}(\mathrm{confounders})
     + 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}).
 \]
-Under causal sufficiency, the additive-SCM structure, and
-exogenous orthogonality (Definition~\ref{def:scm}): causal
-sufficiency ensures the DAG captures all common causes, the
-additive decomposition ensures $a_j$'s contribution enters as a
-separable term $g_j$, and exogenous orthogonality ensures the
-noise driving $g_j$ is independent of the noise driving the
-confounder terms $\{g_k\}_{k \neq j}$ and $h$. Together, these
-give
-$\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}) = 0$, and
-$\sigma^2 - \sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{confounders})$
-as stated. Without causal sufficiency, the covariance term is retained
-and the inequality $\sigma_{\mathrm{do}}^2 \leq \sigma^2$ holds only
-when $\mathrm{Var}(\mathrm{confounders}) +
+
+\emph{Step 2: Causal sufficiency $\Rightarrow$ confounders are
+SCM-known.} Causal sufficiency ensures the DAG $\SCM$ captures all
+common causes of $a_j$'s actions and the confounder signals. Every
+variable contributing to the covariance term appears explicitly in
+the structural equations, so the covariance can in principle be
+computed from the DAG. Without causal sufficiency, latent common
+causes contribute unmodeled covariance that may have either sign.
+
+\emph{Step 3: Exogenous orthogonality $\Rightarrow$
+$\mathrm{Cov}$ term vanishes.} Under exogenous orthogonality
+(Definition~\ref{def:scm}), the noise $U_j$ driving $g_j$ is
+independent of both the noise $\{U_k\}_{k \neq j}$ driving
+$\{g_k\}_{k \neq j}$ and the noise $U_h$ driving the residual
+$h$, conditional on $G_t$. Since the confounders term is
+$\sum_{k \neq j} g_k + h$, each cross-covariance
+$\mathrm{Cov}(g_j, g_k \mid G_t) = 0$ and
+$\mathrm{Cov}(g_j, h \mid G_t) = 0$. This gives
+$\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t) = 0$,
+and therefore
+$\sigma^2 - \sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{confounders})
+\geq 0$
+as stated. Without exogenous orthogonality, the covariance term is
+retained and the inequality
+$\sigma_{\mathrm{do}}^2 \leq \sigma^2$ holds only when
+$\mathrm{Var}(\mathrm{confounders}) +
 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}) \geq 0$; the
 inequality is strict whenever confounders have positive variance and
 the covariance term does not dominate.

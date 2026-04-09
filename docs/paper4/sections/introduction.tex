@@ -14,6 +14,20 @@ develops risk-capability identification, and establishes the anti-monopolar
 property: under a diversity condition, full capability domination is
 anti-maximizing.
 
+\paragraph{Epistemic status.} This paper is implementation machinery.
+Papers~1--3 establish what is maximized ($\volL(G)$), prove structural
+safety properties (self-balancing, anti-monopolar pressure, structural
+alignment), and characterize the conditions under which those properties
+hold \citep{lasser2026gfm, lasser2026poset, lasser2026horizon}. Those
+structural guarantees do not depend on the correctness of this paper's
+results: a flaw in the causal attribution rule, the risk-trust dynamics,
+the SPRT detection test, or the dependency-risk model would be a flaw
+in the \emph{implementation} of agent-evaluation mechanisms, not in the
+framework's alignment properties. The framework falls back on the trust
+and capability machinery of Papers~1--3 whenever this paper's mechanisms
+degrade---a property formalized through the multi-channel attribution
+architecture of Section~\ref{sec:multi_channel}.
+
 The preceding papers treat every agent-evaluation question as a statistical
 signal-processing problem. The foundational paper's scorpion detection
 \citep{lasser2026gfm} identifies agents whose actions are \emph{correlated}
@@ -28,8 +42,9 @@ coordinated risk manipulation, and risk claims whose outcomes are never
 observed.
 
 This paper introduces a structural causal model for capability dynamics
-and uses it to sharpen every agent-evaluation mechanism, upgrading the
-core identification results from statistical to causal. The common
+and uses it to upgrade scorpion detection and risk evaluation from
+statistical to causal identification and to sharpen the remaining
+agent-evaluation mechanisms. The common
 thread: a GFM agent needs a \emph{causal model} of other agents to make
 good decisions about their harm (who caused this contraction?),
 credibility (is this risk claim structurally sound?), and adversarial
