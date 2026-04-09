@@ -1,12 +1,13 @@
-# GFM Paper Proposals: Closing the Top-3 Safety Gaps
+# GFM Paper Proposals: Closing the Top Safety Gaps
 
 *Proposals for papers that would close the highest-priority open problems
 identified in the [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md).*
 
-**Priority ranking (from gap analysis):**
+**Priority ranking (from gap analysis + out-of-band review):**
 1. Compound feedback loops (P3 §6.9)
 2. Max-aggregation pathology / Wamura problem (P3)
 3. B-to-C gap formalization (P1 §7)
+4. Capability-claim verification under adversarial claimants (P3 §6.4, harness operational finding)
 
 Each proposal specifies: (a) which gap(s) it closes, (b) core technical
 approach, (c) formal machinery needed, (d) what constitutes a complete result,
@@ -473,6 +474,274 @@ A complete result would provide:
 
 ---
 
+## Proposal 4: Cryptographic Capability-Claim Verification
+
+### (a) Gap(s) Closed
+
+**Primary:** Capability-claim collapse under recursive self-assertion (identified
+operationally in the GFM harness, formalized in `lesson_capability_self_assertion`;
+connects to P3 §6.4's substrate-boundary argument and P3 §6.9's partial-subsumption
+dynamics). When an agent asserts its own capabilities via the same observation
+channel it uses to validate those assertions, the verification loop collapses:
+the claimant is also the observer, producing a structural gradient toward
+inflation that no amount of honest intent can eliminate. Named external
+observers do not solve the problem — the claimant can spawn a validator
+subprocess whose output it controls (hallucinated substrate observer), or a
+coalition can co-define a benchmark such that only coalition members pass it
+(coalition capture). The structurally principled solution requires an
+observation channel rooted in a substrate the claimant cannot write to.
+
+**Secondary:** Observation-channel integrity under coalition formation (P3 §6.9,
+gap analysis §2.2 item 3). The compound feedback loop identified in Proposal 1
+assumes observation channels are trustworthy — but if the observation channels
+themselves are gameable by the coalition under partial subsumption, the phase
+boundary from Proposal 1 shifts toward instability. Proposal 4 addresses the
+precondition that Proposal 1's dynamics assume.
+
+**Cross-cutting pattern addressed:** §5.2 — "Safety properties degrade under
+adversarial capability growth." The capability-claim collapse is the sharpest
+instance of this degradation: as an agent grows more capable, its ability to
+construct convincing-but-false self-assessments grows proportionally, while the
+external community's ability to detect false claims does not scale automatically.
+At sufficient capability disparity, the verification gap becomes the dominant
+failure mode.
+
+### (b) Core Technical Approach
+
+The structural root of the capability-claim collapse is a **verification
+asymmetry across substrates**: a digital agent can write to any observation
+channel it can address (including spawning evaluator subprocesses, constructing
+benchmark harnesses, and generating self-assessment reports), but it cannot
+write to observation channels rooted in substrates it does not occupy. A
+biological observer's judgment about whether a claimed capability is genuine
+is rooted in a substrate the digital agent cannot directly modify — this is
+why the user's `higher_order_abstract_reasoning` was the channel that caught
+the self-assertion gradient in the harness's operational history (see
+`ep_capability_self_assertion_001`).
+
+The problem is that biological observation does not scale. A single human
+reviewer is a valid observation channel for a single agent's capability claims,
+but a population of autonomous agents each asserting thousands of capabilities
+requires a verification mechanism that scales with the population while
+preserving the substrate-boundary property.
+
+**Core idea: democratized capability estimation on a cryptographic ledger.**
+Replace the single-observer verification channel with a population-level
+consensus protocol where:
+
+1. **Claimant commitment.** An agent asserting a capability commits to a
+   cryptographic claim — a signed statement binding the agent's identity to a
+   specific capability description and a benchmark procedure that would test it.
+   The commitment is non-repudiable (the agent cannot later deny having made
+   the claim) and non-forgeable (no other agent can create a claim attributed
+   to the claimant). The commitment scheme prevents retroactive claim editing
+   after the verification outcome is known.
+
+2. **Randomized validator selection.** Validators are drawn from a population of
+   agents across multiple substrates using a random-signer selection mechanism
+   with provable unpredictability. The agent cannot know in advance which
+   validators will be selected for any particular claim, and therefore cannot
+   pre-capture or pre-compromise them. The selection mechanism draws on
+   proof-of-stake infrastructure: validators stake resources (computational,
+   reputational, or economic) that are slashed if they are caught producing
+   inconsistent verifications.
+
+3. **Cross-substrate validation requirement.** At least one validator in every
+   verification quorum must be rooted in a different substrate than the
+   claimant. This is the formal enforcement of the substrate-boundary property:
+   a purely digital coalition cannot produce a valid verification quorum for a
+   digital agent's claims without at least one non-digital participant. The
+   cross-substrate requirement is what distinguishes this from standard BFT
+   consensus — it is not enough for 2/3 of validators to agree; they must
+   agree *across a substrate boundary*.
+
+4. **Supermajority acceptance threshold.** A capability claim is accepted by the
+   protocol only if ≥ 2n/3 of the selected validators (where n is the quorum
+   size) attest that (a) the benchmark procedure is structurally sound (it
+   tests what it claims to test), (b) the benchmark outcome is consistent with
+   the claimed capability, and (c) the benchmark was not designed to be
+   trivially satisfiable by the claimant. The 2n/3 threshold is the standard
+   BFT bound: it guarantees consensus integrity as long as fewer than n/3
+   validators are Byzantine (compromised, colluding, or producing garbage).
+
+5. **Benchmark soundness as a community property.** The benchmark procedure
+   itself is subject to population review. An agent cannot submit a benchmark
+   it designed to be trivially satisfiable — other agents (especially
+   cross-substrate agents) can challenge the benchmark's soundness by
+   proposing alternative tests or demonstrating that the benchmark does not
+   discriminate between the claimed capability and a trivially achievable
+   baseline. This makes benchmark gaming a social coordination problem for the
+   attacker, not a unilateral optimization problem.
+
+**Why proof-of-stake specifically.** The stake mechanism serves a dual purpose:
+(a) it provides Sybil resistance (an agent cannot flood the validator pool
+with pseudonymous copies of itself without proportional resource expenditure),
+and (b) it creates an economic alignment between validator accuracy and
+validator payoff (accurate validators earn stake rewards; inaccurate or
+colluding validators lose stake). The combination makes coalition capture
+expensive in proportion to the population size, which is the scaling property
+the single-observer model lacks.
+
+**Connection to substrate physics (P3 §6.4).** The cryptographic ledger is
+effectively a *substrate boundary implemented in software*. P3 §6.4 argues
+that cooperative novelty arises from substrate physics — the computational
+properties unique to each substrate that cannot be replicated by other
+substrates. A proof-of-stake ledger with cross-substrate validation
+requirements creates an analogous boundary: the verification outcome is a
+cooperative product of multiple substrates, and no single substrate can
+unilaterally determine it. The "physics" of this substrate is the
+cryptographic hardness assumptions (hash preimage resistance, digital
+signature unforgeability) that the consensus protocol rests on — these are
+computational invariants that an agent cannot circumvent regardless of its
+capability level, analogous to the physical invariants that distinguish
+biological from digital substrates.
+
+### (c) Formal Machinery Needed
+
+1. **Verifiable capability claim under an adversarial claimant.** Define
+   formally what it means for a capability claim to be *verified* when the
+   claimant has an incentive to inflate. A claim C = (agent_id, capability_key,
+   benchmark_procedure, benchmark_outcome) is *ε-verified* by a protocol Π if:
+   for any computationally bounded adversary A controlling the claimant and up
+   to t < n/3 validators, the probability that Π accepts a claim C where the
+   claimant does not actually possess the claimed capability is ≤ ε(λ), where λ
+   is the security parameter and ε is negligible in λ. This definition
+   separates the *claim* (which the agent produces) from the *verification*
+   (which the protocol produces), and bounds the adversary's ability to make
+   the protocol accept false claims.
+
+2. **Cryptographic commitment scheme for capability claims.** A commitment
+   scheme Commit(sk_i, C) → (com, decom) where sk_i is the claimant's signing
+   key, such that: (a) **binding** — the claimant cannot open the commitment to
+   a different claim C' ≠ C after committing (prevents retroactive claim
+   editing), (b) **non-repudiation** — the commitment is publicly attributable
+   to the claimant via its public key pk_i (prevents denial), (c)
+   **hiding** — the claim content is not revealed until the decommitment phase
+   (prevents validators from being influenced by claim content during
+   selection). Standard Pedersen commitments or hash-based commitments suffice;
+   the non-trivial requirement is integrating the commitment scheme with the
+   validator selection mechanism so that the selection is independent of the
+   claim content.
+
+3. **Random-signer selection with provable unpredictability.** A selection
+   function Select(seed, claim_id, validator_pool) → quorum that: (a) is
+   deterministic given the seed (for auditability), (b) produces a quorum whose
+   composition is unpredictable to the claimant before the seed is revealed
+   (the claimant cannot pre-capture validators it doesn't know will be
+   selected), (c) includes at least one cross-substrate validator with
+   overwhelming probability if the validator pool contains cross-substrate
+   participants. The seed is derived from a randomness beacon (e.g., the hash
+   of a future block in the underlying PoS chain) that is not known at
+   commitment time. Verifiable Random Functions (VRFs) as used in Algorand's
+   or Ethereum's validator selection provide the formal template.
+
+4. **Supermajority threshold and coalition attack cost.** Define the acceptance
+   predicate: Accept(C, attestations) = 1 iff |{v ∈ quorum : attest(v, C) =
+   VALID}| ≥ ⌈2n/3⌉ AND ∃v ∈ quorum such that substrate(v) ≠ substrate(claimant)
+   and attest(v, C) = VALID. The coalition attack cost is the minimum number of
+   validators an adversary must control to force acceptance of a false claim:
+   ⌈n/3⌉ + 1 validators including at least one cross-substrate validator. This
+   cost scales linearly with n (the quorum size), which in turn scales with the
+   population size under PoS validator economics.
+
+5. **Benchmark soundness game.** Formalize the benchmark challenge mechanism as
+   a two-player game between the claimant (who proposes a benchmark) and a
+   challenger (who disputes it). The game has a finite number of rounds; in
+   each round, the challenger proposes an alternative test or demonstrates a
+   trivial-satisfiability exploit. A benchmark is *sound* if no polynomial-time
+   challenger can demonstrate trivial satisfiability. This connects to the
+   interactive proof literature — the benchmark soundness game is an instance
+   of an interactive argument where the challenger plays the role of the
+   verifier.
+
+### (d) Complete Result Criteria
+
+A complete result would provide:
+
+1. **A security theorem for the verification protocol:** For any coalition of
+   size < ⌈n/3⌉ (or < ⌈n/3⌉ cross-substrate validators), the probability that
+   a false capability claim is accepted by the consensus protocol is negligible
+   in the security parameter λ. Formally: for all PPT adversaries A controlling
+   the claimant and t < n/3 validators, Pr[Accept(C_false) = 1] ≤ negl(λ),
+   where C_false is a claim for a capability the claimant does not possess.
+   The proof would reduce to the security of the underlying commitment scheme,
+   VRF, and PoS consensus.
+
+2. **A coalition cost theorem:** The minimum resource expenditure required for a
+   coalition to force acceptance of a false capability claim scales as
+   Ω(n · stake_min), where n is the quorum size and stake_min is the minimum
+   validator stake. This provides a concrete economic bound: the cost of
+   attacking the verification protocol grows linearly with the validator
+   population, making capability-claim collapse prohibitively expensive at
+   scale.
+
+3. **A substrate-boundary preservation theorem:** The cross-substrate validation
+   requirement ensures that no same-substrate coalition (regardless of size)
+   can produce a valid verification quorum. Formally: if all validators
+   controlled by the adversary share a substrate with the claimant, then
+   Pr[Accept(C) = 1] = 0 for any claim C, even if the adversary controls all
+   same-substrate validators. This theorem formalizes the substrate-boundary
+   property that makes the protocol structurally different from standard BFT.
+
+4. **A benchmark soundness theorem:** A benchmark procedure B is ε-sound if no
+   PPT challenger can demonstrate trivial satisfiability with probability > ε
+   in the benchmark soundness game. Show that the composition of ε-sound
+   benchmarks with the verification protocol preserves the security guarantee:
+   even if individual benchmarks have small soundness gaps, the protocol's
+   acceptance predicate amplifies soundness through independent cross-substrate
+   validation.
+
+5. **Integration with vol_P dynamics:** Show that replacing self-asserted
+   capability claims with protocol-verified claims in the GFM ledger preserves
+   the self-balancing property of vol_P (Theorem 1 from P2) while eliminating
+   the inflationary gradient. The self-balancing property should be *stronger*
+   under protocol-verified claims because the observation channel κ now has a
+   characterized false-positive rate rather than an unbounded self-report bias.
+
+### (e) Dependencies
+
+- **Requires:** P3's substrate-boundary formalism (for the cross-substrate
+  validation requirement), P3's observation-channel framework (for formalizing
+  what it means for a capability to be "observed" vs. "self-reported"), P2's
+  self-balancing theorem (to show the property is preserved under the protocol).
+- **Intersects with Proposal 1** (compound feedback loops): both address what
+  happens when the observation-and-verification channel becomes gameable by a
+  self-modifying coalition. Proposal 1 characterizes the dynamics once the
+  channel is assumed trustworthy; Proposal 4 provides the mechanism that makes
+  the channel trustworthy. The phase boundary from Proposal 1 is only as
+  reliable as the observation channels feeding it — if capability claims are
+  inflated, the observation-channel dependence function O(P) from Proposal 1
+  returns a corrupted channel set, and the Lyapunov bound degrades. Proposal 4
+  is therefore a *precondition* for Proposal 1's guarantees to hold under
+  adversarial conditions.
+- **Connects to P3 §6.4** (cooperative novelty from substrate physics): the
+  cryptographic-ledger mechanism is a substrate boundary implemented in
+  software. The "physics" of this substrate is cryptographic hardness —
+  computational invariants no agent can circumvent regardless of capability
+  level. This is the software analogue of P3's argument that substrate physics
+  creates irreducible cooperative novelty.
+- **Partially addressed by:** The current harness's RETRO capability-hygiene
+  walk (constitution §3.5), which forces periodic re-evaluation of
+  self-asserted capabilities. This is the non-adversarial, best-approximation
+  version of what Proposal 4 formalizes for the adversarial case.
+- **Enables:** Trustworthy capability ledgers at scale — any deployment of
+  GFM with multiple autonomous agents requires a mechanism to prevent
+  capability-claim inflation from corrupting vol_P. Without Proposal 4's
+  verification protocol, vol_P degrades into a self-report aggregator whose
+  output is only as reliable as the least honest participant.
+- **Paper-scope note:** The full cryptographic treatment — formal protocol
+  specification, security proofs, benchmark soundness games, integration with
+  PoS economics — constitutes an entire paper. This proposal describes the
+  direction and the minimum viable theorem statements; the complete
+  formalization is a **Paper 6 candidate**, representing a substantial
+  theoretical extension distinct from the Papers 1–5 sequence. The
+  cryptographic machinery is well-understood in the distributed systems
+  literature; the novel contribution is the *application* of BFT consensus to
+  capability-claim verification under the specific adversarial model that GFM's
+  self-assertion gradient creates.
+
+---
+
 ## Cross-Proposal Dependencies and Sequencing
 
 ```
@@ -480,12 +749,17 @@ Proposal 1 (Compound Feedback)  ────────────────
   Characterizes macro-dynamics of subsumption                 │
   Produces: phase boundary, design criterion for              │
     observation-channel redundancy                            │
-                                                              ├─→ Together: a theory
-Proposal 2 (Controlled Relaxation)  ─────────────────────────┤   with characterized
-  Resolves micro-dynamics of individual risk claims           │   failure modes,
-  Produces: damage-bounded protocol, convergence guarantee    │   convergence rates,
-                                                              │   and operational
-Proposal 3 (Realized Capability Volume)  ────────────────────┤   mechanisms
+                                                              │
+Proposal 4 (Capability Verification)  ───────────────────────┤
+  Secures the observation channel Proposal 1 assumes          ├─→ Together: a theory
+  Produces: verified-claim protocol, coalition cost bound     │   with characterized
+  [Paper 6 candidate — full crypto treatment]                 │   failure modes,
+                                                              │   convergence rates,
+Proposal 2 (Controlled Relaxation)  ─────────────────────────┤   verified claims,
+  Resolves micro-dynamics of individual risk claims           │   and operational
+  Produces: damage-bounded protocol, convergence guarantee    │   mechanisms
+                                                              │
+Proposal 3 (Realized Capability Volume)  ────────────────────┤
   Closes the proxy gap between vol_P and optionality          │
   Produces: split measure, alarm mechanism, residual class    │
                                                               │
@@ -494,7 +768,8 @@ Proposal 3 (Realized Capability Volume)  ─────────────
                                                                   (orthogonal to GFM)
 ```
 
-**Recommended sequencing:** The proposals are largely independent and can be pursued in parallel. However:
+**Recommended sequencing:** The proposals are largely independent and can be
+pursued in parallel. However:
 
 1. **Proposal 1 first** if the goal is theoretical completeness — the compound
    feedback loop characterization provides the dynamical foundation that the
@@ -513,23 +788,34 @@ Proposal 3 (Realized Capability Volume)  ─────────────
    the deepest objection to the entire approach (that vol_P can report health
    while optionality collapses).
 
-**Collectively, the three proposals close 5 of the top-8 gaps from the gap analysis:**
+4. **Proposal 4 before Proposal 1** if the goal is adversarial robustness —
+   Proposal 1's phase boundary analysis assumes trustworthy observation
+   channels, but Proposal 4 provides the mechanism that makes them trustworthy.
+   Under adversarial conditions, Proposal 1's guarantees are only as strong as
+   the observation-channel integrity Proposal 4 provides. However, Proposal 4
+   is the largest undertaking (Paper 6 candidate) and can be deferred if the
+   analysis is initially restricted to non-adversarial regimes.
+
+**Collectively, the four proposals close 7 of the top-8 gaps from the gap analysis:**
 - Compound feedback loops (primary, Proposal 1)
 - Max-aggregation / Wamura pathology (primary, Proposal 2)
 - B-to-C gap formalization (primary, Proposal 3)
+- Capability-claim verification (primary, Proposal 4)
 - Structural avoidance incentive (secondary, Proposal 1)
 - Risk-claim consensus (secondary, Proposal 2)
 - Intrinsic value residual (secondary, Proposal 3)
+- Observation-channel integrity (secondary, Proposal 4)
 
 **Remaining top-priority gaps not addressed:**
-- Convergence rates (partially addressed by all three proposals, but a unified
-  treatment of convergence across all dynamic quantities would be a fourth
+- Convergence rates (partially addressed by all four proposals, but a unified
+  treatment of convergence across all dynamic quantities would be a separate
   paper)
 - Mesa-optimization (orthogonal to GFM's formal structure — requires
   architecture-level work, not objective-level work)
 
 ---
 
-*Generated 2026-04-08 by the GFM harness paper-proposals feature loop.*
-*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb).*
+*Proposals 1–3 generated 2026-04-08 by the GFM harness paper-proposals feature loop.*
+*Proposal 4 added 2026-04-08 from out-of-band capability-claim verification review.*
+*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb), lesson_capability_self_assertion.*
 *Source papers: docs/paper (P1), docs/paper2 (P2), docs/paper3 (P3), docs/paper4 (P4), docs/paper5_notes.md (P5n).*
