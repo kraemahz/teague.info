@@ -3341,14 +3341,19 @@ class="math inline">\sigma_k^2(t)</span> is an exponentially weighted
 estimate of <span class="math inline">\mathbb{E}[\ell_k]</span>. When
 agent <span class="math inline">a_k</span>’s behavior is stationary (its
 mapping from situations to actions does not change), <span
-class="math inline">\sigma_k^2(t)</span> converges to the true expected
-prediction loss: <span class="math display">\begin{equation}
-\sigma_k^2(t) \xrightarrow{t \to \infty} \mathbb{E}[\ell_k] \quad
-\text{under stationarity of } a_k\text{&#39;s policy}
+class="math inline">\sigma_k^2(t)</span> is asymptotically unbiased for
+the true expected prediction loss with bounded stationary variance:
+<span class="math display">\begin{equation}
+\lim_{t \to \infty} \mathbb{E}\bigl[\sigma_k^2(t)\bigr] =
+\mathbb{E}[\ell_k],
+\qquad
+\limsup_{t \to \infty} \mathrm{Var}\bigl[\sigma_k^2(t)\bigr] \leq
+\frac{1 - \alpha}{1 + \alpha} \cdot \mathrm{Var}[\ell_k]
 \end{equation}</span> and <span class="math inline">T_k(t)</span>
-converges to the corresponding steady-state trust value <span
+concentrates around the steady-state trust value <span
 class="math inline">T_k^* = 1 / (1 + \beta \cdot
-\mathbb{E}[\ell_k])</span>.</p>
+\mathbb{E}[\ell_k])</span> with stationary deviation controlled by <span
+class="math inline">\alpha</span>.</p>
 <p>For a cooperative agent whose behavior is well-predicted by <span
 class="math inline">M_k(G)</span>, <span
 class="math inline">\mathbb{E}[\ell_k]</span> is small, driven by
@@ -3392,12 +3397,12 @@ class="math display">\begin{equation}
 \end{equation}</span> This is a standard form of online gradient
 tracking with learning rate <span class="math inline">(1 -
 \alpha)</span>. The trust factor <span class="math inline">T_k</span>
-inherits the convergence and tracking properties of this estimator.
-Under standard conditions on the learning rate (<span
-class="math inline">(1 - \alpha) \in (0, 1)</span>, which holds by
-construction), the estimator converges almost surely to <span
-class="math inline">\mathbb{E}[\ell_k]</span> for stationary processes,
-and tracks non-stationary processes with bounded lag.</p>
+inherits the <span class="math inline">L^2</span> convergence properties
+of this estimator: under stationarity it is asymptotically unbiased with
+bounded stationary variance (), and under
+non-stationarity it tracks regime changes with lag <span
+class="math inline">O(1/(1-\alpha))</span>.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="app:trust_estimator_integration">Integration with the Local
 Volume Estimator</h2>
 <p>The trust model interfaces with the local volume estimator
@@ -4441,6 +4446,28 @@ class="math inline">T_j \approx 1</span> indefinitely. Detection of
 non-stationary adversaries requires adaptive methods beyond the EWMA
 framework and remains an open problem. </p>
 </div>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Fixed-<span class="math inline">\alpha</span> EWMA does
+not converge almost surely to <span
+class="math inline">\mathbb{E}[\ell_k]</span>: each new residual
+contributes weight <span class="math inline">(1 - \alpha)</span>
+regardless of accumulated history, so the estimator retains nonzero
+stationary variance and does not collapse to a point mass. A
+Robbins-Monro stochastic approximation with decreasing step size <span
+class="math inline">\alpha_t \to 0</span> satisfying <span
+class="math inline">\sum_t \alpha_t = \infty</span> and <span
+class="math inline">\sum_t \alpha_t^2 &lt; \infty</span> <d-cite key="robbins1951stochastic"></d-cite> would give
+almost-sure convergence, but with unbounded tracking lag in the
+non-stationary setting. The trust model is designed to track potentially
+non-stationary agents, so the fixed-<span
+class="math inline">\alpha</span> recursion and the <span
+class="math inline">L^2</span> statement above are the right form.<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </d-article>
 
 <d-appendix>
@@ -4695,6 +4722,18 @@ framework and remains an open problem. </p>
   number={6624},
   pages={1067--1074},
   year={2022}
+}
+
+% --- Stochastic Approximation ---
+
+@article{robbins1951stochastic,
+  title={A Stochastic Approximation Method},
+  author={Robbins, Herbert and Monro, Sutton},
+  journal={The Annals of Mathematical Statistics},
+  volume={22},
+  number={3},
+  pages={400--407},
+  year={1951}
 }
 
 </script>

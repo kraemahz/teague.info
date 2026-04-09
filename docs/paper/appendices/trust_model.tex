@@ -124,12 +124,14 @@ The activation energy threshold $\theta$ serves a distinct purpose from $T_s$. E
 
 The trust factors $T_k$ and $T_s$ evolve through the exponentially weighted update in Equations~\eqref{eq:cumulative_consistency} and~\eqref{eq:self_trust}. This section formalizes the gradient-tracking interpretation of this update and establishes its convergence properties.
 
-The trust update can be viewed as stochastic gradient tracking on the prediction loss $\ell_k(t) = r_k(t)^2$. The cumulative inconsistency $\sigma_k^2(t)$ is an exponentially weighted estimate of $\mathbb{E}[\ell_k]$. When agent $a_k$'s behavior is stationary (its mapping from situations to actions does not change), $\sigma_k^2(t)$ converges to the true expected prediction loss:
+The trust update can be viewed as stochastic gradient tracking on the prediction loss $\ell_k(t) = r_k(t)^2$. The cumulative inconsistency $\sigma_k^2(t)$ is an exponentially weighted estimate of $\mathbb{E}[\ell_k]$. When agent $a_k$'s behavior is stationary (its mapping from situations to actions does not change), $\sigma_k^2(t)$ is asymptotically unbiased for the true expected prediction loss with bounded stationary variance:
 \begin{equation}
 \label{eq:convergence}
-\sigma_k^2(t) \xrightarrow{t \to \infty} \mathbb{E}[\ell_k] \quad \text{under stationarity of } a_k\text{'s policy}
+\lim_{t \to \infty} \mathbb{E}\bigl[\sigma_k^2(t)\bigr] = \mathbb{E}[\ell_k],
+\qquad
+\limsup_{t \to \infty} \mathrm{Var}\bigl[\sigma_k^2(t)\bigr] \leq \frac{1 - \alpha}{1 + \alpha} \cdot \mathrm{Var}[\ell_k]
 \end{equation}
-and $T_k(t)$ converges to the corresponding steady-state trust value $T_k^* = 1 / (1 + \beta \cdot \mathbb{E}[\ell_k])$.
+and $T_k(t)$ concentrates around the steady-state trust value $T_k^* = 1 / (1 + \beta \cdot \mathbb{E}[\ell_k])$ with stationary deviation controlled by $\alpha$.
 
 For a cooperative agent whose behavior is well-predicted by $M_k(G)$, $\mathbb{E}[\ell_k]$ is small, driven by observation noise rather than model error, and $T_k^*$ is close to 1. For a scorpion whose behavior systematically diverges from the model's predictions, $\mathbb{E}[\ell_k]$ is large, and $T_k^*$ is close to 0. For an agent with partially predictable behavior (cooperative in some contexts, adversarial in others), $T_k^*$ takes an intermediate value, appropriately weighting the agent's reports at a level commensurate with their reliability.
 
@@ -142,7 +144,7 @@ This tracking lag is a fundamental tradeoff. Fast tracking (small $\alpha$) dete
 \label{eq:gradient_step}
 \sigma_k^2(t) = \sigma_k^2(t-1) + (1 - \alpha) \cdot \bigl(\ell_k(t) - \sigma_k^2(t-1)\bigr)
 \end{equation}
-This is a standard form of online gradient tracking with learning rate $(1 - \alpha)$. The trust factor $T_k$ inherits the convergence and tracking properties of this estimator. Under standard conditions on the learning rate ($(1 - \alpha) \in (0, 1)$, which holds by construction), the estimator converges almost surely to $\mathbb{E}[\ell_k]$ for stationary processes, and tracks non-stationary processes with bounded lag.
+This is a standard form of online gradient tracking with learning rate $(1 - \alpha)$. The trust factor $T_k$ inherits the $L^2$ convergence properties of this estimator: under stationarity it is asymptotically unbiased with bounded stationary variance (Equation~\ref{eq:convergence}), and under non-stationarity it tracks regime changes with lag $O(1/(1-\alpha))$.\footnote{Fixed-$\alpha$ EWMA does not converge almost surely to $\mathbb{E}[\ell_k]$: each new residual contributes weight $(1 - \alpha)$ regardless of accumulated history, so the estimator retains nonzero stationary variance and does not collapse to a point mass. A Robbins-Monro stochastic approximation with decreasing step size $\alpha_t \to 0$ satisfying $\sum_t \alpha_t = \infty$ and $\sum_t \alpha_t^2 < \infty$ \citep{robbins1951stochastic} would give almost-sure convergence, but with unbounded tracking lag in the non-stationary setting. The trust model is designed to track potentially non-stationary agents, so the fixed-$\alpha$ recursion and the $L^2$ statement above are the right form.}
 
 % ---------------------------------------------------------------------------
 % C.5: Integration with Local Volume Estimator
