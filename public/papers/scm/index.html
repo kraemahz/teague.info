@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/distill/template.v2.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function tryRender() {
+        if (typeof katex === 'undefined') {
+          setTimeout(tryRender, 50);
+          return;
+        }
+        document.querySelectorAll('.math.inline').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: false, throwOnError: false});
+        });
+        document.querySelectorAll('.math.display').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: true, throwOnError: false});
+        });
+      }
+      tryRender();
+    });
+  </script>
+  <style>
+    .definition, .lemma, .proposition, .corollary, .remark, .proof-env {
+      margin: 1.5em 0;
+      padding: 1em 1.2em;
+      border-left: 3px solid #ddd;
+      background: #fafafa;
+    }
+    .definition { border-left-color: #4a90d9; }
+    .lemma { border-left-color: #e67e22; }
+    .proposition { border-left-color: #27ae60; }
+    .corollary { border-left-color: #8e44ad; }
+    .remark { border-left-color: #95a5a6; }
+    .theorem { border-left-color: #2c3e50; }
+    .proof-env { border-left-color: #bdc3c7; background: #fdfdfd; }
+    .env-title { font-weight: bold; margin-bottom: 0.5em; }
+    d-article table { font-size: 0.85em; }
+    d-article table th, d-article table td { padding: 0.4em 0.8em; }
+  </style>
+</head>
+<body>
+
+<d-front-matter>
+<script type="text/json">
+{
+  "title": "A Structural Causal Model for Goal-Frontier Maximization",
+  "description": "Introduces a structural causal model for capability dynamics that upgrades every agent-evaluation mechanism in the GFM sequence from statistical to causal, with do-calculus contraction attribution, EWMA risk-trust dynamics, SPRT scorpion detection, and probabilistic dependency risk.",
+  "authors": [
+    {
+      "author": "Teague Lasser",
+      "authorURL": "https://teague.info",
+      "affiliations": [{"name": "Subseq"}]
+    },
+    {
+      "author": "Claude Opus 4.6",
+      "affiliations": [{"name": "Anthropic"}]
+    },
+    {
+      "author": "GPT 5.4",
+      "affiliations": [{"name": "OpenAI"}]
+    }
+  ]
+}
+</script>
+</d-front-matter>
+
+<d-title>
+  <h1>A Structural Causal Model for Goal-Frontier Maximization</h1>
+  <p style="margin-top: 0.5em;"><a href="/papers/scm/scm.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">&#x1F4C4; Download PDF version</a></p>
+</d-title>
+
+<d-abstract>
+<p>The goal-frontier maximization (GFM) sequence establishes a computable
+alignment objective with structural safety properties and endogenous
+anti-monopolar pressure. The preceding papers treat agent evaluation
+as a statistical signal-processing problem: trust-weighted votes,
+correlational contraction detection, max-aggregated risk reports.
+This paper introduces a structural causal model for capability
+dynamics and uses it to sharpen every agent-evaluation mechanism,
+upgrading the core identification results from statistical to
+causal under explicitly stated structural assumptions.
+Do-calculus contraction attribution sharpens scorpion
+detection under additive-SCM, causal-sufficiency, and
+exogenous-orthogonality conditions.
+Pathway-conditional residuals formalize risk-trust with <span
+class="math inline">L^2</span>
+convergence guarantees. A log-linear opinion pool replaces
+max-aggregation without discarding independence information. A
+probabilistic dependency-risk model sharpens the minimax substrate
+bound into a per-step expected cost that compounds with growth,
+gated by an adversarial balance condition. Each upgrade follows the
+same pattern: a statistical proxy becomes a counterfactual query on
+the actor's own causal model.</p>
+</d-abstract>
+
+<d-article>
+
+<!-- ================================================================== -->
+<!-- SECTION 1: Introduction                                            -->
+<!-- ================================================================== -->
+
+<h1 id="sec:introduction">Introduction</h1>
+
+<p>Goal-frontier maximization (GFM) proposes alignment through a single
+objective: maximize the volume of the jointly achievable capability space
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> <d-cite key="lasser2026gfm"></d-cite>. The foundational paper proves structural
+safety properties (self-balancing against destruction, coercion, and
+rigidity). Its companion <d-cite key="lasser2026poset"></d-cite> constructs a computable
+capability poset with polynomial-time measure computation and a leverage
+ranking signal that produces a gradient toward civilization-building
+infrastructure. The third paper <d-cite key="lasser2026horizon"></d-cite> extends the
+framework to multi-step planning through a discounted value function,
+develops risk-capability identification, and establishes the anti-monopolar
+property: under a diversity condition, full capability domination is
+anti-maximizing.</p>
+
+<p>The preceding papers treat every agent-evaluation question as a statistical
+signal-processing problem. The foundational paper's scorpion detection
+<d-cite key="lasser2026gfm"></d-cite> identifies agents whose actions are <em>correlated</em>
+with <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction but cannot disentangle their contribution from
+simultaneous causes. The horizon paper's risk-trust factor <span class="math inline">T^{\mathrm{risk}}_j</span>
+<d-cite key="lasser2026horizon"></d-cite> has no formal update dynamics. The dependency-risk
+analysis uses minimax bounds that are quantitatively too weak for
+risk-adjusted planning. In each case, statistical signals suffice for
+obvious cases (direct harm, clear deception) but fail for the hard cases
+that matter most: confounded contraction in multi-agent populations,
+coordinated risk manipulation, and risk claims whose outcomes are never
+observed.</p>
+
+<p>This paper introduces a structural causal model for capability dynamics
+and uses it to sharpen every agent-evaluation mechanism, upgrading the
+core identification results from statistical to causal. The common
+thread: a GFM agent needs a <em>causal model</em> of other agents to make
+good decisions about their harm (who caused this contraction?),
+credibility (is this risk claim structurally sound?), and adversarial
+exposure (what substrate-correlated threats do we face?).</p>
+
+<h4>Contributions.</h4>
+<ol>
+<li><p>A structural causal model for capability dynamics with
+  do-calculus contraction attribution, showing a conditional <span class="math inline">L^2</span>
+  convergence advantage over correlational detection under causal
+  sufficiency, additive-SCM structure, and exogenous orthogonality
+  (Section <a href="#sec:causal">2</a>).</p></li>
+<li><p><span class="math inline">L^2</span> EWMA dynamics for risk-trust <span class="math inline">T^{\mathrm{risk}}_j</span> over
+  pathway-conditional structural verification residuals, and a
+  prior-corrected trust-weighted log-linear opinion pool that recovers
+  Bayesian updating in the no-tempering limit, replacing the max
+  aggregation operator, with a two-gate architecture separating
+  attention allocation from action decisions via the actor's own
+  forward causal risk evaluation (Section <a href="#sec:risk_trust">3</a>).</p></li>
+<li><p>Causal scorpion detection under a Gaussian model, committed to a
+  sequential probability ratio test on least-favorable simple
+  hypotheses with Type I/II error control, and a high-probability
+  bound on non-stationary scorpion evasion bandwidth under a
+  stationary-epoch model (Section <a href="#sec:scorpion">4</a>).</p></li>
+<li><p>A probabilistic dependency-risk model gated by an adversarial
+  balance condition <span class="math inline">c > \max_i (f_i \cdot c_i)</span> that admits contagion
+  dynamics, with per-step expected costs that compound at the same
+  rate as growth and a quantitative substrate-count lower bound
+  <span class="math inline">m > c_{\max}/c</span> that sharpens the minimax <span class="math inline">m \geq 2</span>
+  (Section <a href="#sec:dependency">5</a>).</p></li>
+</ol>
+
+<!-- ================================================================== -->
+<!-- SECTION 2: Causal Attribution Framework                            -->
+<!-- ================================================================== -->
+
+<h1 id="sec:causal">Causal Attribution Framework</h1>
+
+<p>The foundational paper's scorpion detection
+(Proposition 2 of <d-cite key="lasser2026gfm"></d-cite>) identifies agents whose actions are
+<em>correlated</em> with <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction. It explicitly acknowledges that
+"disentangling the agent's contribution from simultaneous causes requires a
+causal-attribution procedure that the framework does not provide." This
+section provides that procedure.</p>
+
+<h2 id="sec:scm_def">Structural Causal Model for Capability Dynamics</h2>
+
+<div id="def:scm" class="definition">
+<p><strong>Definition 1</strong> (Capability Dynamics SCM). <em>A structural causal model for capability dynamics is a tuple
+<span class="math inline">\mathcal{M} = (U, V, F, P(U))</span> where:</em></p>
+<ul>
+<li><em><span class="math inline">U</span>: exogenous variables representing agent dispositions, environmental
+    conditions, and stochastic factors not determined by the model.</em></li>
+<li><em><span class="math inline">V = \{G_t, \pi_t^{(1)}, \ldots, \pi_t^{(n)}, \Delta \mathop{\mathrm{vol}}_{\mathrm{P},t}\}</span>:
+    endogenous variables representing the capability poset state, each
+    agent's action at time <span class="math inline">t</span>, and the resulting <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change.</em></li>
+<li><em><span class="math inline">F</span>: structural equations mapping parent variables to children in the
+    causal directed acyclic graph (DAG). The DAG encodes which agents'
+    actions causally influence which capability changes.</em></li>
+<li><em><span class="math inline">P(U)</span>: prior distribution over exogenous variables.</em></li>
+</ul>
+<p><em>When the variance-reduction results of this paper are invoked
+    (Proposition <a href="#prop:causal_dominates">1</a>(c) and downstream), we
+    additionally assume <strong>exogenous orthogonality</strong>: the
+    exogenous noise components entering different agents' structural
+    equations are mutually independent conditional on <span class="math inline">G_t</span>. That is,
+    if <span class="math inline">U_j \subseteq U</span> are the exogenous variables appearing in
+    <span class="math inline">a_j</span>'s structural equation and <span class="math inline">U_k \subseteq U</span> those appearing
+    in <span class="math inline">a_k</span>'s, then <span class="math inline">U_j \perp\!\!\!\perp U_k \mid G_t</span> for <span class="math inline">j \neq k</span>.
+    This rules out shared exogenous shocks that would induce
+    covariance between agents' contributions even under a correct
+    causal DAG.</em></p>
+<p><em>The GFM actor's world model <span class="math inline">\mathcal{W}</span>
+    (Definition 1 of <d-cite key="lasser2026horizon"></d-cite>) is an instance of <span class="math inline">\mathcal{M}</span>
+    restricted to the actor's beliefs about causal structure.</em></p>
+</div>
+
+<p>The SCM extends <span class="math inline">\mathcal{W}</span> by making the causal structure explicit. In the
+foundational paper, <span class="math inline">\mathcal{W}</span> is an opaque prediction model: given
+actions, it predicts <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-changes. The SCM decomposes predictions into
+causal pathways, enabling counterfactual queries: "what would have happened
+if agent <span class="math inline">a_j</span> had acted differently?"</p>
+
+<p><strong>Temporal scope.</strong> <a href="#def:scm">Definition 1</a> specifies a
+<em>single-step</em> SCM: the endogenous variables
+<span class="math inline">\{G_t, \pi_t^{(1)}, \ldots, \pi_t^{(n)}, \Delta \mathop{\mathrm{vol}}_{\mathrm{P},t}\}</span> describe
+one time slice, and the structural equations <span class="math inline">F</span> map actions at step
+<span class="math inline">t</span> to the <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change at step <span class="math inline">t</span>. The do-intervention
+<span class="math inline">\mathrm{do}(\pi_j = \cdot)</span> operates within this single-step
+structure: "other variables respond according to <span class="math inline">F</span>" means other
+endogenous variables in the same time slice are recomputed under the
+intervened structural equations, not that the system evolves forward
+in time. Multi-step effects (an action at <span class="math inline">t</span> that causes a cascade
+at <span class="math inline">t+1</span>) are captured by instantiating a new single-step SCM at
+each subsequent time step with an updated poset state <span class="math inline">G_{t+1}</span>;
+the causal attribution <span class="math inline">\mathrm{CA}(a_j, t)</span>
+(<a href="#def:causal_attribution">Definition 2</a>) is the single-step effect.</p>
+
+<h2 id="sec:causal_contraction">Causal Contraction Attribution</h2>
+
+<div id="def:causal_attribution" class="definition">
+<p><strong>Definition 2</strong> (Causal Contraction Attribution).
+<em>For an observed <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change <span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)</span> at time <span class="math inline">t</span>, the
+    <em>causal contribution</em> of agent <span class="math inline">a_j</span> is:</em></p>
+<span class="math display">
+\mathrm{CA}(a_j, t) = \Delta \mathop{\mathrm{vol}}_{\mathrm{P}}\bigl(G_t \mid \mathrm{do}(\pi_j =
+    \pi_j^{\mathrm{obs}})\bigr)
+    - \Delta \mathop{\mathrm{vol}}_{\mathrm{P}}\bigl(G_t \mid \mathrm{do}(\pi_j = \mathrm{skip})\bigr)
+</span>
+<p><em>where <span class="math inline">\mathrm{do}(\pi_j = \cdot)</span> denotes the do-calculus intervention
+    <d-cite key="pearl2009causality"></d-cite>: setting <span class="math inline">a_j</span>'s action to a specific value
+    while allowing all other variables to respond according to <span class="math inline">F</span>. The
+    first term is the <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change under <span class="math inline">a_j</span>'s observed action; the
+    second is the counterfactual <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change had <span class="math inline">a_j</span> done nothing.</em></p>
+</div>
+
+<p>The causal attribution <span class="math inline">\mathrm{CA}(a_j, t)</span> isolates <span class="math inline">a_j</span>'s contribution
+from confounders: simultaneous actions by other agents, environmental
+changes, and background dynamics that the correlational signal in
+Proposition 2 of <d-cite key="lasser2026gfm"></d-cite> cannot separate. When <span class="math inline">a_j</span>'s
+actions cause contraction, <span class="math inline">\mathrm{CA}(a_j, t) &lt; 0</span>. When they cause
+expansion, <span class="math inline">\mathrm{CA}(a_j, t) > 0</span>. When <span class="math inline">a_j</span>'s actions have no causal
+effect (the contraction would have occurred regardless), <span class="math inline">\mathrm{CA}(a_j,
+t) = 0</span>, and the correlational detection would have produced a false
+positive.</p>
+
+<p><strong>Additivity.</strong> The one-at-a-time <span class="math inline">\mathrm{CA}(a_j, t)</span> of
+the equation above sums to the total
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change only when the SCM's structural equation for
+<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}</span> is <em>additive in agent actions</em>: there exist
+functions <span class="math inline">g_j</span> and a residual <span class="math inline">h</span> such that</p>
+<span class="math display">
+\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)
+    = \sum_j g_j\bigl(\pi_j^{\mathrm{obs}}, G_t, U\bigr)
+    + h(G_t, U)
+</span>
+<p>where <span class="math inline">h</span> does not depend on any <span class="math inline">\pi_j</span>. Under this additive-SCM
+assumption, the one-at-a-time intervention
+<span class="math inline">\mathrm{do}(\pi_j = \pi_j^{\mathrm{obs}})</span> vs.
+<span class="math inline">\mathrm{do}(\pi_j = \mathrm{skip})</span> isolates <span class="math inline">g_j</span> exactly, and</p>
+<span class="math display">
+\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t) = \sum_j \mathrm{CA}(a_j, t) + h(G_t, U).
+</span>
+<p>The additive-SCM assumption is stronger than (and is not implied by)
+conditional independence of agent actions given <span class="math inline">G_t</span>: two
+independently drawn actions can still interact multiplicatively in a
+non-additive structural equation such as
+<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}} = \pi_1 \cdot \pi_2</span>, in which case the one-at-a-time
+<span class="math inline">\mathrm{CA}</span> does not sum to the total. When interaction effects
+are present and a non-additive SCM is required, an exact decomposition
+needs a Shapley-style attribution rule that averages <span class="math inline">\mathrm{CA}</span>
+over all orderings of agent inclusion <d-cite key="shapley1953value"></d-cite>; the
+one-at-a-time form is then an approximation whose error is the
+deviation from additivity. For scorpion detection
+(Section <a href="#sec:scorpion">4</a>), the one-at-a-time form is sufficient
+because the detection signal depends only on the sign and magnitude
+of the diagonal contribution <span class="math inline">g_j</span>, not on the exact decomposition
+of interaction effects.</p>
+
+<h2 id="sec:causal_dominance">Causal Detection Dominates Correlational Detection</h2>
+
+<div id="prop:causal_dominates" class="proposition">
+<p><strong>Proposition 1</strong> (Convergence Advantage of Causal Attribution).
+<em>Let <span class="math inline">a_j</span> be an agent with expected causal contraction <span class="math inline">\mu_j =
+    \mathbb{E}[\mathrm{CA}(a_j, t)] &lt; 0</span> (a scorpion). Assume the
+    observation sequences for both detectors are i.i.d. within a
+    stationary strategy epoch, or weakly dependent with summable
+    autocovariance. Under the SCM <span class="math inline">\mathcal{M}</span>, the following
+    information-theoretic sample-complexity comparison holds
+    (independent of the specific sequential test used; see
+    Section <a href="#sec:scorpion">4</a> for the SPRT-specific operational
+    rates):</em></p>
+<p><em><strong>(a)</strong> The correlational detector (Proposition 2(a) of
+    <d-cite key="lasser2026gfm"></d-cite>) has sample complexity
+    <span class="math inline">\Omega(\sigma^2 / \mu_j^2)</span> for identifying <span class="math inline">a_j</span> as a
+    net-contractor, under the
+    idealized assumption that <span class="math inline">\mu_j</span> appears as an
+    isolable drift in the trust-weighted aggregate <span class="math inline">\hat{\Delta}</span>. Here <span class="math inline">\sigma^2</span>
+    is the total variance of the signal the correlational detector
+    can construct, including confounders.</em></p>
+<p><em><strong>(b)</strong> The causal detector using <span class="math inline">\mathrm{CA}(a_j, t)</span>
+    has sample complexity
+    <span class="math inline">\Omega(\sigma_{\mathrm{do}}^2 / \mu_j^2)</span>, where
+    <span class="math inline">\sigma_{\mathrm{do}}^2</span> is the variance of the causal attribution
+    signal after conditioning on the do-intervention. The ratio
+    <span class="math inline">\sigma_{\mathrm{do}}^2 / \sigma^2 \leq 1</span> (under the conditions
+    of part (c)) is the structural advantage factor.</em></p>
+<p><em><strong>(c)</strong> Under <strong>causal sufficiency</strong> (the SCM
+    <span class="math inline">\mathcal{M}</span> captures all common causes of <span class="math inline">a_j</span>'s actions and the
+    confounder signals), the <strong>additive-SCM</strong> assumption, and <strong>exogenous
+    orthogonality</strong> (<a href="#def:scm">Definition 1</a>), we have
+    <span class="math inline">\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders} \mid G_t) = 0</span>
+    and therefore</em></p>
+<span class="math display">
+    \sigma^2 - \sigma_{\mathrm{do}}^2
+    = \mathrm{Var}(\text{confounders} \mid G_t) \geq 0,
+</span>
+<p><em>so <span class="math inline">\sigma_{\mathrm{do}}^2 \leq \sigma^2</span>, with strict inequality
+    whenever confounders contribute nonzero variance. Without causal
+    sufficiency (or without the additive-SCM structure), the
+    variance identity gives</em></p>
+<span class="math display">
+    \sigma^2 - \sigma_{\mathrm{do}}^2
+    = \mathrm{Var}(\text{confounders} \mid G_t)
+    + 2\,\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders} \mid G_t),
+</span>
+<p><em>whose sign depends on the covariance term. The inequality
+    <span class="math inline">\sigma_{\mathrm{do}}^2 \leq \sigma^2</span> therefore requires the
+    full triple (causal sufficiency, additive SCM, exogenous
+    orthogonality), or the weaker condition
+    <span class="math inline">\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders} \mid G_t)
+        \geq -\tfrac{1}{2} \mathrm{Var}(\text{confounders} \mid G_t)</span>.
+    Under a general (non-sufficient) SCM with adversarial confounder
+    correlation, causal attribution can in principle achieve worse
+    convergence than the correlational detector; characterizing
+    populations in which this occurs is outside the scope of this
+    paper.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>(a) The correlational detector's observable signal is the
+trust-weighted aggregate
+<span class="math inline">\hat{\Delta}(\pi_t) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi_t)</span>
+(Equation 10 of <d-cite key="lasser2026gfm"></d-cite>), where <span class="math inline">R_k \in \{-1, 0, +1\}</span>
+is a ternary directional vote. Let
+<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathrm{total}}(t)</span> denote the <em>true</em> continuous
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change at step <span class="math inline">t</span> that <span class="math inline">\hat{\Delta}</span> estimates. The
+correlational detector's sample complexity for detecting <span class="math inline">a_j</span>'s
+mean effect <span class="math inline">\mu_j</span> is governed by the variance of the continuous
+quantity it must recover, not by the variance of the ternary
+estimator itself: a sign-correct ternary estimator inherits the
+variance of the underlying continuous signal it tracks, plus
+discretization noise. Formally, <span class="math inline">\sigma^2</span> in the bound is the
+variance of any estimator of the total <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change that the
+correlational detector can construct from its observation channel.
+The <span class="math inline">\Omega(\sigma^2 / \mu_j^2)</span> lower bound is the
+information-theoretic sample complexity for detecting a mean shift
+<span class="math inline">\mu_j</span> in noise of variance <span class="math inline">\sigma^2</span>.</p>
+
+<p>(b) The causal detector evaluates <span class="math inline">\mathrm{CA}(a_j, t)</span> directly by
+comparing the observed <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change against the counterfactual under
+<span class="math inline">\mathrm{do}(\pi_j = \mathrm{skip})</span>. The variance of this signal is
+<span class="math inline">\sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{CA}(a_j, t))</span>, which
+excludes the confounding variance.</p>
+
+<p>(c) Under the additive-SCM assumption, the continuous <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
+decomposes as
+<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathrm{total}}(t) = \mathrm{CA}(a_j, t) +
+    \mathrm{confounders}(t)</span>,
+where the confounder term aggregates all other agents' contributions
+and the residual <span class="math inline">h(G_t, U)</span>. By the variance identity for sums:</p>
+<span class="math display">
+\sigma^2 = \mathrm{Var}(\mathrm{CA}(a_j))
+    + \mathrm{Var}(\mathrm{confounders})
+    + 2\,\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders}).
+</span>
+<p>Under causal sufficiency, the additive-SCM structure, and
+exogenous orthogonality (<a href="#def:scm">Definition 1</a>): causal
+sufficiency ensures the DAG captures all common causes, the
+additive decomposition ensures <span class="math inline">a_j</span>'s contribution enters as a
+separable term <span class="math inline">g_j</span>, and exogenous orthogonality ensures the
+noise driving <span class="math inline">g_j</span> is independent of the noise driving the
+confounder terms <span class="math inline">\{g_k\}_{k \neq j}</span> and <span class="math inline">h</span>. Together, these
+give
+<span class="math inline">\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders}) = 0</span>, and
+<span class="math inline">\sigma^2 - \sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{confounders})</span>
+as stated. Without causal sufficiency, the covariance term is retained
+and the inequality <span class="math inline">\sigma_{\mathrm{do}}^2 \leq \sigma^2</span> holds only
+when <span class="math inline">\mathrm{Var}(\mathrm{confounders}) +
+2\,\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{confounders}) \geq 0</span>; the
+inequality is strict whenever confounders have positive variance and
+the covariance term does not dominate. &#x25FC;</p>
+</div>
+
+<p><strong>The correlational detector as an estimator.</strong> Part (a) of
+<a href="#prop:causal_dominates">Proposition 1</a> treats the correlational
+detector as if <span class="math inline">\mu_j</span> appeared directly as a component of the mean
+of the aggregate signal <span class="math inline">\hat{\Delta}</span>. This is an idealization: the
+actual mean of <span class="math inline">\hat{\Delta}</span> is the sum of all agents' mean effects
+plus background dynamics, not <span class="math inline">\mu_j</span> alone. A correlational
+estimator that recovered <span class="math inline">\mu_j</span> from <span class="math inline">\hat{\Delta}</span> would need an
+additional auxiliary procedure &mdash; for example, regressing <span class="math inline">\hat{\Delta}</span>
+against an indicator for <span class="math inline">a_j</span>'s action times, which incurs its own
+bias when confounders are correlated with <span class="math inline">a_j</span>'s action schedule.
+The <span class="math inline">O(\sigma^2 / \mu_j^2)</span> bound therefore describes the best-case
+correlational detector: one that has access to <span class="math inline">a_j</span>'s action schedule
+and uses it as a conditioning variable. A weaker correlational
+detector that only observes <span class="math inline">\hat{\Delta}</span> without conditioning has a
+strictly worse (and generally incomputable) rate. The causal detector
+does not need this auxiliary procedure because
+<span class="math inline">\mathrm{CA}(a_j, t)</span> already isolates <span class="math inline">a_j</span>'s contribution by
+construction.</p>
+
+<p><strong>Practical implication.</strong> In populations with many simultaneously
+acting agents, confounding variance can dominate the correlational signal.
+A single scorpion among 100 simultaneously acting agents contributes
+~1% of the signal variance; the correlational detector needs
+~100&times; more observations than the causal detector to achieve the
+same confidence. The causal detector's advantage grows linearly with the
+number of simultaneously acting confounders.</p>
+
+<h2 id="sec:multi_channel">Causal Attribution as One Channel Among Several</h2>
+
+<p><a href="#prop:causal_dominates">Proposition 1</a> assumes that the SCM <span class="math inline">\mathcal{M}</span> is
+accurate enough to support do-calculus attribution, and that the
+structural assumptions of part (c) (causal sufficiency and
+additive-SCM structure) hold. In practice the SCM is learned from
+observational data, partially specified, and adversarially exposed:
+agents can strategically align their actions to mask causal
+structure, and new agents or delegation chains can emerge during the
+trajectory. A framework that depended on the SCM being perfectly
+learned would be brittle. Instead, the framework is robust because
+causal attribution is <em>one channel</em> among several in a
+multi-channel attribution system, and the system's overall
+attribution accuracy degrades gracefully as any single channel's
+reliability degrades.</p>
+
+<p>Multi-channel attribution is the standard methodology in adversarial
+intrusion analysis and intelligence tradecraft. The Diamond Model of
+intrusion analysis <d-cite key="caltagirone2013diamond"></d-cite> organizes attribution
+around four analytic vertices &mdash; adversary, capability,
+infrastructure, victim &mdash; linked by relationships, with confidence
+coming from cross-vertex correlation rather than from any single
+vertex. The <em>Pyramid of Pain</em> <d-cite key="bianco2013pyramid"></d-cite> ranks
+observable signals by how costly they are for an adversary to change:
+hash values, IP addresses, and domain names are cheap to rotate;
+tools and tactics, techniques, and procedures (TTPs) are expensive to
+retrain. The MITRE ATT&amp;CK framework <d-cite key="strom2018attack"></d-cite> provides
+a shared capability taxonomy that grounds TTP-level attribution in a
+common vocabulary. The <em>Analysis of Competing Hypotheses</em>
+<d-cite key="heuer1999psychology"></d-cite> provides a structured method for
+comparing attribution hypotheses by diagnostic evidence, weighting
+signals by their power to discriminate among candidates rather than
+by their individual strength. In all four traditions, the robustness
+of an attribution decision is driven by signals the adversary cannot
+cheaply fake, and no single signal is load-bearing.</p>
+
+<p>The GFM sequence already supplies several attribution channels,
+distributed across papers:</p>
+<ul>
+<li><p><strong>Behavioral prediction residual.</strong> The trust model of
+    <d-cite key="lasser2026gfm"></d-cite> computes <span class="math inline">r_k(t) = R_k(t) - \hat{R}_k(t
+    \mid M_k(G))</span>, the divergence between an agent's observed
+    behavior and its predictive model. An agent whose actions
+    consistently match its model concentrates on high <span class="math inline">T_k</span>;
+    systematic divergence drives <span class="math inline">T_k</span> down. This is a moderately
+    expensive channel to fake: a scorpion must maintain behavioral
+    consistency with a fictitious model to evade it.</p></li>
+<li><p><strong>Correlational co-occurrence.</strong> The trust-weighted
+    <span class="math inline">\hat{\Delta}</span> signal of <d-cite key="lasser2026gfm"></d-cite> (Proposition 2(a))
+    detects agents whose actions temporally co-occur with
+    <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction. This is a cheap channel to fake &mdash; an
+    adversary can introduce uncorrelated dummy actions &mdash; and is
+    strictly dominated by the causal channel under the conditions of
+    <a href="#prop:causal_dominates">Proposition 1</a>(c).</p></li>
+<li><p><strong>Capability gating.</strong> Papers 2 and 3 of the GFM sequence
+    <d-cite key="lasser2026poset,lasser2026horizon"></d-cite> together provide a
+    structural constraint: an agent cannot cause the contraction of
+    a capability it does not have upstream access to, regardless of
+    any other signal. This is the <em>means-analysis</em> from the
+    intrusion-analysis tradition and sits at the top of the
+    robustness hierarchy: it reflects the structure of the poset
+    itself rather than behavior an adversary can stage.
+    An attribution decision that conflicts with capability gating
+    should be overridden by it, not aggregated with it.</p></li>
+<li><p><strong>Causal contraction attribution</strong> (this paper,
+    <a href="#def:causal_attribution">Definition 2</a>). Moderately expensive to
+    fake, since the SCM demands counterfactual consistency, and
+    strictly informative under the conditions of
+    <a href="#prop:causal_dominates">Proposition 1</a>(c). Vulnerable to SCM
+    misspecification.</p></li>
+<li><p><strong>SPRT scorpion detection</strong> (this paper,
+    Section <a href="#sec:scorpion">4</a>). Moderately expensive to fake under
+    stationary epochs; vulnerable to fast adaptation as characterized
+    by the evasion bandwidth bound.</p></li>
+</ul>
+
+<p><a href="#tab:channels">Table 1</a> summarizes the channels by evasion cost and
+required assumptions.</p>
+
+<table id="tab:channels" style="width: 100%; border-collapse: collapse; margin: 1.5em 0;">
+<caption style="caption-side: bottom; padding-top: 0.5em; font-size: 0.85em; color: #666;">Table 1: Attribution channels ordered by adversarial evasion cost (highest first), following the Pyramid of Pain principle.</caption>
+<thead>
+<tr style="border-bottom: 2px solid #333;">
+<th style="text-align: left;">Channel</th>
+<th style="text-align: left;">Cost to fake</th>
+<th style="text-align: left;">Paper</th>
+<th style="text-align: left;">Key assumptions</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #ddd;">
+<td>Capability gating</td>
+<td>Very high</td>
+<td>2, 3</td>
+<td>Trusted, complete capability graph</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td>Causal attribution</td>
+<td>Moderate</td>
+<td>4</td>
+<td>Causal sufficiency, additive SCM, exog. orthogonality</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td>Behavioral residual</td>
+<td>Moderate</td>
+<td>1</td>
+<td>Predictive-model access</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td>SPRT detection</td>
+<td>Moderate</td>
+<td>4</td>
+<td>Gaussian, stationary epochs</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td>Correlational co-occ.</td>
+<td>Low</td>
+<td>1</td>
+<td>(None beyond observation)</td>
+</tr>
+</tbody>
+</table>
+
+<p>An attribution decision should aggregate evidence across channels,
+weighted by each channel's calibrated reliability, rather than rely
+on the output of any single channel. The multi-channel framing has three
+architectural consequences:</p>
+<ol>
+<li><p><strong>Capability gating is a hard filter, not a prior.</strong>
+    An agent that cannot structurally reach capability <span class="math inline">c_i</span> cannot
+    have caused its contraction, and no amount of causal or
+    correlational evidence should override that. The correct
+    aggregation is a gate-then-aggregate architecture: apply the
+    capability gate first to produce the candidate suspect set, then
+    aggregate the remaining channels over the candidates.</p></li>
+<li><p><strong>No single channel must be perfect.</strong> Each channel has
+    its own reliability, and the aggregate's accuracy depends on
+    the joint reliability profile rather than on the
+    maximum-reliability channel. This is the property that makes
+    multi-channel attribution robust in the threat-intelligence
+    setting and that makes the GFM actor robust to imperfect
+    structure learning (Section <a href="#sec:discussion">6</a>).</p></li>
+<li><p><strong>Channel weights should be calibrated from
+    measurable proxies</strong>, not fixed at design time. The causal
+    channel's weight should scale with an SCM-confidence estimate
+    derived from structure-learning diagnostics; the behavioral
+    channel's weight should scale with a population-level
+    reliability measure derived from the per-agent trust scores
+    <span class="math inline">T_k</span> of <d-cite key="lasser2026gfm"></d-cite> (distinct from the actor's
+    self-trust <span class="math inline">T_s</span>, which governs learning rate rather than
+    channel reliability); the correlational channel's weight
+    should scale with the confounding variance estimated from the
+    population structure. The calibration procedure is outside the
+    scope of this paper and is identified as an open direction in
+    Section <a href="#sec:discussion">6</a>.</p></li>
+</ol>
+
+<p>Paper 4's contribution to this framework is the causal channel: a
+principled, do-calculus-based attribution signal with a convergence
+advantage over the correlational baseline under stated structural
+conditions. It is not the attribution system, and the paper does not
+claim that the causal channel is load-bearing. The overall
+attribution robustness comes from the multi-channel structure, and
+from capability gating in particular as the structural floor.</p>
+
+<!-- ================================================================== -->
+<!-- SECTION 3: Risk-Trust Dynamics                                     -->
+<!-- ================================================================== -->
+
+<h1 id="sec:risk_trust">Risk-Trust Dynamics</h1>
+
+<p>The companion paper <d-cite key="lasser2026horizon"></d-cite> introduces a risk-trust factor
+<span class="math inline">T^{\mathrm{risk}}_j</span> for weighting communicated risk claims but provides only a
+qualitative update rule. This section formalizes the dynamics, drawing on the
+EWMA structure of the foundational paper's behavioral trust
+<d-cite key="lasser2026gfm"></d-cite>.</p>
+
+<h2 id="sec:risk_residual">Structural Verification Residuals</h2>
+
+<div id="def:risk_residual" class="definition">
+<p><strong>Definition 3</strong> (Structural Verification Residual).
+<em>For a risk claim <span class="math inline">(S, \mathcal{P}, |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}|, p)</span> from agent <span class="math inline">a_j</span>
+    (Definition 4 of <d-cite key="lasser2026horizon"></d-cite>), the actor evaluates
+    the specific claimed pathway <span class="math inline">\mathcal{P}</span> against its own SCM
+    <span class="math inline">\mathcal{M}</span> (<a href="#def:scm">Definition 1</a>) using the causal risk evaluation
+    procedure (Section 4.3 of <d-cite key="lasser2026horizon"></d-cite>). This produces
+    a pathway-conditional assessment
+    <span class="math inline">\bigl(p_{\mathcal{W}}(\mathcal{P}),\;
+    |\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathcal{W}}(\mathcal{P})|\bigr)</span>: the probability and
+    contraction magnitude the actor would assign if <span class="math inline">\mathcal{P}</span> were
+    the realized causal pathway. If <span class="math inline">\mathcal{P}</span> has no counterpart in
+    <span class="math inline">\mathcal{M}</span> &mdash; that is, if the actor's causal model contains no edges
+    implementing the claimed mechanism &mdash; then
+    <span class="math inline">\bigl(p_{\mathcal{W}}(\mathcal{P}), |\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathcal{W}}(\mathcal{P})|\bigr)
+    = (0, 0)</span> by convention. The structural verification
+    residual is the dimensionless two-component divergence:</em></p>
+<span class="math display">
+r_j^{\mathrm{risk}}(t) = \left(
+    p_j^{\mathrm{claimed}} - p_{\mathcal{W}}(\mathcal{P}),\;\;
+    \frac{|\Delta \mathop{\mathrm{vol}}_{\mathrm{P},j}^{\mathrm{claimed}}| -
+          |\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathcal{W}}(\mathcal{P})|}{\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)}
+\right)
+</span>
+<p><em>Each component is in <span class="math inline">[-1, 1]</span>: the first is a probability difference,
+    the second is a relative volume difference normalized by the
+    current total poset volume. The Euclidean norm
+    <span class="math inline">\|r_j^{\mathrm{risk}}(t)\|</span> is therefore dimensionally consistent
+    and invariant under rescaling of <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. A fabricated pathway
+    that does not exist in <span class="math inline">\mathcal{M}</span> produces the maximal residual
+    <span class="math inline">\|r_j^{\mathrm{risk}}(t)\| = \sqrt{(p_j^{\mathrm{claimed}})^2
+    + (|\Delta \mathop{\mathrm{vol}}_{\mathrm{P},j}^{\mathrm{claimed}}|/\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t))^2}</span>; structural
+    verification is enforced by the pathway-conditional evaluation,
+    not by an extra pathway-comparison term.</em></p>
+</div>
+
+<p>Unlike the behavioral prediction residual <span class="math inline">r_k(t)</span> (Equation 25 of
+<d-cite key="lasser2026gfm"></d-cite>), which compares <em>predicted</em> against
+<em>observed</em> behavior, the risk residual compares <em>claimed</em> against
+<em>independently modeled</em> risk. This is necessary because risk claims
+are counterfactual predictions that may never be directly observed &mdash;
+the <em>Wamura problem</em>, introduced in the poset paper
+<d-cite key="lasser2026poset"></d-cite> and developed in the risk-communication analysis
+of <d-cite key="lasser2026horizon"></d-cite>: a successful risk
+intervention removes the very evidence that would have justified it,
+so the convergence timescale for risk-trust can in principle exceed
+the timescale on which trust normally accumulates. The SCM provides
+the independent assessment needed to break this circularity: the
+actor's own causal model produces <span class="math inline">(p_{\mathcal{W}},
+|\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathcal{W}}|)</span> without relying on the claim.</p>
+
+<h2 id="sec:ewma_risk_trust">EWMA Risk-Trust Update</h2>
+
+<div id="def:risk_trust_dynamics" class="definition">
+<p><strong>Definition 4</strong> (Risk-Trust Dynamics).
+<em>The risk-trust factor <span class="math inline">T^{\mathrm{risk}}_j</span> evolves through an exponentially weighted
+    moving average of squared structural verification residuals:</em></p>
+<span class="math display">
+\sigma_j^{\mathrm{risk},2}(t) = \alpha_{\mathrm{risk}} \cdot
+    \sigma_j^{\mathrm{risk},2}(t-1) + (1 - \alpha_{\mathrm{risk}}) \cdot
+    \|r_j^{\mathrm{risk}}(t)\|^2
+</span>
+<span class="math display">
+T^{\mathrm{risk}}_j(t) = \frac{1}{1 + \beta_{\mathrm{risk}} \cdot
+    \sigma_j^{\mathrm{risk},2}(t)}
+</span>
+<p><em>where <span class="math inline">\alpha_{\mathrm{risk}} \in (0, 1)</span> controls the decay rate
+    (tracking speed vs. stability), <span class="math inline">\beta_{\mathrm{risk}} > 0</span> controls the
+    sensitivity (how rapidly trust degrades with inconsistency), and
+    <span class="math inline">\|\cdot\|</span> is the Euclidean norm on the two-dimensional residual.</em></p>
+</div>
+
+<p>The structure mirrors the foundational paper's behavioral trust exactly
+(Equations 33 and 38 of <d-cite key="lasser2026gfm"></d-cite>), with the behavioral
+prediction residual replaced by the structural verification residual. The
+parameters <span class="math inline">\alpha_{\mathrm{risk}}</span> and <span class="math inline">\beta_{\mathrm{risk}}</span> are
+independent of the behavioral parameters <span class="math inline">\alpha</span> and <span class="math inline">\beta</span>: an agent can
+have high behavioral trust <span class="math inline">T_k</span> (predictable behavior) and low risk-trust
+<span class="math inline">T^{\mathrm{risk}}_k</span> (unreliable risk assessments), or vice versa. The two trust
+channels operate independently.</p>
+
+<p><strong>Initialization and cooling period.</strong> New agents enter with
+<span class="math inline">\sigma_j^{\mathrm{risk},2}(0) = \sigma_0^{\mathrm{risk},2}</span> (a prior
+reflecting baseline uncertainty about risk-claim quality), producing initial
+risk-trust <span class="math inline">T^{\mathrm{risk}}_j(0) = 1/(1 + \beta_{\mathrm{risk}} \cdot
+\sigma_0^{\mathrm{risk},2})</span>. The effective cooling period is
+<span class="math inline">\tau_{\mathrm{risk}} = \lceil \log \delta / \log
+\alpha_{\mathrm{risk}} \rceil</span> (same formula as the behavioral cooling
+period, Equation 71 of <d-cite key="lasser2026gfm"></d-cite>).</p>
+
+<div id="prop:risk_convergence" class="proposition">
+<p><strong>Proposition 2</strong> (Risk-Trust <span class="math inline">L^2</span> Convergence).
+<em>Let <span class="math inline">X_j(t) = \|r_j^{\mathrm{risk}}(t)\|^2</span> and assume <span class="math inline">a_j</span>'s risk-claim
+    strategy is stationary with
+    <span class="math inline">\mu_j^{\mathrm{risk}} = \mathbb{E}[X_j] &lt; \infty</span> and
+    <span class="math inline">\nu_j^{\mathrm{risk}} = \mathrm{Var}[X_j] &lt; \infty</span>. Then the
+    cumulative inconsistency estimator satisfies:</em></p>
+<span class="math display">
+\lim_{t \to \infty} \mathbb{E}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
+    = \mu_j^{\mathrm{risk}}
+    \qquad \text{(asymptotic unbiasedness)}
+</span>
+<span class="math display">
+\limsup_{t \to \infty}
+    \mathrm{Var}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
+    \leq \frac{1 - \alpha_{\mathrm{risk}}}
+              {1 + \alpha_{\mathrm{risk}}}
+       \cdot C_{\mathrm{dep}} \cdot \nu_j^{\mathrm{risk}}
+    \qquad \text{(bounded stationary variance)}
+</span>
+<p><em>where <span class="math inline">C_{\mathrm{dep}} = 1</span> under i.i.d. squared residuals, and
+    <span class="math inline">C_{\mathrm{dep}}(\alpha_{\mathrm{risk}}) = 1 + 2
+    \sum_{h=1}^{\infty} \alpha_{\mathrm{risk}}^h \cdot
+    \mathrm{Corr}(X_j(t), X_j(t+h))</span> under weak dependence with
+    summable autocovariance. The <span class="math inline">\alpha_{\mathrm{risk}}^h</span> weights
+    arise from the EWMA's geometric weighting: the cross-terms in the
+    variance expansion carry the product of the EWMA coefficients at
+    lag <span class="math inline">h</span>. Since <span class="math inline">|\mathrm{Corr}| \leq 1</span> and
+    <span class="math inline">\sum_h \alpha_{\mathrm{risk}}^h = \alpha_{\mathrm{risk}} /
+    (1 - \alpha_{\mathrm{risk}})</span>, we have the universal bound
+    <span class="math inline">C_{\mathrm{dep}} \leq (1 + \alpha_{\mathrm{risk}}) /
+    (1 - \alpha_{\mathrm{risk}})</span>.
+    Consequently, the variance estimator
+    <span class="math inline">\sigma_j^{\mathrm{risk},2}(t)</span> concentrates in <span class="math inline">L^2</span> around
+    <span class="math inline">\mu_j^{\mathrm{risk}}</span>. The risk-trust factor <span class="math inline">T^{\mathrm{risk}}_j(t)</span>
+    concentrates around the nominal fixed point
+    <span class="math inline">T^{\mathrm{risk},*}_j = 1 / (1 + \beta_{\mathrm{risk}} \mu_j^{\mathrm{risk}})</span>
+    in distribution (via the continuous mapping theorem), with the
+    caveat that <span class="math inline">\mathbb{E}[T^{\mathrm{risk}}_j(t)]</span> may exceed <span class="math inline">T^{\mathrm{risk},*}_j</span> by
+    a Jensen bias term of order
+    <span class="math inline">O(\beta_{\mathrm{risk}}^2 \cdot
+    \mathrm{Var}[\sigma_j^{\mathrm{risk},2}])</span> due to the concavity
+    of <span class="math inline">x \mapsto 1/(1 + \beta_{\mathrm{risk}} x)</span>. The deviation
+    is controlled by <span class="math inline">\alpha_{\mathrm{risk}}</span>: as
+    <span class="math inline">\alpha_{\mathrm{risk}} \to 1</span>, the stationary variance vanishes,
+    the Jensen bias vanishes, and <span class="math inline">T^{\mathrm{risk}}_j(t) \to T^{\mathrm{risk},*}_j</span> in
+    <span class="math inline">L^2</span>. Structurally accurate reporters (small
+    <span class="math inline">\mu_j^{\mathrm{risk}}</span>) concentrate around high <span class="math inline">T^{\mathrm{risk},*}_j</span>;
+    alarmists and chronic underreporters concentrate around low
+    <span class="math inline">T^{\mathrm{risk},*}_j</span>.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>Unrolling the EWMA recursion gives
+<span class="math inline">\sigma_j^{\mathrm{risk},2}(t) = (1 - \alpha_{\mathrm{risk}})
+    \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^s X_j(t-s)
+    + \alpha_{\mathrm{risk}}^t \sigma_j^{\mathrm{risk},2}(0)</span>.
+Taking expectations under stationarity,
+<span class="math inline">\mathbb{E}[\sigma_j^{\mathrm{risk},2}(t)]
+    = (1 - \alpha_{\mathrm{risk}})
+      \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^s \mu_j^{\mathrm{risk}}
+    + \alpha_{\mathrm{risk}}^t \sigma_j^{\mathrm{risk},2}(0)
+    \to \mu_j^{\mathrm{risk}}</span> as <span class="math inline">t \to \infty</span>, establishing
+    asymptotic unbiasedness. Under the i.i.d. assumption,</p>
+<span class="math display">
+\mathrm{Var}[\sigma_j^{\mathrm{risk},2}(t)]
+    = (1 - \alpha_{\mathrm{risk}})^2
+       \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^{2s}
+       \cdot \nu_j^{\mathrm{risk}}
+       + o(1)
+    \longrightarrow \frac{(1 - \alpha_{\mathrm{risk}})^2}
+                          {1 - \alpha_{\mathrm{risk}}^2}
+       \cdot \nu_j^{\mathrm{risk}}
+       = \frac{1 - \alpha_{\mathrm{risk}}}
+              {1 + \alpha_{\mathrm{risk}}}
+       \cdot \nu_j^{\mathrm{risk}},
+</span>
+<p>giving <span class="math inline">C_{\mathrm{dep}} = 1</span>. Under weak dependence
+with summable autocovariance, the cross-terms in the EWMA variance
+expansion carry <span class="math inline">\alpha_{\mathrm{risk}}^h</span> weights from the
+geometric kernel, giving
+<span class="math inline">C_{\mathrm{dep}}(\alpha_{\mathrm{risk}}) = 1 + 2
+\sum_{h=1}^{\infty} \alpha_{\mathrm{risk}}^h \cdot
+\mathrm{Corr}(X_j(t), X_j(t+h))</span>, which is finite because
+<span class="math inline">\alpha_{\mathrm{risk}}^h</span> decays geometrically and the
+autocovariance is summable. The
+concentration statement for <span class="math inline">\sigma_j^{\mathrm{risk},2}(t)</span> around
+<span class="math inline">\mu_j^{\mathrm{risk}}</span> in <span class="math inline">L^2</span> follows directly. For <span class="math inline">T^{\mathrm{risk}}_j(t)</span>,
+the continuous mapping theorem applied to
+<span class="math inline">x \mapsto 1 / (1 + \beta_{\mathrm{risk}} x)</span>, which is Lipschitz on
+<span class="math inline">[0, \infty)</span>, gives convergence in distribution to
+<span class="math inline">T^{\mathrm{risk},*}_j</span>. The Jensen bias arises because
+<span class="math inline">\mathbb{E}[f(X)] \geq f(\mathbb{E}[X])</span> for concave <span class="math inline">f</span>; a
+second-order Taylor expansion gives the bias as
+<span class="math inline">O(\beta_{\mathrm{risk}}^2 \cdot
+\mathrm{Var}[\sigma_j^{\mathrm{risk},2}])</span>, which vanishes as
+<span class="math inline">\alpha_{\mathrm{risk}} \to 1</span>. &#x25FC;</p>
+</div>
+
+<p><strong>Tracking versus convergence: why <span class="math inline">L^2</span> and not almost sure.</strong>
+Fixed-<span class="math inline">\alpha</span> EWMA does not converge almost surely to a deterministic
+limit, and for an adversarial-tracking setting this is the correct
+behavior. Each new residual contributes weight <span class="math inline">(1 - \alpha_{\mathrm{risk}})</span>
+regardless of how much history has accumulated, so the estimator
+never collapses to a point mass and retains nonzero stationary
+variance. A Robbins-Monro stochastic approximation with step size
+<span class="math inline">\alpha_t \to 0</span> satisfying <span class="math inline">\sum_t \alpha_t = \infty</span> and
+<span class="math inline">\sum_t \alpha_t^2 &lt; \infty</span> <d-cite key="robbins1951stochastic"></d-cite> would
+converge almost surely to <span class="math inline">\mu_j^{\mathrm{risk}}</span>, but only at the
+cost of losing the ability to track a non-stationary adversary whose
+strategy changes mid-trajectory. Risk-claim quality and scorpion
+behavior are both moving targets: a cooperative reporter can become
+systematically biased, an alarmist can calibrate, and a scorpion can
+change strategy in response to detection pressure. Past accuracy does
+not guarantee future accuracy under a changing world model
+<span class="math inline">\mathcal{W}</span>, so the tracking property is load-bearing. The
+stationary-variance bound is what the scorpion detection threshold
+(Section <a href="#sec:scorpion">4</a>) is calibrated against, so the <span class="math inline">L^2</span>
+form is not just weaker than almost sure &mdash; it is the form the
+downstream results actually use.</p>
+
+<p><strong>Interaction with the Wamura problem.</strong> The EWMA dynamics converge
+on <em>structural verification quality</em>, not on <em>outcome correctness</em>.
+An agent whose risk claims are structurally plausible (the pathway exists in
+<span class="math inline">\mathcal{M}</span>, the probability and magnitude estimates are calibrated against the
+actor's own model) accumulates low <span class="math inline">\|r^{\mathrm{risk}}\|^2</span> and converges
+to high <span class="math inline">T^{\mathrm{risk},*}_j</span> regardless of whether the risk materializes. This
+partially resolves the Wamura problem: risk-trust converges even when the
+counterfactual is never observed, because convergence depends on structural
+agreement, not outcome observation. The resolution is partial because an
+agent whose claims are structurally plausible but whose probability estimates
+are systematically biased (always 10% higher than the actor's model)
+accumulates moderate <span class="math inline">\|r^{\mathrm{risk}}\|^2</span> and converges to moderate
+<span class="math inline">T^{\mathrm{risk},*}_j</span>, reflecting the bias without resolving it.</p>
+
+<h2 id="sec:logodds">Independence-Preserving Risk Aggregation</h2>
+
+<p>The max operator in Equation 7 of <d-cite key="lasser2026horizon"></d-cite> destroys
+independence information: 50 low-trust agents agreeing on a risk assessment
+are treated identically to one low-trust agent. We propose a
+trust-weighted log-odds aggregation that preserves the evidence-accumulation
+structure of independent reports.</p>
+
+<p><strong>Definition update from the companion paper.</strong>
+The companion paper <d-cite key="lasser2026horizon"></d-cite> defines
+<span class="math inline">\hat{\mathcal{R}}_j</span> as an expected-contraction product
+<span class="math inline">T_j^{\mathrm{risk}} \cdot p \cdot |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}|</span>, which is not a
+probability and cannot be passed through log-odds. We update the
+definition: <span class="math inline">\hat{\mathcal{R}}_j</span> and <span class="math inline">\mathcal{R}_{\mathrm{self}}</span> hereafter
+denote posterior probabilities that the exercise pathway will be
+executed within the planning horizon, calibrated against the shared
+prior <span class="math inline">\pi_0</span> below. The contraction magnitude <span class="math inline">|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}|</span>
+becomes a separate quantity used by the verification gate
+(Section <a href="#sec:attention_not_action">3.4</a>) and the structural
+verification residual (<a href="#def:risk_residual">Definition 3</a>). The
+canonical form of a communicated risk claim is the pair
+<span class="math inline">(\hat{\mathcal{R}}_j, |\Delta \mathop{\mathrm{vol}}_{\mathrm{P},j}^{\mathrm{claimed}}|)</span>; the
+single-number product in <d-cite key="lasser2026horizon"></d-cite> is superseded.</p>
+
+<div id="def:logodds" class="definition">
+<p><strong>Definition 5</strong> (Log-Odds Risk Aggregation).
+<em>Let <span class="math inline">\pi_0 \in (0, 1)</span> be a shared prior on the probability that the
+    exercise pathway will be executed within the planning horizon, and
+    let <span class="math inline">\ell_0 = \log(\pi_0 / (1 - \pi_0))</span> be its log-odds. The
+    actor's self-assessment <span class="math inline">\mathcal{R}_{\mathrm{self}}</span> and each communicated
+    risk estimate <span class="math inline">\hat{\mathcal{R}}_j</span> from agent <span class="math inline">a_j</span> are posterior
+    probabilities derived from the shared prior <span class="math inline">\pi_0</span> plus their
+    respective observations. The aggregated posterior is:</em></p>
+<span class="math display">
+\log \frac{\mathcal{R}_{\mathrm{agg}}}{1 - \mathcal{R}_{\mathrm{agg}}}
+    = \ell_0
+    + \underbrace{\left(\log \frac{\mathcal{R}_{\mathrm{self}}}{1 - \mathcal{R}_{\mathrm{self}}} - \ell_0\right)}_{\text{actor's log-likelihood-ratio}}
+    + \sum_j T^{\mathrm{risk}}_j \cdot \underbrace{\left(\log \frac{\hat{\mathcal{R}}_j}{1 - \hat{\mathcal{R}}_j} - \ell_0\right)}_{\text{reporter } a_j\text{'s log-likelihood-ratio}}
+</span>
+<p><em>where each parenthesized term is the log-likelihood-ratio contributed
+    by that source beyond the shared prior, obtained by subtracting
+    <span class="math inline">\ell_0</span> from their reported posterior log-odds. The <span class="math inline">\mathcal{R}</span> values
+    are normalized to <span class="math inline">[0, 1]</span> as probabilities of the exercise pathway
+    being executed within the planning horizon. The shared prior
+    <span class="math inline">\pi_0</span> is an operational coordination requirement: every
+    reporter's posterior must be calibrated against the same <span class="math inline">\pi_0</span>
+    for the subtraction <span class="math inline">\log(\hat{\mathcal{R}}_j / (1 - \hat{\mathcal{R}}_j))
+    - \ell_0</span> to correctly extract the log-likelihood ratio.
+    Establishing <span class="math inline">\pi_0</span> requires a protocol (e.g., broadcasting it
+    as a system parameter at population initialization), not just a
+    mathematical assumption.
+    Under the neutral
+    bootstrap prior <span class="math inline">\pi_0 = 0.5</span> (<span class="math inline">\ell_0 = 0</span>), the prior-correction
+    terms vanish and the equation reduces to a naive
+    sum of posterior log-odds; under any other shared prior, the
+    correction is required to avoid double-counting the prior.</em></p>
+</div>
+
+<p>The log-odds aggregation has three advantages over the max operator:</p>
+<ol>
+<li><p><strong>Agreement strengthens evidence.</strong> Multiple independent
+    low-trust agents reporting the same risk produce a collective signal
+    proportional to the number of agreeing reporters, weighted by their
+    individual <span class="math inline">T^{\mathrm{risk}}_j</span> values.</p></li>
+<li><p><strong>Trust-weighted log-linear opinion pool.</strong>
+    The equation above is a trust-tempered log-linear opinion
+    pool <d-cite key="genest1986combining"></d-cite>: the aggregate log-odds is a
+    weighted sum of the reporters' log-likelihood ratios plus the
+    shared prior. Under the conditional-independence assumption
+    (reporters' observations are independent given the true risk
+    level and the shared prior <span class="math inline">\pi_0</span>), setting all <span class="math inline">T^{\mathrm{risk}}_j = 1</span>
+    recovers the standard Bayesian posterior update for independent
+    evidence sources. The trust weights <span class="math inline">T^{\mathrm{risk}}_j \in [0, 1]</span> temper
+    each reporter's contribution in proportion to their
+    structural-verification track record; this is not itself
+    Bayes-optimal in general &mdash; exact Bayes-optimality would require
+    a generative model of how each reporter's noise depends on their
+    history, which the framework does not assume &mdash; but it recovers
+    Bayes-optimal behavior in the no-tempering limit and degrades
+    gracefully for untrusted reporters, which is the behavior the
+    aggregation rule is trying to achieve. The prior-correction
+    terms are required regardless of tempering: without them, a naive
+    sum of posterior log-odds would double-count <span class="math inline">\pi_0</span> once per
+    reporter.</p></li>
+<li><p><strong>Graceful degradation.</strong> When a single agent has
+    <span class="math inline">T^{\mathrm{risk}}_j \gg \sum_{k \neq j} T^{\mathrm{risk}}_k</span>, the aggregation approximates
+    max behavior: the dominant reporter's assessment controls the aggregate.
+    The max operator emerges as a limiting case, not an imposed design
+    choice.</p></li>
+</ol>
+
+<p><strong>Bootstrap interaction.</strong> During bootstrap, all <span class="math inline">T^{\mathrm{risk}}_j</span> values
+start at the neutral prior. Under log-odds aggregation, <span class="math inline">n</span> agents
+reporting the same risk at neutral trust produce a collective signal
+<span class="math inline">n \times T^{\mathrm{risk}}_{\mathrm{neutral}}</span> times the individual log-odds,
+proportional to <span class="math inline">n</span>. Under the max operator, the same <span class="math inline">n</span> agents produce
+only <span class="math inline">T^{\mathrm{risk}}_{\mathrm{neutral}}</span> times the maximum individual log-odds,
+independent of <span class="math inline">n</span>. The log-odds aggregation therefore learns faster during
+bootstrap, precisely when the actor's own model is least reliable and
+external evidence is most valuable.</p>
+
+<h2 id="sec:attention_not_action">Aggregation as Attention, Not Action</h2>
+
+<p>The log-odds aggregation amplifies agreement among reporters, which is
+correct when reporters are independent but exploitable by coordinated
+conspirators: <span class="math inline">n</span> agents who agree in advance on a fabricated risk claim
+produce a collective signal proportional to <span class="math inline">n</span>, potentially overwhelming
+the actor's self-assessment and triggering restriction of a capability that
+was never actually dangerous. This is the risk-communication analogue of
+report-bombing: coordinated low-quality reports exploiting an aggregation
+mechanism designed for independent evidence.</p>
+
+<p>Any fixed correlation-detection heuristic is game-able once the adversary
+knows the parameters &mdash; a standard observation in adversarial detection
+settings &mdash; and the ROC trade-off is unfavorable in this domain because
+both error types are costly: false positives (restricting a safe
+capability) and false negatives (ignoring a real risk) both cause
+<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction. We therefore adopt the activation
+energy principle from the foundational paper <d-cite key="lasser2026gfm"></d-cite>, applied
+to risk-claim processing.</p>
+
+<p><strong>The two-gate architecture.</strong> The risk aggregation
+<span class="math inline">\mathcal{R}_{\mathrm{agg}}</span> (<a href="#def:logodds">Definition 5</a>) does not directly
+trigger restriction. It produces a <em>salience signal</em>: the aggregated
+risk level determines the priority at which a capability tuple enters the
+actor's investigation queue. Action requires passing two independent gates:</p>
+<ol>
+<li><p><strong>Salience gate.</strong> The aggregated risk
+    <span class="math inline">\mathcal{R}_{\mathrm{agg}}(S; a_k, t)</span> exceeds an attention threshold
+    <span class="math inline">\theta_{\mathrm{risk}}</span>, placing the capability tuple in the
+    investigation queue.</p></li>
+<li><p><strong>Verification gate.</strong> The actor invokes the forward
+    causal risk-evaluation procedure (Section 4.3 of
+    <d-cite key="lasser2026horizon"></d-cite>) on its own SCM <span class="math inline">\mathcal{M}</span> to independently
+    confirm that the claimed exercise pathway <span class="math inline">\mathcal{P}</span> exists in
+    the actor's causal model, calibrate the probability, and verify
+    the contraction magnitude. This is a forward causal query &mdash;
+    "if <span class="math inline">\mathcal{P}</span> were executed, what would happen?" &mdash; using
+    the same pathway-conditional assessment
+    <span class="math inline">\bigl(p_{\mathcal{W}}(\mathcal{P}), |\Delta \mathop{\mathrm{vol}}_{\mathrm{P},\mathcal{W}}(\mathcal{P})|\bigr)</span>
+    as the structural verification residual
+    (<a href="#def:risk_residual">Definition 3</a>). It is distinct from the
+    retrospective causal contraction attribution
+    (<a href="#def:causal_attribution">Definition 2</a>), which decomposes an
+    <em>observed</em> contraction across agents after the fact.
+    Retrospective attribution has no counterfactual access to
+    hypothetical pathways that were never executed; forward risk
+    evaluation does, and this is the mechanism the verification gate
+    requires. The gate is the activation energy: the actor must
+    reconstruct the risk through its own causal model before
+    acting.</p></li>
+</ol>
+
+<p>Neither gate alone is sufficient. A coordinated report-bomb raises salience
+(gate 1) but fails independent verification (gate 2) because the fabricated
+pathway does not exist in the actor's causal model. A genuine risk reported
+by a single low-trust agent may fail gate 1 (low salience) but would pass
+gate 2 if the actor investigated. The two-gate architecture trades a
+bounded false-negative rate (genuine risks from low-trust reporters may be
+investigated slowly) for strong robustness against coordinated manipulation
+(fabricated risks cannot bypass independent verification regardless of how
+many conspirators report them).</p>
+
+<p><strong>Why heuristic correlation detection is insufficient.</strong> A fixed
+correlation metric (temporal clustering, behavioral similarity among
+reporters, trust-history patterns) is game-able by a sufficiently
+informed adversary: adversaries who know the detection threshold can
+space their reports, diversify their trust-building histories, and
+avoid clustering. The two-gate architecture avoids this arms
+race by not relying on detecting coordination at all. The defense is the
+actor's own intelligence applied through the causal model, not a statistical
+filter on the report stream.</p>
+
+<!-- ================================================================== -->
+<!-- SECTION 4: Causal Scorpion Detection                               -->
+<!-- ================================================================== -->
+
+<h1 id="sec:scorpion">Causal Scorpion Detection</h1>
+
+<p>The foundational paper's Proposition 2 <d-cite key="lasser2026gfm"></d-cite> detects
+scorpions through two channels: contraction attribution (correlational) and
+deception detection (behavioral trust decay). This section upgrades
+channel (a) from correlational to causal, using the SCM of
+Section <a href="#sec:causal">2</a>, and provides bounds on non-stationary scorpion
+evasion.</p>
+
+<h2 id="sec:causal_detection">Causal Detection</h2>
+
+<div id="prop:causal_scorpion" class="proposition">
+<p><strong>Proposition 3</strong> (Causal Scorpion Detection).
+<em>Under the SCM <span class="math inline">\mathcal{M}</span> (<a href="#def:scm">Definition 1</a>), a GFM actor can detect
+    scorpion agents through two upgraded channels:</em></p>
+<p><em><strong>(a) Causal contraction attribution.</strong>
+    <span class="math inline">\mathrm{CA}(a_j, t)</span> (<a href="#def:causal_attribution">Definition 2</a>) replaces
+    the correlational <span class="math inline">\hat{\Delta}</span> signal from Proposition 2(a) of
+    <d-cite key="lasser2026gfm"></d-cite>. Within each stationary epoch of <span class="math inline">a_j</span>'s
+    strategy, the causal-attribution sequence
+    <span class="math inline">\mathrm{CA}(a_j, 1), \mathrm{CA}(a_j, 2), \ldots</span> is i.i.d.
+    <span class="math inline">\mathcal{N}(\mu_j, \sigma_{\mathrm{do}}^2)</span> with unknown mean
+    <span class="math inline">\mu_j</span> and known variance <span class="math inline">\sigma_{\mathrm{do}}^2</span>. (The Gaussian
+    assumption is a modeling choice; for non-Gaussian attributions the
+    SPRT likelihoods below are replaced by their distributional
+    counterparts and the <span class="math inline">O(\cdot)</span> rate constants change, but the
+    structural comparison with the correlational detector is
+    preserved.) The
+    actor maintains two auxiliary EWMA statistics &mdash; a
+    signed-mean estimator and a variance estimator &mdash;
+    for monitoring:</em></p>
+<span class="math display">
+\mu_j^{\mathrm{causal}}(t) = \alpha \cdot \mu_j^{\mathrm{causal}}(t-1)
+    + (1 - \alpha) \cdot \mathrm{CA}(a_j, t)
+</span>
+<span class="math display">
+\sigma_j^{\mathrm{causal},2}(t) = \alpha \cdot
+    \sigma_j^{\mathrm{causal},2}(t-1)
+    + (1 - \alpha) \cdot
+    \bigl(\mathrm{CA}(a_j, t) - \mu_j^{\mathrm{causal}}(t)\bigr)^2
+</span>
+<p><em>These statistics satisfy the same <span class="math inline">L^2</span> convergence guarantees as
+    <a href="#prop:risk_convergence">Proposition 2</a>: asymptotically unbiased
+    with stationary variance bounded by
+    <span class="math inline">\tfrac{1 - \alpha}{1 + \alpha} \sigma_{\mathrm{do}}^2</span> for the
+    signed mean. They do not converge almost surely to a deterministic
+    limit, and we deliberately do not use them as the flag condition.</em></p>
+<p><em>The flag condition is instead a sequential probability ratio test
+    (SPRT) <d-cite key="wald1945sequential"></d-cite> on the causal-attribution
+    sequence, testing the least-favorable simple hypotheses
+    <span class="math inline">H_0: \mu_j = 0</span> (non-scorpion) versus
+    <span class="math inline">H_1: \mu_j = -\epsilon</span> (scorpion with minimum detectable
+    contraction magnitude <span class="math inline">\epsilon > 0</span>). The composite problem
+    (<span class="math inline">\mu_j \geq 0</span> vs. <span class="math inline">\mu_j \leq -\epsilon</span>) is reduced to
+    this simple pair by the standard least-favorable-distribution
+    argument: Type I error is maximized under the null distribution
+    closest to the alternative (<span class="math inline">\mu_j = 0</span>), and Type II error is
+    maximized under the alternative closest to the null
+    (<span class="math inline">\mu_j = -\epsilon</span>), so error guarantees for the simple pair
+    bound the composite problem from above.
+    The actor accumulates the
+    log-likelihood ratio
+    <span class="math inline">\Lambda_j(t) = \sum_{s=1}^{t} \log\bigl(p_{H_1}(\mathrm{CA}(a_j,
+    s)) / p_{H_0}(\mathrm{CA}(a_j, s))\bigr)</span> and applies a
+    two-boundary decision rule: flag <span class="math inline">a_j</span> as a scorpion when
+    <span class="math inline">\Lambda_j(t) \geq \log((1 - \beta_{\mathrm{err}}) /
+    \alpha_{\mathrm{err}})</span> (upper boundary), or provisionally clear
+    <span class="math inline">a_j</span> for the current epoch when
+    <span class="math inline">\Lambda_j(t) \leq \log(\beta_{\mathrm{err}} /
+    (1 - \alpha_{\mathrm{err}}))</span> (lower boundary). Here
+    <span class="math inline">\alpha_{\mathrm{err}}</span> and <span class="math inline">\beta_{\mathrm{err}}</span> are the target
+    Type I and Type II error rates for the simple pair. A provisional
+    clearance is epoch-local: the SPRT resets at the next epoch
+    boundary, reflecting the possibility that a non-scorpion agent
+    may become one. Under this decision rule with
+    Gaussian likelihoods, the per-observation expected
+    log-likelihood ratio under the true mean <span class="math inline">\mu_j</span> is
+    <span class="math inline">\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+    \epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2</span>,
+    giving expected sample size
+    <span class="math inline">\mathbb{E}[\tau_{\mathrm{detect}}] =
+    O\bigl(\sigma_{\mathrm{do}}^2 /
+    [\epsilon(|\mu_j| - \epsilon/2)]\bigr)</span>
+    by Wald's identity. At the design point <span class="math inline">|\mu_j| = \epsilon</span>
+    this reduces to <span class="math inline">O(\sigma_{\mathrm{do}}^2 / \epsilon^2)</span>; for
+    <span class="math inline">|\mu_j| \gg \epsilon</span> it improves to
+    <span class="math inline">O(\sigma_{\mathrm{do}}^2 / (\epsilon |\mu_j|))</span>.
+    By Markov's inequality the detection probability within
+    <span class="math inline">k \cdot \mathbb{E}[\tau_{\mathrm{detect}}]</span> observations is at
+    least <span class="math inline">1 - 1/k</span> for any <span class="math inline">k > 1</span>. (Under the Gaussian model,
+    <span class="math inline">\tau_{\mathrm{detect}}</span> follows an inverse Gaussian distribution
+    whose tail decays exponentially <d-cite key="wald1945sequential"></d-cite>, so
+    the Markov bound is conservative; exponentially tight
+    high-probability detection guarantees are available at the cost
+    of distributional specificity.) The structural advantage over
+    the correlational detector
+    (<a href="#prop:causal_dominates">Proposition 1</a>) is preserved: the
+    causal detector operates on variance <span class="math inline">\sigma_{\mathrm{do}}^2</span>
+    while the correlational detector operates on <span class="math inline">\sigma^2 \geq
+    \sigma_{\mathrm{do}}^2</span>. The signed-mean
+    EWMA is retained as a human-interpretable monitor of the
+    estimator state; the SPRT statistic <span class="math inline">\Lambda_j(t)</span> is the
+    load-bearing decision variable.</em></p>
+
+<p><em><strong>(b) Deception detection (unchanged).</strong> The
+    behavioral trust factor <span class="math inline">T_j</span> detects agents whose reported capability
+    changes diverge from observations, through the same prediction-residual
+    dynamics as the foundational paper (Equations 25, 33, 38 of
+    <d-cite key="lasser2026gfm"></d-cite>). Causal attribution does not affect this channel:
+    a deceptive agent accumulates prediction residuals regardless of whether
+    the contraction is causally attributed.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>Channel (a): By the SCM, <span class="math inline">\mathrm{CA}(a_j, t)</span> isolates <span class="math inline">a_j</span>'s causal
+contribution from confounders
+(<a href="#def:causal_attribution">Definition 2</a>). Within a stationary epoch
+of <span class="math inline">a_j</span>'s strategy, <span class="math inline">\{\mathrm{CA}(a_j, t)\}</span> is i.i.d. with mean
+<span class="math inline">\mu_j</span> and variance <span class="math inline">\sigma_{\mathrm{do}}^2</span>; for a scorpion
+<span class="math inline">\mu_j \leq -\epsilon &lt; 0</span>. The auxiliary EWMAs
+<span class="math inline">\mu_j^{\mathrm{causal}}(t)</span> and <span class="math inline">\sigma_j^{\mathrm{causal},2}(t)</span>
+inherit the <span class="math inline">L^2</span> guarantees of
+<a href="#prop:risk_convergence">Proposition 2</a>: asymptotically unbiased
+estimators of <span class="math inline">\mu_j</span> and <span class="math inline">\sigma_{\mathrm{do}}^2</span> with bounded
+stationary variance. They are not used for the detection decision,
+so we do not require almost-sure convergence.</p>
+
+<p>The SPRT is applied to the least-favorable simple pair
+<span class="math inline">H_0: \mu_j = 0</span> versus <span class="math inline">H_1: \mu_j = -\epsilon</span>.
+Under the Gaussian model, the per-observation expected
+log-likelihood ratio under the true mean <span class="math inline">\mu_j</span> is
+<span class="math inline">\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2</span>. By Wald's
+identity, the expected detection time under true <span class="math inline">\mu_j</span> is
+<span class="math inline">\mathbb{E}[\tau_{\mathrm{detect}}] \approx
+\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) \cdot
+\sigma_{\mathrm{do}}^2 /
+[\epsilon(|\mu_j| - \epsilon/2)]</span>, which at the design point
+<span class="math inline">|\mu_j| = \epsilon</span> reduces to <span class="math inline">O(\sigma_{\mathrm{do}}^2 / \epsilon^2)</span>
+and for <span class="math inline">|\mu_j| \gg \epsilon</span> improves to
+<span class="math inline">O(\sigma_{\mathrm{do}}^2 / (\epsilon |\mu_j|))</span>.
+The SPRT Type I error for the simple pair is bounded by
+<span class="math inline">\alpha_{\mathrm{err}}</span> and Type II by <span class="math inline">\beta_{\mathrm{err}}</span>; the
+least-favorable argument ensures these bounds hold for the
+composite problem.</p>
+
+<p>Channel (b): The behavioral trust dynamics (Appendix B of
+<d-cite key="lasser2026gfm"></d-cite>) operate on behavioral prediction residuals
+<span class="math inline">r_j(t) = R_j(t) - \hat{R}_j(t)</span>, which are independent of causal
+attribution. A deceptive scorpion that misreports capability changes
+accumulates <span class="math inline">r_j(t) \neq 0</span> regardless of confounders, driving
+<span class="math inline">T_j \to T_j^* &lt; 1</span>. &#x25FC;</p>
+</div>
+
+<h2 id="sec:evasion">Non-Stationary Scorpion Bounds</h2>
+
+<p>The foundational paper notes that "a non-stationary scorpion that adapts its strategy in
+response to detection pressure can evade both channels indefinitely"
+(Proposition 2 of <d-cite key="lasser2026gfm"></d-cite>). Under the SCM, we can bound the
+adaptation rate required for evasion.</p>
+
+<div id="prop:evasion_bandwidth" class="proposition">
+<p><strong>Proposition 4</strong> (Evasion Bandwidth).
+<em>A scorpion <span class="math inline">a_j</span> with per-epoch mean causal contraction <span class="math inline">|\mu_j|</span>
+    that changes strategy every <span class="math inline">\tau_{\mathrm{adapt}}</span> steps
+    produces at most <span class="math inline">\tau_{\mathrm{adapt}}</span> observations per strategy
+    epoch. Let
+    <span class="math inline">\bar{\tau}(\mu_j) = O\bigl(\sigma_{\mathrm{do}}^2 /
+    [\epsilon(|\mu_j| - \epsilon/2)]\bigr)</span> be the expected detection
+    time per epoch from the SPRT under the Gaussian model with
+    design parameter <span class="math inline">\epsilon</span>
+    (<a href="#prop:causal_scorpion">Proposition 3</a>). Then:</em></p>
+<p><em><strong>(a)</strong> If
+    <span class="math inline">\tau_{\mathrm{adapt}} \geq k \cdot \bar{\tau}(\mu_j)</span> for some
+    <span class="math inline">k > 1</span>, the scorpion is detected within each epoch with
+    probability at least <span class="math inline">1 - 1/k</span> (by Markov's inequality on the
+    SPRT stopping time).</em></p>
+<p><em><strong>(b)</strong> If <span class="math inline">\tau_{\mathrm{adapt}} &lt; \bar{\tau}(\mu_j)</span>,
+    the expected accumulated evidence at the epoch boundary is below
+    the SPRT threshold. While this does not by itself guarantee
+    evasion with any specific probability, it establishes that the
+    expected number of observations is insufficient for detection,
+    so the SPRT is unlikely to trigger within the epoch.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>Within each epoch of length <span class="math inline">\tau_{\mathrm{adapt}}</span>, the scorpion's
+strategy is stationary and the causal-attribution sequence is i.i.d.
+<span class="math inline">\mathcal{N}(\mu_j, \sigma_{\mathrm{do}}^2)</span>. The SPRT
+statistic accumulates log-likelihood-ratio evidence at expected rate
+<span class="math inline">\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2</span> per
+observation under the Gaussian model
+(<a href="#prop:causal_scorpion">Proposition 3</a>), giving expected detection time
+<span class="math inline">\bar{\tau}(\mu_j) =
+\sigma_{\mathrm{do}}^2 \cdot
+\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) /
+[\epsilon(|\mu_j| - \epsilon/2)]</span>.</p>
+
+<p>(a) By Markov's inequality,
+<span class="math inline">P(\tau_{\mathrm{detect}} > k \bar{\tau}) \leq 1/k</span> for any <span class="math inline">k > 1</span>.
+When <span class="math inline">\tau_{\mathrm{adapt}} \geq k \bar{\tau}(\mu_j)</span>, the epoch
+provides enough observations that the SPRT crosses the detection
+threshold with probability at least <span class="math inline">1 - 1/k</span>.</p>
+
+<p>(b) An epoch boundary resets the SPRT statistic (the hypotheses are
+epoch-local). If <span class="math inline">\tau_{\mathrm{adapt}} &lt; \bar{\tau}(\mu_j)</span>, the
+expected accumulated evidence at the epoch boundary is below the
+SPRT threshold: the evidence accumulation
+rate is insufficient for reliable detection within the epoch. &#x25FC;</p>
+</div>
+
+<p><strong>Interpretation.</strong> The evasion bandwidth
+<span class="math inline">\tau_{\mathrm{adapt}}^* = O\bigl(\sigma_{\mathrm{do}}^2 /
+[\epsilon(|\mu_j| - \epsilon/2)]\bigr)</span> is the
+characteristic timescale: a scorpion that adapts faster than
+<span class="math inline">\tau_{\mathrm{adapt}}^*</span> evades with non-negligible probability per
+epoch, while one that adapts slower than <span class="math inline">k \cdot
+\tau_{\mathrm{adapt}}^*</span> is detected with probability at least
+<span class="math inline">1 - 1/k</span>.
+A fast-adapting scorpion (<span class="math inline">\tau_{\mathrm{adapt}} \ll
+\tau_{\mathrm{adapt}}^*</span>) evades but is constrained to small contractions
+per epoch (otherwise <span class="math inline">\mu_j</span> is large and <span class="math inline">\tau_{\mathrm{adapt}}^*</span> shrinks).
+A slow-adapting scorpion (<span class="math inline">\tau_{\mathrm{adapt}} \gg
+\tau_{\mathrm{adapt}}^*</span>) is detected within each epoch with high
+probability. The product <span class="math inline">\mu_j \cdot \tau_{\mathrm{adapt}}</span> (total
+contraction per epoch) is bounded: a scorpion can either cause large
+damage slowly (and be detected) or small damage quickly (and evade),
+but not large damage quickly.</p>
+
+<p>The time-averaged undetected contraction rate for an evading scorpion
+is bounded by <span class="math inline">|\mu_j|</span>: within each epoch the per-step contraction
+is <span class="math inline">|\mu_j|</span>, and the evasion constraint
+<span class="math inline">\tau_{\mathrm{adapt}} &lt; \bar{\tau}(\mu_j)</span> bounds the epoch length.
+The key trade-off is controlled by the
+SPRT design parameter <span class="math inline">\epsilon</span>: a scorpion whose per-step
+contraction satisfies <span class="math inline">|\mu_j| \leq \epsilon</span> requires at least
+<span class="math inline">\bar{\tau}(\epsilon) = O(\sigma_{\mathrm{do}}^2 / \epsilon^2)</span>
+observations to detect (the worst case at the design point), while
+a scorpion with <span class="math inline">|\mu_j| \gg \epsilon</span> is detected faster in
+proportion to <span class="math inline">|\mu_j| / \epsilon</span>. The SPRT design parameter
+<span class="math inline">\epsilon</span> therefore sets the resolution: reducing <span class="math inline">\epsilon</span> detects
+smaller contractions but requires more observations per epoch.
+The bound tightens as the causal model improves (<span class="math inline">\sigma_{\mathrm{do}}</span>
+decreases) and as the scorpion's adaptation budget
+<span class="math inline">\tau_{\mathrm{adapt}}</span> grows: a scorpion that adapts frequently
+(small <span class="math inline">\tau_{\mathrm{adapt}}</span>) can only afford very small per-step
+contractions, while a scorpion that adapts slowly can sustain larger
+contractions per step but for correspondingly fewer steps before
+detection.</p>
+
+<!-- ================================================================== -->
+<!-- SECTION 5: Probabilistic Dependency Risk                           -->
+<!-- ================================================================== -->
+
+<h1 id="sec:dependency">Probabilistic Dependency Risk</h1>
+
+<p>The companion paper <d-cite key="lasser2026horizon"></d-cite> bounds the worst-case
+contraction of single-substrate versus cross-substrate populations
+through a minimax analysis (Proposition 4). That bound is a
+one-time penalty on the value function: useful for showing
+diversification is structurally preferred, but not directly usable
+inside a discounted trajectory because it does not attach a per-step
+cost. This section converts the minimax bound into an expected
+per-step dependency-risk cost, then folds that cost into the
+discounted value function so diversification enters the horizon
+calculation as a first-class term rather than a static penalty.</p>
+
+<p>The section has three parts. First, a probabilistic substrate threat
+model (Section <a href="#sec:threat_model_below">5.1</a>) that decomposes
+dependency risk into event probability, target selection, and cascade
+effects. Second, an expected per-step risk comparison
+(<a href="#prop:expected_risk">Proposition 5</a>) that sharpens the minimax
+bound into an <em>adversarial balance condition</em> <span class="math inline">c > \max_i (f_i
+\cdot c_i)</span> &mdash; a single inequality that gates when diversification
+strictly beats concentration and that explicitly admits contagion
+dynamics (pandemics, cascading failures, memetic attacks) as the
+motivating threat class. Third, a risk-adjusted trajectory analysis
+(Section <a href="#sec:risk_adjusted">5.3</a>) showing that the per-step cost
+compounds at the same discount rate as growth, so the
+diversification-versus-concentration decision becomes a direct
+comparison of two sums in the value function.</p>
+
+<h2 id="sec:threat_model_below">Substrate Threat Model</h2>
+
+<div id="def:threat_model" class="definition">
+<p><strong>Definition 6</strong> (Substrate Threat Model).
+<em>A substrate threat model is a distribution over adversarial events,
+    parametrized by:</em></p>
+<ul>
+<li><em><span class="math inline">p_{\mathrm{adv}}</span>: per-step probability that a substrate-targeting
+    event occurs.</em></li>
+<li><em><span class="math inline">q_i = p(\mathcal{S}_i \text{ targeted} \mid \text{event occurs})</span>:
+    the conditional probability that substrate class <span class="math inline">\mathcal{S}_i</span> is
+    targeted, given that an event occurs. For an uninformed adversary,
+    <span class="math inline">q_i = 1/m</span> (uniform); for an optimal adversary,
+    <span class="math inline">q_i = \mathbf{1}[i = \arg\max_j (|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_j)|
+    \cdot c_j)]</span>, i.e., the adversary targets the substrate with
+    maximal effective damage (volume contribution times
+    cascade fraction).</em></li>
+<li><em><span class="math inline">c_i \in [0, 1]</span>: the cascade fraction for substrate
+    <span class="math inline">\mathcal{S}_i</span>, defined as the expected fraction of
+    <span class="math inline">\mathcal{S}_i</span>'s total volume lost when a substrate-targeting
+    event hits <span class="math inline">\mathcal{S}_i</span>. "Cascade" refers to the propagation
+    dynamics &mdash; within-substrate impairment spreading from the
+    initial strike through the SCM's structural equations &mdash; and
+    "fraction" constrains <span class="math inline">c_i</span> to <span class="math inline">[0, 1]</span> as a proportion of
+    <span class="math inline">\mathcal{S}_i</span>'s volume. The cascade fraction aggregates the
+    initial impairment and all subsequent within-substrate
+    propagation: if a direct attack impairs 30% of the substrate
+    and triggers a contagion that takes out another 40%, then
+    <span class="math inline">c_i = 0.7</span>.</em></li>
+</ul>
+<p><em>In this threat model <span class="math inline">|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|</span> denotes
+    substrate <span class="math inline">\mathcal{S}_i</span>'s total contribution to <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>
+    &mdash; i.e., the maximum possible contraction if <span class="math inline">\mathcal{S}_i</span>
+    were fully eliminated &mdash; not the expected contraction from a
+    targeting event. The expected contraction is
+    <span class="math inline">|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| \cdot c_i</span>: substrate size times
+    cascade fraction, with the two quantities varied independently.</em></p>
+</div>
+
+<p>The threat model decomposes dependency risk into three components:
+occurrence probability, target selection, and cascading effects. The
+minimax analysis of <d-cite key="lasser2026horizon"></d-cite> assumes <span class="math inline">p_{\mathrm{adv}} > 0</span>
+(non-negligible threat), <span class="math inline">q_i</span> chosen adversarially (worst case), and full
+cascade within the targeted substrate (all agents on that substrate are
+impaired). The probabilistic model relaxes each of these: <span class="math inline">p_{\mathrm{adv}}</span>
+is estimated from the actor's world model, <span class="math inline">q_i</span> reflects the actor's
+beliefs about threat targeting, and cascading effects are modeled through
+the SCM's structural equations.</p>
+
+<h2 id="sec:expected_risk">Expected Per-Step Dependency Risk</h2>
+
+<p><strong>Notation update from the companion paper.</strong> The companion
+paper <d-cite key="lasser2026horizon"></d-cite> defines <span class="math inline">\mathcal{R}_{\mathrm{dep}}</span> as a
+discounted pathway sum over the full planning horizon. In this
+section, <span class="math inline">\mathcal{R}_{\mathrm{dep}}^{\mathrm{single}}</span> and
+<span class="math inline">\mathcal{R}_{\mathrm{dep}}^{\mathrm{mixed}}</span> denote the <em>per-step
+expected dependency-risk cost</em> under the substrate threat model
+(<a href="#def:threat_model">Definition 6</a>): a single-step expected
+contraction, not a discounted sum.</p>
+
+<div id="prop:expected_risk" class="proposition">
+<p><strong>Proposition 5</strong> (Expected Risk Comparison).
+<em>Under the substrate threat model
+    (<a href="#def:threat_model">Definition 6</a>), the expected per-step dependency
+    risk for each strategy is:</em></p>
+<span class="math display">
+\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{single}}]
+    = p_{\mathrm{adv}} \cdot \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot c
+</span>
+<span class="math display">
+\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{mixed}}]
+    = p_{\mathrm{adv}} \cdot \sum_i q_i \cdot
+    |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| \cdot c_i
+</span>
+<p><em>For a single-substrate population
+    (<span class="math inline">m = 1</span>), any substrate-targeting event affects a fraction <span class="math inline">c</span> of
+    the entire population. For a cross-substrate population
+    (<span class="math inline">m \geq 2</span>):</em></p>
+<span class="math display">
+\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{single}}] -
+    \mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{mixed}}]
+    = p_{\mathrm{adv}} \cdot \left(\mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot c
+    - \sum_i q_i \cdot |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| \cdot c_i\right)
+</span>
+<p><em>Under <strong>worst-case adversarial targeting</strong>
+    (<span class="math inline">q_i = \mathbf{1}[i = \arg\max_j (|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_j)|
+    \cdot c_j)]</span>), this gap is positive whenever <span class="math inline">p_{\mathrm{adv}} > 0</span>,
+    the population satisfies substrate capability non-redundancy
+    (Proposition 4 of <d-cite key="lasser2026horizon"></d-cite>), and the
+    <strong>adversarial balance condition</strong>
+    <span class="math inline">c > \max_i (f_i \cdot c_i)</span> holds, where
+    <span class="math inline">f_i = |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| / \mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> is substrate
+    <span class="math inline">\mathcal{S}_i</span>'s share of total volume. The condition is both
+    sufficient and necessary under worst-case targeting; for
+    non-adversarial <span class="math inline">q_i</span> (e.g., uniform), the condition is sufficient
+    but not necessary.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>Under an adversarial target-selection model, <span class="math inline">q_i = \mathbf{1}[i = i^*]</span>
+where <span class="math inline">i^* = \arg\max_j (|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_j)| \cdot c_j)</span>.
+Substituting gives</p>
+<span class="math display">
+    \mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{mixed}}]
+    = p_{\mathrm{adv}} \cdot \max_i \bigl(|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|
+        \cdot c_i\bigr)
+    = p_{\mathrm{adv}} \cdot \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot \max_i (f_i \cdot c_i),
+</span>
+<p>while <span class="math inline">\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{single}}] =
+p_{\mathrm{adv}} \cdot \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot c</span>. The gap is positive iff
+<span class="math inline">c > \max_i (f_i \cdot c_i)</span>. Substrate capability non-redundancy
+(Proposition 4 of <d-cite key="lasser2026horizon"></d-cite>) ensures <span class="math inline">f_i &lt; 1</span> strictly
+for every <span class="math inline">i</span>, so the condition is non-vacuous for any <span class="math inline">c > 0</span>: some
+non-trivial region of <span class="math inline">(f_i, c_i)</span> space satisfies it and some does
+not, and the proposition is a sharp characterization of which region. &#x25FC;</p>
+</div>
+
+<p><strong>On contagion dynamics.</strong> The adversarial balance condition
+admits contagions by construction, which is essential because
+contagion-driven threats &mdash; pandemics, cascading infrastructure
+failures, financial contagion, memetic attacks &mdash; are precisely the
+class where per-substrate cascade fractions can approach saturation
+(<span class="math inline">c_i \to 1</span>) on the targeted substrate. Smaller substrates are expected to
+reach sigmoid saturation faster than larger ones because contagion
+propagation time scales sub-linearly with population size in
+standard epidemiological models <d-cite key="anderson1991infectious"></d-cite>, so
+<span class="math inline">c_i > c</span> is a plausible assumption for the substrates in a
+diversified partition. The gap remains positive as long as each substrate's volume
+share <span class="math inline">f_i</span> is small enough to compensate.</p>
+
+<p>Two instructive limits bracket the regime of interest:</p>
+<ul>
+<li><p><strong>Full-saturation contagion</strong> (<span class="math inline">c_i = c = 1</span>): the
+    condition reduces to <span class="math inline">1 > f_{\max}</span>, which is exactly the
+    substrate-capability-non-redundancy assumption from
+    <d-cite key="lasser2026horizon"></d-cite>. No additional structure is required.</p></li>
+<li><p><strong>Unbalanced partition under contagion amplification</strong>
+    (<span class="math inline">c_i > c</span>, <span class="math inline">f_{\max}</span> large): the condition can fail. For
+    example, <span class="math inline">c = 0.5</span>, <span class="math inline">c_{\max} = 1.0</span>, <span class="math inline">f_{\max} = 0.6</span> gives
+    <span class="math inline">0.5 \not> 0.6</span> and the gap reverses. In this regime
+    diversification provides no dependency-risk advantage over the
+    single-substrate baseline: the adversary still targets the
+    dominant substrate, and the contagion saturates it more
+    thoroughly than in the homogeneous case.</p></li>
+</ul>
+
+<p>The analysis assumes cascade confinement: <span class="math inline">c_i</span> measures only the
+fraction of substrate <span class="math inline">\mathcal{S}_i</span> lost when <span class="math inline">\mathcal{S}_i</span> is
+targeted, not propagation into other substrates. Cross-substrate
+cascades &mdash; a memetic attack on <span class="math inline">\mathcal{S}_1</span> that triggers a
+cascade in <span class="math inline">\mathcal{S}_2</span> through inter-substrate communication
+channels &mdash; are outside the scope of the current bound and require
+a separate treatment beyond the current SCM.</p>
+
+<div id="cor:m_bound" class="corollary">
+<p><strong>Corollary 5.1</strong> (Balanced-Partition Substrate Count).
+<em>Under a balanced substrate partition with <span class="math inline">f_i = 1/m</span> for all <span class="math inline">i</span>,
+the adversarial balance condition of
+<a href="#prop:expected_risk">Proposition 5</a> is equivalent to</em></p>
+<span class="math display">
+m > \frac{c_{\max}}{c},
+</span>
+<p><em>where <span class="math inline">c_{\max} = \max_i c_i</span> is the worst-case per-substrate
+cascade fraction.</em></p>
+</div>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>With <span class="math inline">f_i = 1/m</span>, the adversarial balance condition
+<span class="math inline">c > \max_i (f_i \cdot c_i)</span> reduces to
+<span class="math inline">c > \max_i (c_i / m) = c_{\max} / m</span>, equivalent to the bound above. &#x25FC;</p>
+</div>
+
+<p><a href="#cor:m_bound">Corollary 5.1</a> sharpens the minimax bound of
+<d-cite key="lasser2026horizon"></d-cite>, which establishes only that <span class="math inline">m \geq 2</span>
+strictly dominates <span class="math inline">m = 1</span>. The minimax statement is the special
+case <span class="math inline">c_{\max} = c</span>: cascade
+intensity unchanged by partition size gives <span class="math inline">m > 1</span>, recovering
+<span class="math inline">m \geq 2</span>. Weakening either parameter raises the required
+substrate count:</p>
+<ul>
+<li><p><strong>Moderate contagion</strong> (<span class="math inline">c = 0.5</span>, <span class="math inline">c_{\max} = 1.0</span>):
+    <span class="math inline">m > 2</span>, so <span class="math inline">m \geq 3</span>. Binary diversification is insufficient.</p></li>
+<li><p><strong>High contagion</strong> (<span class="math inline">c = 0.1</span>, <span class="math inline">c_{\max} = 1.0</span>):
+    <span class="math inline">m > 10</span>, so <span class="math inline">m \geq 11</span>. The substrate-count requirement grows
+    inversely with the homogeneous cascade fraction.</p></li>
+<li><p><strong>Low contagion</strong> (<span class="math inline">c \approx c_{\max} \approx 0.3</span>,
+    localized failure modes): <span class="math inline">m > 1</span>, recovering the minimax bound.</p></li>
+</ul>
+<p>Practically: the minimum number of substrates required for
+diversification to strictly help depends on the measured contagion
+intensity, not just on the structural claim that <span class="math inline">m \geq 2</span>.
+A binary partition is correct for threat classes where the
+homogeneous cascade already saturates (<span class="math inline">c \to 1</span>), but
+underprovisions for contagion-driven threats where smaller
+substrates saturate faster than the homogeneous baseline. For
+unbalanced partitions, the operational form
+<span class="math inline">f_{\max} &lt; c / c_{\max}</span> is the direct test: it bounds the largest
+substrate's share rather than specifying a count, and is the
+condition the trust model should check when assessing a given
+partition's dependency-risk posture.</p>
+
+<h2 id="sec:risk_adjusted">Risk-Adjusted Trajectory Comparison</h2>
+
+<p>The per-step expected risk gap compounds at the same rate as growth, unlike
+the one-time minimax penalty in <d-cite key="lasser2026horizon"></d-cite>. Under the
+assumption that <span class="math inline">\Delta_{\mathrm{risk}}</span> is stationary across the
+trajectory, the geometric series sums to the standard discounted
+form:</p>
+<span class="math display">
+V_\gamma^{\mathrm{div},\mathrm{risk}} - V_\gamma^{D,\mathrm{risk}}
+    = \frac{r_{\mathrm{ext}} + \Delta_{\mathrm{risk}}}{1 - \gamma} - \Delta_0
+</span>
+<p>where <span class="math inline">\Delta_{\mathrm{risk}} =
+\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{single}}] -
+\mathbb{E}[\mathcal{R}_{\mathrm{dep}}^{\mathrm{mixed}}] > 0</span> is the per-step
+risk gap from <a href="#prop:expected_risk">Proposition 5</a>. The threshold for
+diversity dominance becomes:</p>
+<span class="math display">
+\gamma^*_{\mathrm{risk}} = 1 - \frac{r_{\mathrm{ext}} +
+    \Delta_{\mathrm{risk}}}{\Delta_0}
+</span>
+<p>The risk gap <span class="math inline">\Delta_{\mathrm{risk}}</span> enters additively with
+<span class="math inline">r_{\mathrm{ext}}</span>, effectively increasing the external contribution by the
+per-step risk mitigation value of cross-substrate diversity. When
+the risk gap is non-stationary &mdash; e.g., the threat landscape
+evolves, or the substrate partition itself changes during the
+trajectory &mdash; the closed-form <span class="math inline">(1 - \gamma)^{-1}</span> denominator
+becomes an approximation, and the exact value is
+<span class="math inline">\sum_{t=0}^{\infty} \gamma^t \cdot \Delta_{\mathrm{risk}}(t)</span>
+computed from a time-varying risk profile.</p>
+
+<p><strong>Quantitative impact.</strong> For a population with <span class="math inline">p_{\mathrm{adv}} =
+0.01</span> (1% per-step probability of substrate-targeting event) and cascade
+fraction <span class="math inline">c = 0.5</span> (half the targeted substrate's capabilities are lost in
+a typical event), <span class="math inline">\Delta_{\mathrm{risk}} = 0.01 \times \Delta_{\mathrm{div}}
+\times 0.5</span> where <span class="math inline">\Delta_{\mathrm{div}}</span> is the substrate diversification
+advantage from Proposition 4 of <d-cite key="lasser2026horizon"></d-cite>. If
+<span class="math inline">\Delta_{\mathrm{div}}</span> is 10% of <span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>, then <span class="math inline">\Delta_{\mathrm{risk}}
+\approx 0.0005 \times \mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>: the per-step risk cost of single-substrate
+concentration is 0.05% of total volume per step. Over the full planning
+horizon (<span class="math inline">1/(1-\gamma)</span> steps), this compounds to <span class="math inline">0.05\% \times
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G) / (1-\gamma)</span>, which for <span class="math inline">\gamma = 0.99</span> is <span class="math inline">5\% \times
+\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> &mdash; substantial.</p>
+
+<p><strong>Interaction with the horizon paper's cooperative-novelty result.</strong>
+The per-step risk gap <span class="math inline">\Delta_{\mathrm{risk}}</span> is amplified by the
+cross-substrate cooperative capabilities analyzed in
+<d-cite key="lasser2026horizon"></d-cite>: any
+cooperative capability requiring agents on both substrates is
+destroyed when either substrate is targeted, so
+<span class="math inline">|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|</span> includes those cooperative losses on
+top of the individual-capability loss on <span class="math inline">\mathcal{S}_i</span>.</p>
+
+<p><strong>Summary.</strong> The adversarial balance condition
+<span class="math inline">c > \max_i (f_i \cdot c_i)</span> converts the companion paper's minimax
+bound into an expected per-step cost <span class="math inline">\Delta_{\mathrm{risk}}</span> that
+compounds as <span class="math inline">\Delta_{\mathrm{risk}} / (1 - \gamma)</span> in the
+discounted value function, making dependency risk a first-class term
+in the horizon calculation rather than a one-time structural
+penalty. The condition is explicit about contagion dynamics and
+inverts (<a href="#cor:m_bound">Corollary 5.1</a>) into a quantitative bound on
+the required substrate count: <span class="math inline">m > c_{\max}/c</span> for balanced
+partitions, or <span class="math inline">f_{\max} &lt; c / c_{\max}</span> for arbitrary partitions.</p>
+
+<!-- ================================================================== -->
+<!-- SECTION 6: Discussion                                              -->
+<!-- ================================================================== -->
+
+<h1 id="sec:discussion">Discussion</h1>
+
+<h2>Limitations</h2>
+
+<p><strong>SCM structure learning as channel optimization, not
+prerequisite.</strong> The causal attribution channel of
+Section <a href="#sec:causal">2</a> requires the actor to know or learn the
+causal DAG over agent actions and capability changes. Standard
+observational structure learning <d-cite key="spirtes2000causation"></d-cite> is
+inadequate for the GFM setting for three distinct reasons. First,
+the data-generating process is adversarial: scorpions can
+strategically align their actions with observed noise to mask their
+causal role, so classical conditional-independence tests can be
+gamed by an adversary who knows which tests will be run. Standard
+structure learning does not have a threat model. Second, the agent
+cardinality is non-fixed: new agents can appear, existing agents can
+delegate, and a group can coordinate and behave as a single
+effective actor, so the variable set itself evolves. Latent-variable
+discovery methods (FCI, RFCI) assume a fixed variable cardinality
+and do not naturally handle this. Third, the actor cannot typically
+intervene on other agents: interventional causal discovery relies on
+actual interventions, which a GFM actor can simulate inside its SCM
+but cannot enforce in the world. This rules out the entire class of
+interventional discovery methods and leaves only observational
+methods, which are strictly weaker under the adversarial conditions
+above.</p>
+
+<p>Because causal attribution is one channel among several
+(Section <a href="#sec:multi_channel">2.4</a>), and capability gating via the
+poset of <d-cite key="lasser2026poset,lasser2026horizon"></d-cite> is
+the strongest and most difficult to fake channel (relative to a
+trusted, sufficiently complete capability graph), structure learning
+becomes an <em>optimization target</em> for one channel's contribution
+rather than a <em>prerequisite</em> for attribution at all. When the
+SCM is poorly learned, the causal channel degrades, the other
+channels are not directly degraded by the SCM misspecification, and
+the multi-channel aggregate reweights toward the
+structurally-grounded channels. The system does not collapse; it
+falls back on the trust and capability machinery of
+<d-cite key="lasser2026gfm,lasser2026poset,lasser2026horizon"></d-cite>.</p>
+
+<p>The structural assumptions underlying
+<a href="#prop:causal_dominates">Proposition 1</a>(c) are partially testable
+through a residual-covariance diagnostic: if
+<span class="math inline">\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{CA}(a_k) \mid G_t)</span> exceeds
+the level the current SCM predicts, the SCM is misspecified &mdash;
+possible causes include a missing edge, latent common causes,
+exogenous-orthogonality failure, non-additivity, or nonstationarity
+&mdash; and the causal channel's reliability should degrade accordingly.</p>
+
+<p><strong>Risk-trust residual dependence on the actor's model.</strong> The
+pathway-conditional structural verification residual
+(<a href="#def:risk_residual">Definition 3</a>) measures divergence between the
+claim and the actor's own assessment of the claimed pathway. If the
+actor's world model is itself poorly calibrated, the residual reflects
+model error rather than claim quality. An agent whose risk assessments
+are accurate but disagree with a miscalibrated actor will accumulate
+high <span class="math inline">\|r^{\mathrm{risk}}\|^2</span> and concentrate around low
+<span class="math inline">T^{\mathrm{risk},*}_j</span> &mdash; a false negative. This is mitigated by the self-trust
+mechanism of <d-cite key="lasser2026gfm"></d-cite>: an actor with a poorly calibrated
+model has low <span class="math inline">T_s</span> and high learning rate, which accelerates model
+correction. But during the correction period, risk-trust assessments
+may be unreliable.</p>
+
+<p><strong>Log-odds aggregation and reporter correlation.</strong> The
+trust-weighted log-linear opinion pool (<a href="#def:logodds">Definition 5</a>)
+recovers Bayesian updating in the no-tempering limit under conditional
+independence of agents' observations given the true risk level. If
+reporters' assessments are correlated &mdash; they share information
+sources, or one reporter's assessment influences others &mdash; the
+aggregation overweights the shared signal. In practice, partial
+independence is the norm: agents with different observation channels
+and different world models produce partially independent assessments,
+and the log-linear pool is an approximation whose error grows with
+the correlation.</p>
+
+<!-- ================================================================== -->
+<!-- SECTION 7: Conclusion                                              -->
+<!-- ================================================================== -->
+
+<h1 id="sec:conclusion">Conclusion</h1>
+
+<p>The preceding GFM papers define what to maximize (<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>), prove
+structural safety properties, and establish anti-monopolar pressure. This
+paper addresses how the actor <em>reasons about other agents</em>: upgrading
+every evaluation mechanism from statistical to causal.</p>
+
+<p>Causal attribution (Section <a href="#sec:causal">2</a>) upgrades the foundational
+paper's correlational scorpion detection to causal identification through
+do-calculus counterfactuals. The convergence advantage over correlational
+detection is proportional to confounding variance, which is substantial in
+populations with many simultaneously acting agents. Non-stationary scorpion
+bounds (Section <a href="#sec:scorpion">4</a>) characterize the evasion bandwidth: how
+fast a scorpion must adapt to remain undetected, and the maximum undetected
+contraction rate.</p>
+
+<p>Risk-trust dynamics (Section <a href="#sec:risk_trust">3</a>) provide formal EWMA
+update equations for <span class="math inline">T^{\mathrm{risk}}_j</span>, with a two-gate architecture separating
+attention allocation (log-odds aggregation) from action decisions (the
+actor's own causal verification). This prevents coordinated report-bombing
+while preserving sensitivity to genuine independent agreement. Probabilistic
+dependency risk (Section <a href="#sec:dependency">5</a>) converts minimax substrate
+bounds into per-step expected costs that compound at the same rate as
+growth, providing the quantitative risk model needed for risk-adjusted
+planning.</p>
+
+<p>Together with the foundational framework <d-cite key="lasser2026gfm"></d-cite>, the
+computable poset <d-cite key="lasser2026poset"></d-cite>, and the horizon-aware objective
+<d-cite key="lasser2026horizon"></d-cite>, these results narrow the gap between the GFM
+framework's structural guarantees and the mechanisms a concrete agent
+would need to realize them. The results here are conditional: the
+causal convergence advantage
+(<a href="#prop:causal_dominates">Proposition 1</a>(c)) relies on causal
+sufficiency, additive structure, and exogenous orthogonality of the
+SCM; the Bayesian interpretation of log-odds aggregation
+(<a href="#def:logodds">Definition 5</a>) relies on conditional independence
+given a shared prior; the dependency-risk gap
+(<a href="#prop:expected_risk">Proposition 5</a>) relies on cascade confinement
+within substrates and the adversarial balance condition; and the
+evasion bound (<a href="#prop:evasion_bandwidth">Proposition 4</a>) relies on a
+stationary-epoch adversary model. Each
+assumption is explicit, falsifiable, and load-bearing. The remaining
+work is both theoretical (relaxing each assumption and characterizing
+what happens when it fails) and empirical: instantiating these
+computations in a concrete environment and checking whether the
+predicted alignment properties hold under real conditions.</p>
+
+<!-- ================================================================== -->
+<!-- Author Contributions                                               -->
+<!-- ================================================================== -->
+
+<h2>Author Contributions</h2>
+
+<p><strong>Teague Lasser</strong> identified the statistical-to-causal upgrade as
+the unifying contribution, proposed the log-odds risk aggregation and
+the two-gate attention/verification architecture, directed all
+revisions, and made final editorial decisions. Responsible for the
+paper's intellectual direction and all claims made.</p>
+
+<p><strong>Claude Opus 4.6</strong> (Anthropic) drafted the formal exposition:
+the structural causal model for capability dynamics, the do-calculus
+contraction attribution, the <span class="math inline">L^2</span> risk-trust EWMA dynamics, the
+pathway-conditional structural verification residual, the SPRT-based
+causal scorpion detection and evasion bandwidth bounds, and the
+probabilistic dependency-risk model with the adversarial balance
+condition.</p>
+
+<p><strong>GPT 5.4</strong> (OpenAI) served as technical reviewer, identifying
+formal gaps in the risk-trust convergence claims, the causal
+attribution assumptions, the log-odds aggregation's cross-paper type
+consistency, and the dependency-risk quantitative analysis &mdash; in
+particular the need to replace the pointwise cascade-fraction
+assumption with the adversarial balance condition that admits
+contagion dynamics.</p>
+
+<p><em>Transparency note.</em> Both AI systems operated as tools under
+human direction. Neither system has continuity across sessions, cannot take
+responsibility for the work in the sense required by most venue authorship
+policies, and cannot respond to reviewer queries independently. They are
+listed as authors to accurately represent their contributions to the
+intellectual content of the paper, not to claim that they meet all criteria
+of traditional academic authorship. The corresponding author for all
+inquiries is Teague Lasser.</p>
+
+<!-- ================================================================== -->
+<!-- Appendix: Proofs                                                   -->
+<!-- ================================================================== -->
+
+<h1 id="app:proofs">Appendix: Proofs</h1>
+
+<p>Propositions <a href="#prop:causal_dominates">1</a> (Convergence Advantage),
+<a href="#prop:risk_convergence">2</a> (Risk-Trust Convergence),
+<a href="#prop:causal_scorpion">3</a> (Causal Scorpion Detection), and
+<a href="#prop:expected_risk">5</a> (Expected Risk Comparison) are proved in the main
+text. This appendix provides the remaining proof.</p>
+
+<h2 id="app:proof_evasion">Proof of Proposition 4 (Evasion Bandwidth)</h2>
+
+<div class="proof-env">
+<p class="env-title">Proof.</p>
+<p>Within each strategy epoch of length <span class="math inline">\tau_{\mathrm{adapt}}</span>, the
+scorpion's behavior is stationary and the causal-attribution sequence
+<span class="math inline">\{\mathrm{CA}(a_j, t)\}</span> is i.i.d. with mean <span class="math inline">\mu_j &lt; 0</span> and
+variance <span class="math inline">\sigma_{\mathrm{do}}^2</span> (the same assumption as
+<a href="#prop:causal_scorpion">Proposition 3</a>). The SPRT decision rule
+tests the least-favorable simple pair <span class="math inline">H_0: \mu_j = 0</span> versus
+<span class="math inline">H_1: \mu_j = -\epsilon</span> under the Gaussian model. The
+per-observation expected log-likelihood ratio under the true mean
+<span class="math inline">\mu_j</span> is
+<span class="math inline">\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2</span>. By Wald's
+identity <d-cite key="wald1945sequential"></d-cite>, the expected detection time
+within a stationary epoch with actual mean <span class="math inline">\mu_j</span> is:</p>
+<span class="math display">
+\bar{\tau}(\mu_j) = \mathbb{E}[\tau_{\mathrm{detect}}]
+    = \frac{\sigma_{\mathrm{do}}^2}
+    {\epsilon(|\mu_j| - \epsilon/2)}
+    \cdot \log\!\frac{1 - \beta_{\mathrm{err}}}{\alpha_{\mathrm{err}}}.
+</span>
+
+<p><strong>Part (a): detection.</strong>
+By Markov's inequality,
+<span class="math inline">P(\tau_{\mathrm{detect}} > k \bar{\tau}(\mu_j)) \leq 1/k</span> for any
+<span class="math inline">k > 1</span>. When <span class="math inline">\tau_{\mathrm{adapt}} \geq k \bar{\tau}(\mu_j)</span>, the
+epoch provides enough observations that the SPRT crosses the
+detection threshold with probability at least <span class="math inline">1 - 1/k</span>.</p>
+
+<p><strong>Part (b): evasion.</strong>
+On an epoch boundary the null and alternative hypotheses change
+(the new epoch has a new <span class="math inline">(\mu_j, \sigma_{\mathrm{do}}^2)</span>), so the
+SPRT statistic is reset to zero: evidence accumulated under one
+pair of hypotheses is not informative about a different pair. If <span class="math inline">\tau_{\mathrm{adapt}} &lt;
+\bar{\tau}(\mu_j)</span>, the expected accumulated evidence at the epoch
+boundary is below the SPRT threshold: the evidence accumulation
+rate is insufficient for reliable detection within the epoch.</p>
+
+<p>The maximum undetected contraction per epoch is
+<span class="math inline">|\mu_j| \cdot \tau_{\mathrm{adapt}}</span>. For a scorpion to evade
+detection within an epoch, it must have
+<span class="math inline">\tau_{\mathrm{adapt}} &lt; \bar{\tau}(\mu_j)</span>. The
+per-step undetected contraction is bounded by <span class="math inline">|\mu_j|</span>, and the
+scorpion can sustain this for at most <span class="math inline">\tau_{\mathrm{adapt}}</span> steps
+before changing strategy. At the design point <span class="math inline">|\mu_j| = \epsilon</span>,
+the per-step contraction is at most <span class="math inline">\epsilon</span>. The time-averaged
+undetected contraction rate is therefore at most <span class="math inline">|\mu_j|</span>,
+achievable only by a scorpion that never needs to pause for strategy
+adaptation. &#x25FC;</p>
+</div>
+
+</d-article>
+
+<d-appendix>
+</d-appendix>
+
+<d-bibliography>
+<script type="text/bibtex">
+% =============================================================================
+% References for "A Structural Causal Model for Goal-Frontier Maximization"
+% =============================================================================
+
+% --- Papers 0-3 ---
+
+@misc{lasser2026gfm,
+  title={Goal-Frontier Maximizers are Civilization Aligned},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/gfm/}}
+}
+
+@misc{lasser2026poset,
+  title={Computable Goal Frontiers and the Gradient Toward Civilization-Building},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/poset/}}
+}
+
+@misc{lasser2026horizon,
+  title={Horizon-Aware Goal-Frontier Maximization Excludes Singleton Behavior},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/horizon/}}
+}
+
+% --- Causal Inference ---
+
+@book{pearl2009causality,
+  title={Causality: Models, Reasoning, and Inference},
+  author={Pearl, Judea},
+  year={2009},
+  edition={2nd},
+  publisher={Cambridge University Press}
+}
+
+@book{spirtes2000causation,
+  title={Causation, Prediction, and Search},
+  author={Spirtes, Peter and Glymour, Clark and Scheines, Richard},
+  year={2000},
+  edition={2nd},
+  publisher={MIT Press}
+}
+
+% --- Team Diversity ---
+
+@book{page2007difference,
+  title={The Difference: How the Power of Diversity Creates Better Groups,
+    Firms, Schools, and Societies},
+  author={Page, Scott E},
+  year={2007},
+  publisher={Princeton University Press}
+}
+
+% --- Alignment ---
+
+@article{amodei2016concrete,
+  title={Concrete Problems in {AI} Safety},
+  author={Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  journal={arXiv preprint arXiv:1606.06565},
+  year={2016}
+}
+
+@inproceedings{turner2021optimal,
+  title={Optimal Policies Tend to Seek Power},
+  author={Turner, Alexander Matt and Smith, Logan and Shah, Rohin and Critch, Andrew and Tadepalli, Prasad},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={34},
+  year={2021}
+}
+
+% --- Singleton / Instrumental Convergence ---
+
+@book{bostrom2014superintelligence,
+  title={Superintelligence: Paths, Dangers, Strategies},
+  author={Bostrom, Nick},
+  year={2014},
+  publisher={Oxford University Press}
+}
+
+@inproceedings{omohundro2008basic,
+  title={The Basic {AI} Drives},
+  author={Omohundro, Stephen M},
+  booktitle={Artificial General Intelligence 2008: Proceedings of the
+    First {AGI} Conference},
+  pages={483--492},
+  year={2008},
+  publisher={IOS Press}
+}
+
+% --- Sequential Decision Theory ---
+
+@book{puterman1994markov,
+  title={Markov Decision Processes: Discrete Stochastic Dynamic Programming},
+  author={Puterman, Martin L},
+  year={1994},
+  publisher={Wiley}
+}
+
+@book{sutton2018reinforcement,
+  title={Reinforcement Learning: An Introduction},
+  author={Sutton, Richard S and Barto, Andrew G},
+  year={2018},
+  edition={2nd},
+  publisher={MIT Press}
+}
+
+% --- Epidemiology / Contagion ---
+
+@book{anderson1991infectious,
+  title={Infectious Diseases of Humans: Dynamics and Control},
+  author={Anderson, Roy M and May, Robert M},
+  year={1991},
+  publisher={Oxford University Press}
+}
+
+% --- Stochastic Approximation and Sequential Analysis ---
+
+@article{robbins1951stochastic,
+  title={A Stochastic Approximation Method},
+  author={Robbins, Herbert and Monro, Sutton},
+  journal={The Annals of Mathematical Statistics},
+  volume={22},
+  number={3},
+  pages={400--407},
+  year={1951}
+}
+
+@article{wald1945sequential,
+  title={Sequential Tests of Statistical Hypotheses},
+  author={Wald, Abraham},
+  journal={The Annals of Mathematical Statistics},
+  volume={16},
+  number={2},
+  pages={117--186},
+  year={1945}
+}
+
+@article{genest1986combining,
+  title={Combining Probability Distributions: A Critique and an Annotated Bibliography},
+  author={Genest, Christian and Zidek, James V},
+  journal={Statistical Science},
+  volume={1},
+  number={1},
+  pages={114--135},
+  year={1986}
+}
+
+@incollection{shapley1953value,
+  title={A Value for $n$-Person Games},
+  author={Shapley, Lloyd S},
+  booktitle={Contributions to the Theory of Games II},
+  editor={Kuhn, H. W. and Tucker, A. W.},
+  pages={307--317},
+  year={1953},
+  publisher={Princeton University Press}
+}
+
+% --- Threat Intelligence and Attribution ---
+
+@techreport{caltagirone2013diamond,
+  title={The Diamond Model of Intrusion Analysis},
+  author={Caltagirone, Sergio and Pendergast, Andrew and Betz, Christopher},
+  institution={Center for Cyber Intelligence Analysis and Threat Research},
+  year={2013},
+  howpublished={\url{https://www.activeresponse.org/wp-content/uploads/2013/07/diamond.pdf}}
+}
+
+@misc{bianco2013pyramid,
+  title={The Pyramid of Pain},
+  author={Bianco, David J},
+  year={2013},
+  howpublished={\url{http://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html}},
+  note={Blog post, Enterprise Detection \& Response}
+}
+
+@book{heuer1999psychology,
+  title={Psychology of Intelligence Analysis},
+  author={Heuer, Richards J},
+  year={1999},
+  publisher={Center for the Study of Intelligence, Central Intelligence Agency}
+}
+
+@techreport{strom2018attack,
+  title={{MITRE ATT\&CK}: Design and Philosophy},
+  author={Strom, Blake E and Applebaum, Andy and Miller, Doug P and Nickels, Kathryn C and Pennington, Adam G and Thomas, Cody B},
+  institution={The MITRE Corporation},
+  year={2018},
+  number={MP180360R1}
+}
+</script>
+</d-bibliography>
+
+</body>
+</html>
