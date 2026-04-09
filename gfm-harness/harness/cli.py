@@ -103,13 +103,21 @@ def cmd_run(args: argparse.Namespace) -> int:
         # New task or autonomous mode: replace any saved state.
         if saved_state is not None:
             # Log the replaced state to memory so it's recoverable via recall.
+            # task_description can be None for saved states produced by a
+            # prior autonomous SELECT — handle that explicitly rather than
+            # slicing a None value.
+            task_preview = (
+                saved_state.task_description[:200]
+                if saved_state.task_description
+                else "(autonomous, no task supplied)"
+            )
             instance.session.memory.append(
                 phase=saved_state.current_phase.value,
                 kind="note",
                 text=(
                     f"Replaced saved feature state (feature_id={saved_state.feature_id}, "
                     f"phase={saved_state.current_phase.value}, "
-                    f"task={saved_state.task_description[:200]}) "
+                    f"task={task_preview}) "
                     f"with {'--autonomous' if autonomous else '--task'} invocation."
                 ),
                 importance=0.5,
