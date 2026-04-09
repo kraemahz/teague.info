@@ -39,7 +39,13 @@ from .tools import (
 
 
 DEFAULT_MODEL = "claude-opus-4-6"
-DEFAULT_MAX_TURNS = 40
+# Generous default ceiling. The intent is "only hit by an obvious problem"
+# (infinite loop, runaway recursion) rather than "force the agent to budget
+# tightly." When running against a logged-in Claude Code session there is
+# no per-token cost, so the only thing 500 turns buys us over 40 is
+# "RETRO actually runs and the loop ends naturally via end_turn." Per-task
+# overrides via CLI flag are a Phase 2 concern.
+DEFAULT_MAX_TURNS = 500
 
 
 # Built-in Agent SDK tools the harness enables by default. The
@@ -365,6 +371,17 @@ async def _run_feature_loop_async(
     if pause is not None:
         terminated_reason = "paused"
 
+    # Fallback memory bounds enforcement. The agent's normal RETRO
+    # consolidate() also calls evict() (post the round-3 fix), but if the
+    # loop terminated without reaching RETRO — for example because it hit
+    # max_turns mid-VERIFY, or crashed in IMPLEMENT, or was paused early
+    # in PLAN — the working buffer can be left over its capacity bound.
+    # This is harm reduction: the harness enforces the bound mechanically
+    # so the next loop starts in a clean state. It does NOT do any
+    # cognitive consolidation work (proposing episodes/lessons) — that's
+    # the agent's job, and a future feature loop can do it.
+    _run_fallback_eviction(session, terminated_reason, verbose)
+
     # Persist trust state regardless of how we terminated.
     save_trust(session)
 
@@ -503,6 +520,94 @@ def _accumulate_usage(total: dict[str, int], result_message: Any) -> None:
     total_cost = getattr(result_message, "total_cost_usd", None)
     if total_cost is not None:
         total["total_cost_usd"] = total_cost
+
+
+def _run_fallback_eviction(
+    session: HarnessSession,
+    terminated_reason: str,
+    verbose: bool,
+) -> None:
+    """
+    Harness-side fallback eviction. Runs at the end of every feature loop
+    regardless of how it terminated, to enforce memory layer bounds even
+    when the agent's normal RETRO did not run.
+
+    The fallback is mechanical: it just calls memory.evict() to drop
+    over-cap entries, then leaves a memory note describing what happened.
+    It does NOT propose episodes or lessons — that's the agent's
+    cognitive work, and forcing it from the harness side would taint the
+    audit trail with hallucinated consolidation.
+
+    Note level on the fallback memory entry uses importance 0.85 because
+    "the harness fell back to bounds enforcement" is the same shape as
+    the rubric's "loss of function" category — a structural failure of
+    the normal flow that future feature loops should be able to detect
+    and reason about.
+    """
+    # Important ordering: write the diagnostic note FIRST, then call
+    # evict(). Writing the note after eviction would push the buffer
+    # back over its cap by 1 (the note itself is an entry). By writing
+    # the note first, evict() sees it in the buffer when it runs and
+    # the note's high importance (0.85) means it survives against the
+    # lowest-importance entries, while the bound is correctly enforced.
+    needs_check = (
+        len(session.memory.working_buffer) > session.memory.working_buffer_max_entries
+        or len(session.memory.episodes) > session.memory.episodes_max_count
+        or len(session.memory.lessons) > session.memory.lessons_max_count
+    )
+
+    if not needs_check:
+        return  # No bound violations; nothing for the fallback to do.
+
+    pre_eviction_counts = {
+        "working_buffer": len(session.memory.working_buffer),
+        "episodes": len(session.memory.episodes),
+        "lessons": len(session.memory.lessons),
+    }
+
+    placeholder_note = (
+        f"Harness fallback eviction fired. The feature loop terminated as "
+        f"'{terminated_reason}' before normal RETRO consolidation could "
+        f"enforce memory bounds. Pre-eviction layer counts: "
+        f"working_buffer={pre_eviction_counts['working_buffer']}, "
+        f"episodes={pre_eviction_counts['episodes']}, "
+        f"lessons={pre_eviction_counts['lessons']}. "
+        f"A future feature loop should run RETRO consolidation to produce "
+        f"proper episodes and lessons from the work this loop did before "
+        f"termination — the fallback only enforces bounds, it does not "
+        f"do cognitive consolidation."
+    )
+
+    try:
+        session.memory.append(
+            phase="retro",
+            kind="note",
+            text=placeholder_note,
+            importance=0.85,
+            metadata={
+                "fallback_eviction": True,
+                "terminated_reason": terminated_reason,
+                "pre_eviction_counts": pre_eviction_counts,
+            },
+        )
+    except Exception as e:  # noqa: BLE001
+        if verbose:
+            print(f"  [fallback eviction note failed] {type(e).__name__}: {e}")
+
+    try:
+        report = session.memory.evict()
+    except Exception as e:  # noqa: BLE001
+        if verbose:
+            print(f"  [fallback eviction failed] {type(e).__name__}: {e}")
+        return
+
+    if verbose:
+        print(
+            f"  [fallback eviction] terminated={terminated_reason!r} "
+            f"evicted entries={len(report.evicted_entries)} "
+            f"episodes={len(report.evicted_episodes)} "
+            f"lessons={len(report.evicted_lessons)}"
+        )
 
 
 def _print_assistant_turn(turn: int, message: Any) -> None:

@@ -54,7 +54,7 @@ else:  # pragma: no cover — harness targets 3.11+ for stdlib tomllib
 
 
 DEFAULT_MODEL = "claude-opus-4-6"
-DEFAULT_MAX_ITERATIONS = 40
+DEFAULT_MAX_ITERATIONS = 500  # generous ceiling; only hit on runaway loops
 DEFAULT_MAX_TOKENS = 16000
 DEFAULT_INITIAL_LEDGER = "default"
 
