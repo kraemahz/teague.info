@@ -1,0 +1,59 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Goal-frontier maximization (GFM) proposes alignment through a single
+objective: maximize the volume of the jointly achievable capability space
+$\volL(G)$ \citep{lasser2026gfm}. The foundational paper proves structural
+safety properties (self-balancing against destruction, coercion, and
+rigidity). Its companion \citep{lasser2026poset} constructs a computable
+capability poset with polynomial-time measure computation and a leverage
+ranking signal that produces a gradient toward civilization-building
+infrastructure. The third paper \citep{lasser2026horizon} extends the
+framework to multi-step planning through a discounted value function,
+develops risk-capability identification, and establishes the anti-monopolar
+property: under a diversity condition, full capability domination is
+anti-maximizing.
+
+The preceding papers treat every agent-evaluation question as a statistical
+signal-processing problem. The foundational paper's scorpion detection
+\citep{lasser2026gfm} identifies agents whose actions are \emph{correlated}
+with $\volL$-contraction but cannot disentangle their contribution from
+simultaneous causes. The horizon paper's risk-trust factor $\Trisk_j$
+\citep{lasser2026horizon} has no formal update dynamics. The dependency-risk
+analysis uses minimax bounds that are quantitatively too weak for
+risk-adjusted planning. In each case, statistical signals suffice for
+obvious cases (direct harm, clear deception) but fail for the hard cases
+that matter most: confounded contraction in multi-agent populations,
+coordinated risk manipulation, and risk claims whose outcomes are never
+observed.
+
+This paper upgrades every agent-evaluation mechanism from statistical to
+causal. The common thread: a GFM agent needs a \emph{causal model} of other
+agents to make good decisions about their harm (who caused this
+contraction?), credibility (is this risk claim structurally sound?), and
+adversarial exposure (what substrate-correlated threats do we face?).
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item A structural causal model for capability dynamics with
+  do-calculus contraction attribution, showing an $L^2$ convergence
+  advantage over correlational detection under causal sufficiency and
+  an additive-SCM condition (Section~\ref{sec:causal}).
+\item $L^2$ EWMA dynamics for risk-trust $\Trisk_j$ over
+  pathway-conditional structural verification residuals, and a
+  prior-corrected trust-weighted log-linear opinion pool that recovers
+  Bayesian updating in the no-tempering limit, replacing the max
+  aggregation operator, with a two-gate architecture separating
+  attention allocation from action decisions via the actor's own
+  forward causal risk evaluation (Section~\ref{sec:risk_trust}).
+\item Causal scorpion detection committed to a sequential probability
+  ratio test with explicit Type I/II error control, and a bound on
+  non-stationary scorpion evasion bandwidth under a stationary-epoch
+  model (Section~\ref{sec:scorpion}).
+\item A probabilistic dependency-risk model gated by an adversarial
+  balance condition $c > \max_i (f_i \cdot c_i)$ that admits contagion
+  dynamics, with per-step expected costs that compound at the same
+  rate as growth and a quantitative substrate-count lower bound
+  $m > c_{\max}/c$ that sharpens the minimax $m \geq 2$
+  (Section~\ref{sec:dependency}).
+\end{enumerate}

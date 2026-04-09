@@ -1,0 +1,185 @@
+\section{Causal Scorpion Detection}
+\label{sec:scorpion}
+
+The foundational paper's Proposition~2 \citep{lasser2026gfm} detects
+scorpions through two channels: contraction attribution (correlational) and
+deception detection (behavioral trust decay). This section upgrades
+channel~(a) from correlational to causal, using the SCM of
+Section~\ref{sec:causal}, and provides bounds on non-stationary scorpion
+evasion.
+
+\subsection{Causal Detection}
+
+\begin{proposition}[Causal Scorpion Detection]
+\label{prop:causal_scorpion}
+Under the SCM $\SCM$ (Definition~\ref{def:scm}), a GFM actor can detect
+    scorpion agents through two upgraded channels:
+\begin{enumerate}
+\item[\textbf{(a)}] \textbf{Causal contraction attribution.}
+    $\CausalAttr(a_j, t)$ (Definition~\ref{def:causal_attribution}) replaces
+    the correlational $\Deltahat$ signal from Proposition~2(a) of
+    \citet{lasser2026gfm}. Within each stationary epoch of $a_j$'s
+    strategy, the causal-attribution sequence
+    $\CausalAttr(a_j, 1), \CausalAttr(a_j, 2), \ldots$ is i.i.d.\ with
+    unknown mean $\mu_j$ and variance $\sigma_{\mathrm{do}}^2$. The
+    actor maintains two auxiliary EWMA statistics --- a
+    \emph{signed-mean} estimator and a \emph{variance} estimator ---
+    for monitoring:
+\begin{align}
+\label{eq:causal_trust_mean}
+\mu_j^{\mathrm{causal}}(t) &= \alpha \cdot \mu_j^{\mathrm{causal}}(t-1)
+    + (1 - \alpha) \cdot \CausalAttr(a_j, t) \\
+\label{eq:causal_trust_var}
+\sigma_j^{\mathrm{causal},2}(t) &= \alpha \cdot
+    \sigma_j^{\mathrm{causal},2}(t-1)
+    + (1 - \alpha) \cdot
+    \bigl(\CausalAttr(a_j, t) - \mu_j^{\mathrm{causal}}(t)\bigr)^2
+\end{align}
+    These statistics satisfy the same $L^2$ convergence guarantees as
+    Proposition~\ref{prop:risk_convergence}: asymptotically unbiased
+    with stationary variance bounded by
+    $\tfrac{1 - \alpha}{1 + \alpha} \sigma_{\mathrm{do}}^2$ for the
+    signed mean. They do not converge almost surely to a deterministic
+    limit, and we deliberately do not use them as the flag condition.
+
+    The flag condition is instead a sequential probability ratio test
+    (SPRT) \citep{wald1945sequential} on the causal-attribution
+    sequence, with null hypothesis
+    $H_0: \mu_j \geq 0$ (non-scorpion) versus alternative
+    $H_1: \mu_j \leq -\epsilon$ (scorpion with minimum detectable
+    contraction magnitude $\epsilon > 0$). The actor accumulates the
+    log-likelihood ratio
+    $\Lambda_j(t) = \sum_{s=1}^{t} \log\bigl(p_{H_1}(\CausalAttr(a_j,
+    s)) / p_{H_0}(\CausalAttr(a_j, s))\bigr)$ and flags $a_j$ as a
+    scorpion when $\Lambda_j(t) > \log((1 - \beta_{\mathrm{err}}) /
+    \alpha_{\mathrm{err}})$, where $\alpha_{\mathrm{err}}$ and
+    $\beta_{\mathrm{err}}$ are the target Type~I and Type~II error
+    rates. Under this decision rule the expected sample size is
+    $\mathbb{E}[\tau_{\mathrm{detect}}] =
+    O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ by Wald's identity, strictly
+    fewer than the correlational detector when confounders are
+    present (Proposition~\ref{prop:causal_dominates}). The signed-mean
+    EWMA is retained as a human-interpretable monitor of the
+    estimator state; the SPRT statistic $\Lambda_j(t)$ is the
+    load-bearing decision variable.
+\item[\textbf{(b)}] \textbf{Deception detection (unchanged).} The
+    behavioral trust factor $T_j$ detects agents whose reported capability
+    changes diverge from observations, through the same prediction-residual
+    dynamics as the foundational paper (Equations~25, 33, 38 of
+    \citet{lasser2026gfm}). Causal attribution does not affect this channel:
+    a deceptive agent accumulates prediction residuals regardless of whether
+    the contraction is causally attributed.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Channel~(a): By the SCM, $\CausalAttr(a_j, t)$ isolates $a_j$'s causal
+contribution from confounders
+(Definition~\ref{def:causal_attribution}). Within a stationary epoch
+of $a_j$'s strategy, $\{\CausalAttr(a_j, t)\}$ is i.i.d.\ with mean
+$\mu_j$ and variance $\sigma_{\mathrm{do}}^2$; for a scorpion
+$\mu_j \leq -\epsilon < 0$. The auxiliary EWMAs
+$\mu_j^{\mathrm{causal}}(t)$ and $\sigma_j^{\mathrm{causal},2}(t)$
+inherit the $L^2$ guarantees of
+Proposition~\ref{prop:risk_convergence}: asymptotically unbiased
+estimators of $\mu_j$ and $\sigma_{\mathrm{do}}^2$ with bounded
+stationary variance. They are not used for the detection decision,
+so we do not require almost-sure convergence.
+
+The SPRT decision on the causal-attribution sequence is a standard
+sequential test: under $H_0$ versus $H_1$ with bounded
+log-likelihood ratios and finite Kullback-Leibler divergence
+$D(H_1 \,\|\, H_0) > 0$, Wald's identity gives expected stopping time
+$\mathbb{E}[\tau_{\mathrm{detect}}] \approx
+\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) /
+D(H_1 \,\|\, H_0)$. For Gaussian causal attributions with
+$D(H_1 \,\|\, H_0) = \epsilon^2 / (2 \sigma_{\mathrm{do}}^2)$, this
+reduces to $\mathbb{E}[\tau_{\mathrm{detect}}] =
+O(\sigma_{\mathrm{do}}^2 / \epsilon^2)$; substituting the actual mean
+$\mu_j$ (which lower-bounds $\epsilon$ for a detectable scorpion)
+gives $O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$, matching the rate claimed
+in Proposition~\ref{prop:causal_dominates}(b). The SPRT Type~I error
+is bounded by $\alpha_{\mathrm{err}}$ and Type~II by
+$\beta_{\mathrm{err}}$ by construction.
+
+Channel~(b): The behavioral trust dynamics (Appendix~B of
+\citet{lasser2026gfm}) operate on behavioral prediction residuals
+$r_j(t) = R_j(t) - \hat{R}_j(t)$, which are independent of causal
+attribution. A deceptive scorpion that misreports capability changes
+accumulates $r_j(t) \neq 0$ regardless of confounders, driving
+$T_j \to T_j^* < 1$.
+\end{proof}
+
+\subsection{Non-Stationary Scorpion Bounds}
+
+The foundational paper notes that ``a non-stationary scorpion that adapts its strategy in
+response to detection pressure can evade both channels indefinitely''
+(Proposition~2 of \citet{lasser2026gfm}). Under the SCM, we can bound the
+adaptation rate required for evasion.
+
+\begin{proposition}[Evasion Bandwidth]
+\label{prop:evasion_bandwidth}
+A scorpion $a_j$ that changes strategy every $\tau_{\mathrm{adapt}}$ steps
+    produces at most $\tau_{\mathrm{adapt}}$ observations per strategy
+    epoch. The causal detector requires
+    $\tau_{\mathrm{detect}} = O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$
+    observations per epoch to identify the scorpion. If
+    $\tau_{\mathrm{adapt}} > \tau_{\mathrm{detect}}$, the scorpion is
+    detected within each epoch. If $\tau_{\mathrm{adapt}} <
+    \tau_{\mathrm{detect}}$, the scorpion evades detection by changing
+    strategy before enough evidence accumulates.
+\end{proposition}
+
+\begin{proof}
+Within each epoch of length $\tau_{\mathrm{adapt}}$, the scorpion's
+strategy is stationary and the causal-attribution sequence is i.i.d.\
+with mean $\mu_j$ and variance $\sigma_{\mathrm{do}}^2$. The SPRT
+statistic accumulates log-likelihood-ratio evidence at expected rate
+$D(H_1 \,\|\, H_0) = \mu_j^2 / (2 \sigma_{\mathrm{do}}^2)$ per
+observation under the Gaussian surrogate used in
+Proposition~\ref{prop:causal_scorpion}. After $\tau_{\mathrm{adapt}}$
+observations, the expected accumulated evidence is
+$\tau_{\mathrm{adapt}} \cdot \mu_j^2 / (2 \sigma_{\mathrm{do}}^2)$. An
+epoch boundary resets the SPRT statistic (the null hypothesis of the
+test is epoch-local). If $\tau_{\mathrm{adapt}} <
+\tau_{\mathrm{detect}}$, the expected evidence at the epoch boundary
+is below the SPRT acceptance boundary
+$\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}})$ and the
+scorpion evades detection within that epoch.
+\end{proof}
+
+\paragraph{Interpretation.} The evasion bandwidth
+$\tau_{\mathrm{adapt}}^* = O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ is the
+minimum adaptation rate a scorpion needs to evade the causal detector.
+A fast-adapting scorpion ($\tau_{\mathrm{adapt}} \ll
+\tau_{\mathrm{adapt}}^*$) evades but is constrained to small contractions
+per epoch (otherwise $\mu_j$ is large and $\tau_{\mathrm{adapt}}^*$ shrinks).
+A slow-adapting scorpion ($\tau_{\mathrm{adapt}} \gg
+\tau_{\mathrm{adapt}}^*$) is detected within each epoch. The product
+$\mu_j \cdot \tau_{\mathrm{adapt}}$ (total contraction per epoch) is
+bounded: a scorpion can either cause large damage slowly (and be detected)
+or small damage quickly (and evade), but not large damage quickly.
+
+The time-averaged undetected contraction rate for an evading scorpion
+is bounded by the signed mean $|\mu_j|$ itself, not by an independent
+$\sigma_{\mathrm{do}}^2 / |\mu_j|$ factor: the evasion constraint
+$\tau_{\mathrm{adapt}} < \tau_{\mathrm{detect}} =
+\sigma_{\mathrm{do}}^2 / \mu_j^2$ (ignoring the constant
+$\log(1/\alpha_{\mathrm{err}})$) bounds the epoch length, and within
+each epoch the per-step contraction is $|\mu_j|$. The appendix proof
+(§\ref{app:proof_evasion}) establishes this bound via the sequential
+probability ratio test accumulation rate. Substituting the evasion
+constraint $|\mu_j| < \sigma_{\mathrm{do}} / \sqrt{\tau_{\mathrm{adapt}}}$
+gives an equivalent expression in terms of the adaptation budget:
+\begin{equation}
+\label{eq:evasion_bound}
+|\text{undetected contraction per step}| \;\leq\; |\mu_j|
+    \;\leq\; \frac{\sigma_{\mathrm{do}}}{\sqrt{\tau_{\mathrm{adapt}}}}
+\end{equation}
+The bound tightens as the causal model improves ($\sigma_{\mathrm{do}}$
+decreases) and as the scorpion's adaptation budget
+$\tau_{\mathrm{adapt}}$ grows: a scorpion that adapts frequently (small
+$\tau_{\mathrm{adapt}}$) can only afford very small per-step
+contractions, while a scorpion that adapts slowly can sustain larger
+contractions per step but for correspondingly fewer steps before
+detection.

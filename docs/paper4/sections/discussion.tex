@@ -1,0 +1,46 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+\paragraph{SCM structure learning.} The causal attribution framework
+(Section~\ref{sec:causal}) requires the actor to know or learn the causal
+DAG over agent actions and capability changes. Structure learning from
+observational data is a well-studied but difficult problem
+\citep{spirtes2000causation}. Incorrect causal structure produces incorrect
+attributions, which can lead to false positive scorpion detection (blaming
+innocent agents for confounded contractions) or false negatives (exonerating
+causally responsible agents). The framework inherits the same
+world-model-dependence limitation as the horizon paper
+\citep{lasser2026horizon}, applied to causal structure specifically. A more
+capable actor builds a more accurate causal model, but the convergence rate
+of structure learning in adversarial environments is not characterized here.
+
+\paragraph{Risk-trust residual dependence on the actor's model.} The
+pathway-conditional structural verification residual
+(Definition~\ref{def:risk_residual}) measures divergence between the
+claim and the actor's own assessment of the claimed pathway. If the
+actor's world model is itself poorly calibrated, the residual reflects
+model error rather than claim quality. An agent whose risk assessments
+are accurate but disagree with a miscalibrated actor will accumulate
+high $\|r^{\mathrm{risk}}\|^2$ and concentrate around low
+$\Trisk_j^*$ --- a false negative. This is mitigated by the self-trust
+mechanism of \citet{lasser2026gfm}: an actor with a poorly calibrated
+model has low $T_s$ and high learning rate, which accelerates model
+correction. But during the correction period, risk-trust assessments
+may be unreliable.
+
+\paragraph{Log-odds aggregation and reporter correlation.} The
+trust-weighted log-linear opinion pool (Definition~\ref{def:logodds})
+recovers Bayesian updating in the no-tempering limit under conditional
+independence of agents' observations given the true risk level. If
+reporters' assessments are correlated --- they share information
+sources, or one reporter's assessment influences others --- the
+aggregation overweights the shared signal. In practice, partial
+independence is the norm: agents with different observation channels
+and different world models produce partially independent assessments,
+and the log-linear pool is an approximation whose error grows with
+the correlation. Characterizing the approximation error under partial
+independence, and deriving a correction term from a reporter-network
+model, is deferred to future work.
+

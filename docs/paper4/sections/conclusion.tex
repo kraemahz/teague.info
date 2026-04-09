@@ -1,0 +1,42 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+The preceding GFM papers define what to maximize ($\volL(G)$), prove
+structural safety properties, and establish anti-monopolar pressure. This
+paper addresses how the actor \emph{reasons about other agents}: upgrading
+every evaluation mechanism from statistical to causal.
+
+Causal attribution (Section~\ref{sec:causal}) upgrades the foundational
+paper's correlational scorpion detection to causal identification through
+do-calculus counterfactuals. The convergence advantage over correlational
+detection is proportional to confounding variance, which is substantial in
+populations with many simultaneously acting agents. Non-stationary scorpion
+bounds (Section~\ref{sec:scorpion}) characterize the evasion bandwidth: how
+fast a scorpion must adapt to remain undetected, and the maximum undetected
+contraction rate.
+
+Risk-trust dynamics (Section~\ref{sec:risk_trust}) provide formal EWMA
+update equations for $\Trisk_j$, with a two-gate architecture separating
+attention allocation (log-odds aggregation) from action decisions (the
+actor's own causal verification). This prevents coordinated report-bombing
+while preserving sensitivity to genuine independent agreement. Probabilistic
+dependency risk (Section~\ref{sec:dependency}) converts minimax substrate
+bounds into per-step expected costs that compound at the same rate as
+growth, providing the quantitative risk model needed for risk-adjusted
+planning.
+
+Together with the foundational framework \citep{lasser2026gfm}, the
+computable poset \citep{lasser2026poset}, and the horizon-aware objective
+\citep{lasser2026horizon}, these results narrow the gap between the GFM
+framework's structural guarantees and the mechanisms a concrete agent
+would need to realize them. The results here are conditional: the
+causal convergence advantage relies on causal sufficiency of the SCM,
+the Bayesian interpretation of log-odds aggregation relies on
+conditional independence given a shared prior, the dependency-risk
+gap relies on non-amplifying cascades across substrates, and the
+evasion bound relies on a stationary-epoch adversary model. Each
+assumption is explicit, falsifiable, and load-bearing. The remaining
+work is both theoretical (relaxing each assumption and characterizing
+what happens when it fails) and empirical: instantiating these
+computations in a concrete environment and checking whether the
+predicted alignment properties hold under real conditions.

@@ -1,0 +1,226 @@
+\section{Causal Attribution Framework}
+\label{sec:causal}
+
+The foundational paper's scorpion detection
+(Proposition~2 of \citet{lasser2026gfm}) identifies agents whose actions are
+\emph{correlated} with $\volL$-contraction. It explicitly acknowledges that
+``disentangling the agent's contribution from simultaneous causes requires a
+causal-attribution procedure that the framework does not provide.'' This
+section provides that procedure.
+
+\subsection{Structural Causal Model for Capability Dynamics}
+
+\begin{definition}[Capability Dynamics SCM]
+\label{def:scm}
+A \emph{structural causal model for capability dynamics} is a tuple
+    $\SCM = (U, V, F, P(U))$ where:
+\begin{itemize}
+\item $U$: exogenous variables representing agent dispositions, environmental
+    conditions, and stochastic factors not determined by the model.
+\item $V = \{G_t, \pi_t^{(1)}, \ldots, \pi_t^{(n)}, \Delta \volL_t\}$:
+    endogenous variables representing the capability poset state, each
+    agent's action at time $t$, and the resulting $\volL$-change.
+\item $F$: structural equations mapping parent variables to children in the
+    causal directed acyclic graph (DAG). The DAG encodes which agents'
+    actions causally influence which capability changes.
+\item $P(U)$: prior distribution over exogenous variables.
+\end{itemize}
+The GFM actor's world model $\WorldModel$
+    (Definition~1 of \citet{lasser2026horizon}) is an instance of $\SCM$
+    restricted to the actor's beliefs about causal structure.
+\end{definition}
+
+The SCM extends $\WorldModel$ by making the causal structure explicit. In the
+foundational paper, $\WorldModel$ is an opaque prediction model: given
+actions, it predicts $\volL$-changes. The SCM decomposes predictions into
+causal pathways, enabling counterfactual queries: ``what would have happened
+if agent $a_j$ had acted differently?''
+
+\subsection{Causal Contraction Attribution}
+
+\begin{definition}[Causal Contraction Attribution]
+\label{def:causal_attribution}
+For an observed $\volL$-change $\Delta \volL(G_t)$ at time $t$, the
+    \emph{causal contribution} of agent $a_j$ is:
+\begin{equation}
+\label{eq:causal_attribution}
+\CausalAttr(a_j, t) = \Delta \volL\bigl(G_t \mid \mathrm{do}(\pi_j =
+    \pi_j^{\mathrm{obs}})\bigr)
+    - \Delta \volL\bigl(G_t \mid \mathrm{do}(\pi_j = \mathrm{skip})\bigr)
+\end{equation}
+where $\mathrm{do}(\pi_j = \cdot)$ denotes the do-calculus intervention
+    \citep{pearl2009causality}: setting $a_j$'s action to a specific value
+    while allowing all other variables to respond according to $F$. The
+    first term is the $\volL$-change under $a_j$'s observed action; the
+    second is the counterfactual $\volL$-change had $a_j$ done nothing.
+\end{definition}
+
+The causal attribution $\CausalAttr(a_j, t)$ isolates $a_j$'s contribution
+from confounders: simultaneous actions by other agents, environmental
+changes, and background dynamics that the correlational signal in
+Proposition~2 of \citet{lasser2026gfm} cannot separate. When $a_j$'s
+actions cause contraction, $\CausalAttr(a_j, t) < 0$. When they cause
+expansion, $\CausalAttr(a_j, t) > 0$. When $a_j$'s actions have no causal
+effect (the contraction would have occurred regardless), $\CausalAttr(a_j,
+t) = 0$, and the correlational detection would have produced a false
+positive.
+
+\paragraph{Additivity.} The one-at-a-time $\CausalAttr(a_j, t)$ of
+Equation~\eqref{eq:causal_attribution} sums to the total
+$\volL$-change only when the SCM's structural equation for
+$\Delta \volL$ is \emph{additive in agent actions}: there exist
+functions $g_j$ and a residual $h$ such that
+\begin{equation}
+\label{eq:additive_scm}
+\Delta \volL(G_t)
+    = \sum_j g_j\bigl(\pi_j^{\mathrm{obs}}, G_t, U\bigr)
+    + h(G_t, U)
+\end{equation}
+where $h$ does not depend on any $\pi_j$. Under this additive-SCM
+assumption, the one-at-a-time intervention
+$\mathrm{do}(\pi_j = \pi_j^{\mathrm{obs}})$ vs.\
+$\mathrm{do}(\pi_j = \mathrm{skip})$ isolates $g_j$ exactly, and
+\begin{equation}
+\label{eq:causal_decomposition}
+\Delta \volL(G_t) = \sum_j \CausalAttr(a_j, t) + h(G_t, U).
+\end{equation}
+The additive-SCM assumption is stronger than (and is not implied by)
+conditional independence of agent actions given $G_t$: two
+independently drawn actions can still interact multiplicatively in a
+non-additive structural equation such as
+$\Delta \volL = \pi_1 \cdot \pi_2$, in which case the one-at-a-time
+$\CausalAttr$ does not sum to the total. When interaction effects
+are present and a non-additive SCM is required, an exact decomposition
+needs a Shapley-style attribution rule that averages $\CausalAttr$
+over all orderings of agent inclusion \citep{shapley1953value}; the
+one-at-a-time form is then an approximation whose error is the
+deviation from additivity. For scorpion detection
+(Section~\ref{sec:scorpion}), the one-at-a-time form is sufficient
+because the detection signal depends only on the sign and magnitude
+of the diagonal contribution $g_j$, not on the exact decomposition
+of interaction effects.
+
+\subsection{Causal Detection Dominates Correlational Detection}
+
+\begin{proposition}[Convergence Advantage of Causal Attribution]
+\label{prop:causal_dominates}
+Let $a_j$ be an agent with expected causal contraction $\mu_j =
+    \mathbb{E}[\CausalAttr(a_j, t)] < 0$ (a scorpion). Assume the
+    observation sequences for both detectors are i.i.d.\ within a
+    stationary strategy epoch, or weakly dependent with summable
+    autocovariance (so that a sequential probability ratio test
+    applies with standard sample-complexity bounds
+    \citep{wald1945sequential}). Under the SCM $\SCM$:
+\begin{enumerate}
+\item[\textbf{(a)}] The correlational detector (Proposition~2(a) of
+    \citet{lasser2026gfm}) requires $O(\sigma^2 / \mu_j^2)$
+    observations to identify $a_j$ as a net-contractor under the
+    idealized assumption that $\mu_j$ appears as an
+    isolable drift in the trust-weighted aggregate $\Deltahat$ (see
+    paragraph below on the correlational estimator). Here $\sigma^2$
+    is the total variance of $\Deltahat$ including confounders.
+\item[\textbf{(b)}] The causal detector using $\CausalAttr(a_j, t)$
+    requires $O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ observations, where
+    $\sigma_{\mathrm{do}}^2$ is the variance of the causal attribution
+    signal after conditioning on the do-intervention.
+\item[\textbf{(c)}] Under \textbf{causal sufficiency} --- the SCM
+    $\SCM$ captures all common causes of $a_j$'s actions and the
+    confounder signals, so
+    $\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t) = 0$
+    --- we have
+    \[
+        \sigma^2 - \sigma_{\mathrm{do}}^2
+        = \mathrm{Var}(\text{confounders} \mid G_t) \geq 0,
+    \]
+    so $\sigma_{\mathrm{do}}^2 \leq \sigma^2$, with strict inequality
+    whenever confounders contribute nonzero variance. Without causal
+    sufficiency, the law of total variance gives
+    \[
+        \sigma^2 - \sigma_{\mathrm{do}}^2
+        = \mathrm{Var}(\text{confounders} \mid G_t)
+        + 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t),
+    \]
+    whose sign depends on the covariance term. The inequality
+    $\sigma_{\mathrm{do}}^2 \leq \sigma^2$ therefore requires either
+    causal sufficiency or the weaker condition
+    $\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t)
+        \geq -\tfrac{1}{2} \mathrm{Var}(\text{confounders} \mid G_t)$.
+    Under a general (non-sufficient) SCM with adversarial confounder
+    correlation, causal attribution can in principle achieve worse
+    convergence than the correlational detector; characterizing
+    populations in which this occurs is outside the scope of this
+    paper.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The correlational detector aggregates the trust-weighted signal
+$\Deltahat(\pi_t) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi_t)$
+(Equation~10 of \citet{lasser2026gfm}). This signal reflects the total
+$\volL$-change, not $a_j$'s contribution alone. By the law of total
+variance: $\mathrm{Var}(\Deltahat) = \mathrm{Var}(\CausalAttr(a_j)) +
+\mathrm{Var}(\text{others} + \epsilon) + 2\mathrm{Cov}$. Standard
+detection theory (sequential probability ratio test) gives the detection
+time as $O(\sigma^2 / \mu_j^2)$ where $\sigma^2 = \mathrm{Var}(\Deltahat)$.
+
+(b) The causal detector evaluates $\CausalAttr(a_j, t)$ directly by
+comparing the observed $\volL$-change against the counterfactual under
+$\mathrm{do}(\pi_j = \mathrm{skip})$. The variance of this signal is
+$\sigma_{\mathrm{do}}^2 = \mathrm{Var}(\CausalAttr(a_j, t))$, which
+excludes the confounding variance.
+
+(c) By the law of total variance applied to the decomposition of
+Equation~\eqref{eq:causal_decomposition},
+\[
+\mathrm{Var}(\Deltahat) = \mathrm{Var}(\CausalAttr(a_j))
+    + \mathrm{Var}(\mathrm{confounders})
+    + 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}).
+\]
+Under causal sufficiency, the SCM $\SCM$ accounts for all common
+causes of $a_j$'s actions and the other signals, so
+$\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}) = 0$, and
+$\sigma^2 - \sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{confounders})$
+as stated. Without causal sufficiency, the covariance term is retained
+and the inequality $\sigma_{\mathrm{do}}^2 \leq \sigma^2$ holds only
+when $\mathrm{Var}(\mathrm{confounders}) +
+2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}) \geq 0$; the
+inequality is strict whenever confounders have positive variance and
+the covariance term does not dominate.
+\end{proof}
+
+\paragraph{The correlational detector as an estimator.} Part (a) of
+Proposition~\ref{prop:causal_dominates} treats the correlational
+detector as if $\mu_j$ appeared directly as a component of the mean
+of the aggregate signal $\Deltahat$. This is an idealization: the
+actual mean of $\Deltahat$ is the sum of all agents' mean effects
+plus background dynamics, not $\mu_j$ alone. A correlational
+estimator that recovered $\mu_j$ from $\Deltahat$ would need an
+additional auxiliary procedure --- for example, regressing $\Deltahat$
+against an indicator for $a_j$'s action times, which incurs its own
+bias when confounders are correlated with $a_j$'s action schedule.
+The $O(\sigma^2 / \mu_j^2)$ bound therefore describes the best-case
+correlational detector: one that has access to $a_j$'s action schedule
+and uses it as a conditioning variable. A weaker correlational
+detector that only observes $\Deltahat$ without conditioning has a
+strictly worse (and generally incomputable) rate. The causal detector
+does not need this auxiliary procedure because
+$\CausalAttr(a_j, t)$ already isolates $a_j$'s contribution by
+construction.
+
+\paragraph{Practical implication.} In populations with many simultaneously
+acting agents, confounding variance can dominate the correlational signal.
+A single scorpion among 100 simultaneously acting agents contributes
+$\sim$1\% of the signal variance; the correlational detector needs
+$\sim$100$\times$ more observations than the causal detector to achieve the
+same confidence. The causal detector's advantage grows linearly with the
+number of simultaneously acting confounders.
+
+\paragraph{Limitation: SCM structure dependence.} The causal detector
+requires the actor to know (or learn) the causal DAG. If the DAG is
+misspecified, causal attributions can be incorrect: a non-causal agent may
+receive spurious attribution (false positive), or a causal agent may be
+exonerated (false negative). Learning the DAG from observational data is
+itself a hard problem \citep{spirtes2000causation}, and the actor's causal
+knowledge improves with the same capability-scaling argument as the
+foundational paper's estimator fidelity: a more capable actor builds a more
+accurate causal model, producing better attributions.

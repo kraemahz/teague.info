@@ -1,0 +1,373 @@
+\section{Risk-Trust Dynamics}
+\label{sec:risk_trust}
+
+The companion paper \citep{lasser2026horizon} introduces a risk-trust factor
+$\Trisk_j$ for weighting communicated risk claims but provides only a
+qualitative update rule. This section formalizes the dynamics, drawing on the
+EWMA structure of the foundational paper's behavioral trust
+\citep{lasser2026gfm}.
+
+\subsection{Structural Verification Residuals}
+
+\begin{definition}[Structural Verification Residual]
+\label{def:risk_residual}
+For a risk claim $(S, \Pathway, |\Delta \volL|, p)$ from agent $a_j$
+    (Definition~4 of \citet{lasser2026horizon}), the actor evaluates
+    \emph{the specific claimed pathway} $\Pathway$ against its own SCM
+    $\SCM$ (Definition~\ref{def:scm}) using the causal risk evaluation
+    procedure (Section~4.3 of \citet{lasser2026horizon}). This produces
+    a pathway-conditional assessment
+    $\bigl(p_{\WorldModel}(\Pathway),\;
+    |\Delta \volL_{\WorldModel}(\Pathway)|\bigr)$: the probability and
+    contraction magnitude the actor would assign if $\Pathway$ were
+    the realized causal pathway. If $\Pathway$ has no counterpart in
+    $\SCM$ --- that is, if the actor's causal model contains no edges
+    implementing the claimed mechanism --- then
+    $\bigl(p_{\WorldModel}(\Pathway), |\Delta \volL_{\WorldModel}(\Pathway)|\bigr)
+    = (0, 0)$ by convention. The \emph{structural verification
+    residual} is the dimensionless two-component divergence:
+\begin{equation}
+\label{eq:risk_residual}
+r_j^{\mathrm{risk}}(t) = \left(
+    p_j^{\mathrm{claimed}} - p_{\WorldModel}(\Pathway),\;\;
+    \frac{|\Delta \volL_j^{\mathrm{claimed}}| -
+          |\Delta \volL_{\WorldModel}(\Pathway)|}{\volL(G_t)}
+\right)
+\end{equation}
+Each component is in $[-1, 1]$: the first is a probability difference,
+    the second is a relative volume difference normalized by the
+    current total poset volume. The Euclidean norm
+    $\|r_j^{\mathrm{risk}}(t)\|$ is therefore dimensionally consistent
+    and invariant under rescaling of $\volL$. A fabricated pathway
+    that does not exist in $\SCM$ produces the maximal residual
+    $\|r_j^{\mathrm{risk}}(t)\| = \sqrt{(p_j^{\mathrm{claimed}})^2
+    + (|\Delta \volL_j^{\mathrm{claimed}}|/\volL(G_t))^2}$; structural
+    verification is enforced by the pathway-conditional evaluation,
+    not by an extra pathway-comparison term.
+\end{definition}
+
+Unlike the behavioral prediction residual $r_k(t)$ (Equation~25 of
+\citet{lasser2026gfm}), which compares \emph{predicted} against
+\emph{observed} behavior, the risk residual compares \emph{claimed} against
+\emph{independently modeled} risk. This is necessary because risk claims
+are counterfactual predictions that may never be directly observed —
+the \emph{Wamura problem}, introduced in the poset paper
+\citep{lasser2026poset} and developed in the risk-communication analysis
+of \citet[\S4]{lasser2026horizon}: a successful risk
+intervention removes the very evidence that would have justified it,
+so the convergence timescale for risk-trust can in principle exceed
+the timescale on which trust normally accumulates. The SCM provides
+the independent assessment needed to break this circularity: the
+actor's own causal model produces $(p_{\WorldModel},
+|\Delta \volL_{\WorldModel}|)$ without relying on the claim.
+
+\subsection{EWMA Risk-Trust Update}
+
+\begin{definition}[Risk-Trust Dynamics]
+\label{def:risk_trust_dynamics}
+The risk-trust factor $\Trisk_j$ evolves through an exponentially weighted
+    moving average of squared structural verification residuals:
+\begin{align}
+\label{eq:risk_sigma}
+\sigma_j^{\mathrm{risk},2}(t) &= \alpha_{\mathrm{risk}} \cdot
+    \sigma_j^{\mathrm{risk},2}(t-1) + (1 - \alpha_{\mathrm{risk}}) \cdot
+    \|r_j^{\mathrm{risk}}(t)\|^2 \\
+\label{eq:risk_trust_update}
+\Trisk_j(t) &= \frac{1}{1 + \beta_{\mathrm{risk}} \cdot
+    \sigma_j^{\mathrm{risk},2}(t)}
+\end{align}
+where $\alpha_{\mathrm{risk}} \in (0, 1)$ controls the decay rate
+    (tracking speed vs. stability), $\beta_{\mathrm{risk}} > 0$ controls the
+    sensitivity (how rapidly trust degrades with inconsistency), and
+    $\|\cdot\|$ is the Euclidean norm on the two-dimensional residual.
+\end{definition}
+
+The structure mirrors the foundational paper's behavioral trust exactly
+(Equations~33 and~38 of \citet{lasser2026gfm}), with the behavioral
+prediction residual replaced by the structural verification residual. The
+parameters $\alpha_{\mathrm{risk}}$ and $\beta_{\mathrm{risk}}$ are
+independent of the behavioral parameters $\alpha$ and $\beta$: an agent can
+have high behavioral trust $T_k$ (predictable behavior) and low risk-trust
+$\Trisk_k$ (unreliable risk assessments), or vice versa. The two trust
+channels operate independently.
+
+\paragraph{Initialization and cooling period.} New agents enter with
+$\sigma_j^{\mathrm{risk},2}(0) = \sigma_0^{\mathrm{risk},2}$ (a prior
+reflecting baseline uncertainty about risk-claim quality), producing initial
+risk-trust $\Trisk_j(0) = 1/(1 + \beta_{\mathrm{risk}} \cdot
+\sigma_0^{\mathrm{risk},2})$. The effective cooling period is
+$\tau_{\mathrm{risk}} = \lceil \log \delta / \log
+\alpha_{\mathrm{risk}} \rceil$ (same formula as the behavioral cooling
+period, Equation~71 of \citet{lasser2026gfm}).
+
+\begin{proposition}[Risk-Trust $L^2$ Convergence]
+\label{prop:risk_convergence}
+Let $X_j(t) = \|r_j^{\mathrm{risk}}(t)\|^2$ and assume $a_j$'s risk-claim
+    strategy is stationary with
+    $\mu_j^{\mathrm{risk}} = \mathbb{E}[X_j] < \infty$ and
+    $\nu_j^{\mathrm{risk}} = \mathrm{Var}[X_j] < \infty$, and that the
+    squared-residual sequence is i.i.d.\ (or weakly dependent with
+    summable autocovariance). Then the cumulative inconsistency estimator
+    satisfies:
+\begin{align}
+\label{eq:risk_trust_bias}
+\lim_{t \to \infty} \mathbb{E}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
+    &= \mu_j^{\mathrm{risk}}
+    \qquad \text{(asymptotic unbiasedness)} \\
+\label{eq:risk_trust_variance}
+\limsup_{t \to \infty}
+    \mathrm{Var}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
+    &\leq \frac{1 - \alpha_{\mathrm{risk}}}
+              {1 + \alpha_{\mathrm{risk}}}
+       \cdot \nu_j^{\mathrm{risk}}
+    \qquad \text{(bounded stationary variance)}
+\end{align}
+Consequently $\Trisk_j(t)$ concentrates around
+    $\Trisk_j^* = 1 / (1 + \beta_{\mathrm{risk}} \mu_j^{\mathrm{risk}})$
+    in mean, with stationary deviation controlled by
+    $\alpha_{\mathrm{risk}}$. Structurally accurate reporters (small
+    $\mu_j^{\mathrm{risk}}$) concentrate around high $\Trisk_j^*$;
+    alarmists and chronic underreporters concentrate around low
+    $\Trisk_j^*$.
+\end{proposition}
+
+\begin{proof}
+Unrolling the EWMA recursion gives
+$\sigma_j^{\mathrm{risk},2}(t) = (1 - \alpha_{\mathrm{risk}})
+    \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^s X_j(t-s)
+    + \alpha_{\mathrm{risk}}^t \sigma_j^{\mathrm{risk},2}(0)$.
+Taking expectations under stationarity,
+$\mathbb{E}[\sigma_j^{\mathrm{risk},2}(t)]
+    = (1 - \alpha_{\mathrm{risk}})
+      \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^s \mu_j^{\mathrm{risk}}
+    + \alpha_{\mathrm{risk}}^t \sigma_j^{\mathrm{risk},2}(0)
+    \to \mu_j^{\mathrm{risk}}$ as $t \to \infty$, establishing
+    Equation~\eqref{eq:risk_trust_bias}. Under the i.i.d.\ assumption,
+\begin{align*}
+\mathrm{Var}[\sigma_j^{\mathrm{risk},2}(t)]
+    &= (1 - \alpha_{\mathrm{risk}})^2
+       \sum_{s=0}^{t-1} \alpha_{\mathrm{risk}}^{2s}
+       \cdot \nu_j^{\mathrm{risk}}
+       + o(1) \\
+    &\longrightarrow \frac{(1 - \alpha_{\mathrm{risk}})^2}
+                          {1 - \alpha_{\mathrm{risk}}^2}
+       \cdot \nu_j^{\mathrm{risk}}
+       = \frac{1 - \alpha_{\mathrm{risk}}}
+              {1 + \alpha_{\mathrm{risk}}}
+       \cdot \nu_j^{\mathrm{risk}},
+\end{align*}
+giving Equation~\eqref{eq:risk_trust_variance}. Under weak dependence
+with summable autocovariance, the same limit holds up to a
+multiplicative constant reflecting the autocovariance sum. The
+concentration statement for $\Trisk_j(t)$ follows by applying the
+continuous mapping theorem to
+$x \mapsto 1 / (1 + \beta_{\mathrm{risk}} x)$, which is Lipschitz on
+$[0, \infty)$.
+\end{proof}
+
+\paragraph{Tracking versus convergence: why $L^2$ and not almost sure.}
+Fixed-$\alpha$ EWMA does not converge almost surely to a deterministic
+limit, and for an adversarial-tracking setting this is the correct
+behavior. Each new residual contributes weight $(1 - \alpha_{\mathrm{risk}})$
+regardless of how much history has accumulated, so the estimator
+never collapses to a point mass and retains nonzero stationary
+variance. A Robbins-Monro stochastic approximation with step size
+$\alpha_t \to 0$ satisfying $\sum_t \alpha_t = \infty$ and
+$\sum_t \alpha_t^2 < \infty$ \citep{robbins1951stochastic} would
+converge almost surely to $\mu_j^{\mathrm{risk}}$, but only at the
+cost of losing the ability to track a non-stationary adversary whose
+strategy changes mid-trajectory. Risk-claim quality and scorpion
+behavior are both moving targets: a cooperative reporter can become
+systematically biased, an alarmist can calibrate, and a scorpion can
+change strategy in response to detection pressure. Past accuracy does
+not guarantee future accuracy under a changing world model
+$\WorldModel$, so the tracking property is load-bearing. The
+stationary-variance bound in Equation~\eqref{eq:risk_trust_variance}
+is what the scorpion detection threshold
+(Section~\ref{sec:scorpion}) is calibrated against, so the $L^2$
+form is not just weaker than almost sure --- it is the form the
+downstream results actually use.
+
+\paragraph{Interaction with the Wamura problem.} The EWMA dynamics converge
+on \emph{structural verification quality}, not on \emph{outcome correctness}.
+An agent whose risk claims are structurally plausible (the pathway exists in
+$\SCM$, the probability and magnitude estimates are calibrated against the
+actor's own model) accumulates low $\|r^{\mathrm{risk}}\|^2$ and converges
+to high $\Trisk_j^*$ regardless of whether the risk materializes. This
+partially resolves the Wamura problem: risk-trust converges even when the
+counterfactual is never observed, because convergence depends on structural
+agreement, not outcome observation. The resolution is partial because an
+agent whose claims are structurally plausible but whose probability estimates
+are systematically biased (always 10\% higher than the actor's model)
+accumulates moderate $\|r^{\mathrm{risk}}\|^2$ and converges to moderate
+$\Trisk_j^*$, reflecting the bias without resolving it.
+
+\subsection{Independence-Preserving Risk Aggregation}
+
+The max operator in Equation~7 of \citet{lasser2026horizon} destroys
+independence information: 50 low-trust agents agreeing on a risk assessment
+are treated identically to one low-trust agent. We propose a
+trust-weighted log-odds aggregation that preserves the evidence-accumulation
+structure of independent reports.
+
+\paragraph{Definition update from the companion paper.}
+The companion paper \citep{lasser2026horizon} sketches
+$\hat{\Risk}_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot
+|\Delta \volL|$ as a product of a probability and a contraction
+magnitude --- that is, an expected-contraction object in the same
+units as $\volL$, not a probability in $[0, 1]$. Taking a log-odds of
+that object is not well-defined. While integrating the aggregation
+rule with the rest of this paper we noticed this inconsistency, and
+we commit here to the definition update that makes the aggregation
+work: $\hat{\Risk}_j$ and $\Risk_{\mathrm{self}}$ denote the reporter's
+and the actor's posterior probability that the exercise pathway will
+be executed within the planning horizon, calibrated against the shared
+prior $\pi_0$ introduced below. The contraction magnitude
+$|\Delta \volL|$ remains a separate quantity: it is used by the
+verification gate (Section~\ref{sec:attention_not_action}) and enters
+the structural verification residual
+(Definition~\ref{def:risk_residual}) independently of the
+probability-aggregation step. We treat the resulting pair
+$(\hat{\Risk}_j, |\Delta \volL_j^{\mathrm{claimed}}|)$ as the canonical
+two-component form of a communicated risk claim for Paper~4 onward;
+the single-number product form in the companion paper should be read
+as the first-sketch version of this pair.
+
+\begin{definition}[Log-Odds Risk Aggregation]
+\label{def:logodds}
+Let $\pi_0 \in (0, 1)$ be a shared prior on the probability that the
+    exercise pathway will be executed within the planning horizon, and
+    let $\ell_0 = \log(\pi_0 / (1 - \pi_0))$ be its log-odds. The
+    actor's self-assessment $\Risk_{\mathrm{self}}$ and each communicated
+    risk estimate $\hat{\Risk}_j$ from agent $a_j$ are posterior
+    probabilities derived from the shared prior $\pi_0$ plus their
+    respective observations (definition update, see above). The aggregated posterior is:
+\begin{equation}
+\label{eq:logodds}
+\log \frac{\Risk_{\mathrm{agg}}}{1 - \Risk_{\mathrm{agg}}}
+    = \ell_0
+    + \underbrace{\left(\log \frac{\Risk_{\mathrm{self}}}{1 - \Risk_{\mathrm{self}}} - \ell_0\right)}_{\text{actor's log-likelihood-ratio}}
+    + \sum_j \Trisk_j \cdot \underbrace{\left(\log \frac{\hat{\Risk}_j}{1 - \hat{\Risk}_j} - \ell_0\right)}_{\text{reporter $a_j$'s log-likelihood-ratio}}
+\end{equation}
+where each parenthesized term is the log-likelihood-ratio contributed
+    by that source beyond the shared prior, obtained by subtracting
+    $\ell_0$ from their reported posterior log-odds. The $\Risk$ values
+    are normalized to $[0, 1]$ as probabilities of the exercise pathway
+    being executed within the planning horizon. Under the neutral
+    bootstrap prior $\pi_0 = 0.5$ ($\ell_0 = 0$), the prior-correction
+    terms vanish and Equation~\eqref{eq:logodds} reduces to a naive
+    sum of posterior log-odds; under any other shared prior, the
+    correction is required to avoid double-counting the prior.
+\end{definition}
+
+The log-odds aggregation has three advantages over the max operator:
+\begin{enumerate}
+\item \textbf{Agreement strengthens evidence.} Multiple independent
+    low-trust agents reporting the same risk produce a collective signal
+    proportional to the number of agreeing reporters, weighted by their
+    individual $\Trisk_j$ values.
+\item \textbf{Trust-weighted log-linear opinion pool.}
+    Equation~\eqref{eq:logodds} is a trust-tempered log-linear opinion
+    pool \citep{genest1986combining}: the aggregate log-odds is a
+    weighted sum of the reporters' log-likelihood ratios plus the
+    shared prior. Under the conditional-independence assumption
+    (reporters' observations are independent given the true risk
+    level and the shared prior $\pi_0$), setting all $\Trisk_j = 1$
+    recovers the standard Bayesian posterior update for independent
+    evidence sources. The trust weights $\Trisk_j \in [0, 1]$ temper
+    each reporter's contribution in proportion to their
+    structural-verification track record; this is not itself
+    Bayes-optimal in general --- exact Bayes-optimality would require
+    a generative model of how each reporter's noise depends on their
+    history, which the framework does not assume --- but it recovers
+    Bayes-optimal behavior in the no-tempering limit and degrades
+    gracefully for untrusted reporters, which is the behavior the
+    aggregation rule is trying to achieve. The prior-correction
+    terms are required regardless of tempering: without them, a naive
+    sum of posterior log-odds would double-count $\pi_0$ once per
+    reporter.
+\item \textbf{Graceful degradation.} When a single agent has
+    $\Trisk_j \gg \sum_{k \neq j} \Trisk_k$, the aggregation approximates
+    max behavior: the dominant reporter's assessment controls the aggregate.
+    The max operator emerges as a limiting case, not an imposed design
+    choice.
+\end{enumerate}
+
+\paragraph{Bootstrap interaction.} During bootstrap, all $\Trisk_j$ values
+start at the neutral prior. Under log-odds aggregation, $n$ agents
+reporting the same risk at neutral trust produce a collective signal
+$n \times \Trisk_{\mathrm{neutral}}$ times the individual log-odds,
+proportional to $n$. Under the max operator, the same $n$ agents produce
+only $\Trisk_{\mathrm{neutral}}$ times the maximum individual log-odds,
+independent of $n$. The log-odds aggregation therefore learns faster during
+bootstrap, precisely when the actor's own model is least reliable and
+external evidence is most valuable.
+
+\subsection{Aggregation as Attention, Not Action}
+\label{sec:attention_not_action}
+
+The log-odds aggregation amplifies agreement among reporters, which is
+correct when reporters are independent but exploitable by coordinated
+conspirators: $n$ agents who agree in advance on a fabricated risk claim
+produce a collective signal proportional to $n$, potentially overwhelming
+the actor's self-assessment and triggering restriction of a capability that
+was never actually dangerous. This is the risk-communication analogue of
+report-bombing: coordinated low-quality reports exploiting an aggregation
+mechanism designed for independent evidence.
+
+Any fixed correlation-detection heuristic is game-able once the adversary
+knows the parameters, and the ROC curve is particularly unfavorable: false
+positives (restricting a safe capability) and false negatives (ignoring a
+real risk) both cause $\volL$-contraction. We therefore adopt the activation
+energy principle from the foundational paper \citep{lasser2026gfm}, applied
+to risk-claim processing.
+
+\paragraph{The two-gate architecture.} The risk aggregation
+$\Risk_{\mathrm{agg}}$ (Definition~\ref{def:logodds}) does not directly
+trigger restriction. It produces a \emph{salience signal}: the aggregated
+risk level determines the priority at which a capability tuple enters the
+actor's investigation queue. Action requires passing two independent gates:
+\begin{enumerate}
+\item \textbf{Salience gate.} The aggregated risk
+    $\Risk_{\mathrm{agg}}(S; a_k, t)$ exceeds an attention threshold
+    $\theta_{\mathrm{risk}}$, placing the capability tuple in the
+    investigation queue.
+\item \textbf{Verification gate.} The actor invokes the forward
+    causal risk-evaluation procedure (Section~4.3 of
+    \citet{lasser2026horizon}) on its own SCM $\SCM$ to independently
+    confirm that the claimed exercise pathway $\Pathway$ exists in
+    the actor's causal model, calibrate the probability, and verify
+    the contraction magnitude. This is a forward causal query ---
+    ``if $\Pathway$ were executed, what would happen?'' --- using
+    the same pathway-conditional assessment
+    $\bigl(p_{\WorldModel}(\Pathway), |\Delta \volL_{\WorldModel}(\Pathway)|\bigr)$
+    as the structural verification residual
+    (Definition~\ref{def:risk_residual}). It is distinct from the
+    retrospective causal contraction attribution
+    (Definition~\ref{def:causal_attribution}), which decomposes an
+    \emph{observed} contraction across agents after the fact.
+    Retrospective attribution has no counterfactual access to
+    hypothetical pathways that were never executed; forward risk
+    evaluation does, and this is the mechanism the verification gate
+    requires. The gate is the activation energy: the actor must
+    reconstruct the risk through its own causal model before
+    acting.
+\end{enumerate}
+Neither gate alone is sufficient. A coordinated report-bomb raises salience
+(gate~1) but fails independent verification (gate~2) because the fabricated
+pathway does not exist in the actor's causal model. A genuine risk reported
+by a single low-trust agent may fail gate~1 (low salience) but would pass
+gate~2 if the actor investigated. The two-gate architecture trades a
+bounded false-negative rate (genuine risks from low-trust reporters may be
+investigated slowly) for strong robustness against coordinated manipulation
+(fabricated risks cannot bypass independent verification regardless of how
+many conspirators report them).
+
+\paragraph{Why heuristic correlation detection is insufficient.} A fixed
+correlation metric (temporal clustering, behavioral similarity among
+reporters, trust-history patterns) is game-able: adversaries who know the
+detection threshold can space their reports, diversify their trust-building
+histories, and avoid clustering. The two-gate architecture avoids this arms
+race by not relying on detecting coordination at all. The defense is the
+actor's own intelligence applied through the causal model, not a statistical
+filter on the report stream.
