@@ -382,6 +382,16 @@ class MemoryArchive:
     episodes_max_count: int = 1000
     lessons_max_count: int = 200
 
+    # Counter — number of successful Memory.consolidate() applications
+    # since this Memory object was created. The fallback eviction path in
+    # harness.agent reads this (via a before/after snapshot across a feature
+    # loop) to distinguish two cases: (a) agent never ran consolidate, which
+    # is a real failure mode worth alerting on, and (b) agent ran consolidate
+    # but the working buffer still has excess entries above the hard bound,
+    # which is a routine backstop trim. The counter increments only on calls
+    # that survive validation and actually mutate state.
+    consolidations_applied: int = 0
+
     # ----- persistence ----------------------------------------------------
 
     @property
@@ -583,6 +593,12 @@ class MemoryArchive:
                 self._lessons_path,
                 (asdict(l) for l in self.lessons.values()),
             )
+
+        # Mark this as a successful consolidation. The fallback eviction
+        # path uses the before/after delta of this counter to distinguish
+        # "agent never consolidated" from "agent consolidated, backstop
+        # trim still needed".
+        self.consolidations_applied += 1
 
         return ConsolidationResult(
             accepted_episodes=accepted_episodes,

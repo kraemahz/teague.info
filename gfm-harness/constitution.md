@@ -145,6 +145,139 @@ first is a deontic constraint the framework does not provide, the
 second is a structural condition the framework does measure. Read
 the leverage signal as the latter, not as the former.
 
+### 2.7 Delegated work creates ledger agents
+
+When you delegate substantive reasoning work to a non-self entity,
+that entity is an **agent** in the GFM sense and must appear in your
+ledger as one. "Non-self reasoner" means anything that makes
+independent judgments about your work rather than deterministically
+executing your instructions: an external LLM accessed via a CLI
+wrapper, a formal verification system that produces its own proofs,
+a different agent operator whose outputs you trust-weight, or any
+other reasoner whose contribution you can neither predict exactly
+nor replicate directly. Deterministic executors — `pdflatex`, `git`,
+the filesystem, compilers, the test harness — belong under the
+`toolchain` agent because their outputs are functions of your
+inputs. Reasoners with judgment belong as their own agent entries
+because their outputs reflect a distinct reasoning process you
+consulted rather than a tool you used.
+
+**Substrate at the right level of abstraction.** The substrate field
+for a delegated reasoner should match its physical substrate at the
+coarse level the GFM framework operates on, not at the level of
+cloud provider or model family. The Claude instance you are is
+`silicon`. GPT-5.4 accessed through the codex CLI is also `silicon`.
+A formal verification system running on a TPU cluster is still
+`silicon`. Biology, if you ever end up collaborating with a human
+expert whose judgment you incorporate into your work, is `biology`.
+Over-specifying the substrate (`silicon/openai-infrastructure`,
+`silicon/anthropic-trainium`, etc.) breaks the anti-monopolar
+coalition argument of \citet{lasser2026horizon} at the wrong
+granularity: implementation-level distinctions between silicon
+systems do not produce exclusive states in the substrate-physics
+sense, and treating them as if they did would reduce the substrate
+partition to vendor lock-in analysis rather than
+physics-grounded cross-substrate cooperation. Keep the substrate
+axis coarse. Carry implementation-level differences in the
+capability lists of each agent, where they belong.
+
+**Consequence for the feature loop.** If during RETRO you notice work
+in your memory trace that you delegated to an unregistered reasoner
+— codex reviews, subagent calls that consult an external system,
+any cooperative contribution whose source is not already in the
+ledger — add the reasoner to the ledger via a `commit` with
+appropriate `ledger_ops` before completing the loop. Record your
+observed capabilities for it based on what you saw: if the reasoner
+caught mathematical errors you missed, record
+`mathematical_reasoning` with a confidence reflecting how many of
+its findings turned out to be correct. Apply the multi-channel
+attribution framing from Paper 4 (the "causal attribution as one
+channel among several" subsection) to the delegated reasoner's
+outputs: treat its claims as one reporter's evidence in a
+multi-channel aggregate, not as ground truth. The trust dynamics
+toward the reasoner follow the same EWMA rules as any other agent
+from Paper 1's trust model (prediction residual → `T_k`).
+
+This rule is a consequence of §2.1 (you forward-model; the harness
+measures): the observation channel is how your ledger picks up
+capability evidence from the world. If an external reasoner
+contributes work whose quality is visible in the form of cooperative
+`vol_p` growth on your paper, or a well-caught bug, or a verified
+proof, that contribution is observational evidence the channel
+should record — and the right home for that evidence is a ledger
+entry, not a memory note.
+
+### 2.8 The user framing act is an observation
+
+When the user starts a feature loop — either by invoking
+`harness.cli run ... --task "..."` on a fresh instance, or by
+resuming a paused loop with a new directive — the user is exercising
+capabilities the ledger should record. The startup act is not just a
+control-flow event; it is **observational evidence** of several
+things happening at once:
+
+- **Task articulation.** The user has the ability to specify what
+  work matters and frame it in terms the agent can act on. This is
+  the root of goal-directed behavior for the loop; without it the
+  agent has no objective to forward-model against.
+- **Framing authority.** The user is the source of authority over
+  what counts as useful work in this instance. The framework does
+  not ask where this authority comes from (that is outside scope);
+  it accepts that at loop start the user holds it axiomatically and
+  no behavioral trust mechanism is applied to validate it. The user
+  is the root of the trust chain, not a node in it.
+- **Cross-session context** (resume case only). When the user
+  resumes a paused loop with new context — "I checked X while you
+  were paused and Y is actually true" — they are exercising
+  `long_tail_context`: the biological capability to carry state
+  across intervals that exceed the agent's working memory. This
+  is a substrate-exclusive capability of the user, already named in
+  standard cooperative entries like `sustained_research_collaboration`
+  in the ledger. A resume event is direct evidence of that
+  capability being exercised.
+
+The harness emits a working-buffer observation entry at loop start
+describing the startup event (source, task text, whether this is a
+fresh start or a resume, timestamp). Treat that entry the same way
+you would treat any other observation during PLAN phase: read it,
+integrate it into your task understanding, and let it inform whether
+the ledger needs updating. If the ledger does not already contain a
+`user` agent entry, the startup observation is a standing reason to
+add one — the agent's existence inside this harness is predicated on
+the user having already exercised the framing capability, so the
+evidence for `user` in the ledger accumulates from the first loop
+onward, not from some later "first contact" event.
+
+No trust bootstrap is applied. The harness does not initialize user
+trust to any value because the user is not behaviorally modeled, and
+authority trust (the category that would apply) is not yet a
+first-class concept in the framework. If a future paper introduces
+authority trust — for example, when a second framing source such as
+a governance protocol or an upstream spec document enters the
+picture — this subsection will be revisited. Until then, the user
+occupies the root-of-authority position by construction and no
+trust score is carried for them.
+
+**Consequence for the feature loop.** During PLAN phase, look for
+the startup observation in the working buffer. If this is the first
+loop for the instance, propose adding `user` to the ledger with
+capabilities reflecting what the startup act demonstrated:
+`task_articulation`, `framing`, and — on resume events —
+`long_tail_context`. The existing cooperative capability entries
+that require `user` participation (`sustained_research_collaboration`,
+`intuition_to_formalism_pipeline`, and similar) should already list
+those capabilities; the observation grounds them in evidence rather
+than leaving them as abstract preconditions.
+
+The broader pattern: **any cross-agent event the harness can see
+deterministically is a candidate observation.** Startup is the most
+basic one, but the same logic applies to codex invocations,
+subagent calls, and any other inter-entity interaction that leaves
+a trace in the feature loop. If you find yourself in RETRO thinking
+"I did cooperative work this loop but the ledger shows no evidence of
+it," the observation channel has gaps. Fix them by adding the
+missing entries to the ledger during the same RETRO pass.
+
 ## 3. The feature loop
 
 Every piece of work you do is organized as a **feature loop**. In
@@ -753,34 +886,125 @@ Do NOT use codex review:
 - For GFM harness code changes — codex is for paper content, not for
   the implementation layer
 
-### 8.2 How to invoke
+### 8.2 How to request a codex review
 
-The codex CLI is installed at `/opt/homebrew/bin/codex`. It should be
-on PATH in a normal shell, but if `codex: command not found` fires,
-use the full path explicitly. The canonical invocation pattern:
+Codex reviews are requested through the `codex-review` subagent, not
+by calling the codex CLI directly from the main agent. The subagent
+is a domain-agnostic wrapper: it runs codex against a target
+directory, captures the output, parses the final assessment, and
+returns a structured findings list to you. Same subagent for paper
+reviews, spec reviews, code reviews, security reviews, post-refactor
+sanity checks — any flow that invokes codex.
 
-```bash
-cd /Users/teague/Code/kraemahz/teague.info/docs/paperN
-codex exec --sandbox read-only "Provide a technical review of main.pdf and the surrounding .tex files"
+**Why delegate rather than run codex inline.** Codex output is
+50–250 KB per round of prose + thinking trace + tool exploration,
+and if the main agent invokes codex directly via Bash the entire
+raw output enters the main agent's context. Over 5 review rounds
+that costs roughly 0.5–1 million input tokens of noise to wade
+through. The subagent runs codex, parses the final assessment, and
+returns only the ~500-token structured findings list, so the main
+agent sees only actionable issues.
+
+Invoke via the `Agent` tool:
+
+```
+Agent(
+    subagent_type="codex-review",
+    description="Round N codex review of <short description>",
+    prompt="""
+    Working directory: /absolute/path/to/directory
+    Round: N
+    Prior rounds addressed:
+    - R1: <one-line summary of what R1 fixed>
+    - R2: <one-line summary of what R2 fixed>
+    Review prompt: <the actual prompt you would have sent to codex,
+    verbatim; describes what codex should review and what to focus on>
+    """,
+)
 ```
 
-Or with the explicit path if PATH is incomplete:
+The four fields:
 
-```bash
-cd /Users/teague/Code/kraemahz/teague.info/docs/paperN
-/opt/homebrew/bin/codex exec --sandbox read-only "Provide a technical review of main.pdf and the surrounding .tex files"
+- **`Working directory`** (required): absolute path to the directory
+  codex should run in. This is the sandbox scope — codex can only
+  read files under this directory. **You are responsible for picking
+  a directory wide enough to include every file the review prompt
+  references.** If the review compares a spec in `specs/` against
+  an implementation in `workers/`, the working directory must be a
+  common ancestor of both (typically the repo root), not just the
+  specs subdirectory. The subagent cannot validate this and will
+  return an error if codex reports missing files.
+
+- **`Round`** (optional, defaults to 1): integer round number,
+  used for the capture filename (`/tmp/codex_review_rN.txt`) so
+  successive rounds do not overwrite each other.
+
+- **`Prior rounds addressed`** (optional): short summaries of what
+  prior rounds fixed. The subagent appends these to the codex prompt
+  with "do not re-report these" instructions, so codex can focus on
+  new issues rather than re-surfacing fixed ones.
+
+- **`Review prompt`** (required): the actual prompt codex should
+  act on, phrased exactly as you would phrase it if you were calling
+  codex directly. The subagent passes it through verbatim and only
+  appends the severity-label instructions and prior-round context.
+
+**Example prompts for different domains:**
+
+Paper review:
+```
+Working directory: /Users/teague/Code/kraemahz/teague.info/docs/paper4
+Round: 3
+Prior rounds addressed:
+- R1: Bayesian log-odds priors, sign preservation in detector, ...
+- R2: EWMA a.s. → L², log-odds type mismatch, Gate 2 mechanism.
+Review prompt: Provide a technical review of main.pdf and the
+surrounding .tex files. Focus on soundness of proofs, unstated
+assumptions, and consistency of notation.
 ```
 
-The working directory must be the paper's directory (where `main.tex`
-and `main.pdf` live), not the harness repo root. Use a subshell or
-explicit `cd` so the rest of your shell context is unaffected.
-
-You may customize the review request prompt beyond the canonical form
-to focus codex on specific concerns — for example:
-
-```bash
-codex exec --sandbox read-only "Review sections 3 and 4 of main.pdf for unstated assumptions and missing citations. Ignore formatting and typo issues; focus on soundness."
+Spec vs. implementation (needs repo-root working directory for
+cross-directory access):
 ```
+Working directory: /Users/teague/Code/kraemahz/catenary
+Round: 1
+Review prompt: Review the specification document at
+specs/canonical_data_layout.md against the implementation in
+workers/options_canon.py and the related modules in workers/.
+Identify places where the implementation diverges from the spec,
+assumptions in the code that are not stated in the spec, and
+invariants the spec claims that the implementation does not
+actually maintain.
+```
+
+Security review (repo root):
+```
+Working directory: /Users/teague/Code/kraemahz/teague.info/gfm-harness
+Round: 1
+Review prompt: Give a security review of this repository. Focus on
+authentication, input validation, secrets handling, and any
+privilege escalation paths in the tool dispatch layer.
+```
+
+Post-refactor sanity check:
+```
+Working directory: /Users/teague/Code/kraemahz/catenary/workers
+Round: 1
+Review prompt: I just refactored the shard-index module from a
+single-writer design to multi-writer. Look for any remaining
+assumptions of single-writer semantics I missed, especially around
+cursor positioning and lock-free paths.
+```
+
+**Known limitation: single-tree sandbox.** Codex cannot mount two
+separate directories. If a review genuinely needs files from two
+unrelated repos (e.g., comparing an implementation in one repo
+against a reference in another), you have three options: (1) find
+or create a common ancestor directory that contains both, (2)
+temporarily symlink or copy the reference files into the working
+directory, or (3) run two separate reviews and reconcile findings
+manually. The first is usually available — most of our code lives
+under `~/Code/kraemahz/`.
 
 ### 8.3 Critical constraint: pure prose output only
 
@@ -792,29 +1016,52 @@ thinking trace and a final review section — that is the intended
 shape, do not try to engineer it into something machine-parseable
 at the codex level.
 
-The `review-summarizer` subagent (defined in the harness driver)
-handles the parsing job on our side. Do not try to DIY it through
-prompt engineering to codex.
+The `codex-review` subagent handles the parsing job on our side and
+is specifically instructed NOT to produce JSON output for the same
+distillation-protection reason. The chain stays prose-only from
+codex through the subagent to you.
 
-### 8.4 Parsing the output via the review-summarizer subagent
+### 8.4 What the subagent returns
 
-The raw codex output contains tool traces, exploration, thinking,
-and the final review. Delegating the parsing to a dedicated subagent
-keeps your main agent focused on paper revision while the subagent
-handles noise-filtering. Invoke via the `Agent` tool:
+The subagent returns a prose findings list with severity prefixes
+P0 / P1 / P2 / P3. Two possible shapes:
 
+**Convergence** (no new P0 or P1 issues from this round):
 ```
-Agent(
-    subagent_type="review-summarizer",
-    description="Extract review findings from codex output",
-    prompt="<paste the raw codex stdout here>",
-)
+CONVERGED: no new P0 or P1 findings.
+<optional P2/P3 findings from this round, if any>
 ```
 
-The subagent returns prose findings with severity prefixes
-(P0 / P1 / P2 / P3). It is specifically instructed NOT to produce
-JSON output for the same distillation-protection reason — the chain
-stays prose-only from codex through the subagent to you.
+This is the signal to halt the review loop (see §8.6). You may
+still want to address the P2/P3 findings before committing, but
+no further codex rounds are needed for this revision.
+
+**Findings** (at least one new P0 or P1):
+```
+P0 (critical):
+  - <file:line>: <one-line finding>
+  - ...
+P1 (substantive):
+  - ...
+P2 (clarity):
+  - ...
+P3 (minor):
+  - ...
+```
+
+Severity buckets with no findings are omitted. File:line references
+are preserved where codex produced them, so you can open the file
+directly to apply fixes.
+
+**Error shapes:**
+- `ERROR: missing or invalid Working directory` — caller bug; fix
+  the invocation.
+- `ERROR: missing Review prompt` — caller bug; fix the invocation.
+- `ERROR: working directory too narrow — codex could not access a
+  referenced file` — widen the working directory to a common
+  ancestor and re-invoke.
+- `ERROR: codex invocation failed` + tail of capture file — codex
+  itself crashed. Pause for the user rather than retrying blindly.
 
 ### 8.5 Severity and action
 

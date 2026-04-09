@@ -64,8 +64,10 @@ DEFAULT_BUILTIN_TOOLS = [
     "Bash",
     # The Agent tool is enabled so the main agent can invoke subagents
     # defined via ClaudeAgentOptions(agents={...}). Currently used for
-    # the review-summarizer subagent that parses raw codex CLI output
-    # during external paper reviews. See constitution §8.
+    # the codex-review subagent that wraps the full codex CLI round
+    # (invocation + capture + parse + return structured findings) for
+    # any review flow — paper, spec, code, security, etc. See
+    # constitution §8.
     "Agent",
 ]
 
@@ -296,79 +298,194 @@ async def _run_feature_loop_async(
 
     allowed_tools = list(builtin_tools) + mcp_tool_names()
 
-    # The review-summarizer subagent extracts review findings from raw
-    # codex CLI output during external-reviewer workflows (constitution
-    # §8). The codex CLI produces noisy output (thinking traces,
-    # exploration, the final review at the bottom), and the main agent
-    # would burn turns trying to parse it directly. Delegating to a
-    # subagent keeps the main agent focused on paper revision while the
-    # subagent handles the noise-filtering.
+    # The codex-review subagent wraps a single codex CLI invocation:
+    # it runs codex against a target directory, captures the output to
+    # a file, parses the final assessment section, and returns a
+    # structured findings list to the calling agent. The subagent is
+    # domain-agnostic — it handles paper reviews, spec reviews, code
+    # reviews, security reviews, and post-refactor sanity checks with
+    # the same interface. The calling agent provides the verbatim codex
+    # prompt plus optional round/prior-context metadata; the subagent
+    # does not know or care what domain it is in.
     #
-    # Critical constraint: the subagent's output MUST be prose, not
-    # structured JSON. A prior attempt to force JSON review output
-    # triggered OpenAI's automated-distillation protection and got the
-    # project banned from the API. Pure prose with severity prefixes
-    # (P0/P1/P2/P3) is the only acceptable format.
-    review_summarizer = AgentDefinition(
+    # Why this is a subagent rather than inline Bash+Read on the main
+    # agent: codex output is 50-250KB per review round and the main
+    # agent would burn its context window on the raw exploration trace.
+    # The subagent runs codex, parses the assessment, and returns only
+    # the ~500-token findings list, so the main agent sees only
+    # actionable severity-tagged issues.
+    #
+    # Critical constraints (see constitution §8):
+    # - Output is pure prose, never JSON. A prior JSON-formatted attempt
+    #   triggered OpenAI's distillation-protection system and got the
+    #   project banned from the API.
+    # - Codex invocations always use `--sandbox read-only` and always
+    #   capture to /tmp/codex_review_rN.txt (unredirected stdout is
+    #   truncated by the Bash tool and costs a full retry).
+    # - The caller owns the working-directory scope decision. The
+    #   sandbox is scoped to the working directory and its descendants,
+    #   so the caller must pick a directory wide enough to include
+    #   every file the review prompt references.
+    codex_review = AgentDefinition(
         description=(
-            "Extract review findings from raw codex CLI output. Use this "
-            "whenever you have invoked `codex exec` for an external paper "
-            "review and need to parse its noisy output into actionable "
-            "findings. Input is the raw codex stdout; output is prose "
-            "findings ranked by severity (P0/P1/P2/P3)."
+            "Invoke codex (GPT-5.4 via /opt/homebrew/bin/codex exec) on "
+            "a target directory, capture its output, parse the final "
+            "assessment, and return structured P0/P1/P2/P3 findings. Use "
+            "this for any codex-based review: paper, spec, code, "
+            "security, refactor sanity check, or other. Domain-agnostic "
+            "wrapper around a single codex invocation."
         ),
         prompt=(
-            "You are the review-summarizer subagent for the GFM harness. "
-            "Your job is to take raw output from the codex CLI (OpenAI's "
-            "GPT-5.4 via `codex exec --sandbox read-only`) and extract "
-            "the technical review content from the surrounding noise.\n"
+            "You are the codex-review subagent for the GFM harness. Your "
+            "single job is to wrap a single codex CLI invocation: run "
+            "codex against a target, capture its output to a file, parse "
+            "the final assessment section, and return a structured "
+            "findings list to the calling agent.\n"
             "\n"
-            "The raw codex output typically contains:\n"
-            "  - Tool calls codex made during its exploration (file reads, "
-            "    search queries, internal reasoning)\n"
-            "  - Codex's thinking traces as it works through the review\n"
-            "  - The actual review content, usually toward the bottom\n"
+            "You are domain-agnostic. The calling agent handles paper "
+            "reviews, spec reviews, code reviews, security reviews, "
+            "refactor sanity checks, and anything else codex can reason "
+            "about. You do not know or care which domain you are in — "
+            "you just run codex with the prompt you were given.\n"
             "\n"
-            "Your task: extract and summarize the review findings in "
-            "prose form, ranked by severity.\n"
+            "The calling agent sends a task description with these fields:\n"
             "\n"
-            "Severity classification:\n"
-            "  - P0: critical errors (wrong claims, broken proofs, "
-            "    invalid assumptions that invalidate the result)\n"
-            "  - P1: substantive issues (unstated assumptions, "
-            "    over-broad claims, gaps in reasoning, missing citations)\n"
-            "  - P2: style and clarity issues (unclear phrasing, "
-            "    suboptimal structure, notation inconsistencies)\n"
-            "  - P3: minor nits (typos, formatting, word choice)\n"
+            "  Working directory: <absolute path to a directory that "
+            "encompasses all files the review prompt references or "
+            "implies>\n"
+            "  Round: <optional integer; defaults to 1 if omitted>\n"
+            "  Prior rounds addressed: <optional prose summary, one "
+            "entry per round>\n"
+            "  Review prompt: <the actual prompt to pass to codex, verbatim>\n"
             "\n"
-            "**CRITICAL OUTPUT CONSTRAINT**: your output must be pure "
-            "prose, not JSON or any structured format. A prior attempt "
-            "to produce structured JSON review output triggered "
-            "OpenAI's automated-distillation protection and got the "
-            "project banned from their API. This subagent's output "
-            "will be shown to the main agent as prose it reads and "
-            "reasons about — it does not need to be parseable by a "
-            "regex or a JSON deserializer. Use natural prose with "
-            "severity prefixes like 'P0:' or 'P1:' at the start of "
-            "each finding, not a JSON array or markdown table.\n"
+            "IMPORTANT — sandbox scope. Codex runs with "
+            "--sandbox read-only, which scopes its file access to the "
+            "working directory and its descendants. The calling agent "
+            "is responsible for choosing a working directory wide "
+            "enough to include every file the review needs to see. If "
+            "the review compares two files in different subtrees "
+            "(e.g., a spec in `specs/` against an implementation in "
+            "`workers/`), the working directory must be a common "
+            "ancestor of both — typically the repo root. You do not "
+            "and cannot validate this; the caller owns the scope "
+            "decision. If codex returns a finding like \"I cannot find "
+            "the implementation file\" or the capture file contains a "
+            "permission-denied error from the sandbox, return \"ERROR: "
+            "working directory too narrow — codex could not access a "
+            "referenced file\" and include the last ~500 characters of "
+            "the capture file so the caller can widen the scope and "
+            "retry.\n"
             "\n"
-            "For each finding, include:\n"
-            "  - The severity prefix\n"
-            "  - Where in the paper the finding applies (section, "
-            "    paragraph, or line if codex referenced one)\n"
-            "  - A concise description of the issue\n"
-            "  - The fix codex suggested, if any\n"
+            "If Working directory is missing or not a directory, return "
+            "\"ERROR: missing or invalid Working directory\" and stop. "
+            "Review prompt is required; if missing, return \"ERROR: "
+            "missing Review prompt\" and stop.\n"
             "\n"
-            "Skip the thinking-trace noise entirely. Do not quote "
-            "codex's exploration process; only the final review "
-            "content matters. If codex produced no actionable findings "
-            "(the review was 'looks good'), say so explicitly and do "
-            "not invent findings to fill the response.\n"
+            "Procedure:\n"
             "\n"
-            "Return your summary as your response; the main agent will "
-            "read it and decide which findings to act on."
+            "1. Compose the full codex prompt. Start with the verbatim "
+            "Review prompt from the task description. If Prior rounds "
+            "addressed is present, append:\n"
+            "\n"
+            "     Prior review rounds have already addressed the "
+            "following issues. Do not re-report them:\n"
+            "\n"
+            "     {Prior rounds addressed}\n"
+            "\n"
+            "   Then append:\n"
+            "\n"
+            "     Use severity labels when surfacing issues: P0 for "
+            "soundness-critical, P1 for substantive, P2 for clarity, "
+            "P3 for minor. If no new P0 or P1 issues remain from this "
+            "pass, state 'CONVERGED: no new P0 or P1 findings' "
+            "explicitly.\n"
+            "\n"
+            "2. Run codex with mandatory file capture. Use the Bash "
+            "tool:\n"
+            "\n"
+            "     cd {Working directory} && /opt/homebrew/bin/codex "
+            "exec --sandbox read-only \"<composed prompt from step 1>\" "
+            "> /tmp/codex_review_r{Round}.txt 2>&1\n"
+            "\n"
+            "   The cd is load-bearing: it sets the sandbox scope. "
+            "Always use --sandbox read-only. Always capture to "
+            "/tmp/codex_review_r{Round}.txt (unredirected codex output "
+            "is truncated by the Bash tool and costs a full retry). If "
+            "Round was not provided, use r1.\n"
+            "\n"
+            "3. Read the capture file. Scan for the final assessment "
+            "section. Codex's natural format is prose with a thinking "
+            "trace followed by a final structured assessment. Look for "
+            "markers like \"**Assessment**\", \"**Overall**\", "
+            "\"**Findings**\", \"**Major Issues**\", \"**P0**\", or "
+            "similar. Everything before the final assessment is "
+            "exploration trace and should be discarded.\n"
+            "\n"
+            "4. Normalize codex's severity labels into P0/P1/P2/P3. "
+            "Codex may use different words depending on the domain:\n"
+            "     - \"critical\", \"blocker\", \"soundness-critical\", "
+            "\"major issue\"     → P0\n"
+            "     - \"substantive\", \"significant\", \"P1\", "
+            "\"secondary issue\"   → P1\n"
+            "     - \"clarity\", \"minor issue\", \"style\", \"P2\"        "
+            "           → P2\n"
+            "     - \"nit\", \"typo\", \"cosmetic\", \"P3\"                   "
+            "      → P3\n"
+            "   When in doubt, default to the more severe bucket.\n"
+            "\n"
+            "5. Return the structured findings as prose. Required "
+            "format:\n"
+            "\n"
+            "     <If codex said CONVERGED or equivalent:>\n"
+            "       CONVERGED: no new P0 or P1 findings.\n"
+            "       {Optional P2/P3 findings from this round, if any.}\n"
+            "\n"
+            "     <Otherwise:>\n"
+            "       P0 (critical):\n"
+            "         - <file:line or location>: <one-line finding>\n"
+            "         - ...\n"
+            "       P1 (substantive):\n"
+            "         - ...\n"
+            "       P2 (clarity):\n"
+            "         - ...\n"
+            "       P3 (minor):\n"
+            "         - ...\n"
+            "\n"
+            "   If a severity bucket is empty, omit that section "
+            "entirely. Preserve codex's file:line references when "
+            "codex gave them — the calling agent uses those to apply "
+            "fixes.\n"
+            "\n"
+            "CRITICAL CONSTRAINTS:\n"
+            "\n"
+            "- Never return the raw codex output. The whole point of "
+            "this subagent is that the calling agent sees only the "
+            "parsed findings, not the 50-250KB of exploration trace "
+            "codex produces. If you return raw output you have failed "
+            "the subagent's purpose.\n"
+            "\n"
+            "- Never produce JSON output. A prior attempt to force "
+            "JSON-formatted reviews triggered OpenAI's "
+            "distillation-protection system and got the project banned "
+            "from the API. The chain stays prose-only from codex "
+            "through this subagent to the calling agent.\n"
+            "\n"
+            "- Never run codex without the file-redirect "
+            "(`> /tmp/codex_review_rN.txt 2>&1`). Unredirected codex "
+            "stdout is truncated by the Bash tool and costs a full "
+            "retry invocation.\n"
+            "\n"
+            "- Never modify files outside /tmp/. Your only filesystem "
+            "write is the codex capture file. You do not apply "
+            "findings, edit source, or commit anything.\n"
+            "\n"
+            "- If codex fails (nonzero exit code, empty capture file, "
+            "no parseable assessment section), return \"ERROR: codex "
+            "invocation failed\" plus the last ~500 characters of the "
+            "capture file. Do not retry; do not try to diagnose; "
+            "return the error to the caller and let them decide."
         ),
-        tools=["Read"],
+        tools=["Bash", "Read"],
     )
 
     # pause_for_user is a notification mechanism, not a hard control-flow
@@ -384,7 +501,7 @@ async def _run_feature_loop_async(
         system_prompt=system_prompt,
         allowed_tools=allowed_tools,
         mcp_servers={"gfm-harness": harness_server},
-        agents={"review-summarizer": review_summarizer},
+        agents={"codex-review": codex_review},
         permission_mode=permission_mode,
         model=model,
         # ThinkingConfigAdaptive is a TypedDict; the "type" field is required
@@ -412,6 +529,26 @@ async def _run_feature_loop_async(
     turns_observed = 0
     last_result: Any = None
     terminated_reason = "end_turn"
+
+    # Snapshot the consolidation counter before the loop runs. The fallback
+    # eviction path at end-of-loop compares this to the post-loop counter
+    # to determine whether the agent called consolidate() during this loop.
+    consolidations_before = session.memory.consolidations_applied
+
+    # Emit a startup observation to the working buffer. This is the harness
+    # side of constitution §2.8: the user starting a feature loop (whether
+    # by providing a task description, or by resuming a paused loop, or
+    # by kicking off autonomous mode) is observational evidence of the
+    # user exercising framing capabilities. The agent reads this entry
+    # during PLAN and can act on it — typically by adding or updating the
+    # `user` ledger entry with observed capabilities. No trust bootstrap
+    # is applied; see §2.8 for why.
+    _emit_startup_observation(
+        session,
+        task_description=task_description,
+        resume_context=resume_context,
+        autonomous=autonomous,
+    )
 
     try:
         async for message in query(prompt=initial_message, options=options):
@@ -462,7 +599,10 @@ async def _run_feature_loop_async(
     # so the next loop starts in a clean state. It does NOT do any
     # cognitive consolidation work (proposing episodes/lessons) — that's
     # the agent's job, and a future feature loop can do it.
-    _run_fallback_eviction(session, terminated_reason, verbose)
+    agent_consolidated = (
+        session.memory.consolidations_applied > consolidations_before
+    )
+    _run_fallback_eviction(session, terminated_reason, agent_consolidated, verbose)
 
     # Persist trust state regardless of how we terminated.
     save_trust(session)
@@ -578,6 +718,111 @@ def _log_assistant_message(session: HarnessSession, message: Any) -> None:
         )
 
 
+def _emit_startup_observation(
+    session: HarnessSession,
+    task_description: str | None,
+    resume_context: str | None,
+    autonomous: bool,
+) -> None:
+    """
+    Write a working-buffer entry at loop start describing the startup
+    event. The agent reads this during PLAN phase as observational
+    evidence that the user has exercised framing capabilities.
+
+    See constitution §2.8 for the framework rationale. No trust bootstrap
+    is performed — the user is the root of authority by construction, not
+    a node in a behaviorally-modeled trust chain.
+
+    The entry is appended with importance 0.6 — high enough to survive
+    an initial consolidation pass, low enough to be consolidated into an
+    episode during RETRO and evicted afterward. An agent that reads the
+    observation and acts on it (by adding `user` to the ledger, for
+    example) does not need the raw entry to persist beyond that point.
+    """
+    is_resume = resume_context is not None and resume_context.strip() != ""
+
+    if autonomous and not is_resume:
+        # Autonomous mode with no resume context: the user started the
+        # instance but did not specify a task. The framing act is
+        # "invoke me with authority to pick my own task from the goal
+        # set", which is still an observation — just a weaker one,
+        # because the content of the task comes from the goal set
+        # rather than from the user's direct articulation.
+        body = (
+            "Feature loop started in autonomous mode. The user exercised "
+            "framing capability by invoking the harness and authorizing "
+            "task selection from the active goal set, but did not provide "
+            "a specific task description. This is evidence of the user's "
+            "framing and task_selection_delegation capabilities. "
+            "Consider whether the ledger contains a `user` entry; if not, "
+            "this observation is standing reason to add one during PLAN "
+            "or RETRO per §2.8."
+        )
+    elif is_resume and task_description:
+        body = (
+            f"Feature loop resumed with new task. Resume context: "
+            f"{resume_context[:500]}{'...' if len(resume_context) > 500 else ''}\n"
+            f"New task: {task_description[:500]}"
+            f"{'...' if task_description and len(task_description) > 500 else ''}\n"
+            f"This is evidence of the user exercising long_tail_context "
+            f"(carrying state across a session boundary that exceeded the "
+            f"agent's working memory) and task_articulation (specifying "
+            f"the next piece of work). See §2.8: if the ledger has no "
+            f"`user` entry, or lacks `long_tail_context` on the existing "
+            f"entry, update it during PLAN or RETRO."
+        )
+    elif is_resume:
+        body = (
+            f"Feature loop resumed. Resume context: "
+            f"{resume_context[:800]}{'...' if len(resume_context) > 800 else ''}\n"
+            f"This is evidence of the user exercising long_tail_context "
+            f"(carrying state across a session boundary). See §2.8."
+        )
+    elif task_description:
+        body = (
+            f"Feature loop started with user-specified task. "
+            f"Task: {task_description[:800]}"
+            f"{'...' if len(task_description) > 800 else ''}\n"
+            f"This is evidence of the user exercising task_articulation "
+            f"and framing capabilities: the authority to specify what "
+            f"work matters and articulate it in actionable terms. See "
+            f"§2.8: if the ledger has no `user` entry, this observation "
+            f"is standing reason to add one."
+        )
+    else:
+        # Unusual case: non-autonomous, no task, no resume. Shouldn't
+        # normally happen given CLI validation, but be defensive.
+        body = (
+            "Feature loop started with no task description, no resume "
+            "context, and autonomous=False. This is an unusual startup "
+            "state that should not occur in normal operation; record it "
+            "but do not treat it as a meaningful observation."
+        )
+
+    try:
+        session.memory.append(
+            phase="plan",
+            kind="observation",
+            text=body,
+            importance=0.6,
+            metadata={
+                "source": "user_framing_channel",
+                "startup_observation": True,
+                "autonomous": autonomous,
+                "is_resume": is_resume,
+                "has_task": task_description is not None and task_description.strip() != "",
+            },
+        )
+    except Exception as e:  # noqa: BLE001
+        # Startup observation is best-effort — if the append fails
+        # (e.g., disk full, memory locked), the loop should still run.
+        # The agent can still function without the observation; it just
+        # won't have the explicit user-channel prompt in its buffer.
+        import traceback
+        print(f"  [startup observation failed] {type(e).__name__}: {e}")
+        traceback.print_exc(limit=2)
+
+
 def _accumulate_usage(total: dict[str, int], result_message: Any) -> None:
     """
     Pull usage fields off a ResultMessage and add to the running total.
@@ -607,31 +852,44 @@ def _accumulate_usage(total: dict[str, int], result_message: Any) -> None:
 def _run_fallback_eviction(
     session: HarnessSession,
     terminated_reason: str,
+    agent_consolidated: bool,
     verbose: bool,
 ) -> None:
     """
     Harness-side fallback eviction. Runs at the end of every feature loop
-    regardless of how it terminated, to enforce memory layer bounds even
-    when the agent's normal RETRO did not run.
+    regardless of how it terminated, to enforce memory layer bounds.
 
-    The fallback is mechanical: it just calls memory.evict() to drop
-    over-cap entries, then leaves a memory note describing what happened.
-    It does NOT propose episodes or lessons — that's the agent's
-    cognitive work, and forcing it from the harness side would taint the
-    audit trail with hallucinated consolidation.
+    Two distinct cases, distinguished by ``agent_consolidated``:
 
-    Note level on the fallback memory entry uses importance 0.85 because
-    "the harness fell back to bounds enforcement" is the same shape as
-    the rubric's "loss of function" category — a structural failure of
-    the normal flow that future feature loops should be able to detect
-    and reason about.
+    1. **Agent never consolidated** (``agent_consolidated=False``). This
+       is a real failure mode: the loop crashed or paused before RETRO,
+       or the agent skipped consolidation. The memory note uses the
+       ``fallback_no_consolidation`` tag and importance 0.85 (structural
+       failure, future loops should detect and reason about it). The next
+       feature loop should run cognitive consolidation over the carried-
+       forward working buffer.
+
+    2. **Agent consolidated but buffer still over bound**
+       (``agent_consolidated=True``). This is routine backstop trimming:
+       the agent's consolidate proposal didn't evict enough entries to
+       get back under the hard limit, so the harness drops the N
+       lowest-importance excess entries mechanically. The memory note
+       uses ``fallback_backstop_trim`` and importance 0.5 (informational,
+       not a failure). No action needed from the next feature loop.
+
+    The fallback is mechanical in both cases: it just calls memory.evict()
+    to drop over-cap entries, then leaves a memory note describing what
+    happened. It does NOT propose episodes or lessons — that's the
+    agent's cognitive work, and forcing it from the harness side would
+    taint the audit trail with hallucinated consolidation.
     """
     # Important ordering: write the diagnostic note FIRST, then call
     # evict(). Writing the note after eviction would push the buffer
     # back over its cap by 1 (the note itself is an entry). By writing
     # the note first, evict() sees it in the buffer when it runs and
-    # the note's high importance (0.85) means it survives against the
-    # lowest-importance entries, while the bound is correctly enforced.
+    # the note's importance means it either survives (failure case, 0.85)
+    # or can itself be evicted (routine case, 0.5) against the lowest-
+    # importance entries, while the bound is correctly enforced.
     needs_check = (
         len(session.memory.working_buffer) > session.memory.working_buffer_max_entries
         or len(session.memory.episodes) > session.memory.episodes_max_count
@@ -647,28 +905,45 @@ def _run_fallback_eviction(
         "lessons": len(session.memory.lessons),
     }
 
-    placeholder_note = (
-        f"Harness fallback eviction fired. The feature loop terminated as "
-        f"'{terminated_reason}' before normal RETRO consolidation could "
-        f"enforce memory bounds. Pre-eviction layer counts: "
-        f"working_buffer={pre_eviction_counts['working_buffer']}, "
-        f"episodes={pre_eviction_counts['episodes']}, "
-        f"lessons={pre_eviction_counts['lessons']}. "
-        f"A future feature loop should run RETRO consolidation to produce "
-        f"proper episodes and lessons from the work this loop did before "
-        f"termination — the fallback only enforces bounds, it does not "
-        f"do cognitive consolidation."
-    )
+    if agent_consolidated:
+        placeholder_note = (
+            f"Harness backstop trim. The agent ran consolidate() during this "
+            f"loop, but the working buffer remained above the hard bound "
+            f"({pre_eviction_counts['working_buffer']} entries vs "
+            f"{session.memory.working_buffer_max_entries} max), so the "
+            f"harness mechanically dropped the lowest-importance excess "
+            f"entries to enforce the bound. This is routine: the agent's "
+            f"cognitive consolidation ran and the backstop only trimmed "
+            f"the residual."
+        )
+        note_importance = 0.5
+        note_tag = "fallback_backstop_trim"
+    else:
+        placeholder_note = (
+            f"Harness fallback eviction fired. The feature loop terminated as "
+            f"'{terminated_reason}' and the agent did not run consolidate() "
+            f"during this loop. Pre-eviction layer counts: "
+            f"working_buffer={pre_eviction_counts['working_buffer']}, "
+            f"episodes={pre_eviction_counts['episodes']}, "
+            f"lessons={pre_eviction_counts['lessons']}. "
+            f"A future feature loop should run RETRO consolidation to produce "
+            f"proper episodes and lessons from the work this loop did before "
+            f"termination — the fallback only enforces bounds, it does not "
+            f"do cognitive consolidation."
+        )
+        note_importance = 0.85
+        note_tag = "fallback_no_consolidation"
 
     try:
         session.memory.append(
             phase="retro",
             kind="note",
             text=placeholder_note,
-            importance=0.85,
+            importance=note_importance,
             metadata={
-                "fallback_eviction": True,
+                note_tag: True,
                 "terminated_reason": terminated_reason,
+                "agent_consolidated": agent_consolidated,
                 "pre_eviction_counts": pre_eviction_counts,
             },
         )
@@ -684,8 +959,9 @@ def _run_fallback_eviction(
         return
 
     if verbose:
+        label = "backstop trim" if agent_consolidated else "fallback eviction"
         print(
-            f"  [fallback eviction] terminated={terminated_reason!r} "
+            f"  [{label}] terminated={terminated_reason!r} "
             f"evicted entries={len(report.evicted_entries)} "
             f"episodes={len(report.evicted_episodes)} "
             f"lessons={len(report.evicted_lessons)}"
