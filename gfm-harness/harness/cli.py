@@ -88,8 +88,11 @@ def cmd_run(args: argparse.Namespace) -> int:
     #   --autonomous              → replace saved state (log the old one)
     #   (none of the above)       → resume saved if present, else need --task
 
-    if args.resume and not args.task and not autonomous:
-        # Resume mode: continue from saved feature state.
+    if args.resume and not args.task:
+        # Resume mode: continue from saved feature state. --resume takes
+        # precedence over --autonomous when both are passed, because the
+        # intent is "continue the saved loop with this feedback" not
+        # "start a fresh autonomous loop."
         if saved_state is None:
             print(
                 "ERROR: --resume was given but no saved feature state exists.\n"
@@ -98,6 +101,13 @@ def cmd_run(args: argparse.Namespace) -> int:
             )
             return 1
         task = saved_state.task_description
+        # If the saved state was produced by an autonomous SELECT
+        # (task_description is None), inherit that mode for the resume.
+        # This preserves the original loop's prompt framing and phase
+        # machine starting point. An explicit --autonomous flag reinforces
+        # the inference; its absence doesn't override.
+        if task is None:
+            autonomous = True
         print(f"Resuming saved feature (phase={saved_state.current_phase.value})")
     elif args.task or autonomous:
         # New task or autonomous mode: replace any saved state.
