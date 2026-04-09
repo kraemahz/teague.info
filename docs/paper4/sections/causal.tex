@@ -274,12 +274,131 @@ $\sim$100$\times$ more observations than the causal detector to achieve the
 same confidence. The causal detector's advantage grows linearly with the
 number of simultaneously acting confounders.
 
-\paragraph{Limitation: SCM structure dependence.} The causal detector
-requires the actor to know (or learn) the causal DAG. If the DAG is
-misspecified, causal attributions can be incorrect: a non-causal agent may
-receive spurious attribution (false positive), or a causal agent may be
-exonerated (false negative). Learning the DAG from observational data is
-itself a hard problem \citep{spirtes2000causation}, and the actor's causal
-knowledge improves with the same capability-scaling argument as the
-foundational paper's estimator fidelity: a more capable actor builds a more
-accurate causal model, producing better attributions.
+\subsection{Causal Attribution as One Channel Among Several}
+\label{sec:multi_channel}
+
+Proposition~\ref{prop:causal_dominates} assumes that the SCM $\SCM$ is
+accurate enough to support do-calculus attribution, and that the
+structural assumptions of part (c) (causal sufficiency and
+additive-SCM structure) hold. In practice the SCM is learned from
+observational data, partially specified, and adversarially exposed:
+agents can strategically align their actions to mask causal
+structure, and new agents or delegation chains can emerge during the
+trajectory. A framework that depended on the SCM being perfectly
+learned would be brittle. Instead, the framework is robust because
+causal attribution is \emph{one channel} among several in a
+multi-channel attribution system, and the system's overall
+attribution accuracy degrades gracefully as any single channel's
+reliability degrades.
+
+Multi-channel attribution is the standard methodology in adversarial
+intrusion analysis and intelligence tradecraft. The Diamond Model of
+intrusion analysis \citep{caltagirone2013diamond} organizes attribution
+around four analytic vertices --- adversary, capability,
+infrastructure, victim --- linked by relationships, with confidence
+coming from cross-vertex correlation rather than from any single
+vertex. The \emph{Pyramid of Pain} \citep{bianco2013pyramid} ranks
+observable signals by how costly they are for an adversary to change:
+hash values, IP addresses, and domain names are cheap to rotate;
+tools and tactics, techniques, and procedures (TTPs) are expensive to
+retrain. The MITRE ATT\&CK framework \citep{strom2018attack} provides
+a shared capability taxonomy that grounds TTP-level attribution in a
+common vocabulary. The \emph{Analysis of Competing Hypotheses}
+\citep{heuer1999psychology} provides a structured method for
+comparing attribution hypotheses by diagnostic evidence, weighting
+signals by their power to discriminate among candidates rather than
+by their individual strength. In all four traditions, the robustness
+of an attribution decision is driven by signals the adversary cannot
+cheaply fake, and no single signal is load-bearing.
+
+The GFM sequence already supplies several attribution channels,
+distributed across papers:
+\begin{itemize}
+\item \textbf{Behavioral prediction residual.} The trust model of
+    \citet{lasser2026gfm} computes $r_k(t) = R_k(t) - \hat{R}_k(t
+    \mid M_k(G))$, the divergence between an agent's observed
+    behavior and its predictive model. An agent whose actions
+    consistently match its model concentrates on high $T_k$;
+    systematic divergence drives $T_k$ down. This is a moderately
+    expensive channel to fake: a scorpion must maintain behavioral
+    consistency with a fictitious model to evade it.
+\item \textbf{Correlational co-occurrence.} The trust-weighted
+    $\Deltahat$ signal of \citet{lasser2026gfm} (Proposition~2(a))
+    detects agents whose actions temporally co-occur with
+    $\volL$-contraction. This is a cheap channel to fake --- an
+    adversary can introduce uncorrelated dummy actions --- and is
+    strictly dominated by the causal channel under the conditions of
+    Proposition~\ref{prop:causal_dominates}(c).
+\item \textbf{Capability gating.} Papers 2 and 3 of the GFM sequence
+    \citep{lasser2026poset, lasser2026horizon} together provide a
+    structural constraint: an agent cannot cause the contraction of
+    a capability it does not have upstream access to, regardless of
+    any other signal. This is the \emph{means-analysis} from the
+    intrusion-analysis tradition and sits at the top of the
+    robustness hierarchy: capability gating is nearly unfakeable
+    \emph{relative to a trusted, sufficiently complete capability
+    graph}, because it reflects the structure of the poset itself
+    rather than behavior an adversary can stage. (Hidden delegation,
+    latent substitute capabilities, or a misspecified poset can
+    defeat the gate; the strength of the gate is bounded by the
+    fidelity of the maintained capability model.) An attribution
+    decision that conflicts with capability gating should be
+    overridden by it, not aggregated with it.
+\item \textbf{Causal contraction attribution} (this paper,
+    Definition~\ref{def:causal_attribution}). Moderately expensive to
+    fake, since the SCM demands counterfactual consistency, and
+    strictly informative under the conditions of
+    Proposition~\ref{prop:causal_dominates}(c). Vulnerable to SCM
+    misspecification.
+\item \textbf{SPRT scorpion detection} (this paper,
+    Section~\ref{sec:scorpion}). Moderately expensive to fake under
+    stationary epochs; vulnerable to fast adaptation as characterized
+    by the evasion bandwidth bound.
+\end{itemize}
+
+An attribution decision should aggregate evidence across channels,
+weighted by each channel's calibrated reliability, rather than rely
+on the output of any single channel. (The aggregation is Bayesian in
+spirit --- each channel contributes evidence toward or against a
+suspect --- but this paper does not formalize the joint hypothesis
+space or channel-dependence model; the full fusion rule is an open
+direction identified below.) The multi-channel framing has three
+architectural consequences:
+
+\begin{enumerate}
+\item \textbf{Capability gating is a hard filter, not a prior.}
+    An agent that cannot structurally reach capability $c_i$ cannot
+    have caused its contraction, and no amount of causal or
+    correlational evidence should override that. The correct
+    aggregation is a gate-then-aggregate architecture: apply the
+    capability gate first to produce the candidate suspect set, then
+    aggregate the remaining channels over the candidates.
+\item \textbf{No single channel must be perfect.} Each channel has
+    its own reliability, and the aggregate's accuracy depends on
+    the joint reliability profile rather than on the
+    maximum-reliability channel. This is the property that makes
+    multi-channel attribution robust in the threat-intelligence
+    setting and that makes the GFM actor robust to imperfect
+    structure learning (Section~\ref{sec:discussion}).
+\item \textbf{Channel weights should be calibrated from
+    measurable proxies}, not fixed at design time. The causal
+    channel's weight should scale with an SCM-confidence estimate
+    derived from structure-learning diagnostics; the behavioral
+    channel's weight should scale with a population-level
+    reliability measure derived from the per-agent trust scores
+    $T_k$ of \citet{lasser2026gfm} (distinct from the actor's
+    self-trust $T_s$, which governs learning rate rather than
+    channel reliability); the correlational channel's weight
+    should scale with the confounding variance estimated from the
+    population structure. The calibration procedure is outside the
+    scope of this paper and is identified as an open direction in
+    Section~\ref{sec:discussion}.
+\end{enumerate}
+
+Paper 4's contribution to this framework is the causal channel: a
+principled, do-calculus-based attribution signal with a convergence
+advantage over the correlational baseline under stated structural
+conditions. It is not the attribution system, and the paper does not
+claim that the causal channel is load-bearing. The overall
+attribution robustness comes from the multi-channel structure, and
+from capability gating in particular as the structural floor.

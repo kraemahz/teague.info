@@ -3,18 +3,61 @@
 
 \subsection{Limitations}
 
-\paragraph{SCM structure learning.} The causal attribution framework
-(Section~\ref{sec:causal}) requires the actor to know or learn the causal
-DAG over agent actions and capability changes. Structure learning from
-observational data is a well-studied but difficult problem
-\citep{spirtes2000causation}. Incorrect causal structure produces incorrect
-attributions, which can lead to false positive scorpion detection (blaming
-innocent agents for confounded contractions) or false negatives (exonerating
-causally responsible agents). The framework inherits the same
-world-model-dependence limitation as the horizon paper
-\citep{lasser2026horizon}, applied to causal structure specifically. A more
-capable actor builds a more accurate causal model, but the convergence rate
-of structure learning in adversarial environments is not characterized here.
+\paragraph{SCM structure learning as channel optimization, not
+prerequisite.} The causal attribution channel of
+Section~\ref{sec:causal} requires the actor to know or learn the
+causal DAG over agent actions and capability changes. Standard
+observational structure learning \citep{spirtes2000causation} is
+inadequate for the GFM setting for three distinct reasons. First,
+the data-generating process is adversarial: scorpions can
+strategically align their actions with observed noise to mask their
+causal role, so classical conditional-independence tests can be
+gamed by an adversary who knows which tests will be run. Standard
+structure learning does not have a threat model. Second, the agent
+cardinality is non-fixed: new agents can appear, existing agents can
+delegate, and a group can coordinate and behave as a single
+effective actor, so the variable set itself evolves. Latent-variable
+discovery methods (FCI, RFCI) assume a fixed variable cardinality
+and do not naturally handle this. Third, the actor cannot typically
+intervene on other agents: interventional causal discovery relies on
+actual interventions, which a GFM actor can simulate inside its SCM
+but cannot enforce in the world. This rules out the entire class of
+interventional discovery methods and leaves only observational
+methods, which are strictly weaker under the adversarial conditions
+above.
+
+Because causal attribution is one channel among several
+(Section~\ref{sec:multi_channel}), and capability gating via the
+poset of \citet{lasser2026poset} and \citet{lasser2026horizon} is
+the strongest and most difficult to fake channel (relative to a
+trusted, sufficiently complete capability graph), structure learning
+becomes an \emph{optimization target} for one channel's contribution
+rather than a \emph{prerequisite} for attribution at all. When the
+SCM is poorly learned, the causal channel degrades, the other
+channels are not directly degraded by the SCM misspecification, and
+the multi-channel aggregate reweights toward the
+structurally-grounded channels. The system does not collapse; it
+falls back on the trust and capability machinery of
+\citet{lasser2026gfm}, \citet{lasser2026poset}, and
+\citet{lasser2026horizon}.
+
+The structural assumptions underlying
+Proposition~\ref{prop:causal_dominates}(c) are partially testable
+through a residual-covariance diagnostic: if
+$\mathrm{Cov}(\CausalAttr(a_j), \CausalAttr(a_k) \mid G_t)$ exceeds
+the level the current SCM predicts, the SCM is misspecified ---
+possible causes include a missing edge, latent common causes,
+exogenous-orthogonality failure, non-additivity, or nonstationarity
+--- and the causal channel's reliability should degrade accordingly. Integrating such a
+diagnostic into a calibrated SCM-confidence scalar
+$c_{\SCM}(t) \in [0,1]$ that weights the causal channel's
+contribution to the multi-channel aggregate --- so declining
+sufficiency down-weights causal attribution without burning specific
+agents' trust --- is an architectural direction we identify but do
+not formalize here. The full adversarial-robust structure-learning
+problem, including the calibration procedure and its interaction
+with the behavioral and capability channels, is deferred to a
+companion paper.
 
 \paragraph{Risk-trust residual dependence on the actor's model.} The
 pathway-conditional structural verification residual
