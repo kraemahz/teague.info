@@ -300,6 +300,32 @@ class PlanState:
     categories_triggered: set[str]  # categories the planned action falls into
     turns_in_phase: int
 
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize to a JSON-compatible dict.
+
+        sets → sorted lists; all other fields are JSON-native.
+        """
+        return {
+            "specification": self.specification,
+            "review_history": list(self.review_history),
+            "unresolved_questions": list(self.unresolved_questions),
+            "scope_decisions_pending": list(self.scope_decisions_pending),
+            "categories_triggered": sorted(self.categories_triggered),
+            "turns_in_phase": self.turns_in_phase,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "PlanState":
+        """Reconstruct from a dict produced by to_dict()."""
+        return cls(
+            specification=data["specification"],
+            review_history=list(data["review_history"]),
+            unresolved_questions=list(data["unresolved_questions"]),
+            scope_decisions_pending=list(data["scope_decisions_pending"]),
+            categories_triggered=set(data["categories_triggered"]),
+            turns_in_phase=data["turns_in_phase"],
+        )
+
 
 def plan_exit_decision(
     plan: PlanState,

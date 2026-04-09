@@ -581,6 +581,8 @@ def _handle_transition_to(session: Any, tool_input: dict[str, Any]) -> str:
     from .phases import Phase
     target = Phase(tool_input["phase"])
     session.transition_to(target)
+    # Persist the updated feature state so the phase survives restarts.
+    session.save_feature_state()
     return _json_dumps({
         "current_phase": target.value,
         "reason_ack": tool_input.get("reason", ""),
@@ -754,6 +756,9 @@ def build_harness_mcp_server(session: Any):
             # Record the pause on the session so the driver and the
             # can_use_tool callback can both see it.
             session._pending_pause = exc
+            # Persist feature state before the loop terminates so the
+            # paused feature can be resumed on the next invocation.
+            session.save_feature_state()
             return _mcp_result(
                 json.dumps({
                     "paused": True,

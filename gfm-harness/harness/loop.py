@@ -42,6 +42,33 @@ class FeatureLoopState:
     started_at: str = ""
     ended_at: str = ""
 
+    def to_dict(self) -> dict:
+        """Serialize to a JSON-compatible dict.
+
+        Phase enum → string value; PlanState → dict or null.
+        """
+        return {
+            "feature_id": self.feature_id,
+            "current_phase": self.current_phase.value,
+            "task_description": self.task_description,
+            "plan": self.plan.to_dict() if self.plan is not None else None,
+            "started_at": self.started_at,
+            "ended_at": self.ended_at,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "FeatureLoopState":
+        """Reconstruct from a dict produced by to_dict()."""
+        plan_data = data.get("plan")
+        return cls(
+            feature_id=data["feature_id"],
+            current_phase=Phase(data["current_phase"]),
+            task_description=data["task_description"],
+            plan=PlanState.from_dict(plan_data) if plan_data is not None else None,
+            started_at=data.get("started_at", ""),
+            ended_at=data.get("ended_at", ""),
+        )
+
 
 @dataclass
 class HarnessSession:
@@ -64,6 +91,53 @@ class HarnessSession:
     # to deny subsequent tool calls, and the driver returns it in the
     # FeatureLoopResult after the stream ends.
     _pending_pause: Any = None
+
+    # --- Feature state persistence -----------------------------------------
+
+    @property
+    def feature_state_path(self) -> Path:
+        return self.session_dir / "feature_state.json"
+
+    def save_feature_state(self) -> None:
+        """Persist the current feature loop state to disk.
+
+        No-op if there is no active feature. Called after phase
+        transitions and pauses so the feature can be resumed on the
+        next invocation.
+        """
+        import json as _json
+
+        if self.current_feature is None:
+            return
+        self.feature_state_path.parent.mkdir(parents=True, exist_ok=True)
+        self.feature_state_path.write_text(
+            _json.dumps(self.current_feature.to_dict(), indent=2)
+        )
+
+    def load_feature_state(self) -> FeatureLoopState | None:
+        """Load a saved feature state from disk.
+
+        Sets self.current_feature if a saved state is found.
+        Returns the state, or None if no saved state exists.
+        """
+        import json as _json
+
+        if not self.feature_state_path.exists():
+            return None
+        data = _json.loads(self.feature_state_path.read_text())
+        state = FeatureLoopState.from_dict(data)
+        self.current_feature = state
+        return state
+
+    def clear_feature_state(self) -> None:
+        """Delete the saved feature state file and clear current_feature.
+
+        Used when a feature loop completes, is abandoned via --reset,
+        or is replaced by a new --task.
+        """
+        if self.feature_state_path.exists():
+            self.feature_state_path.unlink()
+        self.current_feature = None
 
     # --- Scoring API (called by the LLM during PLAN) ---------------------
 

@@ -66,24 +66,88 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         return 1
 
-    autonomous = bool(getattr(args, "autonomous", False))
+    # --reset: clear saved feature state and exit without running a loop.
+    if getattr(args, "reset", False):
+        saved = instance.session.current_feature
+        if saved is not None:
+            print(f"Clearing saved feature state (was: phase={saved.current_phase.value}, "
+                  f"task={saved.task_description[:80]})")
+            instance.session.clear_feature_state()
+        else:
+            print("No saved feature state to clear.")
+        return 0
 
-    if autonomous:
-        # Autonomous mode: no task required. The agent will propose one
-        # in SELECT phase based on its goals + ledger + leverage.
-        task = args.task  # optional hint, None is fine
-    else:
-        task = args.task or instance.config.default_task
-        if not task:
+    autonomous = bool(getattr(args, "autonomous", False))
+    saved_state = instance.session.current_feature  # loaded by Instance.load()
+
+    # --- Resolve task and handle saved-state precedence ---
+    #
+    # Precedence semantics (per user spec):
+    #   --resume "..." (no --task) → load saved state, error if none
+    #   --task "..."              → replace saved state (log the old one)
+    #   --autonomous              → replace saved state (log the old one)
+    #   (none of the above)       → resume saved if present, else need --task
+
+    if args.resume and not args.task and not autonomous:
+        # Resume mode: continue from saved feature state.
+        if saved_state is None:
             print(
-                "ERROR: no task specified and instance has no default_task "
-                "in config.\n"
-                f"Either pass --task, edit {instance.config_path} to set "
-                "run.default_task, or use --autonomous to have the agent "
-                "propose a task from its goals and ledger state.",
+                "ERROR: --resume was given but no saved feature state exists.\n"
+                "Use --task to start a new feature loop instead.",
                 file=sys.stderr,
             )
             return 1
+        task = saved_state.task_description
+        print(f"Resuming saved feature (phase={saved_state.current_phase.value})")
+    elif args.task or autonomous:
+        # New task or autonomous mode: replace any saved state.
+        if saved_state is not None:
+            # Log the replaced state to memory so it's recoverable via recall.
+            instance.session.memory.append(
+                phase=saved_state.current_phase.value,
+                kind="note",
+                text=(
+                    f"Replaced saved feature state (feature_id={saved_state.feature_id}, "
+                    f"phase={saved_state.current_phase.value}, "
+                    f"task={saved_state.task_description[:200]}) "
+                    f"with {'--autonomous' if autonomous else '--task'} invocation."
+                ),
+                importance=0.5,
+            )
+            instance.session.clear_feature_state()
+            print(f"Replaced saved feature state (was: phase={saved_state.current_phase.value})")
+
+        if autonomous:
+            task = args.task  # optional hint, None is fine
+        else:
+            task = args.task or instance.config.default_task
+            if not task:
+                print(
+                    "ERROR: no task specified and instance has no default_task "
+                    "in config.\n"
+                    f"Either pass --task, edit {instance.config_path} to set "
+                    "run.default_task, or use --autonomous to have the agent "
+                    "propose a task from its goals and ledger state.",
+                    file=sys.stderr,
+                )
+                return 1
+    else:
+        # No flags: resume saved state if present, else require --task.
+        if saved_state is not None:
+            task = saved_state.task_description
+            print(f"Resuming saved feature (phase={saved_state.current_phase.value})")
+        else:
+            task = instance.config.default_task
+            if not task:
+                print(
+                    "ERROR: no task specified, no saved feature state, and "
+                    "instance has no default_task in config.\n"
+                    f"Either pass --task, edit {instance.config_path} to set "
+                    "run.default_task, or use --autonomous to have the agent "
+                    "propose a task from its goals and ledger state.",
+                    file=sys.stderr,
+                )
+                return 1
 
     # Resolve the constitution path. It lives in the harness repo, not
     # in the instance data directory. For now assume the harness repo
@@ -98,7 +162,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         )
         return 1
 
-    # Begin the feature loop if not already active.
+    # Begin the feature loop if not already active (i.e., no saved state
+    # was loaded, or saved state was cleared by --task/--autonomous).
     if instance.session.current_feature is None:
         instance.session.begin_feature(task)
 
@@ -119,12 +184,12 @@ def cmd_run(args: argparse.Namespace) -> int:
     # claude-agent-sdk installed for `init`, `list`, `status`, `builders`.
     from .agent import run_feature_loop
 
-    # The agent's working directory is the harness repo root by default.
-    # This lets the agent read harness/memory.py and related files during
-    # investigation, and edit them during implementation. Override via
-    # config.toml [run].cwd in a future iteration if an instance should
-    # operate on a different directory.
-    cwd_path = _find_harness_repo_root()
+    # The agent's working directory is the parent of the harness repo
+    # by default. This lets the agent read/write harness code AND papers
+    # AND docs all under one cwd, so work products land in their natural
+    # location instead of being scoped down to gfm-harness/. Per-instance
+    # cwd override is a Phase 2 concern.
+    cwd_path = _find_default_cwd()
 
     result = run_feature_loop(
         session=instance.session,
@@ -243,14 +308,23 @@ def cmd_builders(args: argparse.Namespace) -> int:
     return 0
 
 
-def _find_harness_repo_root() -> Path:
+def _find_default_cwd() -> Path:
     """
-    Locate the repo root (the directory containing constitution.md and
-    the harness/ package). Used as the default cwd for the Agent SDK so
-    Read/Write/Edit/Bash operate relative to the harness code.
+    Default cwd for the Agent SDK's Read/Write/Edit/Bash tools.
+
+    Currently returns the parent of the harness repo so the agent can
+    write to docs/, papers/, and the harness's own files all under one
+    cwd. The previous default was the harness repo root, which scoped
+    the agent's filesystem reach too narrowly — work products like the
+    GFM safety gap analysis ended up under gfm-harness/docs/ when they
+    really belonged at the parent repo's docs/ level.
+
+    This is a hard-coded default for v1; per-instance config.toml
+    override is a Phase 2 concern. When the harness eventually moves
+    to its own repo, this default will need to change.
     """
-    # harness/cli.py → harness/ → gfm-harness/
-    return Path(__file__).resolve().parent.parent
+    # harness/cli.py → harness/ → gfm-harness/ → teague.info/
+    return Path(__file__).resolve().parent.parent.parent
 
 
 def _find_constitution_path() -> Path | None:
@@ -309,6 +383,15 @@ def main(argv: list[str] | None = None) -> int:
             "instance's goals, ledger state, and leverage gradient. "
             "Starts the feature loop in SELECT phase instead of PLAN. "
             "No --task required."
+        ),
+    )
+    p_run.add_argument(
+        "--reset",
+        action="store_true",
+        help=(
+            "Clear any saved feature state without starting a new loop. "
+            "Use when a paused loop is stuck and you want to abandon it "
+            "cleanly rather than overwrite by starting a new task."
         ),
     )
     p_run.set_defaults(func=cmd_run)

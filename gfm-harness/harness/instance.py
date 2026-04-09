@@ -215,6 +215,9 @@ class Instance:
             commit_log=commit_log,
         )
 
+        # Restore any active feature loop from a prior session.
+        session.load_feature_state()
+
         return cls(
             name=name,
             path=path,
@@ -226,14 +229,15 @@ class Instance:
     def save(self) -> None:
         """
         Persist everything that might have changed: config, goals,
-        ledger, trust. Memory archive and commit log are already
-        append-only to disk, so they don't need an explicit flush here.
-        Call at the end of every feature loop.
+        ledger, trust, feature state. Memory archive and commit log
+        are already append-only to disk, so they don't need an explicit
+        flush here. Call at the end of every feature loop.
         """
         save_config(self.config, self.config_path)
         save_goals(self.goal_set, self.goals_path)
         save_ledger(self.session.ledger, self.ledger_path)
         self.session.trust.save(self.session_dir / "trust.json")
+        self.session.save_feature_state()
 
     # ---- goal management --------------------------------------------------
 
