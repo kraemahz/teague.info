@@ -90,7 +90,12 @@ Under the SCM $\SCM$ (Definition~\ref{def:scm}), a GFM actor can detect
     $O(\sigma_{\mathrm{do}}^2 / (\epsilon |\mu_j|))$.
     By Markov's inequality the detection probability within
     $k \cdot \mathbb{E}[\tau_{\mathrm{detect}}]$ observations is at
-    least $1 - 1/k$ for any $k > 1$. The structural advantage over
+    least $1 - 1/k$ for any $k > 1$. (Under the Gaussian model,
+    $\tau_{\mathrm{detect}}$ follows an inverse Gaussian distribution
+    whose tail decays exponentially \citep{wald1945sequential}, so
+    the Markov bound is conservative; exponentially tight
+    high-probability detection guarantees are available at the cost
+    of distributional specificity.) The structural advantage over
     the correlational detector
     (Proposition~\ref{prop:causal_dominates}) is preserved: the
     causal detector operates on variance $\sigma_{\mathrm{do}}^2$

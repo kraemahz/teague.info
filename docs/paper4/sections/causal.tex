@@ -335,15 +335,13 @@ distributed across papers:
     a capability it does not have upstream access to, regardless of
     any other signal. This is the \emph{means-analysis} from the
     intrusion-analysis tradition and sits at the top of the
-    robustness hierarchy: capability gating is nearly unfakeable
-    \emph{relative to a trusted, sufficiently complete capability
-    graph}, because it reflects the structure of the poset itself
-    rather than behavior an adversary can stage. (Hidden delegation,
-    latent substitute capabilities, or a misspecified poset can
-    defeat the gate; the strength of the gate is bounded by the
-    fidelity of the maintained capability model.) An attribution
-    decision that conflicts with capability gating should be
-    overridden by it, not aggregated with it.
+    robustness hierarchy: it reflects the structure of the poset
+    itself rather than behavior an adversary can stage.%
+    \footnote{The gate's strength is bounded by the fidelity of the
+    maintained capability model: hidden delegation, latent substitute
+    capabilities, or a misspecified poset can defeat it.}
+    An attribution decision that conflicts with capability gating
+    should be overridden by it, not aggregated with it.
 \item \textbf{Causal contraction attribution} (this paper,
     Definition~\ref{def:causal_attribution}). Moderately expensive to
     fake, since the SCM demands counterfactual consistency, and
@@ -355,6 +353,27 @@ distributed across papers:
     stationary epochs; vulnerable to fast adaptation as characterized
     by the evasion bandwidth bound.
 \end{itemize}
+
+Table~\ref{tab:channels} summarizes the channels by evasion cost and
+required assumptions.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lllp{3.8cm}@{}}
+\toprule
+\textbf{Channel} & \textbf{Cost to fake} & \textbf{Paper} & \textbf{Key assumptions} \\
+\midrule
+Capability gating  & Very high & 2, 3 & Trusted, complete capability graph \\
+Causal attribution & Moderate  & 4    & Causal sufficiency, additive SCM, exog.\ orthogonality \\
+Behavioral residual & Moderate & 1    & Predictive-model access \\
+SPRT detection     & Moderate  & 4    & Gaussian, stationary epochs \\
+Correlational co-occ. & Low   & 1    & (None beyond observation) \\
+\bottomrule
+\end{tabular}
+\caption{Attribution channels ordered by adversarial evasion cost (highest first), following the Pyramid of Pain principle.}
+\label{tab:channels}
+\end{table}
 
 An attribution decision should aggregate evidence across channels,
 weighted by each channel's calibrated reliability, rather than rely

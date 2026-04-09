@@ -8,6 +8,7 @@ identified in the [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md).*
 2. Max-aggregation pathology / Wamura problem (P3)
 3. B-to-C gap formalization (P1 §7)
 4. Capability-claim verification under adversarial claimants (P3 §6.4, harness operational finding)
+5. SCM structure learning and calibrated meta-uncertainty for causal attribution (P4 multi-channel subsection)
 
 Each proposal specifies: (a) which gap(s) it closes, (b) core technical
 approach, (c) formal machinery needed, (d) what constitutes a complete result,
@@ -742,6 +743,216 @@ A complete result would provide:
 
 ---
 
+## Proposal 5: Adversarial-Robust Structure Learning as Channel Optimization
+
+### (a) Gap(s) Closed
+
+**Primary:** SCM structure-learning under adversarial conditions (identified in
+P4 Discussion as the principal limitation of causal attribution, and named in
+P4's multi-channel subsection as the open direction for the causal channel).
+P4's causal contribution attribution assumes an accurate structural causal
+model, but the SCM is learned from observational data by the actor itself,
+in an environment where scorpions can strategically align their actions with
+observed noise to mask their causal role, and where the effective agent
+cardinality evolves as new agents appear or existing agents delegate.
+Standard observational structure learning (PC, FCI, and latent-variable
+variants) does not have a threat model and does not handle variable-cardinality
+dynamics, so structure learning in the GFM setting is a distinct open problem.
+
+**Secondary:** Calibrated meta-uncertainty for attribution mechanisms
+(cross-cutting, connects to P1's self-trust and P3's risk-trust). P1 and P3
+already track uncertainty in *agent behavior*; P4 adds uncertainty in *causal
+attribution*; but none of the papers track uncertainty in the *causal model
+itself*. An actor whose SCM is wrong cannot distinguish a reliable attribution
+from an unreliable one, and this meta-uncertainty has no current home in the
+trust-dynamics machinery. Proposal 5 adds the SCM-confidence scalar
+$c_{\mathrm{SCM}}(t) \in [0,1]$ introduced as an open direction in P4's
+discussion and gives it formal machinery and a calibration procedure.
+
+**Cross-cutting pattern addressed:** Graceful degradation under epistemic
+uncertainty. The multi-channel attribution framing of P4 depends on each
+channel's reliability being independently calibrated. Proposal 5 provides the
+calibration for the causal channel specifically, and in doing so demonstrates
+a pattern that could extend to the other channels: every attribution channel
+should expose a reliability scalar derived from measurable proxies, and the
+multi-channel aggregator should down-weight channels whose reliability is
+currently low rather than treating all channels uniformly.
+
+### (b) Core Technical Approach
+
+The key reframing from P4's multi-channel subsection is that structure
+learning does not need to produce a *correct* DAG to be useful; it needs to
+produce a *calibrated confidence estimate* that lets the multi-channel
+aggregator weight causal attribution appropriately. This shifts the target
+from a hard statistical learning problem (recover the true DAG from
+adversarial observational data) to a tractable calibration problem (estimate
+how well the current SCM explains observed variance) and makes graceful
+degradation the primary design goal.
+
+**Core idea: sufficiency-diagnosing online structure learning with calibrated
+confidence output.** The actor maintains a working SCM that it updates from
+observations, and a calibrated confidence scalar $c_{\mathrm{SCM}}(t) \in [0,1]$
+that reflects how well the SCM explains the residual covariance structure in
+the attribution signals. The multi-channel aggregator weights causal attribution
+by $c_{\mathrm{SCM}}(t)$, so the causal channel dominates when the SCM is
+reliable and falls back to the behavioral and structural channels when it is
+not.
+
+1. **Residual-covariance sufficiency diagnostic.** The actor periodically tests
+   whether the SCM accounts for the observed covariance structure of the
+   causal-attribution signals across agents. Under the additive-SCM +
+   causal-sufficiency assumption of P4's Convergence Advantage proposition,
+   the covariance between two agents' causal attributions conditional on the
+   poset state should be zero in expectation. A nonzero residual covariance
+   indicates the SCM is missing an edge (a common cause, shared exogenous
+   noise, or a hidden coordination channel). The diagnostic runs as an online
+   hypothesis test with a bounded false-positive rate under weak-dependence
+   assumptions on the attribution signals.
+
+2. **SCM-confidence calibration.** $c_{\mathrm{SCM}}(t)$ is derived from the
+   diagnostic's current test statistic relative to a calibrated threshold.
+   When residual covariance is near zero, $c_{\mathrm{SCM}}(t) \to 1$ and the
+   causal channel is fully weighted in the attribution aggregate. When residual
+   covariance exceeds a calibrated bound, $c_{\mathrm{SCM}}(t) \to 0$ and the
+   causal channel is effectively disabled. Intermediate values give smooth
+   interpolation between the two regimes. The calibration procedure uses the
+   structure of the $L^2$ EWMA bounds from P4 to convert residual magnitudes
+   into confidence values with known false-positive rates.
+
+3. **Online SCM update from diagnostic failures.** When $c_{\mathrm{SCM}}(t)$
+   degrades, the actor has a choice: attempt to patch the SCM (propose new
+   edges to explain the observed residual covariance) or accept the degradation
+   and continue with the now-lower-weighted causal channel. The right choice
+   depends on the actor's confidence in its own structure-learning procedure
+   and on the cost of mis-patching the SCM — a bad patch is worse than no
+   patch because it injects spurious confidence. The proposal characterizes
+   the decision rule: patch only when the proposed edge is supported by
+   structure-learning evidence that is itself robust to the adversarial
+   conditions of the GFM setting, otherwise accept the degradation.
+
+4. **Adversarially-robust conditional independence tests.** Classical CI tests
+   (partial correlation, kernel-based tests) can be gamed by an adversary who
+   knows which test will be run. The proposal adapts game-theoretic CI testing
+   to the GFM setting, where the actor's test is randomized over a family and
+   the adversary cannot simultaneously fool all tests in the family. This
+   replaces "is X independent of Y given Z?" with "what is the minimum
+   test-statistic over this family of tests, and is it below threshold?" — a
+   worst-case bound that is robust to adversarial noise alignment within the
+   family.
+
+5. **Capability-gating prior.** Structure learning starts from an informative
+   prior provided by the capability-gating channel (the poset structure of P2
+   and the minimax substrate analysis of P3): an edge from agent $a_j$ to
+   $\volL$-contraction can only exist if $a_j$ has upstream capability access
+   to the relevant subnetwork. This prior dramatically reduces the
+   edge-candidate set before any statistical test runs and is nearly unfakeable
+   because it reflects the structure of the poset rather than any learnable
+   signal.
+
+### (c) Formal Machinery Needed
+
+- **Bayesian structure learning over DAG space** as a starting framework, with
+  the capability-gating prior as the prior distribution. Existing machinery:
+  Heckerman-Geiger-Chickering score-based learning, extended with structural
+  priors from the poset.
+- **Residual-covariance hypothesis testing under weak dependence.** The
+  attribution signals are autocorrelated by the EWMA structure of P4, so
+  standard i.i.d.\ CI tests are not directly applicable. Need adaptation to
+  weakly-dependent sequences using mixing conditions or autocovariance-aware
+  test statistics.
+- **Game-theoretic conditional independence testing.** Formalize the
+  adversary's ability to align actions with observed noise, and derive the
+  minimum-risk test over a family of CI tests under this adversarial model.
+  Starting point: the robust hypothesis testing literature (Huber contamination
+  models, minimax testing against composite nulls).
+- **Calibration theory for the SCM-confidence scalar.** The map from
+  residual-covariance test statistic to $c_{\mathrm{SCM}}(t) \in [0,1]$ must
+  be calibrated so that $c_{\mathrm{SCM}}(t)$ has the interpretation of
+  "probability that the SCM's attributions are within bounds for the current
+  regime." Beta distributions over latent reliability are the natural
+  parametric form; nonparametric alternatives (isotonic regression, Platt
+  scaling) give a robustness check.
+- **Multi-channel Bayesian aggregation formalism.** The paper would formalize
+  the aggregator that P4 introduces qualitatively: given reliability-weighted
+  channels (behavioral, correlational, causal, capability-gating), how does
+  the actor combine them into a single attribution distribution? The
+  trust-weighted log-linear opinion pool of P4 is the starting form; the
+  formalism would extend it to handle the gate-then-aggregate architecture
+  in which capability gating is a hard filter rather than a prior.
+- **Threat-intelligence grounding.** The Diamond Model of intrusion analysis
+  (Caltagirone-Pendergast-Betz), the Pyramid of Pain (Bianco), and the MITRE
+  ATT\&CK framework (Strom et al.) are the practitioner-side versions of
+  multi-channel attribution; the proposal would formalize the common
+  structure of these frameworks and adapt it to the GFM actor's setting.
+
+### (d) What Constitutes a Complete Result
+
+A complete result closes the meta-uncertainty gap in P4's causal attribution
+and demonstrates that the multi-channel framing makes imperfect structure
+learning non-fatal. Specifically:
+
+1. **Calibration theorem.** The SCM-confidence scalar $c_{\mathrm{SCM}}(t)$
+   derived from the residual-covariance diagnostic is asymptotically
+   calibrated under stated assumptions: if $c_{\mathrm{SCM}}(t) = p$, then
+   the causal attribution's false-positive rate at the corresponding threshold
+   is at most $1 - p$. This makes $c_{\mathrm{SCM}}(t)$ directly usable as a
+   channel weight in the multi-channel aggregator.
+
+2. **Graceful-degradation theorem.** As $c_{\mathrm{SCM}}(t) \to 0$, the
+   multi-channel aggregator's behavior converges to the P1/P2/P3 non-causal
+   baseline. Specifically, the attribution decisions converge to those made
+   by a system without causal attribution at all, up to bounded-variance
+   noise from the other channels. This guarantees that a misspecified SCM
+   cannot produce attributions worse than the pre-P4 framework.
+
+3. **Adversarial-robustness theorem.** Under a stated adversarial model
+   (bounded action-alignment budget per epoch), the game-theoretic CI-test
+   family has minimum-risk guarantees that a classical single CI test does
+   not. This bounds how much a scorpion can degrade $c_{\mathrm{SCM}}(t)$
+   by strategic action alignment.
+
+4. **Empirical demonstration.** A synthetic GFM population with known
+   structure and known scorpions, where the actor's SCM is systematically
+   corrupted at controlled levels, and the multi-channel aggregator's
+   attribution accuracy is measured as a function of SCM corruption. The
+   graceful-degradation theorem predicts the shape of this curve.
+
+5. **Capability-gating interaction theorem.** The capability-gating prior
+   from the poset provably shifts the posterior over DAGs toward
+   gating-consistent structures, with the shift magnitude proportional to
+   the poset's informational content. This formalizes why capability gating
+   dominates other channels in the robustness hierarchy introduced by P4.
+
+### (e) Dependencies and Sequencing
+
+- **Requires:** P4 (this paper), specifically the multi-channel attribution
+  subsection and the $L^2$ EWMA machinery. The calibration procedure uses
+  the variance bounds from P4's Risk-Trust $L^2$ Convergence proposition
+  directly.
+- **Builds on:** P1 (behavioral prediction residual, self-trust mechanism),
+  P2 (poset structure for capability gating), P3 (risk-trust dynamics,
+  minimax substrate analysis for capability-gating prior).
+- **Enables:** Full closure of the SCM structure-learning gap in P4.
+  Indirectly, this makes the anti-monopolar property of P3 more robust
+  because adversarial attribution failures cannot cascade into misidentified
+  restrictions on innocent substrates.
+- **Does NOT require:** Resolution of compound feedback loops (Proposal 1),
+  max-aggregation (Proposal 2), B-to-C gap (Proposal 3), or cryptographic
+  capability verification (Proposal 4). However, Proposal 5 reinforces
+  Proposal 4: both address channel integrity, with Proposal 4 at the
+  structural level (who could be observed at all) and Proposal 5 at the
+  attribution level (given observation, who gets attributed). A framework
+  that implements both would have substrate-rooted observation (P4) and
+  calibrated attribution (P5), closing the adversarial robustness loop at
+  two levels simultaneously.
+- **Scope estimate:** A single focused paper (not a multi-paper undertaking).
+  The calibration theorem is the load-bearing result; the adversarial-
+  robustness and graceful-degradation theorems follow from existing literature
+  with GFM-specific adaptations. The capability-gating interaction theorem
+  is the most novel mathematical contribution.
+
+---
+
 ## Cross-Proposal Dependencies and Sequencing
 
 ```
@@ -796,18 +1007,20 @@ pursued in parallel. However:
    is the largest undertaking (Paper 6 candidate) and can be deferred if the
    analysis is initially restricted to non-adversarial regimes.
 
-**Collectively, the four proposals close 7 of the top-8 gaps from the gap analysis:**
+**Collectively, the five proposals close 9 of the top-10 gaps from the gap analysis:**
 - Compound feedback loops (primary, Proposal 1)
 - Max-aggregation / Wamura pathology (primary, Proposal 2)
 - B-to-C gap formalization (primary, Proposal 3)
 - Capability-claim verification (primary, Proposal 4)
+- SCM structure learning under adversarial conditions (primary, Proposal 5)
 - Structural avoidance incentive (secondary, Proposal 1)
 - Risk-claim consensus (secondary, Proposal 2)
 - Intrinsic value residual (secondary, Proposal 3)
 - Observation-channel integrity (secondary, Proposal 4)
+- Calibrated meta-uncertainty for attribution (secondary, Proposal 5)
 
 **Remaining top-priority gaps not addressed:**
-- Convergence rates (partially addressed by all four proposals, but a unified
+- Convergence rates (partially addressed by all five proposals, but a unified
   treatment of convergence across all dynamic quantities would be a separate
   paper)
 - Mesa-optimization (orthogonal to GFM's formal structure — requires
@@ -817,5 +1030,6 @@ pursued in parallel. However:
 
 *Proposals 1–3 generated 2026-04-08 by the GFM harness paper-proposals feature loop.*
 *Proposal 4 added 2026-04-08 from out-of-band capability-claim verification review.*
-*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb), lesson_capability_self_assertion.*
+*Proposal 5 added 2026-04-09 from Paper 4 multi-channel attribution discussion.*
+*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb), lesson_capability_self_assertion, Paper 4 §3.4 (multi-channel attribution subsection).*
 *Source papers: docs/paper (P1), docs/paper2 (P2), docs/paper3 (P3), docs/paper4 (P4), docs/paper5_notes.md (P5n).*

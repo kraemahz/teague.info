@@ -246,27 +246,20 @@ trust-weighted log-odds aggregation that preserves the evidence-accumulation
 structure of independent reports.
 
 \paragraph{Definition update from the companion paper.}
-The companion paper \citep{lasser2026horizon} sketches
-$\hat{\Risk}_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot
-|\Delta \volL|$ as a product of a probability and a contraction
-magnitude --- that is, an expected-contraction object in the same
-units as $\volL$, not a probability in $[0, 1]$. Taking a log-odds of
-that object is not well-defined. While integrating the aggregation
-rule with the rest of this paper we noticed this inconsistency, and
-we commit here to the definition update that makes the aggregation
-work: $\hat{\Risk}_j$ and $\Risk_{\mathrm{self}}$ denote the reporter's
-and the actor's posterior probability that the exercise pathway will
-be executed within the planning horizon, calibrated against the shared
-prior $\pi_0$ introduced below. The contraction magnitude
-$|\Delta \volL|$ remains a separate quantity: it is used by the
-verification gate (Section~\ref{sec:attention_not_action}) and enters
-the structural verification residual
-(Definition~\ref{def:risk_residual}) independently of the
-probability-aggregation step. We treat the resulting pair
-$(\hat{\Risk}_j, |\Delta \volL_j^{\mathrm{claimed}}|)$ as the canonical
-two-component form of a communicated risk claim for Paper~4 onward;
-the single-number product form in the companion paper should be read
-as the first-sketch version of this pair.
+The companion paper \citep{lasser2026horizon} defines
+$\hat{\Risk}_j$ as an expected-contraction product
+$T_j^{\mathrm{risk}} \cdot p \cdot |\Delta \volL|$, which is not a
+probability and cannot be passed through log-odds. We update the
+definition: $\hat{\Risk}_j$ and $\Risk_{\mathrm{self}}$ hereafter
+denote posterior probabilities that the exercise pathway will be
+executed within the planning horizon, calibrated against the shared
+prior $\pi_0$ below. The contraction magnitude $|\Delta \volL|$
+becomes a separate quantity used by the verification gate
+(Section~\ref{sec:attention_not_action}) and the structural
+verification residual (Definition~\ref{def:risk_residual}). The
+canonical form of a communicated risk claim is the pair
+$(\hat{\Risk}_j, |\Delta \volL_j^{\mathrm{claimed}}|)$; the
+single-number product in \citet{lasser2026horizon} is superseded.
 
 \begin{definition}[Log-Odds Risk Aggregation]
 \label{def:logodds}
@@ -288,7 +281,15 @@ where each parenthesized term is the log-likelihood-ratio contributed
     by that source beyond the shared prior, obtained by subtracting
     $\ell_0$ from their reported posterior log-odds. The $\Risk$ values
     are normalized to $[0, 1]$ as probabilities of the exercise pathway
-    being executed within the planning horizon. Under the neutral
+    being executed within the planning horizon. The shared prior
+    $\pi_0$ is an operational coordination requirement: every
+    reporter's posterior must be calibrated against the same $\pi_0$
+    for the subtraction $\log(\hat{\Risk}_j / (1 - \hat{\Risk}_j))
+    - \ell_0$ to correctly extract the log-likelihood ratio.
+    Establishing $\pi_0$ requires a protocol (e.g., broadcasting it
+    as a system parameter at population initialization), not just a
+    mathematical assumption.
+    Under the neutral
     bootstrap prior $\pi_0 = 0.5$ ($\ell_0 = 0$), the prior-correction
     terms vanish and Equation~\eqref{eq:logodds} reduces to a naive
     sum of posterior log-odds; under any other shared prior, the
