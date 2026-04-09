@@ -17,23 +17,29 @@ scorpion's behavior is stationary and the causal-attribution sequence
 $\{\CausalAttr(a_j, t)\}$ is i.i.d.\ with mean $\mu_j < 0$ and
 variance $\sigma_{\mathrm{do}}^2$ (the same assumption as
 Proposition~\ref{prop:causal_scorpion}). The SPRT decision rule
-accumulates log-likelihood-ratio evidence at the Kullback-Leibler
-rate
-$D(H_1 \,\|\, H_0) = \mu_j^2 / (2 \sigma_{\mathrm{do}}^2)$
-per observation under the Gaussian surrogate model, and requires
-total accumulated evidence
-$\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}})$ to reject
-$H_0: \mu_j \geq 0$ in favor of $H_1: \mu_j \leq -\epsilon$. By
-Wald's identity \citep{wald1945sequential}, the expected detection
-time within a stationary epoch is:
+tests the least-favorable simple pair $H_0: \mu_j = 0$ versus
+$H_1: \mu_j = -\epsilon$ under the Gaussian model. The
+per-observation expected log-likelihood ratio under the true mean
+$\mu_j$ is
+$\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2$. By Wald's
+identity \citep{wald1945sequential}, the expected detection time
+within a stationary epoch with actual mean $\mu_j$ is:
 \[
-\mathbb{E}[\tau_{\mathrm{detect}}]
-    = \frac{2 \sigma_{\mathrm{do}}^2}{\mu_j^2}
+\bar{\tau}(\mu_j) = \mathbb{E}[\tau_{\mathrm{detect}}]
+    = \frac{\sigma_{\mathrm{do}}^2}
+    {\epsilon(|\mu_j| - \epsilon/2)}
     \cdot \log\!\frac{1 - \beta_{\mathrm{err}}}{\alpha_{\mathrm{err}}}.
 \]
-If $\tau_{\mathrm{adapt}} > \tau_{\mathrm{detect}}$, the scorpion is
-detected within the epoch. If $\tau_{\mathrm{adapt}} < \tau_{\mathrm{detect}}$,
-the scorpion changes strategy before the SPRT threshold is crossed.
+
+\textbf{Part (a): detection.}
+By Markov's inequality,
+$P(\tau_{\mathrm{detect}} > k \bar{\tau}(\mu_j)) \leq 1/k$ for any
+$k > 1$. When $\tau_{\mathrm{adapt}} \geq k \bar{\tau}(\mu_j)$, the
+epoch provides enough observations that the SPRT crosses the
+detection threshold with probability at least $1 - 1/k$.
+
+\textbf{Part (b): evasion.}
 On an epoch boundary the null and alternative hypotheses change
 (the new epoch has a new $(\mu_j, \sigma_{\mathrm{do}}^2)$), so the
 SPRT statistic is reset to zero: evidence accumulated under one
@@ -42,19 +48,20 @@ auxiliary EWMA monitors
 (Equations~\eqref{eq:causal_trust_mean}--\eqref{eq:causal_trust_var})
 retain a fraction $\alpha^{\tau_{\mathrm{adapt}}}$ of prior evidence
 as their output, but the SPRT decision rule itself is
-memoryless across regime changes.
+memoryless across regime changes. If $\tau_{\mathrm{adapt}} <
+\bar{\tau}(\mu_j)$, the expected accumulated evidence at the epoch
+boundary is below the SPRT threshold: the evidence accumulation
+rate is insufficient for reliable detection within the epoch.
 
 The maximum undetected contraction per epoch is
 $|\mu_j| \cdot \tau_{\mathrm{adapt}}$. For a scorpion to evade
 detection within an epoch, it must have
-$\tau_{\mathrm{adapt}} < \mathbb{E}[\tau_{\mathrm{detect}}] =
-(2 \sigma_{\mathrm{do}}^2 / \mu_j^2) \cdot
-\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}})$. The
+$\tau_{\mathrm{adapt}} < \bar{\tau}(\mu_j)$. The
 per-step undetected contraction is bounded by $|\mu_j|$, and the
 scorpion can sustain this for at most $\tau_{\mathrm{adapt}}$ steps
-before changing strategy. The time-averaged undetected contraction
-rate is therefore at most $|\mu_j|$, achievable only by a scorpion
-that never needs to pause for strategy adaptation. A scorpion that
-must pause (to avoid pattern detection or to select a new strategy)
-has a lower time-averaged rate.
+before changing strategy. At the design point $|\mu_j| = \epsilon$,
+the per-step contraction is at most $\epsilon$. The time-averaged
+undetected contraction rate is therefore at most $|\mu_j|$,
+achievable only by a scorpion that never needs to pause for strategy
+adaptation.
 \end{proof}

@@ -25,6 +25,18 @@ A \emph{structural causal model for capability dynamics} is a tuple
     actions causally influence which capability changes.
 \item $P(U)$: prior distribution over exogenous variables.
 \end{itemize}
+When the variance-reduction results of this paper are invoked
+    (Proposition~\ref{prop:causal_dominates}(c) and downstream), we
+    additionally assume \textbf{exogenous orthogonality}: the
+    exogenous noise components entering different agents' structural
+    equations are mutually independent conditional on $G_t$. That is,
+    if $U_j \subseteq U$ are the exogenous variables appearing in
+    $a_j$'s structural equation and $U_k \subseteq U$ those appearing
+    in $a_k$'s, then $U_j \perp\!\!\!\perp U_k \mid G_t$ for $j \neq k$.
+    This rules out shared exogenous shocks that would induce
+    covariance between agents' contributions even under a correct
+    causal DAG.
+
 The GFM actor's world model $\WorldModel$
     (Definition~1 of \citet{lasser2026horizon}) is an instance of $\SCM$
     restricted to the actor's beliefs about causal structure.
@@ -35,6 +47,21 @@ foundational paper, $\WorldModel$ is an opaque prediction model: given
 actions, it predicts $\volL$-changes. The SCM decomposes predictions into
 causal pathways, enabling counterfactual queries: ``what would have happened
 if agent $a_j$ had acted differently?''
+
+\paragraph{Temporal scope.} Definition~\ref{def:scm} specifies a
+\emph{single-step} SCM: the endogenous variables
+$\{G_t, \pi_t^{(1)}, \ldots, \pi_t^{(n)}, \Delta \volL_t\}$ describe
+one time slice, and the structural equations $F$ map actions at step
+$t$ to the $\volL$-change at step $t$. The do-intervention
+$\mathrm{do}(\pi_j = \cdot)$ operates within this single-step
+structure: ``other variables respond according to $F$'' means other
+endogenous variables in the same time slice are recomputed under the
+intervened structural equations, not that the system evolves forward
+in time. Multi-step effects (an action at $t$ that causes a cascade
+at $t+1$) are captured by instantiating a new single-step SCM at
+each subsequent time step with an updated poset state $G_{t+1}$;
+the causal attribution $\CausalAttr(a_j, t)$
+(Definition~\ref{def:causal_attribution}) is the single-step effect.
 
 \subsection{Causal Contraction Attribution}
 
@@ -108,41 +135,52 @@ Let $a_j$ be an agent with expected causal contraction $\mu_j =
     \mathbb{E}[\CausalAttr(a_j, t)] < 0$ (a scorpion). Assume the
     observation sequences for both detectors are i.i.d.\ within a
     stationary strategy epoch, or weakly dependent with summable
-    autocovariance (so that a sequential probability ratio test
-    applies with standard sample-complexity bounds
-    \citep{wald1945sequential}). Under the SCM $\SCM$:
+    autocovariance. Under the SCM $\SCM$, the following
+    \emph{information-theoretic} sample-complexity comparison holds
+    (independent of the specific sequential test used; see
+    Section~\ref{sec:scorpion} for the SPRT-specific operational
+    rates):
 \begin{enumerate}
 \item[\textbf{(a)}] The correlational detector (Proposition~2(a) of
-    \citet{lasser2026gfm}) requires $O(\sigma^2 / \mu_j^2)$
-    observations to identify $a_j$ as a net-contractor under the
+    \citet{lasser2026gfm}) has sample complexity
+    $\Omega(\sigma^2 / \mu_j^2)$ for identifying $a_j$ as a
+    net-contractor, under the
     idealized assumption that $\mu_j$ appears as an
     isolable drift in the trust-weighted aggregate $\Deltahat$ (see
     paragraph below on the correlational estimator). Here $\sigma^2$
-    is the total variance of $\Deltahat$ including confounders.
+    is the total variance of the signal the correlational detector
+    can construct, including confounders.
 \item[\textbf{(b)}] The causal detector using $\CausalAttr(a_j, t)$
-    requires $O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ observations, where
+    has sample complexity
+    $\Omega(\sigma_{\mathrm{do}}^2 / \mu_j^2)$, where
     $\sigma_{\mathrm{do}}^2$ is the variance of the causal attribution
-    signal after conditioning on the do-intervention.
-\item[\textbf{(c)}] Under \textbf{causal sufficiency} --- the SCM
+    signal after conditioning on the do-intervention. The ratio
+    $\sigma_{\mathrm{do}}^2 / \sigma^2 \leq 1$ (under the conditions
+    of part~(c)) is the structural advantage factor.
+\item[\textbf{(c)}] Under \textbf{causal sufficiency} (the SCM
     $\SCM$ captures all common causes of $a_j$'s actions and the
-    confounder signals, so
+    confounder signals), the \textbf{additive-SCM} assumption
+    (Equation~\eqref{eq:additive_scm}), and \textbf{exogenous
+    orthogonality} (Definition~\ref{def:scm}), we have
     $\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t) = 0$
-    --- we have
+    and therefore
     \[
         \sigma^2 - \sigma_{\mathrm{do}}^2
         = \mathrm{Var}(\text{confounders} \mid G_t) \geq 0,
     \]
     so $\sigma_{\mathrm{do}}^2 \leq \sigma^2$, with strict inequality
     whenever confounders contribute nonzero variance. Without causal
-    sufficiency, the law of total variance gives
+    sufficiency (or without the additive-SCM structure), the
+    variance identity gives
     \[
         \sigma^2 - \sigma_{\mathrm{do}}^2
         = \mathrm{Var}(\text{confounders} \mid G_t)
         + 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t),
     \]
     whose sign depends on the covariance term. The inequality
-    $\sigma_{\mathrm{do}}^2 \leq \sigma^2$ therefore requires either
-    causal sufficiency or the weaker condition
+    $\sigma_{\mathrm{do}}^2 \leq \sigma^2$ therefore requires the
+    full triple (causal sufficiency, additive SCM, exogenous
+    orthogonality), or the weaker condition
     $\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders} \mid G_t)
         \geq -\tfrac{1}{2} \mathrm{Var}(\text{confounders} \mid G_t)$.
     Under a general (non-sufficient) SCM with adversarial confounder
@@ -154,14 +192,24 @@ Let $a_j$ be an agent with expected causal contraction $\mu_j =
 \end{proposition}
 
 \begin{proof}
-(a) The correlational detector aggregates the trust-weighted signal
+(a) The correlational detector's observable signal is the
+trust-weighted aggregate
 $\Deltahat(\pi_t) = \sum_{k \in \mathcal{O}} T_k \cdot R_k(\pi_t)$
-(Equation~10 of \citet{lasser2026gfm}). This signal reflects the total
-$\volL$-change, not $a_j$'s contribution alone. By the law of total
-variance: $\mathrm{Var}(\Deltahat) = \mathrm{Var}(\CausalAttr(a_j)) +
-\mathrm{Var}(\text{others} + \epsilon) + 2\mathrm{Cov}$. Standard
-detection theory (sequential probability ratio test) gives the detection
-time as $O(\sigma^2 / \mu_j^2)$ where $\sigma^2 = \mathrm{Var}(\Deltahat)$.
+(Equation~10 of \citet{lasser2026gfm}), where $R_k \in \{-1, 0, +1\}$
+is a ternary directional vote. Let
+$\Delta \volL_{\mathrm{total}}(t)$ denote the \emph{true} continuous
+$\volL$-change at step $t$ that $\Deltahat$ estimates. The
+correlational detector's sample complexity for detecting $a_j$'s
+mean effect $\mu_j$ is governed by the variance of the continuous
+quantity it must recover, not by the variance of the ternary
+estimator itself: a sign-correct ternary estimator inherits the
+variance of the underlying continuous signal it tracks, plus
+discretization noise. Formally, $\sigma^2$ in the bound is the
+variance of any estimator of the total $\volL$-change that the
+correlational detector can construct from its observation channel.
+The $\Omega(\sigma^2 / \mu_j^2)$ lower bound is the
+information-theoretic sample complexity for detecting a mean shift
+$\mu_j$ in noise of variance $\sigma^2$.
 
 (b) The causal detector evaluates $\CausalAttr(a_j, t)$ directly by
 comparing the observed $\volL$-change against the counterfactual under
@@ -169,15 +217,26 @@ $\mathrm{do}(\pi_j = \mathrm{skip})$. The variance of this signal is
 $\sigma_{\mathrm{do}}^2 = \mathrm{Var}(\CausalAttr(a_j, t))$, which
 excludes the confounding variance.
 
-(c) By the law of total variance applied to the decomposition of
-Equation~\eqref{eq:causal_decomposition},
+(c) Under the additive-SCM assumption
+(Equation~\eqref{eq:additive_scm}), the continuous $\volL$-change
+decomposes as
+$\Delta \volL_{\mathrm{total}}(t) = \CausalAttr(a_j, t) +
+    \mathrm{confounders}(t)$,
+where the confounder term aggregates all other agents' contributions
+and the residual $h(G_t, U)$. By the variance identity for sums:
 \[
-\mathrm{Var}(\Deltahat) = \mathrm{Var}(\CausalAttr(a_j))
+\sigma^2 = \mathrm{Var}(\CausalAttr(a_j))
     + \mathrm{Var}(\mathrm{confounders})
     + 2\,\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}).
 \]
-Under causal sufficiency, the SCM $\SCM$ accounts for all common
-causes of $a_j$'s actions and the other signals, so
+Under causal sufficiency, the additive-SCM structure, and
+exogenous orthogonality (Definition~\ref{def:scm}): causal
+sufficiency ensures the DAG captures all common causes, the
+additive decomposition ensures $a_j$'s contribution enters as a
+separable term $g_j$, and exogenous orthogonality ensures the
+noise driving $g_j$ is independent of the noise driving the
+confounder terms $\{g_k\}_{k \neq j}$ and $h$. Together, these
+give
 $\mathrm{Cov}(\CausalAttr(a_j), \mathrm{confounders}) = 0$, and
 $\sigma^2 - \sigma_{\mathrm{do}}^2 = \mathrm{Var}(\mathrm{confounders})$
 as stated. Without causal sufficiency, the covariance term is retained

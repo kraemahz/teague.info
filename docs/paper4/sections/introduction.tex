@@ -36,9 +36,10 @@ adversarial exposure (what substrate-correlated threats do we face?).
 \paragraph{Contributions.}
 \begin{enumerate}
 \item A structural causal model for capability dynamics with
-  do-calculus contraction attribution, showing an $L^2$ convergence
-  advantage over correlational detection under causal sufficiency and
-  an additive-SCM condition (Section~\ref{sec:causal}).
+  do-calculus contraction attribution, showing a conditional $L^2$
+  convergence advantage over correlational detection under causal
+  sufficiency, additive-SCM structure, and exogenous orthogonality
+  (Section~\ref{sec:causal}).
 \item $L^2$ EWMA dynamics for risk-trust $\Trisk_j$ over
   pathway-conditional structural verification residuals, and a
   prior-corrected trust-weighted log-linear opinion pool that recovers
@@ -46,10 +47,11 @@ adversarial exposure (what substrate-correlated threats do we face?).
   aggregation operator, with a two-gate architecture separating
   attention allocation from action decisions via the actor's own
   forward causal risk evaluation (Section~\ref{sec:risk_trust}).
-\item Causal scorpion detection committed to a sequential probability
-  ratio test with explicit Type I/II error control, and a bound on
-  non-stationary scorpion evasion bandwidth under a stationary-epoch
-  model (Section~\ref{sec:scorpion}).
+\item Causal scorpion detection under a Gaussian model, committed to a
+  sequential probability ratio test on least-favorable simple
+  hypotheses with Type I/II error control, and a high-probability
+  bound on non-stationary scorpion evasion bandwidth under a
+  stationary-epoch model (Section~\ref{sec:scorpion}).
 \item A probabilistic dependency-risk model gated by an adversarial
   balance condition $c > \max_i (f_i \cdot c_i)$ that admits contagion
   dynamics, with per-step expected costs that compound at the same

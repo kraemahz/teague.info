@@ -20,8 +20,14 @@ Under the SCM $\SCM$ (Definition~\ref{def:scm}), a GFM actor can detect
     the correlational $\Deltahat$ signal from Proposition~2(a) of
     \citet{lasser2026gfm}. Within each stationary epoch of $a_j$'s
     strategy, the causal-attribution sequence
-    $\CausalAttr(a_j, 1), \CausalAttr(a_j, 2), \ldots$ is i.i.d.\ with
-    unknown mean $\mu_j$ and variance $\sigma_{\mathrm{do}}^2$. The
+    $\CausalAttr(a_j, 1), \CausalAttr(a_j, 2), \ldots$ is i.i.d.\
+    $\mathcal{N}(\mu_j, \sigma_{\mathrm{do}}^2)$ with unknown mean
+    $\mu_j$ and known variance $\sigma_{\mathrm{do}}^2$. (The Gaussian
+    assumption is a modeling choice; for non-Gaussian attributions the
+    SPRT likelihoods below are replaced by their distributional
+    counterparts and the $O(\cdot)$ rate constants change, but the
+    structural comparison with the correlational detector is
+    preserved.) The
     actor maintains two auxiliary EWMA statistics --- a
     \emph{signed-mean} estimator and a \emph{variance} estimator ---
     for monitoring:
@@ -44,21 +50,52 @@ Under the SCM $\SCM$ (Definition~\ref{def:scm}), a GFM actor can detect
 
     The flag condition is instead a sequential probability ratio test
     (SPRT) \citep{wald1945sequential} on the causal-attribution
-    sequence, with null hypothesis
-    $H_0: \mu_j \geq 0$ (non-scorpion) versus alternative
-    $H_1: \mu_j \leq -\epsilon$ (scorpion with minimum detectable
-    contraction magnitude $\epsilon > 0$). The actor accumulates the
+    sequence, testing the least-favorable simple hypotheses
+    $H_0: \mu_j = 0$ (non-scorpion) versus
+    $H_1: \mu_j = -\epsilon$ (scorpion with minimum detectable
+    contraction magnitude $\epsilon > 0$). The composite problem
+    ($\mu_j \geq 0$ vs.\ $\mu_j \leq -\epsilon$) is reduced to
+    this simple pair by the standard least-favorable-distribution
+    argument: Type~I error is maximized under the null distribution
+    closest to the alternative ($\mu_j = 0$), and Type~II error is
+    maximized under the alternative closest to the null
+    ($\mu_j = -\epsilon$), so error guarantees for the simple pair
+    bound the composite problem from above.
+    The actor accumulates the
     log-likelihood ratio
     $\Lambda_j(t) = \sum_{s=1}^{t} \log\bigl(p_{H_1}(\CausalAttr(a_j,
-    s)) / p_{H_0}(\CausalAttr(a_j, s))\bigr)$ and flags $a_j$ as a
-    scorpion when $\Lambda_j(t) > \log((1 - \beta_{\mathrm{err}}) /
-    \alpha_{\mathrm{err}})$, where $\alpha_{\mathrm{err}}$ and
-    $\beta_{\mathrm{err}}$ are the target Type~I and Type~II error
-    rates. Under this decision rule the expected sample size is
+    s)) / p_{H_0}(\CausalAttr(a_j, s))\bigr)$ and applies a
+    two-boundary decision rule: flag $a_j$ as a scorpion when
+    $\Lambda_j(t) \geq \log((1 - \beta_{\mathrm{err}}) /
+    \alpha_{\mathrm{err}})$ (upper boundary), or provisionally clear
+    $a_j$ for the current epoch when
+    $\Lambda_j(t) \leq \log(\beta_{\mathrm{err}} /
+    (1 - \alpha_{\mathrm{err}}))$ (lower boundary). Here
+    $\alpha_{\mathrm{err}}$ and $\beta_{\mathrm{err}}$ are the target
+    Type~I and Type~II error rates for the simple pair. A provisional
+    clearance is epoch-local: the SPRT resets at the next epoch
+    boundary, reflecting the possibility that a non-scorpion agent
+    may become one. Under this decision rule with
+    Gaussian likelihoods, the per-observation expected
+    log-likelihood ratio under the true mean $\mu_j$ is
+    $\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+    \epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2$,
+    giving expected sample size
     $\mathbb{E}[\tau_{\mathrm{detect}}] =
-    O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ by Wald's identity, strictly
-    fewer than the correlational detector when confounders are
-    present (Proposition~\ref{prop:causal_dominates}). The signed-mean
+    O\bigl(\sigma_{\mathrm{do}}^2 /
+    [\epsilon(|\mu_j| - \epsilon/2)]\bigr)$
+    by Wald's identity. At the design point $|\mu_j| = \epsilon$
+    this reduces to $O(\sigma_{\mathrm{do}}^2 / \epsilon^2)$; for
+    $|\mu_j| \gg \epsilon$ it improves to
+    $O(\sigma_{\mathrm{do}}^2 / (\epsilon |\mu_j|))$.
+    By Markov's inequality the detection probability within
+    $k \cdot \mathbb{E}[\tau_{\mathrm{detect}}]$ observations is at
+    least $1 - 1/k$ for any $k > 1$. The structural advantage over
+    the correlational detector
+    (Proposition~\ref{prop:causal_dominates}) is preserved: the
+    causal detector operates on variance $\sigma_{\mathrm{do}}^2$
+    while the correlational detector operates on $\sigma^2 \geq
+    \sigma_{\mathrm{do}}^2$. The signed-mean
     EWMA is retained as a human-interpretable monitor of the
     estimator state; the SPRT statistic $\Lambda_j(t)$ is the
     load-bearing decision variable.
@@ -86,21 +123,25 @@ estimators of $\mu_j$ and $\sigma_{\mathrm{do}}^2$ with bounded
 stationary variance. They are not used for the detection decision,
 so we do not require almost-sure convergence.
 
-The SPRT decision on the causal-attribution sequence is a standard
-sequential test: under $H_0$ versus $H_1$ with bounded
-log-likelihood ratios and finite Kullback-Leibler divergence
-$D(H_1 \,\|\, H_0) > 0$, Wald's identity gives expected stopping time
+The SPRT is applied to the least-favorable simple pair
+$H_0: \mu_j = 0$ versus $H_1: \mu_j = -\epsilon$
+(see channel~(a) above for the reduction from composite to simple
+hypotheses). Under the Gaussian model, the per-observation expected
+log-likelihood ratio under the true mean $\mu_j$ is
+$\mathbb{E}_{\mu_j}[\log(p_{H_1}/p_{H_0})] =
+\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2$. By Wald's
+identity, the expected detection time under true $\mu_j$ is
 $\mathbb{E}[\tau_{\mathrm{detect}}] \approx
-\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) /
-D(H_1 \,\|\, H_0)$. For Gaussian causal attributions with
-$D(H_1 \,\|\, H_0) = \epsilon^2 / (2 \sigma_{\mathrm{do}}^2)$, this
-reduces to $\mathbb{E}[\tau_{\mathrm{detect}}] =
-O(\sigma_{\mathrm{do}}^2 / \epsilon^2)$; substituting the actual mean
-$\mu_j$ (which lower-bounds $\epsilon$ for a detectable scorpion)
-gives $O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$, matching the rate claimed
-in Proposition~\ref{prop:causal_dominates}(b). The SPRT Type~I error
-is bounded by $\alpha_{\mathrm{err}}$ and Type~II by
-$\beta_{\mathrm{err}}$ by construction.
+\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) \cdot
+\sigma_{\mathrm{do}}^2 /
+[\epsilon(|\mu_j| - \epsilon/2)]$, which at the design point
+$|\mu_j| = \epsilon$ reduces to $O(\sigma_{\mathrm{do}}^2 / \epsilon^2)$
+and for $|\mu_j| \gg \epsilon$ improves to
+$O(\sigma_{\mathrm{do}}^2 / (\epsilon |\mu_j|))$.
+The SPRT Type~I error for the simple pair is bounded by
+$\alpha_{\mathrm{err}}$ and Type~II by $\beta_{\mathrm{err}}$; the
+least-favorable argument ensures these bounds hold for the
+composite problem.
 
 Channel~(b): The behavioral trust dynamics (Appendix~B of
 \citet{lasser2026gfm}) operate on behavioral prediction residuals
@@ -119,67 +160,94 @@ adaptation rate required for evasion.
 
 \begin{proposition}[Evasion Bandwidth]
 \label{prop:evasion_bandwidth}
-A scorpion $a_j$ that changes strategy every $\tau_{\mathrm{adapt}}$ steps
+A scorpion $a_j$ with per-epoch mean causal contraction $|\mu_j|$
+    that changes strategy every $\tau_{\mathrm{adapt}}$ steps
     produces at most $\tau_{\mathrm{adapt}}$ observations per strategy
-    epoch. The causal detector requires
-    $\tau_{\mathrm{detect}} = O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$
-    observations per epoch to identify the scorpion. If
-    $\tau_{\mathrm{adapt}} > \tau_{\mathrm{detect}}$, the scorpion is
-    detected within each epoch. If $\tau_{\mathrm{adapt}} <
-    \tau_{\mathrm{detect}}$, the scorpion evades detection by changing
-    strategy before enough evidence accumulates.
+    epoch. Let
+    $\bar{\tau}(\mu_j) = O\bigl(\sigma_{\mathrm{do}}^2 /
+    [\epsilon(|\mu_j| - \epsilon/2)]\bigr)$ be the expected detection
+    time per epoch from the SPRT under the Gaussian model with
+    design parameter $\epsilon$
+    (Proposition~\ref{prop:causal_scorpion}). Then:
+\begin{enumerate}
+\item[\textbf{(a)}] If
+    $\tau_{\mathrm{adapt}} \geq k \cdot \bar{\tau}(\mu_j)$ for some
+    $k > 1$, the scorpion is detected within each epoch with
+    probability at least $1 - 1/k$ (by Markov's inequality on the
+    SPRT stopping time).
+\item[\textbf{(b)}] If $\tau_{\mathrm{adapt}} < \bar{\tau}(\mu_j)$,
+    the expected accumulated evidence at the epoch boundary is below
+    the SPRT threshold. While this does not by itself guarantee
+    evasion with any specific probability, it establishes that the
+    expected number of observations is insufficient for detection,
+    so the SPRT is unlikely to trigger within the epoch.
+\end{enumerate}
 \end{proposition}
 
 \begin{proof}
 Within each epoch of length $\tau_{\mathrm{adapt}}$, the scorpion's
 strategy is stationary and the causal-attribution sequence is i.i.d.\
-with mean $\mu_j$ and variance $\sigma_{\mathrm{do}}^2$. The SPRT
+$\mathcal{N}(\mu_j, \sigma_{\mathrm{do}}^2)$. The SPRT
 statistic accumulates log-likelihood-ratio evidence at expected rate
-$D(H_1 \,\|\, H_0) = \mu_j^2 / (2 \sigma_{\mathrm{do}}^2)$ per
-observation under the Gaussian surrogate used in
-Proposition~\ref{prop:causal_scorpion}. After $\tau_{\mathrm{adapt}}$
-observations, the expected accumulated evidence is
-$\tau_{\mathrm{adapt}} \cdot \mu_j^2 / (2 \sigma_{\mathrm{do}}^2)$. An
-epoch boundary resets the SPRT statistic (the null hypothesis of the
-test is epoch-local). If $\tau_{\mathrm{adapt}} <
-\tau_{\mathrm{detect}}$, the expected evidence at the epoch boundary
-is below the SPRT acceptance boundary
-$\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}})$ and the
-scorpion evades detection within that epoch.
+$\epsilon(|\mu_j| - \epsilon/2) / \sigma_{\mathrm{do}}^2$ per
+observation under the Gaussian model
+(Proposition~\ref{prop:causal_scorpion}), giving expected detection time
+$\bar{\tau}(\mu_j) =
+\sigma_{\mathrm{do}}^2 \cdot
+\log((1 - \beta_{\mathrm{err}}) / \alpha_{\mathrm{err}}) /
+[\epsilon(|\mu_j| - \epsilon/2)]$.
+
+(a) By Markov's inequality,
+$P(\tau_{\mathrm{detect}} > k \bar{\tau}) \leq 1/k$ for any $k > 1$.
+When $\tau_{\mathrm{adapt}} \geq k \bar{\tau}(\mu_j)$, the epoch
+provides enough observations that the SPRT crosses the detection
+threshold with probability at least $1 - 1/k$.
+
+(b) An epoch boundary resets the SPRT statistic (the hypotheses are
+epoch-local). If $\tau_{\mathrm{adapt}} < \bar{\tau}(\mu_j)$, the
+expected accumulated evidence at the epoch boundary is below the
+SPRT threshold. Since the number of observations is less than the
+expected detection time, the SPRT is unlikely to trigger within the
+epoch: the evidence accumulation rate is insufficient for reliable
+detection.
 \end{proof}
 
 \paragraph{Interpretation.} The evasion bandwidth
-$\tau_{\mathrm{adapt}}^* = O(\sigma_{\mathrm{do}}^2 / \mu_j^2)$ is the
-minimum adaptation rate a scorpion needs to evade the causal detector.
+$\tau_{\mathrm{adapt}}^* = O\bigl(\sigma_{\mathrm{do}}^2 /
+[\epsilon(|\mu_j| - \epsilon/2)]\bigr)$ is the
+characteristic timescale: a scorpion that adapts faster than
+$\tau_{\mathrm{adapt}}^*$ evades with non-negligible probability per
+epoch, while one that adapts slower than $k \cdot
+\tau_{\mathrm{adapt}}^*$ is detected with probability at least
+$1 - 1/k$.
 A fast-adapting scorpion ($\tau_{\mathrm{adapt}} \ll
 \tau_{\mathrm{adapt}}^*$) evades but is constrained to small contractions
 per epoch (otherwise $\mu_j$ is large and $\tau_{\mathrm{adapt}}^*$ shrinks).
 A slow-adapting scorpion ($\tau_{\mathrm{adapt}} \gg
-\tau_{\mathrm{adapt}}^*$) is detected within each epoch. The product
-$\mu_j \cdot \tau_{\mathrm{adapt}}$ (total contraction per epoch) is
-bounded: a scorpion can either cause large damage slowly (and be detected)
-or small damage quickly (and evade), but not large damage quickly.
+\tau_{\mathrm{adapt}}^*$) is detected within each epoch with high
+probability. The product $\mu_j \cdot \tau_{\mathrm{adapt}}$ (total
+contraction per epoch) is bounded: a scorpion can either cause large
+damage slowly (and be detected) or small damage quickly (and evade),
+but not large damage quickly.
 
 The time-averaged undetected contraction rate for an evading scorpion
-is bounded by the signed mean $|\mu_j|$ itself, not by an independent
-$\sigma_{\mathrm{do}}^2 / |\mu_j|$ factor: the evasion constraint
-$\tau_{\mathrm{adapt}} < \tau_{\mathrm{detect}} =
-\sigma_{\mathrm{do}}^2 / \mu_j^2$ (ignoring the constant
-$\log(1/\alpha_{\mathrm{err}})$) bounds the epoch length, and within
-each epoch the per-step contraction is $|\mu_j|$. The appendix proof
-(§\ref{app:proof_evasion}) establishes this bound via the sequential
-probability ratio test accumulation rate. Substituting the evasion
-constraint $|\mu_j| < \sigma_{\mathrm{do}} / \sqrt{\tau_{\mathrm{adapt}}}$
-gives an equivalent expression in terms of the adaptation budget:
-\begin{equation}
-\label{eq:evasion_bound}
-|\text{undetected contraction per step}| \;\leq\; |\mu_j|
-    \;\leq\; \frac{\sigma_{\mathrm{do}}}{\sqrt{\tau_{\mathrm{adapt}}}}
-\end{equation}
+is bounded by $|\mu_j|$: within each epoch the per-step contraction
+is $|\mu_j|$, and the evasion constraint
+$\tau_{\mathrm{adapt}} < \bar{\tau}(\mu_j)$ bounds the epoch length.
+The appendix proof (§\ref{app:proof_evasion}) establishes this via
+the SPRT accumulation rate. The key trade-off is controlled by the
+SPRT design parameter $\epsilon$: a scorpion whose per-step
+contraction satisfies $|\mu_j| \leq \epsilon$ requires at least
+$\bar{\tau}(\epsilon) = O(\sigma_{\mathrm{do}}^2 / \epsilon^2)$
+observations to detect (the worst case at the design point), while
+a scorpion with $|\mu_j| \gg \epsilon$ is detected faster in
+proportion to $|\mu_j| / \epsilon$. The SPRT design parameter
+$\epsilon$ therefore sets the resolution: reducing $\epsilon$ detects
+smaller contractions but requires more observations per epoch.
 The bound tightens as the causal model improves ($\sigma_{\mathrm{do}}$
 decreases) and as the scorpion's adaptation budget
-$\tau_{\mathrm{adapt}}$ grows: a scorpion that adapts frequently (small
-$\tau_{\mathrm{adapt}}$) can only afford very small per-step
+$\tau_{\mathrm{adapt}}$ grows: a scorpion that adapts frequently
+(small $\tau_{\mathrm{adapt}}$) can only afford very small per-step
 contractions, while a scorpion that adapts slowly can sustain larger
 contractions per step but for correspondingly fewer steps before
 detection.

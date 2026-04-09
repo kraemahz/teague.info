@@ -41,7 +41,10 @@ A \emph{substrate threat model} is a distribution over adversarial events,
     the conditional probability that substrate class $\mathcal{S}_i$ is
     targeted, given that an event occurs. For an uninformed adversary,
     $q_i = 1/m$ (uniform); for an optimal adversary,
-    $q_i = \mathbf{1}[i = \arg\max_j |\Delta \volL(\mathcal{S}_j)|]$.
+    $q_i = \mathbf{1}[i = \arg\max_j (|\Delta \volL(\mathcal{S}_j)|
+    \cdot c_j)]$, i.e., the adversary targets the substrate with
+    maximal \emph{effective damage} (volume contribution times
+    cascade fraction).
 \item $c_i \in [0, 1]$: the \emph{cascade fraction} for substrate
     $\mathcal{S}_i$, defined as the expected fraction of
     $\mathcal{S}_i$'s total volume lost when a substrate-targeting
@@ -81,6 +84,18 @@ the SCM's structural equations.
 
 \subsection{Expected Per-Step Dependency Risk}
 
+\paragraph{Notation update from the companion paper.} The companion
+paper \citep{lasser2026horizon} defines $\Risk_{\mathrm{dep}}$ as a
+discounted pathway sum over the full planning horizon. In this
+section, $\Risk_{\mathrm{dep}}^{\mathrm{single}}$ and
+$\Risk_{\mathrm{dep}}^{\mathrm{mixed}}$ denote the \emph{per-step
+expected dependency-risk cost} under the substrate threat model
+(Definition~\ref{def:threat_model}): a single-step expected
+contraction, not a discounted sum. The per-step form is the input to
+the risk-adjusted trajectory comparison
+(Section~\ref{sec:risk_adjusted}), which recovers a discounted sum
+by standard geometric-series aggregation.
+
 \begin{proposition}[Expected Risk Comparison]
 \label{prop:expected_risk}
 Under the substrate threat model
@@ -107,13 +122,18 @@ where $c$ and $c_i$ are the cascade fractions from
     = p_{\mathrm{adv}} \cdot \left(\volL(G) \cdot c
     - \sum_i q_i \cdot |\Delta \volL(\mathcal{S}_i)| \cdot c_i\right)
 \end{equation}
-This gap is positive whenever $p_{\mathrm{adv}} > 0$, the population
-    satisfies substrate capability non-redundancy
+Under \textbf{worst-case adversarial targeting}
+    ($q_i = \mathbf{1}[i = \arg\max_j (|\Delta \volL(\mathcal{S}_j)|
+    \cdot c_j)]$), this gap is positive whenever $p_{\mathrm{adv}} > 0$,
+    the population satisfies substrate capability non-redundancy
     (Proposition~4 of \citet{lasser2026horizon}), and the
     \textbf{adversarial balance condition}
     $c > \max_i (f_i \cdot c_i)$ holds, where
     $f_i = |\Delta \volL(\mathcal{S}_i)| / \volL(G)$ is substrate
-    $\mathcal{S}_i$'s share of total volume.
+    $\mathcal{S}_i$'s share of total volume. The condition is both
+    sufficient and necessary under worst-case targeting; for
+    non-adversarial $q_i$ (e.g., uniform), the condition is sufficient
+    but not necessary.
 \end{proposition}
 
 \begin{proof}
@@ -140,11 +160,12 @@ admits contagions by construction, which is essential because
 contagion-driven threats --- pandemics, cascading infrastructure
 failures, financial contagion, memetic attacks --- are precisely the
 class where per-substrate cascade fractions can approach saturation
-($c_i \to 1$) on the targeted substrate. Smaller substrates in general
+($c_i \to 1$) on the targeted substrate. Smaller substrates are expected to
 reach sigmoid saturation faster than larger ones because contagion
-propagation time scales sub-linearly with population size, so it is
-standard to expect $c_i > c$ for the substrates in a diversified
-partition. The gap remains positive as long as each substrate's volume
+propagation time scales sub-linearly with population size in
+standard epidemiological models \citep{anderson1991infectious}, so
+$c_i > c$ is a plausible assumption for the substrates in a
+diversified partition. The gap remains positive as long as each substrate's volume
 share $f_i$ is small enough to compensate.
 
 Two instructive limits bracket the regime of interest:

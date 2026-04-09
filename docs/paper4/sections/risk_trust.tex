@@ -105,10 +105,8 @@ period, Equation~71 of \citet{lasser2026gfm}).
 Let $X_j(t) = \|r_j^{\mathrm{risk}}(t)\|^2$ and assume $a_j$'s risk-claim
     strategy is stationary with
     $\mu_j^{\mathrm{risk}} = \mathbb{E}[X_j] < \infty$ and
-    $\nu_j^{\mathrm{risk}} = \mathrm{Var}[X_j] < \infty$, and that the
-    squared-residual sequence is i.i.d.\ (or weakly dependent with
-    summable autocovariance). Then the cumulative inconsistency estimator
-    satisfies:
+    $\nu_j^{\mathrm{risk}} = \mathrm{Var}[X_j] < \infty$. Then the
+    cumulative inconsistency estimator satisfies:
 \begin{align}
 \label{eq:risk_trust_bias}
 \lim_{t \to \infty} \mathbb{E}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
@@ -119,13 +117,36 @@ Let $X_j(t) = \|r_j^{\mathrm{risk}}(t)\|^2$ and assume $a_j$'s risk-claim
     \mathrm{Var}\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
     &\leq \frac{1 - \alpha_{\mathrm{risk}}}
               {1 + \alpha_{\mathrm{risk}}}
-       \cdot \nu_j^{\mathrm{risk}}
+       \cdot C_{\mathrm{dep}} \cdot \nu_j^{\mathrm{risk}}
     \qquad \text{(bounded stationary variance)}
 \end{align}
-Consequently $\Trisk_j(t)$ concentrates around
+where $C_{\mathrm{dep}} = 1$ under i.i.d.\ squared residuals, and
+    $C_{\mathrm{dep}}(\alpha_{\mathrm{risk}}) = 1 + 2
+    \sum_{h=1}^{\infty} \alpha_{\mathrm{risk}}^h \cdot
+    \mathrm{Corr}(X_j(t), X_j(t+h))$ under weak dependence with
+    summable autocovariance. The $\alpha_{\mathrm{risk}}^h$ weights
+    arise from the EWMA's geometric weighting: the cross-terms in the
+    variance expansion carry the product of the EWMA coefficients at
+    lag $h$. Since $|\mathrm{Corr}| \leq 1$ and
+    $\sum_h \alpha_{\mathrm{risk}}^h = \alpha_{\mathrm{risk}} /
+    (1 - \alpha_{\mathrm{risk}})$, we have the universal bound
+    $C_{\mathrm{dep}} \leq (1 + \alpha_{\mathrm{risk}}) /
+    (1 - \alpha_{\mathrm{risk}})$.
+Consequently, the variance estimator
+    $\sigma_j^{\mathrm{risk},2}(t)$ concentrates in $L^2$ around
+    $\mu_j^{\mathrm{risk}}$. The risk-trust factor $\Trisk_j(t)$
+    concentrates around the nominal fixed point
     $\Trisk_j^* = 1 / (1 + \beta_{\mathrm{risk}} \mu_j^{\mathrm{risk}})$
-    in mean, with stationary deviation controlled by
-    $\alpha_{\mathrm{risk}}$. Structurally accurate reporters (small
+    in distribution (via the continuous mapping theorem), with the
+    caveat that $\mathbb{E}[\Trisk_j(t)]$ may exceed $\Trisk_j^*$ by
+    a Jensen bias term of order
+    $O(\beta_{\mathrm{risk}}^2 \cdot
+    \mathrm{Var}[\sigma_j^{\mathrm{risk},2}])$ due to the concavity
+    of $x \mapsto 1/(1 + \beta_{\mathrm{risk}} x)$. The deviation
+    is controlled by $\alpha_{\mathrm{risk}}$: as
+    $\alpha_{\mathrm{risk}} \to 1$, the stationary variance vanishes,
+    the Jensen bias vanishes, and $\Trisk_j(t) \to \Trisk_j^*$ in
+    $L^2$. Structurally accurate reporters (small
     $\mu_j^{\mathrm{risk}}$) concentrate around high $\Trisk_j^*$;
     alarmists and chronic underreporters concentrate around low
     $\Trisk_j^*$.
@@ -156,13 +177,27 @@ $\mathbb{E}[\sigma_j^{\mathrm{risk},2}(t)]
               {1 + \alpha_{\mathrm{risk}}}
        \cdot \nu_j^{\mathrm{risk}},
 \end{align*}
-giving Equation~\eqref{eq:risk_trust_variance}. Under weak dependence
-with summable autocovariance, the same limit holds up to a
-multiplicative constant reflecting the autocovariance sum. The
-concentration statement for $\Trisk_j(t)$ follows by applying the
-continuous mapping theorem to
+giving $C_{\mathrm{dep}} = 1$ in
+Equation~\eqref{eq:risk_trust_variance}. Under weak dependence
+with summable autocovariance, the cross-terms in the EWMA variance
+expansion carry $\alpha_{\mathrm{risk}}^h$ weights from the
+geometric kernel, giving
+$C_{\mathrm{dep}}(\alpha_{\mathrm{risk}}) = 1 + 2
+\sum_{h=1}^{\infty} \alpha_{\mathrm{risk}}^h \cdot
+\mathrm{Corr}(X_j(t), X_j(t+h))$, which is finite because
+$\alpha_{\mathrm{risk}}^h$ decays geometrically and the
+autocovariance is summable. The
+concentration statement for $\sigma_j^{\mathrm{risk},2}(t)$ around
+$\mu_j^{\mathrm{risk}}$ in $L^2$ follows directly. For $\Trisk_j(t)$,
+the continuous mapping theorem applied to
 $x \mapsto 1 / (1 + \beta_{\mathrm{risk}} x)$, which is Lipschitz on
-$[0, \infty)$.
+$[0, \infty)$, gives convergence in distribution to
+$\Trisk_j^*$. The Jensen bias arises because
+$\mathbb{E}[f(X)] \geq f(\mathbb{E}[X])$ for concave $f$; a
+second-order Taylor expansion gives the bias as
+$O(\beta_{\mathrm{risk}}^2 \cdot
+\mathrm{Var}[\sigma_j^{\mathrm{risk},2}])$, which vanishes as
+$\alpha_{\mathrm{risk}} \to 1$.
 \end{proof}
 
 \paragraph{Tracking versus convergence: why $L^2$ and not almost sure.}
@@ -316,9 +351,11 @@ report-bombing: coordinated low-quality reports exploiting an aggregation
 mechanism designed for independent evidence.
 
 Any fixed correlation-detection heuristic is game-able once the adversary
-knows the parameters, and the ROC curve is particularly unfavorable: false
-positives (restricting a safe capability) and false negatives (ignoring a
-real risk) both cause $\volL$-contraction. We therefore adopt the activation
+knows the parameters --- a standard observation in adversarial detection
+settings --- and the ROC trade-off is unfavorable in this domain because
+both error types are costly: false positives (restricting a safe
+capability) and false negatives (ignoring a real risk) both cause
+$\volL$-contraction. We therefore adopt the activation
 energy principle from the foundational paper \citep{lasser2026gfm}, applied
 to risk-claim processing.
 
@@ -365,9 +402,10 @@ many conspirators report them).
 
 \paragraph{Why heuristic correlation detection is insufficient.} A fixed
 correlation metric (temporal clustering, behavioral similarity among
-reporters, trust-history patterns) is game-able: adversaries who know the
-detection threshold can space their reports, diversify their trust-building
-histories, and avoid clustering. The two-gate architecture avoids this arms
+reporters, trust-history patterns) is game-able by a sufficiently
+informed adversary: adversaries who know the detection threshold can
+space their reports, diversify their trust-building histories, and
+avoid clustering. The two-gate architecture avoids this arms
 race by not relying on detecting coordination at all. The defense is the
 actor's own intelligence applied through the causal model, not a statistical
 filter on the report stream.
