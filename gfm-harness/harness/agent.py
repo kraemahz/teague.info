@@ -122,20 +122,52 @@ def _build_system_prompt(constitution_path: Path) -> str:
 
 def _build_initial_user_message(
     session: HarnessSession,
-    task_description: str,
+    task_description: str | None,
     resume_context: str | None = None,
+    goal_set: Any = None,
+    autonomous: bool = False,
 ) -> str:
-    """The first user message of the feature loop."""
+    """
+    The first user message of the feature loop.
+
+    Two modes:
+      - Task-harness mode (autonomous=False, task_description required):
+        the user supplies a concrete task; the feature loop starts in
+        PLAN phase with the task as the focal objective.
+      - Autonomous mode (autonomous=True, task_description optional):
+        no task is supplied; the feature loop starts in SELECT phase,
+        and the agent proposes its own task from goals + ledger +
+        leverage before pausing for user approval.
+    """
     current_phase = (
         session.current_feature.current_phase.value
-        if session.current_feature else "plan"
+        if session.current_feature else ("select" if autonomous else "plan")
     )
 
+    if autonomous:
+        header = "# Autonomous feature loop: propose a task"
+    else:
+        header = f"# Feature loop: {task_description}"
+
     lines = [
-        f"# Feature loop: {task_description}",
+        header,
         "",
         f"Current phase: **{current_phase}**",
         "",
+    ]
+
+    # In autonomous mode, surface the active goal list so SELECT has
+    # something to gravitate toward. In task-harness mode the goals are
+    # still relevant context but the task itself is the focal objective.
+    if goal_set is not None:
+        active = goal_set.active() if hasattr(goal_set, "active") else []
+        if active:
+            lines.append("## Your active goals (priority-ordered)")
+            for goal in active:
+                lines.append(f"- **[{goal.priority}] {goal.id}**: {goal.statement}")
+            lines.append("")
+
+    lines.extend([
         "## Current ledger summary",
         f"- Agents: {list(session.ledger.agents.keys())}",
         f"- Cooperative capabilities: {list(session.ledger.cooperative.keys())}",
@@ -145,7 +177,7 @@ def _build_initial_user_message(
         f"Pause threshold: {session.trust.pause_threshold}",
         f"Categories with non-zero trust: {[k for k, v in session.trust.category_trust.items() if v > 0]}",
         "",
-    ]
+    ])
 
     recent_memory = session.memory.tail(10)
     if recent_memory:
@@ -158,18 +190,49 @@ def _build_initial_user_message(
         lines.append(resume_context)
         lines.append("")
 
-    lines.append(
-        "Begin the feature loop in the PLAN phase. Call tools as needed; "
-        "use mcp__gfm-harness__transition_to when you are ready to move "
-        "between phases; call mcp__gfm-harness__pause_for_user if you "
-        "need direction from the user."
-    )
+    # The terminal instruction differs by mode.
+    if autonomous:
+        lines.append(
+            "You are in the **SELECT** phase. Your job in SELECT is to "
+            "propose the next task for this feature loop, grounded in "
+            "your active goals and the current ledger state. Specifically:\n"
+            "\n"
+            "  1. Orient using mcp__gfm-harness__read_ledger, "
+            "     mcp__gfm-harness__leverage_report, and "
+            "     mcp__gfm-harness__recall (query for prior work relevant "
+            "     to any of the active goals).\n"
+            "  2. Reason about which goal(s) to gravitate toward this loop "
+            "     and what the highest-leverage concrete task would be "
+            "     under current conditions.\n"
+            "  3. Draft a proposed task: a clear deliverable, a terminal "
+            "     condition, and the category(ies) of decision the task "
+            "     falls into. Record it via mcp__gfm-harness__append_memory "
+            "     with kind='reasoning' and importance=0.6.\n"
+            "  4. Call mcp__gfm-harness__pause_for_user with "
+            "     categories=['task_selection'], including the proposed "
+            "     task verbatim in the `reason` field so the user can "
+            "     approve or redirect it.\n"
+            "\n"
+            "Do NOT transition out of SELECT or begin executing the "
+            "proposed task in this session. The pause is the end of the "
+            "SELECT phase for this session; the user will either approve "
+            "(and you resume in PLAN on the next run) or redirect (and "
+            "you re-propose with their feedback)."
+        )
+    else:
+        lines.append(
+            "Begin the feature loop in the PLAN phase. Call tools as "
+            "needed; use mcp__gfm-harness__transition_to when you are "
+            "ready to move between phases; call "
+            "mcp__gfm-harness__pause_for_user if you need direction from "
+            "the user."
+        )
     return "\n".join(lines)
 
 
 async def _run_feature_loop_async(
     session: HarnessSession,
-    task_description: str,
+    task_description: str | None,
     constitution_path: Path,
     resume_context: str | None,
     model: str,
@@ -178,13 +241,13 @@ async def _run_feature_loop_async(
     permission_mode: str,
     cwd: str | Path | None,
     verbose: bool,
+    goal_set: Any = None,
+    autonomous: bool = False,
 ) -> FeatureLoopResult:
     """Async implementation; run_feature_loop() wraps this in asyncio.run()."""
     from claude_agent_sdk import (
         AssistantMessage,
         ClaudeAgentOptions,
-        PermissionResultAllow,
-        PermissionResultDeny,
         ResultMessage,
         SystemMessage,
         TextBlock,
@@ -195,9 +258,23 @@ async def _run_feature_loop_async(
         query,
     )
 
-    # Begin a feature loop in PLAN phase if one isn't already active.
+    # Begin a feature loop if one isn't already active. Autonomous mode
+    # starts in SELECT phase; task-harness mode starts in PLAN.
     if session.current_feature is None:
-        session.begin_feature(task_description)
+        if autonomous:
+            state = session.begin_feature(
+                task_description or "(autonomous: task to be proposed in SELECT)"
+            )
+            # Override the default PLAN starting phase so the agent's
+            # initial message matches the phase machine state.
+            state.current_phase = Phase.SELECT
+        else:
+            if task_description is None:
+                raise ValueError(
+                    "task_description is required in non-autonomous mode; "
+                    "pass autonomous=True to have the agent propose a task."
+                )
+            session.begin_feature(task_description)
 
     # Reset any stale pause marker from a previous loop.
     session._pending_pause = None
@@ -207,23 +284,14 @@ async def _run_feature_loop_async(
 
     allowed_tools = list(builtin_tools) + mcp_tool_names()
 
-    # can_use_tool denies any tool call after a pause has been signaled,
-    # giving the LLM a hard stop signal even if it tries to keep going.
-    async def _can_use_tool(
-        tool_name: str,
-        tool_input: dict,
-        context: Any,
-    ):
-        if session._pending_pause is not None and tool_name != "mcp__gfm-harness__pause_for_user":
-            return PermissionResultDeny(
-                message=(
-                    "Feature loop has been paused for user direction. "
-                    f"Reason: {session._pending_pause.reason}. "
-                    "Do not call any more tools; produce a final text "
-                    "response summarizing your state so the loop can end cleanly."
-                ),
-            )
-        return PermissionResultAllow()
+    # pause_for_user is a notification mechanism, not a hard control-flow
+    # stop. When the agent fires it, session._pending_pause is set and the
+    # CLI surfaces the question at end-of-loop — but the agent is free to
+    # keep working on orthogonal parts of its current phase or to wrap up
+    # cleanly via end_turn. A legitimate free agent should be able to
+    # parallelize: "I need input on X" does not imply "everything else
+    # must stop" — the parallelism is a feature, not a bug. See
+    # constitution §3.1 (SELECT) and §4.9 (task_selection).
 
     options = ClaudeAgentOptions(
         system_prompt=system_prompt,
@@ -237,23 +305,15 @@ async def _run_feature_loop_async(
         thinking=ThinkingConfigAdaptive(type="adaptive"),
         max_turns=max_turns,
         cwd=cwd,
-        can_use_tool=_can_use_tool,
     )
 
     initial_message = _build_initial_user_message(
-        session, task_description, resume_context
+        session,
+        task_description,
+        resume_context=resume_context,
+        goal_set=goal_set,
+        autonomous=autonomous,
     )
-
-    # can_use_tool requires streaming-mode input (AsyncIterable[dict]) per
-    # the SDK's contract. Wrap the single initial message in a minimal
-    # async generator that matches the expected schema.
-    async def _prompt_stream():
-        yield {
-            "type": "user",
-            "message": {"role": "user", "content": initial_message},
-            "parent_tool_use_id": None,
-            "session_id": f"gfm-{session.current_feature.feature_id}" if session.current_feature else "gfm-0",
-        }
 
     usage_total = {
         "input_tokens": 0,
@@ -266,7 +326,7 @@ async def _run_feature_loop_async(
     terminated_reason = "end_turn"
 
     try:
-        async for message in query(prompt=_prompt_stream(), options=options):
+        async for message in query(prompt=initial_message, options=options):
             if isinstance(message, AssistantMessage):
                 turns_observed += 1
                 if verbose:
@@ -324,7 +384,7 @@ async def _run_feature_loop_async(
 
 def run_feature_loop(
     session: HarnessSession,
-    task_description: str,
+    task_description: str | None,
     constitution_path: Path,
     resume_context: str | None = None,
     model: str = DEFAULT_MODEL,
@@ -333,10 +393,21 @@ def run_feature_loop(
     permission_mode: str = DEFAULT_PERMISSION_MODE,
     cwd: str | Path | None = None,
     verbose: bool = True,
+    goal_set: Any = None,
+    autonomous: bool = False,
 ) -> FeatureLoopResult:
     """
     Run a single feature loop end-to-end against a live LLM via the
     Claude Agent SDK.
+
+    Two modes:
+      - Task-harness mode (default): pass a task_description. The loop
+        starts in PLAN and works toward the task.
+      - Autonomous mode (autonomous=True): task_description may be None.
+        Pass goal_set (typically instance.goal_set) so the agent can
+        read the active goals when proposing a task. The loop starts
+        in SELECT phase; the agent proposes a task and pauses for
+        user approval via the task_selection category.
 
     This is a synchronous wrapper around the async SDK driver. If the
     caller is already in an async context, use _run_feature_loop_async
@@ -363,6 +434,8 @@ def run_feature_loop(
             permission_mode=permission_mode,
             cwd=cwd,
             verbose=verbose,
+            goal_set=goal_set,
+            autonomous=autonomous,
         )
     )
 

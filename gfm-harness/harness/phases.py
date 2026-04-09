@@ -21,6 +21,18 @@ from typing import Any
 
 
 class Phase(Enum):
+    # SELECT is the autonomous-mode task-proposal phase. It runs before
+    # PLAN when the feature loop is started without an externally supplied
+    # task (via `harness run <name> --autonomous`). In SELECT, the agent
+    # reads its goals, the current ledger, the leverage gradient, and
+    # recent memory, then proposes a concrete task to work on and pauses
+    # for user approval (gated by the `task_selection` decision category).
+    # On resume with approval, the agent transitions SELECT → PLAN and
+    # executes the approved task through the normal phase machine.
+    #
+    # In task-harness mode (externally supplied task), SELECT is skipped
+    # and the feature loop starts directly in PLAN.
+    SELECT = "select"
     PLAN = "plan"
     IMPLEMENT = "implement"
     VERIFY = "verify"
@@ -67,6 +79,11 @@ INITIAL_CATEGORIES: dict[str, float] = {
     "result_interpretation":  0.0,  # is the output actually correct, or just "close enough"?
     "visual_inspection":      0.0,  # does the rendered thing actually look right?
     "execution_environment":  0.0,  # resource cost, local vs cloud, available infrastructure
+    # Autonomous task proposal: gates the SELECT phase's task proposal.
+    # Always pauses on fresh instances so the user approves every task the
+    # agent proposes. Climbs as the user rubber-stamps proposals with
+    # "yes, proceed" — that's the autonomy-growth mechanism.
+    "task_selection":         0.0,
 }
 
 INITIAL_FLOORS: dict[str, float] = {

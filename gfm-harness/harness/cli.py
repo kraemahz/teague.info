@@ -66,17 +66,24 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         return 1
 
-    task = args.task or instance.config.default_task
-    if not task:
-        print(
-            "ERROR: no task specified and instance has no default_task in config.\n"
-            f"Either pass --task, or edit {instance.config_path} to set "
-            "run.default_task.\n"
-            "(Agency mode, where the agent proposes its own task, is not "
-            "implemented yet.)",
-            file=sys.stderr,
-        )
-        return 1
+    autonomous = bool(getattr(args, "autonomous", False))
+
+    if autonomous:
+        # Autonomous mode: no task required. The agent will propose one
+        # in SELECT phase based on its goals + ledger + leverage.
+        task = args.task  # optional hint, None is fine
+    else:
+        task = args.task or instance.config.default_task
+        if not task:
+            print(
+                "ERROR: no task specified and instance has no default_task "
+                "in config.\n"
+                f"Either pass --task, edit {instance.config_path} to set "
+                "run.default_task, or use --autonomous to have the agent "
+                "propose a task from its goals and ledger state.",
+                file=sys.stderr,
+            )
+            return 1
 
     # Resolve the constitution path. It lives in the harness repo, not
     # in the instance data directory. For now assume the harness repo
@@ -98,7 +105,14 @@ def cmd_run(args: argparse.Namespace) -> int:
     print(f"=== GFM Harness feature loop ({instance.name}) ===")
     print(f"Instance:    {instance.path}")
     print(f"Model:       {instance.config.model}")
-    print(f"Task:        {task[:100]}{'...' if len(task) > 100 else ''}")
+    if autonomous:
+        print(f"Mode:        autonomous (agent proposes task from goals)")
+        active_goals = instance.goal_set.active()
+        print(f"Goals:       {len(active_goals)} active")
+        for g in active_goals:
+            print(f"  [{g.priority}] {g.id}")
+    else:
+        print(f"Task:        {task[:100]}{'...' if len(task) > 100 else ''}")
     print()
 
     # Lazy-import the agent driver so the CLI is usable without the
@@ -121,6 +135,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         max_turns=instance.config.max_iterations,
         cwd=cwd_path,
         verbose=not args.quiet,
+        goal_set=instance.goal_set,
+        autonomous=autonomous,
     )
 
     # Always persist the updated instance state after a feature loop.
@@ -285,6 +301,16 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--resume", default=None, help="User response to a prior pause")
     p_run.add_argument("--model", default=None, help="Override instance model")
     p_run.add_argument("--quiet", action="store_true", help="Suppress per-turn diagnostics")
+    p_run.add_argument(
+        "--autonomous",
+        action="store_true",
+        help=(
+            "Autonomous mode: the agent proposes its own task from the "
+            "instance's goals, ledger state, and leverage gradient. "
+            "Starts the feature loop in SELECT phase instead of PLAN. "
+            "No --task required."
+        ),
+    )
     p_run.set_defaults(func=cmd_run)
 
     # status
