@@ -4,43 +4,67 @@
 % Core formal contribution #4: the minimal verification ledger.
 
 % §6.1 Design principles
-%   The ledger is motivated by verification requirements, not by analogy
-%   to financial blockchains. It must be:
-%   - Append-only (commitments and verification results cannot be deleted)
-%   - Publicly auditable (any agent can verify the chain of commitments)
-%   - Substrate-distributed (the ledger itself must not be controllable
-%     by a single substrate, or the ledger becomes an endogenous channel)
-%   It need NOT have:
+%   The ledger is motivated by verification requirements, not by
+%   analogy to financial blockchains. It records two kinds of entries:
+%   (a) claim verification records (commitment + result), and
+%   (b) governance decisions (benchmark proposals + votes + outcomes).
+%
+%   Required properties:
+%   - Append-only (entries cannot be deleted or modified)
+%   - Publicly auditable (any participant can verify the chain)
+%   - Substrate-distributed (replicated across substrates; no single
+%     substrate controls the ledger)
+%
+%   NOT required:
 %   - Token economics or financial incentives
 %   - Proof-of-work or proof-of-stake consensus
 %   - Smart contract execution
-%   The minimal construction is an authenticated append-only data structure
-%   (Merkle tree or similar) replicated across substrate-exclusive nodes.
+%   - High transaction throughput (governance decisions are infrequent;
+%     claim verifications scale with compute, not consensus)
+%
+%   The minimal construction is an authenticated append-only data
+%   structure (Merkle tree or similar) replicated across substrate-
+%   exclusive nodes.
 
-% §6.2 Ledger entries
-%   Each entry contains:
+% §6.2 Verification entries
+%   Each verification entry contains:
 %   - Agent identifier a_j
-%   - Commitment Com(c_k, r)
-%   - Witness identifier W⊥
-%   - Exercise protocol specification
-%   - Verification result (pass/fail + timestamp)
-%   - Opened commitment (c_k, r) for public audit
-%   The entry is signed by both the agent and the witness.
+%   - Commitment Com(C, r)
+%   - Algorithmic witness identifier W⊥_alg
+%   - Benchmark/protocol identifier B (must be governance-accepted)
+%   - Verification result (pass/fail + timestamp + raw data hash)
+%   - Opened commitment (C, r) for public audit
+%   Signed by both the agent (commitment phase) and the witness
+%   (verification phase).
 
-% §6.3 Consensus among substrate-exclusive nodes
+% §6.3 Governance entries
+%   Each governance entry contains:
+%   - Benchmark proposal (specification, target capability, proposer)
+%   - Deliberation record (analysis submitted during the window)
+%   - Vote record (per-validator votes, substrate distribution)
+%   - Outcome (accepted/rejected + effective date for accepted forks)
+%   The governance record is permanent: rejected proposals remain in
+%   the ledger with their deliberation records. This provides an
+%   audit trail for benchmark evolution and prevents re-proposal of
+%   previously-studied-and-rejected benchmarks without new evidence.
+
+% §6.4 Consensus among substrate-exclusive nodes
 %   The ledger is replicated across nodes on different substrates.
-%   Consensus requires agreement from nodes on at least two substrates
-%   (matching the m ≥ 2 condition from Paper 3).
-%   This is NOT a general-purpose consensus protocol; it is a
-%   special-purpose agreement on append-only verification records.
-%   The threat model is simpler than Byzantine consensus because
-%   substrate exclusivity limits the adversary's write access.
+%   For verification entries: append requires agreement from the
+%   committing agent and the verifying witness (two-party, cross-
+%   substrate). No general consensus needed for per-claim entries.
+%   For governance entries: acceptance requires a threshold of
+%   cross-substrate validators (e.g., supermajority with at least
+%   one validator per substrate). This is a special-purpose consensus
+%   that is simpler than general Byzantine consensus because the
+%   entries are governance decisions (infrequent, high deliberation)
+%   rather than financial transactions (frequent, low latency).
 
-% §6.4 Relation to the GFM harness ledger
+% §6.5 Relation to the GFM harness ledger
 %   The GFM harness already maintains a ledger (session/ledger.json)
 %   that tracks agents, capabilities, trust, and cooperative
 %   capabilities. Paper 5's construction provides the cryptographic
-%   backbone that makes this ledger tamper-evident and
-%   cross-substrate verifiable.
+%   backbone that makes this ledger tamper-evident, cross-substrate
+%   verifiable, and governance-auditable.
 
 % TODO: formal definitions, data structures, consensus specification.

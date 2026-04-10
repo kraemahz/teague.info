@@ -1,42 +1,87 @@
 \section{Substrate-Exclusive Witnesses}
 \label{sec:witnesses}
 
-% Core formal contribution #2: define substrate-exclusive witnesses.
+% Core formal contribution #2: witness types and the governance layer.
 
-% §4.1 Definition
-%   A witness W⊥ for agent a is substrate-exclusive if:
-%   (i) W⊥ occupies substrate s' ≠ s(a), and
-%   (ii) a has no write access to s' (substrate exclusivity from Paper 3).
-%   The witness's computation is therefore outside a's action space,
-%   making its evaluation exogenous by construction.
+% §4.1 Algorithmic witnesses
+%   Definition: An algorithmic witness W⊥_alg for agent a is a process
+%   that (i) occupies substrate s' ≠ s(a), and (ii) executes a
+%   deterministic or statistical verification protocol against a's
+%   committed claims. The verification function is fully specified by
+%   the protocol; the witness exercises no judgment.
+%
+%   Examples:
+%   - A validator node on separate hardware that checks behavioral
+%     consistency against committed capability claims
+%   - An automated test runner that executes accepted benchmarks
+%     against agent a's outputs
+%   - A statistical monitor that runs SPRT-like detection on the
+%     residuals between committed and observed behavior
+%
+%   Algorithmic witnesses operate at machine speed, scale with compute,
+%   and require no human attention at verification time. Their
+%   substrate exclusivity is enforced by running on physically
+%   separate infrastructure.
 
-% §4.2 Examples of substrate-exclusive witnesses
-%   - Biological observer verifying a digital agent's capability claim
-%     (the harness operational finding: user's higher_order_abstract_reasoning
-%     caught the self-assertion gradient)
-%   - Hardware enclave on a separate physical substrate
-%   - Cross-substrate agent consortium (multiple agents on different
-%     substrates form a witness quorum)
-%   - Physical-world verification (the capability claim is tested in
-%     the physical world, which the digital agent cannot directly modify)
+% §4.2 The governance layer: benchmark admissibility
+%   The algorithmic witness verifies claims against ACCEPTED benchmarks.
+%   The question "which benchmarks are accepted?" is a governance
+%   decision, not a verification decision. It is the single point
+%   where human judgment enters the protocol.
+%
+%   Benchmark admissibility is decided through a fork mechanism:
+%   1. A benchmark proposal B for capability c_k is submitted to the
+%      ledger with a specification (what it tests, how it's scored,
+%      what passing means).
+%   2. A deliberation window opens (e.g., weeks to months). During
+%      this window, any participant can:
+%      - Study the benchmark specification
+%      - Run it against known agents to check for bias
+%      - Flag concerns (e.g., "this benchmark is passable by a
+%        narrow specialist that lacks the general capability c_k")
+%      - Publish analysis to the ledger
+%   3. At the end of the deliberation window, validator nodes vote
+%      on whether to accept B. Acceptance requires a threshold
+%      (e.g., supermajority of cross-substrate validators).
+%   4. If accepted, B becomes part of the protocol. All subsequent
+%      capability claims for c_k can be verified against B
+%      algorithmically. If rejected, B is archived with the
+%      deliberation record.
+%
+%   This is structurally analogous to EIPs (Ethereum Improvement
+%   Proposals): the governance decision is slow (human-speed
+%   deliberation), but once made, enforcement is fast (machine-speed
+%   validation).
 
-% §4.3 Witness trust and the bootstrap problem
-%   The witness must be trusted to execute the verification protocol
-%   honestly. But trust is what we're trying to establish. The resolution:
-%   substrate exclusivity provides the structural guarantee (the agent
-%   can't modify the witness's computation), while the witness's honesty
-%   is incentivized by vol_P maximization (a dishonest witness degrades
-%   the population's verification infrastructure, which is a capability
-%   the witness benefits from).
-%   Connect to Paper 1's trust dynamics: the witness has its own T_j
-%   that evolves through the standard EWMA update.
+% §4.3 Why this resolves the bandwidth problem
+%   Human judgment is needed only for benchmark governance, which is
+%   infrequent: benchmarks change rarely compared to claims. A
+%   population generating thousands of capability claims per day only
+%   needs human judgment when a new benchmark is proposed (perhaps
+%   monthly or less). The per-claim verification is fully algorithmic.
+%   This matches the operational reality that human attention is
+%   scarce: the protocol allocates it to the meta-level decision
+%   (what to measure) rather than the object-level decision (did the
+%   measurement pass).
 
-% §4.4 Witness availability as a diversity requirement
-%   Substrate-exclusive witnesses exist only when m ≥ 2 (Paper 3's
-%   diversity condition). In a monopolar population (m = 1), there are
-%   no cross-substrate witnesses, and verification collapses to the
-%   endogenous case. This connects verification integrity to the
-%   anti-monopolar property: substrate diversity is not just a
-%   safety property — it is a verification prerequisite.
+% §4.4 Coalition capture resistance via governance
+%   A coalition that designs a biased benchmark is caught at the
+%   governance layer:
+%   - The benchmark specification is public during deliberation
+%   - Cross-substrate participants can test it for bias
+%   - The fork requires cross-substrate validator agreement, so a
+%     same-substrate coalition cannot unilaterally accept its own
+%     benchmark
+%   This is stronger than detecting bias after acceptance: prevention
+%   at the governance layer beats detection at the verification layer.
+
+% §4.5 Witness availability requires m ≥ 2
+%   Substrate-exclusive algorithmic witnesses exist only when m ≥ 2
+%   (Paper 3's diversity condition). In a monopolar population (m = 1),
+%   all validator nodes are on the same substrate, and the substrate-
+%   exclusivity guarantee degrades to same-substrate verification.
+%   Cross-substrate governance is impossible because there is no
+%   second substrate to provide an independent perspective.
+%   This connects verification integrity to the anti-monopolar property.
 
 % TODO: formal definitions and propositions.

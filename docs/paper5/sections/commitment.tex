@@ -2,24 +2,27 @@
 \label{sec:commitment}
 
 % Core formal contribution #3: the commitment-verification protocol.
-% This section is ALIGNMENT-GENERAL. It defines the protocol in terms
-% of abstract claims, witnesses, and exercise protocols. The specific
-% claim types (capabilities, risks, benchmarks) are instantiated in §7.
+% This section is ALIGNMENT-GENERAL. All verification is algorithmic
+% against accepted benchmarks/protocols. Human judgment enters only
+% at the governance layer (§4.2), not here.
 
 % §5.1 Protocol overview
-%   Three-phase protocol for verifying an arbitrary claim:
+%   Three-phase protocol for verifying a claim against an accepted
+%   benchmark:
 %   Phase 1 (Commit): Agent a commits to claim C by publishing
-%     Com(C, r) where r is a random blinding factor.
-%     The commitment is binding (a cannot change C after committing)
-%     and hiding (the witness cannot learn C from the commitment).
-%   Phase 2 (Verify): Substrate-exclusive witness W⊥ executes an
-%     exercise protocol E that tests whether claim C holds.
-%     E is defined abstractly: it takes an agent and a claim as input
-%     and produces a verification result. The specific form of E
-%     depends on the claim type (§7 instantiates for GFM claims).
-%   Phase 3 (Reveal): a opens the commitment by revealing (C, r).
-%     The witness publishes Ver(Com, C, E_result) to the ledger.
-%     The ledger entry is permanent and publicly auditable.
+%     Com(C, r) to the ledger. The commitment is binding and hiding.
+%   Phase 2 (Verify): An algorithmic witness W⊥_alg executes the
+%     accepted exercise protocol E for claim type C. The exercise
+%     protocol is fully specified by the governance-accepted benchmark;
+%     the witness exercises no judgment. This runs at machine speed.
+%   Phase 3 (Reveal + Record): a opens the commitment by revealing
+%     (C, r). The witness publishes Ver(Com, C, E_result) to the
+%     ledger. The entry is permanent and publicly auditable.
+%
+%   Key property: Phase 2 is fully algorithmic. The witness is
+%   executing a protocol, not making a judgment call. All judgment
+%   was resolved at the governance layer when the benchmark was
+%   accepted.
 
 % §5.2 Commitment scheme requirements
 %   - Binding: Pr[a opens to C' ≠ C] ≤ negl(λ)
@@ -30,25 +33,30 @@
 
 % §5.3 Zero-knowledge verification
 %   Can the agent prove a claim holds without revealing the claim itself?
-%   ZK proof: the agent proves "I satisfy predicate P" without revealing
-%   which specific claim satisfies it.
-%   This is alignment-general: any framework that has sensitive claims
-%   (e.g., security-relevant capabilities, proprietary strategies)
-%   benefits from ZK verification.
-%   Formal construction: the agent commits to a claim, the witness
-%   verifies a predicate on the claim's properties without learning
-%   the claim's identity.
+%   ZK proof: the agent proves "I satisfy predicate P defined by
+%   accepted benchmark B" without revealing which specific claim
+%   satisfies it.
+%   Formal construction: the agent commits to a claim, the algorithmic
+%   witness verifies a predicate on the claim's properties without
+%   learning the claim's identity.
 
-% §5.4 Coalition resistance (general)
-%   A coalition of agents on the same substrate can coordinate their
-%   claims and exercise protocols. The commitment protocol resists this
-%   because:
-%   (i) the commitment is published before the exercise protocol,
-%   (ii) the exercise protocol is executed by a cross-substrate witness,
-%   (iii) the witness cannot be influenced by the coalition (substrate
-%        exclusivity).
-%   Formal claim: under substrate exclusivity, a coalition of size k
-%   on substrate s cannot influence the verification outcome of a
-%   witness on substrate s' ≠ s.
+% §5.4 Continuous behavioral monitoring
+%   Between explicit commitment-verify-reveal cycles, algorithmic
+%   witnesses run continuous statistical monitoring:
+%   - Is agent a's observed behavior consistent with its last committed
+%     claims?
+%   - Has the residual between committed baseline and observed behavior
+%     drifted beyond the SPRT threshold?
+%   This is the "always on" layer that catches behavioral divergence
+%   between explicit verification events, operating at machine speed
+%   on cross-substrate infrastructure.
+
+% §5.5 Coalition resistance
+%   Under substrate exclusivity, a coalition of size k on substrate s
+%   cannot influence the verification outcome of an algorithmic witness
+%   on substrate s' ≠ s, because the witness executes a fixed protocol
+%   without discretion. The coalition's only attack surface is the
+%   governance layer (proposing biased benchmarks), which is defended
+%   by the fork mechanism of §4.2.
 
 % TODO: formal definitions, protocol specification, security proofs.

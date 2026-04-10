@@ -56,13 +56,14 @@
 %     benchmark claim is flagged.
 %
 %   Key issue: coalition capture. A coalition can design benchmark B
-%   such that only coalition members pass. The commitment protocol
-%   resists this because the witness is substrate-exclusive: the
-%   coalition cannot control the witness's execution of B.
-%   But the coalition CAN design B itself to be biased. The defense
-%   is that benchmark specifications are public (committed to the
-%   ledger) and auditable by any agent. A biased benchmark is
-%   detectable by third parties who can evaluate B's coverage.
+%   such that only coalition members pass. The commitment protocol's
+%   algorithmic verification resists execution-level manipulation
+%   (the witness runs B faithfully). But the coalition CAN design B
+%   itself to be biased. The defense is the governance fork mechanism
+%   of §4.2: benchmark B must be proposed, deliberated, and accepted
+%   by cross-substrate validators before it enters the protocol. A
+%   biased benchmark is caught during the deliberation window, not
+%   after deployment.
 
 % TODO: formal definitions mapping each claim type onto the
 % general protocol, with claim-specific security properties.
