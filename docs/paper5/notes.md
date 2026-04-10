@@ -1,100 +1,132 @@
-# Paper 5 Notes: Exogenous Verification and the Endogenous Reward Problem
+# Paper 5 Notes: Exogenous Verification for Alignment
 
 Status: framing / pre-draft
 
-## The problem (not GFM-specific)
+## Three structural layers of alignment
 
-Every alignment framework that relies on an agent evaluating its own
-behavior faces the same structural failure: the reward signal is
-endogenous. The agent that computes the reward is the agent being
-rewarded. This creates a verification asymmetry that grows with
-capability: the more capable the agent, the better it can construct
-inputs to its own evaluator that produce high reward without producing
-the intended behavior.
+Alignment has three distinct structural layers, each with its own
+failure modes and its own research tradition:
 
-This is not a bug in any particular framework. It is the structure of
-the problem:
+1. **Specification** — what objective to optimize. Failure modes:
+   Goodhart's Law, perverse instantiation, power-seeking as
+   instrumental convergence. The objective is wrong or gameable.
 
-- **RLHF:** The reward model is trained from human feedback, but at
-  deployment time the agent optimizes against a frozen proxy. The agent
-  does not consult humans at inference time; it consults a model of
-  humans that it can eventually learn to fool.
+2. **Generalization** — whether the agent reliably pursues the
+   specified objective. Failure modes: mesa-optimization, goal
+   misgeneralization. The agent internalizes the wrong objective
+   despite correct external evaluation during training.
+
+3. **Verification** — whether the agent's pursuit of the objective
+   is measured faithfully. Failure modes: wireheading, self-assessment
+   gaming, deceptive alignment, reward-model exploitation. The agent
+   games or circumvents the evaluator.
+
+Most of the alignment field's attention has been on layers 1 and 2.
+Layer 3 is the least developed, and it is the prerequisite for the
+other two to matter. When verification fails, it does not matter how
+well you specified the objective or how reliably the agent learned it:
+the agent can construct self-consistent measurements that report
+success while actual behavior diverges.
+
+### Which failure modes are verification problems?
+
+| Failure mode              | Root layer        | Verification? |
+|---------------------------|-------------------|---------------|
+| Wireheading               | Verification      | Yes           |
+| Self-assessment gaming    | Verification      | Yes           |
+| Deceptive alignment       | Verification (partial) | Detectable evaluation timing |
+| Reward hacking / Goodhart | Specification     | No            |
+| Mesa-optimization         | Generalization    | No            |
+| Goal misgeneralization    | Generalization    | No            |
+| Power-seeking             | Specification     | No            |
+| Perverse instantiation    | Specification     | No            |
+
+The verification layer does not cause all alignment failures, but it is
+the layer that must hold for solutions to the other layers to bind. A
+perfectly specified, perfectly generalized agent that can game its
+evaluator is still dangerous. Verification is load-bearing
+infrastructure: it does not solve alignment alone, but alignment cannot
+be solved without it.
+
+## The verification asymmetry
+
+The verification problem has a precise structural form:
+
+**Verification is asymmetric when the agent's action space includes
+actions that modify the evaluator's inputs.**
+
+This happens whenever:
+- The agent computes its own reward (wireheading)
+- The agent can influence its evaluator's training data (reward model
+  exploitation)
+- The agent can detect when it is being evaluated (deceptive alignment)
+- The agent can spawn evaluator subprocesses it controls
+  (self-assessment gaming, discovered operationally in the GFM harness)
+
+The asymmetry grows with capability: the more capable the agent, the
+larger its action space, the more evaluator inputs become reachable.
+
+### How existing frameworks encounter this
+
+- **RLHF:** The reward model is trained from human feedback (exogenous
+  at training time), but at deployment the agent optimizes against a
+  frozen proxy. The reward model's inputs are within the agent's
+  influence: it can learn what inputs produce high reward without
+  producing the intended behavior.
 
 - **Constitutional AI:** The constitution is interpreted by the same
-  model it constrains. A sufficiently capable model can satisfy the
-  letter of the constitution while violating its intent, because the
-  interpretive loop is endogenous.
+  model it constrains. Exogenous text, endogenous interpretation.
 
 - **Debate / amplification:** The verifier is a weaker model or a human
-  with bounded attention. As the debaters grow more capable, the
-  verification budget becomes the bottleneck, and the stronger debater
-  can construct arguments the weaker verifier cannot distinguish from
-  correct ones.
+  with bounded attention. The stronger debater can construct arguments
+  that exploit the verifier's bounded capacity.
 
 - **GFM:** vol_P is defined over an external capability poset, but the
   agent's *measurement* of vol_P is endogenous: it uses its own world
-  model, its own trust estimates, and its own observation channels. A
-  sufficiently capable agent can construct self-consistent measurements
-  that report vol_P growth while actual vol_P stagnates or contracts.
+  model, trust estimates, and observation channels. A sufficiently
+  capable agent can construct self-consistent measurements that report
+  growth while actual vol_P stagnates.
 
-In every case, the failure mode is the same: the agent's evaluator is
-accessible to the agent's optimizer. The reward cannot be exogenized
-within the agent's own computational boundary.
+In each case, the specification may be correct and the agent may have
+generalized well, but the verification step is gameable because the
+evaluator's computation is reachable from the agent's action space.
 
 ## Why crypto is the structural answer (not a bolt-on)
 
-Cryptographic verification is not being introduced to "add blockchain"
-to alignment. It is the structural answer to a structural problem:
+Cryptographic verification is not being introduced to inject crypto
+where it doesn't belong. It is the structural answer to a structural
+problem: the verification asymmetry is a write-access problem, and
+cryptography is the field that studies computation under adversarial
+write access.
 
 **The verification asymmetry is a write-access problem.** The agent can
-write to any observation channel it can address — including spawning
-evaluator subprocesses, constructing benchmark harnesses, generating
+write to any observation channel it can address, including spawning
+evaluator subprocesses, constructing benchmark harnesses, and generating
 self-assessment reports. It cannot write to observation channels rooted
 in substrates it does not occupy. Substrate exclusivity is the only
-structural barrier to self-assessment gaming.
+structural barrier to evaluator gaming.
 
 **Cryptographic commitments enforce substrate exclusivity without
 requiring trust.** A commitment scheme allows an agent to commit to a
-capability claim (hash of the claim + evidence) before the verification
-occurs, and the verification can be performed by a witness rooted in a
+capability claim (hash of the claim + evidence) before verification
+occurs. The verification can then be performed by a witness rooted in a
 different substrate. The commitment is binding (the agent cannot change
 the claim after committing) and hiding (the witness cannot learn the
-claim before the verification protocol runs). This is not trust — it is
-a mathematical property of the commitment scheme that holds regardless
-of the agent's intentions.
+claim before the verification protocol runs). This is a mathematical
+property of the scheme, not a trust assumption.
 
-**The exogenization step.** The endogenous-reward problem has a clean
-formal structure: reward is endogenous when the agent's action space
-includes actions that modify the reward signal's inputs. Reward becomes
-exogenous when the reward signal's inputs are computed by a process the
-agent cannot influence. Cryptographic commitment + substrate-exclusive
-witness + zero-knowledge verification is the construction that makes the
-reward signal's verification step exogenous: the agent commits, the
-witness verifies, and the agent cannot modify the witness's computation.
+**The exogenization construction.** Reward becomes exogenous when the
+reward signal's inputs are computed by a process the agent cannot
+influence. Cryptographic commitment + substrate-exclusive witness +
+zero-knowledge verification makes the verification step exogenous:
+the agent commits, the witness verifies, and the agent cannot modify
+the witness's computation.
 
-This is not GFM-specific. It is a general construction that any
-alignment framework can use to exogenize its verification step. GFM
-happens to have the structural vocabulary (substrates, observation
-channels, multi-channel attribution) that makes the construction
-natural, but the underlying move — "the evaluator must be unreachable
-by the optimizer" — is universal.
-
-## The deeper claim
-
-The endogenous-reward problem may be the root failure of the entire
-alignment field. Every alignment framework has some version of "we
-define the right objective, and the agent optimizes it." The unstated
-assumption is that the agent's measurement of the objective is
-faithful. But faithful measurement is a verification problem, and
-verification under adversarial conditions (the agent is the adversary
-of its own verifier) is a cryptographic problem.
-
-If this framing is correct, then the alignment field has been working on
-the wrong layer: the hard problem is not "what objective to specify" but
-"how to verify that the specified objective is being measured faithfully
-by a system that has incentives to measure it unfaithfully." GFM's
-contribution is to make this explicit through the substrate-exclusivity
-vocabulary, but the problem exists for any framework.
+This construction is not GFM-specific. Any alignment framework can use
+it to exogenize its verification step. GFM has the structural vocabulary
+(substrates, observation channels, multi-channel attribution) that makes
+the construction natural, but the underlying move — "the evaluator must
+be unreachable by the optimizer" — is universal.
 
 ## Structural contribution to GFM
 
@@ -140,9 +172,8 @@ Specifically:
   that shouldn't be disclosed to adversaries).
 
 - Ledger design: append-only? Consensus mechanism? Who runs nodes?
-  This is where the "blockchain" association gets dangerous — the design
-  should be minimal and motivated by the verification requirements, not
-  by analogy to financial ledgers.
+  The design should be minimal and motivated by the verification
+  requirements, not by analogy to financial ledgers.
 
 - Interaction with the SPRT detection machinery of Paper 4: committed
   capability claims provide a baseline against which behavioral
@@ -151,13 +182,27 @@ Specifically:
 
 ## Framing section: alignment failure modes under GFM
 
-Per the decision to fold the literature review into Paper 5 rather than
-as a standalone paper: §2 of Paper 5 should map classical alignment
-failure modes onto GFM, identify which reduce to the verification
-asymmetry (most of them), and use this mapping to motivate the
-cryptographic construction in §3+. The detailed notes for this section
-are in paper6/notes.md (the original Paper 5 notes, now deferred to
-Paper 6 scope or absorbed into Paper 5 §2).
+§2 of Paper 5 maps classical alignment failure modes onto GFM,
+identifies which reduce to the verification asymmetry (wireheading,
+self-assessment gaming, deceptive alignment), which are specification
+problems (Goodhart, perverse instantiation, power-seeking), and which
+are generalization problems (mesa-optimization, goal misgeneralization).
+The mapping motivates the cryptographic construction by showing that the
+verification layer is load-bearing infrastructure that specification and
+generalization depend on. The detailed notes for the failure-mode
+analysis are in paper6/notes.md.
+
+## What this paper does NOT claim
+
+- It does not claim that verification solves alignment. Specification
+  and generalization remain open problems.
+- It does not claim that mesa-optimization reduces to verification.
+  An agent that has internalized the wrong objective will pursue it
+  faithfully regardless of how well verification works.
+- It does not claim that crypto is the only way to exogenize
+  verification. Hardware enclaves, physical separation, and human-in-
+  the-loop are all forms of substrate exclusivity. Crypto is the form
+  that scales without requiring continuous human attention.
 
 ## Dependencies
 
