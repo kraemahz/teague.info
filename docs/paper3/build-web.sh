@@ -24,12 +24,16 @@ ABSTRACT_FILE="$TMPDIR/abstract.html"
 STANDALONE="$TMPDIR/standalone.html"
 
 # Step 1: Pandoc LaTeX -> HTML
+# Pandoc resolves \input{} relative to CWD, not the input file,
+# so we must cd into the paper directory first.
 echo "Converting LaTeX to HTML..."
-pandoc "$PAPER_DIR/main.tex" --from latex --to html --katex \
+pushd "$PAPER_DIR" > /dev/null
+pandoc main.tex --from latex --to html --katex \
     > "$BODY_RAW" 2>/dev/null
 
-pandoc "$PAPER_DIR/main.tex" --from latex --to html --katex --standalone \
+pandoc main.tex --from latex --to html --katex --standalone \
     > "$STANDALONE" 2>/dev/null
+popd > /dev/null
 
 # Step 2: Extract abstract from standalone output
 python3 -c "

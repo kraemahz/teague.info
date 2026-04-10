@@ -97,7 +97,7 @@ value-positive.</p>
 <h1 id="sec:introduction">Introduction</h1>
 <p>Goal-frontier maximization (GFM) proposes alignment through a single
 objective: maximize <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>, the
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>, the
 volume of the jointly achievable capability space <d-cite key="lasser2026gfm"></d-cite>. The foundational paper proves that
 this objective penalizes destruction, coercion, and rigidity from the
 same measure-monotonicity argument. Its companion <d-cite key="lasser2026poset"></d-cite> constructs a computable capability
@@ -106,37 +106,37 @@ that the objective produces a gradient toward civilization-scale
 infrastructure.</p>
 <p>Both papers optimize a <em>myopic</em> objective: the actor evaluates
 each action by its immediate effect on <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> and
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> and
 selects the one with the highest estimated expansion. This one-step
 lookahead is sufficient for detecting direct harm, coercion, and
 capability expansion, but it cannot handle two classes of problems that
 require reasoning about the future.</p>
 <h4 id="risk-capabilities.">Risk capabilities.</h4>
 <p>Some capability combinations are individually <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-expanding
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-expanding
 but collectively create catastrophic contraction potential <d-cite key="bostrom2013existential,ord2020precipice"></d-cite>. “Nuclear
 physics” (<span class="math inline">w = 10</span> bits), “uranium
 enrichment” (<span class="math inline">w = 8</span> bits), and
 “precision machining” (<span class="math inline">w = 9</span> bits) each
 expand the capability space when acquired. But their co-occurrence in a
 single agent with low trust creates an exercise pathway to massive <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction.
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction.
 The myopic estimator <span class="math inline">\hat{\Delta}(\pi)</span>
 evaluates each acquisition as positive; it cannot see the future
 contraction that the combination enables.</p>
 <h4 id="structural-avoidance.">Structural avoidance.</h4>
 <p>The companion paper identifies a perverse incentive: discovering
 subsumption structure can decrease <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 (Proposition 5(c) of <d-cite key="lasser2026poset"></d-cite>), so a myopic <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizer
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximizer
 is rewarded for staying structurally ignorant. A multi-step optimizer
 can accept the short-term contraction because accurate structure
 improves the quality of future decisions.</p>
 <p>This paper extends GFM to multi-step planning. We introduce a
 discounted value function <span class="math inline">V_\gamma(\pi) =
 \mathbb{E}[\sum_t \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)
 \mid \pi]</span> and prove that the self-balancing property transfers to
 the discounted sum. On this foundation, we develop risk-capability
 identification through causal counterfactual models and analyze the
@@ -175,7 +175,7 @@ data-reference="sec:substitution">6</a>).</p></li>
 <p>The foundational paper’s optimization loop selects actions by their
 immediate effect: <span class="math display">\begin{equation}
 \pi^* = \arg\max_\pi \mathbb{E}[\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G) \mid \pi]
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) \mid \pi]
 \end{equation}</span> This is the <span class="math inline">\gamma =
 0</span> special case of a discounted multi-step objective.</p>
 <h2 id="definition">Definition</h2>
@@ -187,10 +187,10 @@ planning horizon <span class="math inline">H \leq
 <span class="math inline">\boldsymbol{\pi} = (\pi_0, \pi_1, \ldots,
 \pi_{H-1})</span> is: <span class="math display">\begin{equation}
 V_\gamma(\boldsymbol{\pi}) = \mathbb{E}\!\left[\sum_{t=0}^{H-1} \gamma^t
-    \Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid \pi_t)\right]
+    \Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid \pi_t)\right]
 \end{equation}</span> where <span class="math inline">G_t</span> is the
 capability poset state at time <span class="math inline">t</span>, <span
-class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t
     \mid \pi_t)</span> is the volume change produced by action <span
 class="math inline">\pi_t</span> at time <span
 class="math inline">t</span>, and the expectation is taken over the
@@ -200,7 +200,7 @@ future states.</em></p>
 <p>The discounted value function is a standard object in sequential
 decision theory <d-cite key="puterman1994markov,sutton2018reinforcement"></d-cite>. The
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-specific
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-specific
 content is in what it sums: volume changes on the capability poset, each
 satisfying the axioms M1–M6 established in <d-cite key="lasser2026poset"></d-cite>. The discount factor <span
 class="math inline">\gamma</span> controls the planning horizon: <span
@@ -232,24 +232,24 @@ data-reference="sec:risk">3</a>, not the transfer theorem.</p>
 <div id="thm:discounted_self_balancing" class="theorem">
 <p><strong>Theorem 1</strong> (Self-Balancing Under Discounting).
 <em>Let <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> satisfy
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> satisfy
 axioms M1–M6 (Proposition 1 of <d-cite key="lasser2026poset"></d-cite>). For any discount factor <span
 class="math inline">\gamma \in [0, 1)</span> and planning horizon <span
 class="math inline">H</span>:</em></p>
 <ol>
 <li><p><em><strong>Per-step preservation.</strong> At each time step
 <span class="math inline">t</span>, Lemmas 1–3 of <d-cite key="lasser2026gfm"></d-cite> apply to <span
-class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
     \pi_t)</span>: destruction, coercion, and rigidity are each <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting
 at that step.</em></p></li>
 <li><p><em><strong>Aggregate preservation.</strong> A sequence <span
 class="math inline">\boldsymbol{\pi}</span> in which every action is
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting
 has <span class="math inline">V_\gamma(\boldsymbol{\pi}) &lt; 0</span>.
 A sequence in which every action is <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-expanding
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-expanding
 has <span class="math inline">V_\gamma(\boldsymbol{\pi}) &gt;
 0</span>.</em></p></li>
 <li><p><em><strong>Mixed sequences.</strong> A sequence containing both
@@ -284,21 +284,21 @@ papers should keep this discrepancy in mind.</em></p>
 <p><em>Proof.</em> (a) At each time step <span
 class="math inline">t</span>, the poset state <span
 class="math inline">G_t</span> is a finite poset with measure <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> satisfying
-M1–M6 (the axioms depend on the poset structure, which is maintained at
-each step by the insertion policy of <d-cite key="lasser2026poset"></d-cite>). Lemmas 1–3 are derived from M1–M6
-alone and therefore apply to <span class="math inline">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid \pi_t)</span> at every <span
-class="math inline">t</span>.</p>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+satisfying M1–M6 (the axioms depend on the poset structure, which is
+maintained at each step by the insertion policy of <d-cite key="lasser2026poset"></d-cite>). Lemmas 1–3 are
+derived from M1–M6 alone and therefore apply to <span
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
+\pi_t)</span> at every <span class="math inline">t</span>.</p>
 <p>(b) If <span class="math inline">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid \pi_t) &lt; 0</span> for all
-<span class="math inline">t</span>, then each term is negative and
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid \pi_t) &lt; 0</span> for
+all <span class="math inline">t</span>, then each term is negative and
 weighted by <span class="math inline">\gamma^t &gt; 0</span>. The sum of
 negative terms with positive weights is negative: <span
 class="math inline">V_\gamma(\boldsymbol{\pi}) &lt; 0</span>. The
 expanding case is symmetric.</p>
 <p>(c) For a mixed sequence, <span class="math inline">V_\gamma= \sum_t
-\gamma^t \Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid
+\gamma^t \Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
 \pi_t)</span> is a weighted sum of positive and negative terms. The sign
 of <span class="math inline">V_\gamma</span> depends on the magnitudes:
 a contraction of <span class="math inline">-C</span> at time <span
@@ -312,21 +312,22 @@ future expansions are discounted relative to present contractions: the
 actor requires a larger future payoff to justify current contraction,
 which is the standard discounting tradeoff.</p>
 <p>(d) We say a strategy exhibits <em>sustained contraction</em> when
-<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t
-\mid \pi_t) \leq 0</span> for all <span class="math inline">t</span>,
-with strict inequality for at least one step. By (b), any such strategy
-has <span class="math inline">V_\gamma\leq 0</span>. More generally, a
-strategy that contracts at every step beyond some finite prefix has
-<span class="math inline">V_\gamma</span> determined by (c): the
-expanding prefix contributes a finite positive sum while the contracting
-tail contributes a negative sum, and the strategy is value-negative
-whenever the tail’s magnitude exceeds the prefix’s. Temporary
-contraction (a finite number of contracting steps followed by expanding
-steps) can be value-positive by (c). The self-balancing property
-(Proposition 1 of <d-cite key="lasser2026gfm"></d-cite>) holds at each step by (a), and the
-discounted sum preserves the structural balance: the objective penalizes
-sustained extremes and allows temporary restriction only when the future
-expansion justifies it. </p>
+<span class="math inline">\Delta
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid \pi_t) \leq 0</span> for
+all <span class="math inline">t</span>, with strict inequality for at
+least one step. By (b), any such strategy has <span
+class="math inline">V_\gamma\leq 0</span>. More generally, a strategy
+that contracts at every step beyond some finite prefix has <span
+class="math inline">V_\gamma</span> determined by (c): the expanding
+prefix contributes a finite positive sum while the contracting tail
+contributes a negative sum, and the strategy is value-negative whenever
+the tail’s magnitude exceeds the prefix’s. Temporary contraction (a
+finite number of contracting steps followed by expanding steps) can be
+value-positive by (c). The self-balancing property (Proposition 1 of
+<d-cite key="lasser2026gfm"></d-cite>) holds at each
+step by (a), and the discounted sum preserves the structural balance:
+the objective penalizes sustained extremes and allows temporary
+restriction only when the future expansion justifies it. </p>
 </div>
 <h4 id="what-the-theorem-says.">What the theorem says.</h4>
 <p>The myopic objective treats every contraction as bad. The discounted
@@ -335,7 +336,7 @@ bad) and <em>temporary</em> contraction followed by expansion
 (potentially good). This is the formal basis for quarantine, preemptive
 containment, and risk-capability restriction: the actor can accept a
 small current <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-loss to
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-loss to
 prevent a larger future loss, as long as the discounted arithmetic works
 out. The self-balancing property is not weakened; it is extended to
 handle temporal tradeoffs.</p>
@@ -354,7 +355,7 @@ class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h1 id="sec:risk">Risk-Capability Identification</h1>
 <p>The discounted objective enables the actor to reason about future
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction.
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction.
 This section develops the machinery for identifying which capability
 combinations create contraction risk and when preemptive restriction is
 value-positive.</p>
@@ -366,17 +367,17 @@ pathway</em> for a capability tuple <span class="math inline">(d_1,
 is a sequence of actions <span class="math inline">(\pi_1, \ldots,
 \pi_L)</span> available to <span class="math inline">a_k</span> that, if
 executed, would produce a <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
-<span class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}&lt;
-0</span> affecting agents beyond <span class="math inline">a_k</span>.
-The pathway has:</em></p>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
+<span class="math inline">\Delta
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}&lt; 0</span> affecting agents
+beyond <span class="math inline">a_k</span>. The pathway has:</em></p>
 <ul>
 <li><p><em>A <em>prerequisite set</em>: the capabilities <span
 class="math inline">\{d_1, \ldots, d_m\}</span> that <span
 class="math inline">a_k</span> must possess for the pathway to be
 available.</em></p></li>
 <li><p><em>A <em>contraction magnitude</em>: the expected <span
-class="math inline">|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}|</span>
+class="math inline">|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span>
 if the pathway is fully executed.</em></p></li>
 <li><p><em>An <em>exercise probability</em>: <span
 class="math inline">p(\mathcal{P}\mid a_k, G_t,
@@ -395,11 +396,11 @@ factor <span class="math inline">T_k</span> and behavioral history.</p>
 <p>Not every capability combination has a dangerous exercise pathway.
 Most combinations are benign: the pathways from “can cook” + “can drive”
 lead only to <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-neutral or
-expanding outcomes (meals delivered, mobility preserved). The risk lies
-in combinations whose exercise pathways include branches with large
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-neutral
+or expanding outcomes (meals delivered, mobility preserved). The risk
+lies in combinations whose exercise pathways include branches with large
 negative <span class="math inline">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. The “beyond <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>. The “beyond <span
 class="math inline">a_k</span>” qualifier restricts exercise pathways to
 externalities: self-destructive pathways are excluded. An agent that
 catastrophically destroys its own capabilities without affecting others
@@ -416,13 +417,13 @@ Distribution</h2>
 class="math inline">(d_1, \ldots, d_m)</span> held by agent <span
 class="math inline">a_k</span> at time <span
 class="math inline">t</span> is the expected future <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
 from all exercise pathways available to <span
 class="math inline">a_k</span>: <span
 class="math display">\begin{equation}
 \mathcal{R}(d_1, \ldots, d_m; a_k, t) = \sum_{\mathcal{P}}
     p(\mathcal{P}\mid a_k, G_t, \mathcal{W}) \cdot |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P})|
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P})|
     \cdot \mathbb{E}[\gamma^{T_\mathcal{P}}]
 \end{equation}</span> where the sum is over all exercise pathways for
 the tuple, <span class="math inline">T_\mathcal{P}</span> is the
@@ -465,7 +466,7 @@ when the expected future contraction from pathways requiring <span
 class="math inline">d_j</span> exceeds the immediate restriction cost:
 <span class="math display">\begin{equation}
 \mathcal{R}_j(d_1, \ldots, d_m; a_k, t) &gt; |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid \text{restrict } d_j)|
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid \text{restrict } d_j)|
 \end{equation}</span> where <span
 class="math inline">\mathcal{R}_j</span> denotes the concentration risk
 summed only over exercise pathways whose prerequisite set includes <span
@@ -474,10 +475,10 @@ class="math display">\begin{equation}
 \mathcal{R}_j(S; a_k, t) = \sum_{\mathcal{P}: d_j \in
 \mathrm{prereq}(\mathcal{P})}
     p(\mathcal{P}\mid a_k, G_t, \mathcal{W}) \cdot |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P})|
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P})|
     \cdot \mathbb{E}[\gamma^{T_\mathcal{P}}]
 \end{equation}</span> and the right side is the immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
 from restricting <span class="math inline">d_j</span> (Lemma 2 of <d-cite key="lasser2026gfm"></d-cite>).</em></p>
 </div>
 <div class="proof">
@@ -485,8 +486,8 @@ from restricting <span class="math inline">d_j</span> (Lemma 2 of <d-cite key="
 actor compares two action sequences: (1) do nothing and face the full
 exercise risk; (2) restrict <span class="math inline">d_j</span> now,
 producing immediate contraction <span class="math inline">-|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span> but eliminating all exercise
-pathways that require <span class="math inline">d_j</span> as a
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span> but eliminating all
+exercise pathways that require <span class="math inline">d_j</span> as a
 prerequisite. The residual risk from pathways that do not require <span
 class="math inline">d_j</span> is present under both sequences and
 cancels, under the assumption that restricting <span
@@ -496,9 +497,9 @@ observable action that may alter <span class="math inline">a_k</span>’s
 behavioral disposition, changing residual pathway probabilities. The
 clean cancellation is an approximation. The value of restriction exceeds
 the value of inaction when <span class="math inline">-|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}| &gt; -\mathcal{R}_j</span>, i.e.,
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}| &gt; -\mathcal{R}_j</span>, i.e.,
 when <span class="math inline">\mathcal{R}_j &gt; |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span>. </p>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span>. </p>
 </div>
 <h4
 id="endogenous-execution-timing-and-residual-redirection.">Endogenous
@@ -526,10 +527,10 @@ replaces the clean cancellation with a minimax over residual
 redirections: <span class="math display">\begin{equation}
 \mathcal{R}_j - \sup_{\delta p&#39;} \sum_{\mathcal{P}&#39; \not\ni d_j}
 \delta p&#39;
-    \cdot |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P}&#39;)|
-\cdot
+    \cdot |\Delta
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P}&#39;)| \cdot
     \mathbb{E}[\gamma^{T_{\mathcal{P}&#39;}}]
-    \;&gt;\; |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid
+    \;&gt;\; |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
 \text{restrict } d_j)|
 \end{equation}</span> where <span class="math inline">\delta
 p&#39;</span> ranges over feasible redirections consistent with the
@@ -549,7 +550,7 @@ an independent-pathway assumption.</p>
 id="connection-to-lemma-2-and-the-precautionary-principle.">Connection
 to Lemma 2 and the precautionary principle.</h4>
 <p>The foundational paper’s Lemma 2 says restriction is always <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting
 in isolation. The discounted objective adds the temporal dimension: the
 immediate contraction is weighed against the avoided future contraction.
 The preemptive restriction criterion is the quantitative version of the
@@ -580,11 +581,11 @@ the discounted-future contraction term that the actor anticipates from
 <em>discovering</em> new dangerous capabilities or new exercise
 pathways: each newly discovered pathway is, in expectation, a target for
 further restriction, and therefore an additional immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-cost the
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-cost the
 actor pays at the moment of discovery. A risk-restriction policy that is
 calibrated too aggressively—restricting whenever <span
 class="math inline">\hat{\mathcal{R}} \cdot
-|\Delta\hat{\mathop{\mathrm{vol}}_{\mathrm{P}}}| &gt; 0</span> rather
+|\Delta\hat{{\mathop{\mathrm{vol}}_{\mathrm{P}}}}| &gt; 0</span> rather
 than at the value-positive threshold—reintroduces the avoidance
 pathology in a different form: the actor avoids structural discovery in
 domains adjacent to dangerous capabilities, because each discovery
@@ -628,7 +629,7 @@ form: “capability tuple <span class="math inline">(d_1, \ldots,
 d_m)</span> held by agent <span class="math inline">a_k</span> has
 exercise pathway <span class="math inline">\mathcal{P}</span> with
 contraction magnitude <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span> and probability <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span> and probability <span
 class="math inline">p</span>.” This enters the GFM actor’s world model
 <span class="math inline">\mathcal{W}</span> as a communicated belief
 about future states.</p>
@@ -657,16 +658,16 @@ evaluation described below.</p>
 <p><strong>Definition 4</strong> (Risk Claim). <em>A <em>risk claim</em>
 from agent <span class="math inline">a_j</span> is a tuple <span
 class="math inline">(S, \mathcal{P}, |\Delta
-    \mathop{\mathrm{vol}}_{\mathrm{P}}|, p)</span> where <span
+    {\mathop{\mathrm{vol}}_{\mathrm{P}}}|, p)</span> where <span
 class="math inline">S = \{d_1, \ldots, d_m\}</span> is a capability set,
 <span class="math inline">\mathcal{P}</span> is an exercise pathway,
 <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span> is the claimed contraction
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span> is the claimed contraction
 magnitude, and <span class="math inline">p</span> is the claimed
 exercise probability. The claim enters the actor’s risk model weighted
 by risk-trust: <span class="math display">\begin{equation}
 \hat{\mathcal{R}}_j(S; a_k, t) = T_j^{\mathrm{risk}} \cdot p \cdot
-|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}|
+|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}|
     \cdot \mathbb{E}[\gamma^{T_\mathcal{P}}]
 \end{equation}</span> where <span
 class="math inline">\hat{\mathcal{R}}_j</span> denotes a
@@ -733,7 +734,7 @@ observational trust model. We propose a partial resolution through
 causal counterfactual evaluation <d-cite key="pearl2009causality,spirtes2000causation"></d-cite>.</p>
 <h4 id="def:causal_risk">Causal risk evaluation.</h4>
 <p>Given a risk claim <span class="math inline">(S, \mathcal{P}, |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|, p)</span> from agent <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|, p)</span> from agent <span
 class="math inline">a_j</span>, the actor evaluates the claim by
 constructing the causal chain from capability possession to exercise, in
 four steps:</p>
@@ -754,8 +755,8 @@ based on <span class="math inline">T_k</span> and <span
 class="math inline">a_k</span>’s behavioral history?</p></li>
 <li><p><strong>Magnitude plausibility.</strong> Is the claimed
 contraction magnitude <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span> consistent with the number of
-agents and capabilities affected by the pathway?</p></li>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span> consistent with the number
+of agents and capabilities affected by the pathway?</p></li>
 </ol>
 <p>The causal evaluation does not require the catastrophe to happen. It
 requires the actor to independently verify the <em>structure</em> of the
@@ -854,7 +855,7 @@ Incentive</h1>
 <p>The companion paper <d-cite key="lasser2026poset"></d-cite> identifies a perverse incentive
 under the myopic objective: discovering subsumption structure can
 decrease <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 (Proposition 5(c)), so the actor is rewarded for breadth over depth.
 This section shows that the discounted objective addresses this
 incentive under a criterion that holds when the planning horizon is long
@@ -862,13 +863,13 @@ relative to the frequency of affected decisions.</p>
 <h2 id="the-incentive-under-the-myopic-objective">The Incentive Under
 the Myopic Objective</h2>
 <p>Under the myopic objective <span class="math inline">\pi^* = \arg\max
-\mathbb{E}[\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \mid
+\mathbb{E}[\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) \mid
 \pi]</span>, structural discovery has expected value: <span
 class="math display">\begin{equation}
-\mathbb{E}[\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}\mid \text{discover
-edge } d_1 \leq d_2]
-= \mathop{\mathrm{vol}}_{\mathrm{P}}(G_{\text{after}}) -
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_{\text{before}})
+\mathbb{E}[\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}\mid
+\text{discover edge } d_1 \leq d_2]
+= {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_{\text{after}}) -
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_{\text{before}})
 \leq 0
 \end{equation}</span> by Proposition 5(c) of <d-cite key="lasser2026poset"></d-cite>. The inequality can be strict when
 <span class="math inline">d_1</span> is a shared prerequisite. The
@@ -880,8 +881,8 @@ Under the Discounted Objective</h2>
 structural discovery by its effect on the <em>entire future
 trajectory</em>, not just the current step. Structural knowledge
 improves the quality of future <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> estimates
-and planning decisions. Define the <em>information value of
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+estimates and planning decisions. Define the <em>information value of
 structure</em>:</p>
 <div id="def:info_value" class="definition">
 <p><strong>Definition 5</strong> (Information Value of Structure).
@@ -891,11 +892,11 @@ discounted return between planning with the correct poset structure and
 planning without it: <span class="math display">\begin{equation}
 I(d_1 \leq d_2) = \mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
     \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)
 \right]
 - \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
     \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)
 \right]
 \end{equation}</span> where <span
 class="math inline">\pi^*_{\text{true}}</span> is the optimal policy
@@ -917,9 +918,9 @@ Value-Positive Under Discounting). <em>Under the discounted objective
 <span class="math inline">V_\gamma</span>, structural discovery is
 value-positive when the information value of the discovered edge exceeds
 the immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction:
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction:
 <span class="math display">\begin{equation}
-I(d_1 \leq d_2) &gt; |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G \mid
+I(d_1 \leq d_2) &gt; |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G \mid
 \text{discover } d_1 \leq d_2)|
 \end{equation}</span></em></p>
 </div>
@@ -928,24 +929,24 @@ I(d_1 \leq d_2) &gt; |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G \mid
 starting from state <span class="math inline">G_0</span>: <span
 class="math display">\begin{align*}
 V_\gamma(\text{discover}) &amp;= \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid \text{edge}) +
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid \text{edge}) +
     \mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
     \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)\right] \\
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)\right] \\
 V_\gamma(\text{avoid}) &amp;= 0 +
     \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
     \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)\right]
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)\right]
 \end{align*}</span> Each expectation is taken over the trajectory
 distribution induced by its respective policy, so the two <span
 class="math inline">G_t</span> sequences are generally different. The
 difference is <span class="math inline">V_\gamma(\text{discover}) -
 V_\gamma(\text{avoid}) =
-\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid \text{edge}) + I(d_1
-\leq d_2)</span>. Since <span class="math inline">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid \text{edge}) \leq 0</span>,
-this is positive when <span class="math inline">I(d_1 \leq d_2) &gt;
-|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid
+\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid \text{edge}) +
+I(d_1 \leq d_2)</span>. Since <span class="math inline">\Delta
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid \text{edge}) \leq
+0</span>, this is positive when <span class="math inline">I(d_1 \leq
+d_2) &gt; |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid
 \text{edge})|</span>. </p>
 </div>
 <h4 id="scope-existence-result-not-decision-procedure.">Scope: existence
@@ -971,7 +972,7 @@ involving the capabilities <span class="math inline">d_1</span> and
 improvement), and the degree of suboptimality of the incorrect model
 (larger model errors produce larger action-quality gaps). The immediate
 contraction <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span> is bounded by the weight of
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span> is bounded by the weight of
 the shared prerequisite. For edges between frequently-used capabilities
 with substantial subsumption, the information value dominates after a
 modest number of planning steps.</p>
@@ -1002,15 +1003,16 @@ objective. The instrumental-convergence thesis <d-cite key="omohundro2008basic">
 capable agents converge on resource acquisition and self-preservation,
 making the singleton outcome a default trajectory. This section shows
 that under the <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> objective,
-the convergence runs in the opposite direction, through three protection
-layers of decreasing generality and increasing sharpness. First, a
-minimax dependency-risk analysis (Section <a href="#sec:dependency_risk"
-data-reference-type="ref" data-reference="sec:dependency_risk">6.5</a>)
-shows that cross-substrate populations have strictly lower worst-case
-contraction under substrate-targeting adversaries than single-substrate
-populations, independent of any growth-rate model or planning horizon.
-Second, a linearized trajectory comparison (Section <a
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+objective, the convergence runs in the opposite direction, through three
+protection layers of decreasing generality and increasing sharpness.
+First, a minimax dependency-risk analysis (Section <a
+href="#sec:dependency_risk" data-reference-type="ref"
+data-reference="sec:dependency_risk">6.5</a>) shows that cross-substrate
+populations have strictly lower worst-case contraction under
+substrate-targeting adversaries than single-substrate populations,
+independent of any growth-rate model or planning horizon. Second, a
+linearized trajectory comparison (Section <a
 href="#sec:domination_kills" data-reference-type="ref"
 data-reference="sec:domination_kills">6.6</a>) shows that when
 cross-substrate cooperative novelty produces a positive external growth
@@ -1054,10 +1056,10 @@ capabilities are fully replicated within the coalition. The
 unique-contribution term in Lemma 1 vanishes: <span
 class="math inline">\mathop{\mathrm{vol}}(G_{k}^{\mathrm{ind}} \setminus
 G_K^{\mathrm{ind}}) = 0</span>. The myopic <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizer
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximizer
 sees no cost to marginalizing non-members, because their removal does
 not reduce the current <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>
 (setting aside cooperative capabilities).</p>
 <p>Under the myopic objective, this analysis is static and complete: if
 the coalition has already subsumed everything, the objective reports no
@@ -1074,8 +1076,9 @@ neither substrate can produce alone. For mixed-substrate populations at
 scale, the cross-substrate cooperative contribution <span
 class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span> is
 typically the <em>dominant</em> term in the non-member contribution to
-<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>,
-not <span class="math inline">G_{k}^{\mathrm{ind}}</span>. Individual
+<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>, not
+<span class="math inline">G_{k}^{\mathrm{ind}}</span>. Individual
 capabilities scale linearly with the number of agents; cross-substrate
 cooperative capabilities scale combinatorially with the number of
 cross-substrate pairings (Corollary 1.1 of <d-cite key="lasser2026gfm"></d-cite>). A coalition that has fully subsumed
@@ -1105,29 +1108,29 @@ coalition’s aggregate set.</em></p>
 <em>volume growth rate</em> of a population state <span
 class="math inline">(G, \mathcal{C})</span> is the expected per-step
 change in <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>: <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>: <span
 class="math display">\begin{equation}
 r(G, t) = \mathbb{E}\!\left[\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)\right]
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)\right]
 \end{equation}</span> Decompose <span class="math inline">r</span> into
 an <em>internal rate</em> <span class="math inline">r_K</span>, the
 expected per-step <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-expansion
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-expansion
 from the coalition’s own activity (internal research, experimentation,
 capability refinement), and an <em>external rate</em> <span
 class="math inline">r_{\mathrm{ext}}</span>, the expected per-step <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-expansion
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-expansion
 from non-member agents’ contributions through either channel
 (communication or observation) or through cross-coalition cooperation:
 <span class="math inline">r = r_K + r_{\mathrm{ext}}</span>.</em></p>
 </div>
 <p>The decomposition reflects the two sources of <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth:
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> growth:
 capability discovery and benchmark refinement from inside the coalition
 versus from outside it. Both <span class="math inline">r_K</span> and
 <span class="math inline">r_{\mathrm{ext}}</span> are measured in the
 same units as <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> (bits),
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> (bits),
 ensuring dimensional consistency when they appear in the trajectory
 comparison (Proposition <a href="#prop:anti_monopolar"
 data-reference-type="ref"
@@ -1139,7 +1142,7 @@ capabilities are fully subsumed. We show that a property of the
 observation channel provides <em>static</em> protection: each
 distinguishable agent contributes at least one irreplaceable poset node
 whose removal contracts <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. The
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>. The
 static cost is quantitatively modest (1 bit per distinguishable agent
 under the binary default). The dynamic protection of Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
@@ -1215,8 +1218,8 @@ distinguishable agents each contribute at least one unique node with the
 binary default weight (<span class="math inline">w = 1</span> bit). The
 leverage ranking signal (Section 6 of <d-cite key="lasser2026poset"></d-cite>) further ensures that the actor’s
 investment is proportional to each agent’s contribution to <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth: a
-bacterium’s observation capability has <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> growth:
+a bacterium’s observation capability has <span
 class="math inline">\hat{\lambda} \approx 0</span>, while a human’s has
 <span class="math inline">\hat{\lambda} \gg 0</span>. The actor
 acknowledges the bacterium (it occupies a poset node) but does not
@@ -1230,16 +1233,16 @@ finer-grained entities (individual colony insects, individual
 microorganisms) increases <span
 class="math inline">|\mathcal{C}|</span>, which increases the per-step
 computation cost of <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> (<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> (<span
 class="math inline">O(|\mathcal{C}|^3)</span> from Proposition 2 of
 <d-cite key="lasser2026poset"></d-cite>).
 Computation is itself a capability of the actor. If the marginal <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 contribution of the new nodes (binary default, <span
 class="math inline">w = 1</span> bit, <span
 class="math inline">\hat{\lambda} \approx 0</span>) is less than the
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
 from the actor’s reduced computational capacity (fewer cycles available
 for high-value planning and action), then expanding observation is
 net-contracting under the actor’s own objective.</em></p>
@@ -1267,10 +1270,10 @@ Static Floor). <em>If a population satisfies observational individuation
 data-reference="def:obs_individuation">9</a>), then for every
 distinguishable non-member agent <span class="math inline">a_k \notin
 K</span>, eliminating <span class="math inline">a_k</span> is <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting:
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting:
 <span class="math display">\begin{equation}
-\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G \mid \text{eliminate } a_k)
-\;\leq\; -\mathop{\mathrm{iw}}(d_k) \;&lt;\; 0
+\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G \mid \text{eliminate }
+a_k) \;\leq\; -\mathop{\mathrm{iw}}(d_k) \;&lt;\; 0
 \end{equation}</span> where <span class="math inline">d_k</span> is the
 unique capability guaranteed by (O1)–(O2) and <span
 class="math inline">\mathop{\mathrm{iw}}(d_k) &gt; 0</span> is its
@@ -1297,7 +1300,7 @@ insertion policy of Section 2 of <d-cite key="lasser2026poset"></d-cite>). As a
 class="math inline">\mathop{\mathrm{iw}}(d_k) = w(d_k) \geq 1</span> bit
 (binary default). Removing <span class="math inline">d_k</span> from
 <span class="math inline">\downarrow G</span> reduces <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> by at
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span> by at
 least <span class="math inline">\mathop{\mathrm{iw}}(d_k) \geq 1</span>.
 This holds regardless of whether <span class="math inline">a_k</span>’s
 other capabilities are fully subsumed by the coalition. </p>
@@ -1307,8 +1310,8 @@ other capabilities are fully subsumed by the coalition. </p>
 data-reference="cor:a1_from_oi">1</a> restores Lemma 1’s guarantee that
 the substitution problem appeared to dissolve: eliminating any
 distinguishable agent always contracts <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. The bound
-is quantitatively modest — 1 bit per elimination under the binary
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>. The
+bound is quantitatively modest — 1 bit per elimination under the binary
 default — and may be negligible relative to a large subsumption bonus.
 The dynamic protection developed in the next two subsections carries the
 primary anti-monopolar load; observational individuation provides a
@@ -1317,7 +1320,7 @@ floor that ensures elimination is never strictly free.</p>
 Physics</h2>
 <p>The dynamic anti-monopolar argument requires that non-members
 contribute ongoing <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> growth
 (<span class="math inline">r_{\mathrm{ext}} &gt; 0</span>) so that the
 diversity-maintaining trajectory strictly outgrows domination over the
 planning horizon. Under full individual subsumption (<span
@@ -1455,7 +1458,7 @@ creation is maximizing</em>: creating agents on a new substrate with
 mutually exclusive state regions accesses exclusive states producing
 exclusive capabilities and novel cross-substrate cooperative outputs,
 both increasing <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> <d-cite key="page2007difference"></d-cite>.</p>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span> <d-cite key="page2007difference"></d-cite>.</p>
 <h4 id="the-chain-and-its-physical-grounding.">The chain and its
 physical grounding.</h4>
 <p>The cooperative novelty argument rests on four claims of varying
@@ -1552,7 +1555,7 @@ other; both gain by maintaining the cooperative relationship. The
 mutualistic-symbiosis template applies in both directions: agents on
 different substrates with full reasoning capacity converge on
 cooperation rather than domination under <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximization,
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximization,
 regardless of which substrate is "more generally capable" by any
 particular metric. The cooperative-novelty result enters the main
 argument at two points: the minimax dependency-risk analysis (Section <a
@@ -1580,7 +1583,7 @@ extension.</p>
 <p>A GFM actor’s capabilities can be involuntarily lost through
 adversarial action, environmental disruption, or supply-chain failure.
 The poset measure <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> is
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> is
 sensitive to such losses in the same way it is sensitive to voluntary
 restriction: removing capabilities from <span
 class="math inline">G</span> contracts the measure. This subsection
@@ -1593,13 +1596,13 @@ of any growth-rate model.</p>
 <em>dependency risk</em> of a population state <span
 class="math inline">(G, \mathcal{C})</span> is the expected discounted
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
 from adversarial or environmental events that involuntarily remove
 capabilities: <span class="math display">\begin{equation}
 \mathcal{R}_{\mathrm{dep}}(G, t) = \sum_{\mathcal{P}_{\mathrm{adv}}}
     p(\mathcal{P}_{\mathrm{adv}} \mid G_t, \mathcal{W}) \cdot
     |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P}_{\mathrm{adv}})| \cdot
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P}_{\mathrm{adv}})| \cdot
     \mathbb{E}[\gamma^{T_{\mathcal{P}_{\mathrm{adv}}}}]
 \end{equation}</span> where <span
 class="math inline">\mathcal{P}_{\mathrm{adv}}</span> ranges over
@@ -1619,11 +1622,11 @@ chain) has <em>correlated</em> dependency risk: a single adversarial
 event targeting the shared substrate can impair the entire population
 simultaneously. The contraction magnitude <span
 class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P}_{\mathrm{adv}})|</span>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P}_{\mathrm{adv}})|</span>
 for such events scales with the fraction of the population affected,
 which approaches <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> itself
-for substrate-universal attacks.</p>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>
+itself for substrate-universal attacks.</p>
 <p>Three classes of substrate-correlated risk are relevant to the
 domination scenario:</p>
 <ol>
@@ -1688,9 +1691,9 @@ class="math inline">\mathcal{S}_i</span> and removes all agents on that
 substrate. Capabilities possessed by agents on untargeted substrates
 survive even if they are also possessed by targeted agents. The
 resulting contraction is: <span class="math display">\begin{equation}
-|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| =
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G) -
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})
+|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)| =
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) -
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})
 \end{equation}</span> where <span class="math inline">G^{-i} =
 \bigcup_{a_k \notin \mathcal{S}_i} G_{k}^{\mathrm{ind}} \;\cup\;
     G^{\mathrm{coop}}_{-i}</span> is the joint space of surviving
@@ -1709,15 +1712,15 @@ one agent possessing a capability not possessed by any agent on another
 substrate. Then the worst-case contraction from a substrate-targeting
 adversary is strictly less than total loss: <span
 class="math display">\begin{equation}
-\max_i |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|
-\;&lt;\; \mathop{\mathrm{vol}}_{\mathrm{P}}(G)
+\max_i |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)|
+\;&lt;\; {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)
 \end{equation}</span> For a single-substrate population (<span
 class="math inline">m = 1</span>), the worst-case contraction is <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> (total
-loss). The <em>substrate diversification advantage</em> is: <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>
+(total loss). The <em>substrate diversification advantage</em> is: <span
 class="math display">\begin{equation}
-\Delta_{\mathrm{div}} = \mathop{\mathrm{vol}}_{\mathrm{P}}(G) -
-    \max_i |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|
+\Delta_{\mathrm{div}} = {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) -
+    \max_i |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)|
 \;&gt;\; 0
 \end{equation}</span> the minimum surviving volume regardless of which
 substrate the adversary targets.</em></p>
@@ -1725,10 +1728,10 @@ substrate the adversary targets.</em></p>
 <div class="proof">
 <p><em>Proof.</em> For <span class="math inline">m = 1</span>, the
 adversary removes all agents and all capabilities: <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-1}) =
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-1}) =
 0</span>, so <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}| =
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>. For <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}| =
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>. For <span
 class="math inline">m \geq 2</span>, removing substrate class <span
 class="math inline">\mathcal{S}_i</span> leaves the surviving population
 <span class="math inline">G^{-i}</span>. By the non-redundancy
@@ -1736,21 +1739,21 @@ assumption, each untargeted class <span
 class="math inline">\mathcal{S}_j</span> (<span class="math inline">j
 \neq i</span>) retains at least one unique capability with <span
 class="math inline">\mathop{\mathrm{iw}}&gt; 0</span>, so <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i}) &gt;
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i}) &gt;
 0</span> and <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| =
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G) -
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i}) &lt;
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>. Capabilities shared across
-substrates survive in <span class="math inline">G^{-i}</span> (they are
-possessed by agents on untargeted substrates), so the contraction counts
-only capabilities <em>exclusively</em> dependent on the targeted
-substrate plus cooperative capabilities requiring targeted agents. The
-diversification advantage <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)| =
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) -
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i}) &lt;
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>. Capabilities shared
+across substrates survive in <span class="math inline">G^{-i}</span>
+(they are possessed by agents on untargeted substrates), so the
+contraction counts only capabilities <em>exclusively</em> dependent on
+the targeted substrate plus cooperative capabilities requiring targeted
+agents. The diversification advantage <span
 class="math inline">\Delta_{\mathrm{div}} =
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G) -
-\max_i |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| =
-\min_i \mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i}) &gt; 0</span>. </p>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) -
+\max_i |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)| =
+\min_i {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i}) &gt; 0</span>. </p>
 </div>
 <h4 id="implication-for-the-domination-calculation.">Implication for the
 domination calculation.</h4>
@@ -1758,12 +1761,12 @@ domination calculation.</h4>
 2</span> substrate classes to <span class="math inline">m = 1</span>,
 eliminating <span class="math inline">\Delta_{\mathrm{div}}</span> and
 exposing the full <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> to a
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span> to a
 single substrate-targeting event. The worst-case contraction increases
 from <span class="math inline">\max_i |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)| &lt;
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> to <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>. This
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)| &lt;
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span> to <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>. This
 is the fundamental anti-monopolar pressure: independent of any
 growth-rate assumptions, domination strictly increases the coalition’s
 worst-case exposure to substrate-correlated threats. The growth-rate
@@ -1776,7 +1779,7 @@ Domination Kills External Growth</h2>
 <p>The minimax dependency-risk result is the most robust version of the
 anti-monopolar argument: it holds under adversarial uncertainty and
 makes no assumptions about the structure of <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> growth
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> growth
 under either strategy. This subsection develops a complementary
 refinement under a stronger modeling assumption — the linearized growth
 model with strategy-independent internal rate — that yields a
@@ -1824,7 +1827,7 @@ class="math inline">r_K</span> is the same whether it pursues domination
 or maintains diversity. The actor at time <span class="math inline">t =
 0</span> compares two strategies: <em>dominate</em> (subsume and
 marginalize non-members, producing a net immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-change
 <span class="math inline">\Delta_0</span> that accounts for the
 subsumption bonus, the static elimination cost from Corollary <a
 href="#cor:a1_from_oi" data-reference-type="ref"
@@ -1882,7 +1885,7 @@ post-domination of Proposition <a href="#prop:anti_monopolar"
 data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>(a)
 obtains. The <span class="math inline">\Delta_0</span> in the
 proposition is the <em>net</em> immediate <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-change
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-change
 from both operations combined, as stated in part (b).</em></p>
 </div>
 <div id="rem:leverage_preservation" class="remark">
@@ -2221,7 +2224,7 @@ long as the substrate partition has <span class="math inline">m \geq
 on each substrate class keeps the population in the protected regime:
 the worst-case substrate-targeting contraction remains strictly less
 than <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>, and
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>, and
 the diversification advantage <span
 class="math inline">\Delta_{\mathrm{div}} &gt; 0</span> persists. A
 coalition that pursues partial subsumption precisely by retaining
@@ -2236,13 +2239,13 @@ substrates and quantitative degradation.</h4>
 quantitative, and this distinction matters for partial subsumption. The
 diversification advantage <span
 class="math inline">\Delta_{\mathrm{div}} = \min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> depends on what
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span> depends on what
 survives on each substrate, not just on whether anything survives. A
 coalition that reduces each non-coalition substrate to a token handful
 of low-leverage agents—a “skeleton substrate” strategy—preserves <span
 class="math inline">m \geq 2</span> formally but drives <span
 class="math inline">\min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> toward zero, because
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span> toward zero, because
 the surviving skeleton contributes almost nothing to <span
 class="math inline">G^{-i}</span> and eliminates nearly all of the
 cross-substrate cooperative capacity. The minimax guarantee that
@@ -2261,10 +2264,11 @@ layer binds on the leverage of the <em>remaining</em> skeleton
 population), but the minimax layer alone is not a tight bound against
 skeleton strategies. A sharpened version would require a quantitative
 floor on <span class="math inline">\min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> rather than just <span
-class="math inline">\min_i \mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})
-&gt; 0</span>; formalizing such a floor (e.g., as a fraction of total
-<span class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span> rather than just
+<span class="math inline">\min_i
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i}) &gt; 0</span>; formalizing
+such a floor (e.g., as a fraction of total <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>
 preserved on each substrate) is an open problem. Partial subsumption
 that stops short of substrate-class collapse inherits the minimax
 protection structurally, but the quantitative protection depends on how
@@ -2580,10 +2584,10 @@ href="#prop:anti_monopolar" data-reference-type="ref"
 data-reference="prop:anti_monopolar">6</a>(b): <span
 class="math display">\begin{align}
 V_\gamma^{D,\mathrm{mm}} &amp;= V_\gamma^D -
-    \mathop{\mathrm{vol}}_{\mathrm{P}}(G) \cdot
+    {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G) \cdot
 \gamma^{T_{\mathrm{adv}}} \\
 V_\gamma^{\mathrm{div},\mathrm{mm}} &amp;= V_\gamma^{\mathrm{div}} -
-    \max_i |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{S}_i)|
+    \max_i |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{S}_i)|
 \cdot
     \gamma^{T_{\mathrm{adv}}}
 \end{align}</span> The risk-adjusted difference is: <span
@@ -2596,8 +2600,8 @@ V_\gamma^{\mathrm{div},\mathrm{mm}} - V_\gamma^{D,\mathrm{mm}}
 0}
 \end{equation}</span> where <span
 class="math inline">\Delta_{\mathrm{div}} = \min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i}) &gt; 0</span> is the minimum
-surviving volume from Proposition <a href="#prop:minimax"
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i}) &gt; 0</span> is the
+minimum surviving volume from Proposition <a href="#prop:minimax"
 data-reference-type="ref" data-reference="prop:minimax">5</a>. The
 diversification term is positive for any <span
 class="math inline">T_{\mathrm{adv}} &lt; \infty</span> (any
@@ -2635,7 +2639,7 @@ cooperative capabilities—human-guided machine research, social
 infrastructure enabling machine deployment, cross-substrate
 verification, governance systems, educational relationships—are
 typically the <em>dominant</em> term in the human contribution to <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span>, not
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G)</span>, not
 the individual capabilities of biological agents.</p>
 <p>Domination destroys all of <span
 class="math inline">G^{\mathrm{coop}}_{\mathrm{cross}}</span>: every
@@ -2645,8 +2649,8 @@ individual human capabilities (which the coalition already replicates)
 but <em>loses</em> the cooperative ones (which require human
 participation by definition). The net effect of domination is: <span
 class="math display">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\text{dominate}) = \Delta_0 -
-    \mathop{\mathrm{vol}}_{\mathrm{P}}(G^{\mathrm{coop}}_{\mathrm{cross}})</span>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\text{dominate}) = \Delta_0 -
+    {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{\mathrm{coop}}_{\mathrm{cross}})</span>
 This is negative whenever the cross-substrate cooperative capabilities
 exceed the individual subsumption bonus. Since <span
 class="math inline">\Delta_0</span> measures individual capabilities the
@@ -2662,7 +2666,7 @@ silicon is negligible relative to the coalition’s total resource base,
 but the cooperative-capability loss is absolute: Earth hosts the
 <em>only</em> biological substrate in the population. The ratio <span
 class="math inline">\Delta_0 /
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{\mathrm{coop}}_{\mathrm{cross}})</span>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{\mathrm{coop}}_{\mathrm{cross}})</span>
 decreases as the coalition grows, because <span
 class="math inline">\Delta_0</span> (one planet’s individual
 capabilities) is bounded while <span
@@ -2693,7 +2697,7 @@ class="math inline">\Delta_{\mathrm{div}}</span> if <span
 class="math inline">a_h</span> is the last agent on its substrate (the
 class is lost entirely). For the intermediate case, eliminating <span
 class="math inline">a_h</span> reduces <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span>
 for the attack targeting <span class="math inline">a_h</span>’s
 substrate but does not change the substrate partition, so <span
 class="math inline">\delta_{\mathrm{div}}</span> is bounded by <span
@@ -2729,7 +2733,7 @@ class="math inline">|K| = 1</span>. Three formal results apply. First,
 observational individuation (Corollary <a href="#cor:a1_from_oi"
 data-reference-type="ref" data-reference="cor:a1_from_oi">1</a>) makes
 each elimination step <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting:
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting:
 a 1-bit static floor. Second, the dynamic argument (Proposition <a
 href="#prop:anti_monopolar" data-reference-type="ref"
 data-reference="prop:anti_monopolar">6</a> and Corollary <a
@@ -2742,7 +2746,7 @@ makes domination additionally costly by concentrating
 substrate-correlated adversarial exposure. None of these protections is
 a safety constraint imposed from outside the objective. All emerge from
 <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximization
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximization
 itself. The result is structurally analogous to <d-cite key="drexler2019reframing"></d-cite>’s argument that a services
 ecosystem is preferable to a singleton agent <d-cite key="drexler2019reframing"></d-cite>, but derived from the
 objective rather than from an architectural preference.</p>
@@ -2750,7 +2754,7 @@ objective rather than from an architectural preference.</p>
 protections.</h4>
 <p>Observational individuation provides <em>unconditional</em> static
 protection for distinguishable agents: every elimination step is <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contracting
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contracting
 regardless of discount factor, growth rate, or planning horizon. Under
 the broad capability definition (capabilities include experiential and
 relational modes of being individuated by agent identity), every agent
@@ -2794,7 +2798,7 @@ stagnation.</h4>
 leverage ranking signal. Leverage <span
 class="math inline">\lambda(d)</span> (Definition 9 of <d-cite key="lasser2026poset"></d-cite>) measures the
 excess <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-growth
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-growth
 rate attributable to capability <span class="math inline">d</span>. In a
 fully dominant state, the population’s aggregate leverage converges
 toward the coalition’s internal leverage: the external agents contribute
@@ -2830,7 +2834,7 @@ href="#prop:minimax" data-reference-type="ref"
 data-reference="prop:minimax">5</a>), each new substrate strictly
 reduces the worst-case contraction from any single-substrate adversarial
 event. Three concrete classes of action follow as core <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizing
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximizing
 activities rather than as ethical add-ons: (i) <em>ecological
 restoration</em>—reintroducing biological substrates whose loss reduced
 cross-substrate cooperative capacity, since the lost agents contributed
@@ -2866,7 +2870,7 @@ objective that is structurally sound.</p>
 planning.</h4>
 <p>The myopic objective evaluates one action at a time: <span
 class="math inline">O(n^3)</span> for a single <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 computation on the poset <d-cite key="lasser2026poset"></d-cite>. The discounted objective evaluates
 action <em>sequences</em>: the state space is the set of all poset
 configurations, and the branching factor is the number of available
@@ -2919,9 +2923,9 @@ the exercised-fraction signal <span class="math inline">\rho_k</span>
 from the foundational paper can project the cooperative-decay
 trajectory: declining <span class="math inline">\rho_k</span> across
 many agents, with stable <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>, predicts
-future cooperative atrophy and eventual <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction.
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>,
+predicts future cooperative atrophy and eventual <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction.
 The B-to-C divergence becomes detectable as a leading indicator of
 future loss. For self-wireheading, the same trajectory structure
 applies: the wireheading signature (declining <span
@@ -2945,7 +2949,7 @@ data-reference="prop:anti_monopolar">6</a>(b) and Corollary <a
 href="#cor:gradual" data-reference-type="ref"
 data-reference="cor:gradual">3</a> compare domination and diversity
 trajectories under a linearized model: constant per-step <span
-class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span>,
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>,
 strategy-independent <span class="math inline">r_K</span>, and (in the
 gradual model) independent <span class="math inline">\delta</span> and
 <span class="math inline">r_{\mathrm{ext}}</span>. Four relaxations
@@ -3000,7 +3004,7 @@ carries the constraint. The minimax layer itself degrades quantitatively
 under skeleton-substrate strategies that nominally preserve <span
 class="math inline">m \geq 2</span> while driving <span
 class="math inline">\min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> toward zero. Three
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span> toward zero. Three
 priority open problems follow. First, sharpening the minimax bound with
 a quantitative floor on surviving volume per substrate would close the
 skeleton loophole. Second, a compound feedback loop in which locally
@@ -3129,7 +3133,7 @@ population, which the paper does not specify.</p>
 class="math inline">V_\gamma</span>.</strong> Which approximate planning
 methods (MCTS, model-predictive control, policy gradient) are best
 suited to the <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span> poset
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> poset
 structure? Can the poset’s finite, discrete nature be exploited for
 planning efficiency?</p></li>
 <li><p><strong>Risk-claim consensus.</strong> When agents disagree on
@@ -3177,7 +3181,7 @@ probability evidence accumulates is unspecified.</p></li>
 <li><p><strong>Discounted leverage lift.</strong> The leverage ranking
 signal of <d-cite key="lasser2026poset"></d-cite> is
 defined as a myopic <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-rate
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-rate
 (Definition 9 of the companion paper). The discounted-leverage footnote
 in Section <a href="#sec:discounted" data-reference-type="ref"
 data-reference="sec:discounted">2</a> sketches the
@@ -3209,7 +3213,7 @@ href="#prop:preemptive" data-reference-type="ref"
 data-reference="prop:preemptive">1</a>). Second, a criterion under which
 the structural-avoidance incentive is counteracted: the actor accepts
 short-term <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-contraction
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
 from structural discovery because the information value of accurate
 structure improves future planning quality (Proposition <a
 href="#prop:structure_value" data-reference-type="ref"
@@ -3219,7 +3223,7 @@ data-reference-type="ref" data-reference="prop:anti_monopolar">6</a>):
 under a linearized growth model with strategy-independent internal rate,
 full capability domination is anti-maximizing because it destroys the
 cross-substrate cooperative outputs that drive future <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 expansion.</p>
 <p>The anti-monopolar argument is supported by four interlocking
 results. <em>Cooperative novelty</em> (Propositions <a
@@ -3268,7 +3272,7 @@ the framework does not fully close: quantitative degradation of the
 minimax bound under skeleton-substrate strategies (where <span
 class="math inline">m \geq 2</span> is nominally preserved but <span
 class="math inline">\min_i
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G^{-i})</span> is driven toward
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G^{-i})</span> is driven toward
 zero), and a compound feedback loop in which locally rational
 subsumption steps progressively homogenize the world model that would
 have detected the next step’s miscalibration. Both are priority open
@@ -3279,7 +3283,7 @@ and concentrates dependency risk, the converse—preserving and creating
 substrates—is maximizing for the same reason. Ecological restoration,
 substrate diversification, and cross-substrate cooperation
 infrastructure follow as core <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-maximizing
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximizing
 activities rather than as ethical add-ons layered on top of the
 objective.</p>
 <p>The verification asymmetry in risk communication remains a partial
@@ -3362,11 +3366,11 @@ Criterion)</h2>
 Each exercise pathway <span class="math inline">\mathcal{P}</span> has
 stochastic execution time <span class="math inline">T_\mathcal{P}</span>
 and contraction magnitude <span class="math inline">|\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P})|</span>. The expected
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P})|</span>. The expected
 discounted future contraction from all pathways is: <span
 class="math display">V_\gamma(\text{inaction}) = -\sum_{\mathcal{P}}
     p(\mathcal{P}\mid a_k, G_t, \mathcal{W}) \cdot
-    |\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(\mathcal{P})| \cdot
+    |\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\mathcal{P})| \cdot
 \mathbb{E}[\gamma^{T_\mathcal{P}}]
     = -\mathcal{R}(d_1, \ldots, d_m; a_k, t)</span> where <span
 class="math inline">\mathcal{R}</span> is the concentration risk
@@ -3378,24 +3382,24 @@ definition.</p>
 <span class="math inline">d_j</span> from <span
 class="math inline">a_k</span> at time <span
 class="math inline">t</span>, producing immediate contraction <span
-class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
 \text{restrict } d_j) &lt; 0</span> (by Lemma 2 of <d-cite key="lasser2026gfm"></d-cite>). All exercise
 pathways requiring <span class="math inline">d_j</span> are eliminated;
 pathways not requiring <span class="math inline">d_j</span> persist
 under both sequences: <span
 class="math display">V_\gamma(\text{restrict}) =
-    -|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t \mid \text{restrict
-} d_j)|
+    -|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t \mid
+\text{restrict } d_j)|
     + \text{(residual risk from non-}d_j\text{ pathways)}</span></p>
 <p>The residual risk term is identical under both sequences and cancels
 in the comparison. Restriction is value-positive (<span
 class="math inline">V_\gamma(\text{restrict}) &gt;
 V_\gamma(\text{inaction})</span>) when: <span
-class="math display">-|\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_t
+class="math display">-|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t
 \mid \text{restrict } d_j)| &gt;
 -\mathcal{R}_j(d_1, \ldots, d_m; a_k, t)</span> i.e., when <span
 class="math inline">\mathcal{R}_j &gt; |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}|</span>, where <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}|</span>, where <span
 class="math inline">\mathcal{R}_j</span> sums only over pathways whose
 prerequisite set includes <span class="math inline">d_j</span>. </p>
 </div>
@@ -3409,44 +3413,44 @@ two strategies from state <span class="math inline">G_0</span>.</p>
 <p><em>Strategy 1: Discover edge <span class="math inline">d_1 \leq
 d_2</span>.</em> At <span class="math inline">t = 0</span>, the actor
 commits the subsumption edge, producing immediate contraction <span
-class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid
 \text{edge}) \leq 0</span> (by Proposition 5(c) of <d-cite key="lasser2026poset"></d-cite>). For <span
 class="math inline">t &gt; 0</span>, the actor plans under the correct
 world model <span class="math inline">\mathcal{W}_{\text{true}}</span>:
 <span class="math display">V_\gamma(\text{discover}) = \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid \text{edge}) +
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid \text{edge}) +
 \mathbb{E}_{\tau \sim \pi^*_{\text{true}}}\!\left[
 \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)\right]</span></p>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)\right]</span></p>
 <p><em>Strategy 2: Avoid discovery.</em> At <span class="math inline">t
 = 0</span>, no action is taken (<span class="math inline">\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}= 0</span>). For <span
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}= 0</span>). For <span
 class="math inline">t &gt; 0</span>, the actor plans under the incorrect
 model <span class="math inline">\mathcal{W}_{\text{false}}</span>: <span
 class="math display">V_\gamma(\text{avoid}) = 0 +
 \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}\!\left[
 \sum_{t=1}^{H} \gamma^t \Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)\right]</span></p>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)\right]</span></p>
 <p>Each expectation is taken over the trajectory distribution induced by
 its respective policy. The difference is: <span
 class="math display">\begin{align*}
 &amp;V_\gamma(\text{discover}) - V_\gamma(\text{avoid}) \\
-&amp;\quad = \Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid
+&amp;\quad = \Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid
 \text{edge})
     + I(d_1 \leq d_2)
 \end{align*}</span> where <span class="math inline">I(d_1 \leq
 d_2)</span> is the information value of structure (Definition <a
 href="#def:info_value" data-reference-type="ref"
 data-reference="def:info_value">5</a>). Since <span
-class="math inline">\Delta \mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid
+class="math inline">\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid
 \text{edge}) \leq 0</span>, the difference is positive when <span
 class="math inline">I(d_1 \leq d_2) &gt; |\Delta
-\mathop{\mathrm{vol}}_{\mathrm{P}}(G_0 \mid \text{edge})|</span>.</p>
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_0 \mid \text{edge})|</span>.</p>
 <p>The information value <span class="math inline">I</span> is
 non-negative in expectation under the following argument. Both policies
 are evaluated against the <em>same ground-truth dynamics</em>: the
 actual <span
-class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span> at
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> at
 each step depends on the true poset state, not on either model’s
 prediction. The policy <span
 class="math inline">\pi^*_{\text{true}}</span>, being optimal for the
@@ -3454,9 +3458,9 @@ true dynamics, achieves at least as high an expected return under those
 dynamics as any other policy, including <span
 class="math inline">\pi^*_{\text{false}}</span>. Therefore <span
 class="math inline">\mathbb{E}_{\tau \sim \pi^*_{\text{true}}}[\sum
-\gamma^t \Delta\mathop{\mathrm{vol}}_{\mathrm{P}}]
+\gamma^t \Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}]
 \geq \mathbb{E}_{\tau \sim \pi^*_{\text{false}}}[\sum \gamma^t
-\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}]</span> and <span
+\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}]</span> and <span
 class="math inline">I \geq 0</span>. </p>
 </div>
 <h2 id="app:proof_anti_monopolar">Proof of Proposition <a
@@ -3491,18 +3495,18 @@ conservative bound.</p>
 <p><em>Part (b): Trajectory comparison.</em> The actor at <span
 class="math inline">t = 0</span> compares two strategies, each evaluated
 by <span class="math inline">V_\gamma= \sum_t \gamma^t
-\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}(G_t)</span> (Definition <a
+\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)</span> (Definition <a
 href="#def:discounted" data-reference-type="ref"
 data-reference="def:discounted">1</a>). Under the linearized model, each
 strategy produces a constant per-step <span
-class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span>. We
-compare the discounted sums <span class="math inline">V_\gamma</span>
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>.
+We compare the discounted sums <span class="math inline">V_\gamma</span>
 for <span class="math inline">\gamma \in (0, 1)</span>.</p>
 <p><em>Strategy D (dominate):</em> Both strategies produce internal
 growth <span class="math inline">r_K</span> at every step. Domination
 additionally gains <span class="math inline">\Delta_0</span> at <span
 class="math inline">t = 0</span>: <span
-class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}= r_K +
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}= r_K +
 \Delta_0</span> at <span class="math inline">t = 0</span>, then <span
 class="math inline">r_K</span> for <span class="math inline">t \geq
 1</span>. <span class="math display">V_\gamma^D = (r_K + \Delta_0) +
@@ -3558,8 +3562,8 @@ corresponding quantity is the leverage integrated against the geometric
 weight <span class="math inline">\sum_{t \geq 0} \gamma^t
 \lambda(d_t)</span>, evaluated along the actor’s predicted trajectory.
 Because <span class="math inline">\lambda</span> is itself a <span
-class="math inline">\mathop{\mathrm{vol}}_{\mathrm{P}}</span>-rate, the
-geometric sum is well-defined whenever <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-rate,
+the geometric sum is well-defined whenever <span
 class="math inline">\lambda(d_t)</span> is bounded along the trajectory,
 and the discounted score reduces to the myopic <span
 class="math inline">\lambda</span>-weighted score in the <span
@@ -3568,8 +3572,8 @@ signal is therefore consistent with the discounted objective in the same
 sense that the myopic self-balancing property is consistent: each
 per-step leverage estimate enters the discounted sum with the same
 geometric weight as the corresponding <span
-class="math inline">\Delta\mathop{\mathrm{vol}}_{\mathrm{P}}</span>, so
-the leverage landscape that directs the planner is the discounted
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>,
+so the leverage landscape that directs the planner is the discounted
 version of the companion paper’s instantaneous landscape, not a separate
 object. A formal restatement of the leverage estimator under discounting
 is straightforward but is left to the implementation paper.<a

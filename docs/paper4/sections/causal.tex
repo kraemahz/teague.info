@@ -281,7 +281,7 @@ of the aggregate signal $\Deltahat$. This is an idealization: the
 actual mean of $\Deltahat$ is the sum of all agents' mean effects
 plus background dynamics, not $\mu_j$ alone. A correlational
 estimator that recovered $\mu_j$ from $\Deltahat$ would need an
-additional auxiliary procedure --- for example, regressing $\Deltahat$
+additional auxiliary procedure, such as regressing $\Deltahat$
 against an indicator for $a_j$'s action times, which incurs its own
 bias when confounders are correlated with $a_j$'s action schedule.
 The $O(\sigma^2 / \mu_j^2)$ bound therefore describes the best-case
@@ -321,8 +321,8 @@ reliability degrades.
 Multi-channel attribution is the standard methodology in adversarial
 intrusion analysis and intelligence tradecraft. The Diamond Model of
 intrusion analysis \citep{caltagirone2013diamond} organizes attribution
-around four analytic vertices --- adversary, capability,
-infrastructure, victim --- linked by relationships, with confidence
+around four analytic vertices (adversary, capability,
+infrastructure, victim) linked by relationships, with confidence
 coming from cross-vertex correlation rather than from any single
 vertex. The \emph{Pyramid of Pain} \citep{bianco2013pyramid} ranks
 observable signals by how costly they are for an adversary to change:
@@ -352,8 +352,8 @@ distributed across papers:
 \item \textbf{Correlational co-occurrence.} The trust-weighted
     $\Deltahat$ signal of \citet{lasser2026gfm} (Proposition~2(a))
     detects agents whose actions temporally co-occur with
-    $\volL$-contraction. This is a cheap channel to fake --- an
-    adversary can introduce uncorrelated dummy actions --- and is
+    $\volL$-contraction. This is a cheap channel to fake
+    (an adversary can introduce uncorrelated dummy actions) and is
     strictly dominated by the causal channel under the conditions of
     Proposition~\ref{prop:causal_dominates}(c).
 \item \textbf{Capability gating.} Papers 2 and 3 of the GFM sequence
@@ -405,8 +405,8 @@ Correlational co-occ. & Low   & 1    & (None beyond observation) \\
 An attribution decision should aggregate evidence across channels,
 weighted by each channel's calibrated reliability, rather than rely
 on the output of any single channel. (The aggregation is Bayesian in
-spirit --- each channel contributes evidence toward or against a
-suspect --- but this paper does not formalize the joint hypothesis
+spirit: each channel contributes evidence toward or against a
+suspect. This paper does not formalize the joint hypothesis
 space or channel-dependence model; the full fusion rule is an open
 direction identified below.) The multi-channel framing has three
 architectural consequences:

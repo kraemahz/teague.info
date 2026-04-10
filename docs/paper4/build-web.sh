@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Build the Distill HTML version of the GFM paper.
+# Build the Distill HTML version of Paper 4.
 # Usage: ./build-web.sh
-# Output: ../../public/papers/gfm/index.html
+# Output: ../../public/papers/scm/index.html
 
 set -euo pipefail
 
@@ -10,7 +10,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PAPER_DIR="$SCRIPT_DIR"
-OUT_DIR="$SCRIPT_DIR/../../public/papers/gfm"
+OUT_DIR="$SCRIPT_DIR/../../public/papers/scm"
 
 mkdir -p "$OUT_DIR"
 
@@ -72,39 +72,43 @@ html = re.sub(r'\\\\label\{[^}]*\}\s*', '', html)
 # Remove bare \qed
 html = re.sub(r'\\\\qed\b', '', html)
 # Remove QED squares
-html = re.sub(r'0?[\u25a1\u25fb\u25fc\u25aa\u25ab\u220e\u25a0\u25fe\u25fd\u25fb\u25b3\u25b2\u25c7]', '', html)
+html = re.sub(r'0?[\u25a1\u25fb\u25fc\u25aa\u25ab\u220e\u25a0\u25fe\u25fd\u25b3\u25b2\u25c7]', '', html)
 
-# Resolve cross-references
+# Resolve cross-references for Paper 4
 ref_map = {
-    'prop:self_balancing': '1', 'prop:scorpion_detection': '2',
-    'prop:sign_correctness': '3',
-    'lem:destruction': '1', 'lem:coercion': '2', 'lem:rigidity': '3',
-    'lem:cooperation': '4',
-    'cor:elimination': '1.1', 'cor:rigid_rules': '1.2',
-    'def:goal': '0', 'def:capability_space': '1',
-    'def:joint_goal_space': '2', 'def:gfm': '3',
-    'def:contraction_expansion': '4', 'def:social_objective': '5',
-    'def:observable_goal_model': '6', 'def:local_volume_estimator': '7',
-    'def:pop_empowerment': '8', 'def:scorpion': '9',
-    'rem:failure_modes': '1', 'rem:fep_correspondence': '2',
-    'rem:detection_scope': '3', 'rem:substitution_scope': '4',
-    'sec:introduction': '1', 'sec:definitions': '2',
-    'sec:self_balancing': '3', 'sec:tractability': '4',
-    'sec:multi_agent': '5', 'sec:connections': '6',
-    'sec:connections_empowerment': '6.1', 'sec:future_concerns': '7',
-    'sec:substitution_problem': '7.3', 'sec:proxy_failure_detector': '7.4',
-    'subsec:optimization_loop': '4.2', 'subsec:scorpion_interaction': '5.3',
-    'subsec:rational_defection': '5.2', 'subsec:trust_model': '5.4',
-    'app:scorpion_taxonomy': 'A', 'app:trust_model': 'B',
-    'app:agent_similarity': 'C', 'app:proofs': 'D',
-    'app:value_divergence': 'A.3', 'app:trust_factor': 'B.1',
-    'app:cooling_period': 'B.2', 'app:trust_update': 'B.4',
-    'app:goal_similarity': 'C.1',
-    'app:proof_coercion': 'D.2', 'app:proof_rigidity': 'D.3',
-    'app:proof_rigid_rules': 'D.4', 'app:proof_elimination': 'D.5',
-    'app:proof_elimination_cost': 'D.6', 'app:proof_cooperation': 'D.7',
-    'app:proof_sign_correctness': 'D.8', 'app:proof_self_balancing': 'D.9',
-    'app:proof_scorpion': 'D.10',
+    # Definitions
+    'def:scm': '1',
+    'def:causal_attribution': '2',
+    'def:risk_residual': '3',
+    'def:risk_trust_dynamics': '4',
+    'def:logodds': '5',
+    'def:threat_model': '6',
+    # Propositions
+    'prop:causal_dominates': '1',
+    'prop:risk_convergence': '2',
+    'prop:causal_scorpion': '3',
+    'prop:evasion_bandwidth': '4',
+    'prop:expected_risk': '5',
+    # Corollaries
+    'cor:m_bound': '5.1',
+    # Sections
+    'sec:introduction': '1',
+    'sec:causal': '2',
+    'sec:multi_channel': '2.4',
+    'sec:risk_trust': '3',
+    'sec:attention_not_action': '3.4',
+    'sec:scorpion': '4',
+    'sec:dependency': '5',
+    'sec:threat_model_below': '5.1',
+    'sec:risk_adjusted': '5.3',
+    'sec:discussion': '6',
+    'sec:conclusion': '7',
+    # Appendices
+    'app:proofs': 'A',
+    'app:proof_evasion': 'A.1',
+    # Tables
+    'tab:channels': '1',
+    'tab:sensitivity': '2',
 }
 
 def resolve_ref(m):
@@ -123,24 +127,35 @@ html = re.sub(r'(?:in\s+)?Equations?\s*(?:--\s*)?(?=[:,\.\)a-z])', '', html)
 html = re.sub(r'\(Equations?\s*\)', '', html)
 
 # Strip control characters
-import unicodedata
 html = ''.join(c for c in html if c in ('\n', '\r', '\t') or (ord(c) >= 0x20))
 
 with open(sys.argv[2], 'w') as f:
     f.write(html)
 " "$BODY_RAW" "$BODY_CLEAN"
 
-# Also clean abstract refs
+# Also clean abstract refs and citations
 python3 -c "
 import re, sys
 html = open(sys.argv[1]).read()
-ref_map = {'prop:self_balancing': '1', 'prop:sign_correctness': '3'}
+
+# Convert citations
+def convert_cite(m):
+    keys = m.group(1).replace(' ', ',')
+    return '<d-cite key=\"' + keys + '\"></d-cite>'
+html = re.sub(
+    r'<span\s+class=\"citation\"\s+data-cites=\"([^\"]+)\">\s*</span>',
+    convert_cite, html, flags=re.DOTALL
+)
+
+# Resolve cross-references (subset relevant to abstract)
+ref_map = {'prop:causal_dominates': '1', 'prop:expected_risk': '5', 'cor:m_bound': '5.1'}
 def resolve_ref(m):
     return ref_map.get(m.group(1), m.group(1))
 html = re.sub(
     r'<a\s+href=\"#[^\"]*\"\s+data-reference-type=\"(?:ref|eqref)\"\s*data-reference=\"([^\"]+)\">\[[^\]]*\]</a>',
     resolve_ref, html, flags=re.DOTALL
 )
+
 html = ''.join(c for c in html if c in ('\n', '\r', '\t') or (ord(c) >= 0x20))
 with open(sys.argv[1], 'w') as f:
     f.write(html)
@@ -186,6 +201,7 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
     .proposition { border-left-color: #27ae60; }
     .corollary { border-left-color: #8e44ad; }
     .remark { border-left-color: #95a5a6; }
+    .theorem { border-left-color: #2c3e50; }
     .proof-env { border-left-color: #bdc3c7; background: #fdfdfd; }
     .env-title { font-weight: bold; margin-bottom: 0.5em; }
     d-article table { font-size: 0.85em; }
@@ -197,8 +213,8 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
 <d-front-matter>
 <script type="text/json">
 {
-  "title": "Goal-Frontier Maximizers are Civilization Aligned",
-  "description": "An alignment objective in which an agent maximizes the volume of the jointly achievable capability space across all agents in a population.",
+  "title": "A Structural Causal Model for Goal-Frontier Maximization",
+  "description": "Causal attribution, risk-trust dynamics, and adversarial dependency-risk analysis for GFM agents, upgrading statistical proxies to counterfactual queries on an explicit structural causal model.",
   "authors": [
     {
       "author": "Teague Lasser",
@@ -219,8 +235,8 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
 </d-front-matter>
 
 <d-title>
-  <h1>Goal-Frontier Maximizers are Civilization Aligned</h1>
-  <p style="margin-top: 0.5em;"><a href="/papers/gfm/gfm.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">📄 Download PDF version</a></p>
+  <h1>A Structural Causal Model for Goal-Frontier Maximization</h1>
+  <p style="margin-top: 0.5em;"><a href="/papers/scm/scm.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">📄 Download PDF version</a></p>
 </d-title>
 
 <d-abstract>
@@ -255,6 +271,12 @@ cat >> "$OUT_DIR/index.html" << 'TEMPLATE_FINAL'
 </body>
 </html>
 TEMPLATE_FINAL
+
+# Copy PDF to output dir
+if [ -f "$PAPER_DIR/main.pdf" ]; then
+    cp "$PAPER_DIR/main.pdf" "$OUT_DIR/scm.pdf"
+    echo "PDF copied to $OUT_DIR/scm.pdf"
+fi
 
 echo "Done: $OUT_DIR/index.html"
 echo "Size: $(wc -c < "$OUT_DIR/index.html") bytes, $(wc -l < "$OUT_DIR/index.html") lines"

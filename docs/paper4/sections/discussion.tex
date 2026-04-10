@@ -45,15 +45,15 @@ The structural assumptions underlying
 Proposition~\ref{prop:causal_dominates}(c) are partially testable
 through a residual-covariance diagnostic: if
 $\mathrm{Cov}(\CausalAttr(a_j), \CausalAttr(a_k) \mid G_t)$ exceeds
-the level the current SCM predicts, the SCM is misspecified ---
-possible causes include a missing edge, latent common causes,
-exogenous-orthogonality failure, non-additivity, or nonstationarity
---- and the causal channel's reliability should degrade accordingly. Integrating such a
+the level the current SCM predicts, the SCM is misspecified
+(possible causes include a missing edge, latent common causes,
+exogenous-orthogonality failure, non-additivity, or nonstationarity),
+and the causal channel's reliability should degrade accordingly. Integrating such a
 diagnostic into a calibrated SCM-confidence scalar
 $c_{\SCM}(t) \in [0,1]$ that weights the causal channel's
-contribution to the multi-channel aggregate --- so declining
+contribution to the multi-channel aggregate, so that declining
 sufficiency down-weights causal attribution without burning specific
-agents' trust --- is an architectural direction we identify but do
+agents' trust, is an architectural direction we identify but do
 not formalize here. The full adversarial-robust structure-learning
 problem, including the calibration procedure and its interaction
 with the behavioral and capability channels, is deferred to a
@@ -85,9 +85,9 @@ SPRT detection rule, is deferred to a companion paper on joint
 attribution. In the interim, the multi-channel attribution
 architecture (Section~\ref{sec:multi_channel}) provides the
 structural defense: coordinated attacks that evade the causal
-channel are still detectable through capability gating --- which
-constrains the set of agents that \emph{could} have caused the
-contraction regardless of interaction structure --- and through
+channel are still detectable through capability gating
+(which constrains the set of agents that \emph{could} have caused the
+contraction regardless of interaction structure) and through
 behavioral prediction residuals, which detect individual
 coordinators whose actions diverge from their predictive models.
 The causal channel's failure under non-additivity degrades one
@@ -102,7 +102,7 @@ actor's world model is itself poorly calibrated, the residual reflects
 model error rather than claim quality. An agent whose risk assessments
 are accurate but disagree with a miscalibrated actor will accumulate
 high $\|r^{\mathrm{risk}}\|^2$ and concentrate around low
-$\Trisk_j^*$ --- a false negative. This is mitigated by the self-trust
+$\Trisk_j^*$, producing a false negative. This is mitigated by the self-trust
 mechanism of \citet{lasser2026gfm}: an actor with a poorly calibrated
 model has low $T_s$ and high learning rate, which accelerates model
 correction. But during the correction period, risk-trust assessments
@@ -112,8 +112,8 @@ may be unreliable.
 Of the three structural assumptions underlying
 Proposition~\ref{prop:causal_dominates}(c), exogenous orthogonality
 is the most likely to fail in deployment. Shared environmental
-shocks --- power grid state, information broadcasts, market
-movements, weather, time-of-day effects on a shared population ---
+shocks (power grid state, information broadcasts, market
+movements, weather, time-of-day effects on a shared population)
 induce covariance between agents' contributions even under a
 correctly specified causal DAG. Conditioning on $G_t$ does not
 remove time-localized shocks that affect multiple agents' actions
@@ -136,8 +136,8 @@ at similar capability-graph states, using the same attribution data
 the actor already collects for the SPRT detector. When the estimated covariance exceeds the level predicted
 under exogenous orthogonality, the assumption has failed and the
 failure is empirically visible. This turns the most fragile of the
-three structural assumptions into the most monitorable one---a
-better epistemic position than ``fragile but unobservable.'' The
+three structural assumptions into the most monitorable one:
+a better epistemic position than ``fragile but unobservable.'' The
 natural integration point is the SCM-confidence scalar
 $c_{\SCM}(t)$ described above: elevated residual covariance is a
 direct input to $c_{\SCM}$ updating, triggering the multi-channel
@@ -152,8 +152,8 @@ it does not --- is an open problem.
 trust-weighted log-linear opinion pool (Definition~\ref{def:logodds})
 recovers Bayesian updating in the no-tempering limit under conditional
 independence of agents' observations given the true risk level. If
-reporters' assessments are correlated --- they share information
-sources, or one reporter's assessment influences others --- the
+reporters' assessments are correlated (they share information
+sources, or one reporter's assessment influences others), the
 aggregation overweights the shared signal. In practice, partial
 independence is the norm: agents with different observation channels
 and different world models produce partially independent assessments,
@@ -172,10 +172,10 @@ verification gate is computationally expensive (forward causal
 evaluation on the actor's own SCM). An adversary who floods the
 actor with structurally plausible false risk claims can exhaust the
 verification budget without any single claim bypassing independent
-verification. The two-gate architecture defends against coordinated
-amplification of false claims into \emph{action} but does not
-defend against attention exhaustion via structurally plausible
-decoys. The defense direction is prioritization: the verification
+verification. The two-gate architecture prevents coordinated
+amplification of false claims from reaching \emph{action},
+but leaves the actor vulnerable to attention exhaustion via
+structurally plausible decoys. The defense direction is prioritization: the verification
 gate should process candidates in order of $\Trisk_j$-weighted
 expected contraction magnitude, so high-trust reporters' claims are
 verified first and low-trust flooding imposes only queue delay, not
@@ -185,8 +185,8 @@ and its interaction with the salience threshold is deferred.
 \emph{The adversary knows $\epsilon$} (Section~\ref{sec:scorpion}).
 The SPRT design parameter $\epsilon$ sets the minimum detectable
 contraction magnitude. A well-informed adversary who can infer
-$\epsilon$ from the actor's behavior --- by probing with small
-contractions and observing flag rates --- will calibrate
+$\epsilon$ from the actor's behavior (by probing with small
+contractions and observing flag rates) will calibrate
 $|\mu_j|$ just below $\epsilon$ and sit in the undetected regime
 permanently. The evasion-bandwidth bound's ``undetected contraction
 rate bounded by $|\mu_j|$'' is only informative if $|\mu_j|$ is
@@ -198,8 +198,8 @@ to marginalize. Because the evasion-bandwidth bound
 $\tau_{\mathrm{adapt}}(\epsilon) =
 O\!\left(\sigma_{\mathrm{do}}^2 /
 [\epsilon(|\mu_j| - \epsilon/2)]\right)$
-is highly nonlinear in $\epsilon$---small-$\epsilon$ draws produce
-very long detection times---the marginalized bound
+is highly nonlinear in $\epsilon$: small-$\epsilon$ draws produce
+very long detection times. The marginalized bound
 \begin{equation}
 \label{eq:marginalized_evasion}
 \mathbb{E}_{p}[\tau_{\mathrm{adapt}}(\epsilon)]
@@ -218,7 +218,7 @@ precisely what the SPRT is trying to detect),
 and the tail bound
 $\Pr_{p}(\tau_{\mathrm{adapt}} > T)$ is the prior mass on the
 $\epsilon$-region where
-$\tau_{\mathrm{adapt}}(\epsilon) > T$---a set that shrinks as
+$\tau_{\mathrm{adapt}}(\epsilon) > T$, a set that shrinks as
 $T$ grows. A log-uniform prior
 $p(\epsilon) \propto 1/\epsilon$ on
 $[\epsilon_{\min}, \epsilon_{\max}]$ is a natural special case:
@@ -242,14 +242,13 @@ scales with its entropy. Log-uniform maximizes this entropy on
 bounded log-support, making it near-optimal against a Bayesian
 adversary trying to infer $p(\epsilon)$ from observations.
 The defense requires the actor to
-\emph{deploy} randomized $\epsilon$---drawing from $p(\epsilon)$
-each epoch and keeping the draw private---not merely to
+\emph{deploy} randomized $\epsilon$, drawing from $p(\epsilon)$
+each epoch and keeping the draw private, rather than merely
 marginalize analytically. Under deployed randomization, the
 adversary's optimal evasion strategy must be computed against the
-distribution $p(\epsilon)$ rather than a known point estimate---the
-minimax-theorem argument for mixed strategies against an optimizing
-adversary \citep{vonneumann1928zur}---and
-inferring the distribution itself requires observing the actor's
+distribution $p(\epsilon)$ rather than a known point estimate,
+following the minimax-theorem argument for mixed strategies against
+an optimizing adversary \citep{vonneumann1928zur}. Inferring the distribution itself requires observing the actor's
 flagging behavior across multiple epochs to estimate
 $p(\epsilon \mid \text{flags})$. This is strictly harder than
 inverting a known $\epsilon$. The general principle is that fixed,
@@ -277,7 +276,7 @@ $\epsilon_{\max}/[\epsilon_{\min}\,
 \log(\epsilon_{\max}/\epsilon_{\min})]$. For plausible
 operational values $\epsilon_{\min} = 0.01$,
 $\epsilon_{\max} = 0.1$, this factor is approximately
-$4.3$---material but bounded. The parameter $\epsilon_{\min}$
+$4.3$, material but bounded. The parameter $\epsilon_{\min}$
 is thus a first-class policy variable: reducing it extends the
 range of detectable contractions but proportionally expands
 expected detection delay. The Markov-inequality bound
@@ -338,14 +337,14 @@ The log-odds aggregation (Definition~\ref{def:logodds}) requires
 every reporter to calibrate against a shared prior $\pi_0$, and
 the paper notes this requires a coordination protocol. The choice
 of $\pi_0$ is itself a manipulation surface: a reporter who can
-influence $\pi_0$ --- by proposing it, by coordinating on a biased
-value, or by exploiting a protocol weakness --- can tilt the
+influence $\pi_0$ (by proposing it, by coordinating on a biased
+value, or by exploiting a protocol weakness) can tilt the
 aggregation without submitting a false report. This paper does not
 develop a prior-robust solution; the adversarial robustness of
 $\pi_0$ establishment is an open problem that interacts with the
 adversarial parameter exposure pattern above. We note that
-per-agent prior randomization---the natural analog of the
-randomized-$\epsilon$ defense---would break the shared-prior
+per-agent prior randomization, the natural analog of the
+randomized-$\epsilon$ defense, would break the shared-prior
 condition on which the log-odds aggregation's Bayes-optimality
 depends (Definition~\ref{def:logodds}), so prior-robustness likely
 requires re-deriving the aggregation rule under heterogeneous priors
@@ -371,8 +370,8 @@ norm accordingly.
 The dependency-risk analysis (Section~\ref{sec:dependency}) assumes
 cascade fractions $c_i$ measure only within-substrate propagation,
 with cross-substrate cascades outside the scope of the current
-bound. In the motivating threat classes --- memetic attacks,
-financial contagion, supply-chain disruption --- cross-substrate
+bound. In the motivating threat classes (memetic attacks,
+financial contagion, supply-chain disruption), cross-substrate
 propagation is exactly the concerning pathway: a memetic attack on
 silicon agents that triggers panic-driven behavior in biological
 agents through inter-substrate communication channels is precisely a
@@ -395,8 +394,8 @@ this assumption holds and the bounds are model-level guarantees
 under the stated assumptions;
 at nonzero leakage rate, the bounds become approximations whose
 error depends on the magnitude of inter-substrate information flow.
-This does not invalidate the theorems---the proofs are correct for
-the model they assume---but it clarifies the empirical condition
+The theorems remain valid; the proofs are correct for the model
+they assume. What changes at nonzero leakage is the empirical condition
 under which the guarantees are tight: cross-substrate informational
 channels (shared training data, memetic propagation, supply-chain
 coupling) must be small relative to the capability differences that
@@ -426,7 +425,7 @@ The hybrid construction does, however, make the adversary's
 inversion problem harder: the detection trigger is a function of
 SPRT threshold accumulation, which depends on
 $\sigma_{\mathrm{do}}^2$, $\epsilon$, and the observed statistics
-sequence---and the observed sequence is itself a function of both
+sequence; the observed sequence is itself a function of both
 the actor's prior monitoring history and the adversary's current
 strategy. The joint distribution over (time-based budget phase,
 detection-trigger sensitivity) is therefore harder for the adversary

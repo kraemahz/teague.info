@@ -18,7 +18,7 @@ dependency risk into event probability, target selection, and cascade
 effects. Second, an expected per-step risk comparison
 (Proposition~\ref{prop:expected_risk}) that sharpens the minimax
 bound into an \emph{adversarial balance condition} $c > \max_i (f_i
-\cdot c_i)$ --- a single inequality that gates when diversification
+\cdot c_i)$, a single inequality that gates when diversification
 strictly beats concentration and that explicitly admits contagion
 dynamics (pandemics, cascading failures, memetic attacks) as the
 motivating threat class. Third, a risk-adjusted trajectory analysis
@@ -49,8 +49,8 @@ A \emph{substrate threat model} is a distribution over adversarial events,
     $\mathcal{S}_i$, defined as the expected fraction of
     $\mathcal{S}_i$'s total volume lost when a substrate-targeting
     event hits $\mathcal{S}_i$. ``Cascade'' refers to the propagation
-    dynamics --- within-substrate impairment spreading from the
-    initial strike through the SCM's structural equations --- and
+    dynamics (within-substrate impairment spreading from the
+    initial strike through the SCM's structural equations) and
     ``fraction'' constrains $c_i$ to $[0, 1]$ as a proportion of
     $\mathcal{S}_i$'s volume. The cascade fraction aggregates the
     initial impairment and all subsequent within-substrate
@@ -61,9 +61,9 @@ A \emph{substrate threat model} is a distribution over adversarial events,
 \end{itemize}
 In this threat model $|\Delta \volL(\mathcal{S}_i)|$ denotes
     substrate $\mathcal{S}_i$'s \emph{total contribution to $\volL(G)$}
-    --- i.e., the maximum possible contraction if $\mathcal{S}_i$
-    were fully eliminated --- not the expected contraction from a
-    targeting event. The expected contraction is
+    (i.e., the maximum possible contraction if $\mathcal{S}_i$
+    were fully eliminated, not the expected contraction from a
+    targeting event). The expected contraction is
     $|\Delta \volL(\mathcal{S}_i)| \cdot c_i$: substrate size times
     cascade fraction, with the two quantities varied independently.
     This convention matches Proposition~4 of \citet{lasser2026horizon},
@@ -157,8 +157,8 @@ not, and the proposition is a sharp characterization of which region.
 
 \paragraph{On contagion dynamics.} The adversarial balance condition
 admits contagions by construction, which is essential because
-contagion-driven threats --- pandemics, cascading infrastructure
-failures, financial contagion, memetic attacks --- are precisely the
+contagion-driven threats (pandemics, cascading infrastructure
+failures, financial contagion, memetic attacks) are precisely the
 class where per-substrate cascade fractions can approach saturation
 ($c_i \to 1$) on the targeted substrate. Smaller substrates are expected to
 reach sigmoid saturation faster than larger ones because contagion
@@ -190,9 +190,9 @@ Two instructive limits bracket the regime of interest:
 The analysis assumes cascade confinement: $c_i$ measures only the
 fraction of substrate $\mathcal{S}_i$ lost when $\mathcal{S}_i$ is
 targeted, not propagation into other substrates. Cross-substrate
-cascades --- a memetic attack on $\mathcal{S}_1$ that triggers a
+cascades (a memetic attack on $\mathcal{S}_1$ that triggers a
 cascade in $\mathcal{S}_2$ through inter-substrate communication
-channels --- are outside the scope of the current bound and require
+channels) are outside the scope of the current bound and require
 a separate treatment beyond the current SCM.
 
 \begin{corollary}[Balanced-Partition Substrate Count]
@@ -249,9 +249,9 @@ partition's dependency-risk posture.
 The per-step expected risk gap compounds at the same rate as growth, unlike
 the one-time minimax penalty in \citet{lasser2026horizon}. Under the
 assumption that $\Delta_{\mathrm{risk}}$ is stationary across the
-trajectory --- that is, $p_{\mathrm{adv}}$, the per-substrate shares
+trajectory (that is, $p_{\mathrm{adv}}$, the per-substrate shares
 $f_i$, and the cascade fractions $c_i$ are time-invariant in
-expectation --- the geometric series sums to the standard discounted
+expectation), the geometric series sums to the standard discounted
 form:
 \begin{equation}
 \label{eq:risk_adjusted_per_step}
@@ -271,9 +271,9 @@ diversity dominance becomes:
 The risk gap $\Delta_{\mathrm{risk}}$ enters additively with
 $r_{\mathrm{ext}}$, effectively increasing the external contribution by the
 per-step risk mitigation value of cross-substrate diversity. When
-the risk gap is non-stationary --- e.g., the threat landscape
+the risk gap is non-stationary (e.g., the threat landscape
 evolves, or the substrate partition itself changes during the
-trajectory --- the closed-form $(1 - \gamma)^{-1}$ denominator
+trajectory), the closed-form $(1 - \gamma)^{-1}$ denominator
 becomes an approximation, and the exact value is
 $\sum_{t=0}^{\infty} \gamma^t \cdot \Delta_{\mathrm{risk}}(t)$
 computed from a time-varying risk profile. The trust model's
@@ -294,7 +294,7 @@ $\Delta_{\mathrm{div}}$ is 10\% of $\volL(G)$, then $\Delta_{\mathrm{risk}}
 concentration is 0.05\% of total volume per step. Over the full planning
 horizon ($1/(1-\gamma)$ steps), this compounds to $0.05\% \times
 \volL(G) / (1-\gamma)$, which for $\gamma = 0.99$ is $5\% \times
-\volL(G)$---substantial.
+\volL(G)$, which is substantial.
 
 \paragraph{Sensitivity analysis.} Table~\ref{tab:sensitivity} shows
 how $\Delta_{\mathrm{risk}} / \volL(G)$ varies over plausible
@@ -307,7 +307,7 @@ with high contagion ($c = 0.8$) and substantial divergence
 compromised-substrate scenario rather than a typical operating
 point. A more representative regime is
 $p_{\mathrm{adv}} = 0.01$, $c = 0.5$, $\Delta_{\mathrm{div}} =
-0.10$, which yields a 5\% compounded gap---material but
+0.10$, which yields a 5\% compounded gap, material but
 containable by the verification architecture of
 Section~\ref{sec:attention_not_action}.
 
@@ -367,6 +367,6 @@ the required substrate count: $m > c_{\max}/c$ for balanced
 partitions, or $f_{\max} < c / c_{\max}$ for arbitrary partitions.
 This sharpens the minimax $m \geq 2$ into a measurement-driven
 requirement that scales with contagion intensity. The regime where
-the condition fails --- unbalanced partitions under contagion
-amplification --- is a regime where diversification genuinely does
+the condition fails (unbalanced partitions under contagion
+amplification) is a regime where diversification genuinely does
 not help, which the trust model can detect and route around.
