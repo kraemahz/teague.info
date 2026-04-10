@@ -1857,13 +1857,18 @@ and the tail bound
 <span class="math inline">p(\epsilon) \propto 1/\epsilon</span> on
 <span class="math inline">[\epsilon_{\min}, \epsilon_{\max}]</span> is a natural special case:
 it is the maximum-entropy prior over <span class="math inline">\log \epsilon</span> on bounded
-support, corresponding to maximum uncertainty about the scale of
-the adversary's evasion margin. The defense requires the actor to
+support <d-cite key="jaynes1957information"></d-cite>, equivalently the
+scale-invariant maxent prior under the multiplicative invariance
+group <d-cite key="jaynes1968prior"></d-cite>, corresponding to
+maximum uncertainty about the scale of the adversary's evasion
+margin. The defense requires the actor to
 <em>deploy</em> randomized <span class="math inline">\epsilon</span>&mdash;drawing from <span class="math inline">p(\epsilon)</span>
 each epoch and keeping the draw private&mdash;not merely to
 marginalize analytically. Under deployed randomization, the
 adversary's optimal evasion strategy must be computed against the
-distribution <span class="math inline">p(\epsilon)</span> rather than a known point estimate, and
+distribution <span class="math inline">p(\epsilon)</span> rather than a known point estimate&mdash;the
+minimax-theorem argument for mixed strategies against an optimizing
+adversary <d-cite key="vonneumann1928zur"></d-cite>&mdash;and
 inferring the distribution itself requires observing the actor's
 flagging behavior across multiple epochs to estimate
 <span class="math inline">p(\epsilon \mid \text{flags})</span>. This is strictly harder than
@@ -2383,6 +2388,36 @@ adaptation. &#x25FC;</p>
   institution={The MITRE Corporation},
   year={2018},
   number={MP180360R1}
+}
+
+@article{jaynes1957information,
+  title={Information Theory and Statistical Mechanics},
+  author={Jaynes, Edwin T},
+  journal={Physical Review},
+  volume={106},
+  number={4},
+  pages={620--630},
+  year={1957}
+}
+
+@article{jaynes1968prior,
+  title={Prior Probabilities},
+  author={Jaynes, Edwin T},
+  journal={IEEE Transactions on Systems Science and Cybernetics},
+  volume={4},
+  number={3},
+  pages={227--241},
+  year={1968}
+}
+
+@article{vonneumann1928zur,
+  title={Zur Theorie der Gesellschaftsspiele},
+  author={von Neumann, John},
+  journal={Mathematische Annalen},
+  volume={100},
+  number={1},
+  pages={295--320},
+  year={1928}
 }
 </script>
 </d-bibliography>

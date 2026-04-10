@@ -220,13 +220,18 @@ $T$ grows. A log-uniform prior
 $p(\epsilon) \propto 1/\epsilon$ on
 $[\epsilon_{\min}, \epsilon_{\max}]$ is a natural special case:
 it is the maximum-entropy prior over $\log \epsilon$ on bounded
-support, corresponding to maximum uncertainty about the scale of
-the adversary's evasion margin. The defense requires the actor to
+support \citep{jaynes1957information}, equivalently the
+scale-invariant maxent prior under the multiplicative
+invariance group \citep{jaynes1968prior}, corresponding to
+maximum uncertainty about the scale of the adversary's evasion
+margin. The defense requires the actor to
 \emph{deploy} randomized $\epsilon$---drawing from $p(\epsilon)$
 each epoch and keeping the draw private---not merely to
 marginalize analytically. Under deployed randomization, the
 adversary's optimal evasion strategy must be computed against the
-distribution $p(\epsilon)$ rather than a known point estimate, and
+distribution $p(\epsilon)$ rather than a known point estimate---the
+minimax-theorem argument for mixed strategies against an optimizing
+adversary \citep{vonneumann1928zur}---and
 inferring the distribution itself requires observing the actor's
 flagging behavior across multiple epochs to estimate
 $p(\epsilon \mid \text{flags})$. This is strictly harder than
