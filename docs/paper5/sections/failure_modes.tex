@@ -1,0 +1,35 @@
+\section{Alignment Failure Modes and the Verification Prerequisite}
+\label{sec:failure_modes}
+
+% This section absorbs the literature-review work from the original
+% Paper 5 scope (now Paper 6 notes). It maps classical alignment failure
+% modes onto GFM and identifies which layer each belongs to.
+
+% Structure:
+% §2.1 Specification failures (Goodhart, perverse instantiation, power-seeking)
+%   - These are objective-design problems. No evaluator, however exogenous,
+%     fixes a badly specified objective.
+%   - GFM addresses these with vol_P (the objective) and the anti-monopolar
+%     property (structural pressure against power concentration).
+%
+% §2.2 Generalization failures (mesa-optimization, goal misgeneralization)
+%   - These are training/learning problems. The agent internalizes the
+%     wrong objective despite correct external evaluation.
+%   - GFM has nothing distinctive to say about mesa-optimization (it is
+%     an objective, not an architecture). This is honestly acknowledged.
+%
+% §2.3 Verification failures (wireheading, self-assessment gaming,
+%       deceptive alignment, reward-model exploitation)
+%   - These are the target of this paper.
+%   - GFM encounters this through the capability-self-assertion gradient
+%     discovered operationally in the harness.
+%
+% §2.4 The prerequisite argument
+%   - Verification does not cause all failures, but it must hold for
+%     solutions to the other layers to bind.
+%   - "A perfectly specified, perfectly generalized agent that can game
+%     its evaluator is still dangerous."
+
+% TODO: write the section. Use paper6/notes.md for the detailed
+% failure-mode analysis. Keep each subsection to ~1 page; the point is
+% to motivate the construction, not to exhaustively survey the literature.

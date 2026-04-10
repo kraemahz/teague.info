@@ -1,0 +1,35 @@
+\section{The Verification Asymmetry}
+\label{sec:asymmetry}
+
+% Core formal contribution #1: define the verification asymmetry precisely.
+
+% §3.1 Write-access formalization
+%   Definition: An evaluation function E is endogenous to agent a if a's
+%   action space A includes actions that modify E's inputs.
+%   Definition: E is exogenous to a if no action in A modifies E's inputs.
+%   The verification asymmetry is the gap between the agent's action space
+%   and the evaluator's input space.
+
+% §3.2 Capability scaling
+%   As capability grows, the agent's action space expands, and more of the
+%   evaluator's inputs become reachable. The asymmetry grows with capability.
+%   Formalize: let R(a) ⊆ I(E) be the set of evaluator inputs reachable
+%   by agent a. The verification asymmetry is |R(a)| / |I(E)|.
+%   For a maximally capable agent, R(a) = I(E) and verification collapses.
+
+% §3.3 Substrate exclusivity as the structural barrier
+%   The only structural limit on R(a) is substrate exclusivity: the agent
+%   cannot write to observation channels rooted in substrates it does not
+%   occupy. This is not a capability limitation (the agent may be
+%   arbitrarily capable within its substrate); it is a physical constraint
+%   on cross-substrate write access.
+%   Connect to Paper 3's substrate partition and Paper 4's multi-channel
+%   attribution.
+
+% §3.4 How existing frameworks encounter the asymmetry
+%   Brief treatment of RLHF, Constitutional AI, debate/amplification, GFM.
+%   Each has the same structural form: the evaluator's computation is
+%   reachable from the agent's action space. The differences are in which
+%   inputs are reachable and how quickly the asymmetry grows.
+
+% TODO: write formal definitions and propositions.

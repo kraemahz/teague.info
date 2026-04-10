@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage[preprint, nonatbib]{neurips_2023}
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Exogenous Verification for Alignment: Cryptographic Commitments on Substrate-Exclusive Channels},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Alignment},
+  pdfkeywords={alignment, verification, cryptographic commitments, substrate exclusivity, capability verification, zero-knowledge proofs, goal-frontier maximization},
+}
+\usepackage{url}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{xcolor}
+
+% Theorem-style environments
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}[proposition]
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Operators and shortcuts — inherit Papers 0--4 notation
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\iw}{iw}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\dc}{\downarrow}
+
+% Inherited from Papers 3--4
+\newcommand{\Vdisc}{V_\gamma}
+\newcommand{\Risk}{\mathcal{R}}
+\newcommand{\WorldModel}{\mathcal{W}}
+\newcommand{\CausalAttr}{\mathrm{CA}}
+\newcommand{\SCM}{\mathcal{M}}
+\newcommand{\Trisk}{{T^{\mathrm{risk}}}}
+
+% New for Paper 5
+\newcommand{\Commit}{\mathrm{Com}}           % commitment scheme
+\newcommand{\Witness}{\mathcal{W}^{\perp}}   % substrate-exclusive witness
+\newcommand{\Verify}{\mathrm{Ver}}           % verification protocol
+\newcommand{\Ledger}{\mathcal{L}}            % append-only ledger
+\newcommand{\ExoEval}{\mathrm{Exo}}          % exogenous evaluator
+
+\title{Exogenous Verification for Alignment: Cryptographic Commitments\\
+on Substrate-Exclusive Channels}
+
+\author{
+  Teague Lasser \\
+  \texttt{teague@subseq.io}
+  \and
+  Claude Opus 4.6 \\
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Introduction: The Verification Layer ---
+\input{sections/introduction}
+
+% --- Alignment Failure Modes and the Verification Prerequisite ---
+\input{sections/failure_modes}
+
+% --- The Verification Asymmetry ---
+\input{sections/asymmetry}
+
+% --- Substrate-Exclusive Witnesses ---
+\input{sections/witnesses}
+
+% --- Cryptographic Commitment Protocol ---
+\input{sections/commitment}
+
+% --- Ledger Architecture ---
+\input{sections/ledger}
+
+% --- Integration with GFM Machinery ---
+\input{sections/integration}
+
+% --- Discussion ---
+\input{sections/discussion}
+
+% --- Conclusion ---
+\input{sections/conclusion}
+
+% --- Author Contributions ---
+\input{sections/contributions}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\newpage
+\appendix
+\input{appendices/proofs}
+
+\end{document}

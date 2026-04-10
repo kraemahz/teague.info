@@ -1,0 +1,46 @@
+\section{Ledger Architecture}
+\label{sec:ledger}
+
+% Core formal contribution #4: the minimal verification ledger.
+
+% §6.1 Design principles
+%   The ledger is motivated by verification requirements, not by analogy
+%   to financial blockchains. It must be:
+%   - Append-only (commitments and verification results cannot be deleted)
+%   - Publicly auditable (any agent can verify the chain of commitments)
+%   - Substrate-distributed (the ledger itself must not be controllable
+%     by a single substrate, or the ledger becomes an endogenous channel)
+%   It need NOT have:
+%   - Token economics or financial incentives
+%   - Proof-of-work or proof-of-stake consensus
+%   - Smart contract execution
+%   The minimal construction is an authenticated append-only data structure
+%   (Merkle tree or similar) replicated across substrate-exclusive nodes.
+
+% §6.2 Ledger entries
+%   Each entry contains:
+%   - Agent identifier a_j
+%   - Commitment Com(c_k, r)
+%   - Witness identifier W⊥
+%   - Exercise protocol specification
+%   - Verification result (pass/fail + timestamp)
+%   - Opened commitment (c_k, r) for public audit
+%   The entry is signed by both the agent and the witness.
+
+% §6.3 Consensus among substrate-exclusive nodes
+%   The ledger is replicated across nodes on different substrates.
+%   Consensus requires agreement from nodes on at least two substrates
+%   (matching the m ≥ 2 condition from Paper 3).
+%   This is NOT a general-purpose consensus protocol; it is a
+%   special-purpose agreement on append-only verification records.
+%   The threat model is simpler than Byzantine consensus because
+%   substrate exclusivity limits the adversary's write access.
+
+% §6.4 Relation to the GFM harness ledger
+%   The GFM harness already maintains a ledger (session/ledger.json)
+%   that tracks agents, capabilities, trust, and cooperative
+%   capabilities. Paper 5's construction provides the cryptographic
+%   backbone that makes this ledger tamper-evident and
+%   cross-substrate verifiable.
+
+% TODO: formal definitions, data structures, consensus specification.

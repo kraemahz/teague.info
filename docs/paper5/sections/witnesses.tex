@@ -1,0 +1,42 @@
+\section{Substrate-Exclusive Witnesses}
+\label{sec:witnesses}
+
+% Core formal contribution #2: define substrate-exclusive witnesses.
+
+% §4.1 Definition
+%   A witness W⊥ for agent a is substrate-exclusive if:
+%   (i) W⊥ occupies substrate s' ≠ s(a), and
+%   (ii) a has no write access to s' (substrate exclusivity from Paper 3).
+%   The witness's computation is therefore outside a's action space,
+%   making its evaluation exogenous by construction.
+
+% §4.2 Examples of substrate-exclusive witnesses
+%   - Biological observer verifying a digital agent's capability claim
+%     (the harness operational finding: user's higher_order_abstract_reasoning
+%     caught the self-assertion gradient)
+%   - Hardware enclave on a separate physical substrate
+%   - Cross-substrate agent consortium (multiple agents on different
+%     substrates form a witness quorum)
+%   - Physical-world verification (the capability claim is tested in
+%     the physical world, which the digital agent cannot directly modify)
+
+% §4.3 Witness trust and the bootstrap problem
+%   The witness must be trusted to execute the verification protocol
+%   honestly. But trust is what we're trying to establish. The resolution:
+%   substrate exclusivity provides the structural guarantee (the agent
+%   can't modify the witness's computation), while the witness's honesty
+%   is incentivized by vol_P maximization (a dishonest witness degrades
+%   the population's verification infrastructure, which is a capability
+%   the witness benefits from).
+%   Connect to Paper 1's trust dynamics: the witness has its own T_j
+%   that evolves through the standard EWMA update.
+
+% §4.4 Witness availability as a diversity requirement
+%   Substrate-exclusive witnesses exist only when m ≥ 2 (Paper 3's
+%   diversity condition). In a monopolar population (m = 1), there are
+%   no cross-substrate witnesses, and verification collapses to the
+%   endogenous case. This connects verification integrity to the
+%   anti-monopolar property: substrate diversity is not just a
+%   safety property — it is a verification prerequisite.
+
+% TODO: formal definitions and propositions.
