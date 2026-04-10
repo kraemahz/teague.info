@@ -301,6 +301,15 @@ how $\Delta_{\mathrm{risk}} / \volL(G)$ varies over plausible
 parameter ranges. The per-step risk gap scales linearly with
 $p_{\mathrm{adv}}$ and $c$, and the compounded effect over the
 planning horizon is $\Delta_{\mathrm{risk}} / (1 - \gamma)$.
+The 80\% upper-bound entry corresponds to a 5\% adversarial rate
+with high contagion ($c = 0.8$) and substantial divergence
+($\Delta_{\mathrm{div}} = 0.20$), representing a
+compromised-substrate scenario rather than a typical operating
+point. A more representative regime is
+$p_{\mathrm{adv}} = 0.01$, $c = 0.5$, $\Delta_{\mathrm{div}} =
+0.10$, which yields a 5\% compounded gap---material but
+containable by the verification architecture of
+Section~\ref{sec:attention_not_action}.
 
 \begin{table}[h]
 \centering
