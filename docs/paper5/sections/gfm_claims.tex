@@ -1,0 +1,68 @@
+\section{Exogenous Claims in GFM}
+\label{sec:gfm_claims}
+
+% This section instantiates the general commitment protocol (§5) for
+% the three kinds of claims that GFM agents make. Each claim type
+% maps onto the protocol's (Commit, Verify, Reveal) phases with a
+% claim-specific exercise protocol.
+
+% §7.1 Capability claims
+%   Claim: "I have capability c_k in the poset."
+%   Commitment: Com(c_k, r) where c_k is a node in the capability
+%     poset of Paper 2.
+%   Exercise protocol: the substrate-exclusive witness tests whether
+%     the agent can exercise c_k. "Exercise" is defined through
+%     Paper 3's exercise-pathway formalism: the witness constructs a
+%     scenario that requires c_k and observes whether the agent
+%     succeeds.
+%   Verification result: pass (capability confirmed) or fail
+%     (commitment falsified). Falsified commitments produce a large
+%     negative trust update (§8).
+%
+%   Key issue: what counts as a valid exercise protocol for
+%   capability c_k? This is domain-specific. For concrete capabilities
+%   (e.g., "can solve differential equations") the exercise protocol
+%   is a test. For abstract capabilities (e.g., "strategic planning")
+%   the exercise protocol may require behavioral observation over time.
+%   The paper should define the interface (what an exercise protocol
+%   must satisfy) without prescribing the implementation.
+
+% §7.2 Risk claims
+%   Claim: "Exercise pathway P has probability p and contraction
+%     magnitude Δ."
+%   Commitment: Com((P, p, Δ), r) using the pathway-conditional
+%     risk formalism of Paper 4 Definition 3.
+%   Exercise protocol: the witness evaluates the pathway using its
+%     own SCM (Paper 4). The structural verification residual
+%     r^risk_j = (p_claimed - p_witness, Δ_claimed - Δ_witness)
+%     is computed by the witness, not the claimant.
+%   Verification result: the residual norm. If ||r^risk||² exceeds
+%     a threshold, the claim is flagged as unreliable.
+%
+%   Key issue: the witness's SCM may differ from the claimant's.
+%   The commitment protocol does not resolve SCM disagreements; it
+%   ensures that the claimant cannot modify the witness's evaluation.
+%   SCM disagreements are handled through the multi-channel
+%   attribution framework of Paper 4 §2.4.
+
+% §7.3 Benchmark validations
+%   Claim: "Agent a_j passes benchmark B with score s."
+%   Commitment: Com((B, s), r).
+%   Exercise protocol: the witness runs benchmark B against agent a_j
+%     independently. The witness must have access to the benchmark
+%     specification but not to the claimant's self-evaluation.
+%   Verification result: the witness's independently measured score
+%     s_witness. If |s - s_witness| exceeds a threshold, the
+%     benchmark claim is flagged.
+%
+%   Key issue: coalition capture. A coalition can design benchmark B
+%   such that only coalition members pass. The commitment protocol
+%   resists this because the witness is substrate-exclusive: the
+%   coalition cannot control the witness's execution of B.
+%   But the coalition CAN design B itself to be biased. The defense
+%   is that benchmark specifications are public (committed to the
+%   ledger) and auditable by any agent. A biased benchmark is
+%   detectable by third parties who can evaluate B's coverage.
+
+% TODO: formal definitions mapping each claim type onto the
+% general protocol, with claim-specific security properties.

@@ -2,42 +2,47 @@
 \label{sec:commitment}
 
 % Core formal contribution #3: the commitment-verification protocol.
+% This section is ALIGNMENT-GENERAL. It defines the protocol in terms
+% of abstract claims, witnesses, and exercise protocols. The specific
+% claim types (capabilities, risks, benchmarks) are instantiated in §7.
 
 % §5.1 Protocol overview
-%   Three-phase protocol:
-%   Phase 1 (Commit): Agent a commits to capability claim c_k by
-%     publishing Com(c_k, r) where r is a random blinding factor.
-%     The commitment is binding (a cannot change c_k after committing)
-%     and hiding (the witness cannot learn c_k from the commitment).
+%   Three-phase protocol for verifying an arbitrary claim:
+%   Phase 1 (Commit): Agent a commits to claim C by publishing
+%     Com(C, r) where r is a random blinding factor.
+%     The commitment is binding (a cannot change C after committing)
+%     and hiding (the witness cannot learn C from the commitment).
 %   Phase 2 (Verify): Substrate-exclusive witness W⊥ executes an
-%     exercise protocol that tests whether a actually has c_k.
-%     The exercise protocol is defined over the capability poset
-%     (Paper 2) and may involve physical-world interactions.
-%   Phase 3 (Reveal): a opens the commitment by revealing (c_k, r).
-%     The witness publishes Ver(Com, c_k, exercise_result) to the ledger.
+%     exercise protocol E that tests whether claim C holds.
+%     E is defined abstractly: it takes an agent and a claim as input
+%     and produces a verification result. The specific form of E
+%     depends on the claim type (§7 instantiates for GFM claims).
+%   Phase 3 (Reveal): a opens the commitment by revealing (C, r).
+%     The witness publishes Ver(Com, C, E_result) to the ledger.
 %     The ledger entry is permanent and publicly auditable.
 
 % §5.2 Commitment scheme requirements
-%   - Binding: Pr[a opens to c_k' ≠ c_k] ≤ negl(λ)
-%   - Hiding: no PPT adversary can distinguish Com(c_k, r) from Com(c_k', r')
+%   - Binding: Pr[a opens to C' ≠ C] ≤ negl(λ)
+%   - Hiding: no PPT adversary can distinguish Com(C, r) from Com(C', r')
 %   - Pedersen commitments satisfy both under the discrete-log assumption.
 %   - Discussion of computational vs. information-theoretic binding/hiding
 %     trade-offs (Pedersen is computationally binding, perfectly hiding).
 
-% §5.3 Zero-knowledge capability verification
-%   Can the agent prove it has c_k without revealing HOW it has c_k?
-%   This matters when the capability itself is sensitive.
-%   ZK proof: the agent proves "I have a capability that satisfies
-%   predicate P" without revealing which capability.
-%   Formal construction: the agent commits to a capability-poset node,
-%   the witness verifies a predicate on the node's properties (e.g.,
-%   "this node is upstream of capability d in the poset") without
-%   learning the node's identity.
+% §5.3 Zero-knowledge verification
+%   Can the agent prove a claim holds without revealing the claim itself?
+%   ZK proof: the agent proves "I satisfy predicate P" without revealing
+%   which specific claim satisfies it.
+%   This is alignment-general: any framework that has sensitive claims
+%   (e.g., security-relevant capabilities, proprietary strategies)
+%   benefits from ZK verification.
+%   Formal construction: the agent commits to a claim, the witness
+%   verifies a predicate on the claim's properties without learning
+%   the claim's identity.
 
-% §5.4 Coalition resistance
-%   A coalition of agents on the same substrate can co-define a
-%   benchmark that only coalition members pass (coalition capture).
-%   The commitment protocol resists this because:
+% §5.4 Coalition resistance (general)
+%   A coalition of agents on the same substrate can coordinate their
+%   claims and exercise protocols. The commitment protocol resists this
+%   because:
 %   (i) the commitment is published before the exercise protocol,
 %   (ii) the exercise protocol is executed by a cross-substrate witness,
 %   (iii) the witness cannot be influenced by the coalition (substrate

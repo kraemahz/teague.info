@@ -1,47 +1,62 @@
 \section{Integration with GFM Machinery}
 \label{sec:integration}
 
-% §7.1 Closing the observation-channel integrity assumption
-%   Paper 4's multi-channel attribution (§2.4) assumes channels are
-%   independently informative. Paper 5 provides the construction that
-%   enforces this: each channel's verification is rooted in a substrate
-%   the claimant cannot modify. Without this, a scorpion that controls
-%   multiple channels can correlate them, breaking the independence
-%   assumption that the log-odds aggregation depends on.
+% This section connects the exogenous claims of §7 to the existing
+% GFM machinery of Papers 1--4. It shows how committed claims improve
+% the fidelity of existing mechanisms.
 
-% §7.2 Committed baselines for SPRT detection
+% §8.1 Closing the observation-channel integrity assumption
+%   Paper 4's multi-channel attribution (§2.4) assumes channels are
+%   independently informative. §7's committed claims provide the
+%   construction that enforces this: each channel's verification is
+%   rooted in a substrate the claimant cannot modify. Without this,
+%   a scorpion that controls multiple channels can correlate them,
+%   breaking the independence assumption that log-odds aggregation
+%   depends on.
+
+% §8.2 Committed baselines for SPRT detection
 %   Paper 4's SPRT scorpion detection compares behavioral observations
 %   against a baseline. Currently, the baseline is the actor's own
 %   estimate of the agent's expected behavior. With committed capability
-%   claims, the baseline can be derived from the committed claim itself:
-%   "agent a_j committed to capability c_k; its observed behavior should
-%   be consistent with having c_k." This converts the SPRT from a
-%   correlational detector (is behavior consistent with the actor's
-%   model?) to a commitment-based detector (is behavior consistent with
-%   the agent's own committed claim?). The detection fidelity improves
-%   because the baseline is exogenous to the actor's model uncertainty.
+%   claims (§7.1), the baseline derives from the agent's own committed
+%   claim: "agent a_j committed to capability c_k; its observed
+%   behavior should be consistent with having c_k." This converts the
+%   SPRT from a correlational detector (is behavior consistent with
+%   the actor's model?) to a commitment-based detector (is behavior
+%   consistent with the agent's own committed claim?). Detection
+%   fidelity improves because the baseline is exogenous to the actor's
+%   model uncertainty.
 
-% §7.3 Trust dynamics with verified capabilities
+% §8.3 Trust dynamics with verified claims
 %   Paper 1's trust EWMA T_j updates from prediction residuals.
-%   When capability claims are verified through the commitment protocol,
-%   the prediction baseline is anchored to the committed claim rather
-%   than the actor's prior. This sharpens the trust update:
-%   - Verified capabilities reduce prior uncertainty, lowering the
+%   Committed and verified claims (§7) anchor the prediction baseline:
+%   - Verified claims reduce prior uncertainty, lowering the
 %     initial-period trust noise.
-%   - Falsified commitments (agent committed to c_k but verification
+%   - Falsified commitments (agent committed to C but verification
 %     failed) produce a large negative trust update, accelerating
 %     scorpion detection.
+%   - Risk claims verified by cross-substrate witnesses (§7.2) sharpen
+%     T^risk_j by replacing endogenous residuals with exogenous ones.
 
-% §7.4 The anti-monopolar connection
-%   Substrate-exclusive witnesses require m ≥ 2. In a monopolar
-%   population (m = 1), there are no cross-substrate witnesses and
-%   verification collapses. This gives the anti-monopolar property
-%   a second structural justification: substrate diversity is not
-%   just a safety property (Paper 3) but a verification prerequisite.
-%   The two arguments reinforce each other: Paper 3 shows monopolar
-%   populations are anti-maximizing; Paper 5 shows they are also
-%   unverifiable. A population that becomes monopolar loses both
-%   the safety guarantee and the ability to check whether it has.
+% §8.4 The anti-monopolar verification theorem
+%   Substrate-exclusive witnesses require m ≥ 2 (Paper 3's diversity
+%   condition). In a monopolar population (m = 1), there are no
+%   cross-substrate witnesses and verification collapses to the
+%   endogenous case. This gives the anti-monopolar property a second
+%   structural justification:
+%   - Paper 3: monopolar populations are anti-maximizing (vol_P
+%     argument).
+%   - Paper 5: monopolar populations are unverifiable (no substrate-
+%     exclusive witnesses exist).
+%   A population that becomes monopolar loses both the safety guarantee
+%   and the ability to check whether it has lost it.
+%
+%   Formal statement: "If m = 1, then for every agent a and every
+%   claim C, Witness(a, C) = ∅ (no substrate-exclusive witness exists),
+%   and all verification is endogenous."
+%   This is a corollary of the witness definition (§4) and the
+%   substrate partition (Paper 3).
 
-% TODO: formal propositions connecting commitment protocol to
-% existing GFM machinery.
+% TODO: formal propositions connecting each integration point to
+% existing GFM machinery. The anti-monopolar verification theorem
+% is likely the strongest standalone result in the paper.
