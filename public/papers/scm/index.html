@@ -1591,7 +1591,15 @@ horizon (<span class="math inline">1/(1-\gamma)</span> steps), this compounds to
 how <span class="math inline">\Delta_{\mathrm{risk}} / \mathop{\mathrm{vol}}_{\mathrm{P}}(G)</span> varies over plausible
 parameter ranges. The per-step risk gap scales linearly with
 <span class="math inline">p_{\mathrm{adv}}</span> and <span class="math inline">c</span>, and the compounded effect over the
-planning horizon is <span class="math inline">\Delta_{\mathrm{risk}} / (1 - \gamma)</span>.</p>
+planning horizon is <span class="math inline">\Delta_{\mathrm{risk}} / (1 - \gamma)</span>.
+The 80% upper-bound entry corresponds to a 5% adversarial rate
+with high contagion (<span class="math inline">c = 0.8</span>) and substantial divergence
+(<span class="math inline">\Delta_{\mathrm{div}} = 0.20</span>), representing a
+compromised-substrate scenario rather than a typical operating
+point. A more representative regime is
+<span class="math inline">p_{\mathrm{adv}} = 0.01</span>, <span class="math inline">c = 0.5</span>, <span class="math inline">\Delta_{\mathrm{div}} = 0.10</span>,
+which yields a 5% compounded gap&mdash;material but
+containable by the verification architecture.</p>
 
 <table>
 <thead>
@@ -1770,7 +1778,23 @@ signals orthogonality failure, and the SCM-confidence scalar
 <span class="math inline">c_{\mathcal{M}}(t)</span> should down-weight the causal channel accordingly.
 The multi-channel aggregate then shifts weight toward capability
 gating and behavioral channels, which do not depend on exogenous
-orthogonality. Characterizing the populations and environments in
+orthogonality. Importantly, orthogonality failure is <em>detectable</em> rather
+than silent. The residual covariance term
+<span class="math inline">\mathrm{Cov}(\mathrm{CA}(a_j), \mathrm{CA}(a_k) \mid G_t)</span> is an
+estimable quantity: it can be estimated from repeated observations
+at similar capability-graph states, using the same attribution data
+the actor already collects for the SPRT detector. When the estimated
+covariance exceeds the level predicted under exogenous orthogonality,
+the assumption has failed and the failure is empirically visible.
+This turns the most fragile of the three structural assumptions into
+the most monitorable one&mdash;a better epistemic position than
+&ldquo;fragile but unobservable.&rdquo; The natural integration point is
+the SCM-confidence scalar <span class="math inline">c_{\mathcal{M}}(t)</span> described above:
+elevated residual covariance is a direct input to
+<span class="math inline">c_{\mathcal{M}}</span> updating, triggering the multi-channel aggregate
+to down-weight the causal channel before the degraded variance
+reduction produces misleading detection results.
+Characterizing the populations and environments in
 which exogenous orthogonality approximately holds &mdash; and deriving
 a partial-independence correction for the variance reduction when
 it does not &mdash; is an open problem.</p>
@@ -1806,13 +1830,48 @@ contractions and observing flag rates &mdash; will calibrate
 permanently. The evasion-bandwidth bound's &ldquo;undetected contraction
 rate bounded by <span class="math inline">|\mu_j|</span>&rdquo; is only informative if <span class="math inline">|\mu_j|</span> is
 bounded by something other than the design parameter itself.
-Defense directions include randomized <span class="math inline">\epsilon</span> (the actor varies
-its design parameter unpredictably across epochs), adaptive
-<span class="math inline">\epsilon</span> (tighten in regimes where cautious adversaries are
-suspected from auxiliary behavioral signals), and Bayesian
-<span class="math inline">\epsilon</span> (treat as a nuisance parameter and marginalize). None
-are developed here; the current treatment characterizes the
-adversary's trade-off under a fixed, known <span class="math inline">\epsilon</span>.</p>
+The defense direction is to treat <span class="math inline">\epsilon</span> as a nuisance
+parameter with an informative prior <span class="math inline">p(\epsilon)</span> encoding the
+actor's belief about the adversary's calibration capability, and
+to marginalize. Because the evasion-bandwidth bound
+<span class="math inline">\tau_{\mathrm{adapt}}(\epsilon) = O\!\left(\sigma_{\mathrm{do}}^2 / [\epsilon(|\mu_j| - \epsilon/2)]\right)</span>
+is highly nonlinear in <span class="math inline">\epsilon</span>&mdash;small-<span class="math inline">\epsilon</span> draws produce
+very long detection times&mdash;the marginalized bound</p>
+
+<span class="math display">
+\mathbb{E}_{p}[\tau_{\mathrm{adapt}}(\epsilon)]
+= \int_{\epsilon_{\min}}^{\epsilon_{\max}}
+\frac{\sigma_{\mathrm{do}}^2}{\epsilon\,(|\mu_j| - \epsilon/2)}\,
+p(\epsilon)\,d\epsilon
+</span>
+
+<p>is finite for any prior supported on
+<span class="math inline">[\epsilon_{\min}, \epsilon_{\max}]</span> with
+<span class="math inline">0 < \epsilon_{\min}</span> and <span class="math inline">\epsilon_{\max} < 2|\mu_j|</span>
+(the detection regime where the SPRT drift is positive),
+and the tail bound
+<span class="math inline">\Pr_{p}(\tau_{\mathrm{adapt}} > T)</span> is the prior mass on the
+<span class="math inline">\epsilon</span>-region where
+<span class="math inline">\tau_{\mathrm{adapt}}(\epsilon) > T</span>&mdash;a set that shrinks as
+<span class="math inline">T</span> grows. A log-uniform prior
+<span class="math inline">p(\epsilon) \propto 1/\epsilon</span> on
+<span class="math inline">[\epsilon_{\min}, \epsilon_{\max}]</span> is a natural special case:
+it is the maximum-entropy prior over <span class="math inline">\log \epsilon</span> on bounded
+support, corresponding to maximum uncertainty about the scale of
+the adversary's evasion margin. The defense requires the actor to
+<em>deploy</em> randomized <span class="math inline">\epsilon</span>&mdash;drawing from <span class="math inline">p(\epsilon)</span>
+each epoch and keeping the draw private&mdash;not merely to
+marginalize analytically. Under deployed randomization, the
+adversary's optimal evasion strategy must be computed against the
+distribution <span class="math inline">p(\epsilon)</span> rather than a known point estimate, and
+inferring the distribution itself requires observing the actor's
+flagging behavior across multiple epochs to estimate
+<span class="math inline">p(\epsilon \mid \text{flags})</span>. This is strictly harder than
+inverting a known <span class="math inline">\epsilon</span>. The general principle is that fixed,
+known parameters are the exploit surface; replacing a point
+<span class="math inline">\epsilon</span> with a privately-drawn <span class="math inline">p(\epsilon)</span> is one instance of
+the randomization-family defense that applies to all three
+adversarial surfaces identified above.</p>
 
 <p><em><span class="math inline">T_j</span> / <span class="math inline">T^{\mathrm{risk}}_j</span> independence</em>
 (<a href="#sec:risk_trust">Section 3</a>). The behavioral trust <span class="math inline">T_j</span> and
@@ -1823,12 +1882,33 @@ the independence: operating as a known-unreliable capability
 reporter (low <span class="math inline">T_j</span>) while generating structurally plausible risk
 claims that accumulate high <span class="math inline">T^{\mathrm{risk}}_j</span>, thereby driving the
 verification-gate queue despite a poor behavioral track record. A
-coupling floor <span class="math inline">T^{\mathrm{risk}}_j \leq f(T_j)</span> for some monotone <span class="math inline">f</span> would
-cap risk-claim influence at a level commensurate with behavioral
-reliability, at the cost of penalizing honest specialists. The
-design choice between full decoupling and a coupled floor is a
-robustness-versus-fairness trade-off that the current paper
-identifies but does not resolve.</p>
+two-sided clamp on risk-trust addresses both failure modes:</p>
+
+<span class="math display">
+T^{\mathrm{risk}}_{\min} \;\leq\; T^{\mathrm{risk}}_j \;\leq\; \max\bigl(f(T_j),\; T^{\mathrm{risk}}_{\min}\bigr)
+</span>
+
+<p>for some monotone <span class="math inline">f</span> and a design parameter
+<span class="math inline">T^{\mathrm{risk}}_{\min} > 0</span>. The lower bound is the floor:
+after each EWMA update the realized <span class="math inline">T^{\mathrm{risk}}_j</span> is clipped from
+below at <span class="math inline">T^{\mathrm{risk}}_{\min}</span>, so neither an adversary
+driving <span class="math inline">T_j</span> toward zero nor a run of correlated environmental
+noise on an honest agent can push risk-trust below the floor,
+preventing self-reinforcing exclusion. The upper bound is the
+coupling cap: when behavioral trust is high enough that
+<span class="math inline">f(T_j) \geq T^{\mathrm{risk}}_{\min}</span>, the cap limits how far
+risk-trust can exceed the behaviorally-warranted level, closing
+the low-<span class="math inline">T_j</span> exploit. This is structurally analogous to the
+adversarial-balance condition
+<span class="math inline">c > \max_i(f_i \cdot c_i)</span> of the dependency-risk section: a
+structural constraint that weakens both failure modes without
+claiming to resolve either tightly. The parameter
+<span class="math inline">T^{\mathrm{risk}}_{\min}</span> itself carries a trade-off: too large
+re-admits the low-<span class="math inline">T_j</span> exploit (the cap lifts so far that
+risk-trust can remain high despite poor behavioral trust); too
+small approaches the unbounded case. The two-sided form does not
+eliminate the robustness-versus-fairness tension; it bounds its
+worst-case expression on both sides.</p>
 
 <p>The unifying theme is that fixed, observable parameters of the
 defense create an adversarial surface. The structural defense
@@ -1847,7 +1927,13 @@ value, or by exploiting a protocol weakness &mdash; can tilt the
 aggregation without submitting a false report. This paper does not
 develop a prior-robust solution; the adversarial robustness of
 <span class="math inline">\pi_0</span> establishment is an open problem that interacts with the
-adversarial parameter exposure pattern above.</p>
+adversarial parameter exposure pattern above. We note that
+per-agent prior randomization&mdash;the natural analog of the
+randomized-<span class="math inline">\epsilon</span> defense&mdash;would break the shared-prior
+condition on which the log-odds aggregation's Bayes-optimality
+depends, so prior-robustness likely requires re-deriving the
+aggregation rule under heterogeneous priors rather than perturbing
+<span class="math inline">\pi_0</span>.</p>
 
 <p><strong>Structural verification residual norm weights.</strong>
 The structural verification residual
@@ -1878,8 +1964,30 @@ cross-substrate cascade, and the adversarial balance condition does
 not cover it. Modeling cross-substrate cascade propagation requires
 extending the SCM's structural equations to include inter-substrate
 edges, which produces a coupled cascade model whose analysis is
-substantially more complex than the within-substrate case. This
-extension is identified as an open problem.</p>
+substantially more complex than the within-substrate case.</p>
+
+<p>This gap is also a coupling point with the structural diversification
+guarantees developed elsewhere in the framework.
+Lasser (2026, Paper 3) establishes the minimax result that
+<span class="math inline">m \geq 2</span> substrate types strictly dominate <span class="math inline">m = 1</span>;
+the Balanced-Partition Substrate Count corollary of the present paper sharpens this to
+<span class="math inline">m > c_{\max}/c</span> under the contagion model of
+the dependency-risk section. Both results assume that
+substrate-exclusive capabilities do not propagate across the
+partition boundary. In the limit of zero cross-substrate leakage
+this assumption holds and the bounds are model-level guarantees
+under the stated assumptions;
+at nonzero leakage rate, the bounds become approximations whose
+error depends on the magnitude of inter-substrate information flow.
+This does not invalidate the theorems&mdash;the proofs are correct for
+the model they assume&mdash;but it clarifies the empirical condition
+under which the guarantees are tight: cross-substrate informational
+channels (shared training data, memetic propagation, supply-chain
+coupling) must be small relative to the capability differences that
+define the partition. The forward direction is either modeling
+inter-substrate edges explicitly within this paper's SCM framework
+or characterizing the leakage rate empirically so that the
+approximation error can be bounded.</p>
 
 <p><strong>Epoch-boundary gaming.</strong>
 <a href="#prop:evasion_bandwidth">Proposition 5</a>'s SPRT bounds are
@@ -1898,6 +2006,23 @@ than resetting the primary accumulator. This mitigates the most
 direct epoch-manipulation attacks but does not eliminate the
 vulnerability, since any fixed-window protocol still gives the
 adversary a known accumulation budget to calibrate against.
+The hybrid construction does, however, make the adversary's
+inversion problem harder: the detection trigger is a function of
+SPRT threshold accumulation, which depends on
+<span class="math inline">\sigma_{\mathrm{do}}^2</span>, <span class="math inline">\epsilon</span>, and the observed statistics
+sequence&mdash;and the observed sequence is itself a function of both
+the actor's prior monitoring history and the adversary's current
+strategy. The joint distribution over (time-based budget phase,
+detection-trigger sensitivity) is therefore harder for the adversary
+to invert than the pure time-based case, unless it can reconstruct
+the actor's internal monitoring state from observable history.
+The residual vulnerability is that an adversary with
+high-bandwidth observation of the actor's flag decisions can
+estimate this joint distribution over many epochs, gradually
+reducing its entropy. &ldquo;Hybrid&rdquo; thus narrows the adversarial
+surface rather than closing it, consistent with the
+adversarial-parameter-exposure theme: fixed parameters leak to
+observation; hybrid parameters leak more slowly.
 Formalizing this hybrid protocol and its adversarial robustness
 is deferred.</p>
 
