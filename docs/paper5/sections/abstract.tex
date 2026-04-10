@@ -1,22 +1,28 @@
 \begin{abstract}
-    Alignment frameworks address three structural layers:
-    specification (what to optimize), generalization (whether the agent
-    reliably pursues it), and verification (whether pursuit is measured
-    faithfully). Most research targets the first two layers. This paper
-    argues that verification is the prerequisite layer: when verification
-    fails, solutions to specification and generalization do not bind.
-    The verification problem has a precise form --- a write-access
-    asymmetry in which the agent's action space includes actions that
-    modify the evaluator's inputs --- and this asymmetry grows with
-    capability. We formalize substrate-exclusive witnesses: verification
-    agents rooted in substrates the claimant cannot write to. A
-    cryptographic commitment protocol (binding, hiding, zero-knowledge)
-    enforces the substrate-exclusivity barrier without requiring trust,
-    and an append-only capability ledger provides the persistent
-    verification record. Within the goal-frontier maximization (GFM)
-    framework, the construction closes the observation-channel integrity
-    assumption of Paper~4's multi-channel attribution, provides coalition
-    resistance against coordinated self-assessment, and converts the
-    SPRT detection machinery from correlational baselines to committed
-    baselines with higher fidelity.
+    Alignment research addresses three structural layers: specification
+    (what to optimize), generalization (whether the agent reliably
+    pursues it), and verification (whether pursuit is measured
+    faithfully).  Most research targets the first two layers.  We argue
+    that verification is the prerequisite layer: when verification fails,
+    solutions to specification and generalization do not bind.  The
+    verification problem has a precise form---a \emph{write-access
+    asymmetry} in which the agent's action space includes actions that
+    modify the evaluator's inputs---and this asymmetry grows
+    monotonically with capability.  We formalize \emph{substrate-exclusive
+    witnesses}: verification processes rooted in substrates the claimant
+    cannot write to, providing the only structural barrier to evaluator
+    gaming that is invariant under capability scaling.  A cryptographic
+    commitment protocol (binding, hiding, zero-knowledge) enforces the
+    substrate-exclusivity barrier without requiring trust, and an
+    append-only verification ledger provides the persistent record.
+    Human judgment enters at exactly one layer---benchmark admissibility
+    via a governance fork mechanism---while per-claim verification is
+    fully algorithmic at machine speed.  Within the goal-frontier
+    maximization (GFM) framework, the construction closes the
+    observation-channel integrity assumption of Paper~4's multi-channel
+    attribution, upgrades SPRT-based scorpion detection from estimated
+    to committed baselines, and yields the \emph{anti-monopolar
+    verification theorem}: a monopolar population ($m = 1$) loses not
+    only the safety guarantee but the ability to detect that it has
+    lost it.
 \end{abstract}

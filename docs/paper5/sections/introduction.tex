@@ -1,21 +1,73 @@
 \section{Introduction}
 \label{sec:introduction}
 
-% Lead with the problem, not the solution.
-% The problem: every alignment framework assumes faithful measurement.
-% The solution (crypto) comes later; this section establishes why
-% verification is load-bearing.
+Alignment research addresses three structural layers, each with distinct
+failure modes and distinct research traditions.  \emph{Specification}
+asks what objective an agent should optimize; failures here include
+Goodhart's Law, perverse instantiation, and instrumental
+convergence~\citep{bostrom2014superintelligence, omohundro2008basic}.
+\emph{Generalization} asks whether the agent reliably pursues the
+specified objective; failures here include mesa-optimization and goal
+misgeneralization~\citep{hubinger2019risks}.  \emph{Verification} asks
+whether the agent's pursuit of the objective is measured faithfully;
+failures here include wireheading, self-assessment gaming, deceptive
+alignment, and reward-model
+exploitation~\citep{amodei2016concrete, gao2023scaling}.  The
+overwhelming majority of the field's attention has been directed at the
+first two layers.  This paper argues that the third layer---verification---is
+the prerequisite for the other two to matter.
 
-% TODO: 3-4 paragraphs covering:
-% 1. Alignment has three layers (spec, gen, ver). Most work targets 1-2.
-% 2. Verification is the prerequisite: a perfectly specified, perfectly
-%    generalized agent that can game its evaluator is still dangerous.
-% 3. The verification problem grows with capability (write-access asymmetry).
-% 4. Paper 5's contribution: formalize the asymmetry, construct the fix,
-%    integrate with GFM. This is implementation-layer work (like Paper 4).
+The argument is structural.  A perfectly specified, perfectly generalized
+agent that can game its evaluator is still dangerous: it can construct
+self-consistent measurements reporting alignment while its actual behavior
+diverges.  The verification problem has a precise form that we formalize
+in \S\ref{sec:asymmetry}: the agent's action space includes actions that
+modify the evaluator's inputs, and this \emph{write-access asymmetry}
+grows with capability.  As the agent becomes more capable, more of the
+evaluator's input space becomes reachable from the agent's actions, until
+at the limit the evaluator is entirely endogenous---a function of
+quantities the agent controls.  At that point, verification is not
+merely difficult; it is structurally absent.
 
-% Epistemic status paragraph (matching Paper 4's pattern):
-% This paper provides verification infrastructure. The framework's
-% structural guarantees (Papers 1-3) do not depend on this paper's
-% correctness; a flaw here degrades verification fidelity, not alignment
-% properties.
+The fix is equally structural.  The only invariant limit on an agent's
+write access is \emph{substrate exclusivity}: an agent cannot write to
+observation channels rooted in substrates it does not
+occupy~\citep{lasser2026horizon, lasser2026scm}.  This is not a
+capability limitation---the agent may be arbitrarily powerful within its
+own substrate---but a physical constraint on cross-substrate causal
+influence.  We construct a cryptographic commitment protocol
+(\S\ref{sec:commitment}) in which the agent commits to a claim before
+verification occurs, and a \emph{substrate-exclusive witness}
+(\S\ref{sec:witnesses}) verifies the claim through a fully algorithmic
+exercise protocol.  The commitment is binding (the agent cannot change
+the claim after committing) and hiding (the witness cannot learn the
+claim before verification runs).  Human judgment enters at exactly one
+layer: benchmark admissibility, decided through a governance fork
+mechanism analogous to Ethereum Improvement Proposals.  Per-claim
+verification is fully algorithmic against governance-accepted benchmarks
+and operates at machine speed.
+
+The paper is organized in two parts.  Part~I (\S\ref{sec:failure_modes}--\S\ref{sec:ledger}) develops the verification layer in
+alignment-general terms: no GFM vocabulary is required, and the
+construction applies to any framework whose evaluation step is
+vulnerable to the write-access asymmetry.  Part~II
+(\S\ref{sec:gfm_claims}--\S\ref{sec:integration}) instantiates the
+construction for the goal-frontier maximization (GFM) framework of
+Papers~1--4~\citep{lasser2026gfm, lasser2026poset, lasser2026horizon,
+lasser2026scm}, closing the observation-channel integrity assumption
+that Paper~4's multi-channel attribution relies on and connecting
+verification integrity to the anti-monopolar property of Paper~3.
+
+\paragraph{Epistemic status.}
+This paper provides verification infrastructure.  The structural
+guarantees of Papers~1--3 (the anti-monopolar property, the
+substrate-diversity gradient, the cooperative production theorem) do not
+depend on this paper's correctness; a flaw here degrades verification
+fidelity, not alignment properties.  The relationship is analogous to
+Paper~4's: implementation-layer machinery that makes the framework's
+theoretical guarantees \emph{enforceable} rather than merely
+\emph{provable}.  The cryptographic constructions we use (Pedersen
+commitments, zero-knowledge proofs) are standard and well-studied; our
+contribution is the structural argument for why they are the right tool
+and the protocol that connects them to the alignment verification
+problem.

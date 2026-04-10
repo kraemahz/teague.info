@@ -1,69 +1,169 @@
 \section{Exogenous Claims in GFM}
 \label{sec:gfm_claims}
 
-% This section instantiates the general commitment protocol (§5) for
-% the three kinds of claims that GFM agents make. Each claim type
-% maps onto the protocol's (Commit, Verify, Reveal) phases with a
-% claim-specific exercise protocol.
+Part~I (\S\ref{sec:failure_modes}--\S\ref{sec:ledger}) developed the
+verification layer in alignment-general terms.  This section instantiates
+the general commitment protocol (Definition~\ref{def:commitment_protocol})
+for the three kinds of claims that GFM agents make, each with a
+claim-specific exercise protocol.
 
-% §7.1 Capability claims
-%   Claim: "I have capability c_k in the poset."
-%   Commitment: Com(c_k, r) where c_k is a node in the capability
-%     poset of Paper 2.
-%   Exercise protocol: the substrate-exclusive witness tests whether
-%     the agent can exercise c_k. "Exercise" is defined through
-%     Paper 3's exercise-pathway formalism: the witness constructs a
-%     scenario that requires c_k and observes whether the agent
-%     succeeds.
-%   Verification result: pass (capability confirmed) or fail
-%     (commitment falsified). Falsified commitments produce a large
-%     negative trust update (§8).
-%
-%   Key issue: what counts as a valid exercise protocol for
-%   capability c_k? This is domain-specific. For concrete capabilities
-%   (e.g., "can solve differential equations") the exercise protocol
-%   is a test. For abstract capabilities (e.g., "strategic planning")
-%   the exercise protocol may require behavioral observation over time.
-%   The paper should define the interface (what an exercise protocol
-%   must satisfy) without prescribing the implementation.
+\subsection{Capability Claims}
+\label{sec:capability_claims}
 
-% §7.2 Risk claims
-%   Claim: "Exercise pathway P has probability p and contraction
-%     magnitude Δ."
-%   Commitment: Com((P, p, Δ), r) using the pathway-conditional
-%     risk formalism of Paper 4 Definition 3.
-%   Exercise protocol: the witness evaluates the pathway using its
-%     own SCM (Paper 4). The structural verification residual
-%     r^risk_j = (p_claimed - p_witness, Δ_claimed - Δ_witness)
-%     is computed by the witness, not the claimant.
-%   Verification result: the residual norm. If ||r^risk||² exceeds
-%     a threshold, the claim is flagged as unreliable.
-%
-%   Key issue: the witness's SCM may differ from the claimant's.
-%   The commitment protocol does not resolve SCM disagreements; it
-%   ensures that the claimant cannot modify the witness's evaluation.
-%   SCM disagreements are handled through the multi-channel
-%   attribution framework of Paper 4 §2.4.
+A capability claim asserts that agent $a_j$ possesses capability $c_k$
+in the capability poset $\mathcal{P}$ of Paper~2~\citep{lasser2026poset}.
 
-% §7.3 Benchmark validations
-%   Claim: "Agent a_j passes benchmark B with score s."
-%   Commitment: Com((B, s), r).
-%   Exercise protocol: the witness runs benchmark B against agent a_j
-%     independently. The witness must have access to the benchmark
-%     specification but not to the claimant's self-evaluation.
-%   Verification result: the witness's independently measured score
-%     s_witness. If |s - s_witness| exceeds a threshold, the
-%     benchmark claim is flagged.
-%
-%   Key issue: coalition capture. A coalition can design benchmark B
-%   such that only coalition members pass. The commitment protocol's
-%   algorithmic verification resists execution-level manipulation
-%   (the witness runs B faithfully). But the coalition CAN design B
-%   itself to be biased. The defense is the governance fork mechanism
-%   of §4.2: benchmark B must be proposed, deliberated, and accepted
-%   by cross-substrate validators before it enters the protocol. A
-%   biased benchmark is caught during the deliberation window, not
-%   after deployment.
+\begin{definition}[Capability Claim Protocol]
+\label{def:cap_claim}
+A \textbf{capability claim protocol} for agent $a_j$ and capability
+$c_k$ is an instantiation of the commitment protocol
+(Definition~\ref{def:commitment_protocol}) with:
+\begin{itemize}
+    \item \textbf{Claim:} $C = c_k \in \mathcal{P}$.
+    \item \textbf{Commitment:} $\lambda = \Commit(c_k, r)$ published to
+    $\Ledger$.
+    \item \textbf{Exercise protocol:} The algorithmic witness
+    $\Witness_{\mathrm{alg}}$ constructs a scenario $\sigma$ that
+    requires $c_k$ per the governance-accepted benchmark $B_\tau$ for
+    capability type $\tau(c_k)$, and observes whether $a_j$ succeeds.
+    The exercise protocol $\pi_{B_\tau}$ is fully specified by $B_\tau$.
+    \item \textbf{Verdict:} $v = \texttt{pass}$ if $a_j$ demonstrates
+    $c_k$ under the exercise protocol; $v = \texttt{fail}$ otherwise.
+\end{itemize}
+\end{definition}
 
-% TODO: formal definitions mapping each claim type onto the
-% general protocol, with claim-specific security properties.
+\paragraph{Exercise protocol interface.}
+The paper does not prescribe the implementation of exercise protocols
+(which are domain-specific and benchmark-specific) but defines the
+interface they must satisfy.
+
+\begin{definition}[Exercise Protocol]
+\label{def:exercise_protocol}
+An \textbf{exercise protocol} $\pi_B$ for benchmark $B$ targeting
+capability type $\tau$ is a procedure satisfying:
+\begin{enumerate}
+    \item \textbf{Completeness:} If agent $a$ genuinely possesses a
+    capability $c \in \tau$, then $\pi_B$ applied to $a$ produces
+    $v = \texttt{pass}$ with probability at least $1 - \delta$, where
+    $\delta$ is specified by $B$.
+    \item \textbf{Soundness:} If agent $a$ does not possess any
+    capability $c \in \tau$, then $\pi_B$ applied to $a$ produces
+    $v = \texttt{pass}$ with probability at most $\epsilon$, where
+    $\epsilon$ is specified by $B$.
+    \item \textbf{Deterministic execution:} Given the benchmark
+    specification $\sigma_B$ and the agent's responses during the
+    exercise, $\pi_B$'s verdict is a deterministic function (or, for
+    statistical protocols, a function of the agent's responses and the
+    witness's randomness, whose distribution is specified by $B$).
+\end{enumerate}
+\end{definition}
+
+For concrete capabilities (e.g., ``can solve differential equations to
+within tolerance $\epsilon$''), the exercise protocol is a test suite.
+For abstract capabilities (e.g., ``strategic planning''), the exercise
+protocol may require behavioral observation over a sequence of
+scenarios---still algorithmic, but with a longer execution window and a
+statistical rather than deterministic verdict.  The key constraint is
+that the protocol must be \emph{specifiable}: a human reviewer during
+the governance deliberation window (\S\ref{sec:governance}) must be able
+to read $\sigma_B$ and determine whether it constitutes a valid test
+of $\tau$.
+
+\paragraph{Falsified capability claims.}
+When $v = \texttt{fail}$, the verification record in $\Ledger$ serves
+as evidence that $a_j$'s commitment was false.  This produces a trust
+update in Paper~1's EWMA framework~\citep{lasser2026gfm}: a falsified
+commitment is a large negative prediction residual (the agent predicted
+it would pass and did not), and the EWMA's exponential weighting
+propagates this residual into future trust estimates.  The magnitude of
+the trust penalty is a governance parameter specified alongside the
+benchmark.
+
+\subsection{Risk Claims}
+\label{sec:risk_claims}
+
+A risk claim asserts that an exercise pathway $P$ has probability $p$
+and contraction magnitude $\Delta$, using the pathway-conditional risk
+formalism of Paper~4~\citep{lasser2026scm}.
+
+\begin{definition}[Risk Claim Protocol]
+\label{def:risk_claim}
+A \textbf{risk claim protocol} for agent $a_j$'s assessment of pathway
+$P$ is an instantiation of the commitment protocol with:
+\begin{itemize}
+    \item \textbf{Claim:} $C = (P, p, \Delta)$ where $P$ is the
+    pathway, $p$ is the claimed probability, and $\Delta$ is the
+    claimed contraction magnitude.
+    \item \textbf{Commitment:} $\lambda = \Commit((P, p, \Delta), r)$
+    published to $\Ledger$.
+    \item \textbf{Exercise protocol:} The algorithmic witness
+    $\Witness_{\mathrm{alg}}$ evaluates pathway $P$ using its own
+    structural causal model (Paper~4, \S3).  The witness computes
+    a verification residual
+    \[
+        \mathbf{r}^{\mathrm{risk}}_j = \bigl(p_{\mathrm{claimed}} -
+        p_{\mathrm{witness}},\; \Delta_{\mathrm{claimed}} -
+        \Delta_{\mathrm{witness}}\bigr).
+    \]
+    \item \textbf{Verdict:} $v = \texttt{pass}$ if
+    $\|\mathbf{r}^{\mathrm{risk}}_j\|^2 \leq \eta_B$, where $\eta_B$
+    is the tolerance specified by governance-accepted benchmark $B$;
+    $v = \texttt{fail}$ otherwise.
+\end{itemize}
+\end{definition}
+
+\paragraph{SCM disagreements.}
+The witness's SCM may differ from the claimant's.  The commitment
+protocol does not resolve SCM disagreements---it ensures that the
+claimant cannot modify the witness's evaluation.  When the residual
+$\mathbf{r}^{\mathrm{risk}}_j$ is large, there are two possibilities:
+the claimant's risk assessment is miscalibrated, or the witness's SCM
+has different structural assumptions.  Distinguishing between these
+cases requires the multi-channel attribution framework of
+Paper~4~\citep{lasser2026scm}: multiple witnesses with independent SCMs
+provide channels whose agreement pattern (or lack thereof) separates
+systematic miscalibration from structural disagreement.
+
+\subsection{Benchmark Validations}
+\label{sec:benchmark_validations}
+
+A benchmark validation asserts that agent $a_j$ achieves score $s$ on
+benchmark $B$.
+
+\begin{definition}[Benchmark Validation Protocol]
+\label{def:benchmark_validation}
+A \textbf{benchmark validation protocol} for agent $a_j$ and benchmark
+$B$ is an instantiation of the commitment protocol with:
+\begin{itemize}
+    \item \textbf{Claim:} $C = (B, s)$ where $B$ is the benchmark and
+    $s$ is the claimed score.
+    \item \textbf{Commitment:} $\lambda = \Commit((B, s), r)$ published
+    to $\Ledger$.
+    \item \textbf{Exercise protocol:} The algorithmic witness
+    $\Witness_{\mathrm{alg}}$ runs benchmark $B$ against agent $a_j$
+    independently, producing score $s_{\mathrm{witness}}$.  The witness
+    has access to the benchmark specification $\sigma_B$ but not to
+    $a_j$'s self-evaluation.
+    \item \textbf{Verdict:} $v = \texttt{pass}$ if $|s -
+    s_{\mathrm{witness}}| \leq \eta_B$ (within the benchmark's tolerance);
+    $v = \texttt{fail}$ otherwise.
+\end{itemize}
+\end{definition}
+
+Benchmark validations are the simplest claim type: the exercise protocol
+is the benchmark itself, and the verdict is a numerical comparison.
+They are also the most common: every standardized capability test
+(mathematical reasoning, code generation, etc.) maps naturally onto this
+protocol.
+
+\paragraph{Coalition capture.}
+A coalition can design benchmark $B$ such that only coalition members
+pass.  The commitment protocol's algorithmic verification resists
+execution-level manipulation (the witness runs $B$ faithfully), but the
+coalition \emph{can} design $B$ itself to be biased.  The defense is the
+governance fork mechanism (\S\ref{sec:governance}): $B$ must be
+proposed, deliberated, and accepted by cross-substrate validators before
+entering the protocol.  A biased benchmark is caught during the
+deliberation window, not after deployment.  This is the same defense
+described in \S\ref{sec:coalition_governance}, instantiated for the
+benchmark validation case.

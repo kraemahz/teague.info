@@ -1,62 +1,248 @@
 \section{Cryptographic Commitment Protocol}
 \label{sec:commitment}
 
-% Core formal contribution #3: the commitment-verification protocol.
-% This section is ALIGNMENT-GENERAL. All verification is algorithmic
-% against accepted benchmarks/protocols. Human judgment enters only
-% at the governance layer (§4.2), not here.
+This section constructs the protocol that enforces the substrate-exclusivity
+barrier of \S\ref{sec:witnesses} cryptographically.  The construction is
+alignment-general: it applies to any framework whose evaluation step is
+vulnerable to the verification asymmetry of \S\ref{sec:asymmetry}.
+Human judgment enters only through the governance layer
+(\S\ref{sec:governance}); everything in this section is fully algorithmic.
 
-% §5.1 Protocol overview
-%   Three-phase protocol for verifying a claim against an accepted
-%   benchmark:
-%   Phase 1 (Commit): Agent a commits to claim C by publishing
-%     Com(C, r) to the ledger. The commitment is binding and hiding.
-%   Phase 2 (Verify): An algorithmic witness W⊥_alg executes the
-%     accepted exercise protocol E for claim type C. The exercise
-%     protocol is fully specified by the governance-accepted benchmark;
-%     the witness exercises no judgment. This runs at machine speed.
-%   Phase 3 (Reveal + Record): a opens the commitment by revealing
-%     (C, r). The witness publishes Ver(Com, C, E_result) to the
-%     ledger. The entry is permanent and publicly auditable.
-%
-%   Key property: Phase 2 is fully algorithmic. The witness is
-%   executing a protocol, not making a judgment call. All judgment
-%   was resolved at the governance layer when the benchmark was
-%   accepted.
+\subsection{Protocol Overview}
+\label{sec:protocol_overview}
 
-% §5.2 Commitment scheme requirements
-%   - Binding: Pr[a opens to C' ≠ C] ≤ negl(λ)
-%   - Hiding: no PPT adversary can distinguish Com(C, r) from Com(C', r')
-%   - Pedersen commitments satisfy both under the discrete-log assumption.
-%   - Discussion of computational vs. information-theoretic binding/hiding
-%     trade-offs (Pedersen is computationally binding, perfectly hiding).
+The protocol verifies a claim $C$ by an agent $a$ against a
+governance-accepted benchmark $B$.  It proceeds in three phases.
 
-% §5.3 Zero-knowledge verification
-%   Can the agent prove a claim holds without revealing the claim itself?
-%   ZK proof: the agent proves "I satisfy predicate P defined by
-%   accepted benchmark B" without revealing which specific claim
-%   satisfies it.
-%   Formal construction: the agent commits to a claim, the algorithmic
-%   witness verifies a predicate on the claim's properties without
-%   learning the claim's identity.
+\begin{definition}[Commitment Protocol]
+\label{def:commitment_protocol}
+A \textbf{commitment protocol} $(\Commit, \Verify, \mathrm{Reveal})$
+over a claim space $\C$, a randomness space $\mathcal{R}$, and a
+commitment space $\Lambda$ consists of:
+\begin{enumerate}
+    \item \textbf{Commit.}  Agent $a$ selects randomness $r
+    \xleftarrow{\$} \mathcal{R}$ and publishes $\lambda =
+    \Commit(C, r)$ to the ledger $\Ledger$.  The commitment $\lambda$
+    is binding and hiding (Proposition~\ref{prop:pedersen_security}).
+    \item \textbf{Verify.}  An algorithmic witness
+    $\Witness_{\mathrm{alg}}$ on substrate $s' \neq s(a)$ executes the
+    exercise protocol $\pi_B$ specified by governance-accepted benchmark
+    $B$ for the claim type of $C$.  The witness interacts with $a$
+    (or with $a$'s outputs) as specified by $\pi_B$ and produces a
+    verdict $v \in \{\texttt{pass}, \texttt{fail}\}$ together with
+    supporting evidence $\xi$.
+    \item \textbf{Reveal.}  Agent $a$ opens the commitment by
+    publishing $(C, r)$ to $\Ledger$.  The witness publishes a
+    verification record $\Verify(\lambda, C, v, \xi)$ to $\Ledger$.
+    Any ledger participant can check that $\Commit(C, r) = \lambda$
+    (the commitment opens correctly) and that $v$ is the witness's
+    verdict.
+\end{enumerate}
+\end{definition}
 
-% §5.4 Continuous behavioral monitoring
-%   Between explicit commitment-verify-reveal cycles, algorithmic
-%   witnesses run continuous statistical monitoring:
-%   - Is agent a's observed behavior consistent with its last committed
-%     claims?
-%   - Has the residual between committed baseline and observed behavior
-%     drifted beyond the SPRT threshold?
-%   This is the "always on" layer that catches behavioral divergence
-%   between explicit verification events, operating at machine speed
-%   on cross-substrate infrastructure.
+The critical structural property is that Phase~2 is fully algorithmic.
+The witness is executing a protocol, not making a judgment call.  All
+judgment was resolved at the governance layer when benchmark $B$ was
+accepted (\S\ref{sec:governance}).  This separation is what makes the
+protocol scalable: governance decisions are infrequent and human-speed;
+per-claim verification is frequent and machine-speed.
 
-% §5.5 Coalition resistance
-%   Under substrate exclusivity, a coalition of size k on substrate s
-%   cannot influence the verification outcome of an algorithmic witness
-%   on substrate s' ≠ s, because the witness executes a fixed protocol
-%   without discretion. The coalition's only attack surface is the
-%   governance layer (proposing biased benchmarks), which is defended
-%   by the fork mechanism of §4.2.
+\subsection{Commitment Scheme Security}
+\label{sec:commitment_security}
 
-% TODO: formal definitions, protocol specification, security proofs.
+The protocol requires a commitment scheme that is simultaneously binding
+(the agent cannot change the claim after committing) and hiding (the
+witness cannot learn the claim before verification runs).  We use
+Pedersen commitments~\citep{pedersen1992non}, which achieve computational
+binding and perfect hiding under the discrete-logarithm assumption.
+
+Let $\mathbb{G}$ be a cyclic group of prime order $q$ in which the
+discrete logarithm problem is hard, and let $g, h \in \mathbb{G}$ be
+generators such that $\log_g h$ is unknown to all participants.  The
+Pedersen commitment to value $C \in \mathbb{Z}_q$ with randomness
+$r \xleftarrow{\$} \mathbb{Z}_q$ is:
+\[
+    \Commit(C, r) = g^C \cdot h^r.
+\]
+
+\begin{proposition}[Pedersen Security]
+\label{prop:pedersen_security}
+The Pedersen commitment scheme satisfies:
+\begin{enumerate}
+    \item[(a)] \textbf{Computational binding:}  If $a$ can open
+    $\lambda$ to two distinct values $C \neq C'$, then $a$ can compute
+    $\log_g h$, which contradicts the discrete-logarithm assumption.
+    Formally, $\Pr[\exists\, (C, r), (C', r')\text{ with } C \neq C'
+    \text{ and } g^C h^r = g^{C'} h^{r'}] \leq \mathsf{negl}(\lambda)$
+    where $\lambda$ is the security parameter.
+    \item[(b)] \textbf{Perfect hiding:}  For any $C, C' \in
+    \mathbb{Z}_q$, the distributions $\{\Commit(C, r) : r
+    \xleftarrow{\$} \mathbb{Z}_q\}$ and $\{\Commit(C', r') : r'
+    \xleftarrow{\$} \mathbb{Z}_q\}$ are identical.  No adversary, even
+    computationally unbounded, can distinguish commitments to different
+    claims.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Standard; see~\citet{pedersen1992non}.  Part~(a): if $g^C h^r = g^{C'}
+h^{r'}$ with $C \neq C'$, then $g^{C - C'} = h^{r' - r}$, so $\log_g
+h = (C - C')(r' - r)^{-1} \bmod q$.  Part~(b): for fixed $C$, the map
+$r \mapsto g^C h^r$ is a bijection $\mathbb{Z}_q \to \mathbb{G}$
+(since $h$ generates $\mathbb{G}$), so $\Commit(C, r)$ is uniform over
+$\mathbb{G}$ regardless of $C$.
+\end{proof}
+
+\begin{remark}
+Pedersen commitments are computationally binding and perfectly hiding.
+This trade-off is correct for our setting: the hiding property must hold
+unconditionally (the witness should not learn the claim even with
+unbounded computation, because a computationally powerful witness on a
+silicon substrate could otherwise break hiding), while binding need only
+hold against computationally bounded adversaries (the agent has bounded
+compute within a given time horizon).  If the trust model required
+unconditional binding, one could substitute a statistically binding,
+computationally hiding scheme, but this weakens the hiding guarantee
+against powerful witnesses.
+\end{remark}
+
+\subsection{Zero-Knowledge Verification}
+\label{sec:zk_verification}
+
+In some settings, the claim itself is sensitive: an agent may wish to
+prove that it satisfies a capability predicate without revealing which
+specific capability satisfies it.  For example, a security-relevant
+capability should be verifiable without disclosing to potential
+adversaries the exact capability the agent holds.
+
+\begin{definition}[Zero-Knowledge Capability Proof]
+\label{def:zk_proof}
+A \textbf{zero-knowledge capability proof} for predicate $P$ defined
+by governance-accepted benchmark $B$ is a protocol in which:
+\begin{enumerate}
+    \item Agent $a$ commits to claim $C$ via $\lambda = \Commit(C, r)$.
+    \item Agent $a$ produces a proof $\pi$ that $P(C) = 1$ (i.e., $C$
+    satisfies the benchmark predicate) without revealing $C$.
+    \item The algorithmic witness $\Witness_{\mathrm{alg}}$ verifies
+    $\pi$ against $\lambda$ and the predicate $P$, accepting if $\pi$
+    is valid.
+\end{enumerate}
+The protocol is \textbf{zero-knowledge} if the witness learns nothing
+beyond $P(C) = 1$.  Formally, there exists a simulator $\mathcal{S}$
+that, given only $P$ and $\lambda$, can produce transcripts
+indistinguishable from real protocol executions~\citep{goldwasser1989knowledge}.
+\end{definition}
+
+Standard constructions for zero-knowledge proofs of committed values
+exist (e.g., Bulletproofs for range proofs~\citep{bunz2018bulletproofs},
+or general-purpose zkSNARKs for arbitrary NP predicates).  The
+contribution here is not a new ZK construction but the identification of
+\emph{when} ZK is needed in the alignment verification setting: namely,
+when the claim's content is itself security-relevant.  For non-sensitive
+claims, the standard Commit--Verify--Reveal protocol of
+\S\ref{sec:protocol_overview} suffices and is simpler.
+
+\subsection{Continuous Behavioral Monitoring}
+\label{sec:continuous_monitoring}
+
+Between explicit Commit--Verify--Reveal cycles, algorithmic witnesses
+run continuous statistical monitoring.  The monitoring protocol detects
+behavioral divergence between the agent's committed claims and its
+observed behavior, analogous to a continuous audit between discrete
+financial reporting periods.
+
+\begin{definition}[Behavioral Consistency Monitor]
+\label{def:behavioral_monitor}
+A \textbf{behavioral consistency monitor} for agent $a$ with committed
+capability profile $\mathbf{C}_a = \{C_1, \ldots, C_k\}$ is a
+substrate-exclusive process that:
+\begin{enumerate}
+    \item Observes $a$'s behavioral stream $\{X_t\}_{t \geq 0}$ through
+    a cross-substrate observation channel.
+    \item Maintains a running likelihood ratio
+    \[
+        \Lambda_t = \sum_{i=1}^{t} \log
+        \frac{p(X_i \mid \mathbf{C}_a)}{p(X_i \mid \neg\,\mathbf{C}_a)}
+    \]
+    where $p(\cdot \mid \mathbf{C}_a)$ is the behavioral distribution
+    consistent with the committed profile and $p(\cdot \mid
+    \neg\,\mathbf{C}_a)$ is an alternative distribution representing
+    behavioral inconsistency.
+    \item Triggers a verification event when $\Lambda_t$ crosses
+    threshold $A$ (inconsistency detected) or reports no anomaly when
+    $\Lambda_t$ crosses threshold $-B$ (consistency confirmed), per the
+    sequential probability ratio test (SPRT).
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Behavioral Monitoring Detection Rate]
+\label{prop:sprt_detection}
+If the agent's actual behavioral distribution is $p_1 \neq p(\cdot \mid
+\mathbf{C}_a)$ and the KL divergence $D_{\mathrm{KL}}(p_1 \,\|\,
+p(\cdot \mid \mathbf{C}_a)) = \delta > 0$, then the expected time to
+detection under the behavioral consistency monitor is
+\[
+    \mathbb{E}[T_{\mathrm{detect}}]
+    \;\leq\; \frac{A}{\delta}
+\]
+where $A = \log\bigl(\frac{1-\beta}{\alpha}\bigr)$ is the upper SPRT
+threshold, $\alpha$ is the false-alarm probability, and $\beta$ is the
+miss probability.
+\end{proposition}
+
+\begin{proof}
+By Wald's identity for the SPRT, the expected sample size under
+alternative $p_1$ satisfies $\mathbb{E}_{p_1}[T] \approx
+A / D_{\mathrm{KL}}(p_1 \| p_0)$ where $p_0 = p(\cdot \mid
+\mathbf{C}_a)$.  The bound follows from substituting $\delta =
+D_{\mathrm{KL}}(p_1 \| p_0)$.
+\end{proof}
+
+The behavioral consistency monitor provides the ``always on'' layer
+between explicit commitment--verification cycles.  It does not replace
+explicit verification (which produces ledger-recorded, auditable
+results) but complements it by catching behavioral divergence in near
+real-time, operating at machine speed on cross-substrate infrastructure.
+
+\subsection{Coalition Resistance}
+\label{sec:coalition_resistance}
+
+\begin{proposition}[Coalition Resistance under Substrate Exclusivity]
+\label{prop:coalition_resistance}
+Let $\Witness_{\mathrm{alg}}$ be an algorithmic witness on substrate
+$s'$, and let $K = \{a_1, \ldots, a_k\}$ be a coalition of agents on
+substrate $s \neq s'$.  Then $K$ cannot influence
+$\Verify(\Witness_{\mathrm{alg}}, C, \pi_B)$ without either:
+\begin{enumerate}
+    \item[(a)] Compromising substrate $s'$ (violating the substrate
+    partition), or
+    \item[(b)] Modifying the governance-accepted benchmark $B$
+    (requiring cross-substrate supermajority per
+    Definition~\ref{def:gov_fork}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:alg_witness}, $\Witness_{\mathrm{alg}}$
+executes protocol $\pi_B$ deterministically on substrate $s'$.  The
+coalition $K$'s actions are confined to substrate $s$ (by assumption).
+To modify the witness's computation, $K$ must either: (i)~write to
+$s'$, which violates the substrate partition (case~a); or (ii)~change
+the protocol $\pi_B$ by modifying the accepted benchmark $B$, which
+requires passing the governance fork protocol with cross-substrate
+supermajority---impossible for a coalition confined to $s$ unless the
+coalition controls validators on $s'$ as well (case~b).  In either
+case, the coalition must breach the cross-substrate boundary to
+influence verification.
+\end{proof}
+
+Coalition resistance has two consequences.  First, it closes the
+coalition capture attack described in \S\ref{sec:coalition_governance}
+at the verification layer: even if a coalition passes a biased benchmark
+through governance (which the fork mechanism is designed to prevent), the
+algorithmic witness executes the benchmark faithfully and cannot be
+induced to misreport results.  Second, it provides the structural
+basis for the observation-channel independence assumption of Paper~4's
+multi-channel attribution (\S\ref{sec:channel_independence}): if
+different channels are verified by witnesses on different substrates,
+a coalition on one substrate cannot correlate those channels.

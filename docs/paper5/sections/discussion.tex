@@ -1,46 +1,139 @@
 \section{Discussion}
 \label{sec:discussion}
 
-% §8.1 What this paper does not claim
-%   - Verification does not solve alignment. Specification and
-%     generalization remain open problems.
-%   - Mesa-optimization does not reduce to verification. An agent that
-%     has internalized the wrong objective will pursue it faithfully
-%     regardless of how well verification works.
-%   - Crypto is not the only way to exogenize verification. Hardware
-%     enclaves, physical separation, and human-in-the-loop are all
-%     forms of substrate exclusivity. Crypto is the form that scales
-%     without requiring continuous human attention.
+\subsection{What This Paper Does Not Claim}
 
-% §8.2 Limitations
-%   - The commitment protocol assumes the capability poset is
-%     well-defined enough that "capability c_k" has a testable meaning.
-%     For vaguely defined capabilities, the exercise protocol may not
-%     be constructible.
-%   - Substrate exclusivity is a physical assumption. If a digital
-%     agent gains write access to a biological substrate (e.g., through
-%     brain-computer interfaces), the substrate barrier degrades.
-%   - The ledger's append-only property requires at least one honest
-%     node per substrate. If all nodes on a substrate are compromised,
-%     the substrate's contribution to consensus is lost.
-%   - Zero-knowledge capability proofs require the capability to be
-%     formalizable as a predicate on the poset. Some capabilities may
-%     resist formalization.
+Three scope boundaries are worth stating explicitly.
 
-% §8.3 Open problems
-%   - Exercise protocol design: what constitutes a valid test of
-%     capability c_k? This is domain-specific and may require
-%     capability-specific protocols.
-%   - Partial verification: can we verify that an agent has "at least"
-%     capability c_k without testing the exact boundary?
-%   - Dynamic capabilities: capabilities change over time. The ledger
-%     records point-in-time verifications; continuous verification
-%     requires periodic re-commitment.
-%   - Cross-substrate witness incentives: why should a witness on
-%     substrate s' spend resources verifying claims by agents on
-%     substrate s? The vol_P-maximization incentive provides a
-%     structural answer (verification is a public good that benefits
-%     the whole population), but the free-rider problem is not
-%     formally resolved.
+First, \emph{verification does not solve alignment}.  Specification
+and generalization remain open problems.  A perfectly verified agent
+whose objective is badly specified will faithfully, observably, and
+verifiably pursue the wrong goal.  The prerequisite argument of
+\S\ref{sec:prerequisite} is that verification must hold \emph{for}
+solutions to the other layers to bind, not that verification
+\emph{is} a solution.
 
-% TODO: write full discussion.
+Second, \emph{mesa-optimization does not reduce to verification}.
+An agent that has internalized the wrong objective through
+mesa-optimization will pursue it faithfully, and exogenous
+verification will confirm that it is behaving consistently with its
+(misaligned) internal objective.  What verification provides for
+mesa-alignment is \emph{detection}, not prevention: if the
+mesa-objective produces behavioral signatures distinguishable from
+the base objective's, continuous monitoring
+(Definition~\ref{def:behavioral_monitor}) can flag the divergence.
+But distinguishability is not guaranteed---deceptive mesa-objectives
+that mimic aligned behavior are precisely the hard case that
+verification infrastructure does not, by itself, resolve.
+
+Third, \emph{cryptography is not the only way to exogenize
+verification}.  Hardware enclaves, physical separation, and
+human-in-the-loop evaluation are all forms of substrate exclusivity.
+Cryptographic commitments are the form that scales without requiring
+continuous human attention: once the governance layer has accepted a
+benchmark, per-claim verification runs at machine speed with no human
+in the loop.  In settings where human attention is abundant or where
+the population is small enough for manual oversight, simpler forms of
+substrate exclusivity may suffice.
+
+\subsection{Limitations}
+
+\paragraph{Capability formalizability.}
+The commitment protocol assumes that capability $c_k$ has a
+testable meaning: that an exercise protocol can be constructed whose
+completeness and soundness (Definition~\ref{def:exercise_protocol})
+are well-defined.  For vaguely defined capabilities---``common
+sense,'' ``creativity,'' ``wisdom''---the exercise protocol may not
+be constructible, and the commitment protocol degrades to an
+unfalsifiable claim.  The governance layer provides a partial defense
+(a benchmark for ``creativity'' must survive deliberation and
+cross-substrate analysis before acceptance), but the fundamental
+problem is that some capabilities resist formalization.
+
+\paragraph{Substrate boundary durability.}
+Substrate exclusivity is a physical assumption: the agent on
+substrate $s$ cannot write to processes on substrate $s' \neq s$.
+This assumption could degrade if cross-substrate interfaces become
+sufficiently penetrable---for example, through brain-computer
+interfaces that give digital agents write access to biological
+substrates, or through hardware exploits that break isolation
+between physically co-located but logically separate substrates.
+The protocol's security degrades gracefully: partial penetration of
+the substrate boundary increases $\rho$ from zero but does not
+immediately make $\rho = 1$.  Full penetration collapses verification
+to the endogenous case.
+
+\paragraph{Honest-node assumption.}
+The ledger's integrity requires at least one honest replication node
+per substrate.  If all nodes on a substrate are compromised (i.e.,
+controlled by agents whose claims are being verified), that
+substrate's contribution to ledger consensus is lost.  The
+cross-substrate supermajority requirement for governance decisions
+(\S\ref{sec:ledger_consensus}) mitigates this: a single compromised
+substrate cannot override multi-substrate governance.  But if
+$m - 1$ substrates are compromised, the remaining honest substrate
+is outvoted.
+
+\paragraph{Zero-knowledge formalizability.}
+Zero-knowledge capability proofs
+(Definition~\ref{def:zk_proof}) require the capability predicate
+$P$ to be expressible as an NP relation (for general-purpose
+zkSNARKs) or as a range predicate (for Bulletproofs).  Some
+capabilities may not admit efficient predicate formulations, in which
+case the zero-knowledge option is unavailable and the agent must
+reveal the claim in the standard Commit--Verify--Reveal protocol.
+
+\subsection{Open Problems}
+
+\paragraph{Exercise protocol design.}
+What constitutes a valid test of capability $c_k$?  The exercise
+protocol interface (Definition~\ref{def:exercise_protocol}) specifies
+completeness and soundness requirements but does not construct protocols.
+Protocol design is domain-specific and is likely to require
+capability-specific research programs---analogous to how benchmark
+design in machine learning is a research area in its own right.
+
+\paragraph{Partial verification.}
+Can we verify that an agent has ``at least'' capability $c_k$ without
+testing the exact boundary?  The poset structure of Paper~2's
+capability space~\citep{lasser2026poset} suggests that partial
+verification should be possible: if $c_k \preceq c_l$ in the poset
+and $c_l$ is verified, then $c_k$ is implied.  Formalizing this
+requires connecting the poset's order-theoretic structure to the
+commitment protocol's exercise protocols.
+
+\paragraph{Dynamic capabilities.}
+Capabilities change over time.  The ledger records point-in-time
+verifications, but the agent's actual capability profile may drift
+between verification events.  Continuous behavioral monitoring
+(Definition~\ref{def:behavioral_monitor}) addresses the drift
+detection problem, but periodic re-commitment is needed to keep the
+ledger's verified profile current.  The optimal re-commitment
+frequency---balancing verification cost against profile staleness---is
+an open parameter.
+
+\paragraph{Witness incentives.}
+Why should a witness on substrate $s'$ spend resources verifying
+claims by agents on substrate $s$?  The $\volL$-maximization
+framework provides a structural answer: verification is a public
+good that benefits the population's joint capability volume, and
+witnesses on substrate $s'$ share in that benefit through cooperative
+capabilities that require verified partners on substrate $s$.  But
+the free-rider problem is not formally resolved: a witness that
+declines to verify still benefits from other witnesses' verification
+work.  Whether $\volL$-maximizing incentives are sufficient to
+sustain a verification ecosystem, or whether additional mechanism
+design is needed, is an open question.
+
+\paragraph{Governance attack surface.}
+The governance fork protocol (\S\ref{sec:governance}) defends
+against coalition capture through public deliberation and
+cross-substrate supermajority.  But governance itself is a social
+process with attack surfaces not captured by the formal model:
+social engineering of validators, strategic timing of proposals to
+exploit low-attention periods, and progressive capture through many
+individually-unobjectionable benchmark proposals that collectively
+bias the verification ecosystem.  The formal defense
+(cross-substrate supermajority) is necessary but may not be
+sufficient; the governance layer is the protocol's least formal
+component and the most likely site of future revisions.

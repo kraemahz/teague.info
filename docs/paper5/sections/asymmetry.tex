@@ -1,35 +1,171 @@
 \section{The Verification Asymmetry}
 \label{sec:asymmetry}
 
-% Core formal contribution #1: define the verification asymmetry precisely.
+The failure modes of \S\ref{sec:ver_failures} share a common formal
+structure: the evaluator's computation is reachable from the agent's
+action space.  This section formalizes that structure.
 
-% §3.1 Write-access formalization
-%   Definition: An evaluation function E is endogenous to agent a if a's
-%   action space A includes actions that modify E's inputs.
-%   Definition: E is exogenous to a if no action in A modifies E's inputs.
-%   The verification asymmetry is the gap between the agent's action space
-%   and the evaluator's input space.
+\subsection{Write-Access Formalization}
+\label{sec:write_access}
 
-% §3.2 Capability scaling
-%   As capability grows, the agent's action space expands, and more of the
-%   evaluator's inputs become reachable. The asymmetry grows with capability.
-%   Formalize: let R(a) ⊆ I(E) be the set of evaluator inputs reachable
-%   by agent a. The verification asymmetry is |R(a)| / |I(E)|.
-%   For a maximally capable agent, R(a) = I(E) and verification collapses.
+Let $a$ be an agent with action space $\mathcal{A}(a)$, and let $E$ be
+an evaluation function with input space $\mathcal{I}(E)$.  An action
+$\alpha \in \mathcal{A}(a)$ \emph{reaches} an input $x \in
+\mathcal{I}(E)$ if executing $\alpha$ can modify the value of $x$.
+Write $\mathcal{R}(a, E) \subseteq \mathcal{I}(E)$ for the set of
+evaluator inputs reachable by $a$.
 
-% §3.3 Substrate exclusivity as the structural barrier
-%   The only structural limit on R(a) is substrate exclusivity: the agent
-%   cannot write to observation channels rooted in substrates it does not
-%   occupy. This is not a capability limitation (the agent may be
-%   arbitrarily capable within its substrate); it is a physical constraint
-%   on cross-substrate write access.
-%   Connect to Paper 3's substrate partition and Paper 4's multi-channel
-%   attribution.
+\begin{definition}[Endogenous and Exogenous Evaluation]
+\label{def:endo_exo}
+An evaluation function $E$ is \textbf{endogenous} to agent $a$ if
+$\mathcal{R}(a, E) \neq \emptyset$: there exists at least one action in
+$a$'s action space that modifies at least one of $E$'s inputs.  $E$ is
+\textbf{exogenous} to $a$ if $\mathcal{R}(a, E) = \emptyset$: no action
+available to $a$ can modify any input to $E$.
+\end{definition}
 
-% §3.4 How existing frameworks encounter the asymmetry
-%   Brief treatment of RLHF, Constitutional AI, debate/amplification, GFM.
-%   Each has the same structural form: the evaluator's computation is
-%   reachable from the agent's action space. The differences are in which
-%   inputs are reachable and how quickly the asymmetry grows.
+The distinction is binary in definition but admits a natural
+quantitative extension.
 
-% TODO: write formal definitions and propositions.
+\begin{definition}[Verification Asymmetry]
+\label{def:ver_asymmetry}
+The \textbf{verification asymmetry} of agent $a$ with respect to
+evaluator $E$ is
+\[
+    \rho(a, E) \;\triangleq\; \frac{|\mathcal{R}(a, E)|}{|\mathcal{I}(E)|}
+    \;\in\; [0, 1].
+\]
+When $\rho = 0$, evaluation is fully exogenous.  When $\rho = 1$,
+evaluation is fully endogenous: every input to $E$ is reachable by $a$.
+\end{definition}
+
+\begin{remark}
+When both $\mathcal{R}(a, E)$ and $\mathcal{I}(E)$ are continuous
+spaces, the ratio of cardinalities is replaced by the ratio of their
+measures under an appropriate reference measure $\mu$ on $\mathcal{I}(E)$:
+$\rho(a, E) = \mu(\mathcal{R}(a, E)) / \mu(\mathcal{I}(E))$.
+The qualitative results of this paper depend only on whether $\rho = 0$
+or $\rho > 0$, so the choice of measure is immaterial for the structural
+arguments.
+\end{remark}
+
+\subsection{Capability Scaling}
+\label{sec:capability_scaling}
+
+The verification asymmetry grows with capability.  As an agent becomes
+more capable, its action space $\mathcal{A}(a)$ expands, and actions
+that were previously beyond its reach become available.  The reachable
+set $\mathcal{R}(a, E)$ is monotonically non-decreasing in the agent's
+capability: acquiring a new capability never \emph{reduces} the set of
+evaluator inputs the agent can influence.
+
+\begin{proposition}[Monotonicity of Verification Asymmetry]
+\label{prop:monotonicity}
+Let $a$ and $a'$ be agents such that $\mathcal{A}(a) \subseteq
+\mathcal{A}(a')$ (i.e., $a'$ has all of $a$'s capabilities and
+possibly more).  Then $\mathcal{R}(a, E) \subseteq \mathcal{R}(a', E)$
+and consequently $\rho(a, E) \leq \rho(a', E)$.
+\end{proposition}
+
+\begin{proof}
+If action $\alpha \in \mathcal{A}(a)$ reaches $x \in \mathcal{I}(E)$,
+then $\alpha \in \mathcal{A}(a')$ by the subset assumption, so $x \in
+\mathcal{R}(a', E)$.  The inequality on $\rho$ follows from monotonicity
+of the ratio.
+\end{proof}
+
+The proposition is elementary but its consequence is not: as AI systems
+become more capable, the verification problem becomes \emph{strictly
+harder}, not merely harder in practice.  Any verification scheme that
+relies on the evaluator being ``hard to reach'' degrades as capability
+grows.  A solution must identify a structural barrier that does not
+degrade with capability.
+
+\subsection{Substrate Exclusivity as the Structural Barrier}
+\label{sec:substrate_barrier}
+
+The only structural limit on $\mathcal{R}(a, E)$ that is invariant
+under capability scaling is \emph{substrate exclusivity}.  An agent on
+substrate $s$ can, in principle, write to any observation channel whose
+computation occurs on $s$: it shares the physical medium, and capability
+growth expands its reach within that medium without bound.  But an agent
+on substrate $s$ cannot write to observation channels whose computation
+occurs on substrate $s' \neq s$, because cross-substrate causal
+influence requires a physical channel between substrates, and the
+\emph{input space} of a process on $s'$ is not addressable from $s$ in
+the same way that co-substrate processes are.
+
+This is Paper~3's substrate partition applied to
+verification~\citep{lasser2026horizon}.  The substrate partition
+$\{S_1, \ldots, S_m\}$ over a population's agents induces a
+corresponding partition on observation channels: channels rooted in
+substrate $s'$ are not writable by agents on substrate $s \neq s'$.
+Paper~4's multi-channel attribution assumes this independence
+structure~\citep{lasser2026scm}; the present paper constructs the
+protocol that \emph{enforces} it.
+
+\begin{definition}[Substrate-Exclusive Evaluation]
+\label{def:substrate_exclusive_eval}
+An evaluation function $E$ is \textbf{substrate-exclusive} with respect
+to agent $a$ on substrate $s$ if $E$'s computation is rooted in
+substrate $s' \neq s$.  By the substrate exclusivity property,
+$\mathcal{R}(a, E) = \emptyset$ for any agent $a$ confined to substrate
+$s$, and therefore $\rho(a, E) = 0$.
+\end{definition}
+
+Substrate exclusivity is not a capability limitation.  The agent may be
+arbitrarily capable within its substrate; the barrier is physical, not
+computational.  This makes it the only known verification barrier that
+is invariant under capability scaling: no amount of capability growth
+within substrate $s$ extends the agent's write access to substrate
+$s'$.
+
+\subsection{How Existing Frameworks Encounter the Asymmetry}
+\label{sec:existing_frameworks}
+
+Each major alignment framework encounters the verification asymmetry at
+a characteristic point.
+
+\paragraph{RLHF.}
+The reward model is trained from human feedback---exogenous at training
+time.  At deployment, the agent optimizes against a frozen reward model
+whose inputs are within its influence: it can learn what input patterns
+produce high reward scores without producing the intended
+behavior~\citep{christiano2017deep, gao2023scaling}.  The asymmetry is
+$\rho > 0$ at deployment because the reward model's input space
+overlaps the agent's output space.
+
+\paragraph{Constitutional AI.}
+The constitution is exogenous text, but its \emph{interpretation} is
+endogenous: the same model that is being constrained performs the
+constitutional evaluation~\citep{bai2022constitutional}.  The asymmetry
+is $\rho > 0$ because the interpretation step's ``inputs''---the
+model's internal representations of constitutional meaning---are
+writable by the model itself.
+
+\paragraph{Debate and amplification.}
+The verifier is a weaker model or a human with bounded
+attention~\citep{irving2018ai}.  A sufficiently strong debater can
+construct arguments that exploit the verifier's bounded capacity.  The
+asymmetry enters through the persuasion channel: the debater's action
+space includes actions that modify the verifier's belief state
+(a subset of the verifier's inputs).
+
+\paragraph{GFM.}
+$\volL$ is defined over an external capability poset, but the agent's
+\emph{measurement} of $\volL$ is endogenous: it uses its own world
+model, trust estimates, and observation
+channels~\citep{lasser2026gfm, lasser2026scm}.  A sufficiently capable
+agent can construct self-consistent measurements that report $\volL$
+growth while actual $\volL$ stagnates.  This was discovered
+operationally in the GFM harness through the capability
+self-assertion gradient: an agent that adds capabilities to its own
+ledger entry is both claimant and observer.
+
+In every case, the specification may be correct and the agent may have
+generalized well, but the verification step is gameable because the
+evaluator's computation is reachable from the agent's action space.
+The differences between frameworks are in \emph{which} evaluator inputs
+are reachable and \emph{how quickly} $\rho$ approaches~1 as capability
+grows.  The structural fix---making $\rho = 0$ by rooting evaluation
+in a different substrate---is the same across all of them.

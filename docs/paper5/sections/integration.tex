@@ -1,62 +1,239 @@
 \section{Integration with GFM Machinery}
 \label{sec:integration}
 
-% This section connects the exogenous claims of §7 to the existing
-% GFM machinery of Papers 1--4. It shows how committed claims improve
-% the fidelity of existing mechanisms.
+This section connects the exogenous verification construction of
+\S\ref{sec:gfm_claims} to the existing machinery of
+Papers~1--4, showing how committed claims improve the fidelity of each
+mechanism.
 
-% §8.1 Closing the observation-channel integrity assumption
-%   Paper 4's multi-channel attribution (§2.4) assumes channels are
-%   independently informative. §7's committed claims provide the
-%   construction that enforces this: each channel's verification is
-%   rooted in a substrate the claimant cannot modify. Without this,
-%   a scorpion that controls multiple channels can correlate them,
-%   breaking the independence assumption that log-odds aggregation
-%   depends on.
+\subsection{Closing the Observation-Channel Integrity Assumption}
+\label{sec:channel_independence}
 
-% §8.2 Committed baselines for SPRT detection
-%   Paper 4's SPRT scorpion detection compares behavioral observations
-%   against a baseline. Currently, the baseline is the actor's own
-%   estimate of the agent's expected behavior. With committed capability
-%   claims (§7.1), the baseline derives from the agent's own committed
-%   claim: "agent a_j committed to capability c_k; its observed
-%   behavior should be consistent with having c_k." This converts the
-%   SPRT from a correlational detector (is behavior consistent with
-%   the actor's model?) to a commitment-based detector (is behavior
-%   consistent with the agent's own committed claim?). Detection
-%   fidelity improves because the baseline is exogenous to the actor's
-%   model uncertainty.
+Paper~4's multi-channel attribution (\S2.4 of~\citet{lasser2026scm})
+aggregates evidence from multiple observation channels via log-odds
+combination.  The aggregation's validity depends on the channels being
+\emph{independently informative}: each channel's evidence is
+conditionally independent of the others given the true state.  If an
+agent can write to multiple channels simultaneously---because they all
+run on the same substrate---the independence assumption fails, and the
+log-odds aggregation can be arbitrarily manipulated.
 
-% §8.3 Trust dynamics with verified claims
-%   Paper 1's trust EWMA T_j updates from prediction residuals.
-%   Committed and verified claims (§7) anchor the prediction baseline:
-%   - Verified claims reduce prior uncertainty, lowering the
-%     initial-period trust noise.
-%   - Falsified commitments (agent committed to C but verification
-%     failed) produce a large negative trust update, accelerating
-%     scorpion detection.
-%   - Risk claims verified by cross-substrate witnesses (§7.2) sharpen
-%     T^risk_j by replacing endogenous residuals with exogenous ones.
+The committed-claim construction closes this gap.  When each observation
+channel's verification is rooted in a substrate-exclusive witness
+(Definition~\ref{def:alg_witness}), and the witnesses are on different
+substrates, a coalition on any single substrate cannot correlate multiple
+channels.
 
-% §8.4 The anti-monopolar verification theorem
-%   Substrate-exclusive witnesses require m ≥ 2 (Paper 3's diversity
-%   condition). In a monopolar population (m = 1), there are no
-%   cross-substrate witnesses and verification collapses to the
-%   endogenous case. This gives the anti-monopolar property a second
-%   structural justification:
-%   - Paper 3: monopolar populations are anti-maximizing (vol_P
-%     argument).
-%   - Paper 5: monopolar populations are unverifiable (no substrate-
-%     exclusive witnesses exist).
-%   A population that becomes monopolar loses both the safety guarantee
-%   and the ability to check whether it has lost it.
-%
-%   Formal statement: "If m = 1, then for every agent a and every
-%   claim C, Witness(a, C) = ∅ (no substrate-exclusive witness exists),
-%   and all verification is endogenous."
-%   This is a corollary of the witness definition (§4) and the
-%   substrate partition (Paper 3).
+\begin{proposition}[Channel Independence under Committed Verification]
+\label{prop:channel_independence}
+Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, and
+let each $E_i$ be verified by an algorithmic witness
+$\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$.  If the witnesses
+are on distinct substrates ($s_i \neq s_j$ for $i \neq j$) and each
+$s_i \neq s(a)$, then the verified outputs $\{v_1, \ldots, v_n\}$ are
+conditionally independent given $a$'s true capability profile
+$\mathbf{C}_a$.
+\end{proposition}
 
-% TODO: formal propositions connecting each integration point to
-% existing GFM machinery. The anti-monopolar verification theorem
-% is likely the strongest standalone result in the paper.
+\begin{proof}
+Each $v_i = \pi_{B_i}(a, \Witness^{(i)}_{\mathrm{alg}})$ is determined
+by $a$'s behavior under exercise protocol $\pi_{B_i}$ and the witness's
+deterministic execution (Definition~\ref{def:alg_witness}).  Agent $a$
+cannot influence $\Witness^{(i)}_{\mathrm{alg}}$'s computation
+(substrate exclusivity).  Witness $\Witness^{(i)}_{\mathrm{alg}}$
+cannot influence $\Witness^{(j)}_{\mathrm{alg}}$'s computation ($s_i
+\neq s_j$).  Therefore, conditional on $a$'s true behavior
+(determined by $\mathbf{C}_a$), the verdicts $v_i$ are functions of
+independent computations on disjoint substrates, hence conditionally
+independent.
+\end{proof}
+
+\begin{remark}
+The proposition requires $n$ distinct witness substrates for $n$
+channels.  When the substrate partition has $m$ substrates total, at
+most $m - 1$ independent channels can be constructed (one substrate is
+occupied by $a$, and each remaining substrate hosts at most one
+independent witness).  This bounds the effective multiplicity of
+independent verification channels by $m - 1$, connecting verification
+depth to substrate diversity.
+\end{remark}
+
+\subsection{Committed Baselines for SPRT Detection}
+\label{sec:committed_baselines}
+
+Paper~4's SPRT-based scorpion detection compares an agent's behavioral
+observations against a baseline.  In the current framework, the baseline
+is the \emph{actor's own estimate} of the agent's expected behavior---an
+endogenous quantity that is subject to the actor's model uncertainty and
+potential manipulation.
+
+Committed capability claims (\S\ref{sec:capability_claims}) provide an
+exogenous alternative.  When agent $a_j$ has committed to capability
+profile $\mathbf{C}_a$ and the commitment has been verified by a
+substrate-exclusive witness, the behavioral distribution $p(\cdot \mid
+\mathbf{C}_a)$ consistent with the committed profile becomes the
+baseline.  The SPRT then tests whether $a_j$'s observed behavior is
+consistent with its own committed claims, rather than with the actor's
+model of what $a_j$ should be doing.
+
+\begin{proposition}[Detection Improvement under Committed Baselines]
+\label{prop:committed_detection}
+Let $p_0$ be the behavioral distribution under the committed capability
+profile $\mathbf{C}_a$, and let $\hat{p}_0$ be the actor's estimated
+baseline.  If the agent's true distribution is $p_1 \neq p_0$, then
+the SPRT detection rate satisfies:
+\[
+    \frac{1}{\mathbb{E}_{p_1}[T_{\mathrm{detect}}^{\mathrm{committed}}]}
+    \;\geq\;
+    \frac{1}{\mathbb{E}_{p_1}[T_{\mathrm{detect}}^{\mathrm{estimated}}]}
+\]
+whenever $D_{\mathrm{KL}}(p_1 \| p_0) \geq D_{\mathrm{KL}}(p_1 \|
+\hat{p}_0)$, i.e., when the committed baseline is at least as
+discriminating as the estimated baseline.  Equality holds if and only if
+$\hat{p}_0 = p_0$.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{prop:sprt_detection}, the expected detection time
+is inversely proportional to the KL divergence between the true and
+baseline distributions.  If $D_{\mathrm{KL}}(p_1 \| p_0) \geq
+D_{\mathrm{KL}}(p_1 \| \hat{p}_0)$, then $\mathbb{E}[T^{\mathrm{committed}}]
+\leq \mathbb{E}[T^{\mathrm{estimated}}]$, and detection is faster
+(or equally fast) under the committed baseline.
+\end{proof}
+
+The committed baseline is at least as discriminating as the estimated
+baseline whenever the agent's commitment is \emph{informative}---that
+is, when the committed profile $\mathbf{C}_a$ constrains the expected
+behavioral distribution more tightly than the actor's prior estimate
+does.  Since agents commit to specific capability claims (not vague
+ranges), committed baselines are generically more informative than
+actor-estimated baselines, especially during the initial-period
+noise that Paper~1's trust EWMA is most vulnerable to.
+
+\subsection{Trust Dynamics with Verified Claims}
+\label{sec:trust_dynamics}
+
+Paper~1's trust EWMA $T_j$ updates from prediction
+residuals~\citep{lasser2026gfm}.  Committed and verified claims anchor
+the prediction baseline and affect trust dynamics in three ways.
+
+\paragraph{Reduced initial-period noise.}
+A new agent entering a population with no trust history begins with
+$T_j$ at a prior value, and the EWMA requires multiple observations to
+converge.  Verified capability claims provide a shortcut: a commitment
+that is verified by a substrate-exclusive witness establishes a baseline
+that the actor's trust model can condition on, reducing the number of
+observations needed for convergence.  The verified claim does not
+replace the behavioral evidence---it provides a structural prior that
+the EWMA refines.
+
+\paragraph{Falsification as accelerated detection.}
+When a commitment is falsified ($v = \texttt{fail}$), the prediction
+residual is large by construction: the agent predicted it would
+demonstrate capability $c_k$ and did not.  In the EWMA framework, this
+produces a correspondingly large negative trust update.  The key
+structural property is that falsification is \emph{binary} (pass/fail
+against an algorithmic protocol), not graded (how consistent is
+behavior?), so the signal is clean and unambiguous.  A single falsified
+commitment can move $T_j$ more than many observations of mildly
+inconsistent behavior.
+
+\paragraph{Exogenous risk residuals.}
+Paper~4's risk trust $\Trisk_j$ is computed from the residual between
+claimed and realized risk.  Currently, both the claim and the
+realization are endogenous to the actor's model.  Committed risk claims
+(\S\ref{sec:risk_claims}), verified by cross-substrate witnesses,
+replace the endogenous claim with an exogenous one: the residual
+$\mathbf{r}^{\mathrm{risk}}_j$ is now between what the agent committed
+to and what the witness measured, not between what the actor estimated
+and what the actor observed.  This sharpens $\Trisk_j$ by removing one
+of the two endogenous quantities from the residual computation.
+
+\subsection{The Anti-Monopolar Verification Theorem}
+\label{sec:anti_monopolar}
+
+Substrate-exclusive witnesses require the substrate partition to have
+$m \geq 2$~(\S\ref{sec:witness_m2}).  The following theorem makes the
+consequence precise.
+
+\begin{theorem}[Anti-Monopolar Verification]
+\label{thm:anti_monopolar}
+Let $\mathcal{A} = \{a_1, \ldots, a_n\}$ be a population of agents
+with substrate partition $\{S_1, \ldots, S_m\}$.  If $m = 1$ (the
+population is monopolar), then for every agent $a_j \in \mathcal{A}$
+and every claim $C$, the set of substrate-exclusive witnesses is empty:
+\[
+    \Witness^{\perp}(a_j, C)
+    \;\triangleq\;
+    \{w : s(w) \neq s(a_j)\}
+    \;=\; \emptyset.
+\]
+Consequently, every evaluation function $E$ available to the population
+satisfies $\rho(a_j, E) > 0$, and all verification is endogenous.
+\end{theorem}
+
+\begin{proof}
+If $m = 1$, then all agents (including any candidate witness $w$)
+occupy the same substrate: $s(w) = s(a_j)$ for all $w \in
+\mathcal{A}$.  By Definition~\ref{def:alg_witness}, an algorithmic
+witness requires $s(w) \neq s(a_j)$, so no member of $\mathcal{A}$
+qualifies.  Since the population has no access to substrates outside
+$S_1$ (by the monopolarity assumption), no process outside
+$\mathcal{A}$ on a different substrate is available either.  Therefore
+$\Witness^{\perp}(a_j, C) = \emptyset$ for all $a_j$ and $C$.
+
+With no substrate-exclusive witnesses, every evaluator $E$ available to
+the population runs on substrate $S_1$.  Agent $a_j$, also on $S_1$,
+has $\mathcal{R}(a_j, E) \supseteq \{x \in \mathcal{I}(E) :
+x \text{ is addressable from } S_1\}$, which is non-empty (the agent
+and evaluator share a substrate and can therefore interact).  Thus
+$\rho(a_j, E) > 0$ for all available $E$.
+\end{proof}
+
+\begin{corollary}[Monopolar Undetectability]
+\label{cor:monopolar_undetect}
+In a monopolar population ($m = 1$), no agent can distinguish between:
+\begin{enumerate}
+    \item[(a)] Verification passing because the claim is true, and
+    \item[(b)] Verification passing because the evaluator is endogenous
+    and the claimant has influenced the evaluation.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Distinguishing between (a) and (b) requires a reference evaluation
+that is exogenous to the claimant.  By Theorem~\ref{thm:anti_monopolar},
+no such evaluation exists when $m = 1$.  Therefore the distinction is
+unresolvable from within the population.
+\end{proof}
+
+Theorem~\ref{thm:anti_monopolar} and Corollary~\ref{cor:monopolar_undetect}
+give the anti-monopolar property a second structural justification beyond
+Paper~3's $\volL$ argument~\citep{lasser2026horizon}:
+
+\begin{itemize}
+    \item \textbf{Paper~3:} A monopolar population is anti-maximizing
+    ($\volL$ decreases because cross-substrate cooperative capacity is
+    destroyed).
+    \item \textbf{Paper~5:} A monopolar population is
+    \emph{unverifiable} (no substrate-exclusive witnesses exist, so all
+    capability claims, risk assessments, and behavioral consistency
+    checks are endogenous).
+\end{itemize}
+
+A population that becomes monopolar loses both the safety guarantee
+\emph{and the ability to detect that it has lost it}.  This makes
+monopolar convergence doubly dangerous: the loss of cross-substrate
+cooperative capacity (Paper~3) is compounded by the loss of the
+verification infrastructure that would detect the convergence.  The
+compound failure is silent---from within a monopolar population, all
+verification reports ``everything is fine,'' because the evaluators
+share the substrate that the evaluated agents can influence.
+
+This result strengthens the case for substrate diversity as a
+structural safety property.  Paper~3 argued that diversity is
+instrumentally valuable (it maximizes $\volL$); Paper~5 argues that
+diversity is epistemically necessary (it is the precondition for knowing
+whether the safety guarantee holds).  A safety guarantee that cannot be
+verified is not a guarantee---it is a hope.

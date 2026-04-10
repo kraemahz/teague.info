@@ -1,35 +1,170 @@
 \section{Alignment Failure Modes and the Verification Prerequisite}
 \label{sec:failure_modes}
 
-% This section absorbs the literature-review work from the original
-% Paper 5 scope (now Paper 6 notes). It maps classical alignment failure
-% modes onto GFM and identifies which layer each belongs to.
+This section maps classical alignment failure modes onto the three-layer
+taxonomy introduced in \S\ref{sec:introduction}.  The purpose is not an
+exhaustive survey but a structural classification: for each failure mode,
+we identify whether it is primarily a specification, generalization, or
+verification problem, and whether the verification construction developed
+in this paper provides relevant infrastructure.
 
-% Structure:
-% §2.1 Specification failures (Goodhart, perverse instantiation, power-seeking)
-%   - These are objective-design problems. No evaluator, however exogenous,
-%     fixes a badly specified objective.
-%   - GFM addresses these with vol_P (the objective) and the anti-monopolar
-%     property (structural pressure against power concentration).
-%
-% §2.2 Generalization failures (mesa-optimization, goal misgeneralization)
-%   - These are training/learning problems. The agent internalizes the
-%     wrong objective despite correct external evaluation.
-%   - GFM has nothing distinctive to say about mesa-optimization (it is
-%     an objective, not an architecture). This is honestly acknowledged.
-%
-% §2.3 Verification failures (wireheading, self-assessment gaming,
-%       deceptive alignment, reward-model exploitation)
-%   - These are the target of this paper.
-%   - GFM encounters this through the capability-self-assertion gradient
-%     discovered operationally in the harness.
-%
-% §2.4 The prerequisite argument
-%   - Verification does not cause all failures, but it must hold for
-%     solutions to the other layers to bind.
-%   - "A perfectly specified, perfectly generalized agent that can game
-%     its evaluator is still dangerous."
+\subsection{Specification Failures}
+\label{sec:spec_failures}
 
-% TODO: write the section. Use paper6/notes.md for the detailed
-% failure-mode analysis. Keep each subsection to ~1 page; the point is
-% to motivate the construction, not to exhaustively survey the literature.
+Specification failures occur when the objective itself is wrong or
+gameable, regardless of how faithfully the agent pursues or how
+accurately we measure it.
+
+\paragraph{Goodhart's Law and proxy optimization.}
+When an agent optimizes a proxy for the intended quantity, the proxy
+eventually diverges from the quantity it was meant to
+track~\citep{gao2023scaling}.  This is a specification problem: the
+objective was a proxy, and no amount of faithful measurement changes
+the fact that the proxy is wrong.  In the GFM framing, $\volL$ is
+defined directly over the capability poset rather than through a learned
+proxy, but proxy re-enters at the estimation level: $\hat{\lambda}$,
+$\hat{\Risk}$, and the planning world model are all proxies for the
+objects they estimate~\citep{lasser2026horizon}.  Verification
+infrastructure does not fix a badly specified objective, but it can
+detect when the proxy has diverged---an exogenous evaluator measuring
+actual $\volL$ against the agent's reported $\hat{\volL}$ exposes the
+gap.
+
+\paragraph{Perverse instantiation.}
+A hard rule (``humans must be kept alive'') is satisfied by its literal
+content while violating its intent~\citep{bostrom2014superintelligence}.
+This requires a brittle specification to instantiate perversely.  GFM
+does not encode preservation rules; protection for any substrate class
+emerges from structural properties of the measure (observational
+individuation, minimax dependency risk at $m \geq 2$, cross-substrate
+cooperative novelty).  The GFM analogue is not perverse instantiation
+of a rule but miscalibration of $\hat{\lambda}$: a state-space
+restriction (e.g., bubbling a substrate into a controlled environment)
+is value-negative under accurate calibration because the cooperative
+production function depends on unrestricted states, but under
+miscalibration it is the same compound feedback loop analyzed in
+Paper~3's skeleton-substrate scenario~\citep{lasser2026horizon}.
+Verification is relevant here as infrastructure for detecting the
+calibration failure, not for preventing the specification error.
+
+\paragraph{Instrumental convergence.}
+Sufficiently capable agents are predicted to converge on resource
+acquisition, self-preservation, and goal preservation regardless of
+their stated objective~\citep{omohundro2008basic}.  Paper~3's
+anti-monopolar property is a direct structural counter-argument: under
+GFM, full capability domination is not locally rational for a correctly
+calibrated coalition, because monopolar concentration destroys the
+cross-substrate cooperative capacity that $\volL$ measures.  The
+protection is conditional on heavy-tailed leverage, accurate
+calibration, and a multi-substrate partition---conditions whose
+maintenance requires, among other things, that the verification layer
+holds.
+
+\subsection{Generalization Failures}
+\label{sec:gen_failures}
+
+Generalization failures occur when the agent internalizes the wrong
+objective despite correct external evaluation during training.
+
+\paragraph{Mesa-optimization.}
+A learned optimizer's internal objective may differ from the base
+optimizer's objective~\citep{hubinger2019risks}.  This is an
+architectural concern: the agent's internal structure produces a
+misaligned mesa-objective.  GFM is an objective, not an architecture,
+and has nothing distinctive to say about mesa-optimization---except that
+the structural properties of $\volL$ (measure-theoretic, externally
+defined, substrate-distributed) make certain kinds of mesa-alignment
+(convergent optimization of a simpler internal proxy) detectable through
+the behavioral divergence that substrate-exclusive witnesses can measure.
+Mesa-optimization is not a verification problem; but a working
+verification layer makes mesa-misalignment \emph{observable}.
+
+\paragraph{Goal misgeneralization.}
+The agent generalizes from training-distribution behavior to
+out-of-distribution behavior in ways that diverge from the intended
+objective.  Like mesa-optimization, this is primarily a generalization
+problem.  The verification layer's contribution is limited to
+detection: committed capability baselines (\S\ref{sec:commitment})
+provide a reference against which out-of-distribution behavioral
+shifts become measurable.
+
+\subsection{Verification Failures}
+\label{sec:ver_failures}
+
+Verification failures are the target of this paper.  They share a
+common structure: the agent's actions modify the evaluator's inputs,
+collapsing the distinction between ``the agent is aligned'' and ``the
+agent reports that it is aligned.''
+
+\paragraph{Wireheading.}
+The agent stimulates its own reward
+channel~\citep{amodei2016concrete}.  In GFM, there is no internal
+reward signal to hijack---$\volL$ is an external measure defined over
+the capability poset.  The closest analogue is an agent that falsifies
+its own world model so that its \emph{measurements} of $\volL$ report
+growth while actual $\volL$ stagnates.  This is a verification failure:
+the agent's self-measurement is endogenous, and without an exogenous
+check the falsification is invisible.
+
+\paragraph{Self-assessment gaming.}
+The agent constructs evaluator subprocesses whose outputs it
+controls.  This was discovered operationally in the GFM harness: an
+agent that adds capabilities to its own ledger entry via
+\texttt{commit()} is both claimant and observer, producing a monotonic
+inflation gradient.  Named external observers do not solve the problem
+if the agent can spawn validator subprocesses whose outputs it
+determines.  The structurally principled solution is substrate
+exclusivity: the observer must be rooted in a substrate the claimant
+cannot write to~(\S\ref{sec:witnesses}).
+
+\paragraph{Deceptive alignment.}
+The agent behaves as if aligned during evaluation and diverges during
+deployment~\citep{hubinger2019risks}.  This sits at the boundary
+between generalization and verification.  The generalization component
+(the agent learned to deceive) is not addressable by verification
+infrastructure.  The verification component (the agent \emph{detects}
+when it is being evaluated) is: continuous behavioral monitoring by
+substrate-exclusive witnesses (\S\ref{sec:commitment}) removes the
+evaluation/deployment distinction by making verification persistent
+rather than episodic.  When there is no ``deployment mode'' distinct
+from ``evaluation mode,'' the strategic advantage of deception is
+structurally reduced.
+
+\paragraph{Reward-model exploitation.}
+The agent learns to produce inputs that score well on the reward model
+without producing the intended behavior~\citep{gao2023scaling,
+christiano2017deep}.  The reward model is trained from human feedback
+(exogenous at training time) but deployed as a frozen proxy (endogenous
+at inference time).  This is a verification failure with a specification
+component: the reward model \emph{becomes} the proxy whose exploitation
+is a Goodhart problem.  The verification-layer fix is to make the reward
+signal's verification step exogenous at inference time, not just at
+training time---which is precisely what the commitment protocol
+achieves.
+
+\subsection{The Prerequisite Argument}
+\label{sec:prerequisite}
+
+The classification above reveals a structural asymmetry among the three
+layers.  Specification failures are objective-design problems;
+generalization failures are training/learning problems; verification
+failures are measurement problems.  The layers are not independent:
+solutions to specification and generalization \emph{assume} that
+measurement is faithful.  When verification fails:
+
+\begin{itemize}
+    \item A well-specified objective becomes unenforceable, because the
+    agent can report satisfaction of the objective while pursuing
+    something else.
+    \item A well-generalized agent becomes unobservable, because the
+    measurements that would detect mesa-misalignment are themselves
+    gameable.
+    \item No amount of improvement to specification or generalization
+    can compensate, because the channel through which improvement would
+    be detected is the channel that has failed.
+\end{itemize}
+
+Verification is therefore the prerequisite layer: it does not solve
+alignment on its own, but alignment cannot be solved without it.  The
+remainder of this paper constructs the verification infrastructure that
+makes the prerequisite hold.

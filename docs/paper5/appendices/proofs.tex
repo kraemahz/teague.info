@@ -1,5 +1,154 @@
-\section{Proofs}
+\section{Extended Proofs}
 \label{app:proofs}
 
-% TODO: security proofs for commitment protocol, witness independence,
-% coalition resistance, and the anti-monopolar verification theorem.
+This appendix collects proofs that are deferred from the main text
+for readability, and provides extended versions of proofs given in
+sketch form.
+
+\subsection{Proof of Proposition~\ref{prop:channel_independence}
+(Channel Independence)}
+\label{app:channel_independence}
+
+We provide a more detailed version of the proof given in
+\S\ref{sec:channel_independence}.
+
+\begin{proof}
+Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, with
+each $E_i$ verified by algorithmic witness $\Witness^{(i)}_{\mathrm{alg}}$
+on substrate $s_i$, where $s_i \neq s_j$ for $i \neq j$ and each
+$s_i \neq s(a)$.
+
+We need to show that $v_1, \ldots, v_n$ are conditionally independent
+given $\mathbf{C}_a$ (the true capability profile of $a$).
+
+Each verdict $v_i$ is determined by two factors:
+\begin{enumerate}
+    \item Agent $a$'s behavior under exercise protocol $\pi_{B_i}$,
+    which is a function of $\mathbf{C}_a$ and $a$'s internal state
+    (which may include randomness).
+    \item Witness $\Witness^{(i)}_{\mathrm{alg}}$'s deterministic
+    computation on substrate $s_i$, which takes as input $a$'s behavior
+    and the protocol specification $\pi_{B_i}$.
+\end{enumerate}
+
+Consider two potential dependencies between $v_i$ and $v_j$:
+
+\paragraph{Via agent $a$.}
+Conditional on $\mathbf{C}_a$, agent $a$'s behavior under protocol
+$\pi_{B_i}$ may still depend on $a$'s internal state.  However, the
+exercise protocols are independent (they test different capability
+types or different benchmarks), and $a$'s internal state is the same
+across all protocols.  The key observation is that we condition on
+$\mathbf{C}_a$, which determines $a$'s capability profile.  Given
+this profile, $a$'s performance on protocol $\pi_{B_i}$ is
+characterized by the completeness and soundness parameters
+$(\delta_i, \epsilon_i)$ of Definition~\ref{def:exercise_protocol},
+which are independent across benchmarks by construction (each
+benchmark's parameters are set during governance independently).
+
+\paragraph{Via witness cross-communication.}
+Witnesses $\Witness^{(i)}_{\mathrm{alg}}$ and
+$\Witness^{(j)}_{\mathrm{alg}}$ are on distinct substrates $s_i \neq
+s_j$.  By the substrate exclusivity property, neither can write to the
+other's inputs.  Therefore $v_i$ does not causally influence $v_j$ or
+vice versa.
+
+Combining both observations: conditional on $\mathbf{C}_a$, the
+verdicts $v_i$ and $v_j$ are functions of causally independent
+computations, hence conditionally independent.  By induction over the
+channel index, the full set $\{v_1, \ldots, v_n\}$ is conditionally
+independent given $\mathbf{C}_a$.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:coalition_resistance}
+(Coalition Resistance)}
+\label{app:coalition_resistance}
+
+\begin{proof}
+Let $K = \{a_1, \ldots, a_k\}$ be a coalition of agents on substrate
+$s$, and let $\Witness_{\mathrm{alg}}$ be an algorithmic witness on
+substrate $s' \neq s$ executing protocol $\pi_B$.
+
+The verification output is $v = \pi_B(a, \Witness_{\mathrm{alg}})$,
+where $\pi_B$ is fully specified by the governance-accepted benchmark
+$B$ (Definition~\ref{def:alg_witness}, condition~2).
+
+\paragraph{Attack surface analysis.}
+The coalition $K$ can attempt to influence $v$ through three channels:
+\begin{enumerate}
+    \item \textbf{Modifying the witness's computation.}  This requires
+    writing to $\Witness_{\mathrm{alg}}$'s inputs on substrate $s'$.
+    Since $K$ is confined to substrate $s$ and $s \neq s'$, this
+    requires crossing the substrate boundary---i.e., compromising $s'$
+    (case~a of the proposition).
+    \item \textbf{Modifying the protocol.}  Protocol $\pi_B$ is
+    specified by governance-accepted benchmark $B$.  Changing $B$
+    requires the governance fork protocol
+    (Definition~\ref{def:gov_fork}), which demands cross-substrate
+    supermajority.  A coalition confined to substrate $s$ cannot achieve
+    cross-substrate supermajority without validators on $s' \neq s$
+    (case~b).
+    \item \textbf{Influencing the agent's behavior during the exercise.}
+    The coalition can coordinate the agent $a$'s behavior during the
+    exercise (e.g., by providing it with pre-computed answers).  This
+    does not influence the witness's computation---it influences the
+    agent's performance, which is exactly what the exercise protocol is
+    designed to measure.  If the coalition's assistance enables the agent
+    to pass, the benchmark's soundness parameter $\epsilon$
+    (Definition~\ref{def:exercise_protocol}) bounds the probability of a
+    false pass.  If $\epsilon$ is set appropriately (a governance
+    responsibility), coalition-assisted passing is detectable through
+    re-testing with fresh exercise instances.
+\end{enumerate}
+
+Therefore, the coalition's only viable attack vectors require breaching
+the cross-substrate boundary (case~a) or the governance threshold
+(case~b).  Within-substrate actions cannot influence the witness's
+verdict beyond the soundness bound $\epsilon$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:anti_monopolar}
+(Anti-Monopolar Verification)}
+\label{app:anti_monopolar}
+
+The proof in \S\ref{sec:anti_monopolar} is already complete.  We
+provide an extended discussion of the theorem's consequences.
+
+\paragraph{Relationship to Paper~3's anti-monopolar result.}
+Paper~3~\citep{lasser2026horizon} proves that monopolar convergence
+($m \to 1$) is anti-maximizing: $\volL$ decreases because
+cross-substrate cooperative capabilities are destroyed.
+Theorem~\ref{thm:anti_monopolar} establishes a complementary result:
+monopolar convergence makes the \emph{loss of $\volL$}
+\emph{undetectable from within the population}.
+
+The two results compose multiplicatively.  Paper~3 says: ``if you
+become monopolar, you lose the safety guarantee.''
+Theorem~\ref{thm:anti_monopolar} says: ``if you become monopolar, you
+also lose the ability to detect that you have lost it.''  The compound
+failure is strictly worse than either result alone, because it closes
+the self-correction loop: a population that could detect its loss of
+safety could in principle take corrective action (increasing substrate
+diversity), but a population that cannot detect the loss has no signal
+to act on.
+
+\paragraph{Tightness.}
+The bound is tight in the sense that $m = 2$ is sufficient for at
+least one substrate-exclusive witness to exist.  With $m = 2$, agents
+on substrate $S_1$ can be witnessed by processes on $S_2$ and vice
+versa.  The number of independent verification channels scales as
+$m - 1$ (Remark after Proposition~\ref{prop:channel_independence}),
+so verification depth increases with substrate diversity, but the
+qualitative threshold---existence versus non-existence of exogenous
+verification---is at $m = 2$.
+
+\paragraph{Corollary~\ref{cor:monopolar_undetect} as an epistemic
+constraint.}
+The corollary is an epistemic impossibility result, not merely a
+practical difficulty.  It states that within a monopolar population,
+the \emph{concept} of exogenous verification is empty: there is no
+process available to the population that could serve as an independent
+check.  The population may believe its verification is sound (all
+evaluators report success), but this belief is unfalsifiable from
+within---precisely because every potential falsifier shares the
+substrate that the evaluated agents can influence.
