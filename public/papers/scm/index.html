@@ -1848,7 +1848,10 @@ p(\epsilon)\,d\epsilon
 <p>is finite for any prior supported on
 <span class="math inline">[\epsilon_{\min}, \epsilon_{\max}]</span> with
 <span class="math inline">0 < \epsilon_{\min}</span> and <span class="math inline">\epsilon_{\max} < 2|\mu_j|</span>
-(the detection regime where the SPRT drift is positive),
+(the detection regime where the SPRT drift is positive; the
+upper cutoff requires the defender to have prior beliefs about
+plausible scorpion contraction magnitudes, since <span class="math inline">|\mu_j|</span> is
+precisely what the SPRT is trying to detect),
 and the tail bound
 <span class="math inline">\Pr_{p}(\tau_{\mathrm{adapt}} > T)</span> is the prior mass on the
 <span class="math inline">\epsilon</span>-region where
@@ -1861,7 +1864,21 @@ support <d-cite key="jaynes1957information"></d-cite>, equivalently the
 scale-invariant maxent prior under the multiplicative invariance
 group <d-cite key="jaynes1968prior"></d-cite>, corresponding to
 maximum uncertainty about the scale of the adversary's evasion
-margin. The defense requires the actor to
+margin. A caveat: log-uniform is maxent over the parameter
+<span class="math inline">\epsilon</span>, but &ldquo;maxent over the parameter&rdquo; is not the same as
+&ldquo;minimax-optimal defender distribution against an adversary
+minimizing expected detection time.&rdquo; The game-theoretic problem
+of finding the defender's minimax-optimal randomization is more
+involved and is not developed here; log-uniform is a defensible
+default under maximum uncertainty, not a proven optimum. A second,
+independent justification comes from the adversary's own
+learning problem: to optimize against deployed randomization,
+the adversary must estimate <span class="math inline">p(\epsilon)</span> from flag observations
+across epochs, and the information cost of learning a distribution
+scales with its entropy. Log-uniform maximizes this entropy on
+bounded log-support, making it near-optimal against a Bayesian
+adversary trying to infer <span class="math inline">p(\epsilon)</span> from observations.
+The defense requires the actor to
 <em>deploy</em> randomized <span class="math inline">\epsilon</span>&mdash;drawing from <span class="math inline">p(\epsilon)</span>
 each epoch and keeping the draw private&mdash;not merely to
 marginalize analytically. Under deployed randomization, the
@@ -1877,6 +1894,37 @@ known parameters are the exploit surface; replacing a point
 <span class="math inline">\epsilon</span> with a privately-drawn <span class="math inline">p(\epsilon)</span> is one instance of
 the randomization-family defense that applies to all three
 adversarial surfaces identified above.</p>
+
+<p>The defense is not free. Under log-uniform <span class="math inline">p(\epsilon)</span> the
+integrand of the marginalized evasion bound is
+dominated by the <span class="math inline">1/\epsilon^2</span> tail near <span class="math inline">\epsilon_{\min}</span>,
+giving</p>
+
+<div class="math display">
+\mathbb{E}_{p}[\bar{\tau}]
+\;\approx\;
+\frac{\sigma_{\mathrm{do}}^2}
+     {|\mu_j|\,\epsilon_{\min}\,
+      \log(\epsilon_{\max}/\epsilon_{\min})}
+</div>
+
+<p>for <span class="math inline">\epsilon_{\min} \ll |\mu_j|</span>. Relative to fixed
+<span class="math inline">\epsilon = \epsilon_{\max}</span> (the least-delay choice), the
+expected detection time expands by a factor
+<span class="math inline">\epsilon_{\max}/[\epsilon_{\min}\,
+\log(\epsilon_{\max}/\epsilon_{\min})]</span>. For plausible
+operational values <span class="math inline">\epsilon_{\min} = 0.01</span>,
+<span class="math inline">\epsilon_{\max} = 0.1</span>, this factor is approximately
+4.3&mdash;material but bounded. The parameter <span class="math inline">\epsilon_{\min}</span>
+is thus a first-class policy variable: reducing it extends the
+range of detectable contractions but proportionally expands
+expected detection delay. The Markov-inequality bound
+(Proposition 4(a)) remains valid
+under randomization, but the reference timescale <span class="math inline">\bar{\tau}</span>
+inflates by the same factor, so the high-probability detection
+guarantee degrades proportionally. The defender trades
+evasion-bandwidth robustness against a quantifiable expansion
+in expected detection time.</p>
 
 <p><em><span class="math inline">T_j</span> / <span class="math inline">T^{\mathrm{risk}}_j</span> independence</em>
 (<a href="#sec:risk_trust">Section 3</a>). The behavioral trust <span class="math inline">T_j</span> and
