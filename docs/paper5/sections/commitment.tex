@@ -93,17 +93,57 @@ $r \mapsto g^C h^r$ is a bijection $\mathbb{Z}_q \to \mathbb{G}$
 $\mathbb{G}$ regardless of $C$.
 \end{proof}
 
+\paragraph{Why binding matters.}
+Binding prevents claim mutation: without it, an agent could commit
+to claim $C$, observe the exercise outcome, and then open the
+commitment to a different claim $C'$ that better fits the result.
+Under Pedersen, opening to $C' \neq C$ requires solving a discrete
+logarithm, which is infeasible for any polynomially-bounded agent.
+Importantly, the blinding factor $r$ does not help the agent here:
+$r$ is used only in the commitment arithmetic and has no influence
+on the exercise protocol or its outcome.  The agent is free to
+choose any $r$ (this freedom is what makes hiding work), but no
+choice of $r$ allows opening to a different $C$.
+
+\paragraph{Why hiding matters.}
+Binding is the load-bearing security property; hiding is
+situationally important.  Hiding serves three purposes:
+\begin{enumerate}
+    \item \textbf{Information leakage prevention.} Commitments are
+    published to the ledger, which is publicly auditable.  Without
+    hiding, every participant sees every pending claim, leaking
+    competitive intelligence and enabling adversarial preparation
+    before verification runs.
+    \item \textbf{Selective-reveal resistance.} An agent that makes
+    multiple commitments could, without hiding, observe which claims
+    the exercise would validate and reveal only those, biasing the
+    verification record.  (The primary defense is mandatory reveal
+    within a time window, but hiding makes the attack information-
+    theoretically impossible rather than protocol-enforced.)
+    \item \textbf{Zero-knowledge proofs
+    (\S\ref{sec:zk_verification}).}  ZK verification requires
+    hiding: the agent proves it satisfies a predicate without
+    revealing which claim satisfies it.  Without hiding, the
+    commitment itself would leak the claim.
+\end{enumerate}
+For standard single-claim verification where the witness needs to
+know the claim to run the exercise, hiding from the \emph{witness}
+is unnecessary (the witness learns the claim through the exercise
+protocol itself).  In this case, hiding protects against
+\emph{non-witness observers} on the ledger, not against the
+assigned witness.
+
 \begin{remark}
-Pedersen commitments are computationally binding and perfectly hiding.
-This trade-off is correct for our setting: the hiding property must hold
-unconditionally (the witness should not learn the claim even with
-unbounded computation, because a computationally powerful witness on a
-silicon substrate could otherwise break hiding), while binding need only
-hold against computationally bounded adversaries (the agent has bounded
-compute within a given time horizon).  If the trust model required
-unconditional binding, one could substitute a statistically binding,
-computationally hiding scheme, but this weakens the hiding guarantee
-against powerful witnesses.
+Pedersen commitments are computationally binding and perfectly
+hiding.  This trade-off is correct for our setting: hiding must
+hold unconditionally (a computationally powerful observer on the
+ledger should not be able to learn pending claims), while binding
+need only hold against computationally bounded agents.  A
+superintelligent agent with polynomial computational resources is
+still a PPT adversary, so the binding guarantee holds.  If the
+setting required unconditional binding, one could substitute a
+statistically binding, computationally hiding scheme at the cost of
+weakening the hiding guarantee against powerful observers.
 \end{remark}
 
 \subsection{Zero-Knowledge Verification}
