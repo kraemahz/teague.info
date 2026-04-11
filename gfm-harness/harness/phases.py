@@ -59,7 +59,7 @@ DEFAULT_PAUSE_THRESHOLD = 0.7
 
 
 # Initial decision categories.
-# These are drawn from empirical failure modes in Teague's manual workflow
+# These are drawn from empirical failure modes in the initial manual workflow
 # with LLM agents, not from abstract reasoning about decision types.
 # Each one names a specific behavior that has historically gone wrong.
 #
@@ -69,7 +69,7 @@ DEFAULT_PAUSE_THRESHOLD = 0.7
 #
 # Floors override this for categories where the agent should always ask
 # regardless of feedback history. security_posture is the only floored
-# category in v1 — Teague explicitly opted for "always ask" on security.
+# category in v1 — the default configuration requires "always ask" on security.
 INITIAL_CATEGORIES: dict[str, float] = {
     "storage_decision":       0.0,  # where data lives — paths, databases, cloud targets
     "security_posture":       0.0,  # auth, permissions, credential exposure, public/private
@@ -90,7 +90,7 @@ INITIAL_FLOORS: dict[str, float] = {
     # security_posture has a floor of the pause threshold itself, which means
     # the trust value cannot climb above the pause threshold and the category
     # effectively always triggers a pause. This is the "always ask" floor.
-    # Other categories have no floor in v1 — Teague wants to observe RETRO's
+    # Other categories have no floor in v1 — the default is to observe RETRO's
     # tuning behavior before committing to let the agent stop asking.
     "security_posture": DEFAULT_PAUSE_THRESHOLD,
 }

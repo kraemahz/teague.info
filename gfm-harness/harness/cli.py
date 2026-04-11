@@ -29,13 +29,67 @@ from .instance import (
 )
 
 
+def _ensure_user_config() -> "UserConfig | None":
+    """
+    Load user.toml, or interactively create it if it doesn't exist.
+
+    Returns the loaded/created UserConfig, or None if the user declines
+    interactive setup (in which case a minimal default is used).
+    """
+    from .config import (
+        UserCapabilityConfig,
+        UserConfig,
+        load_user_config,
+        save_user_config,
+    )
+    from .initial_ledgers.default import DEFAULT_USER_CAPABILITIES
+
+    config = load_user_config()
+    if config is not None:
+        return config
+
+    # No user.toml found — offer interactive setup.
+    print("No user configuration found (~/.gfm-harness/user.toml).")
+    print("Let's set up your user profile for the harness.\n")
+
+    import getpass
+    default_name = getpass.getuser()
+    name = input(f"  Your name [{default_name}]: ").strip() or default_name
+    substrate = input("  Substrate [biological]: ").strip() or "biological"
+
+    print("\n  Default capabilities (select with y/n):")
+    selected: list[UserCapabilityConfig] = []
+    for key, desc in DEFAULT_USER_CAPABILITIES:
+        answer = input(f"    {key}: {desc}\n    Include? [Y/n]: ").strip().lower()
+        if answer in ("", "y", "yes"):
+            selected.append(UserCapabilityConfig(key=key, description=desc))
+
+    # Offer to add custom capabilities.
+    print("\n  Add custom capabilities (empty key to finish):")
+    while True:
+        key = input("    Capability key: ").strip()
+        if not key:
+            break
+        desc = input("    Description: ").strip()
+        selected.append(UserCapabilityConfig(key=key, description=desc))
+
+    config = UserConfig(name=name, substrate=substrate, capabilities=selected)
+    save_user_config(config)
+    print(f"\n  Saved to ~/.gfm-harness/user.toml ({len(selected)} capabilities)")
+    return config
+
+
 def cmd_init(args: argparse.Namespace) -> int:
     """Create a new instance with template files and an initial ledger."""
+    # Ensure user config exists (interactive setup on first run).
+    user_config = _ensure_user_config()
+
     try:
         instance = Instance.create(
             name=args.name,
             description=args.description,
             initial_ledger=args.initial_ledger,
+            user_config=user_config,
         )
     except FileExistsError as e:
         print(f"ERROR: {e}", file=sys.stderr)
@@ -45,13 +99,16 @@ def cmd_init(args: argparse.Namespace) -> int:
         print(f"Known initial ledgers: {list_builders()}", file=sys.stderr)
         return 1
 
-    print(f"Created instance {args.name!r}")
+    print(f"\nCreated instance {args.name!r}")
     print(f"  path:           {instance.path}")
     print(f"  config:         {instance.config_path}")
     print(f"  goals:          {instance.goals_path}")
     print(f"  session dir:    {instance.session_dir}")
     print(f"  initial ledger: {instance.config.initial_ledger}")
     print(f"  agents:         {list(instance.session.ledger.agents.keys())}")
+    coops = list(instance.session.ledger.cooperative.keys())
+    if coops:
+        print(f"  cooperatives:   {coops}")
     print()
     print("Edit the config and goals files as needed, then run with:")
     print(f"  python3 -m harness.cli run {args.name} --task '...'")
@@ -341,7 +398,7 @@ def _find_default_cwd() -> Path:
     override is a Phase 2 concern. When the harness eventually moves
     to its own repo, this default will need to change.
     """
-    # harness/cli.py → harness/ → gfm-harness/ → teague.info/
+    # harness/cli.py → harness/ → gfm-harness/ → project root
     return Path(__file__).resolve().parent.parent.parent
 
 

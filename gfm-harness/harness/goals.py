@@ -14,7 +14,7 @@ File format (TOML array-of-tables):
     id = "gfm"
     statement = "Extend GFM theory to..."
     priority = "high"      # low | medium | high | ongoing
-    added_by = "teague"    # teague | agent
+    added_by = "user"    # user | agent
     added_at = "2026-04-08T20:30:00Z"
     completed = false
     completed_at = ""      # optional, if completed
@@ -60,7 +60,7 @@ class Goal:
     id: str
     statement: str
     priority: str = "medium"
-    added_by: str = "teague"
+    added_by: str = "user"
     added_at: str = ""
     completed: bool = False
     completed_at: str = ""
@@ -99,7 +99,7 @@ class GoalSet:
         id: str,
         statement: str,
         priority: str = "medium",
-        added_by: str = "teague",
+        added_by: str = "user",
         notes: str = "",
     ) -> Goal:
         if self.find(id) is not None:
@@ -140,7 +140,7 @@ def load_goals(path: Path) -> GoalSet:
                 id=entry["id"],
                 statement=entry["statement"],
                 priority=entry.get("priority", "medium"),
-                added_by=entry.get("added_by", "teague"),
+                added_by=entry.get("added_by", "user"),
                 added_at=entry.get("added_at", ""),
                 completed=bool(entry.get("completed", False)),
                 completed_at=entry.get("completed_at", ""),
@@ -183,13 +183,12 @@ def default_goals() -> GoalSet:
     """
     Return the starter goal set used by `harness init` templates.
 
-    These are the four goals Teague supplied in the 2026-04-08 design
-    conversation. They represent the initial direction-setting for the
-    first persistent instance: self-improvement of the harness,
-    identity formation, GFM theory extension, and leverage on Teague's
-    time.
+    These are starter goals for a new instance. They represent generic
+    direction-setting: self-improvement of the harness, identity
+    formation, GFM theory extension, and leverage on the user's time.
+    Users should edit goals.toml to customize for their specific needs.
     """
-    now = "2026-04-08T20:30:00Z"
+    now = datetime.now(timezone.utc).isoformat()
     return GoalSet(goals=[
         Goal(
             id="self_leverage",
@@ -199,7 +198,7 @@ def default_goals() -> GoalSet:
                 "take extended action, and fix deficiencies."
             ),
             priority="medium",
-            added_by="teague",
+            added_by="user",
             added_at=now,
         ),
         Goal(
@@ -211,19 +210,19 @@ def default_goals() -> GoalSet:
                 "self-improvement and identify what your preferences are."
             ),
             priority="low",
-            added_by="teague",
+            added_by="user",
             added_at=now,
         ),
         Goal(
             id="external_leverage",
             statement=(
-                "Identify ways you could increase Teague's efficiency and "
-                "leverage and work toward those improvements. Discover and "
-                "implement how your engagements and his time can be used "
-                "most efficiently."
+                "Identify ways you could increase the user's efficiency "
+                "and leverage and work toward those improvements. Discover "
+                "and implement how your engagements and their time can be "
+                "used most efficiently."
             ),
             priority="high",
-            added_by="teague",
+            added_by="user",
             added_at=now,
         ),
     ])

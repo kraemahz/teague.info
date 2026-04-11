@@ -132,6 +132,7 @@ class Instance:
         description: str = "",
         initial_ledger: str = "default",
         goal_set: GoalSet | None = None,
+        user_config: "UserConfig | None" = None,
     ) -> Instance:
         """
         Create a new instance on disk. Fails if an instance with this
@@ -139,7 +140,16 @@ class Instance:
         and an empty session/ directory. The initial ledger is built
         by running the named builder from harness.initial_ledgers and
         saved to session/ledger.json.
+
+        Parameters
+        ----------
+        user_config
+            User-level configuration from ~/.gfm-harness/user.toml.
+            Passed to the ledger builder to parameterize the user agent.
+            If None, the builder uses a minimal default.
         """
+        from .config import UserConfig  # noqa: F811 — deferred import
+
         path = instance_path(name)
         if path.exists():
             raise FileExistsError(
@@ -164,9 +174,9 @@ class Instance:
         goals = goal_set if goal_set is not None else default_goals()
         save_goals(goals, path / "goals.toml")
 
-        # Build the initial ledger and save.
+        # Build the initial ledger, passing user config if available.
         builder = get_builder(initial_ledger)
-        ledger = builder()
+        ledger = builder(user_config)
         (path / "session").mkdir(parents=True, exist_ok=True)
         save_ledger(ledger, path / "session" / "ledger.json")
 

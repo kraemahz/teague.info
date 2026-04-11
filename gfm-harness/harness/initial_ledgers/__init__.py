@@ -11,7 +11,7 @@ re-running the builder.
 
 To add a new initial ledger:
   1. Create harness/initial_ledgers/<name>.py exporting a
-     build_initial_ledger() -> CapabilityLedger function.
+     build_initial_ledger(user_config) -> CapabilityLedger function.
   2. Register it in REGISTRY below.
   3. Reference it from an instance's config.toml via
      initial_ledger = "<name>".
@@ -26,12 +26,15 @@ from __future__ import annotations
 
 from typing import Callable
 
+from ..config import UserConfig
 from ..ledger import CapabilityLedger
 
 from . import default
 
 
-BuilderFn = Callable[[], CapabilityLedger]
+# Builders now accept an optional UserConfig so the user agent can
+# be parameterized from ~/.gfm-harness/user.toml.
+BuilderFn = Callable[[UserConfig | None], CapabilityLedger]
 
 
 REGISTRY: dict[str, BuilderFn] = {
