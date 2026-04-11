@@ -12,10 +12,12 @@ and~\ref{prop:channel_independence}
 
 The main-text proofs (\S\ref{sec:channel_independence}) are now the
 primary versions.  Proposition~\ref{prop:channel_isolation} (Channel
-Isolation) provides the adversarially robust result requiring only
-substrate exclusivity; Proposition~\ref{prop:channel_independence}
+Isolation) provides the result that is robust against single-substrate
+coalitions, requiring only substrate exclusivity;
+Proposition~\ref{prop:channel_independence}
 (Channel Independence) strengthens to full conditional independence
-under additional sufficiency and independent-randomness assumptions.
+under additional joint-sufficiency and independent-randomness
+assumptions.
 We provide supplementary discussion of the conditioning requirements
 for the stronger result.
 
@@ -36,14 +38,19 @@ same test-suite family may share structural biases.  The assumption
 holds when the governance process produces genuinely independent
 benchmark designs; the proposition's guarantee is conditional on it.
 
-\paragraph{Why condition on capability profile.}
+\paragraph{Why condition on capability profile (joint sufficiency).}
 Agent $a$'s internal state (training history, memory, strategic
-disposition) is a shared cause across all exercises.  The capability
-profile $\mathbf{C}_a$ is a sufficient statistic for exercise
-outcomes under the completeness and soundness model of
-Definition~\ref{def:exercise_protocol}: given $\mathbf{C}_a$, the
-agent's performance on each benchmark is characterized by
-$(\delta_i, \epsilon_i)$, which are set per-benchmark by governance.
+disposition) is a shared cause across all exercises.  The joint
+sufficiency assumption (iii) requires that $\mathbf{C}_a$ absorbs
+all such cross-exercise dependencies: conditional on $\mathbf{C}_a$,
+the agent's performance on $\pi_{B_i}$ is independent of its
+performance on $\pi_{B_j}$.  This is strictly stronger than marginal
+sufficiency (which would only require that $\mathbf{C}_a$ predicts
+per-benchmark performance without guaranteeing cross-benchmark
+independence).  The joint requirement excludes persistent
+cross-exercise state---e.g., an agent that learns from one exercise
+and adapts its strategy for the next---and shared agent-side
+randomness not absorbed by $\mathbf{C}_a$.
 If the agent has latent strategic state not captured by $\mathbf{C}_a$
 (e.g., a deceptive agent that adapts its behavior per-benchmark),
 the conditional-independence guarantee of
@@ -52,10 +59,10 @@ channel-isolation guarantee of
 Proposition~\ref{prop:channel_isolation} still holds, because the
 isolation result depends only on substrate exclusivity, not on the
 agent's internal state.  This is the structural reason for separating
-the two results: isolation is the adversarially load-bearing property,
-and independence is the additional statistical guarantee available
-when the agent's capability profile is an accurate summary of its
-exercise-level behavior.
+the two results: isolation is the load-bearing property against
+single-substrate coalitions, and independence is the additional
+statistical guarantee available when the agent's capability profile
+is a jointly sufficient summary of its exercise-level behavior.
 
 \subsection{Proof of Proposition~\ref{prop:coalition_resistance}
 (Coalition Resistance)}

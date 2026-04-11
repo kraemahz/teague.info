@@ -32,12 +32,14 @@ separating the infrequent, human-speed governance decision from the
 frequent, machine-speed per-claim verification.
 
 Within the GFM framework, the construction closes three open issues.
-First, it provides the observation-channel integrity that
-multi-channel attribution~\citep{lasser2026scm} assumes: channel
-isolation (Proposition~\ref{prop:channel_isolation}) holds
-adversarially under substrate exclusivity alone, and full conditional
-independence (Proposition~\ref{prop:channel_independence}) holds under
-additional sufficiency assumptions.  Second, it upgrades
+First, it provides observation-channel integrity for
+multi-channel attribution~\citep{lasser2026scm}: channel
+isolation (Proposition~\ref{prop:channel_isolation}) prevents
+single-substrate coalitions from injecting coordinated false evidence
+across channels, and full conditional
+independence (Proposition~\ref{prop:channel_independence}), which
+licenses optimal log-odds aggregation, holds under
+additional joint-sufficiency assumptions.  Second, it upgrades
 SPRT-based scorpion detection from actor-estimated baselines to committed
 baselines that, when the committed profile is at least as discriminating
 as the actor's estimate (KL-dominance), provide at least equal detection

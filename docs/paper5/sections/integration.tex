@@ -45,7 +45,7 @@ $j \neq i$.
 \begin{proof}
 By Definition~\ref{def:alg_witness}, each witness
 $\Witness^{(i)}_{\mathrm{alg}}$ executes on substrate $s_i$.  By
-assumption~(i), the substrates are pairwise distinct and disjoint
+assumption, the substrates are pairwise distinct and disjoint
 from $s(a)$.  A coalition $K$ on substrate $s$ can write only to
 processes on $s$ (substrate exclusivity).  If $s \neq s_i$, then $K$
 cannot write to $\Witness^{(i)}_{\mathrm{alg}}$'s inputs.  Since
@@ -55,15 +55,21 @@ In particular, $K$ cannot simultaneously corrupt two or more
 channels.
 \end{proof}
 
-Channel isolation is the adversarially robust result: it holds
-regardless of the agent's internal state, strategic behavior, or
-latent variables not captured by the capability profile.  The absence
-of a write path means that a coalition on one substrate cannot
-simultaneously corrupt multiple channels, which is sufficient for
-Paper~4's multi-channel attribution argument~\citep{lasser2026scm}:
-the log-odds aggregation tolerates correlated evidence as long as
-no single actor can inject correlated \emph{false} evidence across
-channels.
+Channel isolation is the adversarially robust result for
+single-substrate coalitions: it holds regardless of the agent's
+internal state, strategic behavior, or latent variables not captured
+by the capability profile.  The absence of a write path means that
+a coalition confined to one substrate cannot simultaneously corrupt
+multiple channels, restoring \emph{channel integrity} for Paper~4's
+multi-channel attribution~\citep{lasser2026scm}: no single-substrate
+actor can inject coordinated false evidence across channels.
+Channel integrity is weaker than the full conditional independence
+that optimal log-odds aggregation requires---natural correlations
+between channels (e.g., from shared agent state) may still exist
+under isolation alone.  The stronger conditional-independence
+guarantee, which licenses exact log-odds combination, requires the
+additional assumptions of
+Proposition~\ref{prop:channel_independence} below.
 
 Under additional assumptions about the agent's internal state, the
 isolation result strengthens to full conditional independence:
@@ -76,11 +82,14 @@ Proposition~\ref{prop:channel_isolation}, assume additionally:
     \item[(ii)] \textbf{Independent governance:} The benchmark
     parameters $\{B_1, \ldots, B_n\}$ are independently specified
     by governance.
-    \item[(iii)] \textbf{Sufficiency:} $\mathbf{C}_a$ is a sufficient
-    statistic for agent $a$'s exercise-level behavior---i.e.,
-    conditional on $\mathbf{C}_a$, the agent's performance on protocol
-    $\pi_{B_i}$ does not depend on latent state beyond what
-    $\mathbf{C}_a$ captures.
+    \item[(iii)] \textbf{Joint sufficiency:} $\mathbf{C}_a$ is a
+    jointly sufficient statistic for agent $a$'s exercise-level
+    behavior across all benchmarks---i.e., conditional on
+    $\mathbf{C}_a$, the agent's performance on protocol $\pi_{B_i}$
+    is independent of its performance on $\pi_{B_j}$ for $i \neq j$.
+    This excludes persistent cross-exercise state (e.g., the agent
+    learning from one exercise and adapting its strategy for the next)
+    and shared agent-side randomness not absorbed by $\mathbf{C}_a$.
     \item[(iv)] \textbf{Independent randomness:} For statistical
     exercise protocols, each witness $\Witness^{(i)}_{\mathrm{alg}}$
     draws its randomness independently of other witnesses' randomness.
@@ -101,22 +110,23 @@ Conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, all shared causes
 are blocked:
 \begin{itemize}
     \item \textbf{No agent-mediated path:}  By assumption~(iii),
-    $\mathbf{C}_a$ is sufficient for $a$'s exercise-level behavior:
-    conditional on $\mathbf{C}_a$, the agent's latent state (training
-    history, strategic disposition, memory of prior exercises) does not
-    further predict performance on any $\pi_{B_i}$.  This absorbs
-    potential correlations from shared task content across benchmarks
-    (e.g., two benchmarks testing overlapping skills): the sufficiency
-    assumption entails that any such overlap is already captured by
-    $\mathbf{C}_a$.  The agent's performance on each $\pi_{B_i}$ is
-    then characterized by the completeness and soundness parameters
-    $(\delta_i, \epsilon_i)$ of
+    $\mathbf{C}_a$ is jointly sufficient: conditional on
+    $\mathbf{C}_a$, the agent's performance on $\pi_{B_i}$ is
+    independent of its performance on $\pi_{B_j}$.  This blocks
+    correlations from shared latent state (training history, strategic
+    disposition, memory of prior exercises), persistent cross-exercise
+    adaptation (the agent learning from one exercise and modifying its
+    approach to the next), and shared task content across benchmarks
+    (e.g., two benchmarks testing overlapping skills).  The agent's
+    performance on each $\pi_{B_i}$ is then characterized by the
+    completeness and soundness parameters $(\delta_i, \epsilon_i)$ of
     Definition~\ref{def:exercise_protocol}, which are set independently
     per benchmark by governance (assumption~(ii)).
     \item \textbf{No witness-mediated path:}  By
     Proposition~\ref{prop:channel_isolation}, no single-substrate
     coalition can write to two witnesses simultaneously.  Since each
-    witness is on a distinct substrate ($s_i \neq s_j$; assumption~(i)),
+    witness is on a distinct substrate ($s_i \neq s_j$; inherited from
+    Proposition~\ref{prop:channel_isolation}),
     witness $\Witness^{(i)}_{\mathrm{alg}}$ cannot influence
     $\Witness^{(j)}_{\mathrm{alg}}$.
     \item \textbf{No shared-randomness path:}  Per assumption~(iv),
