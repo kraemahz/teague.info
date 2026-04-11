@@ -20,8 +20,8 @@ $c_k$ is an instantiation of the commitment protocol
 (Definition~\ref{def:commitment_protocol}) with:
 \begin{itemize}
     \item \textbf{Claim:} $C = c_k \in \mathcal{P}$.
-    \item \textbf{Commitment:} $\lambda = \Commit(c_k, r)$ published to
-    $\Ledger$.
+    \item \textbf{Commitment:} $\lambda = \Commit((c_k, B_\tau), r)$
+    published to $\Ledger$, binding both the claim and the benchmark.
     \item \textbf{Exercise protocol:} The algorithmic witness
     $\Witness_{\mathrm{alg}}$ constructs a scenario $\sigma$ that
     requires $c_k$ per the governance-accepted benchmark $B_\tau$ for
@@ -100,8 +100,8 @@ $P$ is an instantiation of the commitment protocol with:
     \item \textbf{Claim:} $C = (P, p, \Delta)$ where $P$ is the
     pathway, $p$ is the claimed probability, and $\Delta$ is the
     claimed contraction magnitude.
-    \item \textbf{Commitment:} $\lambda = \Commit((P, p, \Delta), r)$
-    published to $\Ledger$.
+    \item \textbf{Commitment:} $\lambda = \Commit(((P, p, \Delta), B), r)$
+    published to $\Ledger$, binding the risk claim and the benchmark.
     \item \textbf{Exercise protocol:} The algorithmic witness
     $\Witness_{\mathrm{alg}}$ evaluates pathway $P$ using the
     governance-accepted SCM family $\SCM_B$ specified by benchmark $B$
@@ -152,7 +152,9 @@ $B$ is an instantiation of the commitment protocol with:
     \item \textbf{Claim:} $C = (B, s)$ where $B$ is the benchmark and
     $s$ is the claimed score.
     \item \textbf{Commitment:} $\lambda = \Commit((B, s), r)$ published
-    to $\Ledger$.
+    to $\Ledger$.  (For benchmark validations the benchmark $B$ is
+    already part of the claim, so the general protocol's $(C, B)$
+    binding is satisfied by the claim structure itself.)
     \item \textbf{Exercise protocol:} The algorithmic witness
     $\Witness_{\mathrm{alg}}$ runs benchmark $B$ against agent $a_j$
     independently, producing score $s_{\mathrm{witness}}$.  The witness

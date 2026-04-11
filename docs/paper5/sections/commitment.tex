@@ -12,37 +12,43 @@ Human judgment enters only through the governance layer
 \label{sec:protocol_overview}
 
 The protocol verifies a claim $C$ by an agent $a$ against a
-governance-accepted evaluation protocol $\Pi$.  It proceeds in three phases.
+governance-accepted evaluation protocol $B$.  It proceeds in four
+phases.
 
 \begin{definition}[Commitment Protocol]
 \label{def:commitment_protocol}
 A \textbf{commitment protocol} $(\Commit, \Verify, \mathrm{Reveal})$
-over a claim space $\C$, a randomness space $\mathcal{R}$, and a
-commitment space $\Lambda$ consists of:
+over a claim space $\C$, a benchmark space $\mathcal{B}$, a randomness
+space $\mathcal{R}$, and a commitment space $\Lambda$ consists of:
 \begin{enumerate}
-    \item \textbf{Commit.}  Agent $a$ selects randomness $r
-    \xleftarrow{\$} \mathcal{R}$ and publishes $\lambda =
-    \Commit(C, r)$ to the ledger $\Ledger$.  The commitment $\lambda$
-    is binding and hiding (Proposition~\ref{prop:pedersen_security}).
+    \item \textbf{Commit.}  Agent $a$ selects the governance-accepted
+    benchmark $B \in \mathcal{B}$ for the claim type of $C$, selects
+    randomness $r \xleftarrow{\$} \mathcal{R}$, and publishes
+    $\lambda = \Commit((C, B), r)$ to the ledger $\Ledger$.  The
+    commitment $\lambda$ is binding and hiding
+    (Proposition~\ref{prop:pedersen_security}).  By including $B$ in
+    the committed value, the agent is bound to a specific benchmark
+    before verification runs, preventing benchmark-shopping after
+    observing exercise conditions.
     \item \textbf{Verify.}  An algorithmic witness
     $\Witness_{\mathrm{alg}}$ on substrate $s' \neq s(a)$ executes the
-    exercise protocol $\pi_\Pi$ specified by governance-accepted evaluation protocol
-    $B$ for the claim type of $C$.  The witness interacts with $a$
-    (or with $a$'s outputs) as specified by $\pi_B$ and produces a
-    verdict $v \in \{\texttt{pass}, \texttt{fail}\}$ together with
-    supporting evidence $\xi$.
+    exercise protocol $\pi_B$ specified by the committed benchmark $B$.
+    The witness interacts with $a$ (or with $a$'s outputs) as specified
+    by $\pi_B$ and produces a verdict
+    $v \in \{\texttt{pass}, \texttt{fail}\}$ together with supporting
+    evidence $\xi$.
     \item \textbf{Reveal.}  Agent $a$ opens the commitment by
-    publishing $(C, r)$ to $\Ledger$.  The witness publishes a
-    verification record $(a, \lambda, C, v, \xi)$ to $\Ledger$,
+    publishing $(C, B, r)$ to $\Ledger$.  The witness publishes a
+    verification record $(a, \lambda, C, B, v, \xi)$ to $\Ledger$,
     signed per the ledger entry format of \S\ref{sec:ver_entries}.
-    Any ledger participant can check that $\Commit(C, r) = \lambda$
-    (the commitment opens correctly) and that $v$ is the witness's
-    verdict.
+    Any ledger participant can check that $\Commit((C, B), r) = \lambda$
+    (the commitment opens correctly), that $B$ matches the benchmark
+    used in the exercise, and that $v$ is the witness's verdict.
     \item \textbf{Timeout.}  Every commitment $\lambda$ carries a
     governance-specified reveal deadline
     $t_{\mathrm{commit}} + \Delta_{\mathrm{reveal}}$, where
     $t_{\mathrm{commit}}$ is the timestamp at which $\lambda$ was
-    published.  If the agent does not publish $(C, r)$ by the
+    published.  If the agent does not publish $(C, B, r)$ by the
     deadline, any ledger node may emit a \emph{timeout entry}
     recording $v = \texttt{fail}$ for $\lambda$ with
     $\xi = \texttt{reveal\_timeout}$.  The timeout entry requires

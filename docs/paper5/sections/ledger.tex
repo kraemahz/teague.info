@@ -71,8 +71,9 @@ where:
     attacks.
 \end{itemize}
 The entry is completed when either: (a)~$a_j$ opens the commitment by
-publishing $(C, r)$, at which point any participant can verify
-$\Commit(C, r) = \lambda$; or (b)~the reveal deadline
+publishing $(C, B, r)$, at which point any participant can verify
+$\Commit((C, B), r) = \lambda$ and that $B$ matches the benchmark
+recorded in the verification phase; or (b)~the reveal deadline
 $t + \Delta_{\mathrm{reveal}}$ expires without a reveal, in which
 case a timeout entry is appended with $v = \texttt{fail}$ and
 $\xi = \texttt{reveal\_timeout}$ (no witness signature is required
