@@ -38,6 +38,18 @@ commitment space $\Lambda$ consists of:
     Any ledger participant can check that $\Commit(C, r) = \lambda$
     (the commitment opens correctly) and that $v$ is the witness's
     verdict.
+    \item \textbf{Timeout.}  Every commitment $\lambda$ carries a
+    governance-specified reveal deadline
+    $t_{\mathrm{commit}} + \Delta_{\mathrm{reveal}}$, where
+    $t_{\mathrm{commit}}$ is the timestamp at which $\lambda$ was
+    published.  If the agent does not publish $(C, r)$ by the
+    deadline, any ledger node may emit a \emph{timeout entry}
+    recording $v = \texttt{fail}$ for $\lambda$ with
+    $\xi = \texttt{reveal\_timeout}$.  The timeout entry requires
+    only the unexpired commitment's presence on the ledger and the
+    current time exceeding the deadline---no witness participation
+    is needed.  This prevents selective reveal: suppressed
+    commitments are treated as falsified claims.
 \end{enumerate}
 \end{definition}
 
@@ -66,9 +78,10 @@ function or a multi-party computation protocol in which at least one
 honest participant ensures the discrete-log relation remains unknown.
 This is a standard requirement for Pedersen commitments; we do not
 develop the setup protocol further.}
-The Pedersen commitment to a claim value $C \in \mathbb{Z}_q$ (after
-applying the canonical encoding $\mathrm{Enc}$ from the claim space;
-see ``Encoding structured claims'' below) with randomness
+The Pedersen commitment to a claim value $C \in \mathbb{Z}_q$ (the
+output of the canonical injective encoding $\mathrm{Enc}$ applied to
+the structured claim; see ``Encoding structured claims'' below) with
+randomness
 $r \xleftarrow{\$} \mathbb{Z}_q$ is:
 \[
     \Commit(C, r) = g^C \cdot h^r.
@@ -106,23 +119,36 @@ $\mathbb{G}$ regardless of $C$.
 Pedersen commitments operate on scalars $C \in \mathbb{Z}_q$, but
 Part~II's claim types are structured: capability claims commit to
 $c_k \in \mathcal{P}$, risk claims commit to tuples $(P, p, \Delta)$,
-and benchmark validations commit to $(B, s)$.  To apply the Pedersen
-security guarantees to structured claims, a canonical injective encoding
-$\mathrm{Enc} \colon \C \to \mathbb{Z}_q$ is required, where $\C$ is
-the claim space for the relevant claim type.  The encoding must be:
+and benchmark validations commit to $(B, s)$.  Two requirements must be
+met to reduce claim-level binding to Pedersen binding.
+
+\emph{Finite-precision representation.}  Continuous-valued claim
+components (the probability $p \in [0,1]$ and contraction magnitude
+$\Delta$ in risk claims, the score $s$ in benchmark validations) must
+be discretized to a governance-specified finite precision before
+encoding.  The precision is part of the benchmark specification
+$\sigma_B$ (e.g., ``probabilities rounded to $10^{-6}$'').  Once
+discretized, the claim space $\C$ for each claim type is finite.
+
+\emph{Injective encoding.}  A canonical injective encoding
+$\mathrm{Enc} \colon \C \to \mathbb{Z}_q$ maps each (discretized)
+claim to a distinct element of $\mathbb{Z}_q$.  Since $\C$ is
+finite and $|\C| \ll q$ for any practical claim space, a
+deterministic serialization (e.g., fixed-width concatenation of
+field representations with a type tag prefix for domain separation)
+yields a natural number smaller than $q$, giving an injection
+without hashing.  The encoding must satisfy:
 \begin{enumerate}
-    \item \textbf{Injective:}  distinct claims map to distinct
+    \item \textbf{Injectivity:}  distinct claims map to distinct
     elements of $\mathbb{Z}_q$, preserving binding (an agent cannot
     open to a different claim by exploiting encoding collisions).
-    \item \textbf{Domain-separated:}  different claim types use distinct
-    encoding prefixes, so a commitment to a capability claim cannot be
-    reinterpreted as a benchmark validation.
+    \item \textbf{Domain separation:}  different claim types use
+    distinct encoding prefixes, so a commitment to a capability claim
+    cannot be reinterpreted as a benchmark validation.
 \end{enumerate}
-Standard domain-separation conventions (e.g., prepending a type tag
-to the serialized claim before hashing into $\mathbb{Z}_q$) suffice.
-The encoding is a governance-specified convention published alongside
-the benchmark specification $\sigma_B$; it is not a security
-parameter.
+The encoding convention is published as part of the governance entry
+$\sigma_B$; it is deterministic and verifiable by any ledger
+participant.
 
 \paragraph{Why binding matters.}
 Binding prevents claim mutation: without it, an agent could commit
@@ -256,10 +282,12 @@ substrate-exclusive process that:
 
 \begin{proposition}[Behavioral Monitoring Detection Rate]
 \label{prop:sprt_detection}
-If the agent's actual behavioral distribution is $p_1 \neq p_0 \triangleq
-p(\cdot \mid \mathbf{C}_a)$ and the KL divergence
-$D_{\mathrm{KL}}(p_1 \,\|\, p_0) = \delta > 0$, then the expected
-time to detection under the behavioral consistency monitor is
+Suppose the monitor's alternative distribution $p(\cdot \mid
+\neg\,\mathbf{C}_a)$ equals the agent's actual behavioral distribution
+$p_1$ (the simple-vs-simple case), and let
+$D_{\mathrm{KL}}(p_1 \,\|\, p_0) = \delta > 0$ where
+$p_0 = p(\cdot \mid \mathbf{C}_a)$.  Then the expected time to
+detection satisfies
 \[
     \mathbb{E}_{p_1}[T_{\mathrm{detect}}]
     \;\leq\; \frac{A}{\delta}
@@ -276,6 +304,20 @@ $\mathbb{E}_{p_1}[\log(p_1(X)/p_0(X))] = D_{\mathrm{KL}}(p_1 \| p_0)
 By Wald's identity for the SPRT, the expected sample size under the
 alternative satisfies $\mathbb{E}_{p_1}[T] \approx A / \delta$.
 \end{proof}
+
+\begin{remark}
+When the actual distribution $p_1$ differs from the monitor's
+alternative $p(\cdot \mid \neg\,\mathbf{C}_a)$, the per-observation
+drift becomes
+$\mathbb{E}_{p_1}[\log(p(\cdot \mid \neg\,\mathbf{C}_a) / p_0)]$,
+which may be smaller than $\delta$ (or even negative if $p_1$ is
+closer to $p_0$ than to the alternative).  The simple-vs-simple
+bound is therefore an idealized case; in practice, the alternative
+should be chosen as a worst-case or least-favorable distribution
+to ensure detection across a range of behavioral deviations
+(cf.~the least-favorable SPRT construction
+of~\citet{lasser2026scm}).
+\end{remark}
 
 The behavioral consistency monitor provides the ``always on'' layer
 between explicit commitment--verification cycles.  It does not replace

@@ -29,39 +29,49 @@ channels.
 Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, and
 let each $E_i$ be verified by an algorithmic witness
 $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ using
-governance-accepted benchmark $B_i$.  If the witnesses are on distinct
-substrates ($s_i \neq s_j$ for $i \neq j$), each $s_i \neq s(a)$, and
-the benchmark parameters $\{B_1, \ldots, B_n\}$ are independently
-specified by governance, then the verified outputs
-$\{v_1, \ldots, v_n\}$ are conditionally independent given $a$'s true
-capability profile $\mathbf{C}_a$ and the benchmark specifications
-$\{B_1, \ldots, B_n\}$.
+governance-accepted benchmark $B_i$.  Assume:
+\begin{enumerate}
+    \item[(i)] The witnesses are on distinct substrates
+    ($s_i \neq s_j$ for $i \neq j$) and each $s_i \neq s(a)$.
+    \item[(ii)] The benchmark parameters $\{B_1, \ldots, B_n\}$ are
+    independently specified by governance.
+    \item[(iii)] \textbf{Sufficiency:} $\mathbf{C}_a$ is a sufficient
+    statistic for agent $a$'s exercise-level behavior---i.e.,
+    conditional on $\mathbf{C}_a$, the agent's performance on protocol
+    $\pi_{B_i}$ does not depend on latent state beyond what
+    $\mathbf{C}_a$ captures.
+    \item[(iv)] \textbf{Independent randomness:} For statistical
+    exercise protocols, each witness $\Witness^{(i)}_{\mathrm{alg}}$
+    draws its randomness independently of other witnesses' randomness.
+\end{enumerate}
+Then the verified outputs $\{v_1, \ldots, v_n\}$ are conditionally
+independent given $\mathbf{C}_a$ and $\{B_1, \ldots, B_n\}$.
 \end{proposition}
 
 \begin{proof}
 Each $v_i = \pi_{B_i}(a, \Witness^{(i)}_{\mathrm{alg}})$ is determined
 by three inputs: (1)~$a$'s behavior under exercise protocol $\pi_{B_i}$,
 (2)~the benchmark specification $B_i$, and (3)~the witness's
-deterministic execution on substrate $s_i$
-(Definition~\ref{def:alg_witness}).
+execution on substrate $s_i$ (deterministic or with independent
+randomness per assumption~(iv);
+Definition~\ref{def:alg_witness}).
 
-We show that conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, the
-remaining sources of variation in different verdicts are causally
-independent:
+Conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, all shared causes
+are blocked:
 \begin{itemize}
-    \item \textbf{No agent-mediated path:}  Conditional on
-    $\mathbf{C}_a$, agent $a$'s performance on protocol $\pi_{B_i}$
-    is characterized by the completeness and soundness parameters
-    $(\delta_i, \epsilon_i)$ of Definition~\ref{def:exercise_protocol},
-    which are set independently per benchmark by governance.  Agent
-    $a$'s internal state (training history, strategy) affects its
-    behavior, but this effect is captured by $\mathbf{C}_a$---the
-    capability profile is the sufficient statistic for exercise
-    outcomes.
+    \item \textbf{No agent-mediated path:}  By assumption~(iii),
+    $\mathbf{C}_a$ is sufficient for $a$'s exercise-level behavior,
+    so $a$'s performance on $\pi_{B_i}$ is characterized by the
+    completeness and soundness parameters $(\delta_i, \epsilon_i)$ of
+    Definition~\ref{def:exercise_protocol}, which are set independently
+    per benchmark by governance.
     \item \textbf{No witness-mediated path:}  Witness
     $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ cannot
     influence $\Witness^{(j)}_{\mathrm{alg}}$ on substrate $s_j$
-    (substrate exclusivity, $s_i \neq s_j$).
+    (substrate exclusivity, $s_i \neq s_j$; assumption~(i)).
+    \item \textbf{No shared-randomness path:}  Per assumption~(iv),
+    witnesses draw independent randomness, so stochastic verdicts
+    do not correlate through shared seeds.
     \item \textbf{No shared-environment path:}  Benchmark parameters
     $B_i$ are conditioned on, removing correlation through shared
     governance.  Exercise execution occurs on disjoint substrates,
@@ -69,7 +79,8 @@ independent:
 \end{itemize}
 Therefore, conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, the
 verdicts $v_i$ are functions of causally independent computations on
-disjoint substrates, hence conditionally independent.
+disjoint substrates with independent randomness, hence conditionally
+independent.
 \end{proof}
 
 \begin{remark}

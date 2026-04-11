@@ -76,13 +76,17 @@ The coalition $K$ can attempt to influence $v$ through three channels:
     assistance (pre-computed answers, same-substrate coaching) violates
     this condition and is excluded by assumption.  If isolation is
     imperfect---the agent receives some external signal despite the
-    protocol's isolation requirement---the benchmark's soundness
-    parameter $\epsilon$ bounds the probability of a false pass.  The
-    defense is layered: isolation is the primary barrier, and soundness
-    is the backstop for imperfect isolation.  If $\epsilon$ is set
-    appropriately (a governance responsibility), residual
-    coalition-assisted passing is detectable through re-testing with
-    fresh exercise instances.
+    protocol's isolation requirement---the evaluated object is no
+    longer the individual agent but a coalition-assisted system, and
+    the soundness parameter $\epsilon$ (calibrated for individual
+    agents) does not directly bound the assisted system's false-pass
+    probability.  The defense against imperfect isolation is therefore
+    not soundness per se, but \emph{detection and re-testing}: if
+    coalition assistance is suspected, governance can mandate
+    re-verification under tighter isolation controls (e.g., network
+    sandboxing, monitored execution environments).  The proposition's
+    guarantee is conditional on isolation holding; imperfect isolation
+    degrades the guarantee proportionally to the assistance received.
 \end{enumerate}
 
 Therefore, the coalition's only viable attack vectors require breaching
