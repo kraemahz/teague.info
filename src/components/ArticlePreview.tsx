@@ -44,6 +44,10 @@ const ArticlePreview: React.FC = () => {
             <p className="subtitle">Engineer, Philosopher, Dreamer</p>
 
             <h3 className="section-title">Papers</h3>
+            <a href="/papers/exo/" className="paper-link">
+                <p className="paper-title">Exogenous Verification for Alignment</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.6, GPT 5.4</p>
+            </a>
             <a href="/papers/scm/" className="paper-link">
                 <p className="paper-title">A Structural Causal Model for Goal-Frontier Maximization</p>
                 <p className="paper-meta">2026 · Lasser, Claude Opus 4.6, GPT 5.4</p>
