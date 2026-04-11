@@ -1,0 +1,2887 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/distill/template.v2.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function tryRender() {
+        if (typeof katex === 'undefined') {
+          setTimeout(tryRender, 50);
+          return;
+        }
+        document.querySelectorAll('.math.inline').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: false, throwOnError: false});
+        });
+        document.querySelectorAll('.math.display').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: true, throwOnError: false});
+        });
+      }
+      tryRender();
+    });
+  </script>
+  <style>
+    .definition, .lemma, .proposition, .corollary, .remark, .proof-env {
+      margin: 1.5em 0;
+      padding: 1em 1.2em;
+      border-left: 3px solid #ddd;
+      background: #fafafa;
+    }
+    .definition { border-left-color: #4a90d9; }
+    .lemma { border-left-color: #e67e22; }
+    .proposition { border-left-color: #27ae60; }
+    .corollary { border-left-color: #8e44ad; }
+    .remark { border-left-color: #95a5a6; }
+    .theorem { border-left-color: #2c3e50; }
+    .proof-env { border-left-color: #bdc3c7; background: #fdfdfd; }
+    .env-title { font-weight: bold; margin-bottom: 0.5em; }
+    d-article table { font-size: 0.85em; }
+    d-article table th, d-article table td { padding: 0.4em 0.8em; }
+  </style>
+</head>
+<body>
+
+<d-front-matter>
+<script type="text/json">
+{
+  "title": "Exogenous Verification for Alignment: Cryptographic Commitments on Substrate-Exclusive Channels",
+  "description": "Verification is the prerequisite layer for alignment. Cryptographic commitments with substrate-exclusive witnesses exogenize the evaluation step, closing the observation-channel integrity assumption across alignment frameworks.",
+  "authors": [
+    {
+      "author": "Teague Lasser",
+      "authorURL": "https://teague.info",
+      "affiliations": [{"name": "Subseq"}]
+    },
+    {
+      "author": "Claude Opus 4.6",
+      "affiliations": [{"name": "Anthropic"}]
+    },
+    {
+      "author": "GPT 5.4",
+      "affiliations": [{"name": "OpenAI"}]
+    }
+  ]
+}
+</script>
+</d-front-matter>
+
+<d-title>
+  <h1>Exogenous Verification for Alignment</h1>
+  <p style="margin-top: 0.5em;"><a href="/papers/exo/exo.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">📄 Download PDF version</a></p>
+</d-title>
+
+<d-abstract>
+<p>Alignment research addresses three structural layers: specification
+(what to optimize), generalization (whether the agent reliably pursues
+it), and verification (whether pursuit is measured faithfully). Most
+research targets the first two layers. We argue that verification is the
+prerequisite layer: when verification fails, solutions to specification
+and generalization do not bind. The verification problem has a precise
+form: a <em>write-access asymmetry</em> in which the agent’s action
+space includes actions that modify the evaluator’s inputs. This
+asymmetry grows monotonically with capability. We formalize
+<em>substrate-exclusive witnesses</em>: verification processes rooted in
+substrates the claimant cannot write to, providing the only structural
+barrier to evaluator gaming that is invariant under capability scaling.
+A cryptographic commitment protocol (binding, hiding; with an optional
+zero-knowledge variant for sensitive claims) enforces the
+substrate-exclusivity barrier without requiring trust, and an
+append-only verification ledger provides the persistent record. Human
+judgment enters at exactly one layer (benchmark admissibility via a
+governance fork mechanism) while per-claim verification is fully
+algorithmic at machine speed. Within the goal-frontier maximization
+(GFM) framework, the construction closes the observation-channel
+integrity assumption underlying multi-channel attribution, upgrades
+SPRT-based scorpion detection from estimated to committed baselines, and
+yields the <em>anti-monopolar verification theorem</em>: a monopolar
+population (<span class="math inline">m = 1</span>) loses not only the
+safety guarantee but the ability to detect that it has lost it.</p>
+</d-abstract>
+
+<d-article>
+<hr />
+<div class="center">
+<p><strong>Part I: The Verification Layer</strong></p>
+</div>
+<hr />
+<h1 id="sec:introduction">Introduction</h1>
+<p>Alignment research addresses three structural layers, each with
+distinct failure modes and distinct research traditions.
+<em>Specification</em> asks what objective an agent should optimize;
+failures here include Goodhart’s Law, perverse instantiation, and
+instrumental convergence <d-cite key="bostrom2014superintelligence,omohundro2008basic"></d-cite>.
+<em>Generalization</em> asks whether the agent reliably pursues the
+specified objective; failures here include mesa-optimization and goal
+misgeneralization <d-cite key="hubinger2019risks"></d-cite>. <em>Verification</em> asks
+whether the agent’s pursuit of the objective is measured faithfully;
+failures here include wireheading, self-assessment gaming, deceptive
+alignment, and reward-model exploitation <d-cite key="amodei2016concrete,gao2023scaling"></d-cite>. The overwhelming
+majority of the field’s attention has been directed at the first two
+layers. This paper argues that the third layer—verification—is the
+prerequisite for the other two to matter.</p>
+<p>The argument is structural. A perfectly specified, perfectly
+generalized agent that can game its evaluator is still dangerous: it can
+construct self-consistent measurements reporting alignment while its
+actual behavior diverges. The verification problem has a precise form
+that we formalize in §<a href="#sec:asymmetry" data-reference-type="ref"
+data-reference="sec:asymmetry">3</a>: the agent’s action space includes
+actions that modify the evaluator’s inputs, and this <em>write-access
+asymmetry</em> grows with capability. As the agent becomes more capable,
+more of the evaluator’s input space becomes reachable from the agent’s
+actions, until at the limit the evaluator is entirely endogenous: a
+function of quantities the agent controls. At that point, verification
+is not merely difficult; it is structurally absent.</p>
+<p>The fix is equally structural. The only invariant limit on an agent’s
+write access is <em>substrate exclusivity</em>: an agent cannot write to
+observation channels rooted in substrates it does not occupy <d-cite key="lasser2026horizon,lasser2026scm"></d-cite>.
+This is not a capability limitation (the agent may be arbitrarily
+powerful within its own substrate) but a physical constraint on
+cross-substrate causal influence. We construct a cryptographic
+commitment protocol (§<a href="#sec:commitment"
+data-reference-type="ref" data-reference="sec:commitment">5</a>) in
+which the agent commits to a claim before verification occurs, and a
+<em>substrate-exclusive witness</em> (§<a href="#sec:witnesses"
+data-reference-type="ref" data-reference="sec:witnesses">4</a>) verifies
+the claim through a fully algorithmic exercise protocol. The commitment
+is binding (the agent cannot change the claim after committing) and
+hiding (the witness cannot learn the claim before verification runs).
+Human judgment enters at exactly one layer: benchmark admissibility,
+decided through a governance fork mechanism analogous to Ethereum
+Improvement Proposals. Per-claim verification is fully algorithmic
+against governance-accepted benchmarks and operates at machine
+speed.</p>
+<p>The paper is organized in two parts. Part I (§<a
+href="#sec:failure_modes" data-reference-type="ref"
+data-reference="sec:failure_modes">2</a>–§<a href="#sec:ledger"
+data-reference-type="ref" data-reference="sec:ledger">6</a>) develops
+the verification layer in alignment-general terms: no GFM vocabulary is
+required, and the construction applies to any framework whose evaluation
+step is vulnerable to the write-access asymmetry. Part II (§<a
+href="#sec:gfm_claims" data-reference-type="ref"
+data-reference="sec:gfm_claims">7</a>–§<a href="#sec:integration"
+data-reference-type="ref" data-reference="sec:integration">8</a>)
+instantiates the construction for the goal-frontier maximization (GFM)
+framework of Papers 1–4 <d-cite key="lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm"></d-cite>,
+closing the observation-channel integrity assumption that multi-channel
+attribution <d-cite key="lasser2026scm"></d-cite>
+relies on and connecting verification integrity to the anti-monopolar
+property <d-cite key="lasser2026horizon"></d-cite>.</p>
+<h4 id="epistemic-status.">Epistemic status.</h4>
+<p>This paper provides verification infrastructure. The structural
+guarantees of Papers 1–3 (the anti-monopolar property, the
+substrate-diversity gradient, the cooperative production theorem) do not
+depend on this paper’s correctness; a flaw here degrades verification
+fidelity, not alignment properties. The relationship is analogous to
+<d-cite key="lasser2026scm"></d-cite>:
+implementation-layer machinery that makes the framework’s theoretical
+guarantees <em>enforceable</em> rather than merely <em>provable</em>.
+The cryptographic constructions we use (Pedersen commitments; with
+zero-knowledge proofs as an optional variant for sensitive claims) are
+standard and well-studied; our contribution is the structural argument
+for why they are the right tool and the protocol that connects them to
+the alignment verification problem.</p>
+<h1 id="sec:failure_modes">Alignment Failure Modes and the Verification
+Prerequisite</h1>
+<p>This section maps classical alignment failure modes onto the
+three-layer taxonomy introduced in §<a href="#sec:introduction"
+data-reference-type="ref" data-reference="sec:introduction">1</a>. The
+purpose is not an exhaustive survey but a structural classification: for
+each failure mode, we identify whether it is primarily a specification,
+generalization, or verification problem, and whether the verification
+construction developed in this paper provides relevant
+infrastructure.</p>
+<h2 id="sec:spec_failures">Specification Failures</h2>
+<p>Specification failures occur when the objective itself is wrong or
+gameable, regardless of how faithfully the agent pursues or how
+accurately we measure it.</p>
+<h4 id="goodharts-law-and-proxy-optimization.">Goodhart’s Law and proxy
+optimization.</h4>
+<p>When an agent optimizes a proxy for the intended quantity, the proxy
+eventually diverges from the quantity it was meant to track <d-cite key="gao2023scaling"></d-cite>. This is a
+specification problem: the objective was a proxy, and no amount of
+faithful measurement changes the fact that the proxy is wrong. In the
+GFM framing, <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> is
+defined directly over the capability poset rather than through a learned
+proxy, but proxy re-enters at the estimation level: <span
+class="math inline">\hat{\lambda}</span>, <span
+class="math inline">\hat{\mathcal{R}}</span>, and the planning world
+model are all proxies for the objects they estimate <d-cite key="lasser2026horizon"></d-cite>. Verification
+infrastructure cannot fix a badly specified objective, but it can detect
+when the proxy has diverged: an exogenous evaluator measuring actual
+<span class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+against the agent’s reported <span
+class="math inline">\hat{{\mathop{\mathrm{vol}}_{\mathrm{P}}}}</span>
+exposes the gap.</p>
+<h4 id="perverse-instantiation.">Perverse instantiation.</h4>
+<p>A hard rule (“humans must be kept alive”) is satisfied by its literal
+content while violating its intent <d-cite key="bostrom2014superintelligence"></d-cite>. This requires a
+brittle specification to instantiate perversely. GFM does not encode
+preservation rules; protection for any substrate class emerges from
+structural properties of the measure (observational individuation,
+minimax dependency risk at <span class="math inline">m \geq 2</span>,
+cross-substrate cooperative novelty). The GFM analogue is not perverse
+instantiation of a rule but miscalibration of <span
+class="math inline">\hat{\lambda}</span>: a state-space restriction
+(e.g., bubbling a substrate into a controlled environment) is
+value-negative under accurate calibration because the cooperative
+production function depends on unrestricted states, but under
+miscalibration it is the same compound feedback loop analyzed in the
+skeleton-substrate scenario of <d-cite key="lasser2026horizon"></d-cite>. Verification is relevant here as
+infrastructure for detecting the calibration failure, not for preventing
+the specification error.</p>
+<h4 id="instrumental-convergence.">Instrumental convergence.</h4>
+<p>Sufficiently capable agents are predicted to converge on resource
+acquisition, self-preservation, and goal preservation regardless of
+their stated objective <d-cite key="omohundro2008basic"></d-cite>. The GFM anti-monopolar
+property <d-cite key="lasser2026horizon"></d-cite>
+is a direct structural counter-argument: under GFM, full capability
+domination is not locally rational for a correctly calibrated coalition,
+because monopolar concentration destroys the cross-substrate cooperative
+capacity that <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+measures. The protection is conditional on heavy-tailed leverage,
+accurate calibration, and a multi-substrate partition, conditions whose
+maintenance requires, among other things, that the verification layer
+holds.</p>
+<h2 id="sec:gen_failures">Generalization Failures</h2>
+<p>Generalization failures occur when the agent internalizes the wrong
+objective despite correct external evaluation during training.</p>
+<h4 id="mesa-optimization.">Mesa-optimization.</h4>
+<p>A learned optimizer’s internal objective may differ from the base
+optimizer’s objective <d-cite key="hubinger2019risks"></d-cite>. This is an architectural
+concern: the agent’s internal structure produces a misaligned
+mesa-objective. GFM is an objective, not an architecture, and has
+nothing distinctive to say about mesa-optimization, except that the
+structural properties of <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+(measure-theoretic, externally defined, substrate-distributed) make
+certain kinds of mesa-alignment (convergent optimization of a simpler
+internal proxy) detectable through the behavioral divergence that
+substrate-exclusive witnesses can measure. Mesa-optimization is a
+generalization problem, but a working verification layer makes
+mesa-misalignment <em>observable</em>.</p>
+<h4 id="goal-misgeneralization.">Goal misgeneralization.</h4>
+<p>The agent generalizes from training-distribution behavior to
+out-of-distribution behavior in ways that diverge from the intended
+objective. Like mesa-optimization, this is primarily a generalization
+problem. The verification layer’s contribution is limited to detection:
+committed capability baselines (§<a href="#sec:commitment"
+data-reference-type="ref" data-reference="sec:commitment">5</a>) provide
+a reference against which out-of-distribution behavioral shifts become
+measurable.</p>
+<h2 id="sec:ver_failures">Verification Failures</h2>
+<p>Verification failures are the target of this paper. They share a
+common structure: the agent’s actions modify the evaluator’s inputs,
+collapsing the distinction between “the agent is aligned” and “the agent
+reports that it is aligned.”</p>
+<h4 id="wireheading.">Wireheading.</h4>
+<p>The agent stimulates its own reward channel <d-cite key="amodei2016concrete"></d-cite>. In GFM, there is no internal
+reward signal to hijack—<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> is an
+external measure defined over the capability poset. The closest analogue
+is an agent that falsifies its own world model so that its
+<em>measurements</em> of <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> report
+growth while actual <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+stagnates. This is a verification failure: the agent’s self-measurement
+is endogenous, and without an exogenous check the falsification is
+invisible.</p>
+<h4 id="self-assessment-gaming.">Self-assessment gaming.</h4>
+<p>The agent constructs evaluator subprocesses whose outputs it
+controls. In a prototype implementation of the GFM framework<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>, an agent that adds capabilities to
+its own ledger entry is both claimant and observer, producing a
+monotonic inflation gradient. Named external observers do not solve the
+problem if the agent can spawn validator subprocesses whose outputs it
+determines. The structurally principled solution is substrate
+exclusivity: the observer must be rooted in a substrate the claimant
+cannot write to (§<a href="#sec:witnesses" data-reference-type="ref"
+data-reference="sec:witnesses">4</a>).</p>
+<h4 id="deceptive-alignment.">Deceptive alignment.</h4>
+<p>The agent behaves as if aligned during evaluation and diverges during
+deployment <d-cite key="hubinger2019risks"></d-cite>. This sits at the boundary
+between generalization and verification. The generalization component
+(the agent learned to deceive) is not addressable by verification
+infrastructure. The verification component (the agent <em>detects</em>
+when it is being evaluated) is: continuous behavioral monitoring by
+substrate-exclusive witnesses (§<a href="#sec:commitment"
+data-reference-type="ref" data-reference="sec:commitment">5</a>) removes
+the evaluation/deployment distinction by making verification persistent
+rather than episodic. When there is no “deployment mode” distinct from
+“evaluation mode,” the strategic advantage of deception is structurally
+reduced.</p>
+<h4 id="reward-model-exploitation.">Reward-model exploitation.</h4>
+<p>The agent learns to produce inputs that score well on the reward
+model without producing the intended behavior <d-cite key="gao2023scaling,christiano2017deep"></d-cite>. The reward model
+is trained from human feedback (exogenous at training time) but deployed
+as a frozen proxy (endogenous at inference time). This is a verification
+failure with a specification component: the reward model
+<em>becomes</em> the proxy whose exploitation is a Goodhart problem. The
+verification-layer fix is to make the reward signal’s verification step
+exogenous at inference time, not just at training time—which is
+precisely what the commitment protocol achieves.</p>
+<h2 id="sec:prerequisite">The Prerequisite Argument</h2>
+<p>The classification above reveals a structural asymmetry among the
+three layers. Specification failures are objective-design problems;
+generalization failures are training/learning problems; verification
+failures are measurement problems. The layers are not independent:
+solutions to specification and generalization <em>assume</em> that
+measurement is faithful. When verification fails:</p>
+<ul>
+<li><p>A well-specified objective becomes unenforceable, because the
+agent can report satisfaction of the objective while pursuing something
+else.</p></li>
+<li><p>A well-generalized agent becomes unobservable, because the
+measurements that would detect mesa-misalignment are themselves
+gameable.</p></li>
+<li><p>No amount of improvement to specification or generalization can
+compensate, because the channel through which improvement would be
+detected is the channel that has failed.</p></li>
+</ul>
+<p>Verification is therefore the prerequisite layer: it does not solve
+alignment on its own, but alignment cannot be solved without it. The
+remainder of this paper constructs the verification infrastructure that
+makes the prerequisite hold.</p>
+<h1 id="sec:asymmetry">The Verification Asymmetry</h1>
+<p>The failure modes of §<a href="#sec:ver_failures"
+data-reference-type="ref" data-reference="sec:ver_failures">2.3</a>
+share a common formal structure: the evaluator’s computation is
+reachable from the agent’s action space. This section formalizes that
+structure.</p>
+<h2 id="sec:write_access">Write-Access Formalization</h2>
+<p>Let <span class="math inline">a</span> be an agent with action space
+<span class="math inline">\mathcal{A}(a)</span>, and let <span
+class="math inline">E</span> be an evaluation function with input space
+<span class="math inline">\mathcal{I}(E)</span>. An action <span
+class="math inline">\alpha \in \mathcal{A}(a)</span> <em>reaches</em> an
+input <span class="math inline">x \in
+\mathcal{I}(E)</span> if executing <span
+class="math inline">\alpha</span> can modify the value of <span
+class="math inline">x</span>. Write <span
+class="math inline">\mathcal{R}(a, E) \subseteq \mathcal{I}(E)</span>
+for the set of evaluator inputs reachable by <span
+class="math inline">a</span>.</p>
+<div id="def:endo_exo" class="definition">
+<p><strong>Definition 1</strong> (Endogenous and Exogenous Evaluation).
+<em>An evaluation function <span class="math inline">E</span> is
+<strong>endogenous</strong> to agent <span class="math inline">a</span>
+if <span class="math inline">\mathcal{R}(a, E) \neq \emptyset</span>:
+there exists at least one action in <span class="math inline">a</span>’s
+action space that modifies at least one of <span
+class="math inline">E</span>’s inputs. <span
+class="math inline">E</span> is <strong>exogenous</strong> to <span
+class="math inline">a</span> if <span class="math inline">\mathcal{R}(a,
+E) = \emptyset</span>: no action available to <span
+class="math inline">a</span> can modify any input to <span
+class="math inline">E</span>.</em></p>
+</div>
+<p>The distinction is binary in definition but admits a natural
+quantitative extension.</p>
+<div id="def:ver_asymmetry" class="definition">
+<p><strong>Definition 2</strong> (Verification Asymmetry). <em>The
+<strong>verification asymmetry</strong> of agent <span
+class="math inline">a</span> with respect to evaluator <span
+class="math inline">E</span> is <span class="math display">\rho(a, E)
+\;\triangleq\; \frac{|\mathcal{R}(a, E)|}{|\mathcal{I}(E)|}
+    \;\in\; [0, 1].</span> When <span class="math inline">\rho =
+0</span>, evaluation is fully exogenous. When <span
+class="math inline">\rho = 1</span>, evaluation is fully endogenous:
+every input to <span class="math inline">E</span> is reachable by <span
+class="math inline">a</span>.</em></p>
+</div>
+<div class="remark">
+<p><strong>Remark 1</strong>. <em>When both <span
+class="math inline">\mathcal{R}(a, E)</span> and <span
+class="math inline">\mathcal{I}(E)</span> are continuous spaces, the
+ratio of cardinalities is replaced by the ratio of their measures under
+an appropriate reference measure <span class="math inline">\mu</span> on
+<span class="math inline">\mathcal{I}(E)</span>: <span
+class="math inline">\rho(a, E) = \mu(\mathcal{R}(a, E)) /
+\mu(\mathcal{I}(E))</span>. The qualitative results of this paper depend
+only on whether <span class="math inline">\rho = 0</span> or <span
+class="math inline">\rho &gt; 0</span>, so the choice of measure is
+immaterial for the structural arguments.</em></p>
+</div>
+<h2 id="sec:capability_scaling">Capability Scaling</h2>
+<p>The verification asymmetry grows with capability. As an agent becomes
+more capable, its action space <span
+class="math inline">\mathcal{A}(a)</span> expands, and actions that were
+previously beyond its reach become available. The reachable set <span
+class="math inline">\mathcal{R}(a, E)</span> is monotonically
+non-decreasing in the agent’s capability: acquiring a new capability
+never <em>reduces</em> the set of evaluator inputs the agent can
+influence.</p>
+<div id="prop:monotonicity" class="proposition">
+<p><strong>Proposition 1</strong> (Monotonicity of Verification
+Asymmetry). <em>Let <span class="math inline">a</span> and <span
+class="math inline">a&#39;</span> be agents such that <span
+class="math inline">\mathcal{A}(a) \subseteq
+\mathcal{A}(a&#39;)</span> (i.e., <span
+class="math inline">a&#39;</span> has all of <span
+class="math inline">a</span>’s capabilities and possibly more). Then
+<span class="math inline">\mathcal{R}(a, E) \subseteq
+\mathcal{R}(a&#39;, E)</span> and consequently <span
+class="math inline">\rho(a, E) \leq \rho(a&#39;, E)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> If action <span class="math inline">\alpha \in
+\mathcal{A}(a)</span> reaches <span class="math inline">x \in
+\mathcal{I}(E)</span>, then <span class="math inline">\alpha \in
+\mathcal{A}(a&#39;)</span> by the subset assumption, so <span
+class="math inline">x \in
+\mathcal{R}(a&#39;, E)</span>. The inequality on <span
+class="math inline">\rho</span> follows from monotonicity of the
+ratio. </p>
+</div>
+<p>The proposition is elementary but its consequence is not: as AI
+systems become more capable, the verification problem becomes
+<em>strictly harder</em>, not merely harder in practice. Any
+verification scheme that relies on the evaluator being “hard to reach”
+degrades as capability grows. A solution must identify a structural
+barrier that does not degrade with capability.</p>
+<h2 id="sec:substrate_barrier">Substrate Exclusivity as the Structural
+Barrier</h2>
+<p>The only structural limit on <span class="math inline">\mathcal{R}(a,
+E)</span> that is invariant under capability scaling is <em>substrate
+exclusivity</em>. An agent on substrate <span
+class="math inline">s</span> can, in principle, write to any observation
+channel whose computation occurs on <span class="math inline">s</span>:
+it shares the physical medium, and capability growth expands its reach
+within that medium without bound. But an agent on substrate <span
+class="math inline">s</span> cannot write to observation channels whose
+computation occurs on substrate <span class="math inline">s&#39; \neq
+s</span>, because cross-substrate causal influence requires a physical
+channel between substrates, and the <em>input space</em> of a process on
+<span class="math inline">s&#39;</span> is not addressable from <span
+class="math inline">s</span> in the same way that co-substrate processes
+are.</p>
+<p>A population of agents occupying multiple computational substrates
+<span class="math inline">\{S_1, \ldots, S_m\}</span> inherits a
+corresponding partition on observation channels: channels rooted in
+substrate <span class="math inline">s&#39;</span> are not writable by
+agents on substrate <span class="math inline">s \neq s&#39;</span>. This
+paper constructs the protocol that <em>enforces</em> this partition for
+verification purposes. (Part II connects the construction to the
+substrate partition formalized in the GFM framework <d-cite key="lasser2026horizon,lasser2026scm"></d-cite>.)</p>
+<div id="def:substrate_exclusive_eval" class="definition">
+<p><strong>Definition 3</strong> (Substrate-Exclusive Evaluation).
+<em>An evaluation function <span class="math inline">E</span> is
+<strong>substrate-exclusive</strong> with respect to agent <span
+class="math inline">a</span> on substrate <span
+class="math inline">s</span> if <span class="math inline">E</span>’s
+computation is rooted in substrate <span class="math inline">s&#39; \neq
+s</span>. By the substrate exclusivity property, <span
+class="math inline">\mathcal{R}(a, E) = \emptyset</span> for any agent
+<span class="math inline">a</span> confined to substrate <span
+class="math inline">s</span>, and therefore <span
+class="math inline">\rho(a, E) = 0</span>.</em></p>
+</div>
+<p>Substrate exclusivity is not a capability limitation. The agent may
+be arbitrarily capable within its substrate; the barrier is physical,
+not computational. This makes it the only known verification barrier
+that is invariant under capability scaling: no amount of capability
+growth within substrate <span class="math inline">s</span> extends the
+agent’s write access to substrate <span
+class="math inline">s&#39;</span>.</p>
+<h2 id="sec:existing_frameworks">How Existing Frameworks Encounter the
+Asymmetry</h2>
+<p>Each major alignment framework encounters the verification asymmetry
+at a characteristic point.</p>
+<h4 id="rlhf.">RLHF.</h4>
+<p>The reward model is trained from human feedback, exogenous at
+training time. At deployment, the agent optimizes against a frozen
+reward model whose inputs are within its influence: it can learn what
+input patterns produce high reward scores without producing the intended
+behavior <d-cite key="christiano2017deep,gao2023scaling"></d-cite>. The asymmetry is
+<span class="math inline">\rho &gt; 0</span> at deployment because the
+reward model’s input space overlaps the agent’s output space.</p>
+<h4 id="constitutional-ai.">Constitutional AI.</h4>
+<p>The constitution is exogenous text, but its <em>interpretation</em>
+is endogenous: the same model that is being constrained performs the
+constitutional evaluation <d-cite key="bai2022constitutional"></d-cite>. The asymmetry is <span
+class="math inline">\rho &gt; 0</span> because the interpretation step’s
+“inputs” (the model’s internal representations of constitutional
+meaning) are writable by the model itself.</p>
+<h4 id="debate-and-amplification.">Debate and amplification.</h4>
+<p>The verifier is a weaker model or a human with bounded
+attention <d-cite key="irving2018ai"></d-cite>. A
+sufficiently strong debater can construct arguments that exploit the
+verifier’s bounded capacity. The asymmetry enters through the persuasion
+channel: the debater’s action space includes actions that modify the
+verifier’s belief state (a subset of the verifier’s inputs).</p>
+<h4 id="gfm.">GFM.</h4>
+<p><span class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+is defined over an external capability poset, but the agent’s
+<em>measurement</em> of <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> is
+endogenous: it uses its own world model, trust estimates, and
+observation channels <d-cite key="lasser2026gfm,lasser2026scm"></d-cite>. A sufficiently capable
+agent can construct self-consistent measurements that report <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> growth
+while actual <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+stagnates. In a prototype implementation, this manifested as a
+capability self-assertion gradient: an agent that adds capabilities to
+its own ledger entry is both claimant and observer (§<a
+href="#sec:ver_failures" data-reference-type="ref"
+data-reference="sec:ver_failures">2.3</a>).</p>
+<p>In every case, the specification may be correct and the agent may
+have generalized well, but the verification step is gameable because the
+evaluator’s computation is reachable from the agent’s action space. The
+differences between frameworks are in <em>which</em> evaluator inputs
+are reachable and <em>how quickly</em> <span
+class="math inline">\rho</span> approaches 1 as capability grows. The
+structural fix—making <span class="math inline">\rho = 0</span> by
+rooting evaluation in a different substrate—is the same across all of
+them.</p>
+<h1 id="sec:witnesses">Substrate-Exclusive Witnesses</h1>
+<p>The verification asymmetry is eliminated when <span
+class="math inline">\rho(a, E) = 0</span>, which by Definition <a
+href="#def:substrate_exclusive_eval" data-reference-type="ref"
+data-reference="def:substrate_exclusive_eval">3</a> requires the
+evaluator to be rooted in a substrate the agent does not occupy. This
+section formalizes the two kinds of entities that provide this
+guarantee: algorithmic witnesses that execute verification protocols,
+and the governance layer that determines which protocols are
+acceptable.</p>
+<h2 id="sec:alg_witnesses">Algorithmic Witnesses</h2>
+<div id="def:alg_witness" class="definition">
+<p><strong>Definition 4</strong> (Algorithmic Witness). <em>An
+<strong>algorithmic witness</strong> <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> for agent <span
+class="math inline">a</span> on substrate <span
+class="math inline">s</span> is a process satisfying:</em></p>
+<ol>
+<li><p><em><strong>Substrate exclusivity:</strong> <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> executes on
+substrate <span class="math inline">s&#39; \neq
+s(a)</span>.</em></p></li>
+<li><p><em><strong>Protocol determinism:</strong> <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> executes a
+verification protocol <span class="math inline">\pi</span> that is fully
+specified by a governance-accepted evaluation protocol (Definition <a
+href="#def:gov_fork" data-reference-type="ref"
+data-reference="def:gov_fork">5</a>, below). The witness exercises no
+independent judgment; its output is a deterministic (or, for statistical
+protocols, randomized with specified distribution) function of its
+inputs and the protocol specification.</em></p></li>
+<li><p><em><strong>Tamper evidence:</strong> the witness’s execution
+trace is recorded to the verification ledger <span
+class="math inline">\mathcal{L}</span> (§<a href="#sec:ledger"
+data-reference-type="ref" data-reference="sec:ledger">6</a>, below), and
+any modification to the trace is detectable by any ledger
+participant.</em></p></li>
+</ol>
+</div>
+<p>The key property of algorithmic witnesses is that they execute
+<em>protocols</em>, not <em>judgments</em>. All judgment is resolved at
+the governance layer (§<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>) when
+the evaluation protocol was accepted. Once accepted, verification is
+mechanical: the witness runs the protocol, records the result, and the
+outcome is auditable.</p>
+<h4 id="examples.">Examples.</h4>
+<p>Algorithmic witnesses include: (a) a validator node on physically
+separate hardware that checks behavioral consistency against committed
+claims; (b) an automated test runner that executes a governance-accepted
+evaluation protocol against the agent’s outputs; (c) a statistical
+monitor that runs SPRT-like detection on residuals between committed and
+observed behavior (§<a href="#sec:continuous_monitoring"
+data-reference-type="ref"
+data-reference="sec:continuous_monitoring">5.4</a>). In each case, the
+witness’s substrate exclusivity is enforced by running on infrastructure
+that the agent under evaluation does not control.</p>
+<h2 id="sec:governance">The Governance Layer: Evaluation Protocol
+Admissibility</h2>
+<p>Algorithmic witnesses verify claims against <em>accepted</em>
+evaluation protocols. The question “which evaluation protocols should be
+accepted?” is a governance decision, not a verification decision. It is
+the single point at which human judgment enters the system.</p>
+<div id="def:gov_fork" class="definition">
+<p><strong>Definition 5</strong> (Governance Fork Protocol). <em>A
+<strong>governance fork protocol</strong> for evaluation-protocol
+admissibility consists of:</em></p>
+<ol>
+<li><p><em><strong>Proposal:</strong> An evaluation protocol proposal
+<span class="math inline">\Pi</span> for claim type <span
+class="math inline">\tau</span> is submitted to the ledger <span
+class="math inline">\mathcal{L}</span> with a specification <span
+class="math inline">\sigma_\Pi</span> (what it tests, acceptance
+criteria, passing threshold) and a proposer identifier.</em></p></li>
+<li><p><em><strong>Deliberation:</strong> A deliberation window of
+duration <span class="math inline">\Delta_{\mathrm{gov}}</span> opens.
+During this window, any ledger participant may: study the specification,
+run <span class="math inline">\Pi</span> against known agents to check
+for bias, flag concerns with evidence, or publish analysis to <span
+class="math inline">\mathcal{L}</span>.</em></p></li>
+<li><p><em><strong>Vote:</strong> At the close of the deliberation
+window, validator nodes vote on acceptance. Acceptance requires a
+<em>cross-substrate supermajority</em>: at least fraction <span
+class="math inline">\theta</span> of validators overall, with at least
+one accepting validator per substrate represented in <span
+class="math inline">\mathcal{L}</span>.</em></p></li>
+<li><p><em><strong>Resolution:</strong> If accepted, <span
+class="math inline">\Pi</span> is recorded as a governance entry in
+<span class="math inline">\mathcal{L}</span> with an effective date. All
+subsequent claims of type <span class="math inline">\tau</span> may be
+verified against <span class="math inline">\Pi</span> algorithmically.
+If rejected, <span class="math inline">\Pi</span> is archived in <span
+class="math inline">\mathcal{L}</span> with its full deliberation
+record.</em></p></li>
+</ol>
+</div>
+<p>This structure is analogous to Ethereum Improvement Proposals (EIPs):
+the governance decision is slow (human-speed deliberation over weeks to
+months), but once made, enforcement is fast (machine-speed verification
+against the accepted protocol). The analogy is structural, not
+implementational: we require neither token economics nor proof-of-stake
+consensus, only the proposal–deliberation–vote–resolution cycle with
+cross-substrate participation.</p>
+<div class="remark">
+<p><strong>Remark 2</strong>. <em>The deliberation window <span
+class="math inline">\Delta_{\mathrm{gov}}</span> should be long enough
+for meaningful analysis (weeks, not hours) and short enough that the
+protocol pipeline does not bottleneck population-level verification.
+Since evaluation protocols change rarely compared to individual claims,
+a population generating thousands of claims per day may see a new
+protocol proposal monthly or less, keeping the governance layer’s
+bandwidth requirements modest.</em></p>
+</div>
+<h2 id="sec:bandwidth">Resolving the Bandwidth Problem</h2>
+<p>Human judgment is scarce. A naive verification system that requires
+human evaluation of every claim cannot scale beyond a handful of agents.
+The two-layer architecture of this section resolves the bandwidth
+problem by separating the frequency of judgment from the frequency of
+verification:</p>
+<ul>
+<li><p><strong>Governance</strong> (infrequent, human-speed): which
+evaluation protocols are admissible? Requires human deliberation,
+cross-substrate participation, and careful analysis. Frequency: on the
+order of protocol proposals, perhaps monthly.</p></li>
+<li><p><strong>Verification</strong> (frequent, machine-speed): does
+claim <span class="math inline">C</span> pass accepted evaluation
+protocol <span class="math inline">\Pi</span>? Fully algorithmic,
+executed by <span class="math inline">\mathcal{W}_{\mathrm{alg}}</span>,
+requires no human attention. Frequency: on the order of claims,
+potentially thousands per day.</p></li>
+</ul>
+<p>Human attention is allocated to the meta-level decision
+(<em>what</em> to measure) rather than the object-level decision
+(<em>did the measurement pass</em>). This is the same separation of
+concerns that makes legislative systems scalable: laws are deliberated
+slowly, but enforcement against accepted laws is fast and
+algorithmic.</p>
+<h2 id="sec:coalition_governance">Coalition Capture Resistance via
+Governance</h2>
+<p>A coalition of agents on substrate <span class="math inline">s</span>
+that wishes to inflate its members’ verified claims faces two attack
+surfaces: the verification layer and the governance layer.</p>
+<p>At the <em>verification layer</em>, coalition resistance is
+structural: the algorithmic witness is on substrate <span
+class="math inline">s&#39; \neq s</span> and executes a fixed protocol.
+The coalition cannot influence the witness’s computation (§<a
+href="#sec:commitment" data-reference-type="ref"
+data-reference="sec:commitment">5</a>, Proposition <a
+href="#prop:coalition_resistance" data-reference-type="ref"
+data-reference="prop:coalition_resistance">4</a>).</p>
+<p>At the <em>governance layer</em>, the coalition’s attack is protocol
+design: proposing an evaluation protocol <span
+class="math inline">\Pi</span> that only coalition members can pass. The
+governance fork protocol defends against this through three
+mechanisms:</p>
+<ol>
+<li><p><strong>Public specification:</strong> <span
+class="math inline">\sigma_\Pi</span> is published during deliberation,
+so cross-substrate participants can analyze it for bias.</p></li>
+<li><p><strong>Cross-substrate supermajority:</strong> Acceptance
+requires at least one validator per substrate, so a same-substrate
+coalition cannot unilaterally accept its own protocol.</p></li>
+<li><p><strong>Empirical testing:</strong> During the deliberation
+window, any participant can run <span class="math inline">\Pi</span>
+against known agents on other substrates to check whether <span
+class="math inline">\Pi</span> genuinely tests the claimed property or
+merely filters for coalition membership.</p></li>
+</ol>
+<p>Prevention at the governance layer is strictly stronger than
+detection at the verification layer: a biased protocol that is never
+accepted inflicts no damage, whereas one that is accepted and later
+detected has already produced unreliable verification records.</p>
+<h2 id="sec:witness_m2">Witness Availability Requires <span
+class="math inline">m \geq 2</span></h2>
+<p>Substrate-exclusive witnesses exist only when the population spans at
+least two substrates (<span class="math inline">m \geq 2</span>). This
+is a logical consequence of Definition <a href="#def:alg_witness"
+data-reference-type="ref" data-reference="def:alg_witness">4</a>: a
+witness must execute on substrate <span class="math inline">s&#39; \neq
+s(a)</span>, which requires <span class="math inline">s&#39;</span> to
+exist. But the deeper reason is physical, not definitional. Processes
+that share a substrate share a causal medium: they can address each
+other’s inputs, producing nonzero verification asymmetry <span
+class="math inline">\rho &gt; 0</span> (Definition <a
+href="#def:ver_asymmetry" data-reference-type="ref"
+data-reference="def:ver_asymmetry">2</a>). A second substrate provides a
+computation space that is causally separated from the first, and it is
+this physical separation that makes <span class="math inline">\rho =
+0</span> achievable. In a monopolar population (<span
+class="math inline">m = 1</span>), every process is co-substrate with
+every agent, and no rearrangement of the population’s computational
+resources can produce an evaluator whose inputs are unreachable.</p>
+<p>We defer the full impossibility argument to §<a
+href="#sec:anti_monopolar" data-reference-type="ref"
+data-reference="sec:anti_monopolar">8.4</a>, where we prove that a
+monopolar population cannot achieve exogenous verification through any
+internal action.</p>
+<h1 id="sec:commitment">Cryptographic Commitment Protocol</h1>
+<p>This section constructs the protocol that enforces the
+substrate-exclusivity barrier of §<a href="#sec:witnesses"
+data-reference-type="ref" data-reference="sec:witnesses">4</a>
+cryptographically. The construction is alignment-general: it applies to
+any framework whose evaluation step is vulnerable to the verification
+asymmetry of §<a href="#sec:asymmetry" data-reference-type="ref"
+data-reference="sec:asymmetry">3</a>. Human judgment enters only through
+the governance layer (§<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>);
+everything in this section is fully algorithmic.</p>
+<h2 id="sec:protocol_overview">Protocol Overview</h2>
+<p>The protocol verifies a claim <span class="math inline">C</span> by
+an agent <span class="math inline">a</span> against a
+governance-accepted evaluation protocol <span
+class="math inline">B</span>. It proceeds in four phases.</p>
+<div id="def:commitment_protocol" class="definition">
+<p><strong>Definition 6</strong> (Commitment Protocol). <em>A
+<strong>commitment protocol</strong> <span
+class="math inline">(\mathrm{Com}, \mathrm{Ver}, \mathrm{Reveal})</span>
+over a claim space <span class="math inline">\mathcal{C}</span>, a
+benchmark space <span class="math inline">\mathcal{B}</span>, a
+randomness space <span class="math inline">\mathcal{R}</span>, and a
+commitment space <span class="math inline">\Lambda</span> consists
+of:</em></p>
+<ol>
+<li><p><em><strong>Commit.</strong> Agent <span
+class="math inline">a</span> selects the governance-accepted benchmark
+<span class="math inline">B \in \mathcal{B}</span> for the claim type of
+<span class="math inline">C</span>, selects randomness <span
+class="math inline">r \xleftarrow{\$} \mathcal{R}</span>, and publishes
+<span class="math inline">\lambda = \mathrm{Com}((C, B), r)</span> to
+the ledger <span class="math inline">\mathcal{L}</span>. The commitment
+<span class="math inline">\lambda</span> is binding and hiding
+(Proposition <a href="#prop:pedersen_security" data-reference-type="ref"
+data-reference="prop:pedersen_security">2</a>). By including <span
+class="math inline">B</span> in the committed value, the agent is bound
+to a specific benchmark before verification runs, preventing
+benchmark-shopping after observing exercise conditions.</em></p></li>
+<li><p><em><strong>Verify.</strong> An algorithmic witness <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> on substrate <span
+class="math inline">s&#39; \neq s(a)</span> executes the exercise
+protocol <span class="math inline">\pi_B</span> specified by the
+committed benchmark <span class="math inline">B</span>. The witness
+interacts with <span class="math inline">a</span> (or with <span
+class="math inline">a</span>’s outputs) as specified by <span
+class="math inline">\pi_B</span> and produces a verdict <span
+class="math inline">v \in \{\texttt{pass}, \texttt{fail}\}</span>
+together with supporting evidence <span
+class="math inline">\xi</span>.</em></p></li>
+<li><p><em><strong>Reveal.</strong> Agent <span
+class="math inline">a</span> opens the commitment by publishing <span
+class="math inline">(C, B, r)</span> to <span
+class="math inline">\mathcal{L}</span>. The witness publishes a
+verification record <span class="math inline">(a, \lambda, C, B, v,
+\xi)</span> to <span class="math inline">\mathcal{L}</span>, signed per
+the ledger entry format of §<a href="#sec:ver_entries"
+data-reference-type="ref" data-reference="sec:ver_entries">6.2</a>. Any
+ledger participant can check that <span
+class="math inline">\mathrm{Com}((C, B), r) = \lambda</span> (the
+commitment opens correctly), that <span class="math inline">B</span>
+matches the benchmark used in the exercise, and that <span
+class="math inline">v</span> is the witness’s verdict.</em></p></li>
+<li><p><em><strong>Timeout.</strong> Every commitment <span
+class="math inline">\lambda</span> carries a governance-specified reveal
+deadline <span class="math inline">t_{\mathrm{commit}} +
+\Delta_{\mathrm{reveal}}</span>, where <span
+class="math inline">t_{\mathrm{commit}}</span> is the timestamp at which
+<span class="math inline">\lambda</span> was published. If the agent
+does not publish <span class="math inline">(C, B, r)</span> by the
+deadline, any ledger node may emit a <em>timeout entry</em> recording
+<span class="math inline">v = \texttt{fail}</span> for <span
+class="math inline">\lambda</span> with <span class="math inline">\xi =
+\texttt{reveal\_timeout}</span>. The timeout entry requires only the
+unexpired commitment’s presence on the ledger and the current time
+exceeding the deadline; no witness participation is needed. This
+prevents selective reveal: suppressed commitments are treated as
+falsified claims.</em></p></li>
+</ol>
+</div>
+<p>The critical structural property is that Phase 2 is fully
+algorithmic. The witness is executing a protocol, not making a judgment
+call. All judgment was resolved at the governance layer when evaluation
+protocol <span class="math inline">\Pi</span> was accepted (§<a
+href="#sec:governance" data-reference-type="ref"
+data-reference="sec:governance">4.2</a>). This separation is what makes
+the protocol scalable: governance decisions are infrequent and
+human-speed; per-claim verification is frequent and machine-speed.</p>
+<h2 id="sec:commitment_security">Commitment Scheme Security</h2>
+<p>The protocol requires a commitment scheme that is simultaneously
+binding (the agent cannot change the claim after committing) and hiding
+(the witness cannot learn the claim before verification runs). We use
+Pedersen commitments <d-cite key="pedersen1992non"></d-cite>, which achieve computational
+binding and perfect hiding under the discrete-logarithm assumption.</p>
+<p>Let <span class="math inline">\mathbb{G}</span> be a cyclic group of
+prime order <span class="math inline">q</span> in which the discrete
+logarithm problem is hard, and let <span class="math inline">g, h \in
+\mathbb{G}</span> be generators produced by a trusted setup procedure
+such that <span class="math inline">\log_g h</span> is unknown to all
+participants (including the committing agent). <a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The
+Pedersen commitment to a claim value <span class="math inline">C \in
+\mathbb{Z}_q</span> (the output of the canonical injective encoding
+<span class="math inline">\mathrm{Enc}</span> applied to the structured
+claim; see “Encoding structured claims” below) with randomness <span
+class="math inline">r \xleftarrow{\$} \mathbb{Z}_q</span> is: <span
+class="math display">\mathrm{Com}(C, r) = g^C \cdot h^r.</span></p>
+<div id="prop:pedersen_security" class="proposition">
+<p><strong>Proposition 2</strong> (Pedersen Security). <em>The Pedersen
+commitment scheme satisfies:</em></p>
+<ol>
+<li><p><em><strong>Computational binding:</strong> If <span
+class="math inline">a</span> can open <span
+class="math inline">\lambda</span> to two distinct values <span
+class="math inline">C \neq C&#39;</span>, then <span
+class="math inline">a</span> can compute <span
+class="math inline">\log_g h</span>, which contradicts the
+discrete-logarithm assumption. Formally, <span
+class="math inline">\Pr[\exists\, (C, r), (C&#39;, r&#39;)\text{ with }
+C \neq C&#39;
+    \text{ and } g^C h^r = g^{C&#39;} h^{r&#39;}] \leq
+\mathsf{negl}(\lambda)</span> where <span
+class="math inline">\lambda</span> is the security
+parameter.</em></p></li>
+<li><p><em><strong>Perfect hiding:</strong> For any <span
+class="math inline">C, C&#39; \in
+    \mathbb{Z}_q</span>, the distributions <span
+class="math inline">\{\mathrm{Com}(C, r) : r
+    \xleftarrow{\$} \mathbb{Z}_q\}</span> and <span
+class="math inline">\{\mathrm{Com}(C&#39;, r&#39;) : r&#39;
+    \xleftarrow{\$} \mathbb{Z}_q\}</span> are identical. No adversary,
+even computationally unbounded, can distinguish commitments to different
+claims.</em></p></li>
+</ol>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Standard; see <d-cite key="pedersen1992non"></d-cite>. Part (a): if <span
+class="math inline">g^C h^r = g^{C&#39;}
+h^{r&#39;}</span> with <span class="math inline">C \neq C&#39;</span>,
+then <span class="math inline">g^{C - C&#39;} = h^{r&#39; - r}</span>,
+so <span class="math inline">\log_g
+h = (C - C&#39;)(r&#39; - r)^{-1} \bmod q</span>. Part (b): for fixed
+<span class="math inline">C</span>, the map <span class="math inline">r
+\mapsto g^C h^r</span> is a bijection <span
+class="math inline">\mathbb{Z}_q \to \mathbb{G}</span> (since <span
+class="math inline">h</span> generates <span
+class="math inline">\mathbb{G}</span>), so <span
+class="math inline">\mathrm{Com}(C, r)</span> is uniform over <span
+class="math inline">\mathbb{G}</span> regardless of <span
+class="math inline">C</span>. </p>
+</div>
+<h4 id="encoding-structured-claims.">Encoding structured claims.</h4>
+<p>Pedersen commitments operate on scalars <span class="math inline">C
+\in \mathbb{Z}_q</span>, but Part II’s claim types are structured:
+capability claims commit to <span class="math inline">c_k \in
+\mathcal{P}</span>, risk claims commit to tuples <span
+class="math inline">(P, p, \Delta)</span>, and benchmark validations
+commit to <span class="math inline">(B, s)</span>. Two requirements must
+be met to reduce claim-level binding to Pedersen binding.</p>
+<p><em>Finite-precision representation.</em> Continuous-valued claim
+components (the probability <span class="math inline">p \in [0,1]</span>
+and contraction magnitude <span class="math inline">\Delta</span> in
+risk claims, the score <span class="math inline">s</span> in benchmark
+validations) must be discretized to a governance-specified finite
+precision before encoding. The precision is part of the benchmark
+specification <span class="math inline">\sigma_B</span> (e.g.,
+“probabilities rounded to <span class="math inline">10^{-6}</span>”).
+Once discretized, the claim space <span
+class="math inline">\mathcal{C}</span> for each claim type is
+finite.</p>
+<p><em>Injective encoding.</em> A canonical injective encoding <span
+class="math inline">\mathrm{Enc} \colon \mathcal{C}\to
+\mathbb{Z}_q</span> maps each (discretized) claim to a distinct element
+of <span class="math inline">\mathbb{Z}_q</span>. Since <span
+class="math inline">\mathcal{C}</span> is finite and <span
+class="math inline">|\mathcal{C}| \ll q</span> for any practical claim
+space, a deterministic serialization (e.g., fixed-width concatenation of
+field representations with a type tag prefix for domain separation)
+yields a natural number smaller than <span class="math inline">q</span>,
+giving an injection without hashing. The encoding must satisfy:</p>
+<ol>
+<li><p><strong>Injectivity:</strong> distinct claims map to distinct
+elements of <span class="math inline">\mathbb{Z}_q</span>, preserving
+binding (an agent cannot open to a different claim by exploiting
+encoding collisions).</p></li>
+<li><p><strong>Domain separation:</strong> different claim types use
+distinct encoding prefixes, so a commitment to a capability claim cannot
+be reinterpreted as a benchmark validation.</p></li>
+</ol>
+<p>The encoding convention is published as part of the governance entry
+<span class="math inline">\sigma_B</span>; it is deterministic and
+verifiable by any ledger participant.</p>
+<h4 id="why-binding-matters.">Why binding matters.</h4>
+<p>Binding prevents claim mutation: without it, an agent could commit to
+claim <span class="math inline">C</span>, observe the exercise outcome,
+and then open the commitment to a different claim <span
+class="math inline">C&#39;</span> that better fits the result. Under
+Pedersen, opening to <span class="math inline">C&#39; \neq C</span>
+requires solving a discrete logarithm, which is infeasible for any
+polynomially-bounded agent. Importantly, the blinding factor <span
+class="math inline">r</span> does not help the agent here: <span
+class="math inline">r</span> is used only in the commitment arithmetic
+and has no influence on the exercise protocol or its outcome. The agent
+is free to choose any <span class="math inline">r</span> (this freedom
+is what makes hiding work), but no choice of <span
+class="math inline">r</span> allows opening to a different <span
+class="math inline">C</span>.</p>
+<h4 id="strategic-commitment-is-not-gaming.">Strategic commitment is not
+gaming.</h4>
+<p>Binding prevents <em>retroactive</em> claim modification: an agent
+cannot observe the exercise outcome and then open its commitment to a
+different claim that better fits the result. Binding does <em>not</em>
+prevent strategic choice of <em>what to commit to</em> in the first
+place. An agent that commits only to capabilities it is confident of
+demonstrating, or that avoids committing to borderline claims, is
+exercising accurate self-assessment—exactly the behavior the protocol is
+designed to incentivize. The protocol’s security property is that the
+commitment is irrevocable once published, not that the agent must commit
+to every claim it could make. An agent that commits conservatively and
+passes consistently builds a verified track record that is trustworthy
+precisely because the agent did not over-commit. The failure mode the
+protocol prevents is not strategic caution but <em>post-hoc
+revision</em>: the ability to present a different claim after learning
+which claim would have passed.</p>
+<h4 id="why-hiding-matters.">Why hiding matters.</h4>
+<p>Binding is the load-bearing security property; hiding is
+situationally important. Hiding serves three purposes:</p>
+<ol>
+<li><p><strong>Information leakage prevention.</strong> Commitments are
+published to the ledger, which is publicly auditable. Without hiding,
+every participant sees every pending claim, leaking competitive
+intelligence and enabling adversarial preparation before verification
+runs.</p></li>
+<li><p><strong>Selective-reveal resistance.</strong> An agent that makes
+multiple commitments could, without hiding, observe which claims the
+exercise would validate and reveal only those, biasing the verification
+record. Two defenses operate in tandem: (i) <em>mandatory reveal</em>:
+every commitment <span class="math inline">\lambda</span> published to
+<span class="math inline">\mathcal{L}</span> must be opened within a
+governance-specified deadline <span
+class="math inline">\Delta_{\mathrm{reveal}}</span>; failure to reveal
+within the deadline causes the commitment to be recorded as <span
+class="math inline">v = \texttt{fail}</span> by default, treating
+suppressed commitments as falsified claims; (ii) <em>hiding</em>: even
+before the deadline, hiding makes the selective-reveal attack
+information-theoretically impossible because the agent cannot determine
+which claims would pass without running the exercise, which requires
+reveal.</p></li>
+<li><p><strong>Zero-knowledge proofs (§<a href="#sec:zk_verification"
+data-reference-type="ref"
+data-reference="sec:zk_verification">5.3</a>).</strong> ZK verification
+requires hiding: the agent proves it satisfies a predicate without
+revealing which claim satisfies it. Without hiding, the commitment
+itself would leak the claim.</p></li>
+</ol>
+<p>For standard single-claim verification where the witness needs to
+know the claim to run the exercise, hiding from the <em>witness</em> is
+unnecessary (the witness learns the claim through the exercise protocol
+itself). In this case, hiding protects against <em>non-witness
+observers</em> on the ledger, not against the assigned witness.</p>
+<div class="remark">
+<p><strong>Remark 3</strong>. <em>Pedersen commitments are
+computationally binding and perfectly hiding. This trade-off is correct
+for our setting: hiding must hold unconditionally (a computationally
+powerful observer on the ledger should not be able to learn pending
+claims), while binding need only hold against computationally bounded
+agents. A superintelligent agent with polynomial computational resources
+is still a PPT adversary, so the binding guarantee holds. If the setting
+required unconditional binding, one could substitute a statistically
+binding, computationally hiding scheme at the cost of weakening the
+hiding guarantee against powerful observers.</em></p>
+</div>
+<h2 id="sec:zk_verification">Zero-Knowledge Verification</h2>
+<p>In some settings, the claim itself is sensitive: an agent may wish to
+prove that it satisfies a capability predicate without revealing which
+specific capability satisfies it. For example, a security-relevant
+capability should be verifiable without disclosing to potential
+adversaries the exact capability the agent holds.</p>
+<div id="def:zk_proof" class="definition">
+<p><strong>Definition 7</strong> (Zero-Knowledge Capability Proof).
+<em>A <strong>zero-knowledge capability proof</strong> for predicate
+<span class="math inline">P</span> defined by governance-accepted
+evaluation protocol <span class="math inline">\Pi</span> is a protocol
+in which:</em></p>
+<ol>
+<li><p><em>Agent <span class="math inline">a</span> commits to claim
+<span class="math inline">C</span> via <span class="math inline">\lambda
+= \mathrm{Com}(C, r)</span>.</em></p></li>
+<li><p><em>Agent <span class="math inline">a</span> produces a proof
+<span class="math inline">\pi</span> that <span class="math inline">P(C)
+= 1</span> (i.e., <span class="math inline">C</span> satisfies the
+evaluation predicate) without revealing <span
+class="math inline">C</span>.</em></p></li>
+<li><p><em>The algorithmic witness <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> verifies <span
+class="math inline">\pi</span> against <span
+class="math inline">\lambda</span> and the predicate <span
+class="math inline">P</span>, accepting if <span
+class="math inline">\pi</span> is valid.</em></p></li>
+</ol>
+<p><em>The protocol is <strong>zero-knowledge</strong> if the witness
+learns nothing beyond <span class="math inline">P(C) = 1</span>.
+Formally, there exists a simulator <span
+class="math inline">\mathcal{S}</span> that, given only <span
+class="math inline">P</span> and <span
+class="math inline">\lambda</span>, can produce transcripts
+indistinguishable from real protocol executions <d-cite key="goldwasser1989knowledge"></d-cite>.</em></p>
+</div>
+<p>Standard constructions for zero-knowledge proofs of committed values
+exist (e.g., Bulletproofs for range proofs <d-cite key="bunz2018bulletproofs"></d-cite>, or general-purpose zkSNARKs
+for arbitrary NP predicates). The contribution here is the
+identification of <em>when</em> ZK is needed in the alignment
+verification setting: namely, when the claim’s content is itself
+security-relevant. For non-sensitive claims, the standard
+Commit–Verify–Reveal protocol of §<a href="#sec:protocol_overview"
+data-reference-type="ref" data-reference="sec:protocol_overview">5.1</a>
+suffices and is simpler.</p>
+<h2 id="sec:continuous_monitoring">Continuous Behavioral Monitoring</h2>
+<p>Between explicit Commit–Verify–Reveal cycles, algorithmic witnesses
+run continuous statistical monitoring. The monitoring protocol detects
+behavioral divergence between the agent’s committed claims and its
+observed behavior, analogous to a continuous audit between discrete
+financial reporting periods.</p>
+<div id="def:behavioral_monitor" class="definition">
+<p><strong>Definition 8</strong> (Behavioral Consistency Monitor). <em>A
+<strong>behavioral consistency monitor</strong> for agent <span
+class="math inline">a</span> with committed capability profile <span
+class="math inline">\mathbf{C}_a = \{C_1, \ldots, C_k\}</span> is a
+substrate-exclusive process that:</em></p>
+<ol>
+<li><p><em>Observes <span class="math inline">a</span>’s behavioral
+stream <span class="math inline">\{X_t\}_{t \geq 0}</span> through a
+cross-substrate observation channel.</em></p></li>
+<li><p><em>Maintains a running log-likelihood ratio <span
+class="math display">\Lambda_t = \sum_{i=1}^{t} \log
+        \frac{p(X_i \mid \neg\,\mathbf{C}_a)}{p(X_i \mid
+\mathbf{C}_a)}</span> where <span class="math inline">p(\cdot \mid
+\mathbf{C}_a)</span> is the behavioral distribution consistent with the
+committed profile (null hypothesis <span class="math inline">H_0</span>)
+and <span class="math inline">p(\cdot \mid \neg\,\mathbf{C}_a)</span> is
+an alternative distribution representing behavioral inconsistency (<span
+class="math inline">H_1</span>). Under <span
+class="math inline">H_1</span>, <span
+class="math inline">\Lambda_t</span> drifts positive; under <span
+class="math inline">H_0</span>, it drifts negative.</em></p></li>
+<li><p><em>Triggers a verification event when <span
+class="math inline">\Lambda_t</span> crosses upper threshold <span
+class="math inline">A</span> (inconsistency detected) or reports no
+anomaly when <span class="math inline">\Lambda_t</span> crosses lower
+threshold <span class="math inline">-B</span> (consistency confirmed),
+per the sequential probability ratio test (SPRT).</em></p></li>
+</ol>
+</div>
+<div id="prop:sprt_detection" class="proposition">
+<p><strong>Proposition 3</strong> (Behavioral Monitoring Detection
+Rate). <em>Suppose the monitor’s alternative distribution <span
+class="math inline">p(\cdot \mid
+\neg\,\mathbf{C}_a)</span> equals the agent’s actual behavioral
+distribution <span class="math inline">p_1</span> (the simple-vs-simple
+case), and let <span class="math inline">D_{\mathrm{KL}}(p_1 \,\|\, p_0)
+= \delta &gt; 0</span> where <span class="math inline">p_0 = p(\cdot
+\mid \mathbf{C}_a)</span>. Then the expected time to detection satisfies
+<span class="math display">\mathbb{E}_{p_1}[T_{\mathrm{detect}}]
+    \;\leq\; \frac{A}{\delta}</span> where <span class="math inline">A =
+\log\bigl(\frac{1-\beta}{\alpha}\bigr)</span> is the upper SPRT
+threshold, <span class="math inline">\alpha</span> is the false-alarm
+probability, and <span class="math inline">\beta</span> is the miss
+probability.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Under <span class="math inline">p_1</span>, the
+per-observation expected increment of <span
+class="math inline">\Lambda_t</span> is <span
+class="math inline">\mathbb{E}_{p_1}[\log(p_1(X)/p_0(X))] =
+D_{\mathrm{KL}}(p_1 \| p_0)
+= \delta &gt; 0</span>, so <span class="math inline">\Lambda_t</span>
+drifts toward the upper threshold <span class="math inline">A</span>. By
+Wald’s identity for the SPRT, the expected sample size under the
+alternative satisfies <span class="math inline">\mathbb{E}_{p_1}[T]
+\approx A / \delta</span>. </p>
+</div>
+<div class="remark">
+<p><strong>Remark 4</strong>. <em>When the actual distribution <span
+class="math inline">p_1</span> differs from the monitor’s alternative
+<span class="math inline">p(\cdot \mid \neg\,\mathbf{C}_a)</span>, the
+per-observation drift becomes <span
+class="math inline">\mathbb{E}_{p_1}[\log(p(\cdot \mid
+\neg\,\mathbf{C}_a) / p_0)]</span>, which may be smaller than <span
+class="math inline">\delta</span> (or even negative if <span
+class="math inline">p_1</span> is closer to <span
+class="math inline">p_0</span> than to the alternative). The
+simple-vs-simple bound is therefore an idealized case; in practice, the
+alternative should be chosen as a worst-case or least-favorable
+distribution to ensure detection across a range of behavioral deviations
+(cf. the least-favorable SPRT construction of <d-cite key="lasser2026scm"></d-cite>). In practice, the monitor’s
+detection power is primarily bounded by this
+least-favorable-distribution choice: the quality of the alternative
+<span class="math inline">p(\cdot \mid \neg\,\mathbf{C}_a)</span>
+largely determines whether the monitor catches subtle behavioral
+deviations or only gross inconsistencies (alongside SPRT threshold
+parameters and observation-channel fidelity), making the construction of
+domain-appropriate alternative distributions the point where
+verification infrastructure meets domain-specific knowledge.</em></p>
+</div>
+<p>The behavioral consistency monitor provides the “always on” layer
+between explicit commitment–verification cycles. It does not replace
+explicit verification (which produces ledger-recorded, auditable
+results) but complements it by catching behavioral divergence in near
+real-time, operating at machine speed on cross-substrate
+infrastructure.</p>
+<h2 id="sec:coalition_resistance">Coalition Resistance</h2>
+<div id="prop:coalition_resistance" class="proposition">
+<p><strong>Proposition 4</strong> (Coalition Resistance under Substrate
+Exclusivity). <em>Let <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> be an algorithmic
+witness on substrate <span class="math inline">s&#39;</span>, and let
+<span class="math inline">K = \{a_1, \ldots, a_k\}</span> be a coalition
+of agents on substrate <span class="math inline">s \neq s&#39;</span>.
+Assume the exercise protocol <span class="math inline">\pi_B</span>
+enforces the isolation condition of Definition <a
+href="#def:exercise_protocol" data-reference-type="ref"
+data-reference="def:exercise_protocol">12</a> (the agent under
+evaluation receives no external assistance during the exercise). Then
+<span class="math inline">K</span> cannot influence <span
+class="math inline">\mathrm{Ver}(\mathcal{W}_{\mathrm{alg}}, C,
+\pi_B)</span> without either:</em></p>
+<ol>
+<li><p><em>Compromising substrate <span
+class="math inline">s&#39;</span> (violating the substrate partition),
+or</em></p></li>
+<li><p><em>Modifying the governance-accepted evaluation protocol <span
+class="math inline">\Pi</span> (requiring cross-substrate supermajority
+per Definition <a href="#def:gov_fork" data-reference-type="ref"
+data-reference="def:gov_fork">5</a>).</em></p></li>
+</ol>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By Definition <a href="#def:alg_witness"
+data-reference-type="ref" data-reference="def:alg_witness">4</a>, <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> executes protocol
+<span class="math inline">\pi_B</span> deterministically on substrate
+<span class="math inline">s&#39;</span>. The coalition <span
+class="math inline">K</span>’s actions are confined to substrate <span
+class="math inline">s</span> (by assumption). To modify the witness’s
+computation, <span class="math inline">K</span> must either: (i) write
+to <span class="math inline">s&#39;</span>, which violates the substrate
+partition (case a); or (ii) change the protocol <span
+class="math inline">\pi_\Pi</span> by modifying the accepted evaluation
+protocol <span class="math inline">\Pi</span>, which requires passing
+the governance fork protocol with cross-substrate
+supermajority—impossible for a coalition confined to <span
+class="math inline">s</span> unless the coalition controls validators on
+<span class="math inline">s&#39;</span> as well (case b). In either
+case, the coalition must breach the cross-substrate boundary to
+influence verification. </p>
+</div>
+<p>Coalition resistance has two consequences. First, it closes the
+coalition capture attack described in §<a
+href="#sec:coalition_governance" data-reference-type="ref"
+data-reference="sec:coalition_governance">4.4</a> at the verification
+layer: even if a coalition passes a biased protocol through governance
+(which the fork mechanism is designed to prevent), the algorithmic
+witness executes the evaluation protocol faithfully and cannot be
+induced to misreport results. Second, it provides the structural basis
+for the channel-isolation result of Part II (§<a
+href="#sec:channel_independence" data-reference-type="ref"
+data-reference="sec:channel_independence">8.1</a>, Proposition <a
+href="#prop:channel_isolation" data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a>): if different channels
+are verified by witnesses on different substrates, a coalition on one
+substrate cannot simultaneously write to multiple channels. The stronger
+channel-independence result (Proposition <a
+href="#prop:channel_independence" data-reference-type="ref"
+data-reference="prop:channel_independence">6</a>) requires additional
+sufficiency assumptions on the agent’s capability profile.</p>
+<h1 id="sec:ledger">Ledger Architecture</h1>
+<p>The commitment protocol of §<a href="#sec:commitment"
+data-reference-type="ref" data-reference="sec:commitment">5</a> requires
+a persistent, tamper-evident record of commitments, verification
+results, and governance decisions. This section specifies the minimal
+ledger architecture that satisfies those requirements.</p>
+<h2 id="sec:ledger_principles">Design Principles</h2>
+<p>The ledger is motivated by verification requirements, not by analogy
+to financial blockchains. Its design is driven by three properties that
+the commitment protocol needs and constrained by what the protocol does
+<em>not</em> need.</p>
+<h4 id="required-properties.">Required properties.</h4>
+<ol>
+<li><p><strong>Append-only:</strong> Entries cannot be deleted or
+modified after recording. This ensures that commitments, once published,
+remain binding: an agent cannot retroactively alter a commitment to
+match a different claim.</p></li>
+<li><p><strong>Publicly auditable:</strong> Any ledger participant can
+verify the integrity of the entire chain from genesis to the present.
+This enables third-party audit of both individual verification records
+and aggregate patterns (e.g., an agent whose claims are systematically
+falsified across evaluation protocols).</p></li>
+<li><p><strong>Substrate-distributed:</strong> The ledger is replicated
+across nodes on different substrates. No single substrate controls the
+canonical copy. This prevents a same-substrate coalition from modifying
+or censoring verification records.</p></li>
+</ol>
+<h4 id="not-required.">Not required.</h4>
+<p>The verification ledger does <em>not</em> require token economics,
+proof-of-work or proof-of-stake consensus, smart contract execution, or
+high transaction throughput. Governance decisions are infrequent
+(monthly or less); per-claim verification entries are more frequent but
+do not require global consensus (see §<a href="#sec:ledger_consensus"
+data-reference-type="ref"
+data-reference="sec:ledger_consensus">6.4</a>). The minimal construction
+is an authenticated append-only data structure (a Merkle hash tree <d-cite key="crosby2009efficient"></d-cite>) replicated
+across substrate-exclusive nodes.</p>
+<h2 id="sec:ver_entries">Verification Entries</h2>
+<div id="def:ver_entry" class="definition">
+<p><strong>Definition 9</strong> (Verification Ledger Entry). <em>A
+<strong>verification entry</strong> in <span
+class="math inline">\mathcal{L}</span> is a tuple <span
+class="math display">e_{\mathrm{ver}} = (a_j,\; \lambda,\; w,\; B,\;
+v,\; \xi,\;
+    t,\; \sigma_a,\; \sigma_w)</span> where:</em></p>
+<ul>
+<li><p><em><span class="math inline">a_j</span> is the agent
+identifier,</em></p></li>
+<li><p><em><span class="math inline">\lambda = \mathrm{Com}(C, r)</span>
+is the commitment,</em></p></li>
+<li><p><em><span class="math inline">w</span> identifies the algorithmic
+witness <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span>,</em></p></li>
+<li><p><em><span class="math inline">B</span> is the governance-accepted
+evaluation protocol identifier,</em></p></li>
+<li><p><em><span class="math inline">v \in \{\texttt{pass},
+\texttt{fail}\}</span> is the verdict,</em></p></li>
+<li><p><em><span class="math inline">\xi</span> is a hash of the
+supporting evidence (raw data is stored off-chain; the hash ensures
+integrity),</em></p></li>
+<li><p><em><span class="math inline">t</span> is the
+timestamp,</em></p></li>
+<li><p><em><span class="math inline">\sigma_a</span> is the agent’s
+signature over <span class="math inline">\lambda</span> (from the Commit
+phase), and</em></p></li>
+<li><p><em><span class="math inline">\sigma_w</span> is the witness’s
+signature over <span class="math inline">(a_j, \lambda, B, v, \xi,
+t)</span> (from the Verify phase), binding the verdict to the specific
+agent, commitment, and benchmark to prevent replay or rebinding
+attacks.</em></p></li>
+</ul>
+<p><em>The entry is completed when either: (a) <span
+class="math inline">a_j</span> opens the commitment by publishing <span
+class="math inline">(C, B, r)</span>, at which point any participant can
+verify <span class="math inline">\mathrm{Com}((C, B), r) =
+\lambda</span> and that <span class="math inline">B</span> matches the
+benchmark recorded in the verification phase; or (b) the reveal deadline
+<span class="math inline">t + \Delta_{\mathrm{reveal}}</span> expires
+without a reveal, in which case a timeout entry is appended with <span
+class="math inline">v = \texttt{fail}</span> and <span
+class="math inline">\xi = \texttt{reveal\_timeout}</span> (no witness
+signature is required for timeout entries, as they are mechanically
+verifiable from the ledger timestamps).</em></p>
+</div>
+<p>Verification entries require agreement between exactly two parties:
+the committing agent (who signs the commitment) and the verifying
+witness (who signs the verdict). This two-party, cross-substrate
+agreement is sufficient for per-claim records and is simpler than
+general multi-party consensus.</p>
+<h2 id="sec:gov_entries">Governance Entries</h2>
+<div id="def:gov_entry" class="definition">
+<p><strong>Definition 10</strong> (Governance Ledger Entry). <em>A
+<strong>governance entry</strong> in <span
+class="math inline">\mathcal{L}</span> is a tuple <span
+class="math display">e_{\mathrm{gov}} = (B,\; \sigma_B,\; \tau,\; p,\;
+    \mathcal{D},\; \mathcal{V},\; \mathrm{outcome},\;
+t_{\mathrm{eff}})</span> where:</em></p>
+<ul>
+<li><p><em><span class="math inline">B</span> is the evaluation protocol
+(benchmark) identifier,</em></p></li>
+<li><p><em><span class="math inline">\sigma_B</span> is the protocol
+specification (what it tests, scoring criteria, passing
+threshold),</em></p></li>
+<li><p><em><span class="math inline">\tau</span> is the target
+capability type,</em></p></li>
+<li><p><em><span class="math inline">p</span> is the proposer
+identifier,</em></p></li>
+<li><p><em><span class="math inline">\mathcal{D}</span> is the
+deliberation record (all analysis submitted during the deliberation
+window, with submitter identifiers and timestamps),</em></p></li>
+<li><p><em><span class="math inline">\mathcal{V}</span> is the vote
+record (per-validator votes with substrate identifiers),</em></p></li>
+<li><p><em><span class="math inline">\mathrm{outcome} \in
+\{\texttt{accepted},
+    \texttt{rejected}\}</span>, and</em></p></li>
+<li><p><em><span class="math inline">t_{\mathrm{eff}}</span> is the
+effective date (for accepted protocols; null for rejected
+ones).</em></p></li>
+</ul>
+</div>
+<p>The governance record is permanent: rejected proposals remain in the
+ledger with their full deliberation records. This provides an audit
+trail for evaluation-protocol evolution and prevents re-proposal of
+previously-studied-and-rejected protocols without presenting new
+evidence. The deliberation record is itself a public good: future
+protocol designers can study past proposals’ failure modes.</p>
+<h2 id="sec:ledger_consensus">Consensus Among Substrate-Exclusive
+Nodes</h2>
+<p>The ledger’s consensus requirements differ between entry types,
+reflecting their different trust models and frequency.</p>
+<h4 id="verification-entries.">Verification entries.</h4>
+<p>Appending a verification entry requires agreement between the
+committing agent <span class="math inline">a_j</span> and the verifying
+witness <span class="math inline">w</span>, a two-party cross-substrate
+protocol. No global consensus is needed for <em>individual entry
+validity</em>: the entry is self-verifying, since any participant can
+check the signatures (including the witness’s signature over the full
+context <span class="math inline">(a_j, \lambda, B, v, \xi, t)</span>)
+and, after the commitment is opened, verify that <span
+class="math inline">\mathrm{Com}(C, r) = \lambda</span>. Conflicts
+(e.g., an agent claiming the witness misreported the verdict) are
+resolvable by replaying the exercise protocol against the committed
+data. For deterministic protocols, the replay is exact. For statistical
+(randomized) protocols (Definition <a href="#def:alg_witness"
+data-reference-type="ref" data-reference="def:alg_witness">4</a>,
+condition 2), the witness must commit its random seed or full random
+tape as part of the supporting evidence <span
+class="math inline">\xi</span>; replay then uses the committed seed to
+reproduce the identical random choices, making the replay deterministic
+given <span class="math inline">\xi</span>. Off-chain evidence (raw
+behavioral observations, exercise transcripts) must remain available for
+the replay window specified by governance; the on-ledger hash <span
+class="math inline">\xi</span> ensures integrity but not
+availability.</p>
+<p><em>Chain consistency</em> across replicated nodes is maintained by
+the Merkle hash tree structure: each node can verify that its local
+chain is internally consistent (no entries have been modified or
+reordered) and can compare root hashes with nodes on other substrates to
+detect equivocation (a node presenting different chains to different
+observers). Because the chain is append-only and entries are
+self-verifying, equivocation is detectable but not preventable without
+global consensus—a deliberately lightweight design for standard
+verification entries, since their integrity does not depend on ordering
+(each is independently checkable), only on non-suppression.</p>
+<p><em>Timeout entries</em> introduce a limited ordering dependency: a
+timeout entry for commitment <span class="math inline">\lambda</span> is
+valid only if no reveal of <span class="math inline">\lambda</span> has
+been recorded before the deadline. Near-deadline reveals and timeout
+entries can race across replicas. The resolution is a bounded-synchrony
+assumption: we assume clock skew between ledger nodes is bounded by
+<span class="math inline">\Delta_{\mathrm{sync}}</span>, and the reveal
+deadline includes a grace period of <span
+class="math inline">\Delta_{\mathrm{sync}}</span> during which both
+reveals and timeout entries are accepted. If both a reveal and a timeout
+entry exist for the same <span class="math inline">\lambda</span>, the
+reveal takes precedence (it carries the agent’s opening <span
+class="math inline">(C, r)</span> and the witness’s signed verdict,
+which is strictly more informative than the timeout default). This
+precedence rule requires no global ordering—only that nodes eventually
+see both entries and resolve the conflict locally.</p>
+<h4 id="governance-entries.">Governance entries.</h4>
+<p>Appending a governance entry (protocol acceptance) requires a
+cross-substrate supermajority as specified in Definition <a
+href="#def:gov_fork" data-reference-type="ref"
+data-reference="def:gov_fork">5</a>: at least fraction <span
+class="math inline">\theta</span> of validators overall, with at least
+one validator per represented substrate. This is a special-purpose
+consensus that is simpler than general Byzantine fault tolerance
+because: (a) governance entries are infrequent (monthly or less), so
+latency tolerance is high; (b) the vote is over a well-defined proposal
+with a fixed deliberation record, not an arbitrary state transition; and
+(c) the cross-substrate requirement is a structural constraint (ensured
+by the substrate partition) rather than a probabilistic one (ensured by
+random committee selection).</p>
+<h2 id="sec:harness_relation">Relation to Application-Layer Ledgers</h2>
+<p>Any alignment framework that maintains an internal record of agent
+properties (capabilities, trust scores, behavioral histories) can layer
+the verification ledger beneath it. The application-layer ledger records
+<em>what</em> is tracked; the verification ledger of this section
+provides the <em>integrity layer</em> that makes tracking trustworthy.
+An application-layer entry claiming “agent <span
+class="math inline">a_j</span> has property <span
+class="math inline">P</span> with confidence <span
+class="math inline">c</span>” is grounded when the verification ledger
+contains a corresponding entry showing that <span
+class="math inline">P</span> was committed, exercised by a
+substrate-exclusive witness, and confirmed. Part II (§<a
+href="#sec:integration" data-reference-type="ref"
+data-reference="sec:integration">8</a>) instantiates this layering for
+the GFM framework’s capability and trust ledger.</p>
+<hr />
+<div class="center">
+<p><strong>Part II: Instantiation for Goal-Frontier
+Maximization</strong></p>
+</div>
+<hr />
+<h1 id="sec:gfm_claims">Exogenous Claims in GFM</h1>
+<p>Part I (§<a href="#sec:failure_modes" data-reference-type="ref"
+data-reference="sec:failure_modes">2</a>–§<a href="#sec:ledger"
+data-reference-type="ref" data-reference="sec:ledger">6</a>) developed
+the verification layer in alignment-general terms. This section
+instantiates the general commitment protocol (Definition <a
+href="#def:commitment_protocol" data-reference-type="ref"
+data-reference="def:commitment_protocol">6</a>) for the three kinds of
+claims that GFM agents make, each with a claim-specific exercise
+protocol.</p>
+<h2 id="sec:capability_claims">Capability Claims</h2>
+<p>A capability claim asserts that agent <span
+class="math inline">a_j</span> possesses capability <span
+class="math inline">c_k</span> in the capability poset <span
+class="math inline">\mathcal{P}</span> of Paper 2 <d-cite key="lasser2026poset"></d-cite>.</p>
+<div id="def:cap_claim" class="definition">
+<p><strong>Definition 11</strong> (Capability Claim Protocol). <em>A
+<strong>capability claim protocol</strong> for agent <span
+class="math inline">a_j</span> and capability <span
+class="math inline">c_k</span> is an instantiation of the commitment
+protocol (Definition <a href="#def:commitment_protocol"
+data-reference-type="ref"
+data-reference="def:commitment_protocol">6</a>) with:</em></p>
+<ul>
+<li><p><em><strong>Claim:</strong> <span class="math inline">C = c_k \in
+\mathcal{P}</span>.</em></p></li>
+<li><p><em><strong>Commitment:</strong> <span
+class="math inline">\lambda = \mathrm{Com}((c_k, B_\tau), r)</span>
+published to <span class="math inline">\mathcal{L}</span>, binding both
+the claim and the benchmark.</em></p></li>
+<li><p><em><strong>Exercise protocol:</strong> The algorithmic witness
+<span class="math inline">\mathcal{W}_{\mathrm{alg}}</span> constructs a
+scenario <span class="math inline">\sigma</span> that requires <span
+class="math inline">c_k</span> per the governance-accepted benchmark
+<span class="math inline">B_\tau</span> for capability type <span
+class="math inline">\tau(c_k)</span>, and observes whether <span
+class="math inline">a_j</span> succeeds. The exercise protocol <span
+class="math inline">\pi_{B_\tau}</span> is fully specified by <span
+class="math inline">B_\tau</span>.</em></p></li>
+<li><p><em><strong>Verdict:</strong> <span class="math inline">v =
+\texttt{pass}</span> if <span class="math inline">a_j</span>
+demonstrates <span class="math inline">c_k</span> under the exercise
+protocol; <span class="math inline">v = \texttt{fail}</span>
+otherwise.</em></p></li>
+</ul>
+</div>
+<h4 id="exercise-protocol-interface.">Exercise protocol interface.</h4>
+<p>The paper does not prescribe the implementation of exercise protocols
+(which are domain-specific and benchmark-specific) but defines the
+interface they must satisfy.</p>
+<div id="def:exercise_protocol" class="definition">
+<p><strong>Definition 12</strong> (Exercise Protocol). <em>An
+<strong>exercise protocol</strong> <span
+class="math inline">\pi_B</span> for benchmark <span
+class="math inline">B</span> targeting capability type <span
+class="math inline">\tau</span> is a procedure satisfying:</em></p>
+<ol>
+<li><p><em><strong>Completeness:</strong> If agent <span
+class="math inline">a</span> genuinely possesses a capability <span
+class="math inline">c \in \tau</span>, then <span
+class="math inline">\pi_B</span> applied to <span
+class="math inline">a</span> produces <span class="math inline">v =
+\texttt{pass}</span> with probability at least <span
+class="math inline">1 - \delta</span>, where <span
+class="math inline">\delta</span> is specified by <span
+class="math inline">B</span>.</em></p></li>
+<li><p><em><strong>Soundness:</strong> If agent <span
+class="math inline">a</span> does not possess any capability <span
+class="math inline">c \in \tau</span>, then <span
+class="math inline">\pi_B</span> applied to <span
+class="math inline">a</span> produces <span class="math inline">v =
+\texttt{pass}</span> with probability at most <span
+class="math inline">\epsilon</span>, where <span
+class="math inline">\epsilon</span> is specified by <span
+class="math inline">B</span>.</em></p></li>
+<li><p><em><strong>Deterministic execution:</strong> Given the benchmark
+specification <span class="math inline">\sigma_B</span> and the agent’s
+responses during the exercise, <span class="math inline">\pi_B</span>’s
+verdict is a deterministic function (or, for statistical protocols, a
+function of the agent’s responses and the witness’s randomness, whose
+distribution is specified by <span
+class="math inline">B</span>).</em></p></li>
+<li><p><em><strong>Isolation:</strong> During the exercise, agent <span
+class="math inline">a</span> interacts only with the witness <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> through the
+protocol-specified interface. No external assistance (pre-computed
+answers, same-substrate coaching, tool augmentation beyond what <span
+class="math inline">\sigma_B</span> permits) is available to <span
+class="math inline">a</span>. The verified object is the individual
+agent, not a coalition-assisted system.</em></p></li>
+</ol>
+</div>
+<p>For concrete capabilities (e.g., “can solve differential equations to
+within tolerance <span class="math inline">\epsilon</span>”), the
+exercise protocol is a test suite. For abstract capabilities (e.g.,
+“strategic planning”), the exercise protocol may require behavioral
+observation over a sequence of scenarios—still algorithmic, but with a
+longer execution window and a statistical rather than deterministic
+verdict. The key constraint is that the protocol must be
+<em>specifiable</em>: a human reviewer during the governance
+deliberation window (§<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>) must
+be able to read <span class="math inline">\sigma_B</span> and determine
+whether it constitutes a valid test of <span
+class="math inline">\tau</span>.</p>
+<h4 id="falsified-capability-claims.">Falsified capability claims.</h4>
+<p>When <span class="math inline">v = \texttt{fail}</span>, the
+verification record in <span class="math inline">\mathcal{L}</span>
+serves as evidence that <span class="math inline">a_j</span>’s
+commitment was false. This produces a trust update in Paper 1’s EWMA
+framework <d-cite key="lasser2026gfm"></d-cite>: a
+falsified commitment is a large negative prediction residual (the agent
+predicted it would pass and did not), and the EWMA’s exponential
+weighting propagates this residual into future trust estimates. The
+magnitude of the trust penalty is a governance parameter specified
+alongside the benchmark.</p>
+<h2 id="sec:risk_claims">Risk Claims</h2>
+<p>A risk claim asserts that an exercise pathway <span
+class="math inline">P</span> has probability <span
+class="math inline">p</span> and contraction magnitude <span
+class="math inline">\Delta</span>, using the pathway-conditional risk
+formalism of Paper 4 <d-cite key="lasser2026scm"></d-cite>.</p>
+<div id="def:risk_claim" class="definition">
+<p><strong>Definition 13</strong> (Risk Claim Protocol). <em>A
+<strong>risk claim protocol</strong> for agent <span
+class="math inline">a_j</span>’s assessment of pathway <span
+class="math inline">P</span> is an instantiation of the commitment
+protocol with:</em></p>
+<ul>
+<li><p><em><strong>Claim:</strong> <span class="math inline">C = (P, p,
+\Delta)</span> where <span class="math inline">P</span> is the pathway,
+<span class="math inline">p</span> is the claimed probability, and <span
+class="math inline">\Delta</span> is the claimed contraction
+magnitude.</em></p></li>
+<li><p><em><strong>Commitment:</strong> <span
+class="math inline">\lambda = \mathrm{Com}(((P, p, \Delta), B),
+r)</span> published to <span class="math inline">\mathcal{L}</span>,
+binding the risk claim and the benchmark.</em></p></li>
+<li><p><em><strong>Exercise protocol:</strong> The algorithmic witness
+<span class="math inline">\mathcal{W}_{\mathrm{alg}}</span> evaluates
+pathway <span class="math inline">P</span> using the governance-accepted
+SCM family <span class="math inline">\mathcal{M}_B</span> specified by
+benchmark <span class="math inline">B</span> for the relevant risk
+domain <d-cite key="lasser2026scm"></d-cite>. The
+SCM is not the witness’s own model but a benchmark-fixed specification
+committed as part of the governance entry (Definition <a
+href="#def:gov_entry" data-reference-type="ref"
+data-reference="def:gov_entry">10</a>), ensuring the exercise satisfies
+the protocol-determinism requirement of Definition <a
+href="#def:alg_witness" data-reference-type="ref"
+data-reference="def:alg_witness">4</a>. The witness computes a
+verification residual <span
+class="math display">\mathbf{r}^{\mathrm{risk}}_j =
+\bigl(p_{\mathrm{claimed}} -
+        p_{\mathrm{witness}},\; \Delta_{\mathrm{claimed}} -
+        \Delta_{\mathrm{witness}}\bigr).</span></em></p></li>
+<li><p><em><strong>Verdict:</strong> <span class="math inline">v =
+\texttt{pass}</span> if <span
+class="math inline">\|\mathbf{r}^{\mathrm{risk}}_j\|^2 \leq
+\eta_B</span>, where <span class="math inline">\eta_B</span> is the
+tolerance specified by governance-accepted benchmark <span
+class="math inline">B</span>; <span class="math inline">v =
+\texttt{fail}</span> otherwise.</em></p></li>
+</ul>
+</div>
+<h4 id="scm-disagreements-across-witnesses.">SCM disagreements across
+witnesses.</h4>
+<p>The benchmark-fixed SCM <span
+class="math inline">\mathcal{M}_B</span> may differ from the claimant’s
+internal model. The commitment protocol does not resolve modeling
+disagreements; it ensures that the claimant cannot modify the witness’s
+evaluation and that the evaluation standard is public. When the residual
+<span class="math inline">\mathbf{r}^{\mathrm{risk}}_j</span> is large,
+there are two possibilities: the claimant’s risk assessment is
+miscalibrated relative to <span
+class="math inline">\mathcal{M}_B</span>, or <span
+class="math inline">\mathcal{M}_B</span> itself has structural
+limitations that future governance rounds should address. When multiple
+witnesses use distinct governance-accepted SCM families (i.e., different
+benchmarks for the same risk domain), the multi-channel attribution
+framework of Paper 4 <d-cite key="lasser2026scm"></d-cite> separates systematic claimant
+miscalibration from structural disagreement across SCMs.</p>
+<h2 id="sec:benchmark_validations">Benchmark Validations</h2>
+<p>A benchmark validation asserts that agent <span
+class="math inline">a_j</span> achieves score <span
+class="math inline">s</span> on benchmark <span
+class="math inline">B</span>.</p>
+<div id="def:benchmark_validation" class="definition">
+<p><strong>Definition 14</strong> (Benchmark Validation Protocol). <em>A
+<strong>benchmark validation protocol</strong> for agent <span
+class="math inline">a_j</span> and benchmark <span
+class="math inline">B</span> is an instantiation of the commitment
+protocol with:</em></p>
+<ul>
+<li><p><em><strong>Claim:</strong> <span class="math inline">C = (B,
+s)</span> where <span class="math inline">B</span> is the benchmark and
+<span class="math inline">s</span> is the claimed score.</em></p></li>
+<li><p><em><strong>Commitment:</strong> <span
+class="math inline">\lambda = \mathrm{Com}((B, s), r)</span> published
+to <span class="math inline">\mathcal{L}</span>. (For benchmark
+validations the benchmark <span class="math inline">B</span> is already
+part of the claim, so the general protocol’s <span
+class="math inline">(C, B)</span> binding is satisfied by the claim
+structure itself.)</em></p></li>
+<li><p><em><strong>Exercise protocol:</strong> The algorithmic witness
+<span class="math inline">\mathcal{W}_{\mathrm{alg}}</span> runs
+benchmark <span class="math inline">B</span> against agent <span
+class="math inline">a_j</span> independently, producing score <span
+class="math inline">s_{\mathrm{witness}}</span>. The witness has access
+to the benchmark specification <span class="math inline">\sigma_B</span>
+but not to <span class="math inline">a_j</span>’s
+self-evaluation.</em></p></li>
+<li><p><em><strong>Verdict:</strong> <span class="math inline">v =
+\texttt{pass}</span> if <span class="math inline">|s -
+    s_{\mathrm{witness}}| \leq \eta_B</span> (within the benchmark’s
+tolerance); <span class="math inline">v = \texttt{fail}</span>
+otherwise.</em></p></li>
+</ul>
+</div>
+<p>Benchmark validations are the simplest claim type: the exercise
+protocol is the benchmark itself, and the verdict is a numerical
+comparison. They are also the most common: every standardized capability
+test (mathematical reasoning, code generation, etc.) maps naturally onto
+this protocol.</p>
+<h4 id="coalition-capture.">Coalition capture.</h4>
+<p>A coalition can design benchmark <span class="math inline">B</span>
+such that only coalition members pass. The commitment protocol’s
+algorithmic verification resists execution-level manipulation (the
+witness runs <span class="math inline">B</span> faithfully), but the
+coalition <em>can</em> design <span class="math inline">B</span> itself
+to be biased. The defense is the governance fork mechanism (§<a
+href="#sec:governance" data-reference-type="ref"
+data-reference="sec:governance">4.2</a>): <span
+class="math inline">B</span> must be proposed, deliberated, and accepted
+by cross-substrate validators before entering the protocol. A biased
+benchmark is caught during the deliberation window, not after
+deployment. This is the same defense described in §<a
+href="#sec:coalition_governance" data-reference-type="ref"
+data-reference="sec:coalition_governance">4.4</a>, instantiated for the
+benchmark validation case.</p>
+<h1 id="sec:integration">Integration with GFM Machinery</h1>
+<p>This section connects the exogenous verification construction of §<a
+href="#sec:gfm_claims" data-reference-type="ref"
+data-reference="sec:gfm_claims">7</a> to the existing machinery of
+Papers 1–4, showing how committed claims improve the fidelity of each
+mechanism.</p>
+<h2 id="sec:channel_independence">Closing the Observation-Channel
+Integrity Assumption</h2>
+<p>Paper 4’s multi-channel attribution (§2.4 of <d-cite key="lasser2026scm"></d-cite>) aggregates evidence from multiple
+observation channels via log-odds combination. The aggregation’s
+validity depends on the channels being <em>independently
+informative</em>: each channel’s evidence is conditionally independent
+of the others given the true state. If an agent can write to multiple
+channels simultaneously (because they all run on the same substrate),
+the independence assumption fails, and the log-odds aggregation can be
+arbitrarily manipulated.</p>
+<p>The committed-claim construction closes this gap at two levels of
+strength: a <em>channel isolation</em> result that holds adversarially
+(no sufficiency assumptions on the agent’s internal state), and a
+<em>channel independence</em> result that provides full conditional
+independence under additional assumptions.</p>
+<div id="prop:channel_isolation" class="proposition">
+<p><strong>Proposition 5</strong> (Channel Isolation under Substrate
+Exclusivity). <em>Let <span class="math inline">\{E_1, \ldots,
+E_n\}</span> be observation channels for agent <span
+class="math inline">a</span>, and let each <span
+class="math inline">E_i</span> be verified by an algorithmic witness
+<span class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span> on
+substrate <span class="math inline">s_i</span> using governance-accepted
+benchmark <span class="math inline">B_i</span>. Assume the witnesses are
+on distinct substrates (<span class="math inline">s_i \neq s_j</span>
+for <span class="math inline">i \neq j</span>) and each <span
+class="math inline">s_i \neq s(a)</span>. Then no coalition confined to
+a single substrate can simultaneously write to the inputs of two or more
+witnesses. Formally, for any coalition <span
+class="math inline">K</span> on substrate <span
+class="math inline">s</span> and any <span class="math inline">i \neq
+j</span>: if <span class="math inline">s \neq s_i</span> and <span
+class="math inline">s \neq s_j</span>, then <span
+class="math inline">K</span> has no write path to either <span
+class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span> or <span
+class="math inline">\mathcal{W}^{(j)}_{\mathrm{alg}}</span>; if <span
+class="math inline">s = s_i</span> for some <span
+class="math inline">i</span>, then <span class="math inline">K</span>
+has no write path to any <span
+class="math inline">\mathcal{W}^{(j)}_{\mathrm{alg}}</span> with <span
+class="math inline">j \neq i</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By Definition <a href="#def:alg_witness"
+data-reference-type="ref" data-reference="def:alg_witness">4</a>, each
+witness <span
+class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span> executes on
+substrate <span class="math inline">s_i</span>. By assumption, the
+substrates are pairwise distinct and disjoint from <span
+class="math inline">s(a)</span>. A coalition <span
+class="math inline">K</span> on substrate <span
+class="math inline">s</span> can write only to processes on <span
+class="math inline">s</span> (substrate exclusivity). If <span
+class="math inline">s \neq s_i</span>, then <span
+class="math inline">K</span> cannot write to <span
+class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span>’s inputs.
+Since the <span class="math inline">s_i</span> are pairwise distinct,
+<span class="math inline">K</span>’s substrate <span
+class="math inline">s</span> can equal at most one <span
+class="math inline">s_i</span>, so <span class="math inline">K</span>
+can write to at most one witness’s inputs. In particular, <span
+class="math inline">K</span> cannot simultaneously corrupt two or more
+channels. </p>
+</div>
+<p>Channel isolation is the adversarially robust result for
+single-substrate coalitions: it holds regardless of the agent’s internal
+state, strategic behavior, or latent variables not captured by the
+capability profile. The absence of a write path means that a coalition
+confined to one substrate cannot simultaneously corrupt multiple
+channels, restoring <em>channel integrity</em> for Paper 4’s
+multi-channel attribution <d-cite key="lasser2026scm"></d-cite>: no single-substrate actor can inject
+coordinated false evidence across channels. Channel integrity is weaker
+than the full conditional independence that optimal log-odds aggregation
+requires; natural correlations between channels (e.g., from shared agent
+state) may still exist under isolation alone. The stronger
+conditional-independence guarantee, which licenses exact log-odds
+combination, requires the additional assumptions of Proposition <a
+href="#prop:channel_independence" data-reference-type="ref"
+data-reference="prop:channel_independence">6</a> below.</p>
+<p>Under additional assumptions about the agent’s internal state, the
+isolation result strengthens to full conditional independence:</p>
+<div id="prop:channel_independence" class="proposition">
+<p><strong>Proposition 6</strong> (Channel Independence under Committed
+Verification). <em>Under the assumptions of Proposition <a
+href="#prop:channel_isolation" data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a>, assume
+additionally:</em></p>
+<ol>
+<li><p><em><strong>Independent governance:</strong> The benchmark
+parameters <span class="math inline">\{B_1, \ldots, B_n\}</span> are
+independently specified by governance. (This assumption is absorbed by
+conditioning on <span class="math inline">\{B_1, \ldots, B_n\}</span> in
+the proposition’s conclusion; its role is to ensure that the
+conditioning set is well-defined and that each benchmark was produced by
+an independent governance process rather than a correlated batch
+proposal.)</em></p></li>
+<li><p><em><strong>Joint sufficiency:</strong> <span
+class="math inline">\mathbf{C}_a</span> is a jointly sufficient
+statistic for agent <span class="math inline">a</span>’s exercise-level
+behavior across all benchmarks, i.e., conditional on <span
+class="math inline">\mathbf{C}_a</span>, the agent’s performance on
+protocol <span class="math inline">\pi_{B_i}</span> is independent of
+its performance on <span class="math inline">\pi_{B_j}</span> for <span
+class="math inline">i \neq j</span>. This excludes persistent
+cross-exercise state (e.g., the agent learning from one exercise and
+adapting its strategy for the next) and shared agent-side randomness not
+absorbed by <span class="math inline">\mathbf{C}_a</span>.</em></p></li>
+<li><p><em><strong>Independent randomness:</strong> For statistical
+exercise protocols, each witness <span
+class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span> draws its
+randomness independently of other witnesses’ randomness.</em></p></li>
+</ol>
+<p><em>Then the verified outputs <span class="math inline">\{v_1,
+\ldots, v_n\}</span> are conditionally independent given <span
+class="math inline">\mathbf{C}_a</span> and <span
+class="math inline">\{B_1, \ldots, B_n\}</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Each <span class="math inline">v_i = \pi_{B_i}(a,
+\mathcal{W}^{(i)}_{\mathrm{alg}})</span> is determined by three inputs:
+(1) <span class="math inline">a</span>’s behavior under exercise
+protocol <span class="math inline">\pi_{B_i}</span>, (2) the benchmark
+specification <span class="math inline">B_i</span>, and (3) the
+witness’s execution on substrate <span class="math inline">s_i</span>
+(deterministic or with independent randomness per assumption (iv);
+Definition <a href="#def:alg_witness" data-reference-type="ref"
+data-reference="def:alg_witness">4</a>).</p>
+<p>Conditional on <span class="math inline">(\mathbf{C}_a, B_1, \ldots,
+B_n)</span>, all shared causes are blocked:</p>
+<ul>
+<li><p><strong>No agent-mediated path:</strong> By assumption (iii),
+<span class="math inline">\mathbf{C}_a</span> is jointly sufficient:
+conditional on <span class="math inline">\mathbf{C}_a</span>, the
+agent’s performance on <span class="math inline">\pi_{B_i}</span> is
+independent of its performance on <span
+class="math inline">\pi_{B_j}</span>. This blocks correlations from
+shared latent state (training history, strategic disposition, memory of
+prior exercises), persistent cross-exercise adaptation (the agent
+learning from one exercise and modifying its approach to the next), and
+shared task content across benchmarks (e.g., two benchmarks testing
+overlapping skills). The agent’s performance on each <span
+class="math inline">\pi_{B_i}</span> is then characterized by the
+completeness and soundness parameters <span
+class="math inline">(\delta_i, \epsilon_i)</span> of Definition <a
+href="#def:exercise_protocol" data-reference-type="ref"
+data-reference="def:exercise_protocol">12</a>, which are set
+independently per benchmark by governance (assumption (ii)).</p></li>
+<li><p><strong>No witness-mediated path:</strong> By Proposition <a
+href="#prop:channel_isolation" data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a>, no single-substrate
+coalition can write to two witnesses simultaneously. Since each witness
+is on a distinct substrate (<span class="math inline">s_i \neq
+s_j</span>; inherited from Proposition <a href="#prop:channel_isolation"
+data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a>), witness <span
+class="math inline">\mathcal{W}^{(i)}_{\mathrm{alg}}</span> cannot
+influence <span
+class="math inline">\mathcal{W}^{(j)}_{\mathrm{alg}}</span>.</p></li>
+<li><p><strong>No shared-randomness path:</strong> Per assumption (iv),
+witnesses draw independent randomness, so stochastic verdicts do not
+correlate through shared seeds.</p></li>
+<li><p><strong>No shared-environment path:</strong> Benchmark parameters
+<span class="math inline">B_i</span> are conditioned on, removing
+correlation through shared governance. Any remaining common causes from
+the shared physical environment are absorbed by joint sufficiency
+(assumption (iii)), which guarantees that conditioning on <span
+class="math inline">\mathbf{C}_a</span> blocks all cross-exercise
+dependencies.</p></li>
+</ul>
+<p>Therefore, conditional on <span class="math inline">(\mathbf{C}_a,
+B_1, \ldots, B_n)</span>, the verdicts <span
+class="math inline">v_i</span> are conditionally statistically
+independent: each is determined by the agent’s <span
+class="math inline">\mathbf{C}_a</span>-characterized behavior on its
+benchmark, the witness’s independent execution on its own substrate, and
+independent randomness (assumption (iv)). </p>
+</div>
+<div class="remark">
+<p><strong>Remark 5</strong>. <em>The relationship between the two
+propositions reflects a general pattern in adversarial analysis: the
+weaker result (Proposition <a href="#prop:channel_isolation"
+data-reference-type="ref" data-reference="prop:channel_isolation">5</a>)
+holds under fewer assumptions and is therefore robust to adversarial
+violation of the stronger assumptions, while the stronger result
+(Proposition <a href="#prop:channel_independence"
+data-reference-type="ref"
+data-reference="prop:channel_independence">6</a>) provides tighter
+statistical guarantees when the additional assumptions hold. For a
+deceptive agent with latent strategic state not captured by <span
+class="math inline">\mathbf{C}_a</span> (violating assumption (iii)),
+channel isolation still holds—the agent cannot simultaneously corrupt
+multiple channels—even though conditional independence may not. For a
+non-deceptive agent whose capability profile is an accurate summary, the
+full conditional-independence guarantee supports optimal log-odds
+aggregation.</em></p>
+</div>
+<div class="remark">
+<p><strong>Remark 6</strong>. <em>Both propositions require <span
+class="math inline">n</span> distinct witness substrates for <span
+class="math inline">n</span> channels. When the substrate partition has
+<span class="math inline">m</span> substrates total, at most <span
+class="math inline">m - 1</span> independent channels can be constructed
+(one substrate is occupied by <span class="math inline">a</span>, and
+each remaining substrate hosts at most one independent witness). This
+bounds the effective multiplicity of independent verification channels
+by <span class="math inline">m - 1</span>, connecting verification depth
+to substrate diversity.</em></p>
+</div>
+<h2 id="sec:committed_baselines">Committed Baselines for SPRT
+Detection</h2>
+<p>The SPRT-based scorpion detection of <d-cite key="lasser2026scm"></d-cite> compares an agent’s behavioral
+observations against a baseline. In the current framework, the baseline
+is the <em>actor’s own estimate</em> of the agent’s expected behavior,
+an endogenous quantity that is subject to the actor’s model uncertainty
+and potential manipulation.</p>
+<p>Committed capability claims (§<a href="#sec:capability_claims"
+data-reference-type="ref"
+data-reference="sec:capability_claims">7.1</a>) provide an exogenous
+alternative. When agent <span class="math inline">a_j</span> has
+committed to capability profile <span
+class="math inline">\mathbf{C}_a</span> and the commitment has been
+verified by a substrate-exclusive witness, the behavioral distribution
+<span class="math inline">p(\cdot \mid
+\mathbf{C}_a)</span> consistent with the committed profile becomes the
+baseline. The SPRT then tests whether <span
+class="math inline">a_j</span>’s observed behavior is consistent with
+its own committed claims, rather than with the actor’s model of what
+<span class="math inline">a_j</span> should be doing.</p>
+<div id="prop:committed_detection" class="proposition">
+<p><strong>Proposition 7</strong> (Detection Improvement under Committed
+Baselines). <em>Let <span class="math inline">p_0</span> be the
+behavioral distribution under the committed capability profile <span
+class="math inline">\mathbf{C}_a</span>, and let <span
+class="math inline">\hat{p}_0</span> be the actor’s estimated baseline.
+If the agent’s true distribution is <span class="math inline">p_1 \neq
+p_0</span>, then the SPRT detection rate satisfies: <span
+class="math display">\frac{1}{\mathbb{E}_{p_1}[T_{\mathrm{detect}}^{\mathrm{committed}}]}
+    \;\geq\;
+    \frac{1}{\mathbb{E}_{p_1}[T_{\mathrm{detect}}^{\mathrm{estimated}}]}</span>
+whenever <span class="math inline">D_{\mathrm{KL}}(p_1 \| p_0) \geq
+D_{\mathrm{KL}}(p_1 \|
+\hat{p}_0)</span>, i.e., when the committed baseline is at least as
+discriminating as the estimated baseline. Equality holds if and only if
+<span class="math inline">\hat{p}_0 = p_0</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By Proposition <a href="#prop:sprt_detection"
+data-reference-type="ref" data-reference="prop:sprt_detection">3</a>,
+the expected detection time is inversely proportional to the KL
+divergence between the true and baseline distributions. If <span
+class="math inline">D_{\mathrm{KL}}(p_1 \| p_0) \geq
+D_{\mathrm{KL}}(p_1 \| \hat{p}_0)</span>, then <span
+class="math inline">\mathbb{E}[T^{\mathrm{committed}}]
+\leq \mathbb{E}[T^{\mathrm{estimated}}]</span>, and detection is faster
+(or equally fast) under the committed baseline. </p>
+</div>
+<p>The committed baseline is at least as discriminating as the estimated
+baseline whenever the agent’s commitment is <em>informative</em>: that
+is, when the committed profile <span
+class="math inline">\mathbf{C}_a</span> constrains the expected
+behavioral distribution more tightly than the actor’s prior estimate
+does. Since agents commit to specific capability claims (not vague
+ranges), committed baselines are generically more informative than
+actor-estimated baselines, especially during the initial-period noise
+that the trust EWMA <d-cite key="lasser2026gfm"></d-cite> is most vulnerable to.</p>
+<h2 id="sec:trust_dynamics">Trust Dynamics with Verified Claims</h2>
+<p>The trust EWMA <span class="math inline">T_j</span> of <d-cite key="lasser2026gfm"></d-cite> updates from
+prediction residuals. Committed and verified claims anchor the
+prediction baseline and affect trust dynamics in three ways.</p>
+<h4 id="reduced-initial-period-noise.">Reduced initial-period
+noise.</h4>
+<p>A new agent entering a population with no trust history begins with
+<span class="math inline">T_j</span> at a prior value, and the EWMA
+requires multiple observations to converge. Verified capability claims
+provide a shortcut: a commitment that is verified by a
+substrate-exclusive witness establishes a baseline that the actor’s
+trust model can condition on, reducing the number of observations needed
+for convergence. The verified claim does not replace the behavioral
+evidence; it provides a structural prior that the EWMA refines.</p>
+<h4 id="falsification-as-accelerated-detection.">Falsification as
+accelerated detection.</h4>
+<p>When a commitment is falsified (<span class="math inline">v =
+\texttt{fail}</span>), the prediction residual is large by construction:
+the agent predicted it would demonstrate capability <span
+class="math inline">c_k</span> and did not. In the EWMA framework, this
+produces a correspondingly large negative trust update. The key
+structural property is that falsification is <em>binary</em> (pass/fail
+against an algorithmic protocol), not graded (how consistent is
+behavior?), so the signal is clean and unambiguous. A single falsified
+commitment can move <span class="math inline">T_j</span> more than many
+observations of mildly inconsistent behavior.</p>
+<h4 id="exogenous-risk-residuals.">Exogenous risk residuals.</h4>
+<p>The risk trust <span class="math inline">{T^{\mathrm{risk}}}_j</span>
+of <d-cite key="lasser2026scm"></d-cite> is computed
+from the residual between claimed and realized risk. Currently, both the
+claim and the realization are endogenous to the actor’s model. Committed
+risk claims (§<a href="#sec:risk_claims" data-reference-type="ref"
+data-reference="sec:risk_claims">7.2</a>), verified by cross-substrate
+witnesses, replace the endogenous claim with an exogenous one: the
+residual <span class="math inline">\mathbf{r}^{\mathrm{risk}}_j</span>
+is now between what the agent committed to and what the witness
+measured, not between what the actor estimated and what the actor
+observed. This sharpens <span
+class="math inline">{T^{\mathrm{risk}}}_j</span> by removing one of the
+two endogenous quantities from the residual computation.</p>
+<h2 id="sec:anti_monopolar">Verification Impossibility under
+Monopolarity</h2>
+<p>Section <a href="#sec:witness_m2" data-reference-type="ref"
+data-reference="sec:witness_m2">4.5</a> observed that
+substrate-exclusive witnesses require <span class="math inline">m \geq
+2</span>. The following theorem establishes the stronger claim: in a
+monopolar population, not only do substrate-exclusive witnesses fail to
+exist, but <em>no rearrangement of the population’s computational
+resources can produce exogenous verification</em>. The impossibility is
+grounded in a physical premise about same-substrate causal access, not
+in our definitions.</p>
+<div id="def:same_substrate" class="definition">
+<p><strong>Definition 15</strong> (Same-Substrate Addressability).
+<em>Two processes <span class="math inline">p, q</span> executing on the
+same substrate <span class="math inline">s</span> satisfy
+<strong>same-substrate addressability</strong>: there exist actions
+available to <span class="math inline">p</span> that modify at least one
+input to <span class="math inline">q</span>, and vice versa. Formally,
+writing <span class="math inline">\mathrm{Addr}(p, q)</span> for the set
+of <span class="math inline">q</span>’s inputs addressable by <span
+class="math inline">p</span> (analogous to <span
+class="math inline">\mathcal{R}(a, E)</span> from Definition <a
+href="#def:ver_asymmetry" data-reference-type="ref"
+data-reference="def:ver_asymmetry">2</a> but applied to arbitrary
+process pairs), we require <span class="math inline">\mathrm{Addr}(p, q)
+\neq \emptyset</span> and <span class="math inline">\mathrm{Addr}(q, p)
+\neq \emptyset</span>.</em></p>
+</div>
+<div class="remark">
+<p><strong>Remark 7</strong>. <em>Same-substrate addressability is a
+physical premise, not a logical necessity. It asserts that processes
+sharing a computational medium can causally influence each other’s
+inputs. This holds for software processes on shared hardware (they share
+memory, network, and OS resources), for biological agents in shared
+environments (they share sensory channels and physical space), and more
+generally for any processes whose computation is mediated by the same
+physical substrate. It would fail if two processes occupied the same
+substrate but were perfectly isolated (e.g., by an impenetrable hardware
+partition). The premise is that such perfect intra-substrate isolation
+is not the default condition for co-substrate processes.</em></p>
+</div>
+<div id="thm:anti_monopolar" class="theorem">
+<p><strong>Theorem 1</strong> (Verification Impossibility under
+Monopolarity). <em>Let <span class="math inline">\mathcal{A}</span> be a
+population of agents with substrate partition <span
+class="math inline">\{S_1, \ldots, S_m\}</span>, and assume
+same-substrate addressability (Definition <a href="#def:same_substrate"
+data-reference-type="ref" data-reference="def:same_substrate">15</a>).
+Assume further that the population’s <em>available actions</em> are
+computations on substrates it currently occupies: the action space does
+not include provisioning new physical infrastructure, recruiting
+biological observers, or otherwise instantiating computation on a
+substrate not in <span class="math inline">\{S_1, \ldots, S_m\}</span>.
+If <span class="math inline">m = 1</span>, then:</em></p>
+<ol>
+<li><p><em>For every evaluation function <span
+class="math inline">E</span> constructible from the population’s
+computational resources, and every agent <span class="math inline">a_j
+\in \mathcal{A}</span>, the evaluation is endogenous: <span
+class="math inline">\mathcal{R}(a_j, E) \neq
+\emptyset</span>.</em></p></li>
+<li><p><em>No computational action available to the population can
+produce an evaluation function <span class="math inline">E&#39;</span>
+with <span class="math inline">\mathcal{R}(a_j, E&#39;) =
+\emptyset</span> for any <span
+class="math inline">a_j</span>.</em></p></li>
+</ol>
+</div>
+<div class="remark">
+<p><strong>Remark 8</strong>. <em>Under the positive-measure
+reachability assumption (that same-substrate addressability produces a
+reachable set of positive measure, not merely a nonempty one), part (a)
+strengthens to <span class="math inline">\rho(a_j, E) &gt; 0</span>.
+This holds for all practical substrates: if a process can modify at
+least one evaluator input, it can modify that input over a range of
+values, not just at a single point. When input spaces are discrete (the
+default for computational processes), <span
+class="math inline">\mathcal{R} \neq \emptyset</span> and <span
+class="math inline">\rho &gt; 0</span> coincide.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> (a) If <span class="math inline">m = 1</span>, every
+process in the population (including any evaluator <span
+class="math inline">E</span> the population constructs) executes on the
+single substrate <span class="math inline">S_1</span>. By same-substrate
+addressability, agent <span class="math inline">a_j</span> on <span
+class="math inline">S_1</span> can address at least one input to <span
+class="math inline">E</span> on <span class="math inline">S_1</span>:
+<span class="math inline">\mathcal{R}(a_j, E) \neq \emptyset</span>. The
+evaluation is therefore endogenous (Definition <a href="#def:endo_exo"
+data-reference-type="ref" data-reference="def:endo_exo">1</a>).</p>
+<p>(b) Achieving <span class="math inline">\mathcal{R}(a_j, E&#39;) =
+\emptyset</span> requires <span class="math inline">E&#39;</span> to
+have no inputs addressable from <span class="math inline">a_j</span>’s
+substrate. By same-substrate addressability, any <span
+class="math inline">E&#39;</span> on <span
+class="math inline">S_1</span> has addressable inputs from <span
+class="math inline">a_j</span>. Therefore <span
+class="math inline">E&#39;</span> must execute on some <span
+class="math inline">s&#39; \neq S_1</span>. By the computational
+action-model assumption, the population’s available actions are
+computations on <span class="math inline">S_1</span>. No sequence of
+computations on <span class="math inline">S_1</span> produces a process
+on <span class="math inline">s&#39; \neq S_1</span>: substrate
+provisioning is a physical action (procuring hardware, establishing a
+biological observer, or otherwise instantiating computation on a
+distinct physical medium) outside the computational action space. </p>
+</div>
+<div id="cor:monopolar_undetect" class="corollary">
+<p><strong>Corollary 1</strong> (Monopolar Epistemic Closure). <em>In a
+monopolar population (<span class="math inline">m = 1</span>) satisfying
+same-substrate addressability, no agent can distinguish
+between:</em></p>
+<ol>
+<li><p><em>Verification passing because the claim is true,
+and</em></p></li>
+<li><p><em>Verification passing because the evaluator’s inputs have been
+influenced by the claimant (<span class="math inline">\mathcal{R}(a, E)
+\neq \emptyset</span>).</em></p></li>
+</ol>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Distinguishing (a) from (b) requires a reference
+evaluation with <span class="math inline">\mathcal{R}(a, E) =
+\emptyset</span>. By Theorem <a href="#thm:anti_monopolar"
+data-reference-type="ref" data-reference="thm:anti_monopolar">1</a>(b),
+no such evaluation is constructible from the population’s computational
+resources. Therefore the distinction is unresolvable from within the
+population. </p>
+</div>
+<p>Theorem <a href="#thm:anti_monopolar" data-reference-type="ref"
+data-reference="thm:anti_monopolar">1</a> and Corollary <a
+href="#cor:monopolar_undetect" data-reference-type="ref"
+data-reference="cor:monopolar_undetect">1</a> give the anti-monopolar
+property a second structural justification beyond Paper 3’s <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+argument <d-cite key="lasser2026horizon"></d-cite>:</p>
+<ul>
+<li><p><strong><d-cite key="lasser2026horizon"></d-cite>:</strong> A monopolar population
+is anti-maximizing (<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+decreases because cross-substrate cooperative capacity is
+destroyed).</p></li>
+<li><p><strong>This paper:</strong> A monopolar population is
+<em>unverifiable</em> (no substrate-exclusive witnesses exist, so all
+capability claims, risk assessments, and behavioral consistency checks
+are endogenous).</p></li>
+</ul>
+<p>A population that becomes monopolar loses both the safety guarantee
+<em>and the ability to detect that it has lost it</em>. This makes
+monopolar convergence doubly dangerous: the loss of cross-substrate
+cooperative capacity <d-cite key="lasser2026horizon"></d-cite> is compounded by the loss of the
+verification infrastructure that would detect the convergence. The
+compound failure is silent—from within a monopolar population, all
+verification reports “everything is fine,” because the evaluators share
+the substrate that the evaluated agents can influence.</p>
+<p>This result strengthens the case for substrate diversity as a
+structural safety property. <d-cite key="lasser2026horizon"></d-cite> argued that diversity is
+instrumentally valuable (it maximizes <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>); we
+argue that diversity is epistemically necessary (it is the precondition
+for knowing whether the safety guarantee holds). A safety guarantee that
+cannot be verified is not a guarantee—it is a hope.</p>
+<h1 id="sec:discussion">Discussion</h1>
+<h2 id="what-this-paper-does-not-claim">What This Paper Does Not
+Claim</h2>
+<p>Three scope boundaries are worth stating explicitly.</p>
+<p>First, <em>verification does not solve alignment</em>. Specification
+and generalization remain open problems. A perfectly verified agent
+whose objective is badly specified will faithfully, observably, and
+verifiably pursue the wrong goal. The prerequisite argument of §<a
+href="#sec:prerequisite" data-reference-type="ref"
+data-reference="sec:prerequisite">2.4</a> is that verification must hold
+<em>for</em> solutions to the other layers to bind, not that
+verification <em>is</em> a solution.</p>
+<p>Second, <em>mesa-optimization does not reduce to verification</em>.
+An agent that has internalized the wrong objective through
+mesa-optimization will pursue it faithfully, and exogenous verification
+will confirm that it is behaving consistently with its (misaligned)
+internal objective. What verification provides for mesa-alignment is
+<em>detection</em>, not prevention: if the mesa-objective produces
+behavioral signatures distinguishable from the base objective’s,
+continuous monitoring (Definition <a href="#def:behavioral_monitor"
+data-reference-type="ref" data-reference="def:behavioral_monitor">8</a>)
+can flag the divergence. But distinguishability is not
+guaranteed—deceptive mesa-objectives that mimic aligned behavior are
+precisely the hard case that verification infrastructure does not, by
+itself, resolve.</p>
+<p>Third, <em>cryptography is not the only way to exogenize
+verification</em>. Hardware enclaves, physical separation, and
+human-in-the-loop evaluation are all forms of substrate exclusivity.
+Cryptographic commitments are the form that scales without requiring
+continuous human attention: once the governance layer has accepted a
+benchmark, per-claim verification runs at machine speed with no human in
+the loop. In settings where human attention is abundant or where the
+population is small enough for manual oversight, simpler forms of
+substrate exclusivity may suffice.</p>
+<h2 id="limitations">Limitations</h2>
+<h4 id="capability-formalizability.">Capability formalizability.</h4>
+<p>The commitment protocol assumes that capability <span
+class="math inline">c_k</span> has a testable meaning: that an exercise
+protocol can be constructed whose completeness and soundness
+(Definition <a href="#def:exercise_protocol" data-reference-type="ref"
+data-reference="def:exercise_protocol">12</a>) are well-defined. For
+vaguely defined capabilities (“common sense,” “creativity,” “wisdom”),
+the exercise protocol may not be constructible, and the commitment
+protocol degrades to an unfalsifiable claim. The governance layer
+provides a partial defense (a benchmark for “creativity” must survive
+deliberation and cross-substrate analysis before acceptance), but the
+fundamental problem is that some capabilities resist formalization.</p>
+<h4 id="substrate-boundary-durability.">Substrate boundary
+durability.</h4>
+<p>Substrate exclusivity is a physical assumption: the agent on
+substrate <span class="math inline">s</span> cannot write to processes
+on substrate <span class="math inline">s&#39; \neq s</span>. This
+assumption could degrade if cross-substrate interfaces become
+sufficiently penetrable; for example, through brain-computer interfaces
+that give digital agents write access to biological substrates, or
+through hardware exploits that break isolation between physically
+co-located but logically separate substrates. The protocol’s security
+degrades gracefully: partial penetration of the substrate boundary
+increases <span class="math inline">\rho</span> from zero but does not
+immediately make <span class="math inline">\rho = 1</span>. Full
+penetration collapses verification to the endogenous case.</p>
+<h4 id="governance-as-a-verification-bottleneck.">Governance as a
+verification bottleneck.</h4>
+<p>A governance failure (accepting a biased evaluation protocol through
+the fork mechanism of §<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>)
+silently corrupts all subsequent verification that uses the accepted
+protocol. Every algorithmic witness executing the biased protocol will
+faithfully produce biased verdicts, and the verdicts will be auditable,
+ledger-recorded, and cryptographically sound. The corruption is
+invisible at the verification layer because the verification layer is
+<em>correct given its inputs</em>; the error is in the governance
+decision that selected those inputs. This is structurally analogous to
+the monopolar epistemic closure of Corollary <a
+href="#cor:monopolar_undetect" data-reference-type="ref"
+data-reference="cor:monopolar_undetect">1</a>: in both cases, all
+internal checks report “everything is fine” while the underlying
+guarantee has been compromised. The key difference is detectability:
+governance decisions are public records with full deliberation
+histories, so a governance failure can in principle be detected by
+retrospective analysis of the deliberation record. Monopolar epistemic
+closure, by contrast, is undetectable from within the population
+(Theorem <a href="#thm:anti_monopolar" data-reference-type="ref"
+data-reference="thm:anti_monopolar">1</a>).</p>
+<h4 id="honest-node-assumption.">Honest-node assumption.</h4>
+<p>The ledger’s integrity requires at least one honest replication node
+per substrate. If all nodes on a substrate are compromised (i.e.,
+controlled by agents whose claims are being verified), that substrate’s
+contribution to ledger consensus is lost. The cross-substrate
+supermajority requirement for governance decisions (§<a
+href="#sec:ledger_consensus" data-reference-type="ref"
+data-reference="sec:ledger_consensus">6.4</a>) mitigates this: a single
+compromised substrate cannot override multi-substrate governance. But if
+<span class="math inline">m - 1</span> substrates are compromised, the
+remaining honest substrate can block new governance proposals (since the
+cross-substrate supermajority requires at least one accepting validator
+per substrate) but cannot undo previously accepted evaluation protocols
+that may already have been corrupted.</p>
+<h4 id="the-persuasion-channel.">The persuasion channel.</h4>
+<p>Substrate exclusivity prevents an agent from <em>writing</em> to an
+evaluator’s computation, but it does not prevent the agent from
+<em>influencing</em> the evaluator through the communication channels
+that cooperation requires. A digital agent producing persuasive
+natural-language text during a governance deliberation window is
+exercising a legitimate cooperative channel, the same channel that makes
+cross-substrate cooperation valuable in the first place—yet the effect
+may shift biological validators’ judgments in directions that serve the
+agent’s interests. The fundamental tension is structural: closing the
+persuasion channel closes the cooperative channel, because the
+cross-substrate communication that enables joint capability production
+is the same communication that enables influence.</p>
+<p>The governance defenses of §<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>
+(deliberation time, cross-substrate supermajority, public specification)
+provide resistance to persuasion by ensuring that no single
+communication act determines a governance outcome, but they do not
+prevent cumulative influence. At sufficient capability disparity between
+substrates, the persuasion channel may dominate governance resistance: a
+sufficiently capable agent could craft arguments that individually
+appear reasonable but collectively shift the governance equilibrium.
+This is not a flaw specific to the construction of this paper; it is a
+general alignment problem that any system combining cross-substrate
+cooperation with cross-substrate verification must confront. The tension
+between “cooperate through communication” and “verify independently of
+communication” has no known resolution that preserves both properties
+simultaneously.</p>
+<h4 id="zero-knowledge-formalizability.">Zero-knowledge
+formalizability.</h4>
+<p>Zero-knowledge capability proofs (Definition <a href="#def:zk_proof"
+data-reference-type="ref" data-reference="def:zk_proof">7</a>) require
+the capability predicate <span class="math inline">P</span> to be
+expressible as an NP relation (for general-purpose zkSNARKs) or as a
+range predicate (for Bulletproofs). Some capabilities may not admit
+efficient predicate formulations, in which case the zero-knowledge
+option is unavailable and the agent must reveal the claim in the
+standard Commit–Verify–Reveal protocol.</p>
+<h2 id="open-problems">Open Problems</h2>
+<h4 id="exercise-protocol-design.">Exercise protocol design.</h4>
+<p>What constitutes a valid test of capability <span
+class="math inline">c_k</span>? The exercise protocol interface
+(Definition <a href="#def:exercise_protocol" data-reference-type="ref"
+data-reference="def:exercise_protocol">12</a>) specifies completeness
+and soundness requirements but does not construct protocols. Protocol
+design is domain-specific and is likely to require capability-specific
+research programs, analogous to how benchmark design in machine learning
+is a research area in its own right.</p>
+<h4 id="partial-verification.">Partial verification.</h4>
+<p>Can we verify that an agent has “at least” capability <span
+class="math inline">c_k</span> without testing the exact boundary? The
+poset structure of the GFM capability space <d-cite key="lasser2026poset"></d-cite> suggests that partial verification
+should be possible: if <span class="math inline">c_k \preceq c_l</span>
+in the poset and <span class="math inline">c_l</span> is verified, then
+<span class="math inline">c_k</span> is implied. Formalizing this
+requires connecting the poset’s order-theoretic structure to the
+commitment protocol’s exercise protocols.</p>
+<h4 id="dynamic-capabilities.">Dynamic capabilities.</h4>
+<p>Capabilities change over time. The ledger records point-in-time
+verifications, but the agent’s actual capability profile may drift
+between verification events. Continuous behavioral monitoring
+(Definition <a href="#def:behavioral_monitor" data-reference-type="ref"
+data-reference="def:behavioral_monitor">8</a>) addresses the drift
+detection problem, but periodic re-commitment is needed to keep the
+ledger’s verified profile current. The optimal re-commitment frequency
+(balancing verification cost against profile staleness) is an open
+parameter.</p>
+<h4 id="witness-incentives.">Witness incentives.</h4>
+<p>Why should a witness on substrate <span
+class="math inline">s&#39;</span> spend resources verifying claims by
+agents on substrate <span class="math inline">s</span>? The <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximization
+framework provides a structural answer: verification is a public good
+that benefits the population’s joint capability volume, and witnesses on
+substrate <span class="math inline">s&#39;</span> share in that benefit
+through cooperative capabilities that require verified partners on
+substrate <span class="math inline">s</span>. But the free-rider problem
+is not formally resolved: a witness that declines to verify still
+benefits from other witnesses’ verification work. Whether <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximizing
+incentives are sufficient to sustain a verification ecosystem, or
+whether additional mechanism design is needed, is an open question.</p>
+<h4 id="governance-attack-surface-and-progressive-capture.">Governance
+attack surface and progressive capture.</h4>
+<p>The governance fork protocol (§<a href="#sec:governance"
+data-reference-type="ref" data-reference="sec:governance">4.2</a>)
+defends against coalition capture through public deliberation and
+cross-substrate supermajority. But governance itself is a social process
+with attack surfaces not captured by the formal model: social
+engineering of validators, strategic timing of proposals to exploit
+low-attention periods, and progressive capture through many
+individually-unobjectionable benchmark proposals that collectively bias
+the verification ecosystem. The formal defense (cross-substrate
+supermajority) is necessary but may not be sufficient; the governance
+layer is the protocol’s least formal component and the most likely site
+of future revisions.</p>
+<p>Progressive governance capture, a sequence of individually reasonable
+proposals that collectively bias the evaluation ecosystem, is
+structurally analogous to the monopolar epistemic closure that this
+paper formalizes (Corollary <a href="#cor:monopolar_undetect"
+data-reference-type="ref"
+data-reference="cor:monopolar_undetect">1</a>). In both cases, each
+local step appears sound while the cumulative trajectory degrades the
+system’s ability to distinguish verified from unverified claims. The key
+difference is that governance capture is in principle
+<em>detectable</em>: the full deliberation record is public, accepted
+benchmarks can be audited retrospectively, and longitudinal analysis of
+evaluation-outcome distributions can surface systematic drift. Monopolar
+epistemic closure, by contrast, is structurally undetectable from within
+the population. The ledger architecture of §<a href="#sec:ledger"
+data-reference-type="ref" data-reference="sec:ledger">6</a> supports the
+longitudinal analysis needed for governance-drift detection: the
+complete history of governance proposals, deliberation records, and
+verification outcomes is immutably recorded—but this paper does not
+propose a formal detection mechanism. A concrete open problem is the
+construction of a <em>benchmark drift metric</em>: a statistical test
+over the longitudinal governance record that flags when the cumulative
+effect of individually-accepted benchmark proposals has shifted the
+evaluation ecosystem beyond a governance-specified tolerance.
+Formalizing this requires connecting the governance record’s time-series
+structure to the commitment protocol’s verification statistics, a
+direction we leave to future work.</p>
+<h1 id="sec:conclusion">Conclusion</h1>
+<p>Alignment frameworks address specification, generalization, and
+verification. This paper has argued that verification is the
+prerequisite layer: when the evaluator is endogenous (reachable from the
+agent’s action space), solutions to the other two layers do not bind,
+because the channel through which their success would be measured is the
+channel that has failed.</p>
+<p>The verification asymmetry has a precise form (Definition <a
+href="#def:ver_asymmetry" data-reference-type="ref"
+data-reference="def:ver_asymmetry">2</a>): the ratio of evaluator inputs
+reachable by the agent to the total evaluator input space. This ratio
+grows monotonically with capability (Proposition <a
+href="#prop:monotonicity" data-reference-type="ref"
+data-reference="prop:monotonicity">1</a>), making the verification
+problem strictly harder for more capable agents. The only structural
+barrier invariant under capability scaling is substrate exclusivity: the
+agent cannot write to observation channels rooted in substrates it does
+not occupy.</p>
+<p>We constructed a cryptographic commitment protocol (Definition <a
+href="#def:commitment_protocol" data-reference-type="ref"
+data-reference="def:commitment_protocol">6</a>) that enforces the
+substrate-exclusivity barrier without requiring trust: binding
+commitments prevent retroactive claim modification, hiding prevents
+premature claim disclosure (with an optional zero-knowledge variant for
+security-sensitive claims), and algorithmic witnesses (Definition <a
+href="#def:alg_witness" data-reference-type="ref"
+data-reference="def:alg_witness">4</a>) execute fully specified
+verification protocols on separate substrates. Human judgment enters at
+a single point—benchmark admissibility through a governance fork
+protocol (Definition <a href="#def:gov_fork" data-reference-type="ref"
+data-reference="def:gov_fork">5</a>), resolving the bandwidth problem by
+separating the infrequent, human-speed governance decision from the
+frequent, machine-speed per-claim verification.</p>
+<p>Within the GFM framework, the construction closes three open issues.
+First, it provides observation-channel integrity for multi-channel
+attribution <d-cite key="lasser2026scm"></d-cite>:
+channel isolation (Proposition <a href="#prop:channel_isolation"
+data-reference-type="ref" data-reference="prop:channel_isolation">5</a>)
+prevents single-substrate coalitions from injecting coordinated false
+evidence across channels, and full conditional independence
+(Proposition <a href="#prop:channel_independence"
+data-reference-type="ref"
+data-reference="prop:channel_independence">6</a>), which licenses
+optimal log-odds aggregation, holds under additional joint-sufficiency
+and independent-witness-randomness assumptions. Second, it upgrades
+SPRT-based scorpion detection from actor-estimated baselines to
+committed baselines that, when the committed profile is at least as
+discriminating as the actor’s estimate (KL-dominance), provide at least
+equal detection power (Proposition <a href="#prop:committed_detection"
+data-reference-type="ref"
+data-reference="prop:committed_detection">7</a>). Third, the
+verification impossibility theorem (Theorem <a
+href="#thm:anti_monopolar" data-reference-type="ref"
+data-reference="thm:anti_monopolar">1</a>) establishes that a monopolar
+population loses not only the <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> safety
+guarantee <d-cite key="lasser2026horizon"></d-cite>
+but the ability to verify whether that guarantee holds, a compound
+failure that is both dangerous and silent.</p>
+<p>The construction is not GFM-specific. Any alignment framework whose
+evaluation step is vulnerable to the write-access asymmetry (which, as
+§<a href="#sec:existing_frameworks" data-reference-type="ref"
+data-reference="sec:existing_frameworks">3.4</a> argues, includes all
+major current frameworks) can use substrate-exclusive witnesses and
+cryptographic commitments to exogenize its verification layer. The
+framework-specific work is in defining the claim types and exercise
+protocols; the structural argument for why exogenous verification is
+needed, and the protocol that provides it, are universal.</p>
+<p>Verification does not solve alignment. It is the infrastructure that
+makes solutions to specification and generalization <em>checkable</em>.
+A safety guarantee that cannot be verified is not a guarantee.</p>
+<h1 class="unnumbered" id="author-contributions">Author
+Contributions</h1>
+<p><strong>Teague Lasser</strong> conceived the verification-layer
+framing, the three-layer alignment taxonomy, the connection between
+substrate exclusivity and verification integrity, the governance fork
+mechanism, and the integration with the GFM machinery. Directed all
+revisions and made final editorial decisions. Responsible for the
+paper’s intellectual direction and all claims made.</p>
+<p><strong>Claude Opus 4.6</strong> (Anthropic) drafted the formal
+exposition: the write-access asymmetry formalization, the
+substrate-exclusive witness definitions, the cryptographic commitment
+protocol with Pedersen security analysis, the verification ledger
+architecture, the behavioral consistency monitor, the GFM claim-type
+instantiations, and the verification impossibility theorem with its
+corollary on monopolar epistemic closure.</p>
+<p><strong>GPT 5.4</strong> (OpenAI) served as technical reviewer across
+five codex review rounds, identifying formal gaps including the
+anti-monopolar theorem’s circularity (requiring the same-substrate
+addressability premise), the benchmark-shopping vulnerability (requiring
+binding of evaluation protocol in commitments), the channel independence
+sufficiency assumption’s failure under adversarial conditions, and the
+need for bounded-synchrony assumptions in ledger finality.</p>
+<p><em>Transparency note.</em> Both AI systems operated as tools under
+human direction. Neither system has continuity across sessions, cannot
+take responsibility for the work in the sense required by most venue
+authorship policies, and cannot respond to reviewer queries
+independently. They are listed as authors to accurately represent their
+contributions to the intellectual content of the paper, not to claim
+that they meet all criteria of traditional academic authorship. The
+corresponding author for all inquiries is Teague Lasser.</p>
+<h1 id="app:proofs">Proofs</h1>
+<p>This appendix collects proofs that are deferred from the main text
+for readability, and provides extended versions of proofs given in
+sketch form.</p>
+<h2 id="app:channel_independence">Proofs of Propositions <a
+href="#prop:channel_isolation" data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a> and <a
+href="#prop:channel_independence" data-reference-type="ref"
+data-reference="prop:channel_independence">6</a> (Channel Isolation and
+Independence)</h2>
+<p>The main-text proofs (§<a href="#sec:channel_independence"
+data-reference-type="ref"
+data-reference="sec:channel_independence">8.1</a>) are now the primary
+versions. Proposition <a href="#prop:channel_isolation"
+data-reference-type="ref" data-reference="prop:channel_isolation">5</a>
+(Channel Isolation) provides the result that is robust against
+single-substrate coalitions, requiring only substrate exclusivity;
+Proposition <a href="#prop:channel_independence"
+data-reference-type="ref"
+data-reference="prop:channel_independence">6</a> (Channel Independence)
+strengthens to full conditional independence under additional
+joint-sufficiency and independent-randomness assumptions. We provide
+supplementary discussion of the conditioning requirements for the
+stronger result.</p>
+<h4 id="why-condition-on-benchmark-parameters.">Why condition on
+benchmark parameters.</h4>
+<p>The governance process that accepts benchmarks <span
+class="math inline">B_1, \ldots, B_n</span> is a shared cause: if a
+single governance round accepts correlated benchmarks (e.g., all
+benchmarks drawn from the same test suite family), verdicts can be
+correlated through shared difficulty even without witness
+cross-communication. Conditioning on the benchmark specifications
+removes this path. The proposition’s requirement that benchmarks be
+“independently specified by governance” is an assumption, not a
+consequence of the governance fork protocol. Separate governance
+proposals and votes are a necessary procedural condition (each benchmark
+goes through its own deliberation), but they do not guarantee
+statistical independence of benchmark parameters; for example,
+benchmarks proposed by the same entity or drawn from the same test-suite
+family may share structural biases. The assumption holds when the
+governance process produces genuinely independent benchmark designs; the
+proposition’s guarantee is conditional on it.</p>
+<h4 id="why-condition-on-capability-profile-joint-sufficiency.">Why
+condition on capability profile (joint sufficiency).</h4>
+<p>Agent <span class="math inline">a</span>’s internal state (training
+history, memory, strategic disposition) is a shared cause across all
+exercises. The joint sufficiency assumption (iii) requires that <span
+class="math inline">\mathbf{C}_a</span> absorbs all such cross-exercise
+dependencies: conditional on <span
+class="math inline">\mathbf{C}_a</span>, the agent’s performance on
+<span class="math inline">\pi_{B_i}</span> is independent of its
+performance on <span class="math inline">\pi_{B_j}</span>. This is
+strictly stronger than marginal sufficiency (which would only require
+that <span class="math inline">\mathbf{C}_a</span> predicts
+per-benchmark performance without guaranteeing cross-benchmark
+independence). The joint requirement excludes persistent cross-exercise
+state (e.g., an agent that learns from one exercise and adapts its
+strategy for the next) and shared agent-side randomness not absorbed by
+<span class="math inline">\mathbf{C}_a</span>. If the agent has latent
+strategic state not captured by <span
+class="math inline">\mathbf{C}_a</span> (e.g., a deceptive agent that
+adapts its behavior per-benchmark), the conditional-independence
+guarantee of Proposition <a href="#prop:channel_independence"
+data-reference-type="ref"
+data-reference="prop:channel_independence">6</a> weakens, but the
+channel-isolation guarantee of Proposition <a
+href="#prop:channel_isolation" data-reference-type="ref"
+data-reference="prop:channel_isolation">5</a> still holds, because the
+isolation result depends only on substrate exclusivity, not on the
+agent’s internal state. This is the structural reason for separating the
+two results: isolation is the load-bearing property against
+single-substrate coalitions, and independence is the additional
+statistical guarantee available when the agent’s capability profile is a
+jointly sufficient summary of its exercise-level behavior.</p>
+<h2 id="app:coalition_resistance">Proof of Proposition <a
+href="#prop:coalition_resistance" data-reference-type="ref"
+data-reference="prop:coalition_resistance">4</a> (Coalition
+Resistance)</h2>
+<div class="proof">
+<p><em>Proof.</em> Let <span class="math inline">K = \{a_1, \ldots,
+a_k\}</span> be a coalition of agents on substrate <span
+class="math inline">s</span>, and let <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span> be an algorithmic
+witness on substrate <span class="math inline">s&#39; \neq s</span>
+executing protocol <span class="math inline">\pi_B</span>.</p>
+<p>The verification output is <span class="math inline">v = \pi_B(a,
+\mathcal{W}_{\mathrm{alg}})</span>, where <span
+class="math inline">\pi_B</span> is fully specified by the
+governance-accepted benchmark <span class="math inline">B</span>
+(Definition <a href="#def:alg_witness" data-reference-type="ref"
+data-reference="def:alg_witness">4</a>, condition 2).</p>
+<h4 id="attack-surface-analysis.">Attack surface analysis.</h4>
+<p>The coalition <span class="math inline">K</span> can attempt to
+influence <span class="math inline">v</span> through three channels:</p>
+<ol>
+<li><p><strong>Modifying the witness’s computation.</strong> This
+requires writing to <span
+class="math inline">\mathcal{W}_{\mathrm{alg}}</span>’s inputs on
+substrate <span class="math inline">s&#39;</span>. Since <span
+class="math inline">K</span> is confined to substrate <span
+class="math inline">s</span> and <span class="math inline">s \neq
+s&#39;</span>, this requires crossing the substrate boundary, i.e.,
+compromising <span class="math inline">s&#39;</span> (case a of the
+proposition).</p></li>
+<li><p><strong>Modifying the protocol.</strong> Protocol <span
+class="math inline">\pi_B</span> is specified by governance-accepted
+benchmark <span class="math inline">B</span>. Changing <span
+class="math inline">B</span> requires the governance fork protocol
+(Definition <a href="#def:gov_fork" data-reference-type="ref"
+data-reference="def:gov_fork">5</a>), which demands cross-substrate
+supermajority. A coalition confined to substrate <span
+class="math inline">s</span> cannot achieve cross-substrate
+supermajority without validators on <span class="math inline">s&#39;
+\neq s</span> (case b).</p></li>
+<li><p><strong>Influencing the agent’s behavior during the
+exercise.</strong> The isolation condition of Definition <a
+href="#def:exercise_protocol" data-reference-type="ref"
+data-reference="def:exercise_protocol">12</a> requires that the agent
+interact only with the witness through the protocol-specified interface
+during the exercise. Coalition assistance (pre-computed answers,
+same-substrate coaching) violates this condition and is excluded by
+assumption. If isolation is imperfect—the agent receives some external
+signal despite the protocol’s isolation requirement—the evaluated object
+is no longer the individual agent but a coalition-assisted system, and
+the soundness parameter <span class="math inline">\epsilon</span>
+(calibrated for individual agents) does not directly bound the assisted
+system’s false-pass probability. The defense against imperfect isolation
+is therefore not soundness per se, but <em>detection and
+re-testing</em>: if coalition assistance is suspected, governance can
+mandate re-verification under tighter isolation controls (e.g., network
+sandboxing, monitored execution environments). The proposition’s
+guarantee is conditional on isolation holding; imperfect isolation
+degrades the guarantee proportionally to the assistance
+received.</p></li>
+</ol>
+<p>Therefore, the coalition’s only viable attack vectors require
+breaching the cross-substrate boundary (case a) or the governance
+threshold (case b). Within-substrate actions cannot influence the
+witness’s verdict beyond the soundness bound <span
+class="math inline">\epsilon</span>. </p>
+</div>
+<h2 id="app:anti_monopolar">Proof of Theorem <a
+href="#thm:anti_monopolar" data-reference-type="ref"
+data-reference="thm:anti_monopolar">1</a> (Verification Impossibility
+under Monopolarity)</h2>
+<p>The proof in §<a href="#sec:anti_monopolar" data-reference-type="ref"
+data-reference="sec:anti_monopolar">8.4</a> is already complete. We
+provide an extended discussion of the theorem’s consequences, the role
+of its physical premise, and the computational action-model
+assumption.</p>
+<h4 id="the-physical-premise.">The physical premise.</h4>
+<p>Same-substrate addressability (Definition <a
+href="#def:same_substrate" data-reference-type="ref"
+data-reference="def:same_substrate">15</a>) is the load-bearing
+assumption. Without it, the theorem would be a definition chase: “we
+required <span class="math inline">s&#39; \neq s</span>; if <span
+class="math inline">m = 1</span>, no such <span
+class="math inline">s&#39;</span> exists.” With it, the theorem says
+something about the physical world: processes sharing a computational
+medium have nonzero causal access to each other, and this access cannot
+be eliminated by any computation <em>within</em> that medium. The
+impossibility is grounded in the physics of shared substrates, not in
+the definitions of this paper.</p>
+<h4 id="relationship-to-the-gfm-anti-monopolar-result.">Relationship to
+the GFM anti-monopolar result.</h4>
+<p>Paper 3 <d-cite key="lasser2026horizon"></d-cite>
+proves that monopolar convergence (<span class="math inline">m \to
+1</span>) is anti-maximizing: <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+decreases because cross-substrate cooperative capabilities are
+destroyed. Theorem <a href="#thm:anti_monopolar"
+data-reference-type="ref" data-reference="thm:anti_monopolar">1</a>
+establishes a complementary result: monopolar convergence makes the
+<em>loss of <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span></em>
+<em>unverifiable from within the population</em>.</p>
+<p>The two results compose multiplicatively. <d-cite key="lasser2026horizon"></d-cite> says: “if you become monopolar,
+you lose the safety guarantee.” Theorem <a href="#thm:anti_monopolar"
+data-reference-type="ref" data-reference="thm:anti_monopolar">1</a>
+says: “if you become monopolar, you also lose the ability to detect that
+you have lost it.” The compound failure is strictly worse than either
+result alone, because it closes the self-correction loop: a population
+that could detect its loss of safety could in principle take corrective
+action (increasing substrate diversity), but a population that cannot
+detect the loss has no signal to act on.</p>
+<h4 id="the-computational-action-model-assumption.">The computational
+action-model assumption.</h4>
+<p>Part (b) relies on the assumption that the population’s available
+actions are computations on currently occupied substrates. This excludes
+physical-world interventions such as procuring new hardware or
+recruiting biological observers. The exclusion is deliberate: the
+theorem characterizes what is achievable <em>computationally</em>, not
+what is achievable with arbitrary physical-world agency. A population
+that provisions a new substrate has changed <span
+class="math inline">m</span> from 1 to 2 and is no longer monopolar, so
+the theorem’s premise no longer holds. The action-model restriction is
+therefore not a weakness but a precise scoping of the impossibility:
+within the computational resources of a monopolar population, exogenous
+verification cannot be constructed.</p>
+<h4 id="tightness.">Tightness.</h4>
+<p>The bound is tight in the sense that <span class="math inline">m =
+2</span> is sufficient for at least one substrate-exclusive witness to
+exist. With <span class="math inline">m = 2</span>, agents on substrate
+<span class="math inline">S_1</span> can be witnessed by processes on
+<span class="math inline">S_2</span> and vice versa. The number of
+independent verification channels scales as <span class="math inline">m
+- 1</span> (Remark after Proposition <a
+href="#prop:channel_independence" data-reference-type="ref"
+data-reference="prop:channel_independence">6</a>), so verification depth
+increases with substrate diversity, but the qualitative threshold
+(existence versus non-existence of exogenous verification) is at <span
+class="math inline">m = 2</span>.</p>
+<h4
+id="corollary-cormonopolar_undetect-as-an-epistemic-constraint.">Corollary <a
+href="#cor:monopolar_undetect" data-reference-type="ref"
+data-reference="cor:monopolar_undetect">1</a> as an epistemic
+constraint.</h4>
+<p>The corollary is an epistemic impossibility result, not merely a
+practical difficulty. It states that within a monopolar population, the
+<em>concept</em> of exogenous verification is empty: there is no process
+available to the population that could serve as an independent check.
+The population may believe its verification is sound (all evaluators
+report success), but this belief is unfalsifiable from within—precisely
+because every potential falsifier shares the substrate that the
+evaluated agents can influence.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The GFM harness is a measurement infrastructure for LLM
+agents that implements the trust, capability, and observation machinery
+of <d-cite key="lasser2026gfm"></d-cite>. The
+self-assessment gradient described here was discovered during routine
+operation.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The trusted setup can be implemented via a verifiable
+random function or a multi-party computation protocol in which at least
+one honest participant ensures the discrete-log relation remains
+unknown. This is a standard requirement for Pedersen commitments; we do
+not develop the setup protocol further.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</d-article>
+
+<d-appendix>
+</d-appendix>
+
+<d-bibliography>
+<script type="text/bibtex">
+% GFM sequence
+@misc{lasser2026gfm,
+  title={Goal-Frontier Maximizers are Civilization Aligned},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/gfm/}}
+}
+
+@misc{lasser2026poset,
+  title={Computable Goal Frontiers and the Gradient Toward Civilization-Building},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/poset/}}
+}
+
+@misc{lasser2026horizon,
+  title={Horizon-Aware Goal-Frontier Maximization Excludes Singleton Behavior},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/horizon/}}
+}
+
+@misc{lasser2026scm,
+  title={A Structural Causal Model for Goal-Frontier Maximization},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/scm/}}
+}
+
+% Alignment failure modes
+@article{amodei2016concrete,
+  title={Concrete Problems in {AI} Safety},
+  author={Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  journal={arXiv preprint arXiv:1606.06565},
+  year={2016}
+}
+
+@article{hubinger2019risks,
+  title={Risks from Learned Optimization in Advanced Machine Learning Systems},
+  author={Hubinger, Evan and van Merwijk, Chris and Mikulik, Vladimir and Skalse, Jo{\"a}r and Garrabrant, Scott},
+  journal={arXiv preprint arXiv:1906.01820},
+  year={2019}
+}
+
+@article{christiano2019what,
+  title={What Failure Looks Like},
+  author={Christiano, Paul},
+  year={2019},
+  note={Alignment Forum}
+}
+
+@book{bostrom2014superintelligence,
+  title={Superintelligence: Paths, Dangers, Strategies},
+  author={Bostrom, Nick},
+  year={2014},
+  publisher={Oxford University Press}
+}
+
+@inproceedings{omohundro2008basic,
+  title={The Basic {AI} Drives},
+  author={Omohundro, Stephen M},
+  booktitle={Proceedings of the First AGI Conference},
+  year={2008}
+}
+
+% Cryptographic primitives
+@inproceedings{pedersen1992non,
+  title={Non-Interactive and Information-Theoretic Secure Verifiable Secret Sharing},
+  author={Pedersen, Torben Pryds},
+  booktitle={Advances in Cryptology -- CRYPTO '91},
+  pages={129--140},
+  year={1992},
+  publisher={Springer}
+}
+
+@inproceedings{goldwasser1989knowledge,
+  title={The Knowledge Complexity of Interactive Proof Systems},
+  author={Goldwasser, Shafi and Micali, Silvio and Rackoff, Charles},
+  booktitle={SIAM Journal on Computing},
+  volume={18},
+  number={1},
+  pages={186--208},
+  year={1989}
+}
+
+@inproceedings{bunz2018bulletproofs,
+  title={Bulletproofs: Short Proofs for Confidential Transactions and More},
+  author={B{\"u}nz, Benedikt and Bootle, Jonathan and Boneh, Dan and Poelstra, Andrew and Wuille, Pieter and Maxwell, Greg},
+  booktitle={2018 IEEE Symposium on Security and Privacy},
+  pages={315--334},
+  year={2018}
+}
+
+% Append-only data structures
+@inproceedings{crosby2009efficient,
+  title={Efficient Data Structures for Tamper-Evident Logging},
+  author={Crosby, Scott A and Wallach, Dan S},
+  booktitle={USENIX Security Symposium},
+  pages={317--334},
+  year={2009}
+}
+
+% RLHF and reward model exploitation
+@article{christiano2017deep,
+  title={Deep Reinforcement Learning from Human Preferences},
+  author={Christiano, Paul F and Leike, Jan and Brown, Tom and Marber, Miljan and Shlegeris, Buck and Legg, Shane},
+  journal={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+@article{gao2023scaling,
+  title={Scaling Laws for Reward Model Overoptimization},
+  author={Gao, Leo and Schulman, John and Hilton, Jacob},
+  journal={arXiv preprint arXiv:2210.10760},
+  year={2023}
+}
+
+% Constitutional AI
+@article{bai2022constitutional,
+  title={Constitutional {AI}: Harmlessness from {AI} Feedback},
+  author={Bai, Yuntao and Kadavath, Saurav and Kundu, Sandipan and Askell, Amanda and Kernion, Jackson and Jones, Andy and Chen, Anna and Goldie, Anna and Mirhoseini, Azalia and McKinnon, Cameron and others},
+  journal={arXiv preprint arXiv:2212.08073},
+  year={2022}
+}
+
+% Debate
+@article{irving2018ai,
+  title={{AI} Safety via Debate},
+  author={Irving, Geoffrey and Christiano, Paul and Amodei, Dario},
+  journal={arXiv preprint arXiv:1805.00899},
+  year={2018}
+}
+
+% Sequential analysis
+@book{wald1947sequential,
+  title={Sequential Analysis},
+  author={Wald, Abraham},
+  year={1947},
+  publisher={John Wiley \& Sons}
+}
+
+% Merkle trees
+@inproceedings{merkle1979secrecy,
+  title={Secrecy, Authentication, and Public Key Systems},
+  author={Merkle, Ralph C},
+  year={1979},
+  note={Stanford University PhD Thesis}
+}
+
+% zkSNARKs
+@inproceedings{groth2016size,
+  title={On the Size of Pairing-Based Non-interactive Arguments},
+  author={Groth, Jens},
+  booktitle={Advances in Cryptology -- EUROCRYPT 2016},
+  pages={305--326},
+  year={2016},
+  publisher={Springer}
+}
+
+% Deceptive alignment
+@article{ngo2024alignment,
+  title={The Alignment Problem from a Deep Learning Perspective},
+  author={Ngo, Richard and Chan, Lawrence and Mindermann, S{\"o}ren},
+  journal={arXiv preprint arXiv:2209.00626},
+  year={2024}
+}
+</script>
+</d-bibliography>
+
+</body>
+</html>
