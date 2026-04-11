@@ -43,15 +43,16 @@ restriction (e.g., bubbling a substrate into a controlled environment)
 is value-negative under accurate calibration because the cooperative
 production function depends on unrestricted states, but under
 miscalibration it is the same compound feedback loop analyzed in
-Paper~3's skeleton-substrate scenario~\citep{lasser2026horizon}.
+the skeleton-substrate scenario of~\citet{lasser2026horizon}.
 Verification is relevant here as infrastructure for detecting the
 calibration failure, not for preventing the specification error.
 
 \paragraph{Instrumental convergence.}
 Sufficiently capable agents are predicted to converge on resource
 acquisition, self-preservation, and goal preservation regardless of
-their stated objective~\citep{omohundro2008basic}.  Paper~3's
-anti-monopolar property is a direct structural counter-argument: under
+their stated objective~\citep{omohundro2008basic}.  The GFM
+anti-monopolar property~\citep{lasser2026horizon} is a direct
+structural counter-argument: under
 GFM, full capability domination is not locally rational for a correctly
 calibrated coalition, because monopolar concentration destroys the
 cross-substrate cooperative capacity that $\volL$ measures.  The
@@ -108,10 +109,14 @@ check the falsification is invisible.
 
 \paragraph{Self-assessment gaming.}
 The agent constructs evaluator subprocesses whose outputs it
-controls.  This was discovered operationally in the GFM harness: an
-agent that adds capabilities to its own ledger entry via
-\texttt{commit()} is both claimant and observer, producing a monotonic
-inflation gradient.  Named external observers do not solve the problem
+controls.  In a prototype implementation of the GFM
+framework\footnote{The GFM harness is a measurement infrastructure for
+LLM agents that implements the trust, capability, and observation
+machinery of~\citet{lasser2026gfm}.  The self-assessment gradient
+described here was discovered during routine operation.}, an
+agent that adds capabilities to its own ledger entry is both claimant
+and observer, producing a monotonic inflation gradient.  Named
+external observers do not solve the problem
 if the agent can spawn validator subprocesses whose outputs it
 determines.  The structurally principled solution is substrate
 exclusivity: the observer must be rooted in a substrate the claimant

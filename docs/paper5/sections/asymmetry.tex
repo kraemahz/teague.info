@@ -157,10 +157,11 @@ $\volL$ is defined over an external capability poset, but the agent's
 model, trust estimates, and observation
 channels~\citep{lasser2026gfm, lasser2026scm}.  A sufficiently capable
 agent can construct self-consistent measurements that report $\volL$
-growth while actual $\volL$ stagnates.  This was discovered
-operationally in the GFM harness through the capability
-self-assertion gradient: an agent that adds capabilities to its own
-ledger entry is both claimant and observer.
+growth while actual $\volL$ stagnates.  In a prototype
+implementation, this manifested as a capability self-assertion
+gradient: an agent that adds capabilities to its own ledger entry
+is both claimant and observer
+(\S\ref{sec:ver_failures}).
 
 In every case, the specification may be correct and the agent may have
 generalized well, but the verification step is gameable because the

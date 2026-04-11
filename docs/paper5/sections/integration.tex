@@ -61,7 +61,7 @@ depth to substrate diversity.
 \subsection{Committed Baselines for SPRT Detection}
 \label{sec:committed_baselines}
 
-Paper~4's SPRT-based scorpion detection compares an agent's behavioral
+The SPRT-based scorpion detection of~\citet{lasser2026scm} compares an agent's behavioral
 observations against a baseline.  In the current framework, the baseline
 is the \emph{actor's own estimate} of the agent's expected behavior---an
 endogenous quantity that is subject to the actor's model uncertainty and
@@ -109,13 +109,13 @@ behavioral distribution more tightly than the actor's prior estimate
 does.  Since agents commit to specific capability claims (not vague
 ranges), committed baselines are generically more informative than
 actor-estimated baselines, especially during the initial-period
-noise that Paper~1's trust EWMA is most vulnerable to.
+noise that the trust EWMA~\citep{lasser2026gfm} is most vulnerable to.
 
 \subsection{Trust Dynamics with Verified Claims}
 \label{sec:trust_dynamics}
 
-Paper~1's trust EWMA $T_j$ updates from prediction
-residuals~\citep{lasser2026gfm}.  Committed and verified claims anchor
+The trust EWMA $T_j$ of~\citet{lasser2026gfm} updates from prediction
+residuals.  Committed and verified claims anchor
 the prediction baseline and affect trust dynamics in three ways.
 
 \paragraph{Reduced initial-period noise.}
@@ -140,7 +140,7 @@ commitment can move $T_j$ more than many observations of mildly
 inconsistent behavior.
 
 \paragraph{Exogenous risk residuals.}
-Paper~4's risk trust $\Trisk_j$ is computed from the residual between
+The risk trust $\Trisk_j$ of~\citet{lasser2026scm} is computed from the residual between
 claimed and realized risk.  Currently, both the claim and the
 realization are endogenous to the actor's model.  Committed risk claims
 (\S\ref{sec:risk_claims}), verified by cross-substrate witnesses,
@@ -242,10 +242,10 @@ give the anti-monopolar property a second structural justification beyond
 Paper~3's $\volL$ argument~\citep{lasser2026horizon}:
 
 \begin{itemize}
-    \item \textbf{Paper~3:} A monopolar population is anti-maximizing
+    \item \textbf{\citet{lasser2026horizon}:} A monopolar population is anti-maximizing
     ($\volL$ decreases because cross-substrate cooperative capacity is
     destroyed).
-    \item \textbf{Paper~5:} A monopolar population is
+    \item \textbf{This paper:} A monopolar population is
     \emph{unverifiable} (no substrate-exclusive witnesses exist, so all
     capability claims, risk assessments, and behavioral consistency
     checks are endogenous).
@@ -254,15 +254,16 @@ Paper~3's $\volL$ argument~\citep{lasser2026horizon}:
 A population that becomes monopolar loses both the safety guarantee
 \emph{and the ability to detect that it has lost it}.  This makes
 monopolar convergence doubly dangerous: the loss of cross-substrate
-cooperative capacity (Paper~3) is compounded by the loss of the
+cooperative capacity~\citep{lasser2026horizon} is compounded by the loss of the
 verification infrastructure that would detect the convergence.  The
 compound failure is silent---from within a monopolar population, all
 verification reports ``everything is fine,'' because the evaluators
 share the substrate that the evaluated agents can influence.
 
 This result strengthens the case for substrate diversity as a
-structural safety property.  Paper~3 argued that diversity is
-instrumentally valuable (it maximizes $\volL$); Paper~5 argues that
+structural safety property.  \citet{lasser2026horizon} argued that
+diversity is instrumentally valuable (it maximizes $\volL$); we argue
+that
 diversity is epistemically necessary (it is the precondition for knowing
 whether the safety guarantee holds).  A safety guarantee that cannot be
 verified is not a guarantee---it is a hope.

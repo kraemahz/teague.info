@@ -31,16 +31,17 @@ separating the infrequent, human-speed governance decision from the
 frequent, machine-speed per-claim verification.
 
 Within the GFM framework, the construction closes three open issues.
-First, it provides the observation-channel integrity that Paper~4's
-multi-channel attribution assumes
+First, it provides the observation-channel integrity that
+multi-channel attribution~\citep{lasser2026scm} assumes
 (Proposition~\ref{prop:channel_independence}).  Second, it upgrades
 SPRT-based scorpion detection from actor-estimated baselines to committed
 baselines with at least equal detection power
-(Proposition~\ref{prop:committed_detection}).  Third, the anti-monopolar
-verification theorem (Theorem~\ref{thm:anti_monopolar}) establishes
-that a monopolar population loses not only the $\volL$ safety guarantee
-(Paper~3) but the ability to verify whether that guarantee holds---a
-compound failure that is both dangerous and silent.
+(Proposition~\ref{prop:committed_detection}).  Third, the verification
+impossibility theorem (Theorem~\ref{thm:anti_monopolar}) establishes
+that a monopolar population loses not only the $\volL$ safety
+guarantee~\citep{lasser2026horizon} but the ability to verify whether
+that guarantee holds, a compound failure that is both dangerous and
+silent.
 
 The construction is not GFM-specific.  Any alignment framework whose
 evaluation step is vulnerable to the write-access asymmetry---which, as

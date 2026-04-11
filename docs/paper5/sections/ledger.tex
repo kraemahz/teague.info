@@ -143,18 +143,17 @@ arbitrary state transition; and (c)~the cross-substrate requirement is a
 structural constraint (ensured by the substrate partition) rather than a
 probabilistic one (ensured by random committee selection).
 
-\subsection{Relation to the GFM Harness Ledger}
+\subsection{Relation to Application-Layer Ledgers}
 \label{sec:harness_relation}
 
-The GFM harness maintains a capability ledger that tracks agents,
-individual capabilities, trust states, and cooperative capabilities.
-Paper~5's construction provides the cryptographic infrastructure that
-makes this ledger tamper-evident, cross-substrate verifiable, and
-governance-auditable.  The relationship is layered: the harness ledger
-is the \emph{application layer} (what is tracked), and the
-verification ledger of this section is the \emph{integrity layer}
-(how tracking is made trustworthy).  A harness ledger entry claiming
-``agent $a_j$ has capability $c_k$ with trust $T_j$'' is grounded when
-the verification ledger contains a corresponding entry showing that
-$c_k$ was committed, exercised by a substrate-exclusive witness, and
-confirmed.
+Any alignment framework that maintains an internal record of agent
+properties (capabilities, trust scores, behavioral histories) can
+layer the verification ledger beneath it.  The application-layer
+ledger records \emph{what} is tracked; the verification ledger of
+this section provides the \emph{integrity layer} that makes tracking
+trustworthy.  An application-layer entry claiming ``agent $a_j$ has
+property $P$ with confidence $c$'' is grounded when the verification
+ledger contains a corresponding entry showing that $P$ was committed,
+exercised by a substrate-exclusive witness, and confirmed.
+Part~II (\S\ref{sec:integration}) instantiates this layering for
+the GFM framework's capability and trust ledger.
