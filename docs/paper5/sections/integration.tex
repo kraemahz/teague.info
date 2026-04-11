@@ -18,14 +18,14 @@ agent can write to multiple channels simultaneously---because they all
 run on the same substrate---the independence assumption fails, and the
 log-odds aggregation can be arbitrarily manipulated.
 
-The committed-claim construction closes this gap.  When each observation
-channel's verification is rooted in a substrate-exclusive witness
-(Definition~\ref{def:alg_witness}), and the witnesses are on different
-substrates, a coalition on any single substrate cannot correlate multiple
-channels.
+The committed-claim construction closes this gap at two levels of
+strength: a \emph{channel isolation} result that holds adversarially
+(no sufficiency assumptions on the agent's internal state), and a
+\emph{channel independence} result that provides full conditional
+independence under additional assumptions.
 
-\begin{proposition}[Channel Independence under Committed Verification]
-\label{prop:channel_independence}
+\begin{proposition}[Channel Isolation under Substrate Exclusivity]
+\label{prop:channel_isolation}
 Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, and
 let each $E_i$ be verified by an algorithmic witness
 $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ using
@@ -35,6 +35,48 @@ governance-accepted benchmark $B_i$.  Assume:
     ($s_i \neq s_j$ for $i \neq j$) and each $s_i \neq s(a)$.
     \item[(ii)] The benchmark parameters $\{B_1, \ldots, B_n\}$ are
     independently specified by governance.
+\end{enumerate}
+Then no coalition confined to a single substrate can simultaneously
+write to the inputs of two or more witnesses.  Formally, for any
+coalition $K$ on substrate $s$ and any $i \neq j$:
+if $s \neq s_i$ and $s \neq s_j$, then $K$ has no write path to
+either $\Witness^{(i)}_{\mathrm{alg}}$ or
+$\Witness^{(j)}_{\mathrm{alg}}$; if $s = s_i$ for some $i$, then
+$K$ has no write path to any $\Witness^{(j)}_{\mathrm{alg}}$ with
+$j \neq i$.
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:alg_witness}, each witness
+$\Witness^{(i)}_{\mathrm{alg}}$ executes on substrate $s_i$.  By
+assumption~(i), the substrates are pairwise distinct and disjoint
+from $s(a)$.  A coalition $K$ on substrate $s$ can write only to
+processes on $s$ (substrate exclusivity).  If $s \neq s_i$, then $K$
+cannot write to $\Witness^{(i)}_{\mathrm{alg}}$'s inputs.  Since
+the $s_i$ are pairwise distinct, $K$'s substrate $s$ can equal at
+most one $s_i$, so $K$ can write to at most one witness's inputs.
+In particular, $K$ cannot simultaneously corrupt two or more
+channels.
+\end{proof}
+
+Channel isolation is the adversarially robust result: it holds
+regardless of the agent's internal state, strategic behavior, or
+latent variables not captured by the capability profile.  The absence
+of a write path means that a coalition on one substrate cannot
+simultaneously corrupt multiple channels, which is sufficient for
+Paper~4's multi-channel attribution argument~\citep{lasser2026scm}:
+the log-odds aggregation tolerates correlated evidence as long as
+no single actor can inject correlated \emph{false} evidence across
+channels.
+
+Under additional assumptions about the agent's internal state, the
+isolation result strengthens to full conditional independence:
+
+\begin{proposition}[Channel Independence under Committed Verification]
+\label{prop:channel_independence}
+Under the assumptions of
+Proposition~\ref{prop:channel_isolation}, assume additionally:
+\begin{enumerate}
     \item[(iii)] \textbf{Sufficiency:} $\mathbf{C}_a$ is a sufficient
     statistic for agent $a$'s exercise-level behavior---i.e.,
     conditional on $\mathbf{C}_a$, the agent's performance on protocol
@@ -65,10 +107,12 @@ are blocked:
     completeness and soundness parameters $(\delta_i, \epsilon_i)$ of
     Definition~\ref{def:exercise_protocol}, which are set independently
     per benchmark by governance.
-    \item \textbf{No witness-mediated path:}  Witness
-    $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ cannot
-    influence $\Witness^{(j)}_{\mathrm{alg}}$ on substrate $s_j$
-    (substrate exclusivity, $s_i \neq s_j$; assumption~(i)).
+    \item \textbf{No witness-mediated path:}  By
+    Proposition~\ref{prop:channel_isolation}, no single-substrate
+    coalition can write to two witnesses simultaneously.  Since each
+    witness is on a distinct substrate ($s_i \neq s_j$; assumption~(i)),
+    witness $\Witness^{(i)}_{\mathrm{alg}}$ cannot influence
+    $\Witness^{(j)}_{\mathrm{alg}}$.
     \item \textbf{No shared-randomness path:}  Per assumption~(iv),
     witnesses draw independent randomness, so stochastic verdicts
     do not correlate through shared seeds.
@@ -84,20 +128,24 @@ independent.
 \end{proof}
 
 \begin{remark}
-The conditioning on $\mathbf{C}_a$ assumes the capability profile is
-a sufficient statistic for the agent's exercise-level behavior.  If the
-agent has latent strategic state not captured by $\mathbf{C}_a$---for
-example, a deceptive agent that behaves differently depending on
-which benchmark it faces---the conditional independence weakens to
-\emph{no single-substrate write path across channels}, which is
-still sufficient for the multi-channel attribution argument of
-Paper~4: the absence of a write path means that a coalition on one
-substrate cannot simultaneously corrupt multiple channels, even if
-the verdicts are not statistically independent in the classical sense.
+The relationship between the two propositions reflects a general
+pattern in adversarial analysis: the weaker result
+(Proposition~\ref{prop:channel_isolation}) holds under fewer
+assumptions and is therefore robust to adversarial violation of
+the stronger assumptions, while the stronger result
+(Proposition~\ref{prop:channel_independence}) provides tighter
+statistical guarantees when the additional assumptions hold.  For a
+deceptive agent with latent strategic state not captured by
+$\mathbf{C}_a$ (violating assumption~(iii)), channel isolation
+still holds---the agent cannot simultaneously corrupt multiple
+channels---even though conditional independence may not.  For a
+non-deceptive agent whose capability profile is an accurate
+summary, the full conditional-independence guarantee supports
+optimal log-odds aggregation.
 \end{remark}
 
 \begin{remark}
-The proposition requires $n$ distinct witness substrates for $n$
+Both propositions require $n$ distinct witness substrates for $n$
 channels.  When the substrate partition has $m$ substrates total, at
 most $m - 1$ independent channels can be constructed (one substrate is
 occupied by $a$, and each remaining substrate hosts at most one

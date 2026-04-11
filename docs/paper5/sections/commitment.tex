@@ -168,6 +168,24 @@ on the exercise protocol or its outcome.  The agent is free to
 choose any $r$ (this freedom is what makes hiding work), but no
 choice of $r$ allows opening to a different $C$.
 
+\paragraph{Strategic commitment is not gaming.}
+Binding prevents \emph{retroactive} claim modification: an agent
+cannot observe the exercise outcome and then open its commitment to
+a different claim that better fits the result.  Binding does
+\emph{not} prevent strategic choice of \emph{what to commit to} in
+the first place.  An agent that commits only to capabilities it is
+confident of demonstrating, or that avoids committing to borderline
+claims, is exercising accurate self-assessment---exactly the
+behavior the protocol is designed to incentivize.  The protocol's
+security property is that the commitment is irrevocable once
+published, not that the agent must commit to every claim it could
+make.  An agent that commits conservatively and passes consistently
+builds a verified track record that is trustworthy precisely because
+the agent did not over-commit.  The failure mode the protocol
+prevents is not strategic caution but \emph{post-hoc revision}:
+the ability to present a different claim after learning which claim
+would have passed.
+
 \paragraph{Why hiding matters.}
 Binding is the load-bearing security property; hiding is
 situationally important.  Hiding serves three purposes:
@@ -322,7 +340,13 @@ bound is therefore an idealized case; in practice, the alternative
 should be chosen as a worst-case or least-favorable distribution
 to ensure detection across a range of behavioral deviations
 (cf.~the least-favorable SPRT construction
-of~\citet{lasser2026scm}).
+of~\citet{lasser2026scm}).  In practice, the monitor's detection
+power is bottlenecked by this least-favorable-distribution choice:
+the quality of the alternative $p(\cdot \mid \neg\,\mathbf{C}_a)$
+determines whether the monitor catches subtle behavioral
+deviations or only gross inconsistencies, making the construction
+of domain-appropriate alternative distributions the point where
+verification infrastructure meets domain-specific knowledge.
 \end{remark}
 
 The behavioral consistency monitor provides the ``always on'' layer

@@ -5,14 +5,19 @@ This appendix collects proofs that are deferred from the main text
 for readability, and provides extended versions of proofs given in
 sketch form.
 
-\subsection{Proof of Proposition~\ref{prop:channel_independence}
-(Channel Independence)}
+\subsection{Proofs of Propositions~\ref{prop:channel_isolation}
+and~\ref{prop:channel_independence}
+(Channel Isolation and Independence)}
 \label{app:channel_independence}
 
-The main-text proof (\S\ref{sec:channel_independence}) is now the
-primary version and includes the full causal-path analysis with the
-strengthened conditioning on $(\mathbf{C}_a, B_1, \ldots, B_n)$.
-We provide supplementary discussion of the conditioning requirements.
+The main-text proofs (\S\ref{sec:channel_independence}) are now the
+primary versions.  Proposition~\ref{prop:channel_isolation} (Channel
+Isolation) provides the adversarially robust result requiring only
+substrate exclusivity; Proposition~\ref{prop:channel_independence}
+(Channel Independence) strengthens to full conditional independence
+under additional sufficiency and independent-randomness assumptions.
+We provide supplementary discussion of the conditioning requirements
+for the stronger result.
 
 \paragraph{Why condition on benchmark parameters.}
 The governance process that accepts benchmarks $B_1, \ldots, B_n$ is
@@ -41,10 +46,16 @@ agent's performance on each benchmark is characterized by
 $(\delta_i, \epsilon_i)$, which are set per-benchmark by governance.
 If the agent has latent strategic state not captured by $\mathbf{C}_a$
 (e.g., a deceptive agent that adapts its behavior per-benchmark),
-the conditional-independence guarantee weakens.  The remark in the
-main text addresses this case: even without statistical independence,
-the absence of a single-substrate write path across channels is
-sufficient for the multi-channel attribution argument.
+the conditional-independence guarantee of
+Proposition~\ref{prop:channel_independence} weakens---but the
+channel-isolation guarantee of
+Proposition~\ref{prop:channel_isolation} still holds, because the
+isolation result depends only on substrate exclusivity, not on the
+agent's internal state.  This is the structural reason for separating
+the two results: isolation is the adversarially load-bearing property,
+and independence is the additional statistical guarantee available
+when the agent's capability profile is an accurate summary of its
+exercise-level behavior.
 
 \subsection{Proof of Proposition~\ref{prop:coalition_resistance}
 (Coalition Resistance)}

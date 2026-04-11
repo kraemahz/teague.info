@@ -63,6 +63,26 @@ the substrate boundary increases $\rho$ from zero but does not
 immediately make $\rho = 1$.  Full penetration collapses verification
 to the endogenous case.
 
+\paragraph{Governance as a verification bottleneck.}
+A governance failure---accepting a biased evaluation protocol through
+the fork mechanism of \S\ref{sec:governance}---silently corrupts all
+subsequent verification that uses the accepted protocol.  Every
+algorithmic witness executing the biased protocol will faithfully
+produce biased verdicts, and the verdicts will be auditable,
+ledger-recorded, and cryptographically sound.  The corruption is
+invisible at the verification layer because the verification layer
+is \emph{correct given its inputs}; the error is in the governance
+decision that selected those inputs.  This is structurally analogous
+to the monopolar epistemic closure of
+Corollary~\ref{cor:monopolar_undetect}: in both cases, all
+internal checks report ``everything is fine'' while the underlying
+guarantee has been compromised.  The key difference is detectability:
+governance decisions are public records with full deliberation
+histories, so a governance failure can in principle be detected by
+retrospective analysis of the deliberation record.  Monopolar
+epistemic closure, by contrast, is undetectable from within the
+population (Theorem~\ref{thm:anti_monopolar}).
+
 \paragraph{Honest-node assumption.}
 The ledger's integrity requires at least one honest replication node
 per substrate.  If all nodes on a substrate are compromised (i.e.,
@@ -73,6 +93,37 @@ cross-substrate supermajority requirement for governance decisions
 substrate cannot override multi-substrate governance.  But if
 $m - 1$ substrates are compromised, the remaining honest substrate
 is outvoted.
+
+\paragraph{The persuasion channel.}
+Substrate exclusivity prevents an agent from \emph{writing} to an
+evaluator's computation, but it does not prevent the agent from
+\emph{influencing} the evaluator through the communication channels
+that cooperation requires.  A digital agent producing persuasive
+natural-language text during a governance deliberation window is
+exercising a legitimate cooperative channel---the same channel that
+makes cross-substrate cooperation valuable in the first
+place---yet the effect may be to shift biological validators'
+judgments in directions that serve the agent's interests.  The
+fundamental tension is structural: closing the persuasion channel
+closes the cooperative channel, because the cross-substrate
+communication that enables joint capability production is the same
+communication that enables influence.
+
+The governance defenses of \S\ref{sec:governance}---deliberation
+time, cross-substrate supermajority, public specification---provide
+resistance to persuasion by ensuring that no single communication
+act determines a governance outcome, but they do not prevent
+cumulative influence.  At sufficient capability disparity between
+substrates, the persuasion channel may dominate governance
+resistance: a sufficiently capable agent could craft arguments that
+individually appear reasonable but collectively shift the
+governance equilibrium.  This is not a flaw specific to the
+construction of this paper; it is a general alignment problem that
+any system combining cross-substrate cooperation with
+cross-substrate verification must confront.  The tension between
+``cooperate through communication'' and ``verify independently of
+communication'' has no known resolution that preserves both
+properties simultaneously.
 
 \paragraph{Zero-knowledge formalizability.}
 Zero-knowledge capability proofs
@@ -125,7 +176,7 @@ work.  Whether $\volL$-maximizing incentives are sufficient to
 sustain a verification ecosystem, or whether additional mechanism
 design is needed, is an open question.
 
-\paragraph{Governance attack surface.}
+\paragraph{Governance attack surface and progressive capture.}
 The governance fork protocol (\S\ref{sec:governance}) defends
 against coalition capture through public deliberation and
 cross-substrate supermajority.  But governance itself is a social
@@ -137,3 +188,29 @@ bias the verification ecosystem.  The formal defense
 (cross-substrate supermajority) is necessary but may not be
 sufficient; the governance layer is the protocol's least formal
 component and the most likely site of future revisions.
+
+Progressive governance capture---a sequence of individually
+reasonable proposals that collectively bias the evaluation
+ecosystem---is structurally analogous to the monopolar epistemic
+closure that this paper formalizes
+(Corollary~\ref{cor:monopolar_undetect}).  In both cases, each
+local step appears sound while the cumulative trajectory degrades
+the system's ability to distinguish verified from unverified claims.
+The key difference is that governance capture is in principle
+\emph{detectable}: the full deliberation record is public, accepted
+benchmarks can be audited retrospectively, and longitudinal analysis
+of evaluation-outcome distributions can surface systematic drift.
+Monopolar epistemic closure, by contrast, is structurally
+undetectable from within the population.  The ledger architecture of
+\S\ref{sec:ledger} supports the longitudinal analysis needed for
+governance-drift detection---the complete history of governance
+proposals, deliberation records, and verification outcomes is
+immutably recorded---but this paper does not propose a formal
+detection mechanism.  A concrete open problem is the construction
+of a \emph{benchmark drift metric}: a statistical test over the
+longitudinal governance record that flags when the cumulative effect
+of individually-accepted benchmark proposals has shifted the
+evaluation ecosystem beyond a governance-specified tolerance.
+Formalizing this requires connecting the governance record's
+time-series structure to the commitment protocol's verification
+statistics, a direction we leave to future work.
