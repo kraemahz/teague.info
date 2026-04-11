@@ -64,8 +64,11 @@ where:
     \item $t$ is the timestamp,
     \item $\sigma_a$ is the agent's signature over $\lambda$ (from the
     Commit phase), and
-    \item $\sigma_w$ is the witness's signature over $(v, \xi, t)$
-    (from the Verify phase).
+    \item $\sigma_w$ is the witness's signature over
+    $(a_j, \lambda, B, v, \xi, t)$
+    (from the Verify phase), binding the verdict to the specific
+    agent, commitment, and benchmark to prevent replay or rebinding
+    attacks.
 \end{itemize}
 The entry is completed when $a_j$ opens the commitment by publishing
 $(C, r)$, at which point any participant can verify $\Commit(C, r) =
@@ -90,8 +93,8 @@ A \textbf{governance entry} in $\Ledger$ is a tuple
 \]
 where:
 \begin{itemize}
-    \item $\Pi$ is the evaluation protocol identifier,
-    \item $\sigma_\Pi$ is the protocol specification (what it tests,
+    \item $B$ is the evaluation protocol (benchmark) identifier,
+    \item $\sigma_B$ is the protocol specification (what it tests,
     scoring criteria, passing threshold),
     \item $\tau$ is the target capability type,
     \item $p$ is the proposer identifier,
@@ -103,7 +106,7 @@ where:
     \item $\mathrm{outcome} \in \{\texttt{accepted},
     \texttt{rejected}\}$, and
     \item $t_{\mathrm{eff}}$ is the effective date (for accepted
-    accepted protocols; null for rejected ones).
+    protocols; null for rejected ones).
 \end{itemize}
 \end{definition}
 
@@ -112,7 +115,7 @@ ledger with their full deliberation records.  This provides an audit
 trail for evaluation-protocol evolution and prevents re-proposal of
 previously-studied-and-rejected protocols without presenting new
 evidence.  The deliberation record is itself a public good: future
-future protocol designers can study past proposals' failure modes.
+protocol designers can study past proposals' failure modes.
 
 \subsection{Consensus Among Substrate-Exclusive Nodes}
 \label{sec:ledger_consensus}
@@ -123,12 +126,25 @@ reflecting their different trust models and frequency.
 \paragraph{Verification entries.}
 Appending a verification entry requires agreement between the committing
 agent $a_j$ and the verifying witness $w$---a two-party cross-substrate
-protocol.  No global consensus is needed.  The entry is self-verifying:
-any participant can check the signatures and, after the commitment is
-opened, verify that $\Commit(C, r) = \lambda$.  Conflicts (e.g., an
+protocol.  No global consensus is needed for \emph{individual entry
+validity}: the entry is self-verifying, since any participant can check
+the signatures (including the witness's signature over the full context
+$(a_j, \lambda, B, v, \xi, t)$) and, after the commitment is opened,
+verify that $\Commit(C, r) = \lambda$.  Conflicts (e.g., an
 agent claiming the witness misreported the verdict) are resolvable by
 replaying the exercise protocol against the committed data, which is
 deterministic by Definition~\ref{def:alg_witness}.
+
+\emph{Chain consistency} across replicated nodes is maintained by the
+Merkle hash tree structure: each node can verify that its local chain
+is internally consistent (no entries have been modified or reordered)
+and can compare root hashes with nodes on other substrates to detect
+equivocation (a node presenting different chains to different
+observers).  Because the chain is append-only and entries are
+self-verifying, equivocation is detectable but not preventable without
+global consensus---a deliberately lightweight design, since the
+verification entries' integrity does not depend on ordering (each
+entry is independently checkable), only on non-suppression.
 
 \paragraph{Governance entries.}
 Appending a governance entry (protocol acceptance) requires a

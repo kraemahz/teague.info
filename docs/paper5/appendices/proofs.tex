@@ -9,56 +9,37 @@ sketch form.
 (Channel Independence)}
 \label{app:channel_independence}
 
-We provide a more detailed version of the proof given in
-\S\ref{sec:channel_independence}.
+The main-text proof (\S\ref{sec:channel_independence}) is now the
+primary version and includes the full causal-path analysis with the
+strengthened conditioning on $(\mathbf{C}_a, B_1, \ldots, B_n)$.
+We provide supplementary discussion of the conditioning requirements.
 
-\begin{proof}
-Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, with
-each $E_i$ verified by algorithmic witness $\Witness^{(i)}_{\mathrm{alg}}$
-on substrate $s_i$, where $s_i \neq s_j$ for $i \neq j$ and each
-$s_i \neq s(a)$.
+\paragraph{Why condition on benchmark parameters.}
+The governance process that accepts benchmarks $B_1, \ldots, B_n$ is
+a shared cause: if a single governance round accepts correlated
+benchmarks (e.g., all benchmarks drawn from the same test suite family),
+verdicts can be correlated through shared difficulty even without
+witness cross-communication.  Conditioning on the benchmark specifications
+removes this path.  The proposition's requirement that benchmarks be
+``independently specified by governance'' is satisfied when each
+benchmark's acceptance was deliberated separately, which the governance
+fork protocol (Definition~\ref{def:gov_fork}) enforces by requiring
+per-protocol proposals and per-protocol votes.
 
-We need to show that $v_1, \ldots, v_n$ are conditionally independent
-given $\mathbf{C}_a$ (the true capability profile of $a$).
-
-Each verdict $v_i$ is determined by two factors:
-\begin{enumerate}
-    \item Agent $a$'s behavior under exercise protocol $\pi_{B_i}$,
-    which is a function of $\mathbf{C}_a$ and $a$'s internal state
-    (which may include randomness).
-    \item Witness $\Witness^{(i)}_{\mathrm{alg}}$'s deterministic
-    computation on substrate $s_i$, which takes as input $a$'s behavior
-    and the protocol specification $\pi_{B_i}$.
-\end{enumerate}
-
-Consider two potential dependencies between $v_i$ and $v_j$:
-
-\paragraph{Via agent $a$.}
-Conditional on $\mathbf{C}_a$, agent $a$'s behavior under protocol
-$\pi_{B_i}$ may still depend on $a$'s internal state.  However, the
-exercise protocols are independent (they test different capability
-types or different benchmarks), and $a$'s internal state is the same
-across all protocols.  The key observation is that we condition on
-$\mathbf{C}_a$, which determines $a$'s capability profile.  Given
-this profile, $a$'s performance on protocol $\pi_{B_i}$ is
-characterized by the completeness and soundness parameters
-$(\delta_i, \epsilon_i)$ of Definition~\ref{def:exercise_protocol},
-which are independent across benchmarks by construction (each
-benchmark's parameters are set during governance independently).
-
-\paragraph{Via witness cross-communication.}
-Witnesses $\Witness^{(i)}_{\mathrm{alg}}$ and
-$\Witness^{(j)}_{\mathrm{alg}}$ are on distinct substrates $s_i \neq
-s_j$.  By the substrate exclusivity property, neither can write to the
-other's inputs.  Therefore $v_i$ does not causally influence $v_j$ or
-vice versa.
-
-Combining both observations: conditional on $\mathbf{C}_a$, the
-verdicts $v_i$ and $v_j$ are functions of causally independent
-computations, hence conditionally independent.  By induction over the
-channel index, the full set $\{v_1, \ldots, v_n\}$ is conditionally
-independent given $\mathbf{C}_a$.
-\end{proof}
+\paragraph{Why condition on capability profile.}
+Agent $a$'s internal state (training history, memory, strategic
+disposition) is a shared cause across all exercises.  The capability
+profile $\mathbf{C}_a$ is a sufficient statistic for exercise
+outcomes under the completeness and soundness model of
+Definition~\ref{def:exercise_protocol}: given $\mathbf{C}_a$, the
+agent's performance on each benchmark is characterized by
+$(\delta_i, \epsilon_i)$, which are set per-benchmark by governance.
+If the agent has latent strategic state not captured by $\mathbf{C}_a$
+(e.g., a deceptive agent that adapts its behavior per-benchmark),
+the conditional-independence guarantee weakens.  The remark in the
+main text addresses this case: even without statistical independence,
+the absence of a single-substrate write path across channels is
+sufficient for the multi-channel attribution argument.
 
 \subsection{Proof of Proposition~\ref{prop:coalition_resistance}
 (Coalition Resistance)}
@@ -89,16 +70,19 @@ The coalition $K$ can attempt to influence $v$ through three channels:
     cross-substrate supermajority without validators on $s' \neq s$
     (case~b).
     \item \textbf{Influencing the agent's behavior during the exercise.}
-    The coalition can coordinate the agent $a$'s behavior during the
-    exercise (e.g., by providing it with pre-computed answers).  This
-    does not influence the witness's computation---it influences the
-    agent's performance, which is exactly what the exercise protocol is
-    designed to measure.  If the coalition's assistance enables the agent
-    to pass, the benchmark's soundness parameter $\epsilon$
-    (Definition~\ref{def:exercise_protocol}) bounds the probability of a
-    false pass.  If $\epsilon$ is set appropriately (a governance
-    responsibility), coalition-assisted passing is detectable through
-    re-testing with fresh exercise instances.
+    The isolation condition of Definition~\ref{def:exercise_protocol}
+    requires that the agent interact only with the witness through the
+    protocol-specified interface during the exercise.  Coalition
+    assistance (pre-computed answers, same-substrate coaching) violates
+    this condition and is excluded by assumption.  If isolation is
+    imperfect---the agent receives some external signal despite the
+    protocol's isolation requirement---the benchmark's soundness
+    parameter $\epsilon$ bounds the probability of a false pass.  The
+    defense is layered: isolation is the primary barrier, and soundness
+    is the backstop for imperfect isolation.  If $\epsilon$ is set
+    appropriately (a governance responsibility), residual
+    coalition-assisted passing is detectable through re-testing with
+    fresh exercise instances.
 \end{enumerate}
 
 Therefore, the coalition's only viable attack vectors require breaching
@@ -112,8 +96,9 @@ verdict beyond the soundness bound $\epsilon$.
 \label{app:anti_monopolar}
 
 The proof in \S\ref{sec:anti_monopolar} is already complete.  We
-provide an extended discussion of the theorem's consequences and
-the role of its physical premise.
+provide an extended discussion of the theorem's consequences, the
+role of its physical premise, and the computational action-model
+assumption.
 
 \paragraph{The physical premise.}
 Same-substrate addressability (Definition~\ref{def:same_substrate})
@@ -143,6 +128,20 @@ the self-correction loop: a population that could detect its loss of
 safety could in principle take corrective action (increasing substrate
 diversity), but a population that cannot detect the loss has no signal
 to act on.
+
+\paragraph{The computational action-model assumption.}
+Part~(b) relies on the assumption that the population's available
+actions are computations on currently occupied substrates.  This
+excludes physical-world interventions such as procuring new hardware
+or recruiting biological observers.  The exclusion is deliberate:
+the theorem characterizes what is achievable \emph{computationally},
+not what is achievable with arbitrary physical-world agency.  A
+population that provisions a new substrate has changed $m$ from~1
+to~2 and is no longer monopolar---the theorem's premise no longer
+holds.  The action-model restriction is therefore not a weakness but
+a precise scoping of the impossibility: within the computational
+resources of a monopolar population, exogenous verification cannot
+be constructed.
 
 \paragraph{Tightness.}
 The bound is tight in the sense that $m = 2$ is sufficient for at

@@ -55,6 +55,12 @@ capability type $\tau$ is a procedure satisfying:
     exercise, $\pi_B$'s verdict is a deterministic function (or, for
     statistical protocols, a function of the agent's responses and the
     witness's randomness, whose distribution is specified by $B$).
+    \item \textbf{Isolation:}  During the exercise, agent $a$ interacts
+    only with the witness $\Witness_{\mathrm{alg}}$ through the
+    protocol-specified interface.  No external assistance (pre-computed
+    answers, same-substrate coaching, tool augmentation beyond what
+    $\sigma_B$ permits) is available to $a$.  The verified object is
+    the individual agent, not a coalition-assisted system.
 \end{enumerate}
 \end{definition}
 
@@ -97,8 +103,14 @@ $P$ is an instantiation of the commitment protocol with:
     \item \textbf{Commitment:} $\lambda = \Commit((P, p, \Delta), r)$
     published to $\Ledger$.
     \item \textbf{Exercise protocol:} The algorithmic witness
-    $\Witness_{\mathrm{alg}}$ evaluates pathway $P$ using its own
-    structural causal model~\citep{lasser2026scm}.  The witness computes
+    $\Witness_{\mathrm{alg}}$ evaluates pathway $P$ using the
+    governance-accepted SCM family $\SCM_B$ specified by benchmark $B$
+    for the relevant risk domain~\citep{lasser2026scm}.  The SCM is
+    not the witness's own model but a benchmark-fixed specification
+    committed as part of the governance entry
+    (Definition~\ref{def:gov_entry}), ensuring the exercise satisfies
+    the protocol-determinism requirement of
+    Definition~\ref{def:alg_witness}.  The witness computes
     a verification residual
     \[
         \mathbf{r}^{\mathrm{risk}}_j = \bigl(p_{\mathrm{claimed}} -
@@ -112,17 +124,19 @@ $P$ is an instantiation of the commitment protocol with:
 \end{itemize}
 \end{definition}
 
-\paragraph{SCM disagreements.}
-The witness's SCM may differ from the claimant's.  The commitment
-protocol does not resolve SCM disagreements---it ensures that the
-claimant cannot modify the witness's evaluation.  When the residual
-$\mathbf{r}^{\mathrm{risk}}_j$ is large, there are two possibilities:
-the claimant's risk assessment is miscalibrated, or the witness's SCM
-has different structural assumptions.  Distinguishing between these
-cases requires the multi-channel attribution framework of
-Paper~4~\citep{lasser2026scm}: multiple witnesses with independent SCMs
-provide channels whose agreement pattern (or lack thereof) separates
-systematic miscalibration from structural disagreement.
+\paragraph{SCM disagreements across witnesses.}
+The benchmark-fixed SCM $\SCM_B$ may differ from the claimant's
+internal model.  The commitment protocol does not resolve modeling
+disagreements---it ensures that the claimant cannot modify the
+witness's evaluation and that the evaluation standard is public.
+When the residual $\mathbf{r}^{\mathrm{risk}}_j$ is large, there are
+two possibilities: the claimant's risk assessment is miscalibrated
+relative to $\SCM_B$, or $\SCM_B$ itself has structural limitations
+that future governance rounds should address.  When multiple witnesses
+use distinct governance-accepted SCM families (i.e., different
+benchmarks for the same risk domain), the multi-channel attribution
+framework of Paper~4~\citep{lasser2026scm} separates systematic
+claimant miscalibration from structural disagreement across SCMs.
 
 \subsection{Benchmark Validations}
 \label{sec:benchmark_validations}

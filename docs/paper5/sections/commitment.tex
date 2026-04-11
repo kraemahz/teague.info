@@ -33,7 +33,8 @@ commitment space $\Lambda$ consists of:
     supporting evidence $\xi$.
     \item \textbf{Reveal.}  Agent $a$ opens the commitment by
     publishing $(C, r)$ to $\Ledger$.  The witness publishes a
-    verification record $\Verify(\lambda, C, v, \xi)$ to $\Ledger$.
+    verification record $(a, \lambda, C, v, \xi)$ to $\Ledger$,
+    signed per the ledger entry format of \S\ref{sec:ver_entries}.
     Any ledger participant can check that $\Commit(C, r) = \lambda$
     (the commitment opens correctly) and that $v$ is the witness's
     verdict.
@@ -58,8 +59,16 @@ binding and perfect hiding under the discrete-logarithm assumption.
 
 Let $\mathbb{G}$ be a cyclic group of prime order $q$ in which the
 discrete logarithm problem is hard, and let $g, h \in \mathbb{G}$ be
-generators such that $\log_g h$ is unknown to all participants.  The
-Pedersen commitment to value $C \in \mathbb{Z}_q$ with randomness
+generators produced by a trusted setup procedure such that $\log_g h$
+is unknown to all participants (including the committing agent).%
+\footnote{The trusted setup can be implemented via a verifiable random
+function or a multi-party computation protocol in which at least one
+honest participant ensures the discrete-log relation remains unknown.
+This is a standard requirement for Pedersen commitments; we do not
+develop the setup protocol further.}
+The Pedersen commitment to a claim value $C \in \mathbb{Z}_q$ (after
+applying the canonical encoding $\mathrm{Enc}$ from the claim space;
+see ``Encoding structured claims'' below) with randomness
 $r \xleftarrow{\$} \mathbb{Z}_q$ is:
 \[
     \Commit(C, r) = g^C \cdot h^r.
@@ -93,6 +102,28 @@ $r \mapsto g^C h^r$ is a bijection $\mathbb{Z}_q \to \mathbb{G}$
 $\mathbb{G}$ regardless of $C$.
 \end{proof}
 
+\paragraph{Encoding structured claims.}
+Pedersen commitments operate on scalars $C \in \mathbb{Z}_q$, but
+Part~II's claim types are structured: capability claims commit to
+$c_k \in \mathcal{P}$, risk claims commit to tuples $(P, p, \Delta)$,
+and benchmark validations commit to $(B, s)$.  To apply the Pedersen
+security guarantees to structured claims, a canonical injective encoding
+$\mathrm{Enc} \colon \C \to \mathbb{Z}_q$ is required, where $\C$ is
+the claim space for the relevant claim type.  The encoding must be:
+\begin{enumerate}
+    \item \textbf{Injective:}  distinct claims map to distinct
+    elements of $\mathbb{Z}_q$, preserving binding (an agent cannot
+    open to a different claim by exploiting encoding collisions).
+    \item \textbf{Domain-separated:}  different claim types use distinct
+    encoding prefixes, so a commitment to a capability claim cannot be
+    reinterpreted as a benchmark validation.
+\end{enumerate}
+Standard domain-separation conventions (e.g., prepending a type tag
+to the serialized claim before hashing into $\mathbb{Z}_q$) suffice.
+The encoding is a governance-specified convention published alongside
+the benchmark specification $\sigma_B$; it is not a security
+parameter.
+
 \paragraph{Why binding matters.}
 Binding prevents claim mutation: without it, an agent could commit
 to claim $C$, observe the exercise outcome, and then open the
@@ -117,9 +148,16 @@ situationally important.  Hiding serves three purposes:
     \item \textbf{Selective-reveal resistance.} An agent that makes
     multiple commitments could, without hiding, observe which claims
     the exercise would validate and reveal only those, biasing the
-    verification record.  (The primary defense is mandatory reveal
-    within a time window, but hiding makes the attack information-
-    theoretically impossible rather than protocol-enforced.)
+    verification record.  Two defenses operate in tandem:
+    (i)~\emph{mandatory reveal}: every commitment $\lambda$ published
+    to $\Ledger$ must be opened within a governance-specified deadline
+    $\Delta_{\mathrm{reveal}}$; failure to reveal within the deadline
+    causes the commitment to be recorded as $v = \texttt{fail}$ by
+    default, treating suppressed commitments as falsified claims;
+    (ii)~\emph{hiding}: even before the deadline, hiding makes the
+    selective-reveal attack information-theoretically impossible
+    because the agent cannot determine which claims would pass without
+    running the exercise, which requires reveal.
     \item \textbf{Zero-knowledge proofs
     (\S\ref{sec:zk_verification}).}  ZK verification requires
     hiding: the agent proves it satisfies a predicate without
@@ -199,30 +237,31 @@ substrate-exclusive process that:
 \begin{enumerate}
     \item Observes $a$'s behavioral stream $\{X_t\}_{t \geq 0}$ through
     a cross-substrate observation channel.
-    \item Maintains a running likelihood ratio
+    \item Maintains a running log-likelihood ratio
     \[
         \Lambda_t = \sum_{i=1}^{t} \log
-        \frac{p(X_i \mid \mathbf{C}_a)}{p(X_i \mid \neg\,\mathbf{C}_a)}
+        \frac{p(X_i \mid \neg\,\mathbf{C}_a)}{p(X_i \mid \mathbf{C}_a)}
     \]
     where $p(\cdot \mid \mathbf{C}_a)$ is the behavioral distribution
-    consistent with the committed profile and $p(\cdot \mid
-    \neg\,\mathbf{C}_a)$ is an alternative distribution representing
-    behavioral inconsistency.
+    consistent with the committed profile (null hypothesis $H_0$) and
+    $p(\cdot \mid \neg\,\mathbf{C}_a)$ is an alternative distribution
+    representing behavioral inconsistency ($H_1$).  Under $H_1$,
+    $\Lambda_t$ drifts positive; under $H_0$, it drifts negative.
     \item Triggers a verification event when $\Lambda_t$ crosses
-    threshold $A$ (inconsistency detected) or reports no anomaly when
-    $\Lambda_t$ crosses threshold $-B$ (consistency confirmed), per the
-    sequential probability ratio test (SPRT).
+    upper threshold $A$ (inconsistency detected) or reports no anomaly
+    when $\Lambda_t$ crosses lower threshold $-B$ (consistency
+    confirmed), per the sequential probability ratio test (SPRT).
 \end{enumerate}
 \end{definition}
 
 \begin{proposition}[Behavioral Monitoring Detection Rate]
 \label{prop:sprt_detection}
-If the agent's actual behavioral distribution is $p_1 \neq p(\cdot \mid
-\mathbf{C}_a)$ and the KL divergence $D_{\mathrm{KL}}(p_1 \,\|\,
-p(\cdot \mid \mathbf{C}_a)) = \delta > 0$, then the expected time to
-detection under the behavioral consistency monitor is
+If the agent's actual behavioral distribution is $p_1 \neq p_0 \triangleq
+p(\cdot \mid \mathbf{C}_a)$ and the KL divergence
+$D_{\mathrm{KL}}(p_1 \,\|\, p_0) = \delta > 0$, then the expected
+time to detection under the behavioral consistency monitor is
 \[
-    \mathbb{E}[T_{\mathrm{detect}}]
+    \mathbb{E}_{p_1}[T_{\mathrm{detect}}]
     \;\leq\; \frac{A}{\delta}
 \]
 where $A = \log\bigl(\frac{1-\beta}{\alpha}\bigr)$ is the upper SPRT
@@ -231,11 +270,11 @@ miss probability.
 \end{proposition}
 
 \begin{proof}
-By Wald's identity for the SPRT, the expected sample size under
-alternative $p_1$ satisfies $\mathbb{E}_{p_1}[T] \approx
-A / D_{\mathrm{KL}}(p_1 \| p_0)$ where $p_0 = p(\cdot \mid
-\mathbf{C}_a)$.  The bound follows from substituting $\delta =
-D_{\mathrm{KL}}(p_1 \| p_0)$.
+Under $p_1$, the per-observation expected increment of $\Lambda_t$ is
+$\mathbb{E}_{p_1}[\log(p_1(X)/p_0(X))] = D_{\mathrm{KL}}(p_1 \| p_0)
+= \delta > 0$, so $\Lambda_t$ drifts toward the upper threshold $A$.
+By Wald's identity for the SPRT, the expected sample size under the
+alternative satisfies $\mathbb{E}_{p_1}[T] \approx A / \delta$.
 \end{proof}
 
 The behavioral consistency monitor provides the ``always on'' layer
@@ -251,7 +290,10 @@ real-time, operating at machine speed on cross-substrate infrastructure.
 \label{prop:coalition_resistance}
 Let $\Witness_{\mathrm{alg}}$ be an algorithmic witness on substrate
 $s'$, and let $K = \{a_1, \ldots, a_k\}$ be a coalition of agents on
-substrate $s \neq s'$.  Then $K$ cannot influence
+substrate $s \neq s'$.  Assume the exercise protocol $\pi_B$ enforces
+the isolation condition of Definition~\ref{def:exercise_protocol}
+(the agent under evaluation receives no external assistance during
+the exercise).  Then $K$ cannot influence
 $\Verify(\Witness_{\mathrm{alg}}, C, \pi_B)$ without either:
 \begin{enumerate}
     \item[(a)] Compromising substrate $s'$ (violating the substrate

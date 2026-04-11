@@ -21,14 +21,14 @@ on substrate $s$ is a process satisfying:
     \item \textbf{Protocol determinism:} $\Witness_{\mathrm{alg}}$
     executes a verification protocol $\pi$ that is fully specified by a
     governance-accepted evaluation protocol
-    (Definition~\ref{def:gov_fork}).
+    (Definition~\ref{def:gov_fork}, below).
     The witness exercises no independent judgment; its output is a
     deterministic (or, for statistical protocols, randomized with
     specified distribution) function of its inputs and the protocol
     specification.
     \item \textbf{Tamper evidence:} the witness's execution trace is
     recorded to the verification ledger $\Ledger$
-    (\S\ref{sec:ledger}), and any modification to the trace is
+    (\S\ref{sec:ledger}, below), and any modification to the trace is
     detectable by any ledger participant.
 \end{enumerate}
 \end{definition}

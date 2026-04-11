@@ -22,7 +22,8 @@ We constructed a cryptographic commitment protocol
 (Definition~\ref{def:commitment_protocol}) that enforces the
 substrate-exclusivity barrier without requiring trust: binding
 commitments prevent retroactive claim modification, hiding prevents
-premature claim disclosure, and algorithmic witnesses
+premature claim disclosure (with an optional zero-knowledge variant
+for security-sensitive claims), and algorithmic witnesses
 (Definition~\ref{def:alg_witness}) execute fully specified verification
 protocols on separate substrates.  Human judgment enters at a single
 point---benchmark admissibility through a governance fork protocol

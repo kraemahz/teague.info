@@ -28,25 +28,62 @@ channels.
 \label{prop:channel_independence}
 Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, and
 let each $E_i$ be verified by an algorithmic witness
-$\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$.  If the witnesses
-are on distinct substrates ($s_i \neq s_j$ for $i \neq j$) and each
-$s_i \neq s(a)$, then the verified outputs $\{v_1, \ldots, v_n\}$ are
-conditionally independent given $a$'s true capability profile
-$\mathbf{C}_a$.
+$\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ using
+governance-accepted benchmark $B_i$.  If the witnesses are on distinct
+substrates ($s_i \neq s_j$ for $i \neq j$), each $s_i \neq s(a)$, and
+the benchmark parameters $\{B_1, \ldots, B_n\}$ are independently
+specified by governance, then the verified outputs
+$\{v_1, \ldots, v_n\}$ are conditionally independent given $a$'s true
+capability profile $\mathbf{C}_a$ and the benchmark specifications
+$\{B_1, \ldots, B_n\}$.
 \end{proposition}
 
 \begin{proof}
 Each $v_i = \pi_{B_i}(a, \Witness^{(i)}_{\mathrm{alg}})$ is determined
-by $a$'s behavior under exercise protocol $\pi_{B_i}$ and the witness's
-deterministic execution (Definition~\ref{def:alg_witness}).  Agent $a$
-cannot influence $\Witness^{(i)}_{\mathrm{alg}}$'s computation
-(substrate exclusivity).  Witness $\Witness^{(i)}_{\mathrm{alg}}$
-cannot influence $\Witness^{(j)}_{\mathrm{alg}}$'s computation ($s_i
-\neq s_j$).  Therefore, conditional on $a$'s true behavior
-(determined by $\mathbf{C}_a$), the verdicts $v_i$ are functions of
-independent computations on disjoint substrates, hence conditionally
-independent.
+by three inputs: (1)~$a$'s behavior under exercise protocol $\pi_{B_i}$,
+(2)~the benchmark specification $B_i$, and (3)~the witness's
+deterministic execution on substrate $s_i$
+(Definition~\ref{def:alg_witness}).
+
+We show that conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, the
+remaining sources of variation in different verdicts are causally
+independent:
+\begin{itemize}
+    \item \textbf{No agent-mediated path:}  Conditional on
+    $\mathbf{C}_a$, agent $a$'s performance on protocol $\pi_{B_i}$
+    is characterized by the completeness and soundness parameters
+    $(\delta_i, \epsilon_i)$ of Definition~\ref{def:exercise_protocol},
+    which are set independently per benchmark by governance.  Agent
+    $a$'s internal state (training history, strategy) affects its
+    behavior, but this effect is captured by $\mathbf{C}_a$---the
+    capability profile is the sufficient statistic for exercise
+    outcomes.
+    \item \textbf{No witness-mediated path:}  Witness
+    $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ cannot
+    influence $\Witness^{(j)}_{\mathrm{alg}}$ on substrate $s_j$
+    (substrate exclusivity, $s_i \neq s_j$).
+    \item \textbf{No shared-environment path:}  Benchmark parameters
+    $B_i$ are conditioned on, removing correlation through shared
+    governance.  Exercise execution occurs on disjoint substrates,
+    removing shared physical-environment effects.
+\end{itemize}
+Therefore, conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, the
+verdicts $v_i$ are functions of causally independent computations on
+disjoint substrates, hence conditionally independent.
 \end{proof}
+
+\begin{remark}
+The conditioning on $\mathbf{C}_a$ assumes the capability profile is
+a sufficient statistic for the agent's exercise-level behavior.  If the
+agent has latent strategic state not captured by $\mathbf{C}_a$---for
+example, a deceptive agent that behaves differently depending on
+which benchmark it faces---the conditional independence weakens to
+\emph{no single-substrate write path across channels}, which is
+still sufficient for the multi-channel attribution argument of
+Paper~4: the absence of a write path means that a coalition on one
+substrate cannot simultaneously corrupt multiple channels, even if
+the verdicts are not statistically independent in the classical sense.
+\end{remark}
 
 \begin{remark}
 The proposition requires $n$ distinct witness substrates for $n$
@@ -166,8 +203,11 @@ causal access, not in our definitions.
 Two processes $p, q$ executing on the same substrate $s$ satisfy
 \textbf{same-substrate addressability}: there exist actions available
 to $p$ that modify at least one input to $q$, and vice versa.
-Formally, $\mathcal{R}(p, q) \neq \emptyset$ and
-$\mathcal{R}(q, p) \neq \emptyset$.
+Formally, writing $\mathrm{Addr}(p, q)$ for the set of $q$'s inputs
+addressable by $p$ (analogous to $\mathcal{R}(a, E)$ from
+Definition~\ref{def:ver_asymmetry} but applied to arbitrary process
+pairs), we require $\mathrm{Addr}(p, q) \neq \emptyset$ and
+$\mathrm{Addr}(q, p) \neq \emptyset$.
 \end{definition}
 
 \begin{remark}
@@ -188,35 +228,53 @@ is not the default condition for co-substrate processes.
 \label{thm:anti_monopolar}
 Let $\mathcal{A}$ be a population of agents with substrate partition
 $\{S_1, \ldots, S_m\}$, and assume same-substrate addressability
-(Definition~\ref{def:same_substrate}).  If $m = 1$, then:
+(Definition~\ref{def:same_substrate}).  Assume further that the
+population's \emph{available actions} are computations on substrates
+it currently occupies: the action space does not include provisioning
+new physical infrastructure, recruiting biological observers, or
+otherwise instantiating computation on a substrate not in
+$\{S_1, \ldots, S_m\}$.  If $m = 1$, then:
 \begin{enumerate}
     \item[(a)] For every evaluation function $E$ constructible from the
     population's computational resources, and every agent
-    $a_j \in \mathcal{A}$, the verification asymmetry satisfies
-    $\rho(a_j, E) > 0$.
-    \item[(b)] No action available to the population can produce an
-    evaluation function $E'$ with $\rho(a_j, E') = 0$ for any $a_j$.
+    $a_j \in \mathcal{A}$, the evaluation is endogenous:
+    $\mathcal{R}(a_j, E) \neq \emptyset$.
+    \item[(b)] No computational action available to the population can
+    produce an evaluation function $E'$ with
+    $\mathcal{R}(a_j, E') = \emptyset$ for any $a_j$.
 \end{enumerate}
 \end{theorem}
+
+\begin{remark}
+Under the positive-measure reachability assumption---that
+same-substrate addressability produces a reachable set of positive
+measure, not merely a nonempty one---part~(a) strengthens to
+$\rho(a_j, E) > 0$.  This holds for all practical substrates:
+if a process can modify at least one evaluator input, it can
+modify that input over a range of values, not just at a single
+point.  When input spaces are discrete (the default for
+computational processes), $\mathcal{R} \neq \emptyset$ and
+$\rho > 0$ coincide.
+\end{remark}
 
 \begin{proof}
 (a)~If $m = 1$, every process in the population (including any
 evaluator $E$ the population constructs) executes on the single
 substrate $S_1$.  By same-substrate addressability, agent $a_j$ on
 $S_1$ can address at least one input to $E$ on $S_1$:
-$\mathcal{R}(a_j, E) \neq \emptyset$.  Therefore $\rho(a_j, E) > 0$.
+$\mathcal{R}(a_j, E) \neq \emptyset$.  The evaluation is therefore
+endogenous (Definition~\ref{def:endo_exo}).
 
-(b)~Achieving $\rho(a_j, E') = 0$ requires $E'$ to have no inputs
-addressable from $a_j$'s substrate.  By same-substrate addressability,
-any $E'$ on $S_1$ has addressable inputs.  Therefore $E'$ must execute
-on some $s' \neq S_1$.  But the population occupies only $S_1$ (by
-$m = 1$), so constructing $E'$ on $s'$ requires creating or accessing
-infrastructure on a substrate the population does not currently occupy.
-This is a physical action (provisioning hardware, establishing a
-biological observer, or otherwise instantiating computation on a
-distinct physical medium) that lies outside the population's
-\emph{computational} action space.  No sequence of computations on
-$S_1$ produces a process on $s' \neq S_1$.
+(b)~Achieving $\mathcal{R}(a_j, E') = \emptyset$ requires $E'$ to have
+no inputs addressable from $a_j$'s substrate.  By same-substrate
+addressability, any $E'$ on $S_1$ has addressable inputs from $a_j$.
+Therefore $E'$ must execute on some $s' \neq S_1$.  By the
+computational action-model assumption, the population's available
+actions are computations on $S_1$.  No sequence of computations on
+$S_1$ produces a process on $s' \neq S_1$: substrate provisioning is a
+physical action (procuring hardware, establishing a biological observer,
+or otherwise instantiating computation on a distinct physical medium)
+outside the computational action space.
 \end{proof}
 
 \begin{corollary}[Monopolar Epistemic Closure]
@@ -226,14 +284,15 @@ addressability, no agent can distinguish between:
 \begin{enumerate}
     \item[(a)] Verification passing because the claim is true, and
     \item[(b)] Verification passing because the evaluator's inputs have
-    been influenced by the claimant ($\rho > 0$).
+    been influenced by the claimant ($\mathcal{R}(a, E) \neq \emptyset$).
 \end{enumerate}
 \end{corollary}
 
 \begin{proof}
 Distinguishing (a) from (b) requires a reference evaluation with
-$\rho = 0$.  By Theorem~\ref{thm:anti_monopolar}(b), no such
-evaluation is achievable.  Therefore the distinction is unresolvable
+$\mathcal{R}(a, E) = \emptyset$.  By Theorem~\ref{thm:anti_monopolar}(b),
+no such evaluation is constructible from the population's computational
+resources.  Therefore the distinction is unresolvable
 from within the population.
 \end{proof}
 
