@@ -135,10 +135,17 @@ protocol.  No global consensus is needed for \emph{individual entry
 validity}: the entry is self-verifying, since any participant can check
 the signatures (including the witness's signature over the full context
 $(a_j, \lambda, B, v, \xi, t)$) and, after the commitment is opened,
-verify that $\Commit(C, r) = \lambda$.  Conflicts (e.g., an
-agent claiming the witness misreported the verdict) are resolvable by
-replaying the exercise protocol against the committed data, which is
-deterministic by Definition~\ref{def:alg_witness}.
+verify that $\Commit(C, r) = \lambda$.  Conflicts (e.g., an agent claiming the witness misreported the verdict)
+are resolvable by replaying the exercise protocol against the committed
+data.  For deterministic protocols, the replay is exact.  For
+statistical (randomized) protocols
+(Definition~\ref{def:alg_witness}, condition~2), the witness must
+commit its random seed or full random tape as part of the supporting
+evidence $\xi$; replay then uses the committed seed to reproduce the
+identical random choices, making the replay deterministic given $\xi$.
+Off-chain evidence (raw behavioral observations, exercise transcripts)
+must remain available for the replay window specified by governance;
+the on-ledger hash $\xi$ ensures integrity but not availability.
 
 \emph{Chain consistency} across replicated nodes is maintained by the
 Merkle hash tree structure: each node can verify that its local chain
@@ -147,9 +154,24 @@ and can compare root hashes with nodes on other substrates to detect
 equivocation (a node presenting different chains to different
 observers).  Because the chain is append-only and entries are
 self-verifying, equivocation is detectable but not preventable without
-global consensus---a deliberately lightweight design, since the
-verification entries' integrity does not depend on ordering (each
-entry is independently checkable), only on non-suppression.
+global consensus---a deliberately lightweight design for standard
+verification entries, since their integrity does not depend on
+ordering (each is independently checkable), only on non-suppression.
+
+\emph{Timeout entries} introduce a limited ordering dependency: a
+timeout entry for commitment $\lambda$ is valid only if no reveal of
+$\lambda$ has been recorded before the deadline.  Near-deadline
+reveals and timeout entries can race across replicas.  The resolution
+is a bounded-synchrony assumption: we assume clock skew between
+ledger nodes is bounded by $\Delta_{\mathrm{sync}}$, and the reveal
+deadline includes a grace period of $\Delta_{\mathrm{sync}}$ during
+which both reveals and timeout entries are accepted.  If both a reveal
+and a timeout entry exist for the same $\lambda$, the reveal takes
+precedence (it carries the agent's opening $(C, r)$ and the witness's
+signed verdict, which is strictly more informative than the timeout
+default).  This precedence rule requires no global ordering---only
+that nodes eventually see both entries and resolve the conflict
+locally.
 
 \paragraph{Governance entries.}
 Appending a governance entry (protocol acceptance) requires a

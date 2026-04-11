@@ -21,10 +21,15 @@ benchmarks (e.g., all benchmarks drawn from the same test suite family),
 verdicts can be correlated through shared difficulty even without
 witness cross-communication.  Conditioning on the benchmark specifications
 removes this path.  The proposition's requirement that benchmarks be
-``independently specified by governance'' is satisfied when each
-benchmark's acceptance was deliberated separately, which the governance
-fork protocol (Definition~\ref{def:gov_fork}) enforces by requiring
-per-protocol proposals and per-protocol votes.
+``independently specified by governance'' is an assumption, not a
+consequence of the governance fork protocol.  Separate governance
+proposals and votes are a necessary procedural condition (each
+benchmark goes through its own deliberation), but they do not
+guarantee statistical independence of benchmark parameters---for
+example, benchmarks proposed by the same entity or drawn from the
+same test-suite family may share structural biases.  The assumption
+holds when the governance process produces genuinely independent
+benchmark designs; the proposition's guarantee is conditional on it.
 
 \paragraph{Why condition on capability profile.}
 Agent $a$'s internal state (training history, memory, strategic
