@@ -12,7 +12,7 @@ Human judgment enters only through the governance layer
 \label{sec:protocol_overview}
 
 The protocol verifies a claim $C$ by an agent $a$ against a
-governance-accepted benchmark $B$.  It proceeds in three phases.
+governance-accepted evaluation protocol $\Pi$.  It proceeds in three phases.
 
 \begin{definition}[Commitment Protocol]
 \label{def:commitment_protocol}
@@ -26,7 +26,7 @@ commitment space $\Lambda$ consists of:
     is binding and hiding (Proposition~\ref{prop:pedersen_security}).
     \item \textbf{Verify.}  An algorithmic witness
     $\Witness_{\mathrm{alg}}$ on substrate $s' \neq s(a)$ executes the
-    exercise protocol $\pi_B$ specified by governance-accepted benchmark
+    exercise protocol $\pi_\Pi$ specified by governance-accepted evaluation protocol
     $B$ for the claim type of $C$.  The witness interacts with $a$
     (or with $a$'s outputs) as specified by $\pi_B$ and produces a
     verdict $v \in \{\texttt{pass}, \texttt{fail}\}$ together with
@@ -42,7 +42,7 @@ commitment space $\Lambda$ consists of:
 
 The critical structural property is that Phase~2 is fully algorithmic.
 The witness is executing a protocol, not making a judgment call.  All
-judgment was resolved at the governance layer when benchmark $B$ was
+judgment was resolved at the governance layer when evaluation protocol $\Pi$ was
 accepted (\S\ref{sec:governance}).  This separation is what makes the
 protocol scalable: governance decisions are infrequent and human-speed;
 per-claim verification is frequent and machine-speed.
@@ -118,11 +118,11 @@ adversaries the exact capability the agent holds.
 \begin{definition}[Zero-Knowledge Capability Proof]
 \label{def:zk_proof}
 A \textbf{zero-knowledge capability proof} for predicate $P$ defined
-by governance-accepted benchmark $B$ is a protocol in which:
+by governance-accepted evaluation protocol $\Pi$ is a protocol in which:
 \begin{enumerate}
     \item Agent $a$ commits to claim $C$ via $\lambda = \Commit(C, r)$.
     \item Agent $a$ produces a proof $\pi$ that $P(C) = 1$ (i.e., $C$
-    satisfies the benchmark predicate) without revealing $C$.
+    satisfies the evaluation predicate) without revealing $C$.
     \item The algorithmic witness $\Witness_{\mathrm{alg}}$ verifies
     $\pi$ against $\lambda$ and the predicate $P$, accepting if $\pi$
     is valid.
@@ -216,7 +216,7 @@ $\Verify(\Witness_{\mathrm{alg}}, C, \pi_B)$ without either:
 \begin{enumerate}
     \item[(a)] Compromising substrate $s'$ (violating the substrate
     partition), or
-    \item[(b)] Modifying the governance-accepted benchmark $B$
+    \item[(b)] Modifying the governance-accepted evaluation protocol $\Pi$
     (requiring cross-substrate supermajority per
     Definition~\ref{def:gov_fork}).
 \end{enumerate}
@@ -228,7 +228,7 @@ executes protocol $\pi_B$ deterministically on substrate $s'$.  The
 coalition $K$'s actions are confined to substrate $s$ (by assumption).
 To modify the witness's computation, $K$ must either: (i)~write to
 $s'$, which violates the substrate partition (case~a); or (ii)~change
-the protocol $\pi_B$ by modifying the accepted benchmark $B$, which
+the protocol $\pi_\Pi$ by modifying the accepted evaluation protocol $\Pi$, which
 requires passing the governance fork protocol with cross-substrate
 supermajority---impossible for a coalition confined to $s$ unless the
 coalition controls validators on $s'$ as well (case~b).  In either
@@ -238,11 +238,11 @@ influence verification.
 
 Coalition resistance has two consequences.  First, it closes the
 coalition capture attack described in \S\ref{sec:coalition_governance}
-at the verification layer: even if a coalition passes a biased benchmark
+at the verification layer: even if a coalition passes a biased protocol
 through governance (which the fork mechanism is designed to prevent), the
-algorithmic witness executes the benchmark faithfully and cannot be
+algorithmic witness executes the evaluation protocol faithfully and cannot be
 induced to misreport results.  Second, it provides the structural
-basis for the observation-channel independence assumption of Paper~4's
+basis for the observation-channel independence assumption of Part~II's
 multi-channel attribution (\S\ref{sec:channel_independence}): if
 different channels are verified by witnesses on different substrates,
 a coalition on one substrate cannot correlate those channels.

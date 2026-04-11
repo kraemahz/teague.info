@@ -95,14 +95,14 @@ influence requires a physical channel between substrates, and the
 \emph{input space} of a process on $s'$ is not addressable from $s$ in
 the same way that co-substrate processes are.
 
-This is Paper~3's substrate partition applied to
-verification~\citep{lasser2026horizon}.  The substrate partition
-$\{S_1, \ldots, S_m\}$ over a population's agents induces a
-corresponding partition on observation channels: channels rooted in
-substrate $s'$ are not writable by agents on substrate $s \neq s'$.
-Paper~4's multi-channel attribution assumes this independence
-structure~\citep{lasser2026scm}; the present paper constructs the
-protocol that \emph{enforces} it.
+A population of agents occupying multiple computational substrates
+$\{S_1, \ldots, S_m\}$ inherits a corresponding partition on
+observation channels: channels rooted in substrate $s'$ are not
+writable by agents on substrate $s \neq s'$.  This paper constructs
+the protocol that \emph{enforces} this partition for verification
+purposes.  (Part~II connects the construction to the substrate
+partition formalized in the GFM
+framework~\citep{lasser2026horizon, lasser2026scm}.)
 
 \begin{definition}[Substrate-Exclusive Evaluation]
 \label{def:substrate_exclusive_eval}

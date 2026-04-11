@@ -108,11 +108,23 @@ verdict beyond the soundness bound $\epsilon$.
 \end{proof}
 
 \subsection{Proof of Theorem~\ref{thm:anti_monopolar}
-(Anti-Monopolar Verification)}
+(Verification Impossibility under Monopolarity)}
 \label{app:anti_monopolar}
 
 The proof in \S\ref{sec:anti_monopolar} is already complete.  We
-provide an extended discussion of the theorem's consequences.
+provide an extended discussion of the theorem's consequences and
+the role of its physical premise.
+
+\paragraph{The physical premise.}
+Same-substrate addressability (Definition~\ref{def:same_substrate})
+is the load-bearing assumption.  Without it, the theorem would be a
+definition chase: ``we required $s' \neq s$; if $m = 1$, no such $s'$
+exists.'' With it, the theorem says something about the physical
+world: processes sharing a computational medium have nonzero causal
+access to each other, and this access cannot be eliminated by any
+computation \emph{within} that medium.  The impossibility is
+grounded in the physics of shared substrates, not in the definitions
+of this paper.
 
 \paragraph{Relationship to Paper~3's anti-monopolar result.}
 Paper~3~\citep{lasser2026horizon} proves that monopolar convergence
@@ -120,7 +132,7 @@ Paper~3~\citep{lasser2026horizon} proves that monopolar convergence
 cross-substrate cooperative capabilities are destroyed.
 Theorem~\ref{thm:anti_monopolar} establishes a complementary result:
 monopolar convergence makes the \emph{loss of $\volL$}
-\emph{undetectable from within the population}.
+\emph{unverifiable from within the population}.
 
 The two results compose multiplicatively.  Paper~3 says: ``if you
 become monopolar, you lose the safety guarantee.''

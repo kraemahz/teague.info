@@ -150,62 +150,91 @@ to and what the witness measured, not between what the actor estimated
 and what the actor observed.  This sharpens $\Trisk_j$ by removing one
 of the two endogenous quantities from the residual computation.
 
-\subsection{The Anti-Monopolar Verification Theorem}
+\subsection{Verification Impossibility under Monopolarity}
 \label{sec:anti_monopolar}
 
-Substrate-exclusive witnesses require the substrate partition to have
-$m \geq 2$~(\S\ref{sec:witness_m2}).  The following theorem makes the
-consequence precise.
+Section~\ref{sec:witness_m2} observed that substrate-exclusive witnesses
+require $m \geq 2$.  The following theorem establishes the stronger
+claim: in a monopolar population, not only do substrate-exclusive
+witnesses fail to exist, but \emph{no rearrangement of the population's
+computational resources can produce exogenous verification}.  The
+impossibility is grounded in a physical premise about same-substrate
+causal access, not in our definitions.
 
-\begin{theorem}[Anti-Monopolar Verification]
+\begin{definition}[Same-Substrate Addressability]
+\label{def:same_substrate}
+Two processes $p, q$ executing on the same substrate $s$ satisfy
+\textbf{same-substrate addressability}: there exist actions available
+to $p$ that modify at least one input to $q$, and vice versa.
+Formally, $\mathcal{R}(p, q) \neq \emptyset$ and
+$\mathcal{R}(q, p) \neq \emptyset$.
+\end{definition}
+
+\begin{remark}
+Same-substrate addressability is a physical premise, not a logical
+necessity.  It asserts that processes sharing a computational medium
+can causally influence each other's inputs.  This holds for software
+processes on shared hardware (they share memory, network, and OS
+resources), for biological agents in shared environments (they share
+sensory channels and physical space), and more generally for any
+processes whose computation is mediated by the same physical
+substrate.  It would fail if two processes occupied the same substrate
+but were perfectly isolated (e.g., by an impenetrable hardware
+partition).  The premise is that such perfect intra-substrate isolation
+is not the default condition for co-substrate processes.
+\end{remark}
+
+\begin{theorem}[Verification Impossibility under Monopolarity]
 \label{thm:anti_monopolar}
-Let $\mathcal{A} = \{a_1, \ldots, a_n\}$ be a population of agents
-with substrate partition $\{S_1, \ldots, S_m\}$.  If $m = 1$ (the
-population is monopolar), then for every agent $a_j \in \mathcal{A}$
-and every claim $C$, the set of substrate-exclusive witnesses is empty:
-\[
-    \Witness^{\perp}(a_j, C)
-    \;\triangleq\;
-    \{w : s(w) \neq s(a_j)\}
-    \;=\; \emptyset.
-\]
-Consequently, every evaluation function $E$ available to the population
-satisfies $\rho(a_j, E) > 0$, and all verification is endogenous.
+Let $\mathcal{A}$ be a population of agents with substrate partition
+$\{S_1, \ldots, S_m\}$, and assume same-substrate addressability
+(Definition~\ref{def:same_substrate}).  If $m = 1$, then:
+\begin{enumerate}
+    \item[(a)] For every evaluation function $E$ constructible from the
+    population's computational resources, and every agent
+    $a_j \in \mathcal{A}$, the verification asymmetry satisfies
+    $\rho(a_j, E) > 0$.
+    \item[(b)] No action available to the population can produce an
+    evaluation function $E'$ with $\rho(a_j, E') = 0$ for any $a_j$.
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-If $m = 1$, then all agents (including any candidate witness $w$)
-occupy the same substrate: $s(w) = s(a_j)$ for all $w \in
-\mathcal{A}$.  By Definition~\ref{def:alg_witness}, an algorithmic
-witness requires $s(w) \neq s(a_j)$, so no member of $\mathcal{A}$
-qualifies.  Since the population has no access to substrates outside
-$S_1$ (by the monopolarity assumption), no process outside
-$\mathcal{A}$ on a different substrate is available either.  Therefore
-$\Witness^{\perp}(a_j, C) = \emptyset$ for all $a_j$ and $C$.
+(a)~If $m = 1$, every process in the population (including any
+evaluator $E$ the population constructs) executes on the single
+substrate $S_1$.  By same-substrate addressability, agent $a_j$ on
+$S_1$ can address at least one input to $E$ on $S_1$:
+$\mathcal{R}(a_j, E) \neq \emptyset$.  Therefore $\rho(a_j, E) > 0$.
 
-With no substrate-exclusive witnesses, every evaluator $E$ available to
-the population runs on substrate $S_1$.  Agent $a_j$, also on $S_1$,
-has $\mathcal{R}(a_j, E) \supseteq \{x \in \mathcal{I}(E) :
-x \text{ is addressable from } S_1\}$, which is non-empty (the agent
-and evaluator share a substrate and can therefore interact).  Thus
-$\rho(a_j, E) > 0$ for all available $E$.
+(b)~Achieving $\rho(a_j, E') = 0$ requires $E'$ to have no inputs
+addressable from $a_j$'s substrate.  By same-substrate addressability,
+any $E'$ on $S_1$ has addressable inputs.  Therefore $E'$ must execute
+on some $s' \neq S_1$.  But the population occupies only $S_1$ (by
+$m = 1$), so constructing $E'$ on $s'$ requires creating or accessing
+infrastructure on a substrate the population does not currently occupy.
+This is a physical action (provisioning hardware, establishing a
+biological observer, or otherwise instantiating computation on a
+distinct physical medium) that lies outside the population's
+\emph{computational} action space.  No sequence of computations on
+$S_1$ produces a process on $s' \neq S_1$.
 \end{proof}
 
-\begin{corollary}[Monopolar Undetectability]
+\begin{corollary}[Monopolar Epistemic Closure]
 \label{cor:monopolar_undetect}
-In a monopolar population ($m = 1$), no agent can distinguish between:
+In a monopolar population ($m = 1$) satisfying same-substrate
+addressability, no agent can distinguish between:
 \begin{enumerate}
     \item[(a)] Verification passing because the claim is true, and
-    \item[(b)] Verification passing because the evaluator is endogenous
-    and the claimant has influenced the evaluation.
+    \item[(b)] Verification passing because the evaluator's inputs have
+    been influenced by the claimant ($\rho > 0$).
 \end{enumerate}
 \end{corollary}
 
 \begin{proof}
-Distinguishing between (a) and (b) requires a reference evaluation
-that is exogenous to the claimant.  By Theorem~\ref{thm:anti_monopolar},
-no such evaluation exists when $m = 1$.  Therefore the distinction is
-unresolvable from within the population.
+Distinguishing (a) from (b) requires a reference evaluation with
+$\rho = 0$.  By Theorem~\ref{thm:anti_monopolar}(b), no such
+evaluation is achievable.  Therefore the distinction is unresolvable
+from within the population.
 \end{proof}
 
 Theorem~\ref{thm:anti_monopolar} and Corollary~\ref{cor:monopolar_undetect}

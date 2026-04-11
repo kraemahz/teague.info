@@ -20,7 +20,8 @@ on substrate $s$ is a process satisfying:
     executes on substrate $s' \neq s(a)$.
     \item \textbf{Protocol determinism:} $\Witness_{\mathrm{alg}}$
     executes a verification protocol $\pi$ that is fully specified by a
-    governance-accepted benchmark $B$ (Definition~\ref{def:gov_fork}).
+    governance-accepted evaluation protocol
+    (Definition~\ref{def:gov_fork}).
     The witness exercises no independent judgment; its output is a
     deterministic (or, for statistical protocols, randomized with
     specified distribution) function of its inputs and the protocol
@@ -34,40 +35,40 @@ on substrate $s$ is a process satisfying:
 
 The key property of algorithmic witnesses is that they execute
 \emph{protocols}, not \emph{judgments}.  All judgment is resolved at the
-governance layer (\S\ref{sec:governance}) when the benchmark was
-accepted.  Once accepted, verification is mechanical: the witness
+governance layer (\S\ref{sec:governance}) when the evaluation protocol
+was accepted.  Once accepted, verification is mechanical: the witness
 runs the protocol, records the result, and the outcome is auditable.
 
 \paragraph{Examples.}
 Algorithmic witnesses include: (a)~a validator node on physically
 separate hardware that checks behavioral consistency against committed
-capability claims; (b)~an automated test runner that executes a
-governance-accepted benchmark against the agent's outputs; (c)~a
+claims; (b)~an automated test runner that executes a
+governance-accepted evaluation protocol against the agent's outputs; (c)~a
 statistical monitor that runs SPRT-like detection on residuals between
 committed and observed behavior (\S\ref{sec:continuous_monitoring}).
 In each case, the witness's substrate exclusivity is enforced by running
 on infrastructure that the agent under evaluation does not control.
 
-\subsection{The Governance Layer: Benchmark Admissibility}
+\subsection{The Governance Layer: Evaluation Protocol Admissibility}
 \label{sec:governance}
 
-Algorithmic witnesses verify claims against \emph{accepted} benchmarks.
-The question ``which benchmarks should be accepted?'' is a governance
-decision, not a verification decision.  It is the single point at which
-human judgment enters the protocol.
+Algorithmic witnesses verify claims against \emph{accepted} evaluation
+protocols.  The question ``which evaluation protocols should be
+accepted?'' is a governance decision, not a verification decision.
+It is the single point at which human judgment enters the system.
 
 \begin{definition}[Governance Fork Protocol]
 \label{def:gov_fork}
-A \textbf{governance fork protocol} for benchmark admissibility
-consists of:
+A \textbf{governance fork protocol} for evaluation-protocol
+admissibility consists of:
 \begin{enumerate}
-    \item \textbf{Proposal:} A benchmark proposal $B$ for capability
-    type $\tau$ is submitted to the ledger $\Ledger$ with a
-    specification $\sigma_B$ (what it tests, scoring criteria, passing
-    threshold) and a proposer identifier.
+    \item \textbf{Proposal:} An evaluation protocol proposal $\Pi$ for
+    claim type $\tau$ is submitted to the ledger $\Ledger$ with a
+    specification $\sigma_\Pi$ (what it tests, acceptance criteria,
+    passing threshold) and a proposer identifier.
     \item \textbf{Deliberation:} A deliberation window of duration
     $\Delta_{\mathrm{gov}}$ opens.  During this window, any ledger
-    participant may: study the specification, run $B$ against known
+    participant may: study the specification, run $\Pi$ against known
     agents to check for bias, flag concerns with evidence, or publish
     analysis to $\Ledger$.
     \item \textbf{Vote:} At the close of the deliberation window,
@@ -75,18 +76,18 @@ consists of:
     \emph{cross-substrate supermajority}: at least fraction $\theta$ of
     validators overall, with at least one accepting validator per
     substrate represented in $\Ledger$.
-    \item \textbf{Resolution:} If accepted, $B$ is recorded as a
+    \item \textbf{Resolution:} If accepted, $\Pi$ is recorded as a
     governance entry in $\Ledger$ with an effective date.  All
-    subsequent capability claims for type $\tau$ may be verified against
-    $B$ algorithmically.  If rejected, $B$ is archived in $\Ledger$ with
-    its full deliberation record.
+    subsequent claims of type $\tau$ may be verified against
+    $\Pi$ algorithmically.  If rejected, $\Pi$ is archived in $\Ledger$
+    with its full deliberation record.
 \end{enumerate}
 \end{definition}
 
 This structure is analogous to Ethereum Improvement Proposals (EIPs):
 the governance decision is slow (human-speed deliberation over weeks to
 months), but once made, enforcement is fast (machine-speed verification
-against the accepted benchmark).  The analogy is structural, not
+against the accepted protocol).  The analogy is structural, not
 implementational: we require neither token economics nor
 proof-of-stake consensus, only the proposal--deliberation--vote--resolution
 cycle with cross-substrate participation.
@@ -94,32 +95,31 @@ cycle with cross-substrate participation.
 \begin{remark}
 The deliberation window $\Delta_{\mathrm{gov}}$ should be long enough
 for meaningful analysis (weeks, not hours) and short enough that the
-benchmark pipeline does not bottleneck population-level verification.
-Since benchmarks change rarely compared to individual claims---a
-population generating thousands of capability claims per day may see a
-new benchmark proposal monthly or less---the governance layer's bandwidth
-requirements are modest.
+protocol pipeline does not bottleneck population-level verification.
+Since evaluation protocols change rarely compared to individual
+claims, a population generating thousands of claims per day may see a
+new protocol proposal monthly or less, keeping the governance layer's
+bandwidth requirements modest.
 \end{remark}
 
 \subsection{Resolving the Bandwidth Problem}
 \label{sec:bandwidth}
 
 Human judgment is scarce.  A naive verification system that requires
-human evaluation of every capability claim cannot scale beyond a
-handful of agents.  The two-layer architecture of this section resolves
-the bandwidth problem by separating the frequency of judgment from the
-frequency of verification:
+human evaluation of every claim cannot scale beyond a handful of agents.
+The two-layer architecture of this section resolves the bandwidth
+problem by separating the frequency of judgment from the frequency of
+verification:
 
 \begin{itemize}
-    \item \textbf{Governance} (infrequent, human-speed): which benchmarks
-    are admissible?  Requires human deliberation, cross-substrate
+    \item \textbf{Governance} (infrequent, human-speed): which evaluation
+    protocols are admissible?  Requires human deliberation, cross-substrate
     participation, and careful analysis.  Frequency: on the order of
-    benchmark proposals, perhaps monthly.
+    protocol proposals, perhaps monthly.
     \item \textbf{Verification} (frequent, machine-speed): does claim
-    $C$ pass accepted benchmark $B$?  Fully algorithmic, executed by
-    $\Witness_{\mathrm{alg}}$, requires no human attention.
-    Frequency: on the order of capability claims, potentially thousands
-    per day.
+    $C$ pass accepted evaluation protocol $\Pi$?  Fully algorithmic,
+    executed by $\Witness_{\mathrm{alg}}$, requires no human attention.
+    Frequency: on the order of claims, potentially thousands per day.
 \end{itemize}
 
 Human attention is allocated to the meta-level decision (\emph{what} to
@@ -132,7 +132,7 @@ enforcement against accepted laws is fast and algorithmic.
 \label{sec:coalition_governance}
 
 A coalition of agents on substrate $s$ that wishes to inflate its
-members' verified capabilities faces two attack surfaces: the
+members' verified claims faces two attack surfaces: the
 verification layer and the governance layer.
 
 At the \emph{verification layer}, coalition resistance is structural:
@@ -140,41 +140,45 @@ the algorithmic witness is on substrate $s' \neq s$ and executes a fixed
 protocol.  The coalition cannot influence the witness's computation
 (\S\ref{sec:commitment}, Proposition~\ref{prop:coalition_resistance}).
 
-At the \emph{governance layer}, the coalition's attack is benchmark
-design: proposing a benchmark $B$ that only coalition members can pass.
-The governance fork protocol defends against this through three
-mechanisms:
+At the \emph{governance layer}, the coalition's attack is protocol
+design: proposing an evaluation protocol $\Pi$ that only coalition
+members can pass.  The governance fork protocol defends against this
+through three mechanisms:
 \begin{enumerate}
-    \item \textbf{Public specification:} $\sigma_B$ is published during
+    \item \textbf{Public specification:} $\sigma_\Pi$ is published during
     deliberation, so cross-substrate participants can analyze it for
     bias.
     \item \textbf{Cross-substrate supermajority:}  Acceptance requires
     at least one validator per substrate, so a same-substrate coalition
-    cannot unilaterally accept its own benchmark.
+    cannot unilaterally accept its own protocol.
     \item \textbf{Empirical testing:} During the deliberation window,
-    any participant can run $B$ against known agents on other substrates
-    to check whether $B$ is capability-testing or coalition-filtering.
+    any participant can run $\Pi$ against known agents on other substrates
+    to check whether $\Pi$ genuinely tests the claimed property or
+    merely filters for coalition membership.
 \end{enumerate}
 
 Prevention at the governance layer is strictly stronger than detection
-at the verification layer: a biased benchmark that is never accepted
+at the verification layer: a biased protocol that is never accepted
 inflicts no damage, whereas one that is accepted and later detected has
 already produced unreliable verification records.
 
 \subsection{Witness Availability Requires \texorpdfstring{$m \geq 2$}{m >= 2}}
 \label{sec:witness_m2}
 
-Substrate-exclusive witnesses exist only when the substrate partition
-has $m \geq 2$---Paper~3's diversity
-condition~\citep{lasser2026horizon}.  In a monopolar population ($m =
-1$), all agents occupy the same substrate, and no witness can satisfy
-the substrate-exclusivity requirement of
-Definition~\ref{def:alg_witness}.  Every ``witness'' is co-substrate
-with the claimant, and the verification asymmetry $\rho$ cannot be
-driven to zero.
+Substrate-exclusive witnesses exist only when the population spans at
+least two substrates ($m \geq 2$).  This is a logical consequence of
+Definition~\ref{def:alg_witness}: a witness must execute on substrate
+$s' \neq s(a)$, which requires $s'$ to exist.  But the deeper reason is
+physical, not definitional.  Processes that share a substrate share a
+causal medium: they can address each other's inputs, producing nonzero
+verification asymmetry $\rho > 0$
+(Definition~\ref{def:ver_asymmetry}).  A second substrate provides a
+computation space that is causally separated from the first, and it
+is this physical separation that makes $\rho = 0$ achievable.  In a
+monopolar population ($m = 1$), every process is co-substrate with
+every agent, and no rearrangement of the population's computational
+resources can produce an evaluator whose inputs are unreachable.
 
-This observation connects verification integrity to the anti-monopolar
-property.  We defer the full formal treatment to
+We defer the full impossibility argument to
 \S\ref{sec:anti_monopolar}, where we prove that a monopolar population
-loses not only the $\volL$ safety guarantee (Paper~3's result) but also
-the ability to verify whether it has lost it.
+cannot achieve exogenous verification through any internal action.

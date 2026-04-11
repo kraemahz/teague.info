@@ -24,7 +24,7 @@ the commitment protocol needs and constrained by what the protocol does
     the integrity of the entire chain from genesis to the present.
     This enables third-party audit of both individual verification
     records and aggregate patterns (e.g., an agent whose claims are
-    systematically falsified across benchmarks).
+    systematically falsified across evaluation protocols).
     \item \textbf{Substrate-distributed:} The ledger is replicated
     across nodes on different substrates.  No single substrate controls
     the canonical copy.  This prevents a same-substrate coalition from
@@ -57,7 +57,7 @@ where:
     \item $\lambda = \Commit(C, r)$ is the commitment,
     \item $w$ identifies the algorithmic witness
     $\Witness_{\mathrm{alg}}$,
-    \item $B$ is the governance-accepted benchmark identifier,
+    \item $B$ is the governance-accepted evaluation protocol identifier,
     \item $v \in \{\texttt{pass}, \texttt{fail}\}$ is the verdict,
     \item $\xi$ is a hash of the supporting evidence (raw data is
     stored off-chain; the hash ensures integrity),
@@ -90,8 +90,8 @@ A \textbf{governance entry} in $\Ledger$ is a tuple
 \]
 where:
 \begin{itemize}
-    \item $B$ is the benchmark identifier,
-    \item $\sigma_B$ is the benchmark specification (what it tests,
+    \item $\Pi$ is the evaluation protocol identifier,
+    \item $\sigma_\Pi$ is the protocol specification (what it tests,
     scoring criteria, passing threshold),
     \item $\tau$ is the target capability type,
     \item $p$ is the proposer identifier,
@@ -103,16 +103,16 @@ where:
     \item $\mathrm{outcome} \in \{\texttt{accepted},
     \texttt{rejected}\}$, and
     \item $t_{\mathrm{eff}}$ is the effective date (for accepted
-    benchmarks; null for rejected ones).
+    accepted protocols; null for rejected ones).
 \end{itemize}
 \end{definition}
 
 The governance record is permanent: rejected proposals remain in the
 ledger with their full deliberation records.  This provides an audit
-trail for benchmark evolution and prevents re-proposal of
-previously-studied-and-rejected benchmarks without presenting new
+trail for evaluation-protocol evolution and prevents re-proposal of
+previously-studied-and-rejected protocols without presenting new
 evidence.  The deliberation record is itself a public good: future
-benchmark designers can study past proposals' failure modes.
+future protocol designers can study past proposals' failure modes.
 
 \subsection{Consensus Among Substrate-Exclusive Nodes}
 \label{sec:ledger_consensus}
@@ -131,7 +131,7 @@ replaying the exercise protocol against the committed data, which is
 deterministic by Definition~\ref{def:alg_witness}.
 
 \paragraph{Governance entries.}
-Appending a governance entry (benchmark acceptance) requires a
+Appending a governance entry (protocol acceptance) requires a
 cross-substrate supermajority as specified in
 Definition~\ref{def:gov_fork}: at least fraction $\theta$ of validators
 overall, with at least one validator per represented substrate.  This is
