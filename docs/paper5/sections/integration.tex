@@ -29,13 +29,9 @@ independence under additional assumptions.
 Let $\{E_1, \ldots, E_n\}$ be observation channels for agent $a$, and
 let each $E_i$ be verified by an algorithmic witness
 $\Witness^{(i)}_{\mathrm{alg}}$ on substrate $s_i$ using
-governance-accepted benchmark $B_i$.  Assume:
-\begin{enumerate}
-    \item[(i)] The witnesses are on distinct substrates
-    ($s_i \neq s_j$ for $i \neq j$) and each $s_i \neq s(a)$.
-    \item[(ii)] The benchmark parameters $\{B_1, \ldots, B_n\}$ are
-    independently specified by governance.
-\end{enumerate}
+governance-accepted benchmark $B_i$.  Assume the witnesses are on
+distinct substrates ($s_i \neq s_j$ for $i \neq j$) and each
+$s_i \neq s(a)$.
 Then no coalition confined to a single substrate can simultaneously
 write to the inputs of two or more witnesses.  Formally, for any
 coalition $K$ on substrate $s$ and any $i \neq j$:
@@ -77,6 +73,9 @@ isolation result strengthens to full conditional independence:
 Under the assumptions of
 Proposition~\ref{prop:channel_isolation}, assume additionally:
 \begin{enumerate}
+    \item[(ii)] \textbf{Independent governance:} The benchmark
+    parameters $\{B_1, \ldots, B_n\}$ are independently specified
+    by governance.
     \item[(iii)] \textbf{Sufficiency:} $\mathbf{C}_a$ is a sufficient
     statistic for agent $a$'s exercise-level behavior---i.e.,
     conditional on $\mathbf{C}_a$, the agent's performance on protocol
@@ -102,11 +101,18 @@ Conditional on $(\mathbf{C}_a, B_1, \ldots, B_n)$, all shared causes
 are blocked:
 \begin{itemize}
     \item \textbf{No agent-mediated path:}  By assumption~(iii),
-    $\mathbf{C}_a$ is sufficient for $a$'s exercise-level behavior,
-    so $a$'s performance on $\pi_{B_i}$ is characterized by the
-    completeness and soundness parameters $(\delta_i, \epsilon_i)$ of
+    $\mathbf{C}_a$ is sufficient for $a$'s exercise-level behavior:
+    conditional on $\mathbf{C}_a$, the agent's latent state (training
+    history, strategic disposition, memory of prior exercises) does not
+    further predict performance on any $\pi_{B_i}$.  This absorbs
+    potential correlations from shared task content across benchmarks
+    (e.g., two benchmarks testing overlapping skills): the sufficiency
+    assumption entails that any such overlap is already captured by
+    $\mathbf{C}_a$.  The agent's performance on each $\pi_{B_i}$ is
+    then characterized by the completeness and soundness parameters
+    $(\delta_i, \epsilon_i)$ of
     Definition~\ref{def:exercise_protocol}, which are set independently
-    per benchmark by governance.
+    per benchmark by governance (assumption~(ii)).
     \item \textbf{No witness-mediated path:}  By
     Proposition~\ref{prop:channel_isolation}, no single-substrate
     coalition can write to two witnesses simultaneously.  Since each

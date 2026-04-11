@@ -341,11 +341,13 @@ should be chosen as a worst-case or least-favorable distribution
 to ensure detection across a range of behavioral deviations
 (cf.~the least-favorable SPRT construction
 of~\citet{lasser2026scm}).  In practice, the monitor's detection
-power is bottlenecked by this least-favorable-distribution choice:
-the quality of the alternative $p(\cdot \mid \neg\,\mathbf{C}_a)$
-determines whether the monitor catches subtle behavioral
-deviations or only gross inconsistencies, making the construction
-of domain-appropriate alternative distributions the point where
+power is primarily bounded by this least-favorable-distribution
+choice: the quality of the alternative
+$p(\cdot \mid \neg\,\mathbf{C}_a)$ largely determines whether
+the monitor catches subtle behavioral deviations or only gross
+inconsistencies (alongside SPRT threshold parameters and
+observation-channel fidelity), making the construction of
+domain-appropriate alternative distributions the point where
 verification infrastructure meets domain-specific knowledge.
 \end{remark}
 
@@ -396,7 +398,11 @@ at the verification layer: even if a coalition passes a biased protocol
 through governance (which the fork mechanism is designed to prevent), the
 algorithmic witness executes the evaluation protocol faithfully and cannot be
 induced to misreport results.  Second, it provides the structural
-basis for the observation-channel independence assumption of Part~II's
-multi-channel attribution (\S\ref{sec:channel_independence}): if
-different channels are verified by witnesses on different substrates,
-a coalition on one substrate cannot correlate those channels.
+basis for the channel-isolation result of Part~II
+(\S\ref{sec:channel_independence},
+Proposition~\ref{prop:channel_isolation}): if different channels are
+verified by witnesses on different substrates, a coalition on one
+substrate cannot simultaneously write to multiple channels.  The
+stronger channel-independence result
+(Proposition~\ref{prop:channel_independence}) requires additional
+sufficiency assumptions on the agent's capability profile.

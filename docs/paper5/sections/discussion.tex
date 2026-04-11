@@ -92,7 +92,10 @@ cross-substrate supermajority requirement for governance decisions
 (\S\ref{sec:ledger_consensus}) mitigates this: a single compromised
 substrate cannot override multi-substrate governance.  But if
 $m - 1$ substrates are compromised, the remaining honest substrate
-is outvoted.
+can block new governance proposals (since the cross-substrate
+supermajority requires at least one accepting validator per substrate)
+but cannot undo previously accepted evaluation protocols that may
+already have been corrupted.
 
 \paragraph{The persuasion channel.}
 Substrate exclusivity prevents an agent from \emph{writing} to an
