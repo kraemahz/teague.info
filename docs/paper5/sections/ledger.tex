@@ -18,7 +18,7 @@ the commitment protocol needs and constrained by what the protocol does
 \begin{enumerate}
     \item \textbf{Append-only:} Entries cannot be deleted or modified
     after recording.  This ensures that commitments, once published,
-    remain binding---an agent cannot retroactively alter a commitment
+    remain binding: an agent cannot retroactively alter a commitment
     to match a different claim.
     \item \textbf{Publicly auditable:} Any ledger participant can verify
     the integrity of the entire chain from genesis to the present.
@@ -38,7 +38,7 @@ high transaction throughput.  Governance decisions are infrequent
 (monthly or less); per-claim verification entries are more frequent but
 do not require global consensus (see \S\ref{sec:ledger_consensus}).
 The minimal construction is an authenticated append-only data
-structure---a Merkle hash tree~\citep{crosby2009efficient}---replicated
+structure (a Merkle hash tree~\citep{crosby2009efficient}) replicated
 across substrate-exclusive nodes.
 
 \subsection{Verification Entries}
@@ -131,7 +131,7 @@ reflecting their different trust models and frequency.
 
 \paragraph{Verification entries.}
 Appending a verification entry requires agreement between the committing
-agent $a_j$ and the verifying witness $w$---a two-party cross-substrate
+agent $a_j$ and the verifying witness $w$, a two-party cross-substrate
 protocol.  No global consensus is needed for \emph{individual entry
 validity}: the entry is self-verifying, since any participant can check
 the signatures (including the witness's signature over the full context

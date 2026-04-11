@@ -32,7 +32,7 @@ removes this path.  The proposition's requirement that benchmarks be
 consequence of the governance fork protocol.  Separate governance
 proposals and votes are a necessary procedural condition (each
 benchmark goes through its own deliberation), but they do not
-guarantee statistical independence of benchmark parameters---for
+guarantee statistical independence of benchmark parameters; for
 example, benchmarks proposed by the same entity or drawn from the
 same test-suite family may share structural biases.  The assumption
 holds when the governance process produces genuinely independent
@@ -48,13 +48,13 @@ performance on $\pi_{B_j}$.  This is strictly stronger than marginal
 sufficiency (which would only require that $\mathbf{C}_a$ predicts
 per-benchmark performance without guaranteeing cross-benchmark
 independence).  The joint requirement excludes persistent
-cross-exercise state---e.g., an agent that learns from one exercise
-and adapts its strategy for the next---and shared agent-side
+cross-exercise state (e.g., an agent that learns from one exercise
+and adapts its strategy for the next) and shared agent-side
 randomness not absorbed by $\mathbf{C}_a$.
 If the agent has latent strategic state not captured by $\mathbf{C}_a$
 (e.g., a deceptive agent that adapts its behavior per-benchmark),
 the conditional-independence guarantee of
-Proposition~\ref{prop:channel_independence} weakens---but the
+Proposition~\ref{prop:channel_independence} weakens, but the
 channel-isolation guarantee of
 Proposition~\ref{prop:channel_isolation} still holds, because the
 isolation result depends only on substrate exclusivity, not on the
@@ -83,7 +83,7 @@ The coalition $K$ can attempt to influence $v$ through three channels:
     \item \textbf{Modifying the witness's computation.}  This requires
     writing to $\Witness_{\mathrm{alg}}$'s inputs on substrate $s'$.
     Since $K$ is confined to substrate $s$ and $s \neq s'$, this
-    requires crossing the substrate boundary---i.e., compromising $s'$
+    requires crossing the substrate boundary, i.e., compromising $s'$
     (case~a of the proposition).
     \item \textbf{Modifying the protocol.}  Protocol $\pi_B$ is
     specified by governance-accepted benchmark $B$.  Changing $B$
@@ -164,7 +164,7 @@ or recruiting biological observers.  The exclusion is deliberate:
 the theorem characterizes what is achievable \emph{computationally},
 not what is achievable with arbitrary physical-world agency.  A
 population that provisions a new substrate has changed $m$ from~1
-to~2 and is no longer monopolar---the theorem's premise no longer
+to~2 and is no longer monopolar, so the theorem's premise no longer
 holds.  The action-model restriction is therefore not a weakness but
 a precise scoping of the impossibility: within the computational
 resources of a monopolar population, exogenous verification cannot
@@ -177,8 +177,8 @@ on substrate $S_1$ can be witnessed by processes on $S_2$ and vice
 versa.  The number of independent verification channels scales as
 $m - 1$ (Remark after Proposition~\ref{prop:channel_independence}),
 so verification depth increases with substrate diversity, but the
-qualitative threshold---existence versus non-existence of exogenous
-verification---is at $m = 2$.
+qualitative threshold (existence versus non-existence of exogenous
+verification) is at $m = 2$.
 
 \paragraph{Corollary~\ref{cor:monopolar_undetect} as an epistemic
 constraint.}

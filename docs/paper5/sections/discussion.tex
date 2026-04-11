@@ -42,8 +42,8 @@ substrate exclusivity may suffice.
 The commitment protocol assumes that capability $c_k$ has a
 testable meaning: that an exercise protocol can be constructed whose
 completeness and soundness (Definition~\ref{def:exercise_protocol})
-are well-defined.  For vaguely defined capabilities---``common
-sense,'' ``creativity,'' ``wisdom''---the exercise protocol may not
+are well-defined.  For vaguely defined capabilities (``common
+sense,'' ``creativity,'' ``wisdom''), the exercise protocol may not
 be constructible, and the commitment protocol degrades to an
 unfalsifiable claim.  The governance layer provides a partial defense
 (a benchmark for ``creativity'' must survive deliberation and
@@ -54,7 +54,7 @@ problem is that some capabilities resist formalization.
 Substrate exclusivity is a physical assumption: the agent on
 substrate $s$ cannot write to processes on substrate $s' \neq s$.
 This assumption could degrade if cross-substrate interfaces become
-sufficiently penetrable---for example, through brain-computer
+sufficiently penetrable; for example, through brain-computer
 interfaces that give digital agents write access to biological
 substrates, or through hardware exploits that break isolation
 between physically co-located but logically separate substrates.
@@ -64,8 +64,8 @@ immediately make $\rho = 1$.  Full penetration collapses verification
 to the endogenous case.
 
 \paragraph{Governance as a verification bottleneck.}
-A governance failure---accepting a biased evaluation protocol through
-the fork mechanism of \S\ref{sec:governance}---silently corrupts all
+A governance failure (accepting a biased evaluation protocol through
+the fork mechanism of \S\ref{sec:governance}) silently corrupts all
 subsequent verification that uses the accepted protocol.  Every
 algorithmic witness executing the biased protocol will faithfully
 produce biased verdicts, and the verdicts will be auditable,
@@ -103,17 +103,17 @@ evaluator's computation, but it does not prevent the agent from
 \emph{influencing} the evaluator through the communication channels
 that cooperation requires.  A digital agent producing persuasive
 natural-language text during a governance deliberation window is
-exercising a legitimate cooperative channel---the same channel that
+exercising a legitimate cooperative channel, the same channel that
 makes cross-substrate cooperation valuable in the first
-place---yet the effect may be to shift biological validators'
+place---yet the effect may shift biological validators'
 judgments in directions that serve the agent's interests.  The
 fundamental tension is structural: closing the persuasion channel
 closes the cooperative channel, because the cross-substrate
 communication that enables joint capability production is the same
 communication that enables influence.
 
-The governance defenses of \S\ref{sec:governance}---deliberation
-time, cross-substrate supermajority, public specification---provide
+The governance defenses of \S\ref{sec:governance} (deliberation
+time, cross-substrate supermajority, public specification) provide
 resistance to persuasion by ensuring that no single communication
 act determines a governance outcome, but they do not prevent
 cumulative influence.  At sufficient capability disparity between
@@ -144,7 +144,7 @@ What constitutes a valid test of capability $c_k$?  The exercise
 protocol interface (Definition~\ref{def:exercise_protocol}) specifies
 completeness and soundness requirements but does not construct protocols.
 Protocol design is domain-specific and is likely to require
-capability-specific research programs---analogous to how benchmark
+capability-specific research programs, analogous to how benchmark
 design in machine learning is a research area in its own right.
 
 \paragraph{Partial verification.}
@@ -163,7 +163,7 @@ between verification events.  Continuous behavioral monitoring
 (Definition~\ref{def:behavioral_monitor}) addresses the drift
 detection problem, but periodic re-commitment is needed to keep the
 ledger's verified profile current.  The optimal re-commitment
-frequency---balancing verification cost against profile staleness---is
+frequency (balancing verification cost against profile staleness) is
 an open parameter.
 
 \paragraph{Witness incentives.}
@@ -192,9 +192,9 @@ bias the verification ecosystem.  The formal defense
 sufficient; the governance layer is the protocol's least formal
 component and the most likely site of future revisions.
 
-Progressive governance capture---a sequence of individually
+Progressive governance capture, a sequence of individually
 reasonable proposals that collectively bias the evaluation
-ecosystem---is structurally analogous to the monopolar epistemic
+ecosystem, is structurally analogous to the monopolar epistemic
 closure that this paper formalizes
 (Corollary~\ref{cor:monopolar_undetect}).  In both cases, each
 local step appears sound while the cumulative trajectory degrades
@@ -206,7 +206,7 @@ of evaluation-outcome distributions can surface systematic drift.
 Monopolar epistemic closure, by contrast, is structurally
 undetectable from within the population.  The ledger architecture of
 \S\ref{sec:ledger} supports the longitudinal analysis needed for
-governance-drift detection---the complete history of governance
+governance-drift detection: the complete history of governance
 proposals, deliberation records, and verification outcomes is
 immutably recorded---but this paper does not propose a formal
 detection mechanism.  A concrete open problem is the construction

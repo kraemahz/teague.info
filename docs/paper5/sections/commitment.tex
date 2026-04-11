@@ -53,7 +53,7 @@ space $\mathcal{R}$, and a commitment space $\Lambda$ consists of:
     recording $v = \texttt{fail}$ for $\lambda$ with
     $\xi = \texttt{reveal\_timeout}$.  The timeout entry requires
     only the unexpired commitment's presence on the ledger and the
-    current time exceeding the deadline---no witness participation
+    current time exceeding the deadline; no witness participation
     is needed.  This prevents selective reveal: suppressed
     commitments are treated as falsified claims.
 \end{enumerate}
@@ -264,7 +264,7 @@ indistinguishable from real protocol executions~\citep{goldwasser1989knowledge}.
 Standard constructions for zero-knowledge proofs of committed values
 exist (e.g., Bulletproofs for range proofs~\citep{bunz2018bulletproofs},
 or general-purpose zkSNARKs for arbitrary NP predicates).  The
-contribution here is not a new ZK construction but the identification of
+contribution here is the identification of
 \emph{when} ZK is needed in the alignment verification setting: namely,
 when the claim's content is itself security-relevant.  For non-sensitive
 claims, the standard Commit--Verify--Reveal protocol of

@@ -25,7 +25,7 @@ in \S\ref{sec:asymmetry}: the agent's action space includes actions that
 modify the evaluator's inputs, and this \emph{write-access asymmetry}
 grows with capability.  As the agent becomes more capable, more of the
 evaluator's input space becomes reachable from the agent's actions, until
-at the limit the evaluator is entirely endogenous---a function of
+at the limit the evaluator is entirely endogenous: a function of
 quantities the agent controls.  At that point, verification is not
 merely difficult; it is structurally absent.
 
@@ -33,8 +33,8 @@ The fix is equally structural.  The only invariant limit on an agent's
 write access is \emph{substrate exclusivity}: an agent cannot write to
 observation channels rooted in substrates it does not
 occupy~\citep{lasser2026horizon, lasser2026scm}.  This is not a
-capability limitation---the agent may be arbitrarily powerful within its
-own substrate---but a physical constraint on cross-substrate causal
+capability limitation (the agent may be arbitrarily powerful within its
+own substrate) but a physical constraint on cross-substrate causal
 influence.  We construct a cryptographic commitment protocol
 (\S\ref{sec:commitment}) in which the agent commits to a claim before
 verification occurs, and a \emph{substrate-exclusive witness}

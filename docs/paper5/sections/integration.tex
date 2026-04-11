@@ -14,8 +14,8 @@ aggregates evidence from multiple observation channels via log-odds
 combination.  The aggregation's validity depends on the channels being
 \emph{independently informative}: each channel's evidence is
 conditionally independent of the others given the true state.  If an
-agent can write to multiple channels simultaneously---because they all
-run on the same substrate---the independence assumption fails, and the
+agent can write to multiple channels simultaneously (because they all
+run on the same substrate), the independence assumption fails, and the
 log-odds aggregation can be arbitrarily manipulated.
 
 The committed-claim construction closes this gap at two levels of
@@ -64,7 +64,7 @@ multiple channels, restoring \emph{channel integrity} for Paper~4's
 multi-channel attribution~\citep{lasser2026scm}: no single-substrate
 actor can inject coordinated false evidence across channels.
 Channel integrity is weaker than the full conditional independence
-that optimal log-odds aggregation requires---natural correlations
+that optimal log-odds aggregation requires; natural correlations
 between channels (e.g., from shared agent state) may still exist
 under isolation alone.  The stronger conditional-independence
 guarantee, which licenses exact log-odds combination, requires the
@@ -88,7 +88,7 @@ Proposition~\ref{prop:channel_isolation}, assume additionally:
     rather than a correlated batch proposal.)
     \item[(iii)] \textbf{Joint sufficiency:} $\mathbf{C}_a$ is a
     jointly sufficient statistic for agent $a$'s exercise-level
-    behavior across all benchmarks---i.e., conditional on
+    behavior across all benchmarks, i.e., conditional on
     $\mathbf{C}_a$, the agent's performance on protocol $\pi_{B_i}$
     is independent of its performance on $\pi_{B_j}$ for $i \neq j$.
     This excludes persistent cross-exercise state (e.g., the agent
@@ -182,7 +182,7 @@ depth to substrate diversity.
 
 The SPRT-based scorpion detection of~\citet{lasser2026scm} compares an agent's behavioral
 observations against a baseline.  In the current framework, the baseline
-is the \emph{actor's own estimate} of the agent's expected behavior---an
+is the \emph{actor's own estimate} of the agent's expected behavior, an
 endogenous quantity that is subject to the actor's model uncertainty and
 potential manipulation.
 
@@ -222,7 +222,7 @@ D_{\mathrm{KL}}(p_1 \| \hat{p}_0)$, then $\mathbb{E}[T^{\mathrm{committed}}]
 \end{proof}
 
 The committed baseline is at least as discriminating as the estimated
-baseline whenever the agent's commitment is \emph{informative}---that
+baseline whenever the agent's commitment is \emph{informative}: that
 is, when the committed profile $\mathbf{C}_a$ constrains the expected
 behavioral distribution more tightly than the actor's prior estimate
 does.  Since agents commit to specific capability claims (not vague
@@ -244,7 +244,7 @@ converge.  Verified capability claims provide a shortcut: a commitment
 that is verified by a substrate-exclusive witness establishes a baseline
 that the actor's trust model can condition on, reducing the number of
 observations needed for convergence.  The verified claim does not
-replace the behavioral evidence---it provides a structural prior that
+replace the behavioral evidence; it provides a structural prior that
 the EWMA refines.
 
 \paragraph{Falsification as accelerated detection.}
@@ -328,9 +328,9 @@ $\{S_1, \ldots, S_m\}$.  If $m = 1$, then:
 \end{theorem}
 
 \begin{remark}
-Under the positive-measure reachability assumption---that
+Under the positive-measure reachability assumption (that
 same-substrate addressability produces a reachable set of positive
-measure, not merely a nonempty one---part~(a) strengthens to
+measure, not merely a nonempty one), part~(a) strengthens to
 $\rho(a_j, E) > 0$.  This holds for all practical substrates:
 if a process can modify at least one evaluator input, it can
 modify that input over a range of values, not just at a single

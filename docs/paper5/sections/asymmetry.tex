@@ -127,7 +127,7 @@ Each major alignment framework encounters the verification asymmetry at
 a characteristic point.
 
 \paragraph{RLHF.}
-The reward model is trained from human feedback---exogenous at training
+The reward model is trained from human feedback, exogenous at training
 time.  At deployment, the agent optimizes against a frozen reward model
 whose inputs are within its influence: it can learn what input patterns
 produce high reward scores without producing the intended
@@ -139,8 +139,8 @@ overlaps the agent's output space.
 The constitution is exogenous text, but its \emph{interpretation} is
 endogenous: the same model that is being constrained performs the
 constitutional evaluation~\citep{bai2022constitutional}.  The asymmetry
-is $\rho > 0$ because the interpretation step's ``inputs''---the
-model's internal representations of constitutional meaning---are
+is $\rho > 0$ because the interpretation step's ``inputs'' (the
+model's internal representations of constitutional meaning) are
 writable by the model itself.
 
 \paragraph{Debate and amplification.}

@@ -3,8 +3,8 @@
 
 Alignment frameworks address specification, generalization, and
 verification.  This paper has argued that verification is the
-prerequisite layer: when the evaluator is endogenous---reachable from
-the agent's action space---solutions to the other two layers do not
+prerequisite layer: when the evaluator is endogenous (reachable from
+the agent's action space), solutions to the other two layers do not
 bind, because the channel through which their success would be measured
 is the channel that has failed.
 
@@ -27,7 +27,7 @@ for security-sensitive claims), and algorithmic witnesses
 (Definition~\ref{def:alg_witness}) execute fully specified verification
 protocols on separate substrates.  Human judgment enters at a single
 point---benchmark admissibility through a governance fork protocol
-(Definition~\ref{def:gov_fork})---resolving the bandwidth problem by
+(Definition~\ref{def:gov_fork}), resolving the bandwidth problem by
 separating the infrequent, human-speed governance decision from the
 frequent, machine-speed per-claim verification.
 
@@ -52,9 +52,9 @@ that guarantee holds, a compound failure that is both dangerous and
 silent.
 
 The construction is not GFM-specific.  Any alignment framework whose
-evaluation step is vulnerable to the write-access asymmetry---which, as
+evaluation step is vulnerable to the write-access asymmetry (which, as
 \S\ref{sec:existing_frameworks} argues, includes all major current
-frameworks---can use substrate-exclusive witnesses and cryptographic
+frameworks) can use substrate-exclusive witnesses and cryptographic
 commitments to exogenize its verification layer.  The framework-specific
 work is in defining the claim types and exercise protocols; the
 structural argument for why exogenous verification is needed, and the

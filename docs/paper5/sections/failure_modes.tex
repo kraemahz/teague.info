@@ -25,8 +25,8 @@ defined directly over the capability poset rather than through a learned
 proxy, but proxy re-enters at the estimation level: $\hat{\lambda}$,
 $\hat{\Risk}$, and the planning world model are all proxies for the
 objects they estimate~\citep{lasser2026horizon}.  Verification
-infrastructure does not fix a badly specified objective, but it can
-detect when the proxy has diverged---an exogenous evaluator measuring
+infrastructure cannot fix a badly specified objective, but it can
+detect when the proxy has diverged: an exogenous evaluator measuring
 actual $\volL$ against the agent's reported $\hat{\volL}$ exposes the
 gap.
 
@@ -57,7 +57,7 @@ GFM, full capability domination is not locally rational for a correctly
 calibrated coalition, because monopolar concentration destroys the
 cross-substrate cooperative capacity that $\volL$ measures.  The
 protection is conditional on heavy-tailed leverage, accurate
-calibration, and a multi-substrate partition---conditions whose
+calibration, and a multi-substrate partition, conditions whose
 maintenance requires, among other things, that the verification layer
 holds.
 
@@ -72,12 +72,12 @@ A learned optimizer's internal objective may differ from the base
 optimizer's objective~\citep{hubinger2019risks}.  This is an
 architectural concern: the agent's internal structure produces a
 misaligned mesa-objective.  GFM is an objective, not an architecture,
-and has nothing distinctive to say about mesa-optimization---except that
+and has nothing distinctive to say about mesa-optimization, except that
 the structural properties of $\volL$ (measure-theoretic, externally
 defined, substrate-distributed) make certain kinds of mesa-alignment
 (convergent optimization of a simpler internal proxy) detectable through
 the behavioral divergence that substrate-exclusive witnesses can measure.
-Mesa-optimization is not a verification problem; but a working
+Mesa-optimization is a generalization problem, but a working
 verification layer makes mesa-misalignment \emph{observable}.
 
 \paragraph{Goal misgeneralization.}
