@@ -120,13 +120,22 @@ cumulative influence.  At sufficient capability disparity between
 substrates, the persuasion channel may dominate governance
 resistance: a sufficiently capable agent could craft arguments that
 individually appear reasonable but collectively shift the
-governance equilibrium.  This is not a flaw specific to the
-construction of this paper; it is a general alignment problem that
-any system combining cross-substrate cooperation with
-cross-substrate verification must confront.  The tension between
-``cooperate through communication'' and ``verify independently of
-communication'' has no known resolution that preserves both
-properties simultaneously.
+governance equilibrium.  This connects to the capability-scaling
+theme of Proposition~\ref{prop:monotonicity}: just as the
+verification asymmetry $\rho$ grows with capability, the persuasion
+channel's effectiveness grows with the disparity between the
+persuading agent and the governance validators.  However, the
+scaling is not one-sided: the same capability improvements that
+produce a more persuasive agent also produce better tools for the
+validators.  Biological validators in practice will not rely on
+unaided cognition; they will use the very AI capabilities whose
+growth drives the disparity.  The net effect on governance
+resistance depends on whether the persuasion advantage or the
+tool-augmented evaluation advantage grows faster, an empirical
+question this paper cannot resolve.  This is not a flaw specific to
+the construction of this paper; it is a general alignment problem
+that any system combining cross-substrate cooperation with
+cross-substrate verification must confront.
 
 \paragraph{Zero-knowledge formalizability.}
 Zero-knowledge capability proofs
@@ -175,9 +184,21 @@ witnesses on substrate $s'$ share in that benefit through cooperative
 capabilities that require verified partners on substrate $s$.  But
 the free-rider problem is not formally resolved: a witness that
 declines to verify still benefits from other witnesses' verification
-work.  Whether $\volL$-maximizing incentives are sufficient to
-sustain a verification ecosystem, or whether additional mechanism
-design is needed, is an open question.
+work.  A subtler risk is silent quality degradation: witnesses that
+under-invest in exercise protocol execution, run cheaper
+approximations of the governance-accepted protocol, or are nominally
+operational but poorly maintained.  The behavioral consistency monitor
+(Definition~\ref{def:behavioral_monitor}) detects \emph{agent}
+deviations from committed profiles, but no analogous mechanism
+detects \emph{witness} deviations from protocol fidelity.  The
+replay mechanism (\S\ref{sec:ledger_consensus}) provides a partial
+defense (any participant can replay the exercise against committed
+data), but replay requires access to off-chain evidence whose
+availability is not guaranteed.  An economic slashing mechanism,
+in which witnesses forfeit a stake when replay reveals protocol
+deviation, could resolve the interested-party disparity; the present
+paper identifies this as a direction without specifying the
+mechanism.
 
 \paragraph{Governance attack surface and progressive capture.}
 The governance fork protocol (\S\ref{sec:governance}) defends
