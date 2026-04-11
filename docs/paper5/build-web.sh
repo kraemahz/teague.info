@@ -206,6 +206,10 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
     {
       "author": "Claude Opus 4.6",
       "affiliations": [{"name": "Anthropic"}]
+    },
+    {
+      "author": "GPT 5.4",
+      "affiliations": [{"name": "OpenAI"}]
     }
   ]
 }

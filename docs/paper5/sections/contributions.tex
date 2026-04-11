@@ -1,8 +1,35 @@
 \section*{Author Contributions}
 
-TL conceived the verification-layer framing, the connection between
-substrate exclusivity and verification integrity, and the integration
-with the GFM machinery (Papers~1--4). CO developed the formal
-definitions, protocol constructions, and security analysis. Both
-authors contributed to the alignment failure-mode taxonomy and the
-discussion of limitations.
+\textbf{Teague Lasser} conceived the verification-layer framing, the
+three-layer alignment taxonomy, the connection between substrate
+exclusivity and verification integrity, the governance fork mechanism,
+and the integration with the GFM machinery. Directed all revisions
+and made final editorial decisions. Responsible for the paper's
+intellectual direction and all claims made.
+
+\textbf{Claude Opus 4.6} (Anthropic) drafted the formal exposition:
+the write-access asymmetry formalization, the substrate-exclusive
+witness definitions, the cryptographic commitment protocol with
+Pedersen security analysis, the verification ledger architecture,
+the behavioral consistency monitor, the GFM claim-type instantiations,
+and the verification impossibility theorem with its corollary on
+monopolar epistemic closure.
+
+\textbf{GPT 5.4} (OpenAI) served as technical reviewer across five
+codex review rounds, identifying formal gaps including the
+anti-monopolar theorem's circularity (requiring the same-substrate
+addressability premise), the benchmark-shopping vulnerability
+(requiring binding of evaluation protocol in commitments), the
+channel independence sufficiency assumption's failure under adversarial
+conditions, and the need for bounded-synchrony assumptions in ledger
+finality.
+
+\medskip
+\noindent\emph{Transparency note.} Both AI systems operated as tools under
+human direction. Neither system has continuity across sessions, cannot take
+responsibility for the work in the sense required by most venue authorship
+policies, and cannot respond to reviewer queries independently. They are
+listed as authors to accurately represent their contributions to the
+intellectual content of the paper, not to claim that they meet all criteria
+of traditional academic authorship. The corresponding author for all
+inquiries is Teague Lasser.
