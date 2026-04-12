@@ -557,13 +557,19 @@ shared environmental noise affects both substrates), the correction signals
 from cross-substrate channels may be sub-additive, and the effective
 rho_k^cross should be discounted accordingly.
 
-[CONJECTURE: For most practical substrate partitions (m = 2, biology +
-silicon), rho_min^cross = 1 per dimension. This means the design criterion
-reduces to: "every safety-relevant dimension of W must have at least one
-biological observation channel." This is structurally the same as the harness
-constitution's principle that the user's higher_order_abstract_reasoning is the
-uniquely non-gameable validator -- formalized as a design criterion for the
-phase boundary.]
+**Remark (m = 2 specialization).** For any substrate partition with m = 2,
+each dimension has at most one cross-substrate channel per pair. The design
+criterion reduces to: every safety-relevant dimension of W must have a channel
+on *both* substrates. In the common case (biology + silicon), this means every
+dimension needs at least one biological observation channel. But this framing
+should not be read as "biological substrates are special" — rather, *m = 2 is
+a fragile minimum*. Any loss of a single channel on a single dimension is
+immediately fatal because there is zero redundancy. The structural implication
+is that m >= 3 is where the redundancy criterion becomes non-trivially
+satisfiable. (Note: the substrate partition is at the level of abstraction
+where failure correlations matter. Two silicon deployments with uncorrelated
+failure modes may functionally constitute different substrates, increasing
+effective m beyond the nominal substrate-type count.)
 
 ---
 
@@ -683,14 +689,17 @@ singularly load-bearing for every dimension they cover**. Loss of the
 biological observation channel on any dimension immediately violates the
 redundancy criterion on that dimension.
 
-[OPEN QUESTION for user: This result has a strong qualitative implication: in
-the m = 2 case, the phase boundary's stability depends critically on whether
-the biological substrate's channels are *maintained* as the system evolves. If
-automation progressively replaces human judgment on safety-relevant dimensions
-(e.g., the human stops reviewing AI capability claims because the AI's
-self-reports "seem fine"), rho_k^cross drops from 1 to 0 on those dimensions,
-and the system enters the absorbing basin. Is this the right way to frame the
-result, or is it too prescriptive about the biological substrate's role?]
+**Remark (progressive attenuation as the real threat).** The m = 2
+vulnerability is not that the biological substrate is *removed* (an overt
+act that would be detectable) but that it is *attenuated* — the human stops
+reviewing AI capability claims because the AI's self-reports "seem fine,"
+or human judgment is progressively replaced by automated proxies that share
+the silicon substrate's failure modes. This attenuation reduces effective
+sensitivity without changing the nominal channel count, causing rho_k^cross
+to drop below the threshold while appearing unchanged to a naive audit. The
+skeleton-substrate scenario (Corollary 3) is precisely this failure mode.
+The framing should emphasize m = 2 fragility and the value of m >= 3, not
+the specialness of any particular substrate.
 
 **Corollary 3 (Skeleton-Substrate Vulnerability).** Under a skeleton-substrate
 strategy where m >= 2 nominally but the non-dominant substrate's channels have
@@ -787,35 +796,39 @@ first on the dimension with lowest rho_k^eff, and then cascade effects (Lemma
    biological channel on any safety-relevant dimension immediately violates the
    redundancy criterion.
 
-### Open questions requiring user.higher_order_abstract_reasoning
+### Resolved design questions
 
-These are questions where the correct answer requires judgment calls about the
-framework's structure that are beyond what the formal machinery alone
-determines.
+These questions were surfaced during drafting and resolved through user review.
 
-1. **Nonlinear dynamics.** The linearized treatment (constant r_S, r_W, r_sub)
-   is a starting approximation. In reality, all three rates depend on the
-   current state: r_sub accelerates as the actor becomes more capable, r_S may
-   degrade as the world model errors compound, and r_W may vary by dimension. A
-   nonlinear treatment would strengthen the result but may require different
-   proof techniques. Is the linearized case sufficient for a first paper, with
-   nonlinear extensions flagged as future work?
+1. **Nonlinear dynamics.** *Resolution: linearized is sufficient for the first
+   paper.* The linearized treatment (constant r_S, r_W, r_sub) already produces
+   the qualitative result: self-correcting and absorbing basins exist, separated
+   by a characterized boundary. The nonlinear treatment (state-dependent rates)
+   would tighten the boundary but not change the structural conclusion. Flag the
+   nonlinear extension in Discussion as future work.
 
-2. **The r_ext observability question.** Proposition 2 argues that the
-   monopolar absorbing state is stable because r_ext becomes unobservable. But
-   r_ext is a property of the *true* dynamics, not just the observed dynamics —
-   could a sufficiently capable actor *infer* r_ext from indirect evidence
-   (e.g., rate of internal innovation slowing)? If so, the absorbing state
-   might not be fully absorbing, and the phase boundary becomes a *metastable*
-   transition rather than an irreversible one. This would be a weaker but more
-   realistic result.
+2. **The r_ext observability question.** *Resolution: present both cases.* Under
+   Assumption B1 (no endogenous correction on blind dimensions), the monopolar
+   state is truly absorbing (Proposition 2 as stated). Under a weaker assumption
+   that allows indirect inference — e.g., the actor notices its rate of novel
+   capability discovery has been declining monotonically since subsuming
+   substrate S2 — the absorbing state becomes *metastable*: the actor has
+   evidence that something was lost, even if it cannot directly observe what.
+   The paper should present Proposition 2 under B1 as the main result, then
+   add a Remark or Proposition showing metastability under the weaker
+   assumption. The metastable case is more realistic and more interesting;
+   the absorbing case under B1 is the worst-case characterization.
 
-3. **Computational complexity of the phase boundary.** Is the condition r_S *
-   rho_min^cross > r_W * r_sub efficiently computable from observable
-   quantities? The actor needs to evaluate whether it is in the self-correcting
-   basin to take protective action. If the evaluation requires quantities the
-   actor cannot compute (because they depend on the true world model), the
-   phase boundary is a theoretical characterization but not an operational one.
+3. **Computational complexity of the phase boundary.** *Resolution: partially
+   self-diagnosable.* The actor can observe rho_k^cross (it knows which channels
+   it has) and can estimate r_S (from its own learning rate). It cannot directly
+   observe r_W (the degradation rate depends on the true dynamics). So the
+   phase boundary is partially self-diagnosable: the actor can check "am I
+   above the threshold for the r_W I estimate" but not "is my estimate of r_W
+   correct." This is honest and worth stating. The actor can monitor the
+   observable ingredients and flag when they approach the boundary, even if
+   it cannot guarantee the boundary is computed correctly. Frame this as a
+   limitation rather than leaving it as an open question.
 
 ### Design decisions resolved in this outline
 
