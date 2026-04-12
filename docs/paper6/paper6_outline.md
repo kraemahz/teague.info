@@ -724,8 +724,9 @@ collapses: every non-trivial risk restriction is absorbing, and the framework
 converges to maximal restriction. This is the formal statement of why the
 Wamura problem was called "the most important open problem" in Paper 3.
 
-*Proof sketch:* With r_S = 0, the condition r_S * rho_min^cross > r_W * r_sub
-is never satisfied (0 > positive), so Part (b) of Theorem 1 applies
+*Proof sketch:* With r_S = 0, the cumulative error budget B is always positive
+(no correction term to offset degradation and drift exposure), so Part (b)
+of Theorem 1 applies
 universally. Every restriction step reduces observation (no exercise -> no
 evidence), increasing world-model error on the risk dimension, making the next
 restriction appear more justified.
@@ -745,15 +746,18 @@ substrate partition must satisfy:
 
 where:
 
-    K_min(k, L_max) = ceil(r_W(k) * r_sub_max(L_max) / r_S(k))
+    K_min(k, L_max) = ceil((r_W(k) * r_sub_max(L_max)
+                         + d_max(k) * Delta_rho_avg(k) / L_max) / r_S(k))
 
 and r_sub_max(L_max) is the maximum subsumption rate under locally rational
-dynamics from any state in the basin with L(W) <= L_max. The dependence on
-L_max enters through r_sub_max: larger initial world-model errors produce more
-aggressive subsumption (the actor is more miscalibrated, making subsumption
-appear more rational), requiring higher channel redundancy to compensate. When
-L_max is small (good initialization), r_sub_max is low and K_min is
-correspondingly lower.
+dynamics from any state in the basin with L(W) <= L_max. The d_max term
+(from Assumption C2') captures the drift-exposure cost: when subsumption
+removes channels covering well-calibrated dimensions, the required redundancy
+increases even if L_max is small. The dependence on L_max enters through both
+r_sub_max (larger errors → more aggressive subsumption) and the d_max ratio
+(smaller L_max → the drift exposure dominates the error-proportional term).
+When L_max is small and Delta_rho_avg is nonzero, K_min can be substantially
+larger than the original formula without the drift term would predict.
 
 ### Practical implications
 
@@ -810,12 +814,25 @@ Consider a two-substrate system (biology + silicon) with:
   substrate diversity, cooperative growth rate, self-trust calibration)
 - 3 observation channels from biology (covering dimensions 1, 3, 5)
 - 4 observation channels from silicon (covering dimensions 1, 2, 3, 4)
-- Parameters: r_S = 0.1 per step, r_W = 0.05 per step, r_sub = 0.2 per step
+- Parameters: r_S = 0.1 per step, r_W = 0.05 per step, r_sub = 0.2 per step,
+  d_max = 0.02 per step
+
+*Note on parameter grounding:* These values are chosen for pedagogical clarity,
+not empirical calibration. r_sub = 0.2 means one subsumption event per five
+time steps, which is aggressive but plausible during an active consolidation
+phase. r_S = 0.1 corresponds to 10% error correction per step from the EWMA
+learning rule at moderate learning rate. r_W = 0.05 assumes the uncorrected
+drift rate is half the correction rate. d_max = 0.02 is the exogenous drift
+rate on a newly blinded dimension. A sensitivity analysis over plausible
+ranges of (r_S, r_W, r_sub, d_max) should accompany the full paper; the
+single-point example here illustrates the dynamics, not the quantitative
+predictions.
 
 ### Trajectory under progressive marginalization
 
 1. **Initial state:** rho_min^cross = 1 (dimension 2 covered only by silicon,
-   dimension 5 only by biology). Condition: 0.1 * 1 > 0.05 * 0.2 = 0.01.
+   dimension 5 only by biology). No subsumption has occurred yet so
+   Delta_rho_avg = 0. Condition: 0.1 * 1 > 0.05 * 0.2 + 0 = 0.01.
    Satisfied. System is in self-correcting basin.
 
 2. **Biological channels attenuated** (skeleton-substrate: biological agents
