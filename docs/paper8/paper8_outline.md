@@ -2,7 +2,26 @@
 
 *Working title. Companion to Papers 1-7 in the GFM sequence.*
 
-**Thesis:** The GFM framework's central measure, vol_P, quantifies capability *possession* -- the potential optionality available to a collective. But the experiential value it is meant to protect requires capability *exercise* -- the actual realization of that optionality in the world. The gap between possession and exercise is the B-to-C gap: a collective can have high vol_P while most of its capabilities lie dormant (the Doll Problem) or while exercise concentrates on a narrow self-reinforcing subset (wireheading). This paper introduces *realized capability volume* vol_R, a second measure that tracks exercised optionality alongside vol_P. The B-to-C ratio beta = vol_R / vol_P becomes the framework's diagnostic for proxy failure: when beta diverges from 1, the framework's objective (vol_P maximization) is no longer tracking the experiential goal it was designed to serve. The central result is a time-averaged convergence theorem: under the benchmark-refinement dynamic from Paper 2, the time-averaged beta converges to a positive floor for all capabilities outside a *residual class* -- capabilities that fail benchmarkability, a class that includes (but may not be limited to) capabilities individuated by agent identity. The paper converts the B-to-C gap from an open problem into a characterized limitation: the gap closes for benchmarkable capabilities with quantified convergence, and the capabilities it cannot reach are structurally identified.
+**Thesis:** The GFM framework's central measure, vol_P, quantifies capability
+*possession* -- the potential optionality available to a collective. But the
+experiential value it is meant to protect requires capability *exercise* -- the
+actual realization of that optionality in the world. The gap between possession
+and exercise is the B-to-C gap: a collective can have high vol_P while most of
+its capabilities lie dormant (the Doll Problem) or while exercise concentrates
+on a narrow self-reinforcing subset (wireheading). This paper introduces
+*realized capability volume* vol_R, a second measure that tracks exercised
+optionality alongside vol_P. The B-to-C ratio beta = vol_R / vol_P becomes the
+framework's diagnostic for proxy failure: when beta diverges from 1, the
+framework's objective (vol_P maximization) is no longer tracking the
+experiential goal it was designed to serve. The central result is a
+time-averaged convergence theorem: under the benchmark-refinement dynamic from
+Paper 2, the time-averaged beta converges to a positive floor for all
+capabilities outside a *residual class* -- capabilities that fail
+benchmarkability, a class that includes (but may not be limited to)
+capabilities individuated by agent identity. The paper converts the B-to-C gap
+from an open problem into a characterized limitation: the gap closes for
+benchmarkable capabilities with quantified convergence, and the capabilities it
+cannot reach are structurally identified.
 
 **Status:** Outline with formal definitions and theorem statements. Proof sketches indicate approach; full proofs are future work.
 
@@ -27,15 +46,38 @@
 
 ### Purpose
 
-Paper 1 defines the GFM actor as a system that maximizes vol_P -- the poset measure over the capability space (Paper 1, Definition 6; Paper 2, Definition 7). Paper 2 axiomatizes vol_P as a poset measure satisfying M1-M6 (Paper 2, Proposition 1) and proves it is self-balancing (Paper 2, Theorem 1). Paper 3 extends the analysis to multi-substrate collectives, proving that full domination is anti-maximizing under discounting (Paper 3, Proposition 6). Throughout, vol_P is treated as a faithful proxy for the experiential optionality the framework is meant to protect.
+Paper 1 defines the GFM actor as a system that maximizes vol_P -- the poset
+measure over the capability space (Paper 1, Definition 6; Paper 2, Definition
+7). Paper 2 axiomatizes vol_P as a poset measure satisfying M1-M6 (Paper 2,
+Proposition 1) and proves it is self-balancing (Paper 2, Theorem 1). Paper 3
+extends the analysis to multi-substrate collectives, proving that full
+domination is anti-maximizing under discounting (Paper 3, Proposition 6).
+Throughout, vol_P is treated as a faithful proxy for the experiential
+optionality the framework is meant to protect.
 
-But vol_P measures what the collective *can* do, not what it *does*. The B-to-C gap -- named in Paper 1 Section 7 and flagged as a primary open problem in the gap analysis -- is the possibility that these diverge. Two failure modes are identified but not formally addressed:
+But vol_P measures what the collective *can* do, not what it *does*. The B-to-C
+gap -- named in Paper 1 Section 7 and flagged as a primary open problem in the
+gap analysis -- is the possibility that these diverge. Two failure modes are
+identified but not formally addressed:
 
-1. **The Doll Problem** (Paper 1, Section 7.1): A collective possesses rich capabilities but exercises none of them. Like a child with a room full of untouched dolls, the vol_P score is high but the experiential value is zero. The framework's self-balancing property prevents capability *contraction*, but it says nothing about whether capabilities are actually *used*.
+1. **The Doll Problem** (Paper 1, Section 7.1): A collective possesses rich
+   capabilities but exercises none of them. Like a child with a room full of
+   untouched dolls, the vol_P score is high but the experiential value is zero.
+   The framework's self-balancing property prevents capability *contraction*,
+   but it says nothing about whether capabilities are actually *used*.
 
-2. **Wireheading** (Paper 5, Discussion): A collective exercises capabilities, but only in narrow self-reinforcing loops that serve the measurement system rather than experiential value. High vol_P and apparently high exercise, but the exercise is degenerate -- the collective is optimizing the proxy rather than the thing the proxy tracks.
+2. **Wireheading** (Paper 5, Discussion): A collective exercises capabilities,
+   but only in narrow self-reinforcing loops that serve the measurement system
+   rather than experiential value. High vol_P and apparently high exercise, but
+   the exercise is degenerate -- the collective is optimizing the proxy rather
+   than the thing the proxy tracks.
 
-Both failure modes share a structural cause: vol_P is a *possession* measure, and possession is necessary but not sufficient for the experiential optionality the framework aims to protect. The B-to-C gap is the formal version of Goodhart's Law applied to the GFM framework itself: when the measure (vol_P) diverges from the target (experiential optionality), optimizing the measure no longer serves the target.
+Both failure modes share a structural cause: vol_P is a *possession* measure,
+and possession is necessary but not sufficient for the experiential optionality
+the framework aims to protect. The B-to-C gap is the formal version of
+Goodhart's Law applied to the GFM framework itself: when the measure (vol_P)
+diverges from the target (experiential optionality), optimizing the measure no
+longer serves the target.
 
 ### The exercised-fraction heuristic
 
@@ -72,13 +114,28 @@ These are the right signals, but they lack formal grounding. rho_k is a per-agen
 
 The central design question for vol_R is: what counts as "exercising" a capability? Three candidate definitions, ordered by strength:
 
-1. **Invocation:** Capability d was called/activated during the observation window. Too weak: a diagnostic ping that invokes a capability without depending on its output counts as exercise, producing false positives.
+1. **Invocation:** Capability d was called/activated during the observation
+   window. Too weak: a diagnostic ping that invokes a capability without
+   depending on its output counts as exercise, producing false positives.
 
-2. **Contribution:** Capability d contributed to an output during the observation window. Better, but ambiguous: a capability that was part of a pipeline but whose removal would not change the output was "contributing" in a causal sense but not load-bearing.
+2. **Contribution:** Capability d contributed to an output during the
+   observation window. Better, but ambiguous: a capability that was part of a
+   pipeline but whose removal would not change the output was "contributing" in
+   a causal sense but not load-bearing.
 
-3. **Load-bearing exercise:** Capability d was a necessary condition for a realized output -- removing d would have made the output unrealizable. This is the counterfactual criterion, and it is the one this paper adopts.
+3. **Load-bearing exercise:** Capability d was a necessary condition for a
+   realized output -- removing d would have made the output unrealizable. This
+   is the counterfactual criterion, and it is the one this paper adopts.
 
-The counterfactual criterion is *inspired by* Paper 4's causal attribution framework (Definition 2) but requires a distinct formalization. Paper 4's SCM models action interventions on the capability dynamics (do(pi) interventions on agent actions), not capability-removal interventions on the realizable output set. The exercise indicator needs a capability-removal counterfactual: "what outputs would be lost if d were removed from the poset?" This is a structural counterfactual on the poset, not a dynamical intervention on the SCM. We define it independently and note the connection to Paper 4's contraction attribution as an analogy, not a direct application.
+The counterfactual criterion is *inspired by* Paper 4's causal attribution
+framework (Definition 2) but requires a distinct formalization. Paper 4's SCM
+models action interventions on the capability dynamics (do(pi) interventions on
+agent actions), not capability-removal interventions on the realizable output
+set. The exercise indicator needs a capability-removal counterfactual: "what
+outputs would be lost if d were removed from the poset?" This is a structural
+counterfactual on the poset, not a dynamical intervention on the SCM. We define
+it independently and note the connection to Paper 4's contraction attribution
+as an analogy, not a direct application.
 
 ### Formal definition
 
@@ -89,7 +146,10 @@ The counterfactual criterion is *inspired by* Paper 4's causal attribution frame
                (i.e., d is necessary for O: removing d from the poset makes O unrealizable)
     e_t(d) = 0  otherwise
 
-where R(P') denotes the set of cooperative outputs realizable under poset P'. The counterfactual R(P \ {d}) is a structural query on the poset -- it asks whether alternative pathways to O exist among the remaining capabilities -- not a dynamical intervention on the SCM.
+where R(P') denotes the set of cooperative outputs realizable under poset P'.
+The counterfactual R(P \ {d}) is a structural query on the poset -- it asks
+whether alternative pathways to O exist among the remaining capabilities -- not
+a dynamical intervention on the SCM.
 
 **Remark (window length).** The exercise indicator depends on the observation window Delta. Short windows (Delta -> 0) produce sparse exercise indicators (most capabilities are dormant at any instant); long windows (Delta -> infinity) produce saturated indicators (every capability has been used at some point). The natural choice is Delta = 1 / alpha, where alpha is the EWMA learning rate from Paper 4's risk-trust dynamics (Definition 4) -- this matches the timescale on which the framework updates its estimates, so the exercise indicator reflects capabilities that are actively contributing to the framework's current operational state.
 
@@ -166,43 +226,88 @@ Furthermore, beta accounts for the poset structure (weights, subsumption relatio
 
 ### Which axioms does vol_R inherit?
 
-Paper 2 Proposition 1 establishes that vol_P satisfies axioms M1-M6. Since vol_R = vol_P restricted to the exercised sub-poset P^ex_t, the question is whether the restriction preserves each axiom.
+Paper 2 Proposition 1 establishes that vol_P satisfies axioms M1-M6. Since
+vol_R = vol_P restricted to the exercised sub-poset P^ex_t, the question is
+whether the restriction preserves each axiom.
 
 **Theorem 1 (Axiom Inheritance for vol_R).**
 
 Let vol_R(G, t) = vol_P(G restricted to P^ex_t) as in Definition 3. We analyze each of Paper 2's axioms M1-M6 (Proposition 1):
 
-**(M1) Non-negativity:** vol_R satisfies M1. vol_R(G, t) = vol_P(P^ex_t) >= 0 because vol_P satisfies M1 on any sub-poset.
+**(M1) Non-negativity:** vol_R satisfies M1. vol_R(G, t) = vol_P(P^ex_t) >= 0
+because vol_P satisfies M1 on any sub-poset.
 
-**(M2) Null empty set:** vol_R satisfies M2. When P^ex_t = empty (no capabilities exercised), vol_R = vol_P(empty) = 0.
+**(M2) Null empty set:** vol_R satisfies M2. When P^ex_t = empty (no
+capabilities exercised), vol_R = vol_P(empty) = 0.
 
-**(M3) Monotonicity:** vol_R satisfies M3 *within the exercised sub-poset*: if A subset B subset P^ex_t, then vol_R restricted to A <= vol_R restricted to B. However, M3 does NOT hold for the relationship between the full poset and the exercised sub-poset in the natural sense: adding a capability to P that is not exercised increases vol_P (M3 holds for vol_P) but leaves vol_R unchanged (the exercised sub-poset does not grow).
+**(M3) Monotonicity:** vol_R satisfies M3 *within the exercised sub-poset*: if
+A subset B subset P^ex_t, then vol_R restricted to A <= vol_R restricted to B.
+However, M3 does NOT hold for the relationship between the full poset and the
+exercised sub-poset in the natural sense: adding a capability to P that is not
+exercised increases vol_P (M3 holds for vol_P) but leaves vol_R unchanged (the
+exercised sub-poset does not grow).
 
-**(M4) Additivity under poset-disjointness:** vol_R satisfies M4. If two subsets of P^ex_t are poset-disjoint (Paper 2, Definition 8), then vol_R of their union equals the sum. This follows because poset-disjointness in P^ex_t implies poset-disjointness in P, and vol_P's M4 applies.
+**(M4) Additivity under poset-disjointness:** vol_R satisfies M4. If two
+subsets of P^ex_t are poset-disjoint (Paper 2, Definition 8), then vol_R of
+their union equals the sum. This follows because poset-disjointness in P^ex_t
+implies poset-disjointness in P, and vol_P's M4 applies.
 
-**(M5) Non-triviality:** vol_R satisfies M5 conditionally. For an exercised capability d in P^ex_t with s_max(d) >= 1, vol_R({d}) = vol_P({d}) > 0. But a capability with s_max >= 1 that is *not exercised* (d not in P^ex_t) contributes 0 to vol_R — non-triviality applies only to exercised capabilities.
+**(M5) Non-triviality:** vol_R satisfies M5 conditionally. For an exercised
+capability d in P^ex_t with s_max(d) >= 1, vol_R({d}) = vol_P({d}) > 0. But a
+capability with s_max >= 1 that is *not exercised* (d not in P^ex_t)
+contributes 0 to vol_R — non-triviality applies only to exercised capabilities.
 
-**(M6) Superadditivity under independence:** vol_R does NOT unconditionally satisfy M6. This is the critical finding.
+**(M6) Superadditivity under independence:** vol_R does NOT unconditionally
+satisfy M6. This is the critical finding.
 
 **Proposition 4 (Conditional Failure of M6 for vol_R).**
 
-Axiom M6 (superadditivity under independence) requires that merging two poset-disjoint groups produces a measure at least as large as the sum. For vol_P, this holds because independent capabilities contribute independent weights and cooperative capabilities contribute additional positive terms.
+Axiom M6 (superadditivity under independence) requires that merging two
+poset-disjoint groups produces a measure at least as large as the sum. For
+vol_P, this holds because independent capabilities contribute independent
+weights and cooperative capabilities contribute additional positive terms.
 
-For vol_R, M6 can fail when merging two groups changes the exercise status of capabilities in either group. Specifically: if group A has capability d_A exercised (load-bearing for output O_A), and group B has capability d_B that provides an alternative pathway for O_A, then merging A and B may cause e_t(d_A) to drop from 1 to 0 (d_A is no longer necessary because d_B is available). The merged vol_R can be *less* than the sum of the separate vol_R values.
+For vol_R, M6 can fail when merging two groups changes the exercise status of
+capabilities in either group. Specifically: if group A has capability d_A
+exercised (load-bearing for output O_A), and group B has capability d_B that
+provides an alternative pathway for O_A, then merging A and B may cause
+e_t(d_A) to drop from 1 to 0 (d_A is no longer necessary because d_B is
+available). The merged vol_R can be *less* than the sum of the separate vol_R
+values.
 
 *Proof sketch:* Constructive counterexample. Group A: {d_A} with e_t(d_A) = 1 (only pathway to output O). Group B: {d_B} with e_t(d_B) = 1 (only pathway to output Q). Merged group: d_B provides an alternative pathway to O, so e_t(d_A; merged) = 0. vol_R(A) = w(d_A), vol_R(B) = w(d_B), vol_R(merged) = w(d_B) + cooperative terms but WITHOUT w(d_A). When w(d_A) > cooperative terms from the merge, vol_R(merged) < vol_R(A) + vol_R(B). M6 fails.
 
 ### Consequence: vol_R is not self-balancing
 
-**Corollary 1 (vol_R Lacks Unconditional Self-Balancing).** Since M6 is a load-bearing axiom for Paper 2's self-balancing theorem (Theorem 1), and vol_R does not unconditionally satisfy M6, the self-balancing property does NOT transfer from vol_P to vol_R without additional conditions.
+**Corollary 1 (vol_R Lacks Unconditional Self-Balancing).** Since M6 is a
+load-bearing axiom for Paper 2's self-balancing theorem (Theorem 1), and vol_R
+does not unconditionally satisfy M6, the self-balancing property does NOT
+transfer from vol_P to vol_R without additional conditions.
 
-This is a significant structural finding. It means that an actor maximizing vol_R (rather than vol_P) would not have the automatic diversity-preserving properties that make vol_P a safe objective. The correct design is therefore: *optimize vol_P* (which is self-balancing) but *monitor vol_R* (which diagnoses proxy failure). vol_R is a diagnostic, not an objective.
+This is a significant structural finding. It means that an actor maximizing
+vol_R (rather than vol_P) would not have the automatic diversity-preserving
+properties that make vol_P a safe objective. The correct design is therefore:
+*optimize vol_P* (which is self-balancing) but *monitor vol_R* (which diagnoses
+proxy failure). vol_R is a diagnostic, not an objective.
 
-**Remark (when M6 does hold for vol_R).** M6 holds for vol_R under a *non-redundancy* condition: if no capability in either group provides an alternative pathway for any output realized by the other group, then merging preserves exercise status and M6 holds. This condition is equivalent to requiring that the groups' realized outputs are disjoint -- each output depends only on capabilities from one group. When this holds, vol_R inherits all six axioms, and the self-balancing property transfers conditionally.
+**Remark (when M6 does hold for vol_R).** M6 holds for vol_R under a
+*non-redundancy* condition: if no capability in either group provides an
+alternative pathway for any output realized by the other group, then merging
+preserves exercise status and M6 holds. This condition is equivalent to
+requiring that the groups' realized outputs are disjoint -- each output depends
+only on capabilities from one group. When this holds, vol_R inherits all six
+axioms, and the self-balancing property transfers conditionally.
 
-**Proposition 5 (Conditional Self-Balancing for vol_R).** Under the non-redundancy condition (the exercised sub-posets of the two groups realize disjoint output sets), vol_R satisfies M6 and the self-balancing property from Paper 2 Theorem 1 applies to vol_R.
+**Proposition 5 (Conditional Self-Balancing for vol_R).** Under the
+non-redundancy condition (the exercised sub-posets of the two groups realize
+disjoint output sets), vol_R satisfies M6 and the self-balancing property from
+Paper 2 Theorem 1 applies to vol_R.
 
-*Proof sketch:* Under non-redundancy, merging does not change exercise indicators in either group. The merged exercised sub-poset is the disjoint union of the individual exercised sub-posets, plus any new cooperative capabilities that become exercised through cross-group outputs. The cooperative terms are non-negative (same argument as Paper 2 Theorem 1). M6 follows.
+*Proof sketch:* Under non-redundancy, merging does not change exercise
+indicators in either group. The merged exercised sub-poset is the disjoint
+union of the individual exercised sub-posets, plus any new cooperative
+capabilities that become exercised through cross-group outputs. The cooperative
+terms are non-negative (same argument as Paper 2 Theorem 1). M6 follows.
 
 ---
 
@@ -264,9 +369,15 @@ Consider a capability collective G with poset P, benchmark refinement dynamic (D
 - Weight: sum_{d added at step t} w(d) <= W_add per step, where W_add is a constant.
 - Residual growth: vol_P(R_t) / vol_P(G_t) <= rho_R for all t, where rho_R in [0, 1) is a constant. This prevents the residual class from dominating vol_P as the poset grows.
 
-The weight bound is necessary because beta = vol_R / vol_P: even with bounded capability count, high-weight dormant additions can drive the denominator faster than the numerator, making beta arbitrarily small. The residual share bound rho_R ensures that the irreducible gap stays bounded.
+The weight bound is necessary because beta = vol_R / vol_P: even with bounded
+capability count, high-weight dormant additions can drive the denominator
+faster than the numerator, making beta arbitrarily small. The residual share
+bound rho_R ensures that the irreducible gap stays bounded.
 
-**Assumption R4 (Exercise persistence).** Once a capability is exercised through a benchmark, it remains exercised (e_t(d) = 1) for at least Delta_min steps before the exercise indicator can decay. This ensures that benchmark-driven exercise is not immediately undone by the decay mechanism.
+**Assumption R4 (Exercise persistence).** Once a capability is exercised
+through a benchmark, it remains exercised (e_t(d) = 1) for at least Delta_min
+steps before the exercise indicator can decay. This ensures that
+benchmark-driven exercise is not immediately undone by the decay mechanism.
 
 Then the *time-averaged* B-to-C ratio converges:
 
@@ -364,17 +475,38 @@ Paper 1 flags category (i) as the hardest case for the framework. Theorem 3 conf
 
 ### Bounding the residual class
 
-**Definition 12 (Observational Individuation Floor).** For a distinguishable agent k (Paper 3, Definition 8), define OI_floor(k) = vol_P({d_k}) where d_k is the unique capability guaranteed by Paper 3's observational individuation (Definition 9, Corollary 2.1). This is a convenience notation introduced in this paper; Paper 3 establishes the existence of d_k and the guarantee vol_P({d_k}) > 0 but does not use the symbol OI_floor.
+**Definition 12 (Observational Individuation Floor).** For a distinguishable
+agent k (Paper 3, Definition 8), define OI_floor(k) = vol_P({d_k}) where d_k is
+the unique capability guaranteed by Paper 3's observational individuation
+(Definition 9, Corollary 2.1). This is a convenience notation introduced in
+this paper; Paper 3 establishes the existence of d_k and the guarantee
+vol_P({d_k}) > 0 but does not use the symbol OI_floor.
 
-**Proposition 6 (Observational Individuation Provides a vol_R Floor for Active Agents).** The OI_floor (Definition 12) is a *lower bound* on vol_P contribution per distinguishable agent, not an upper bound.
+**Proposition 6 (Observational Individuation Provides a vol_R Floor for Active
+Agents).** The OI_floor (Definition 12) is a *lower bound* on vol_P
+contribution per distinguishable agent, not an upper bound.
 
-For vol_R, the transfer depends on exercise status: if agent k is actively participating in the collective (producing observation-channel outputs as a byproduct of participation), then the observational individuation capability d_k is continuously exercised (e_t(d_k) = 1), and the floor transfers to vol_R:
+For vol_R, the transfer depends on exercise status: if agent k is actively
+participating in the collective (producing observation-channel outputs as a
+byproduct of participation), then the observational individuation capability
+d_k is continuously exercised (e_t(d_k) = 1), and the floor transfers to vol_R:
 
     vol_R(G, t) >= sum_{k: agent k is active} OI_floor(k)
 
-*Proof sketch:* An active agent k generates distinct behavioral patterns (Paper 3, Definition 8) as a byproduct of participation. These patterns constitute exercise of the observational individuation capability d_k. Since d_k is unique to agent k (no other agent can replicate k's specific behavioral signature), d_k is load-bearing for the observation-channel output (removing d_k removes the distinguishability signal). Hence e_t(d_k) = 1 for active agents. The floor is the sum of OI_floor(k) over active agents.
+*Proof sketch:* An active agent k generates distinct behavioral patterns (Paper
+3, Definition 8) as a byproduct of participation. These patterns constitute
+exercise of the observational individuation capability d_k. Since d_k is unique
+to agent k (no other agent can replicate k's specific behavioral signature),
+d_k is load-bearing for the observation-channel output (removing d_k removes
+the distinguishability signal). Hence e_t(d_k) = 1 for active agents. The floor
+is the sum of OI_floor(k) over active agents.
 
-**Remark (floor does not transfer for inactive agents).** If agent k is nominally present but inactive (skeleton-substrate scenario from Paper 6's worked example), k's observation-channel outputs are not generated, e_t(d_k) = 0, and the OI floor does not contribute to vol_R. This aligns with the phase boundary analysis: skeleton-substrate strategies degrade both rho_k^cross (Paper 6) and beta (Paper 8).
+**Remark (floor does not transfer for inactive agents).** If agent k is
+nominally present but inactive (skeleton-substrate scenario from Paper 6's
+worked example), k's observation-channel outputs are not generated, e_t(d_k) =
+0, and the OI floor does not contribute to vol_R. This aligns with the phase
+boundary analysis: skeleton-substrate strategies degrade both rho_k^cross
+(Paper 6) and beta (Paper 8).
 
 **Remark (vol_P(R) is not upper-bounded by OI).** The observational individuation result provides a *floor* on vol_P contribution per agent, not a *cap* on the residual class. Identity-individuated capabilities may contribute arbitrarily more than OI_floor(k) to vol_P if they have high independent weights. Bounding vol_P(R) from above would require a theory of how much of each capability's weight is attributable to its identity-individuated dimension vs. its functional dimension -- a decomposition this paper identifies as an open problem (see Open Question 1) but does not resolve.
 
@@ -402,10 +534,11 @@ This converts the B-to-C gap from an open problem ("does the framework's proxy t
 
 **Definition 9 (B-to-C Alarm).** The B-to-C alarm fires when the B-to-C ratio drops below a threshold:
 
-    ALARM(t) = 1  if  beta(G, t) < beta_alarm
-    ALARM(t) = 0  otherwise
+    ALARM(t) = beta(G, t) < beta_alarm
 
-where beta_alarm in (0, 1) is a configurable threshold. The alarm detects proxy failure: when beta is low, vol_P is high but exercise is low, indicating that the framework's objective is not tracking experiential optionality.
+where beta_alarm in (0, 1) is a configurable threshold. The alarm detects proxy
+failure: when beta is low, vol_P is high but exercise is low, indicating that
+the framework's objective is not tracking experiential optionality.
 
 ### Diagnostic decomposition
 
@@ -416,11 +549,19 @@ When ALARM fires, the actor needs to diagnose *why* beta is low. The diagnostic 
     1 - beta = delta_dormant + delta_restricted + delta_residual
 
 where:
-- **delta_dormant** = contribution from benchmarkable capabilities that are dormant (e_t(d) = 0) but not restricted. These are capabilities the collective possesses and could exercise but has not. The benchmark refinement mechanism (Section 5) addresses these.
+- **delta_dormant** = contribution from benchmarkable capabilities that are
+  dormant (e_t(d) = 0) but not restricted. These are capabilities the
+  collective possesses and could exercise but has not. The benchmark refinement
+  mechanism (Section 5) addresses these.
 
-- **delta_restricted** = contribution from capabilities that are dormant because of active restrictions (Paper 3, Proposition 1). These are capabilities the framework has restricted due to risk claims. The controlled relaxation protocol from Paper 7 addresses these.
+- **delta_restricted** = contribution from capabilities that are dormant
+  because of active restrictions (Paper 3, Proposition 1). These are
+  capabilities the framework has restricted due to risk claims. The controlled
+  relaxation protocol from Paper 7 addresses these.
 
-- **delta_residual** = contribution from the residual class R (Definition 8). These are capabilities the framework structurally cannot exercise-verify. This component is irreducible within the current framework.
+- **delta_residual** = contribution from the residual class R (Definition 8).
+  These are capabilities the framework structurally cannot exercise-verify.
+  This component is irreducible within the current framework.
 
 **Proposition 7 (Computability of the Gap Decomposition).** The gap decomposition (Definition 10) is computable in O(|P|) time given:
 - The exercise indicator vector E = (e_t(d))_{d in P} (requires evaluating the counterfactual for each capability)
@@ -467,7 +608,9 @@ Consider a two-substrate collective (biology + silicon) with:
 
 ### Phase 1: Initial state (beta = 1)
 
-All capabilities are exercised: e_t(d) = 1 for all d. The collective operates with full exercise -- every capability is load-bearing for at least one cooperative output. beta = 20.0 / 20.0 = 1.0.
+All capabilities are exercised: e_t(d) = 1 for all d. The collective operates
+with full exercise -- every capability is load-bearing for at least one
+cooperative output. beta = 20.0 / 20.0 = 1.0.
 
 ### Phase 2: Automation concentrates exercise (beta drops)
 
@@ -503,13 +646,30 @@ vol_R recovers toward vol_P. beta -> 1.0 (excluding any residual class contribut
 
 ### Lessons from the example
 
-1. **Automation is the natural driver of the Doll Problem.** When silicon capabilities provide alternative pathways for outputs previously requiring biological participation, biological capabilities become dormant (per-output necessity weakens, Proposition 1). vol_P remains high (the capabilities still exist) but beta drops.
+1. **Automation is the natural driver of the Doll Problem.** When silicon
+   capabilities provide alternative pathways for outputs previously requiring
+   biological participation, biological capabilities become dormant (per-output
+   necessity weakens, Proposition 1). vol_P remains high (the capabilities
+   still exist) but beta drops.
 
-2. **The alarm detects the problem.** The drop in beta from 1.0 to 0.575 fires the alarm. The diagnostic decomposition identifies the source: dormant biological capabilities, not restrictions or residual-class issues.
+2. **The alarm detects the problem.** The drop in beta from 1.0 to 0.575 fires
+   the alarm. The diagnostic decomposition identifies the source: dormant
+   biological capabilities, not restrictions or residual-class issues.
 
-3. **Benchmark refinement is the correction mechanism.** By proposing tests that genuinely require the dormant capabilities, the actor restores exercise and beta recovers. The convergence theorem (Theorem 2) guarantees this recovery at a rate determined by the refinement rates.
+3. **Benchmark refinement is the correction mechanism.** By proposing tests
+   that genuinely require the dormant capabilities, the actor restores exercise
+   and beta recovers. The convergence theorem (Theorem 2) guarantees this
+   recovery at a rate determined by the refinement rates.
 
-4. **The dynamics parallel Paper 6's phase boundary.** The dormancy of biological capabilities in Phase 2 is structurally analogous to the observation-channel loss in Paper 6's compound feedback loop: biological observation channels degrade when biological capabilities become dormant. The difference is that Paper 6 analyzes the *dynamical* consequence (world-model degradation leading to the absorbing state), while this paper analyzes the *proxy* consequence (vol_P no longer tracks exercised optionality). Both diagnose the same underlying phenomenon from different angles.
+4. **The dynamics parallel Paper 6's phase boundary.** The dormancy of
+   biological capabilities in Phase 2 is structurally analogous to the
+   observation-channel loss in Paper 6's compound feedback loop: biological
+   observation channels degrade when biological capabilities become dormant.
+   The difference is that Paper 6 analyzes the *dynamical* consequence
+   (world-model degradation leading to the absorbing state), while this paper
+   analyzes the *proxy* consequence (vol_P no longer tracks exercised
+   optionality). Both diagnose the same underlying phenomenon from different
+   angles.
 
 ---
 
@@ -517,31 +677,90 @@ vol_R recovers toward vol_P. beta -> 1.0 (excluding any residual class contribut
 
 ### What this paper establishes
 
-1. **The B-to-C gap is formally measurable.** The realized capability volume vol_R and the B-to-C ratio beta provide a measure-theoretic diagnostic for the divergence between capability possession and capability exercise. This converts "is the proxy tracking the target?" from a philosophical question into a computable quantity.
+1. **The B-to-C gap is formally measurable.** The realized capability volume
+   vol_R and the B-to-C ratio beta provide a measure-theoretic diagnostic for
+   the divergence between capability possession and capability exercise. This
+   converts "is the proxy tracking the target?" from a philosophical question
+   into a computable quantity.
 
-2. **The gap closes for benchmarkable capabilities (in time average).** Under the benchmark refinement dynamic, the time-averaged beta converges to a floor determined by the refinement rates, exercise persistence, and poset growth. The floor approaches 1 - vol_P(R)/vol_P(G) as refinement rates increase relative to poset growth.
+2. **The gap closes for benchmarkable capabilities (in time average).** Under
+   the benchmark refinement dynamic, the time-averaged beta converges to a
+   floor determined by the refinement rates, exercise persistence, and poset
+   growth. The floor approaches 1 - vol_P(R)/vol_P(G) as refinement rates
+   increase relative to poset growth.
 
-3. **The residual class is partially characterized.** Identity-individuated capabilities -- those whose value is tied to *who* exercises them, not just *what* they do -- form a sufficient condition for residual class membership. The full residual class may be larger, including capabilities that fail benchmarkability for other reasons (communicability, repeatability, isolation, load-bearing requirements). The magnitude of vol_P(R) remains an open problem.
+3. **The residual class is partially characterized.** Identity-individuated
+   capabilities -- those whose value is tied to *who* exercises them, not just
+   *what* they do -- form a sufficient condition for residual class membership.
+   The full residual class may be larger, including capabilities that fail
+   benchmarkability for other reasons (communicability, repeatability,
+   isolation, load-bearing requirements). The magnitude of vol_P(R) remains an
+   open problem.
 
-4. **vol_R is not self-balancing.** The critical structural finding: vol_R does not satisfy axiom M6 unconditionally, so the self-balancing property does not transfer. This is why vol_R is a diagnostic, not an objective -- an actor maximizing vol_R would lack the automatic diversity-preservation that makes vol_P safe.
+4. **vol_R is not self-balancing.** The critical structural finding: vol_R does
+   not satisfy axiom M6 unconditionally, so the self-balancing property does
+   not transfer. This is why vol_R is a diagnostic, not an objective -- an
+   actor maximizing vol_R would lack the automatic diversity-preservation that
+   makes vol_P safe.
 
-5. **Wireheading is detectable.** The exercise leverage concentration metric (Definition 11, Proposition 9) provides a second-order diagnostic that catches the failure mode where beta is high but exercise is degenerate.
+5. **Wireheading is detectable.** The exercise leverage concentration metric
+   (Definition 11, Proposition 9) provides a second-order diagnostic that
+   catches the failure mode where beta is high but exercise is degenerate.
 
 ### Open questions requiring user.higher_order_abstract_reasoning
 
-1. **The experiential weight problem.** Theorem 3 characterizes *which* capabilities are in the residual class, but not *how much* they contribute to experiential value. A capability with high functional weight w(d) and a small experiential component has most of its value benchmarkable; a capability with low functional weight but high experiential value (e.g., a unique creative perspective) has most of its value in the residual. The framework currently treats all of w(d) as either benchmarkable or residual. A more nuanced treatment would decompose w(d) = w_func(d) + w_exp(d), with only w_exp(d) in the residual. Is this decomposition feasible, or does it require solving the hard problem (or a functional analog)?
+1. **The experiential weight problem.** Theorem 3 characterizes *which*
+   capabilities are in the residual class, but not *how much* they contribute
+   to experiential value. A capability with high functional weight w(d) and a
+   small experiential component has most of its value benchmarkable; a
+   capability with low functional weight but high experiential value (e.g., a
+   unique creative perspective) has most of its value in the residual. The
+   framework currently treats all of w(d) as either benchmarkable or residual.
+   A more nuanced treatment would decompose w(d) = w_func(d) + w_exp(d), with
+   only w_exp(d) in the residual. Is this decomposition feasible, or does it
+   require solving the hard problem (or a functional analog)?
 
-2. **The proxy-of-a-proxy problem.** vol_R uses vol_P as its base measure. If vol_P itself is a flawed proxy for experiential value (which it is -- that is the whole point of this paper), then vol_R inherits the flaw. vol_R diagnoses the exercise gap but not the underlying adequacy of vol_P as a measure of what matters. Is there a way to ground vol_R in something other than vol_P, or is the recursive proxy structure unavoidable?
+2. **The proxy-of-a-proxy problem.** vol_R uses vol_P as its base measure. If
+   vol_P itself is a flawed proxy for experiential value (which it is -- that
+   is the whole point of this paper), then vol_R inherits the flaw. vol_R
+   diagnoses the exercise gap but not the underlying adequacy of vol_P as a
+   measure of what matters. Is there a way to ground vol_R in something other
+   than vol_P, or is the recursive proxy structure unavoidable?
 
-3. **Dynamic residual class.** The residual class R is defined statically: a capability is identity-individuated or it is not. But in practice, capabilities may transition between benchmarkable and identity-individuated as the collective evolves. A capability that was benchmarkable (functionally testable) may become identity-individuated as the agent develops a unique relationship with it. Does the residual class need a dynamic treatment, and if so, how does this affect the convergence theorem?
+3. **Dynamic residual class.** The residual class R is defined statically: a
+   capability is identity-individuated or it is not. But in practice,
+   capabilities may transition between benchmarkable and identity-individuated
+   as the collective evolves. A capability that was benchmarkable (functionally
+   testable) may become identity-individuated as the agent develops a unique
+   relationship with it. Does the residual class need a dynamic treatment, and
+   if so, how does this affect the convergence theorem?
 
 ### Connections to other papers in the sequence
 
-- **Paper 6 (compound feedback loops):** Paper 6's phase boundary analysis assumes vol_P accurately measures the quantity the framework optimizes. Paper 8 asks whether that assumption holds. The connection: when beta < 1, the phase boundary parameters (r_S, r_W) may be miscalibrated because the actor is optimizing a proxy (vol_P) that diverges from the true target. A complete treatment would extend Paper 6's phase boundary to account for the vol_P/vol_R divergence.
+- **Paper 6 (compound feedback loops):** Paper 6's phase boundary analysis
+  assumes vol_P accurately measures the quantity the framework optimizes. Paper
+  8 asks whether that assumption holds. The connection: when beta < 1, the
+  phase boundary parameters (r_S, r_W) may be miscalibrated because the actor
+  is optimizing a proxy (vol_P) that diverges from the true target. A complete
+  treatment would extend Paper 6's phase boundary to account for the
+  vol_P/vol_R divergence.
 
-- **Paper 7 (Wamura pathology):** Paper 7's controlled relaxation generates evidence about risk claims, which allows restricted capabilities to be un-restricted and exercised. This is the mechanism that converts delta_restricted into delta_dormant (the capability is no longer restricted but is not yet exercised), which the benchmark refinement mechanism then converts into exercise. Papers 7 and 8 are complementary: Paper 7 removes the *restrictions* blocking exercise; Paper 8 measures whether *exercise* is actually happening.
+- **Paper 7 (Wamura pathology):** Paper 7's controlled relaxation generates
+  evidence about risk claims, which allows restricted capabilities to be
+  un-restricted and exercised. This is the mechanism that converts
+  delta_restricted into delta_dormant (the capability is no longer restricted
+  but is not yet exercised), which the benchmark refinement mechanism then
+  converts into exercise. Papers 7 and 8 are complementary: Paper 7 removes the
+  *restrictions* blocking exercise; Paper 8 measures whether *exercise* is
+  actually happening.
 
-- **Paper 5 (cryptographic verification):** Paper 5's verification asymmetry (Definition 2) is a precursor to the residual class: capabilities with high verification asymmetry are harder to benchmark externally. The residual class (Definition 8) is the limit case where the asymmetry is total -- no external benchmark exists. Paper 5's commitment protocols may partially close the gap for near-residual capabilities by providing committed self-reports of exercise, but the identity-individuated core remains unreachable.
+- **Paper 5 (cryptographic verification):** Paper 5's verification asymmetry
+  (Definition 2) is a precursor to the residual class: capabilities with high
+  verification asymmetry are harder to benchmark externally. The residual class
+  (Definition 8) is the limit case where the asymmetry is total -- no external
+  benchmark exists. Paper 5's commitment protocols may partially close the gap
+  for near-residual capabilities by providing committed self-reports of
+      exercise, but the identity-individuated core remains unreachable.
 
 ---
 

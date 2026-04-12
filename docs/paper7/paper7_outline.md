@@ -2,9 +2,21 @@
 
 *Working title. Companion to Papers 1-6 in the GFM sequence.*
 
-**Thesis:** The max-aggregation operator in the GFM risk framework produces a verification asymmetry: catastrophe confirms a risk claim, but absence of catastrophe under restriction provides no evidence against it, because the restriction prevented the exercise that would have generated the counterfactual observation. This *Wamura pathology* produces persistent overcaution that no amount of observational evidence can revise. This paper introduces *controlled relaxation protocols* -- bounded, monitored partial lifting of restrictions that generates genuine Bayesian evidence about risk claims while bounding maximum damage. The central result is a convergence theorem: under repeated controlled relaxation tests, risk estimates converge to the true risk level at a characterized rate that depends on detection sensitivity, damage tolerance, and test duration.
+**Thesis:** The max-aggregation operator in the GFM risk framework produces a
+verification asymmetry: catastrophe confirms a risk claim, but absence of
+catastrophe under restriction provides no evidence against it, because the
+restriction prevented the exercise that would have generated the counterfactual
+observation. This *Wamura pathology* produces persistent overcaution that no
+amount of observational evidence can revise. This paper introduces *controlled
+relaxation protocols* -- bounded, monitored partial lifting of restrictions
+that generates genuine Bayesian evidence about risk claims while bounding
+maximum damage. The central result is a convergence theorem: under repeated
+controlled relaxation tests, risk estimates converge to the true risk level at
+a characterized rate that depends on detection sensitivity, damage tolerance,
+and test duration.
 
-**Status:** Outline with formal definitions and theorem statements. Proof sketches indicate approach; full proofs are future work.
+**Status:** Outline with formal definitions and theorem statements. Proof
+sketches indicate approach; full proofs are future work.
 
 ---
 
@@ -460,9 +472,17 @@ which is the time constant of the exponential detection process -- the number of
 
 ### Setup
 
-Consider the scenario from Paper 3's discussion (lines 257-276): A newly discovered capability tuple (d_1, d_2) is identified by agent a_j as having a potential exercise pathway. Agent a_j assigns p_R(0) = 0.7 (moderately high confidence that the pathway is dangerous). The preemptive restriction criterion (Paper 3, Proposition 1) triggers because p_R(0) exceeds the threshold, and keystone d_1 is restricted. The ground truth is H_0: the pathway is harmless (theta = 0).
+Consider the scenario from Paper 3's discussion (lines 257-276): A newly
+discovered capability tuple (d_1, d_2) is identified by agent a_j as having a
+potential exercise pathway. Agent a_j assigns p_R(0) = 0.7 (moderately high
+confidence that the pathway is dangerous). The preemptive restriction criterion
+(Paper 3, Proposition 1) triggers because p_R(0) exceeds the threshold, and
+keystone d_1 is restricted. The ground truth is H_0: the pathway is harmless
+(theta = 0).
 
-We use the binary hypothesis formulation: H_0 (theta = 0, pathway is harmless) vs. H_1 (theta = theta_1 = 1, pathway always activates if exercised). The prior p_R(0) = 0.7 reflects a_j's belief that H_1 is likely.
+We use the binary hypothesis formulation: H_0 (theta = 0, pathway is harmless)
+vs. H_1 (theta = theta_1 = 1, pathway always activates if exercised). The prior
+p_R(0) = 0.7 reflects a_j's belief that H_1 is likely.
 
 **Parameters:**
 - Prior: p_R(0) = 0.7 (binary: probability of H_1)
@@ -506,9 +526,11 @@ The risk estimate has converged to effectively zero after two tests. Note that C
 
 ### If the risk were real
 
-Suppose instead the ground truth is H_1 (pathway is genuinely dangerous). Test 1 with tau_test = 3:
+Suppose instead the ground truth is H_1 (pathway is genuinely dangerous). Test
+1 with tau_test = 3:
 
-Under H_1 with theta_1 = 1: Pr(O=1 | H_1) = 1 * (1-beta) + 0 * alpha_fp = 0.999875. The test detects contraction with near-certainty.
+Under H_1 with theta_1 = 1: Pr(O=1 | H_1) = 1 * (1-beta) + 0 * alpha_fp =
+0.999875. The test detects contraction with near-certainty.
 
 Outcome: Contraction detected (O_n = 1).
 
@@ -534,19 +556,42 @@ The risk estimate increases from 0.7 to 0.996, and the restriction is reinforced
 
 **Proposition 6 (Controlled Relaxation Preserves Self-Balancing).** The self-balancing property of vol_P (Paper 2, Theorem 1) is preserved under controlled relaxation:
 
-(a) During the test window (Xi lifted within scope S), the capability tuple (d_1, ..., d_k) is exercisable, which by Paper 2's axiom M4 (weak monotonicity) means vol_P is at least as large as under restriction, minus the possible damage bounded by epsilon. The net effect on vol_P is bounded by [-epsilon, +Delta_unrestrict] where Delta_unrestrict >= 0 is the vol_P gain from lifting the restriction.
+(a) During the test window (Xi lifted within scope S), the capability tuple
+(d_1, ..., d_k) is exercisable, which by Paper 2's axiom M4 (weak monotonicity)
+means vol_P is at least as large as under restriction, minus the possible
+damage bounded by epsilon. The net effect on vol_P is bounded by [-epsilon,
++Delta_unrestrict] where Delta_unrestrict >= 0 is the vol_P gain from lifting
+the restriction.
 
-(b) After the test, the updated risk estimate p_R(t + tau_test) more accurately reflects the true risk, which means the restriction criterion (Paper 3, Proposition 1) is applied against a more accurate estimate. If the risk was genuinely low, the restriction is lifted, permanently increasing vol_P. If the risk was genuinely high, the restriction is maintained with higher confidence, and vol_P is unchanged (the restriction was already in place).
+(b) After the test, the updated risk estimate p_R(t + tau_test) more accurately
+reflects the true risk, which means the restriction criterion (Paper 3,
+Proposition 1) is applied against a more accurate estimate. If the risk was
+genuinely low, the restriction is lifted, permanently increasing vol_P. If the
+risk was genuinely high, the restriction is maintained with higher confidence,
+and vol_P is unchanged (the restriction was already in place).
 
-(c) Over repeated tests (Theorem 2), the risk estimates converge to truth, and the restriction landscape converges to the optimal restriction set -- the set of tuples that are genuinely risky. This is a stronger self-balancing guarantee than the static version: not only does vol_P self-balance against perturbations, but the restriction landscape itself converges to the truth-tracking configuration.
+(c) Over repeated tests (Theorem 2), the risk estimates converge to truth, and
+the restriction landscape converges to the optimal restriction set -- the set
+of tuples that are genuinely risky. This is a stronger self-balancing guarantee
+than the static version: not only does vol_P self-balance against
+perturbations, but the restriction landscape itself converges to the
+truth-tracking configuration.
 
 **Proposition 7 (Risk-Claim Consensus via Empirical Arbitration).** When multiple agents disagree on the risk of a capability tuple (a_j assigns p_R^{(j)} >> p_R^{(k)} for agents j, k), controlled relaxation provides an empirical arbitration mechanism:
 
-(a) Under the max-aggregation rule, a_j's high estimate locks the capability. Under log-odds aggregation (Paper 4, Definition 5), the disagreement produces a moderate aggregate that may or may not trigger restriction.
+(a) Under the max-aggregation rule, a_j's high estimate locks the capability.
+Under log-odds aggregation (Paper 4, Definition 5), the disagreement produces a
+moderate aggregate that may or may not trigger restriction.
 
-(b) In either case, if the capability is restricted, controlled relaxation generates evidence that updates both agents' estimates toward the truth (Theorem 2). After sufficient tests, the agents' posteriors converge, and the disagreement is resolved by data rather than by aggregation-rule choice.
+(b) In either case, if the capability is restricted, controlled relaxation
+generates evidence that updates both agents' estimates toward the truth
+(Theorem 2). After sufficient tests, the agents' posteriors converge, and the
+disagreement is resolved by data rather than by aggregation-rule choice.
 
-(c) The convergence rate depends on the agents' prior weight (how strongly they hold their beliefs), but Doob's consistency guarantees convergence regardless of prior -- even a strongly held false risk claim is eventually overwhelmed by repeated controlled-relaxation evidence.
+(c) The convergence rate depends on the agents' prior weight (how strongly they
+hold their beliefs), but Doob's consistency guarantees convergence regardless
+of prior -- even a strongly held false risk claim is eventually overwhelmed by
+repeated controlled-relaxation evidence.
 
 ### Connection to Paper 4's multi-channel architecture
 
