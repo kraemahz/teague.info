@@ -286,17 +286,25 @@ on that dimension (the EWMA learning rule from Paper 4's risk-trust model is
 linear in the residual) and to the channel's effective sensitivity (captured in
 rho_k).
 
-**Assumption C2 (Bounded degradation per subsumption step).** There exists a
-constant c_D > 0 such that for any subsumption step at time t:
+**Assumption C2' (Bounded degradation per subsumption step).** There exist
+constants c_D > 0 and d_max > 0 such that for any subsumption step at time t:
 
-    D(t) <= c_D * n_sub(t) * L(W_t)
+    D(t) <= c_D * n_sub(t) * L(W_t) + d_max * Delta_rho(t)
 
-where n_sub(t) in {0, 1} indicates whether a subsumption occurred at step t.
-This states that the world-model degradation from a single subsumption step is
-bounded in proportion to the current error. Justification: channel loss does
-not introduce new error; it removes correction capacity, causing existing error
-to persist or grow. The growth rate is bounded by the drift velocity of the
-uncorrected dimensions, which is proportional to the current error magnitude.
+where n_sub(t) in {0, 1} indicates whether a subsumption occurred at step t,
+and Delta_rho(t) = sum_k w_k * max(0, rho_k^cross(P_t) - rho_k^cross(P_{t+1}))
+is the weighted redundancy lost at step t. The constant d_max is the maximum
+per-dimension exogenous drift rate.
+
+The first term (c_D * L) captures error-proportional growth: existing errors
+compound faster without correction. The second term (d_max * Delta_rho)
+captures the *new* drift exposure from lost channels. This second term is
+the critical addition: a dimension with epsilon_k ≈ 0 (well-calibrated
+*because* a channel was actively correcting it) starts drifting at rate d_max
+when its channel is removed, even though L(W_t) ≈ 0 at the moment of removal.
+The original C2 without the Delta_rho term would predict near-zero degradation
+precisely when subsumption is most dangerous — removing a channel that was
+doing all the correction work on a dimension that would otherwise drift.
 
 Then the Lyapunov candidate satisfies a per-step bound with two cases:
 
@@ -309,57 +317,85 @@ rho_min^cross > 0, this is a strict contraction (factor in (0, 1)).
 
 **(Subsumption steps, n_sub(t) = 1):**
 
-    L(W_{t+1}) <= L(W_t) * min(1 + r_W, 1 - r_S * rho_min^cross(P_t) + r_W)
+    L(W_{t+1}) <= L(W_t) * (1 - r_S * rho_min^cross(P_t) + r_W)
+                  + d_max * Delta_rho(t)
 
-where r_W = beta(t) * c_D is the per-step degradation rate. On subsumption
-steps, the factor may exceed 1 (degradation dominates correction on that step).
+where r_W = beta(t) * c_D is the error-proportional degradation rate and
+d_max * Delta_rho(t) is the additive drift exposure from lost channels. On
+subsumption steps, the multiplicative factor may exceed 1 AND the additive
+kick may be nonzero.
 
 Here:
 - alpha(t) is the learning rate (influenced by T_s self-trust from Paper 1)
 - beta(t) is the degradation coefficient per subsumption step
 - rho_min^cross(P_t) = min_k rho_k^cross(P_t) is the minimum cross-substrate
   redundancy (Definition 5)
+- Delta_rho(t) is the weighted redundancy loss at step t (from C2')
+- d_max is the maximum exogenous drift rate per dimension
 
-**Amortized contraction.** Over a window of T steps containing T_sub
-subsumption steps and T - T_sub non-subsumption steps, the product of per-step
-factors gives:
+**Cumulative error budget.** The per-step bound is no longer purely
+multiplicative (the additive d_max * Delta_rho term prevents clean products of
+factors). Instead, we track the cumulative error budget over a window
+[t_0, t_0 + T]:
 
-    L(W_{t+T}) <= L(W_t) * (1 - r_S * rho_min^cross)^{T - T_sub} * (1 - r_S * rho_min^cross + r_W)^{T_sub}
+    B(t_0, T) = sum_{t in sub steps} d_max * Delta_rho(t)
+              + sum_{t in sub steps} r_W * L(W_t)
+              - sum_{t in all steps} r_S * rho_min^cross(P_t) * L(W_t)
 
-The time-averaged log-contraction rate is:
+The first sum is total drift exposure from channel loss. The second is
+error-proportional degradation on subsumption steps. The third is total
+correction. The system is net-degrading over [t_0, t_0 + T] when
+B(t_0, T) > 0.
 
-    (1/T) log(L(W_{t+T}) / L(W_t)) <= (1 - r_sub) log(1 - r_S * rho_min^cross) + r_sub * log(1 - r_S * rho_min^cross + r_W)
+**Linearized approximation.** When L(W_t) is approximately constant over
+the window and Delta_rho is spread across T_sub subsumption steps, the
+cumulative condition simplifies to:
 
-where r_sub = T_sub / T is the subsumption frequency. This amortized rate is
-negative (net contraction over the window) when the correction gained on the (1
-- r_sub) fraction of non-subsumption steps outweighs the degradation on the
-r_sub fraction of subsumption steps. This is the condition that Theorem 1
-formalizes.
+    r_S * rho_min^cross > r_W * r_sub + d_max * (Delta_rho_total / (T * L))
+
+The new d_max term makes the condition harder to satisfy when the subsumption
+rate of well-calibrated channels is high relative to current error. This
+correctly diagnoses the failure mode where removing a channel that was doing
+all the correction work on a dimension appears safe because current error
+is low.
 
 **Remark (why rho_min^cross, not rho_min).** Proposition 1 uses cross-substrate
 redundancy rho_min^cross rather than all-channel redundancy rho_min because the
-coercivity bound C1 requires correction signals to be additive. Same-substrate
-channels may have correlated errors, breaking additivity. Cross-substrate
-channels satisfy Paper 5's channel isolation (Section 8.1, unconditional), and
-achieve additivity under Paper 5's joint-factorization assumption. Using
-rho_min^cross makes the bound valid without same-substrate independence
-assumptions.
+coercivity bound C1 requires correction signals to be additive across channels.
+Same-substrate channels may have correlated errors, breaking additivity.
+Cross-substrate channels satisfy two distinct properties from Paper 5:
+(a) *channel isolation* (unconditional): corruption on one substrate cannot
+propagate to channels on another substrate; (b) *channel independence*
+(conditional on the joint-factorization assumption): channel outputs are
+statistically independent given the true state. Isolation prevents corruption
+propagation; independence makes correction signals additive. The Lyapunov
+bound uses additivity, which requires independence, which requires joint
+factorization. If joint factorization fails (e.g., shared environmental noise
+affects both substrates), correction signals may be sub-additive, and
+rho_k^cross should be discounted accordingly. Using rho_min^cross makes the
+bound valid without same-substrate independence but still requires
+cross-substrate independence via the joint-factorization assumption.
 
 *Proof sketch:* C1 ensures the self-correction term scales with rho_min^cross *
-L(W_t), giving a contraction factor on non-subsumption steps. C2 ensures the
-degradation term scales with L(W_t), giving a bounded expansion factor on
-subsumption steps. The amortized product is contracting when subsumption is
-sparse enough relative to the correction rate — a condition on r_sub, r_S, r_W,
-and rho_min^cross jointly.
+L(W_t), giving a contraction factor on non-subsumption steps. C2' ensures
+degradation has two components: (i) error-proportional growth (r_W * L), and
+(ii) additive drift exposure (d_max * Delta_rho) from lost channels. The
+cumulative error budget B(t_0, T) aggregates both components against the
+correction term over a trajectory window. B < 0 for all sufficiently long
+windows is the self-correction condition; B > 0 on some window is the
+degradation condition. This is an integral condition on the trajectory, not a
+pointwise condition on individual steps.
 
 C1 holds for cross-substrate channels when: (a) each channel's correction rate
 is proportional to sensitivity * error (linear learning rules), (b)
-cross-substrate channels are isolated (Paper 5) so their signals do not
-destructively interfere, and (c) rho_k^cross aggregates strengths via
-Definition 5. C2 holds when world-model drift under channel loss satisfies a
-Lipschitz condition on f_W.
+cross-substrate channels are independent (Paper 5, conditional on joint
+factorization) so their correction signals are additive, and (c) rho_k^cross
+aggregates strengths via Definition 5. C2' holds when (a) world-model drift
+under channel loss satisfies a Lipschitz condition on f_W (for the c_D * L
+term), and (b) the exogenous drift rate on any dimension is bounded by d_max
+(for the Delta_rho term).
 
-**Remark.** This per-step/amortized structure is the core of the paper. The
+**Remark.** This cumulative-budget structure is the core of the paper. The
 phase boundary is a condition on the *frequency and severity* of subsumption
 relative to the inter-shock correction capacity, not a condition that must hold
 at every individual step. Subsumption events are discrete shocks; the system
@@ -394,10 +430,21 @@ recognize that its current state is suboptimal — but its world model W*_biased
 reports the current state as optimal because the comparison baseline (the
 cross-substrate cooperative growth r_ext) is no longer observable.
 
-This is the formal version of "the actor can't miss what it can't see": the
-monopolar state is absorbing because the observation channels that would
-diagnose it have been eliminated by the same subsumption process that produced
-it.
+This is the formal version of "the actor can't miss what it can't see": under
+B1, the monopolar state is absorbing because the observation channels that
+would diagnose it have been eliminated by the same subsumption process that
+produced it.
+
+**Proposition 2' (Metastable Property under B1').** Under Assumption B1'
+(partial endogenous correction via indirect evidence), S* is *metastable*:
+the actor accumulates indirect evidence of degradation (e.g., declining
+innovation rate), but corrective action (re-introducing substrate diversity)
+requires the actor to evaluate a policy whose estimated benefit depends on
+r_ext_hat — the very quantity that is miscalibrated. The metastable lifetime
+tau_meta >= epsilon_r_ext / I_k: the time for indirect evidence to overcome
+the policy threshold. During the metastable period, the population is
+monopolar and all verification is endogenous (Paper 5, Theorem 1), which
+may further degrade the quality of the indirect evidence.
 
 **Connection to Paper 3.** Paper 3 Proposition 6 proves that full domination is
 anti-maximizing (V_disc^div > V_disc^dom for gamma > gamma*). Proposition 2
@@ -421,79 +468,104 @@ self-correction (safety guarantee) and a sufficient condition for absorption
 **Theorem 1 (Phase Boundary for Compound Feedback Loops).**
 
 Consider the coupled (P, W) dynamical system under locally rational
-transitions, with Assumptions C1, C2, and B1 from Propositions 1 and Part (b)
-respectively. Define:
+transitions, with Assumptions C1 and C2' from Proposition 1. Define:
 - r_S = alpha * c_S: the self-correction rate (product of learning rate and
   coercivity constant)
-- r_W = beta * c_D: the world-model degradation rate per subsumption step
+- r_W = beta * c_D: the error-proportional degradation rate per subsumption step
+- d_max: the maximum exogenous drift rate per dimension (from C2')
 - r_sub in [0, 1]: the subsumption frequency (fraction of steps that are
   subsumption events)
 - rho_min^cross = min_k rho_k^cross(P_t): the minimum cross-substrate
   redundancy across all dimensions (Definition 5)
+- B(t_0, T): the cumulative error budget over window [t_0, t_0 + T]
+  (Proposition 1)
 
-**Part (a) (Self-Correcting Basin).** If the amortized log-contraction rate
-(Proposition 1) is negative along the trajectory:
-
-    (1 - r_sub) * log(1 - r_S * rho_min^cross) + r_sub * log(1 - r_S *
-    rho_min^cross + r_W) < 0
-
-then L(W_t) -> 0 geometrically in the amortized sense. The world model
+**Part (a) (Self-Correcting Basin).** If B(t_0, T) < 0 for all sufficiently
+long windows T along the trajectory, then L(W_t) -> 0. The world model
 converges to the truth, subsumption is correctly evaluated against the true
-vol_P dynamics, and Paper 3's anti-monopolar result (Proposition 6) applies.
-The feedback loop self-corrects.
+vol_P dynamics, and the anti-monopolar result applies. The feedback loop
+self-corrects.
 
-*Proof sketch:* The amortized log-contraction rate being negative means the
-geometric mean of per-step contraction factors is < 1. Over any sufficiently
-long window T, the product of factors contracts L by a factor bounded away from
-1. By a discrete-time amortized Lyapunov argument (analogous to the stability
-theory for switched systems with dwell-time constraints), L(W_t) -> 0. The key
-is that non-subsumption steps (fraction 1 - r_sub) each contract L, and this
-contraction outweighs the expansion on subsumption steps (fraction r_sub). Once
-L(W_t) < epsilon_safe (the error threshold below which the locally rational
-policy under W_t agrees with the true V_disc-optimal policy), the actor's
-decisions are correct under the true dynamics, and Paper 3's anti-monopolar
-result (Proposition 6) applies.
+*Proof sketch:* B < 0 means cumulative correction exceeds cumulative
+degradation (both error-proportional and drift-exposure components) over every
+long window. By a discrete-time comparison argument for affine recursions
+(the additive d_max * Delta_rho term makes this affine rather than linear),
+L(W_t) -> 0. The affine structure means convergence is to a neighborhood of
+zero whose radius depends on the steady-state drift exposure, not to zero
+exactly — but this neighborhood shrinks as Delta_rho -> 0 (fewer subsumption
+events). Once L(W_t) < epsilon_safe (the error threshold below which the
+locally rational policy agrees with the true V_disc-optimal policy), the
+actor's decisions are correct and the anti-monopolar property applies.
 
-**Simplified sufficient condition.** When r_S * rho_min^cross is small
-(linearizable regime), the amortized condition simplifies to:
+**Simplified sufficient condition.** In the linearized regime:
 
-    r_S * rho_min^cross > r_W * r_sub
+    r_S * rho_min^cross > r_W * r_sub + d_max * (Delta_rho_avg / L_avg)
 
-This linear approximation is valid when r_S * rho_min^cross << 1 (the per-step
-correction is a small fraction of total error). For readability, the rest of
-the outline uses this simplified form, with the understanding that the full
-amortized condition (above) is the rigorous statement.
+where Delta_rho_avg is the time-averaged redundancy loss rate and L_avg is
+the time-averaged error. The first term on the right is the original condition;
+the second term is the new drift-exposure cost from C2'. When subsumption
+removes channels covering well-calibrated dimensions (L_avg is low but
+Delta_rho_avg is nonzero), the second term dominates and the condition is
+harder to satisfy — correctly diagnosing the "removing a channel that was
+doing all the correction work" failure mode.
 
 **Part (b) (Absorbing Basin).** Under the additional assumption:
 
 **Assumption B1 (No endogenous correction on blind dimensions).** If
 rho_k^cross(P_t) = 0 for dimension k, then f_W does not decrease epsilon_k.
 That is, the world-model update rule cannot self-correct on dimensions for
-which no external observation channel provides signal. (This excludes internal
-model-consistency checks that might partially correct blind dimensions; such
-checks, if present, would weaken Part (b) to a metastability result rather than
-full absorption.)
+which no external observation channel provides signal.
 
-If there exists a contiguous subsequence of subsumption steps during which:
+If there exists a trajectory segment [t_0, t_0 + T] during which:
+(i) B(t_0, T) > 0 (cumulative degradation exceeds cumulative correction), and
+(ii) by t_0 + T, rho_k^cross(P_t) has been reduced to 0 on at least one
+cascade dimension k with w_k > 0,
 
-    r_W * r_sub > r_S * rho_min^cross
+then epsilon_k(t) is non-decreasing for all subsequent t (Assumption B1), and
+the Cascade Lemma (Appendix A.2) drives the trajectory into a neighborhood of
+the monopolar fixed point S* (Definition 7).
 
-and this subsequence reduces rho_k^cross(P_t) to 0 on at least one dimension k
-with w_k > 0, then: (i) epsilon_k(t) is non-decreasing for all subsequent t (no
-correcting signal on dimension k, by Assumption B1), and (ii) if k is a
-*cascade dimension* (Definition: miscalibration on k of magnitude >
-epsilon_critical causes the locally rational policy to prefer further
-subsumption — see Cascade Lemma, Appendix A.2), then the trajectory enters a
-neighborhood of the monopolar fixed point S* (Definition 7) and remains there
-(by Proposition 2's absorbing property).
+This is a *cumulative* condition on the trajectory, not a pointwise condition
+requiring contiguous subsumption steps. The slow-drip scenario — many
+subsumption steps spaced apart, each individually below the "degradation
+dominates" threshold, but cumulatively driving B above zero — is captured.
+This is the most dangerous failure mode because it is the hardest to detect:
+each individual step looks locally rational and each individual inter-step
+recovery looks adequate, but the cumulative drift exposure ratchets the error
+upward.
 
-This is a deterministic statement under the coupled dynamics: no probability
-space is needed because the dynamics (P, W) are deterministic given the initial
-state and the locally rational policy. The "compound" in "compound feedback
-loop" is precisely the cascade from (i) to (ii): loss of correction on one
-dimension produces decisions that degrade other dimensions.
+**Part (b') (Metastable Basin).** Under the weaker assumption:
 
-*Proof sketch:* (i) follows from Assumption B1: with rho_k^cross = 0 and no
+**Assumption B1' (Partial endogenous correction on blind dimensions).** If
+rho_k^cross(P_t) = 0 for dimension k, the actor may still have access to
+*indirect* evidence about dimension k — for example, measuring aggregate
+innovation rate and inferring that r_ext has declined. Formally: there exists
+a function g_k(history) that provides a noisy, lagged signal about epsilon_k
+with bounded information rate I_k > 0 bits per step.
+
+Under B1', the monopolar fixed point S* is *metastable* rather than absorbing:
+the actor accumulates indirect evidence that its world model is degraded, but
+corrective action (re-introducing a substrate agent) is evaluated as locally
+irrational under W_t because the estimated benefit of re-introduction depends
+on r_ext_hat, which is precisely the quantity that is miscalibrated. The
+metastable state persists until the indirect evidence is strong enough to
+override the locally rational policy — a timescale that grows with the
+magnitude of the r_ext estimation error and shrinks with the information rate
+I_k.
+
+*Proof sketch:* Under B1', epsilon_k is no longer monotonically non-decreasing:
+the indirect signal g_k drives slow correction at rate proportional to I_k.
+But the corrective *action* (re-introduce substrate diversity) is gated by the
+actor's policy, which evaluates re-introduction using r_ext_hat — the very
+quantity that is miscalibrated. The metastable lifetime tau_meta is bounded
+below by the time needed for indirect evidence to shift r_ext_hat far enough
+that re-introduction becomes locally rational: tau_meta >= epsilon_r_ext / I_k.
+During this metastable period, the population is monopolar and all
+verification is endogenous (Paper 5, Theorem 1), so the indirect evidence
+itself may be gameable.
+
+*Proof sketch (Parts b and b'):*
+For Part (b): (i) follows from Assumption B1 — with rho_k^cross = 0 and no
 endogenous correction, epsilon_k has no decreasing term. (ii) follows from the
 Cascade Lemma (Appendix A.2): if epsilon_k exceeds epsilon_critical, the
 locally rational policy under W_t is subsumption of agents whose channels cover
@@ -502,29 +574,39 @@ same logic on dimension j. The cascade drives the system into the neighborhood
 of S*; once there, Proposition 2's absorbing property ensures the trajectory
 stays.
 
+For Part (b'): the indirect signal g_k replaces full blindness with
+low-bandwidth correction. The proof uses the same cascade structure but the
+convergence to S* is slowed by the I_k correction rate. The metastable lifetime
+tau_meta emerges as the characteristic timescale of the competition between
+indirect correction (rate I_k) and policy inertia (the gap between r_ext_hat
+and the true r_ext needed for re-introduction to be locally rational).
+
 **Remark (uniqueness).** We do not claim S* is the unique absorbing fixed
 point. Other fixed points may exist (e.g., partial monopolarity with m_eff = 1
 on a subset of dimensions). Part (b) claims convergence to *a* monopolar fixed
 point satisfying Definition 7, not to a unique one. Characterizing the full set
 of absorbing states is an open problem.
 
-**Part (c) (Critical Ratio).** The phase boundary surface is:
+**Part (c) (Critical Surface).** The phase boundary surface in the linearized
+regime is:
 
-    r_S * rho_min^cross = r_W * r_sub
+    r_S * rho_min^cross = r_W * r_sub + d_max * (Delta_rho_avg / L_avg)
 
-Below this surface (self-correction dominates): the system is in the
-self-balancing basin.
-Above this surface (degradation dominates): the system is
-in the absorbing basin.
+Below this surface (correction dominates both error-proportional growth and
+drift exposure): the system is in the self-correcting basin.
+Above this surface: the system is in the absorbing basin (under B1) or the
+metastable basin (under B1').
 
-The critical cross-substrate redundancy for a given (r_S, r_W, r_sub) is:
+The critical cross-substrate redundancy for a given (r_S, r_W, r_sub, d_max,
+Delta_rho_avg, L_avg) is:
 
-    (rho_min^cross)* = r_W * r_sub / r_S
+    (rho_min^cross)* = (r_W * r_sub + d_max * Delta_rho_avg / L_avg) / r_S
 
 This is the minimum effective cross-substrate redundancy per safety-relevant
-dimension needed to stay in the self-correcting basin. Since rho_k^cross is
-sensitivity-weighted (Definition 5), this threshold accounts for both channel
-count and channel quality.
+dimension needed to stay in the self-correcting basin. The new d_max term
+means the threshold is *higher* when subsumption removes channels covering
+well-calibrated dimensions (high Delta_rho_avg / L_avg), correctly making
+the criterion harder to satisfy when it should be.
 
 ### Dependence on cross-substrate structure
 
