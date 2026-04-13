@@ -226,13 +226,19 @@ The phase boundary surface in the linearized regime is:
 \end{equation}
 Below this surface (total correction---exogenous channels plus
 endogenous incentive---dominates both error-proportional growth and
-drift exposure): the system is in the self-correcting basin.
-Above this surface, the self-correcting sufficient condition fails;
-the system enters the absorbing basin (under B1) or the metastable
-basin (under B1$'$) if the additional blindness and threshold-trigger
-conditions of Parts~(b)/(b$'$) are also met.
+drift exposure): Part~(a)'s contraction condition is satisfied,
+so $\Lyap$ converges to the bounded neighborhood of
+Equation~\ref{eq:neighborhood}.  The system is in the
+self-correcting basin provided additionally that $\Lyap_\infty <
+\epsilon_{\mathrm{safe}}$ (i.e., the neighborhood is small enough for
+policy correctness).  Above this surface, the contraction condition
+fails; the system enters the absorbing basin (under B1) or the
+metastable basin (under B1$'$) if the additional blindness and
+threshold-trigger conditions of Parts~(b)/(b$'$) are also met.
 
-Solving for the critical cross-substrate redundancy:
+Solving for the critical cross-substrate redundancy (assuming
+$\rS > 0$; the $\rS = 0$ case is the Wamura degeneracy of
+Proposition~\ref{prop:wamura}):
 \begin{equation}
 \label{eq:critical_redundancy}
 (\rhomincross)^* = \frac{\rW \cdot \rsub

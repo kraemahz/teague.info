@@ -66,10 +66,16 @@ covering channels.  The endogenous term $\alphamin \cdot
 c_{\mathrm{V}} \cdot \underline{\nu}$ is aggregate (it arises from
 the actor's overall $\volL$-gradient, not from any single
 dimension's channels).  We assign the full aggregate endogenous
-correction to each dimension's budget; this is conservative because
-the endogenous correction benefits all dimensions simultaneously,
-so each dimension's individual budget overstates the correction
-available to it alone.
+correction to each dimension's budget.  This makes $\Kmin$ a
+\emph{lower bound} on the true per-dimension requirement: the
+endogenous correction is a shared resource whose per-dimension
+allocation is bounded by the aggregate total $\alphamin \cdot
+c_{\mathrm{V}} \cdot \underline{\nu}$, so crediting each dimension
+with the full amount may underestimate $\Kmin$.  For a conservative
+per-dimension bound, set $c_{\mathrm{V}} = 0$ in
+Equation~\ref{eq:kmin_formula}; the aggregate condition
+(Equation~\ref{eq:self_correcting}) does not have this decomposition
+issue.
 Each dimension has its own drift exposure
 $\dmax \cdot \Delta\rho_k(t)$, where $\Delta\rho_k$ is the
 redundancy loss on dimension $k$ specifically.  Requiring each
