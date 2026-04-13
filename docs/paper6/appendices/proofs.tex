@@ -1,0 +1,236 @@
+\section{Proof Details and Technical Notes}
+\label{app:proofs}
+
+\subsection{Theorem 1 proof strategy}
+\label{app:proof_strategy}
+
+The proof follows a discrete Lyapunov stability argument on the coupled
+system, analogous to dwell-time conditions in switched linear
+systems~\citep{liberzon2003switching}.
+
+\paragraph{Step 1: Lyapunov candidate.}
+Construct $\Lyap(\Wm_t) = \sum_k w_k \, \epsilon_k(t)^2$ as the
+candidate (Definition~\ref{def:wm_error}).
+
+\paragraph{Step 2: Verify comparison functions.}
+Assumption~C1 (coercivity) requires showing that the aggregate
+correction signal from channels covering dimension $k$ is at least
+proportional to $\rho_k \cdot \epsilon_k^2$.  This follows from the
+EWMA-style learning rules: each channel's correction is linear in the
+residual and proportional to sensitivity.  Under the joint-factorization
+assumption (Paper~5), cross-substrate channels' corrections are
+independent and therefore additive.
+
+Assumption~C2$'$ (bounded degradation) requires two properties:
+\begin{enumerate}
+\item[(i)] A Lipschitz bound on $f_{\Wm}$: the world model does not
+  jump discontinuously when a channel is lost.  This gives the
+  $c_{\mathrm{D}} \cdot \Lyap$ term.
+\item[(ii)] A bounded exogenous drift rate: when a channel is removed
+  from dimension $k$ that was previously well-calibrated, the
+  dimension drifts at a bounded rate $\dmax$.  This gives the
+  $\dmax \cdot \Delta\rho$ term.
+\end{enumerate}
+
+\paragraph{Step 3: Per-step bounds.}
+Apply the comparison functions to obtain
+Proposition~\ref{prop:error_dynamics}'s per-step bounds: contraction
+factor $(1 - \rS \cdot \rhomincross) < 1$ on non-subsumption steps;
+affine bound with factor $(1 - \rS \cdot \rhomincross + \rW)$ and
+additive kick $\dmax \cdot \Delta\rho$ on subsumption steps.
+
+\paragraph{Step 4 (Part a): Amortized contraction.}
+Define the amortized log-contraction rate over a window of $T$ steps.
+When the cumulative error budget $B(t_0, T) < 0$ for all sufficiently
+long windows, the geometric mean of per-step multiplicative factors
+is $< 1$, and the cumulative additive drift is dominated by the
+cumulative contraction.
+
+The formal argument uses the affine recursion comparison theorem.
+Write the per-step bound as:
+\begin{equation*}
+\Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
+\end{equation*}
+where $a_t = 1 - \rS \cdot \rhomincross(P_t) + \nsub(t) \cdot \rW$
+and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$.  Iterating:
+\begin{equation}
+\label{eq:iterated_bound}
+\Lyap_{t_0 + T} \leq \Lyap_{t_0} \prod_{t=t_0}^{t_0+T-1} a_t
+  + \sum_{s=t_0}^{t_0+T-1} b_s \prod_{t=s+1}^{t_0+T-1} a_t
+\end{equation}
+
+The first term converges to zero when the geometric mean of $a_t$ is
+$< 1$ (which follows from $B < 0$).  The second term converges to a
+bounded steady-state value:
+\begin{equation*}
+\Lyap_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
+  = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
+    {\rS \cdot \rhomincross - \rW \cdot \rsub}
+\end{equation*}
+where $\bar{a}$ and $\bar{b}$ are the time-averaged multiplicative
+and additive factors.  This neighborhood shrinks as $\Delta\rho \to 0$
+(subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
+locally rational policy agrees with the true $\Vdisc$-optimal policy,
+and Paper~3's anti-monopolar property applies.
+
+\paragraph{Step 5 (Part b): Cascade.}
+When $B > 0$ on some window and $\rhocross_k = 0$ for some dimension
+$k$, Assumption~B1 gives $\epsilon_k$ non-decreasing.  The Cascade
+Lemma (Appendix~\ref{app:cascade}) then propagates the failure to
+other dimensions, driving the system toward $S^*$.
+
+\paragraph{Key technical challenges.}
+Two co-evolution problems require careful handling:
+\begin{enumerate}
+\item The contraction factor depends on $\rhomincross(P_t)$, which
+  changes as agents are subsumed.  The self-correcting basin is
+  defined by the set of $(P, \Wm)$ states where the amortized
+  contraction condition holds along the trajectory, not just at the
+  initial state.
+
+\item The self-correction rate $\alpha(t)$ depends on $T_s$
+  (Paper~1), which depends on the error history.  The EWMA structure
+  of $T_s$ provides the necessary bound: $\alpha$ adapts monotonically
+  in response to prediction residuals, so $\rS$ is bounded below by
+  a function of the minimum $T_s$ along the trajectory.
+\end{enumerate}
+
+\subsection{Cascade Lemma}
+\label{app:cascade}
+
+\begin{lemma}[Cascade]
+\label{lem:cascade}
+Define the \emph{action gap} for agent $a_j$ at world-model state
+$\Wm$ as
+\begin{equation*}
+G_j(\Wm) = \Vdisc^{\mathrm{preserve}}(a_j, \Wm)
+  - \Vdisc^{\mathrm{subsume}}(a_j, \Wm)
+\end{equation*}
+(positive when preservation is preferred).  Fix a dimension $k$ and consider a state $\Wm_t$ satisfying:
+\begin{enumerate}
+\item[(0)] \textbf{Single-coordinate dominance.}
+  $\Wm_t[k'] = \Wm^*[k']$ for all $k' \neq k$.  (Dimension $k$ has
+  been blinded while all other dimensions are still corrected.  This
+  is the cascade scenario: the lemma is applied at the step where $k$
+  first triggers a wrong action, before the resulting subsumption
+  blinds further dimensions.)
+\end{enumerate}
+
+\noindent Define the one-dimensional path
+$\Wm(\epsilon) = \Wm^* + \epsilon \cdot e_k \cdot
+\mathrm{sgn}(\Wm_t[k] - \Wm^*[k])$, where $e_k$ is the $k$-th
+standard basis vector and $\epsilon \in [0, \epsilon_k(t)]$.  Under
+assumption~(0), $\Wm_t = \Wm(\epsilon_k(t))$.
+
+Assume additionally:
+\begin{enumerate}
+\item[(i)] $G_j(\Wm(\epsilon))$ is continuously differentiable in
+  $\epsilon$,
+\item[(ii)] the miscalibration direction on $k$ makes preservation
+  less attractive:
+  $\frac{d}{d\epsilon} G_j(\Wm(\epsilon)) < 0$ for all
+  $\epsilon \in [0, \epsilon_k(t)]$ (i.e., increasing error on $k$
+  monotonically decreases the action gap).
+\end{enumerate}
+
+Define the cascade threshold:
+\begin{equation}
+\label{eq:cascade_threshold_def}
+\epsilon_{\mathrm{crit}} =
+  \frac{G_j(\Wm^*)}
+  {\displaystyle\inf_{\epsilon \in [0, \epsilon_k(t)]}
+    \left|\frac{d}{d\epsilon} G_j(\Wm(\epsilon))\right|}
+\end{equation}
+(the true action gap divided by the minimum sensitivity to
+dimension-$k$ error along the path; a lower bound on sensitivity
+gives an upper bound on the error needed to flip the action).
+
+Then the cascade operates in two steps:
+\begin{enumerate}
+\item[\textbf{(A)}] \textbf{Action flip.}  If
+  $\epsilon_k(t) > \epsilon_{\mathrm{crit}}$, then $G_j(\Wm_t) < 0$
+  and the locally rational action under $\Wm_t$ selects subsumption of
+  $a_j$.
+\item[\textbf{(B)}] \textbf{Error propagation.}  Subsumption of $a_j$
+  removes $a_j$'s channels.  For any dimension $j' \neq k$ covered
+  exclusively by $a_j$'s channels, the per-coordinate error
+  $\epsilon_{j'}(t+1) \geq \epsilon_{j'}(t)$.
+\end{enumerate}
+
+Miscalibration on one dimension produces decisions that degrade other
+dimensions.
+\end{lemma}
+
+\begin{proof}
+\emph{Step (A): Action flip.}
+Under the true world model $\Wm^*$, preservation is optimal:
+$G_j(\Wm^*) > 0$.  By the mean value theorem applied to the
+scalar function $\epsilon \mapsto G_j(\Wm(\epsilon))$ on
+$[0, \epsilon_k(t)]$:
+\begin{equation*}
+G_j(\Wm_t) = G_j(\Wm(\epsilon_k(t)))
+  = G_j(\Wm^*) +
+  \frac{d G_j}{d\epsilon}\bigg|_{\epsilon = \tilde{\epsilon}}
+  \cdot \epsilon_k(t)
+\end{equation*}
+for some $\tilde{\epsilon} \in (0, \epsilon_k(t))$.  By
+assumption~(ii), the derivative is negative, so:
+\begin{equation*}
+G_j(\Wm_t) = G_j(\Wm^*)
+  - \left|\frac{d G_j}{d\epsilon}\bigg|_{\tilde{\epsilon}}\right|
+  \cdot \epsilon_k(t)
+  \leq G_j(\Wm^*)
+  - \inf_{\epsilon} \left|\frac{d G_j}{d\epsilon}\right|
+  \cdot \epsilon_k(t)
+\end{equation*}
+When $\epsilon_k(t) > \epsilon_{\mathrm{crit}} =
+G_j(\Wm^*) \big/ \inf |\frac{d G_j}{d\epsilon}|$, the right side is
+negative, so $G_j(\Wm_t) < 0$ and the locally rational action
+selects subsumption of $a_j$.
+
+\emph{Step (B): Error propagation.}
+Once $a_j$ is subsumed, Lemma~\ref{lem:channel_contraction} gives
+$\Obs(P_{t+1}) \subseteq \Obs(P_t)$.  For any dimension $j'$
+covered exclusively by $a_j$'s channels, $\rhocross_{j'}(P_{t+1})
+= 0$.  By Assumption~B1a (no correction on blind
+dimensions; Assumption~\ref{ass:B1}), $f_{\Wm}$ does not decrease
+$\epsilon_{j'}$ when $\rhocross_{j'} = 0$.  Moreover, the exogenous
+drift bound from Assumption~C2$'$ gives $\epsilon_{j'}(t+1) \geq
+\epsilon_{j'}(t)$: the correction signal vanishes while the drift
+exposure is non-negative.
+
+The cascade propagates: if $\epsilon_{j'}$ subsequently exceeds
+$\epsilon_{\mathrm{crit}}$ for another agent $a_{j''}$ whose channels
+cover dimensions $j'' \neq j'$, step~(A) applies again, driving
+further subsumptions.
+\end{proof}
+
+\subsection{Connection to Paper 3's $\gamma^*$}
+\label{app:gamma_star}
+
+Paper~3's Proposition~6 gives $\gamma^* = 1 - \rext / \Delta_0$ as the
+critical discount factor for diversity dominance.  Under the coupled
+$(P, \Wm)$ dynamics, the actor does not know the true $\rext$; it uses
+$\hat{\rext} = \rext - \epsilon_{\rext}$.  The \emph{perceived}
+critical discount factor is:
+\begin{equation}
+\label{eq:perceived_gamma}
+\gamma^*_{\mathrm{perceived}} = 1 -
+  \frac{\rext - \epsilon_{\rext}}{\Delta_0}
+\end{equation}
+
+When $\epsilon_{\rext} > 0$ (underestimating cross-substrate growth):
+\begin{itemize}
+\item $\gamma^*_{\mathrm{perceived}} > \gamma^*$ (the threshold
+  appears higher than it truly is),
+\item For $\gamma \in (\gamma^*, \gamma^*_{\mathrm{perceived}})$,
+  diversity dominates in truth but domination appears rational to the
+  actor.
+\end{itemize}
+
+This is the \emph{mechanism} by which world-model error converts a
+self-balancing regime into a locally rational subsumption cascade.  The
+phase boundary from Theorem~\ref{thm:phase_boundary} characterizes
+when $\epsilon_{\rext}$ stays small enough that
+$\gamma^*_{\mathrm{perceived}}$ remains close to $\gamma^*$,
+preserving the effective reach of Paper~3's anti-monopolar result.

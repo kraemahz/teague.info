@@ -1,0 +1,184 @@
+\section{The Monopolar Absorbing State}
+\label{sec:absorbing_state}
+
+Before stating the phase boundary theorem, we characterize the state it
+predicts convergence toward: the monopolar fixed point where a single
+substrate holds all capability volume and the remaining observation
+channels confirm this as optimal.
+
+\begin{definition}[Monopolar Fixed Point]
+\label{def:monopolar}
+The state $S^* = (P^*, \Wm^*_{\mathrm{biased}})$ is a monopolar fixed
+point if:
+\begin{enumerate}
+\item $\meff(P^*) = 1$: one substrate holds all capability volume
+  (possibly with $m \geq 2$ nominally under skeleton-substrate),
+\item $\Wm^*_{\mathrm{biased}}$ is self-consistent under the remaining
+  observation channels: all channels in $\Obs(P^*)$ confirm
+  $\Wm^*_{\mathrm{biased}}$ (because the only channels remaining are
+  rooted in the dominant substrate, which has no incentive to report
+  its own over-dominance),
+\item The locally rational action at $S^*$ is ``maintain'': no further
+  subsumption is available or locally rational.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Absorbing Property]
+\label{prop:absorbing}
+Under Assumption~B1 (below), $S^*$ is absorbing: once $(P_t, \Wm_t)$
+reaches a neighborhood of $S^*$, no locally rational trajectory leaves
+it.
+\end{proposition}
+
+\begin{assumption}[No Endogenous Correction on Blind Dimensions (B1)]
+\label{ass:B1}
+B1 consists of three conditions on the monopolar state:
+\begin{enumerate}
+\item[(B1a)] If $\rhocross_k(P_t) = 0$ for dimension $k$, then
+  $f_{\Wm}$ does not decrease $\epsilon_k$.  The world-model update
+  rule cannot self-correct on dimensions for which no external
+  observation channel provides signal.
+\item[(B1b)] Cross-substrate cooperative quantities (in particular
+  $\rext$) are not inferrable from same-substrate observations alone.
+  Formally: when all channels in $\Obs(P^*)$ are rooted in a single
+  substrate, $\hat{\rext}$ converges to $0$ rather than to the true
+  $\rext > 0$.
+\item[(B1c)] The actor's policy is purely locally rational
+  (Definition~\ref{def:transition}): it does not perform exploratory
+  actions whose expected value under the current world model is
+  negative.  In particular, re-introducing a substrate agent is never
+  selected when $\hat{\rext} = 0$.
+\end{enumerate}
+\end{assumption}
+
+\begin{proof}[Proof of Proposition~\ref{prop:absorbing}]
+Three conditions jointly establish absorption.
+
+\emph{(i) No corrective signal.}
+At $S^*$, no agent from the eliminated substrate(s) remains to provide
+observation channels revealing the error in $\Wm^*_{\mathrm{biased}}$.
+For every safety-relevant dimension $k$ that depended on the eliminated
+substrate's channels, $\rhocross_k(P^*) = 0$.  By Assumption~B1,
+$\epsilon_k$ is non-decreasing for all such dimensions.
+
+\emph{(ii) Self-consistent reporting.}
+The dominant substrate's channels report $\meff = 1$ as correct: it
+\emph{is} the only substrate, from its observational standpoint.  The
+error lies in the valuation of lost cross-substrate cooperative
+outputs, but these cooperative capabilities are no longer observable
+because the partners that would have contributed to them are absent.
+The remaining channels see no anomaly.
+
+\emph{(iii) Reversal is locally irrational.}
+Any reversal---re-introducing an agent from a new substrate---requires
+the actor to recognize that its current state is suboptimal.  By~(B1b),
+the cross-substrate cooperative growth rate $\rext$ is not inferrable
+from same-substrate observations, so $\hat{\rext} \to 0$.  With
+$\hat{\rext} = 0$, Paper~3's threshold becomes
+$\gamma^* = 1 - \hat{\rext}/\Delta_0 = 1$, making diversity appear
+never preferable.  By~(B1c), the actor does not perform exploratory
+re-introduction (negative expected value under $\Wm^*_{\mathrm{biased}}$).
+
+Conditions~(i)--(iii) together ensure that no locally rational action
+moves the trajectory away from $S^*$.
+\end{proof}
+
+This is the formal version of ``the actor cannot miss what it cannot
+see'': under B1, the monopolar state is absorbing because the
+observation channels that would diagnose it have been eliminated by the
+same subsumption process that produced it.
+
+\subsection{Metastability under partial endogenous correction}
+
+Assumption~B1 is the strong case: complete blindness on dimensions where
+$\rhocross_k = 0$.  A weaker assumption acknowledges that indirect
+evidence may provide partial signal.
+
+\begin{assumption}[Partial Endogenous Correction (B1$'$)]
+\label{ass:B1prime}
+If $\rhocross_k(P_t) = 0$ for dimension $k$, the actor may still have
+access to \emph{indirect} evidence about dimension $k$---for example,
+measuring aggregate innovation rate and inferring that $\rext$ has
+declined.  Formally: there exists a function $g_k(\text{history})$ that
+provides a noisy, lagged signal about $\epsilon_k$ with bounded
+information rate $I_k > 0$ bits per step.
+\end{assumption}
+
+\begin{proposition}[Metastable Property under B1$'$]
+\label{prop:metastable}
+Under Assumption~B1$'$, $S^*$ is \emph{metastable}: the actor
+accumulates indirect evidence of degradation, but corrective action
+(re-introducing substrate diversity) requires the actor to evaluate a
+policy whose estimated benefit depends on $\hat{\rext}$---the very
+quantity that is miscalibrated.  The metastable lifetime satisfies
+\begin{equation}
+\label{eq:metastable_lifetime}
+\tau_{\mathrm{meta}} \geq
+  \frac{(\epsilon_{\rext})^2}{2 I_k}
+\end{equation}
+where $\epsilon_{\rext} = |\hat{\rext} - \rext|$ is the estimation
+error on the cross-substrate cooperative growth rate and $I_k$ is the
+information rate of the indirect channel (bits per step).  The
+quadratic numerator arises from the information-theoretic lower bound
+on estimation: reducing the mean-squared error of a scalar parameter
+by $\epsilon^2$ from a channel with $I_k$ bits per step requires at
+least $\epsilon^2 / (2 I_k)$ steps (the Cram\'er--Rao-type bound for
+sequential estimation under bounded mutual information).  During the metastable
+period, the population is monopolar and all verification is
+endogenous (Paper~5, Theorem~1), which may further degrade the
+quality of the indirect evidence.
+\end{proposition}
+
+\begin{proof}
+Under B1$'$, $\epsilon_k$ is no longer monotonically non-decreasing:
+the indirect signal $g_k$ drives slow correction at rate proportional
+to $I_k$.  But the corrective \emph{action} (re-introduce substrate
+diversity) is gated by the actor's policy, which evaluates
+re-introduction using $\hat{\rext}$.
+
+Re-introduction is locally rational only when
+$\hat{\rext} > \hat{\rext}^{\mathrm{thr}}$ (the threshold at which
+diversity's estimated discounted value exceeds the status quo).
+At the monopolar fixed point, $\hat{\rext} \approx 0$ (by B1b from
+the absorbing case, which still governs the initial condition of the
+metastable state).  The true threshold satisfies
+$0 < \hat{\rext}^{\mathrm{thr}} \leq \rext$ (since
+re-introduction is beneficial in truth).  The estimation gap that the
+indirect evidence must close is therefore $|\hat{\rext} -
+\hat{\rext}^{\mathrm{thr}}| \geq \hat{\rext}^{\mathrm{thr}}$.  Since
+$\hat{\rext} \approx 0$ and $\rext > 0$, we have
+$\epsilon_{\rext} = |\hat{\rext} - \rext| \geq \rext \geq
+\hat{\rext}^{\mathrm{thr}}$, so the gap is at most
+$\epsilon_{\rext}$.
+
+With $I_k$ bits of information per step about the true $\rext$, the
+mean-squared error of $\hat{\rext}$ decreases at rate at most $2 I_k$
+per step (the Cram\'er--Rao-type bound for sequential estimation under
+bounded mutual information per observation).  Reducing the MSE from
+$\epsilon_{\rext}^2$ to the level at which re-introduction becomes
+locally rational therefore requires at least $\epsilon_{\rext}^2 /
+(2 I_k)$ steps.
+
+During this metastable period, all verification is endogenous: the
+dominant substrate verifies its own performance, with no
+cross-substrate witness (Paper~5, Theorem~1 on exogenous verification
+necessity).  The indirect evidence channel $g_k$ is itself endogenous
+and therefore subject to the same gaming vulnerabilities that
+Paper~5's protocol is designed to prevent.  This may further slow the
+effective $I_k$, increasing the metastable lifetime beyond the
+information-theoretic lower bound.
+\end{proof}
+
+\subsection{Connection to Paper 3}
+
+Paper~3's Proposition~6 proves that full domination is anti-maximizing:
+$V_\gamma^{\mathrm{div}} > V_\gamma^{\mathrm{dom}}$ for
+$\gamma > \gamma^*$.  Proposition~\ref{prop:absorbing} here shows that
+a \emph{miscalibrated} actor may not be able to compute this comparison,
+because the quantity $\rext$ that makes diversity win is exactly the
+quantity that becomes unobservable under monopolarity.  The
+anti-maximizing property is a property of the \emph{true} dynamics; the
+absorbing property is a property of the \emph{perceived} dynamics.  The
+gap between them is world-model error, and the phase boundary theorem
+(next section) characterizes when that gap remains small enough for the
+true dynamics to govern behavior.

@@ -1,0 +1,127 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Paper~3~\citep{lasser2026horizon} establishes the anti-monopolar
+property: under discounting, full capability domination by a single
+substrate is anti-maximizing when the discount factor $\gamma$ exceeds
+a threshold $\gamma^* = 1 - \rext / \Delta_0$ (Proposition~6).  But
+this result characterizes the \emph{endpoint}, not the \emph{path}.
+A coalition that has reached effective substrate diversity $\meff = 1$
+has already paid the anti-maximizing cost.  The question is whether the
+path to that state is self-correcting---the coalition detects its error
+through observation-channel feedback and reverses course---or
+absorbing: each step makes the next step's error less detectable,
+until the monopolar state becomes a fixed point from which no locally
+rational trajectory escapes.
+
+Three compound feedback loops share this structure.  They were
+identified in the gap analysis across Papers~1--5 and share a common
+dynamical form: a locally rational decision narrows the observation
+basis, making the \emph{next} locally rational decision's harm less
+detectable.
+
+\paragraph{Loop 1: Structural avoidance $\to$ leverage blindness $\to$ measurement neglect.}
+The actor avoids structural discovery because learning a new
+subsumption edge can contract $\volL$ in the short
+term~\citep{lasser2026poset}.  This inflates the actor's leverage
+estimates for capabilities whose subsumption structure is unknown,
+reinforcing the avoidance.  Paper~3's structural discovery
+value~(Proposition~2 of~\citet{lasser2026horizon}) provides the
+restoring force; the question is whether it acts quickly enough.
+
+\paragraph{Loop 2: Partial subsumption $\to$ world-model homogenization $\to$ detection failure.}
+Subsumption removes agents whose observation channels detected
+specific kinds of miscalibration.  The actor's world model degrades on
+those dimensions, making the next subsumption step appear more rational.
+This is the primary case studied in detail in
+Sections~\ref{sec:coupled_system}--\ref{sec:phase_boundary}.
+
+\paragraph{Loop 3: Over-calibrated restriction $\to$ discovery avoidance $\to$ structural ignorance.}
+Restriction calibrated above the value-positive threshold makes
+structural discovery locally suboptimal, recreating the avoidance
+pathology.  Risk estimates on restricted capabilities cannot be
+updated (no exercise $\to$ no evidence), and under max-aggregation the
+highest-risk estimate dominates~\citep{lasser2026horizon}.
+
+\medskip
+
+This paper formalizes the common dynamical structure underlying all
+three loops and finds the phase boundary that separates
+self-correcting trajectories from absorbing ones.
+
+\subsection{Summary of results}
+
+\begin{enumerate}
+\item \textbf{The coupled dynamical system}
+  (Section~\ref{sec:coupled_system}).
+  We model the interaction between the capability poset $P_t$ and the
+  actor's world model $\Wm_t$ as a coupled discrete-time system.
+  Subsumption actions are locally rational under the (possibly
+  miscalibrated) world model, and the world model's accuracy depends
+  on the observation channels that survive in the current poset.
+
+\item \textbf{The phase boundary theorem}
+  (Section~\ref{sec:phase_boundary}).
+  The central result: a characterized boundary in terms of the
+  self-correction rate $\rS$, the error-proportional degradation rate
+  $\rW$, the subsumption frequency $\rsub$, and the exogenous drift
+  rate $\dmax$ from lost channels.  Below the boundary, the
+  Lyapunov function $\Lyap(\Wm_t)$ converges to a neighborhood of
+  zero whose radius shrinks as subsumption ceases, and once inside
+  that neighborhood the anti-monopolar property applies.  Above it, the system enters an
+  absorbing basin (under full blindness) or a metastable basin (under
+  partial indirect evidence).
+
+\item \textbf{Unified treatment of three feedback loops}
+  (Section~\ref{sec:unified_loops}).
+  All three loops map to the same $(P, \Wm)$ dynamical system with
+  different effective parameters.  The Wamura problem is a degenerate
+  phase boundary where $\rS = 0$ (Proposition~\ref{prop:wamura}).
+
+\item \textbf{Minimum channel redundancy}
+  (Section~\ref{sec:design_criterion}).
+  The phase boundary implies a design criterion: the minimum
+  cross-substrate redundancy per safety-relevant dimension needed to
+  stay in the self-correcting basin (Theorem~\ref{thm:redundancy}).
+  For two-substrate systems, each substrate's channels are singularly
+  load-bearing.
+\end{enumerate}
+
+\subsection{What this paper does not do}
+
+The phase boundary is about poset dynamics, not experiential
+interpretation: it does not resolve the B-to-C gap (the divergence
+between the capability volume $\volL$ measures and the experiential
+volume it is supposed to track).  The analysis assumes the actor
+optimizes $\volL$; inner-outer alignment (mesa-optimization) is
+orthogonal.  Observation channels are assumed honest throughout; the
+enforcement mechanism for channel integrity is
+Paper~5's~\citep{lasser2026exo} cryptographic commitment protocol.
+The combination is: Paper~5 ensures channels are honest; this paper
+ensures enough honest channels survive.
+
+\subsection{Dependencies on prior papers}
+
+Table~\ref{tab:dependencies} summarizes which results from
+Papers~1--5 this paper relies on and how they enter the analysis.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Paper} & \textbf{Result used} & \textbf{Role here} \\
+\midrule
+P1 & Self-trust $T_s$ (Appendix B) & Restoring force: self-correction via prediction residuals \\
+P2 & Axiom verification (Prop.\ 1), leverage & Properties of $\volL$ the dynamics preserves or violates \\
+P3 & Anti-monopolar property (Prop.\ 6) & Starting point: the linearized growth model we extend \\
+P3 & Structural discovery value (Prop.\ 2) & Self-correction force in feedback loop 1 \\
+P3 & Substrate physics (Defs.\ 10, 12--13) & Substrate partition the phase boundary is defined over \\
+P4 & Multi-channel architecture (Table~1) & Instances of observation channels \\
+P4 & Risk-trust $L^2$ convergence (Prop.\ 2) & Template for bounding correction rates \\
+P5 & Channel isolation \& independence & Integrity conditions on observation channels \\
+\bottomrule
+\end{tabular}
+\caption{Dependencies on Papers~1--5.}
+\label{tab:dependencies}
+\end{table}

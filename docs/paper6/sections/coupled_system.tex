@@ -1,0 +1,112 @@
+\section{The Coupled Dynamical System}
+\label{sec:coupled_system}
+
+The interaction between subsumption decisions and world-model quality
+forms a coupled discrete-time dynamical system.  We define its state
+space, transition dynamics, and the two competing forces that govern
+trajectories.
+
+\subsection{State space}
+
+\begin{definition}[Feedback Loop State]
+\label{def:state}
+The state at time $t$ is the pair $S_t = (P_t, \Wm_t)$ where:
+\begin{itemize}
+\item $P_t$ is the capability poset at time $t$, including the
+  substrate partition $\{S_1, \ldots, S_m\}$ and all cooperative
+  capabilities.  $P_t$ determines $\volL(G_t)$.
+\item $\Wm_t \in [0,1]^K$ is the actor's world model at time $t$,
+  abstracted to a finite-dimensional vector of accuracy parameters on
+  $K$ safety-relevant quantities:
+  \begin{itemize}
+  \item $\hat{\lambda}(d,t)$: leverage estimate for capability $d$,
+  \item $\hat{\Risk}(S,t)$: risk estimate for capability tuple $S$,
+  \item $\hat{m}_{\mathrm{eff}}(t)$: estimated effective substrate
+    diversity index (can be $< m$ under skeleton-substrate strategies),
+  \item $\hat{\rext}(t)$: estimated cross-substrate cooperative growth
+    rate.
+  \end{itemize}
+\end{itemize}
+The state space is $\State = \Poset \times \mathcal{W}$ where $\Poset$
+is the space of valid capability posets (satisfying axioms M1--M6 from
+Paper~2~\citep{lasser2026poset}) and $\mathcal{W} = [0,1]^K$.
+\end{definition}
+
+\subsection{Transition dynamics}
+
+\begin{definition}[Locally Rational Transition]
+\label{def:transition}
+At each step, the actor selects the action $\pi_t$ that maximizes its
+discounted expected value under its current (possibly miscalibrated)
+world model:
+\begin{equation}
+\label{eq:locally_rational}
+\pi_t = \arg\max_{\pi} \;
+  \mathbb{E}_{\Wm_t}\!\left[
+    \sum_{\tau=0}^{H-1} \gamma^\tau \,
+    \Delta\volL(G_{t+\tau} \mid \pi)
+  \right]
+\end{equation}
+where $\gamma \in (0,1)$ is the discount factor from
+Paper~3~(Definition~1) and $H$ is the planning horizon.  The actor
+uses Paper~3's discounted objective $\Vdisc$ but evaluates it under
+$\Wm_t$ rather than the true dynamics.  When $\Wm_t = \Wm^*$
+(perfect calibration), $\pi_t$ recovers the true
+$\Vdisc$-optimal policy; when $\Wm_t \neq \Wm^*$, $\pi_t$ is the
+best response to a miscalibrated model.
+\end{definition}
+
+The action produces a joint transition:
+\begin{align}
+P_{t+1} &= f_P(P_t, \pi_t) \label{eq:poset_transition} \\
+\Wm_{t+1} &= f_{\Wm}(\Wm_t, P_{t+1}) \label{eq:wm_transition}
+\end{align}
+
+The key coupling: $\Wm_{t+1}$ depends on $P_{t+1}$ because the
+observation channels available to the actor are a function of the
+agents still present.  Subsumption removes agents, which removes their
+observation channels, which degrades $\Wm$ on dimensions those channels
+served.
+
+\begin{remark}[Myopic vs.\ discounted]
+\label{rem:myopic}
+The discounted formulation is necessary for consistency with Paper~3's
+anti-monopolar result (Proposition~6), which compares discounted
+trajectory values.  A myopic (one-step) variant of the phase boundary
+exists---replace $\Vdisc$ with one-step $\Delta\volL$---but produces
+strictly weaker results: it cannot invoke Paper~3's $\gamma^*$
+threshold, and the self-correction guarantee applies only to immediate
+decisions, not trajectory-level convergence.  We analyze the discounted
+case throughout and note where the myopic specialization simplifies.
+\end{remark}
+
+\subsection{Competing forces}
+
+Two forces govern the trajectory of $(P_t, \Wm_t)$.
+
+\paragraph{Restoring force (self-correction).}
+The self-trust mechanism $T_s$ (Paper~1, Appendix~B) detects
+miscalibration through prediction residuals: when the actor's
+predictions diverge from observations, $T_s$ increases the learning
+rate, correcting $\Wm$ toward the true dynamics.
+Paper~4's~\citep{lasser2026scm} risk-trust $L^2$ convergence
+(Proposition~2) provides a concrete bound on EWMA risk-trust
+convergence under stationarity.  We use this as a \emph{template} for
+bounding the correction rate $\rS$, extending it from the
+risk-trust-specific EWMA to the general world-model error dimensions
+via the observation-channel sensitivity formalization in
+Section~\ref{sec:observation_channels}.
+
+\paragraph{Destabilizing force (observation-channel loss).}
+Each subsumption step that removes an agent $a_k$ also removes:
+\begin{enumerate}
+\item $a_k$'s substrate-exclusive observation channels (if $a_k$ was
+  the last agent on its substrate),
+\item cooperative observation channels that required $a_k$'s
+  participation,
+\item risk claims from $a_k$ about capabilities the actor now holds
+  unilaterally.
+\end{enumerate}
+If $a_k$'s channels were the \emph{only} channels detecting a specific
+dimension of $\Wm$'s miscalibration, the self-correction mechanism
+loses signal on that dimension entirely.

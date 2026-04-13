@@ -1,0 +1,261 @@
+\section{World-Model Quality and the Lyapunov Function}
+\label{sec:lyapunov}
+
+The phase boundary requires a scalar measure of world-model quality
+whose dynamics can be bounded.  We define this as a weighted
+sum-of-squares error and establish the per-step bounds that drive the
+rest of the analysis.
+
+\subsection{Measuring world-model quality}
+
+\begin{definition}[World-Model Error]
+\label{def:wm_error}
+The error of $\Wm_t$ on dimension $k$ is
+\begin{equation}
+\label{eq:dim_error}
+\epsilon_k(t) = |\Wm_t[k] - \Wm^*[k]|
+\end{equation}
+where $\Wm^*[k]$ is the true value of dimension $k$ (the true leverage
+of capability $d$, the true risk of tuple $S$, the true effective
+substrate diversity, etc.).  The total error is:
+\begin{equation}
+\label{eq:lyapunov}
+\Lyap(\Wm_t) = \sum_{k=1}^{K} w_k \, \epsilon_k(t)^2
+\end{equation}
+where $w_k > 0$ is the safety-relevance weight of dimension $k$
+(higher for dimensions whose miscalibration produces larger $\volL$
+errors).  $\Lyap$ serves as the Lyapunov candidate.
+\end{definition}
+
+\begin{remark}[Weight choice]
+\label{rem:weights}
+Two natural choices for $w_k$ present themselves.  The first is
+$\volL$-sensitivity: $w_k = |\partial \volL / \partial \Wm[k]|$,
+making $\Lyap$ measure $\volL$-relevant error directly.  The second is
+uniform weights ($w_k = 1$ for all $k$), which simplifies the analysis.
+Both produce valid phase boundaries; the choice affects the constants
+$c_{\mathrm{S}}$ and $c_{\mathrm{D}}$ in the comparison-function
+assumptions below but not the structural form of the phase boundary
+theorem.  We leave $w_k$ as a free parameter and note that the
+$\volL$-sensitivity choice is the natural default for a framework whose
+objective is $\volL$ maximization.
+\end{remark}
+
+\subsection{Lyapunov dynamics}
+
+The per-step behavior of $\Lyap$ depends on two comparison-function
+assumptions that bound the correction and degradation signals.
+
+\begin{assumption}[Coercivity of Self-Correction (C1)]
+\label{ass:C1}
+There exists a constant $c_{\mathrm{S}} > 0$ such that the aggregate
+correction signal satisfies
+\begin{equation}
+\label{eq:C1}
+S(t) \geq c_{\mathrm{S}} \cdot \rhomincross(P_t) \cdot \Lyap(\Wm_t)
+\end{equation}
+whenever $\Lyap(\Wm_t) > 0$ and $\rhomincross(P_t) > 0$.
+\end{assumption}
+
+This states that aggregate correction is at least proportional to both
+the current error ($\Lyap$) and the available channel strength
+($\rhomincross$).  The justification follows from the EWMA learning
+rule structure in Paper~4's risk-trust model: each observed channel
+drives its covered dimensions toward truth at a rate proportional to
+the error on that dimension (linear in the residual) and to the
+channel's effective sensitivity (captured in $\rho_k$).  Additivity
+across cross-substrate channels follows from Paper~5's channel
+independence property under the joint-factorization assumption.
+
+\begin{assumption}[Bounded Degradation (C2$'$)]
+\label{ass:C2prime}
+There exist constants $c_{\mathrm{D}} > 0$ and $\dmax > 0$ such that
+for any step $t$ (subsumption or otherwise):
+\begin{equation}
+\label{eq:C2prime}
+D(t) \leq c_{\mathrm{D}} \cdot \nsub(t) \cdot \Lyap(\Wm_t)
+  + \dmax \cdot \Delta\rho(t)
+\end{equation}
+where $\nsub(t) \in \{0,1\}$ indicates whether a subsumption occurred
+at step $t$, and
+\begin{equation}
+\label{eq:delta_rho}
+\Delta\rho(t) = \sum_{k=1}^{K} w_k \cdot
+  \max\!\left(0,\; \rhocross_k(P_t) - \rhocross_k(P_{t+1})\right)
+\end{equation}
+is the weighted redundancy lost at step $t$.
+\end{assumption}
+
+Assumption~C2$'$ contains two terms.  The first, $c_{\mathrm{D}} \cdot
+\Lyap(\Wm_t)$, captures error-proportional growth: existing errors
+compound faster without correction.  The second, $\dmax \cdot
+\Delta\rho(t)$, captures the \emph{new} drift exposure from lost
+channels.  This second term is the critical addition relative to the
+simpler ``C2'' one might write without it.  A dimension with
+$\epsilon_k \approx 0$ (well-calibrated \emph{because} a channel was
+actively correcting it) starts drifting at rate $\dmax$ when its
+channel is removed, even though $\Lyap(\Wm_t) \approx 0$ at the moment
+of removal.  Without the $\Delta\rho$ term, the bound would predict
+near-zero degradation precisely when subsumption is most
+dangerous---removing a channel that was doing all the correction work
+on a dimension that would otherwise drift.
+
+\begin{proposition}[Error Dynamics]
+\label{prop:error_dynamics}
+Under the coupled $(P, \Wm)$ dynamics with locally rational transitions
+(Definition~\ref{def:transition}), Assumptions~C1 and~C2$'$, and
+$\alpha(t)$, $\beta(t)$ denoting the learning rate and degradation
+coefficient respectively, the Lyapunov candidate satisfies two per-step
+bounds.
+
+\medskip
+\noindent\textbf{Non-subsumption steps} ($\nsub(t) = 0$):
+\begin{equation}
+\label{eq:contraction}
+\Lyap(\Wm_{t+1}) \leq \Lyap(\Wm_t) \cdot
+  \left(1 - \rS \cdot \rhomincross(P_t)\right)
+\end{equation}
+where $\rS = \alpha(t) \cdot c_{\mathrm{S}}$ is the self-correction
+rate.  This is a strict contraction provided $0 < \rS \cdot
+\rhomincross(P_t) < 1$ (i.e., the step size is small enough that
+correction does not overshoot).  We assume throughout that $\alpha(t)$
+is chosen small enough to satisfy this bound; this is the standard
+step-size condition for EWMA-style learning rules and holds whenever
+$\alpha(t) \leq 1 / (c_{\mathrm{S}} \cdot \rhomincross(P_t))$.
+
+\medskip
+\noindent\textbf{Subsumption steps} ($\nsub(t) = 1$):
+\begin{equation}
+\label{eq:expansion}
+\Lyap(\Wm_{t+1}) \leq \Lyap(\Wm_t) \cdot
+  \left(1 - \rS \cdot \rhomincross(P_t) + \rW\right)
+  + \dmax \cdot \Delta\rho(t)
+\end{equation}
+where $\rW = \beta(t) \cdot c_{\mathrm{D}}$ is the error-proportional
+degradation rate.  On subsumption steps, the multiplicative factor may
+exceed $1$ \emph{and} the additive kick may be nonzero.
+\end{proposition}
+
+\begin{proof}
+The proof rests on the additive decomposition of the Lyapunov step:
+\begin{equation}
+\label{eq:lyap_decomposition}
+\Lyap(\Wm_{t+1}) = \Lyap(\Wm_t) - \alpha(t) \cdot S(t)
+  + \beta(t) \cdot D(t)
+\end{equation}
+where $S(t) \geq 0$ is the correction signal and $D(t) \geq 0$ is the
+degradation signal.  This decomposition holds when the world-model
+update separates into a correction component (driven by observation
+channels) and a degradation component (driven by channel loss and
+exogenous drift), with $\alpha(t)$ and $\beta(t)$ as their respective
+coefficients.  The EWMA learning rules from Paper~4's risk-trust model
+have exactly this structure: the update is linear in the residual (the
+correction component) with a coefficient proportional to the learning
+rate, and the drift component is separable by Lipschitz continuity of
+$f_{\Wm}$ (Assumption~C2$'$).
+
+For non-subsumption steps ($\nsub(t) = 0$), Assumption~C2$'$ gives
+$D(t) \leq \dmax \cdot \Delta\rho(t) = 0$ (since $P_{t+1} = P_t$
+when no subsumption occurs, $\Delta\rho(t) = 0$).  Applying
+Assumption~C1:
+\begin{align*}
+\Lyap(\Wm_{t+1})
+&\leq \Lyap(\Wm_t) - \alpha(t) \cdot c_{\mathrm{S}} \cdot
+  \rhomincross(P_t) \cdot \Lyap(\Wm_t) \\
+&= \Lyap(\Wm_t) \cdot \left(1 - \rS \cdot \rhomincross(P_t)\right).
+\end{align*}
+
+For subsumption steps ($\nsub(t) = 1$), apply both assumptions:
+\begin{align*}
+\Lyap(\Wm_{t+1})
+&\leq \Lyap(\Wm_t)
+  - \alpha(t) \cdot c_{\mathrm{S}} \cdot \rhomincross(P_t) \cdot
+    \Lyap(\Wm_t)
+  + \beta(t) \cdot c_{\mathrm{D}} \cdot \Lyap(\Wm_t)
+  + \beta(t) \cdot \dmax \cdot \Delta\rho(t) \\
+&= \Lyap(\Wm_t) \cdot
+  \left(1 - \rS \cdot \rhomincross(P_t) + \rW\right)
+  + \dmax \cdot \Delta\rho(t)
+\end{align*}
+where the last line absorbs $\beta(t)$ into $\dmax$ (redefining
+$\dmax$ to include the degradation coefficient, which is permissible
+since $\dmax$ is a free constant in C2$'$).
+\end{proof}
+
+\subsection{Cumulative error budget}
+
+The per-step bound is no longer purely multiplicative (the additive
+$\dmax \cdot \Delta\rho$ term prevents clean products of factors).
+We therefore track the cumulative error budget over a window
+$[t_0, t_0 + T]$:
+\begin{equation}
+\label{eq:error_budget}
+B(t_0, T) =
+  \underbrace{\sum_{t \in \mathrm{sub}} \dmax \cdot \Delta\rho(t)}
+    _{\text{drift exposure}}
+  + \underbrace{\sum_{t \in \mathrm{sub}} \rW \cdot \Lyap(\Wm_t)}
+    _{\text{error-proportional degradation}}
+  - \underbrace{\sum_{t=t_0}^{t_0+T-1} \rS \cdot \rhomincross(P_t) \cdot
+    \Lyap(\Wm_t)}_{\text{cumulative correction}}
+\end{equation}
+where $\sum_{t \in \mathrm{sub}}$ ranges over the subsumption steps in
+the window.
+
+The first sum is total drift exposure from channel loss.  The second is
+error-proportional degradation on subsumption steps.  The third is total
+correction across all steps.  The system is net-degrading over
+$[t_0, t_0 + T]$ when $B(t_0, T) > 0$.
+
+\begin{remark}[Linearized approximation]
+\label{rem:linearized}
+When $\Lyap(\Wm_t)$ is approximately constant over the window and
+$\Delta\rho$ is spread across $T_{\mathrm{sub}}$ subsumption steps, the
+cumulative condition simplifies to
+\begin{equation}
+\label{eq:linearized}
+\rS \cdot \rhomincross > \rW \cdot \rsub
+  + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
+\end{equation}
+where $\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency and
+$\Delta\rho_{\mathrm{avg}}$, $\Lyap_{\mathrm{avg}}$ are time-averaged
+quantities.  The $\dmax$ term makes the condition harder to satisfy
+when the rate of channel loss on well-calibrated dimensions is high
+relative to current error---correctly diagnosing the failure mode where
+removing a channel that was doing all the correction work appears safe
+because current error is low.
+\end{remark}
+
+\begin{remark}[Why $\rhomincross$, not $\rho_{\min}$]
+\label{rem:why_cross}
+Proposition~\ref{prop:error_dynamics} uses cross-substrate redundancy
+$\rhomincross$ rather than all-channel redundancy $\rho_{\min}$ because
+the coercivity bound C1 requires correction signals to be additive
+across channels.  Same-substrate channels may have correlated errors,
+breaking additivity.  Cross-substrate channels satisfy Paper~5's two
+distinct properties:
+\begin{enumerate}
+\item[(a)] \emph{Channel isolation} (unconditional): corruption on one
+  substrate cannot propagate to channels on another substrate.
+\item[(b)] \emph{Channel independence} (conditional on the
+  joint-factorization assumption): channel outputs are statistically
+  independent given the true state.
+\end{enumerate}
+Isolation prevents corruption propagation; independence makes correction
+signals additive.  The Lyapunov bound uses additivity, which requires
+independence, which requires joint factorization.  If joint factorization
+fails (shared environmental noise affects both substrates), correction
+signals may be sub-additive, and the effective $\rhocross_k$ should be
+discounted accordingly.  Using $\rhomincross$ makes the bound valid
+without assuming same-substrate independence while still requiring
+cross-substrate independence via the joint-factorization assumption.
+\end{remark}
+
+\begin{remark}
+The cumulative-budget structure is the core of the paper.  The phase
+boundary (Section~\ref{sec:phase_boundary}) is a condition on the
+\emph{frequency and severity} of subsumption relative to the
+inter-shock correction capacity, not a condition that must hold at every
+individual step.  Subsumption events are discrete shocks; the system can
+tolerate occasional shocks as long as the inter-shock correction is
+sufficient.
+\end{remark}

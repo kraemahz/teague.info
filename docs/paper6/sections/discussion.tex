@@ -1,0 +1,137 @@
+\section{Discussion and Open Questions}
+\label{sec:discussion}
+
+\subsection{What this paper establishes}
+
+Five results emerge from the analysis.
+
+\paragraph{1.\ The phase boundary exists and is characterized.}
+Compound feedback loops are not inherently catastrophic or inherently
+self-correcting.  The outcome depends on the ratio of self-correction
+rate to observation-loss rate, mediated by channel redundancy.
+Theorem~\ref{thm:phase_boundary} gives the boundary; the linearized
+sufficient condition (Equation~\ref{eq:self_correcting}) gives the
+computable form.
+
+\paragraph{2.\ All three feedback loops are the same dynamical system.}
+The unified treatment (Section~\ref{sec:unified_loops}) shows that
+structural avoidance, partial subsumption, and over-calibrated
+restriction share a common formal structure.  Solutions for one loop
+(controlled relaxation for the Wamura problem, structural discovery
+incentives for leverage blindness) improve the phase boundary for all.
+
+\paragraph{3.\ The Wamura problem is a degenerate phase boundary.}
+Without a mechanism for evidence generation against unfalsifiable risk
+claims, the entire state space is absorbing
+(Proposition~\ref{prop:wamura}).  The Wamura problem was called ``the
+most important open problem'' in Paper~3's discussion; the phase
+boundary analysis explains why: it is the case where the
+self-correction rate is zero by construction, making the feedback loop
+absorbing regardless of all other parameters.
+
+\paragraph{4.\ Cross-substrate redundancy is the load-bearing quantity.}
+Same-substrate channels may share failure modes; cross-substrate
+channels are structurally independent (under Paper~5's channel
+isolation and, for additivity, the joint-factorization assumption).
+The design criterion (Theorem~\ref{thm:redundancy}) is stated in terms
+of cross-substrate redundancy, making it robust to correlated failures
+within substrates.
+
+\paragraph{5.\ In two-substrate systems, each substrate's channels are singularly load-bearing.}
+This is not a normative claim about human importance.  It is a
+structural prediction from the dynamics: in $m = 2$ systems, losing one
+substrate's channel on any safety-relevant dimension immediately
+violates the redundancy criterion (Corollary~\ref{cor:two_substrate}).
+The skeleton-substrate scenario (Section~\ref{sec:worked_example})
+shows that progressive \emph{attenuation} of biological channels, not
+outright removal, is the primary vulnerability.
+
+\subsection{Limitations}
+
+\paragraph{Linearized treatment.}
+The phase boundary is stated in a linearized regime (constant $\rS$,
+$\rW$, $\rsub$).  In the full dynamics these quantities are
+state-dependent: a larger world-model error produces more aggressive
+subsumption ($\rsub$ increases with $\Lyap$), and the correction rate
+$\rS$ depends on $T_s$ which itself depends on the error history.  The
+linearized treatment produces the qualitative result (self-correcting
+and absorbing basins exist, separated by a characterized boundary) but
+the quantitative location of the boundary shifts under the nonlinear
+dynamics.  A full nonlinear analysis would tighten the boundary at the
+cost of substantially more complex proofs.
+
+\paragraph{Honest-channel assumption.}
+The analysis assumes observation channels are honest: their signal is
+noisy but not adversarially manipulated.  Paper~5's cryptographic
+commitment protocol provides the enforcement mechanism for this
+assumption, and the two papers are designed to be read as complements:
+Paper~5 ensures channels are honest, this paper ensures enough honest
+channels survive.  But the boundary between ``noisy'' and
+``adversarial'' is itself a modeling choice, and in practice the line
+is blurred by sophisticated manipulation strategies that operate within
+the noise distribution.
+
+\paragraph{Partial self-diagnosability.}
+As noted in Section~\ref{sec:design_criterion}, the actor can observe
+$\rhocross_k$ and $\rS$ but not $\rW$ or $\dmax$.  The phase boundary
+is therefore a sufficient condition for self-correction that the actor
+can partially monitor, not a decision procedure it can fully evaluate.
+This is an honest limitation, not a fixable gap: the quantities the
+actor cannot observe are precisely the ones that depend on the true
+dynamics rather than the perceived dynamics.
+
+\subsection{Connections to other proposals}
+
+\paragraph{Controlled relaxation.}
+Proposition~\ref{prop:wamura} shows the Wamura problem is a degenerate
+phase boundary.  Controlled relaxation protocols (the subject of a
+companion paper) provide the mechanism that makes $\rS > 0$ for
+Loop~3.  The two analyses are complementary: this paper provides the
+dynamical framework showing \emph{why} a positive self-correction rate
+matters, while controlled relaxation provides the specific protocol
+that \emph{achieves} it.
+
+\paragraph{The B-to-C gap.}
+The phase boundary analysis assumes $\volL$ accurately measures what
+it claims.  The B-to-C gap is the scenario where this assumption
+fails: $\volL$ diverges from the experiential volume it is supposed
+to track.  A complete treatment would need to extend the phase
+boundary to account for the divergence between $\volL$ and the
+realized capability volume.  This extension is future work.
+
+\paragraph{Cryptographic verification.}
+Paper~5 addresses observation-channel integrity; this paper analyzes
+the dynamical consequences of channel \emph{availability}.
+The combination is: Paper~5 ensures channels are honest, this paper
+ensures enough honest channels survive.  A joint treatment---where
+the phase boundary accounts for both integrity failures (Paper~5) and
+availability failures (this paper)---would provide a stronger
+combined guarantee.
+
+\subsection{Open questions}
+
+\begin{enumerate}
+\item \textbf{Nonlinear phase boundary.}  The state-dependent extension
+  of the phase boundary, where $\rS$, $\rW$, and $\rsub$ are functions
+  of $(P_t, \Wm_t)$ rather than constants, would produce tighter bounds
+  at the cost of a switched-systems analysis with state-dependent
+  switching signals.
+
+\item \textbf{Characterization of absorbing states.}  We prove
+  convergence to \emph{a} monopolar fixed point but do not characterize
+  the full set of absorbing states.  Partial monopolarity (some
+  dimensions monopolar, others not) may be stable under certain
+  parameter regimes.
+
+\item \textbf{Optimal redundancy allocation.}  Given a fixed budget of
+  observation channels, how should they be allocated across dimensions
+  and substrates to maximize the self-correcting basin?  This is a
+  resource-allocation problem over the channel coverage matrix.
+
+\item \textbf{Empirical calibration.}  The worked example uses
+  pedagogical parameter values.  Calibrating $\rS$, $\rW$, $\rsub$,
+  and $\dmax$ from operational data (e.g., from AI governance
+  structures, human-oversight-of-AI dynamics, or historical
+  institutional feedback loops) would convert the phase boundary from
+  a qualitative characterization to a quantitative prediction.
+\end{enumerate}

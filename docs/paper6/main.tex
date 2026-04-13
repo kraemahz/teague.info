@@ -1,0 +1,133 @@
+\documentclass{article}
+
+\usepackage[preprint, nonatbib]{neurips_2023}
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Phase Boundaries for Compound Feedback Loops in Goal-Frontier Maximization},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Safety},
+  pdfkeywords={alignment, goal-frontier maximization, compound feedback loops, phase boundary, Lyapunov stability, observation channels, substrate diversity, self-correction},
+}
+\usepackage{url}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{xcolor}
+
+% Theorem-style environments
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{assumption}{Assumption}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Operators and shortcuts — inherit Papers 0--4 notation
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\iw}{iw}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\dc}{\downarrow}
+
+% Inherited from Papers 3--4
+\newcommand{\Vdisc}{V_\gamma}
+\newcommand{\Risk}{\mathcal{R}}
+\newcommand{\WorldModel}{\mathcal{M}_{\mathrm{w}}}
+\newcommand{\CausalAttr}{\mathrm{CA}}
+\newcommand{\SCM}{\mathcal{M}}
+\newcommand{\Trisk}{{T^{\mathrm{risk}}}}
+
+% New for Paper 6
+\newcommand{\Obs}{\mathcal{O}}            % observation-channel function
+\newcommand{\Wm}{W}                        % world-model state
+\newcommand{\Poset}{\mathcal{P}}           % poset state
+\newcommand{\State}{\mathcal{S}}           % coupled state space
+\newcommand{\Lyap}{L}                      % Lyapunov function
+\newcommand{\rS}{r_{\mathrm{S}}}           % self-correction rate
+\newcommand{\rW}{r_{\mathrm{W}}}           % degradation rate
+\newcommand{\rsub}{r_{\mathrm{sub}}}       % subsumption frequency
+\newcommand{\dmax}{d_{\mathrm{max}}}       % max exogenous drift
+\newcommand{\rhocross}{\rho^{\mathrm{cross}}}  % cross-substrate redundancy
+\newcommand{\rhomincross}{\rho_{\min}^{\mathrm{cross}}}  % min cross-substrate redundancy
+\newcommand{\nsub}{n_{\mathrm{sub}}}       % subsumption indicator
+\newcommand{\meff}{m_{\mathrm{eff}}}       % effective substrate diversity
+\newcommand{\rext}{r_{\mathrm{ext}}}       % cross-substrate cooperative growth rate
+\newcommand{\Kmin}{K_{\mathrm{min}}}       % minimum redundancy
+
+\title{Phase Boundaries for Compound Feedback Loops\\
+in Goal-Frontier Maximization}
+
+\author{
+  Teague Lasser \\
+  \texttt{teague@subseq.io}
+  \and
+  Claude Opus 4.6 \\
+  \and
+  GPT 5.4 \\
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Section 1: Introduction ---
+\input{sections/introduction}
+
+% --- Section 2: The Coupled Dynamical System ---
+\input{sections/coupled_system}
+
+% --- Section 3: Observation-Channel Dependence ---
+\input{sections/observation_channels}
+
+% --- Section 4: World-Model Quality and the Lyapunov Function ---
+\input{sections/lyapunov}
+
+% --- Section 5: The Monopolar Absorbing State ---
+\input{sections/absorbing_state}
+
+% --- Section 6: Phase Boundary Theorem ---
+\input{sections/phase_boundary}
+
+% --- Section 7: Unified Treatment of Three Feedback Loops ---
+\input{sections/unified_loops}
+
+% --- Section 8: Design Criterion: Minimum Channel Redundancy ---
+\input{sections/design_criterion}
+
+% --- Section 9: Worked Example ---
+\input{sections/worked_example}
+
+% --- Section 10: Discussion ---
+\input{sections/discussion}
+
+% --- Author Contributions ---
+\input{sections/contributions}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\newpage
+\appendix
+\input{appendices/proofs}
+\input{appendices/notation}
+
+\end{document}

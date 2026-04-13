@@ -1,0 +1,135 @@
+\section{Observation-Channel Dependence}
+\label{sec:observation_channels}
+
+The coupling between poset state and world-model quality runs through
+the observation channels.  This section formalizes the channel function,
+defines the redundancy measures that enter the phase boundary, and
+establishes that subsumption monotonically contracts the available
+channel set.
+
+\subsection{The observation-channel function}
+
+\begin{definition}[Observation-Channel Function]
+\label{def:obs_channel}
+$\Obs\colon \Poset \to 2^{\C}$ is a function from poset states to
+sets of available observation channels, where $\C = \{c_1, \ldots,
+c_N\}$ is the universe of possible channels.  Each channel $c_i$ is
+characterized by:
+\begin{itemize}
+\item $\mathrm{substrate}(c_i)$: the substrate on which $c_i$ is
+  rooted,
+\item $\mathrm{dims}(c_i) \subseteq \{1, \ldots, K\}$: the dimensions
+  of $\Wm$ that $c_i$ provides signal about,
+\item $\sigma(c_i, k)$: the signal-to-noise ratio of channel $c_i$ on
+  dimension $k \in \mathrm{dims}(c_i)$.
+\end{itemize}
+$\Obs(P_t)$ is determined by the agents present in $P_t$: each agent
+$a_j$ contributes its observation channels, and removing $a_j$ removes
+all channels rooted in $a_j$.
+\end{definition}
+
+This connects to Paper~4's multi-channel architecture
+(Table~1 of~\citet{lasser2026scm}): the five channels (capability
+gating, causal attribution, behavioral residual, SPRT detection,
+correlational co-occurrence) are each instances of $c_i$ with specific
+substrate rootings and dimension coverage.
+
+\subsection{Channel redundancy}
+
+\begin{definition}[Effective Channel Redundancy]
+\label{def:redundancy}
+For dimension $k$ of $\Wm$, the effective redundancy at poset state $P$
+is the aggregate correction strength from all channels covering $k$:
+\begin{equation}
+\label{eq:redundancy}
+\rho_k(P) = \sum_{\substack{c \in \Obs(P) \\ k \in \mathrm{dims}(c)}}
+  \min\!\left(1,\; \frac{\sigma(c, k)}{\sigma_{\mathrm{thr}}}\right)
+\end{equation}
+where $\sigma_{\mathrm{thr}}$ is the minimum sensitivity at which a
+channel provides operationally meaningful correction signal.  When
+$\rho_k(P) = 0$, the actor is blind on dimension $k$: no observation
+channel can detect miscalibration of $\Wm[k]$.
+\end{definition}
+
+The sensitivity-weighted definition is strictly more informative than a
+raw channel count.  A channel with $\sigma \ll \sigma_{\mathrm{thr}}$
+contributes negligibly to $\rho_k$, correctly diagnosing
+skeleton-substrate strategies where channels are nominally present but
+practically inert.
+
+\begin{definition}[Cross-Substrate Redundancy]
+\label{def:cross_redundancy}
+For dimension $k$, the cross-substrate redundancy is:
+\begin{equation}
+\label{eq:cross_redundancy}
+\rhocross_k(P) = \sum_{s \in \mathrm{substrates}(P)}
+  \min\!\left(1,\;
+    \max_{\substack{c \in \Obs(P) \\ \mathrm{substrate}(c) = s \\
+    k \in \mathrm{dims}(c)}}
+    \frac{\sigma(c, k)}{\sigma_{\mathrm{thr}}}
+  \right)
+\end{equation}
+This measures how many \emph{substrates} contribute operationally
+meaningful channels covering dimension $k$.
+\end{definition}
+
+Cross-substrate redundancy is the load-bearing quantity for the phase
+boundary.  Same-substrate channels may share failure modes (correlated
+noise, common-cause miscalibration), while cross-substrate channels
+satisfy two distinct properties from
+Paper~5~\citep{lasser2026exo}:
+\begin{enumerate}
+\item[(a)] \emph{Channel isolation} (unconditional): corruption on one
+  substrate cannot propagate to channels on another substrate.
+\item[(b)] \emph{Channel independence} (conditional on the
+  joint-factorization assumption from Paper~5, Section~8.1): channel
+  outputs are statistically independent given the true state.
+\end{enumerate}
+Isolation prevents corruption propagation; independence makes correction
+signals additive.  The Lyapunov bound in
+Section~\ref{sec:lyapunov} uses additivity, which requires
+independence, which requires joint factorization.  The phase boundary
+theorem (Section~\ref{sec:phase_boundary}) uses $\rhocross_k$ as the
+primary sufficient statistic.
+
+\subsection{Subsumption and channel loss}
+
+\begin{lemma}[Monotone Channel Contraction]
+\label{lem:channel_contraction}
+If $P_{t+1}$ is obtained from $P_t$ by removing agent $a_k$
+(subsumption), then $\Obs(P_{t+1}) \subseteq \Obs(P_t)$.
+Equivalently, subsumption never creates new observation channels.
+\end{lemma}
+
+\begin{proof}
+Observation channels are rooted in agents (Definition~\ref{def:obs_channel}).
+Removing agent $a_k$ removes all channels in $\{c \in \Obs(P_t) :
+c \text{ is rooted in } a_k\}$.  No channel in $\C \setminus \Obs(P_t)$
+has its rooting condition satisfied by the removal of $a_k$, since
+channel existence requires the presence (not absence) of a rooting
+agent.  Therefore $\Obs(P_{t+1}) = \Obs(P_t) \setminus
+\{c : c \text{ rooted in } a_k\} \subseteq \Obs(P_t)$.
+\end{proof}
+
+\begin{remark}
+This is a modeling assumption.  In principle, removing an adversarial
+agent could \emph{improve} signal-to-noise on some channels by
+removing adversarial noise injection.  We assume honest channels
+throughout this paper; adversarial channel manipulation is
+Paper~5's domain.
+\end{remark}
+
+\begin{corollary}[Redundancy is Non-Increasing Under Subsumption]
+\label{cor:redundancy_monotone}
+For all $k$: $\rho_k(P_{t+1}) \leq \rho_k(P_t)$ and
+$\rhocross_k(P_{t+1}) \leq \rhocross_k(P_t)$ when $P_{t+1}$ results
+from subsumption.
+\end{corollary}
+
+\begin{proof}
+$\Obs(P_{t+1}) \subseteq \Obs(P_t)$ by
+Lemma~\ref{lem:channel_contraction}.  Both $\rho_k$ and $\rhocross_k$
+are sums over subsets of $\Obs(P)$ with non-negative terms
+(Definitions~\ref{def:redundancy} and~\ref{def:cross_redundancy}).
+Restricting to a subset cannot increase the sum.
+\end{proof}

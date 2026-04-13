@@ -1,0 +1,151 @@
+\section{Unified Treatment of Three Feedback Loops}
+\label{sec:unified_loops}
+
+The three compound feedback loops identified in the gap analysis across
+Papers~1--5 are instances of the same $(P, \Wm)$ dynamical system with
+different effective parameters.  This section maps each loop to the
+formalism and shows how the phase boundary specializes.
+
+\subsection{Loop 1: Structural avoidance $\to$ leverage blindness}
+
+\paragraph{Mapping.}
+The ``subsumption'' here is not agent elimination but \emph{structural
+discovery avoidance}: the actor avoids learning poset structure
+(subsumption edges) because discovery can contract $\volL$ in the short
+term.
+
+\begin{itemize}
+\item $P_t$: the actor's \emph{known} poset (a subset of the true
+  poset).
+\item $\Wm_t$: leverage estimates $\hat{\lambda}(d, t)$, which are
+  accurate only for the known poset.
+\item ``Observation channels'' lost: each avoided structural discovery
+  removes a potential correction to $\hat{\lambda}$.
+\item $\rW$: the rate at which leverage estimates drift due to
+  un-learned structure.
+\item $\rS$: the rate at which Paper~3's structural discovery
+  value (Proposition~2, Definition~5) drives the actor toward
+  learning structure.
+\end{itemize}
+
+\paragraph{Phase boundary specialization.}
+Self-correction dominates when the information value $I(d_1 \leq d_2)$
+(Paper~3, Definition~5) exceeds the immediate $\volL$ contraction from
+discovery for a sufficient fraction of unknown edges.  The critical
+ratio becomes:
+\begin{equation}
+\label{eq:loop1_boundary}
+\min_{\text{undiscovered edges}}
+  \frac{I(\text{edge})}{|\Delta\volL(\text{discover edge})|}
+  > \text{threshold}
+\end{equation}
+where the threshold is determined by the degradation and drift
+parameters from the general phase boundary.  This formalizes Paper~2's
+discussion of structural avoidance as a phase-boundary condition
+rather than an informal concern.
+
+\subsection{Loop 2: Partial subsumption $\to$ world-model homogenization}
+
+This is the primary case, directly formalized in
+Sections~\ref{sec:coupled_system}--\ref{sec:phase_boundary}.  The
+parameters are as defined throughout: $P_t$ is the capability poset,
+$\Wm_t$ is the full world-model accuracy vector, observation channels
+are rooted in agents, and the phase boundary is stated in terms of
+$(\rS, \rW, \rsub, \dmax, \rhomincross)$.
+
+\subsection{Loop 3: Over-calibrated restriction $\to$ discovery avoidance}
+
+\paragraph{Mapping.}
+The ``subsumption'' is the actor \emph{restricting} capabilities rather
+than eliminating agents.  But the dynamical structure is identical:
+restriction prevents exercise, which prevents observation, which
+prevents calibration of the risk estimates that justified the
+restriction.
+
+\begin{itemize}
+\item $P_t$: the set of unrestricted capabilities (restriction reduces
+  the exercisable poset).
+\item $\Wm_t$: risk estimates $\hat{\Risk}(S, t)$, which are accurate
+  only for exercised capabilities.
+\item ``Observation channels'' lost: each restriction prevents the
+  exercise events that would have generated Bayesian evidence about
+  the risk claim (the verification asymmetry from
+  Paper~3, Remark~2).
+\item $\rW$: the rate at which risk estimates drift due to
+  un-exercised pathways (this is exactly the Wamura problem from
+  Paper~3).
+\item $\rS$: the rate at which controlled relaxation protocols or
+  natural exercise events provide counter-evidence.
+\end{itemize}
+
+\paragraph{Phase boundary specialization.}
+Self-correction dominates when the controlled relaxation protocol
+generates evidence faster than restriction accumulates unfalsifiable
+risk claims.  This connects the present paper to the Wamura problem: a
+controlled relaxation protocol is the \emph{mechanism} that makes $\rS$
+positive for Loop~3, without which $\rS = 0$ and the absorbing basin is
+the entire state space.
+
+\begin{proposition}[Wamura Problem as Phase Boundary Degeneracy]
+\label{prop:wamura}
+In the absence of controlled relaxation ($\rS = 0$ for Loop~3), the
+phase boundary collapses: every non-trivial risk restriction is
+absorbing, and the framework converges to maximal restriction.
+\end{proposition}
+
+\begin{proof}
+With $\rS = 0$, the cumulative error budget $B(t_0, T)$ becomes
+\begin{equation*}
+B(t_0, T) = \sum_{t \in \mathrm{sub}} \dmax \cdot \Delta\rho(t)
+  + \sum_{t \in \mathrm{sub}} \rW \cdot \Lyap(\Wm_t)
+\end{equation*}
+Both sums contain only non-negative terms ($\dmax, \Delta\rho, \rW,
+\Lyap \geq 0$), and the correction term vanishes entirely.
+Therefore $B(t_0, T) \geq 0$ for every window, with equality only in
+the trivial case where no restriction occurs.
+
+For any non-trivial restriction step ($\nsub(t) = 1$ with
+$\Delta\rho(t) > 0$ or $\Lyap(\Wm_t) > 0$), $B > 0$ and Part~(b)
+of Theorem~\ref{thm:phase_boundary} applies.  Every restriction step
+reduces observation (no exercise produces no evidence), increasing
+world-model error on the risk dimension, making the next restriction
+appear more justified under the miscalibrated model.
+
+This is the formal statement of why the Wamura problem was called
+``the most important open problem'' in Paper~3's discussion: without a
+mechanism to generate evidence against unfalsifiable risk claims, the
+feedback loop between restriction and evidence suppression is
+absorbing by default.
+\end{proof}
+
+\subsection{Summary}
+
+Table~\ref{tab:loops} summarizes the three loops as parameter
+instantiations of the unified system.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Loop} & \textbf{$P_t$} & \textbf{$\Wm_t$} &
+\textbf{$\rS$ source} & \textbf{$\rW$ source} \\
+\midrule
+1. Structural avoidance & Known poset & Leverage estimates &
+  Discovery value (P3 Prop.\ 2) & Un-learned structure \\
+2. Partial subsumption & Capability poset & Full accuracy vector &
+  $T_s$ self-trust (P1) & Channel loss \\
+3. Over-calibrated restriction & Unrestricted caps. & Risk estimates &
+  Controlled relaxation & Unfalsifiable risk \\
+\bottomrule
+\end{tabular}
+\caption{Three feedback loops as instances of the $(P, \Wm)$ system.}
+\label{tab:loops}
+\end{table}
+
+The unified treatment reveals that solutions for one loop improve the
+phase boundary for all three.  Controlled relaxation (which makes
+$\rS > 0$ for Loop~3) has no direct effect on Loop~2's parameters, but
+the structural insight transfers: any mechanism that generates
+observation-channel signal on dimensions that would otherwise go blind
+is a contribution to $\rS$ in the relevant loop's phase boundary.

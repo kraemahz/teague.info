@@ -1,0 +1,344 @@
+\section{Phase Boundary Theorem}
+\label{sec:phase_boundary}
+
+This section presents the central result: a characterized boundary in
+the parameter space of the coupled $(P, \Wm)$ system that separates
+self-correcting dynamics from absorbing (or metastable) dynamics.
+
+\begin{theorem}[Phase Boundary for Compound Feedback Loops]
+\label{thm:phase_boundary}
+Consider the coupled $(P, \Wm)$ dynamical system under locally rational
+transitions (Definition~\ref{def:transition}), with
+Assumptions~C1 and~C2$'$ (Section~\ref{sec:lyapunov}).  Define:
+\begin{itemize}
+\item $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$: a lower bound on
+  the self-correction rate (the infimum is taken over the trajectory),
+\item $\rW = \sup_t \beta(t) \cdot c_{\mathrm{D}}$: an upper bound on
+  the error-proportional degradation rate per subsumption step,
+\item $\dmax$: the maximum exogenous drift rate per dimension (from
+  C2$'$; a global constant),
+\item $\rsub \in [0,1]$: the time-averaged subsumption frequency over
+  the trajectory window,
+\item $\rhomincross = \inf_{t \in [t_0, t_0+T]} \min_k
+  \rhocross_k(P_t)$: the infimum of the minimum cross-substrate
+  redundancy over the window
+  (Definition~\ref{def:cross_redundancy}),
+\item $B(t_0, T)$: the cumulative error budget over window
+  $[t_0, t_0 + T]$ (Equation~\ref{eq:error_budget}).
+\end{itemize}
+
+\noindent The simplified sufficient conditions below use these
+worst-case bounds.  The full trajectory-level statement (Part~a) uses
+the cumulative error budget $B(t_0, T)$ directly, which tracks the
+time-varying quantities along the trajectory.
+
+\medskip
+\noindent\textbf{Part~(a): Self-Correcting Basin.}
+If the uniform contraction condition holds---there exist constants
+$\bar{a} \in (0,1)$ and $\bar{b} \geq 0$ such that, for all
+sufficiently long windows $[t_0, t_0+T]$, the time-averaged
+log-contraction rate of the per-step multiplicative factor
+$a_t$ satisfies $\frac{1}{T}\sum \ln a_t \leq \ln \bar{a} < 0$ and
+the time-averaged additive drift satisfies
+$\frac{1}{T}\sum b_t \leq \bar{b}$ (see Equation~\ref{eq:uniform_contraction}
+for notation)---then $\Lyap(\Wm_t)$ converges to a neighborhood of zero
+whose radius is bounded by
+\begin{equation}
+\label{eq:neighborhood}
+\Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
+  \overline{\Delta\rho}}{\rS \cdot \rhomincross - \rW \cdot \rsub}
+\end{equation}
+where $\overline{\Delta\rho} \coloneqq \Delta\rho_{\mathrm{avg}}$ is
+the time-averaged redundancy loss per subsumption step (the two
+notations are used interchangeably; the overline form in display
+equations, the subscript form in inline text).  This neighborhood shrinks as subsumption ceases
+($\overline{\Delta\rho} \to 0$).  Once $\Lyap(\Wm_t) <
+\epsilon_{\mathrm{safe}}$ (defined as the error threshold below which
+the locally rational policy agrees with the true $\Vdisc$-optimal
+policy), subsumption is correctly evaluated against the true $\volL$
+dynamics and the anti-monopolar result (Paper~3, Proposition~6) applies.
+
+The feedback loop self-corrects provided the neighborhood radius
+$\Lyap_\infty < \epsilon_{\mathrm{safe}}$, which imposes an additional
+constraint on the steady-state subsumption rate.
+
+\medskip
+\noindent\textbf{Simplified sufficient condition.}  In the linearized
+regime (Remark~\ref{rem:linearized}):
+\begin{equation}
+\label{eq:self_correcting}
+\rS \cdot \rhomincross > \rW \cdot \rsub
+  + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
+\end{equation}
+The first term on the right is the error-proportional degradation cost;
+the second is the drift-exposure cost from lost channels.  When
+subsumption removes channels covering well-calibrated dimensions
+($\Lyap_{\mathrm{avg}}$ is low but $\Delta\rho_{\mathrm{avg}}$ is
+nonzero), the second term dominates and the condition is harder to
+satisfy---correctly diagnosing the ``removing a channel that was doing
+all the correction work'' failure mode.
+
+\medskip
+\noindent\textbf{Part~(b): Absorbing Basin.}
+Under Assumption~B1 (no endogenous correction on blind dimensions;
+Assumption~\ref{ass:B1}):
+
+If there exists a trajectory segment $[t_0, t_0 + T]$ during which
+\begin{enumerate}
+\item[(i)] $B(t_0, T) > 0$ (cumulative degradation exceeds cumulative
+  correction),
+\item[(ii)] by $t_0 + T$, $\rhocross_k(P_t)$ has been reduced to $0$
+  on at least one cascade dimension $k$ with $w_k > 0$, and
+\item[(iii)] the accumulated error on $k$ exceeds the cascade
+  threshold: $\epsilon_k(t_0 + T) > \epsilon_{\mathrm{crit}}$ (defined
+  in Lemma~\ref{lem:cascade}; the threshold below which
+  miscalibration on dimension $k$ is insufficient to flip the locally
+  rational action from ``preserve'' to ``subsume''),
+\end{enumerate}
+then the following cascade occurs.  By Assumption~B1,
+$\epsilon_k(t)$ is non-decreasing for $t > t_0 + T$ (no correction on
+a fully blind dimension), and condition~(iii) ensures the error is
+large enough to produce incorrect subsumption decisions affecting other
+dimensions.  The Cascade Lemma (Appendix~\ref{app:cascade}) then
+propagates the failure: the resulting subsumptions drive $\rhocross_j
+\to 0$ on additional dimensions $j \neq k$, each of which subsequently
+accumulates error and triggers further incorrect subsumptions.  The
+trajectory converges to a neighborhood of the monopolar fixed point
+$S^*$ (Definition~\ref{def:monopolar}).
+
+This is a \emph{cumulative} condition on the trajectory, not a
+pointwise condition requiring contiguous subsumption steps.  The
+slow-drip scenario---many subsumption steps spaced apart, each
+individually below the ``degradation dominates'' threshold, but
+cumulatively driving $B$ above zero---is captured.  This is the most
+dangerous failure mode because it is the hardest to detect: each
+individual step looks locally rational and each individual inter-step
+recovery looks adequate, but the cumulative drift exposure ratchets the
+error upward.
+
+\medskip
+\noindent\textbf{Part~(b$'$): Metastable Basin.}
+Under Assumption~B1$'$ (partial endogenous correction via indirect
+evidence; Assumption~\ref{ass:B1prime}):
+
+Under the same trajectory conditions~(i)--(iii) as Part~(b), the system
+enters a \emph{metastable} basin rather than an absorbing one.  The
+metastable lifetime $\tau_{\mathrm{meta}} \geq (\epsilon_{\rext})^2 /
+(2 I_k)$ (Proposition~\ref{prop:metastable}).  During the metastable period, the
+system is monopolar and operates under endogenous verification only
+(Paper~5).
+
+\medskip
+\noindent\textbf{Part~(c): Critical Surface.}
+The phase boundary surface in the linearized regime is:
+\begin{equation}
+\label{eq:critical_surface}
+\rS \cdot \rhomincross = \rW \cdot \rsub
+  + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
+\end{equation}
+Below this surface (correction dominates both error-proportional growth
+and drift exposure): the system is in the self-correcting basin.
+Above this surface: the system is in the absorbing basin (under B1) or
+the metastable basin (under B1$'$).
+
+The critical cross-substrate redundancy for a given
+$(\rS, \rW, \rsub, \dmax, \Delta\rho_{\mathrm{avg}},
+\Lyap_{\mathrm{avg}})$ is:
+\begin{equation}
+\label{eq:critical_redundancy}
+(\rhomincross)^* = \frac{\rW \cdot \rsub
+  + \dmax \cdot \Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}}
+  {\rS}
+\end{equation}
+This is the minimum effective cross-substrate redundancy per
+safety-relevant dimension needed to stay in the self-correcting basin.
+The $\dmax$ term means the threshold is \emph{higher} when subsumption
+removes channels covering well-calibrated dimensions (high
+$\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
+\end{theorem}
+
+\begin{proof}
+The proof proceeds in four steps.  Full details are in
+Appendix~\ref{app:proof_strategy}.
+
+\emph{Step 1: Part~(a).}
+From Proposition~\ref{prop:error_dynamics}, the per-step bound is an
+affine recursion:
+\begin{equation}
+\label{eq:affine_recursion}
+\Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
+\end{equation}
+where $a_t = 1 - \rS(t) \cdot \rhomincross(P_t)
+  + \nsub(t) \cdot \rW(t)$
+and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$, with
+$\rS(t) = \alpha(t) \cdot c_{\mathrm{S}}$ and
+$\rW(t) = \beta(t) \cdot c_{\mathrm{D}}$.
+
+We require a uniform contraction condition: there exist constants
+$\bar{a} \in (0,1)$ and $\bar{b} \geq 0$ such that, for all
+sufficiently long windows $[t_0, t_0+T]$,
+\begin{equation}
+\label{eq:uniform_contraction}
+\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} \ln a_t \leq \ln \bar{a} < 0
+\qquad \text{and} \qquad
+\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} b_t \leq \bar{b}
+\end{equation}
+The first condition states that the time-averaged log-contraction rate
+is strictly negative (amortized over both subsumption and
+non-subsumption steps).  The second bounds the time-averaged additive
+drift.
+
+Note that $a_t > 0$ for all $t$: on non-subsumption steps,
+$a_t = 1 - \rS(t) \cdot \rhomincross(P_t) > 0$ by the step-size
+condition (Section~\ref{sec:lyapunov}); on subsumption steps,
+$a_t = 1 - \rS(t) \cdot \rhomincross(P_t) + \rW(t)
+\geq 1 - \rS(t) \cdot \rhomincross(P_t) > 0$ since $\rW(t) \geq 0$.
+Therefore $\ln a_t$ is well-defined.
+
+The uniform contraction
+condition~\eqref{eq:uniform_contraction} is the working hypothesis of
+Part~(a); the cumulative error budget $B(t_0,T) < 0$ from the
+Simplified Sufficient Condition (below) implies it in the linearized
+regime where $\Lyap(\Wm_t)$ is approximately constant over the
+window.  The connection: in the linearized regime,
+$a_t \approx 1 + (a_t - 1)$ with $|a_t - 1| \ll 1$, so
+$\ln a_t \approx a_t - 1$ and the log-averaged contraction rate
+equals the arithmetic average $\frac{1}{T}\sum (a_t - 1)$, which is
+precisely the unweighted analogue of $B / (T \cdot \Lyap)$.  The
+bounded-drift condition on $\bar{b}$ follows from boundedness of
+$\Delta\rho(t)$ per step.
+
+Under conditions~\eqref{eq:uniform_contraction}, iterating the affine
+recursion~\eqref{eq:affine_recursion} gives (cf.\
+\citet{khalil2002nonlinear}, Chapter~4, and
+\citet{liberzon2003switching}, Theorem~3.1 on average dwell-time
+stability for switched affine systems):
+\begin{equation}
+\label{eq:iterated_convergence}
+\limsup_{t \to \infty} \Lyap(\Wm_t)
+  \leq \frac{\bar{b}}{1 - \bar{a}}
+\end{equation}
+This is the neighborhood radius in
+Equation~\ref{eq:neighborhood}.  The convergence is geometric in the
+amortized sense: $\Lyap_t \leq \bar{a}^t \cdot \Lyap_0 +
+\bar{b} / (1 - \bar{a})$.
+
+Once $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$, the actor's decisions
+are correct and the anti-monopolar property applies.  The bridge from
+the Lyapunov function to decision correctness proceeds in two steps.
+First, $\Lyap \geq w_k \cdot \epsilon_k^2$ for each $k$
+(Definition~\ref{def:wm_error}), so $\Lyap <
+\epsilon_{\mathrm{safe}}$ implies $\epsilon_k <
+\sqrt{\epsilon_{\mathrm{safe}} / w_k}$ for all $k$.  Second, define
+the per-dimension cascade threshold
+\begin{equation*}
+\epsilon_{\mathrm{crit},k}
+  \coloneqq \min_{j \in \mathcal{A}_t}
+    \epsilon_{\mathrm{crit}}^{(j,k)}
+\end{equation*}
+where $\epsilon_{\mathrm{crit}}^{(j,k)}$ is the cascade threshold
+from Lemma~\ref{lem:cascade} for the pair (agent~$a_j$,
+dimension~$k$), and the minimum is over the current agent set
+$\mathcal{A}_t$.  This gives the smallest error on dimension $k$ that
+could flip \emph{any} preserve/subsume action.  Then set
+\begin{equation*}
+\epsilon_{\mathrm{safe}} = \min_k \, w_k \cdot
+  (\epsilon_{\mathrm{crit},k})^2
+\end{equation*}
+When $\Lyap < \epsilon_{\mathrm{safe}}$, we have
+$\epsilon_k < \epsilon_{\mathrm{crit},k}$ for every $k$, so no
+dimension's error exceeds any action's cascade threshold.  Since the
+locally rational choice is an $\arg\max$ over a finite action set
+(Definition~\ref{def:transition}), each pairwise comparison is
+correct, and therefore the global policy agrees with the true
+$\Vdisc$-optimal policy.
+
+\emph{Step 2: Part~(b).}
+Suppose $B(t_0, T) > 0$ on some window and
+$\rhocross_k(P_{t_0 + T}) = 0$ for some dimension $k$ with
+$w_k > 0$.  By Assumption~B1, $\epsilon_k(t)$ is non-decreasing for
+$t > t_0 + T$.  If $\epsilon_k$ exceeds $\epsilon_{\mathrm{crit}}$
+(the cascade threshold from Lemma~\ref{lem:cascade}), the locally
+rational action under $\Wm_t$ is subsumption of agents whose channels
+cover other dimensions $j \neq k$, driving $\rhocross_j$ toward $0$
+and triggering the same logic on dimension $j$.  The cascade
+(Appendix~\ref{app:cascade}) drives the system into the neighborhood
+of $S^*$; once there, Proposition~\ref{prop:absorbing} ensures the
+trajectory stays.
+
+\emph{Step 3: Part~(b$'$).}
+Under B1$'$, the indirect signal $g_k$ provides correction at rate
+$I_k$ on the blinded dimension.  The cascade structure is the same as
+Part~(b) but convergence to $S^*$ is slowed by $I_k$.  The metastable
+lifetime $\tau_{\mathrm{meta}} \geq (\epsilon_{\rext})^2 / (2 I_k)$
+emerges from the Cram\'er--Rao-type bound on sequential estimation:
+reducing the mean-squared error of $\hat{\rext}$ from
+$\epsilon_{\rext}^2$ to the level at which re-introduction becomes
+locally rational requires at least $\epsilon_{\rext}^2 / (2 I_k)$
+steps from a channel providing $I_k$ bits per step.
+
+\emph{Step 4: Part~(c).}
+The critical surface is obtained by setting $B(t_0, T) = 0$ in the
+linearized approximation
+(Equation~\ref{eq:linearized}).
+Solving for $\rhomincross$ yields
+Equation~\ref{eq:critical_redundancy}.
+\end{proof}
+
+\begin{remark}[Uniqueness]
+We do not claim $S^*$ is the unique absorbing fixed point.  Other fixed
+points may exist (partial monopolarity with $\meff = 1$ on a subset of
+dimensions).  Part~(b) claims convergence to \emph{a} monopolar fixed
+point satisfying Definition~\ref{def:monopolar}, not to a unique one.
+Characterizing the full set of absorbing states is an open problem.
+\end{remark}
+
+\subsection{Dependence on cross-substrate structure}
+
+\begin{corollary}[Robustness to Same-Substrate Correlation]
+\label{cor:same_substrate}
+Since Theorem~\ref{thm:phase_boundary} is stated with $\rhomincross$
+(cross-substrate redundancy only), its guarantee holds even under
+worst-case correlation among same-substrate channels.
+\end{corollary}
+
+\begin{proof}
+Same-substrate channels may share failure modes (both rooted in
+silicon, both consulting the same training data).  Cross-substrate
+channels satisfy Paper~5's channel isolation property unconditionally:
+corruption on one substrate cannot propagate to channels rooted in
+another substrate.  Under the additional joint-factorization assumption
+from Paper~5, cross-substrate channels achieve full conditional
+independence, making their correction signals additive.
+
+The modified condition asks: ``do the isolated (and, under joint
+factorization, independent) cross-substrate channels alone suffice?''
+If yes, the self-correction guarantee holds regardless of
+same-substrate correlation.
+
+A tighter bound using all-channel $\rho_{\min}$ (with appropriate
+correlation discounting) would yield a larger self-correcting basin.
+But the cross-substrate formulation provides a \emph{structural}
+guarantee that does not depend on empirically verifying same-substrate
+independence.
+\end{proof}
+
+\begin{remark}[$m = 2$ specialization]
+\label{rem:m2}
+For any substrate partition with $m = 2$, each dimension has at most
+one cross-substrate channel per pair.  The design criterion reduces to:
+every safety-relevant dimension of $\Wm$ must have a channel on
+\emph{both} substrates.  In the common case (biology $+$ silicon), this
+means every dimension needs at least one biological observation channel.
+
+This framing should not be read as ``biological substrates are
+special.''  Rather, $m = 2$ is a fragile minimum.  Any loss of a single
+channel on a single dimension is immediately fatal because there is zero
+redundancy margin.  The structural implication is that $m \geq 3$ is
+where the redundancy criterion becomes non-trivially satisfiable.
+
+The substrate partition is at the level of abstraction where failure
+correlations matter.  Two silicon deployments with uncorrelated failure
+modes may functionally constitute different substrates, increasing
+effective $m$ beyond the nominal substrate-type count.
+\end{remark}

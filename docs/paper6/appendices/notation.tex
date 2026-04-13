@@ -1,0 +1,53 @@
+\section{Notation Summary}
+\label{app:notation}
+
+Table~\ref{tab:notation} collects the principal symbols used in the
+paper.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Symbol} & \textbf{Definition} & \textbf{Introduced in} \\
+\midrule
+$S_t = (P_t, \Wm_t)$ & Coupled state & Def.\ \ref{def:state} \\
+$P_t$ & Capability poset at time $t$ & Def.\ \ref{def:state} \\
+$\Wm_t$ & World-model accuracy vector & Def.\ \ref{def:state} \\
+$\gamma$ & Discount factor (Paper~3, Def.\ 1) & Def.\ \ref{def:transition} \\
+$\Obs(P)$ & Observation-channel function & Def.\ \ref{def:obs_channel} \\
+$\mathrm{dims}(c)$ & Dimensions of $\Wm$ covered by channel $c$ & Def.\ \ref{def:obs_channel} \\
+$\sigma(c, k)$ & Signal-to-noise ratio of $c$ on dim.\ $k$ & Def.\ \ref{def:obs_channel} \\
+$\sigma_{\mathrm{thr}}$ & Minimum operationally meaningful sensitivity & Def.\ \ref{def:redundancy} \\
+$\rho_k(P)$ & Effective channel redundancy & Def.\ \ref{def:redundancy} \\
+$\rhocross_k(P)$ & Cross-substrate redundancy & Def.\ \ref{def:cross_redundancy} \\
+$\Lyap(\Wm_t)$ & Lyapunov function (world-model error) & Def.\ \ref{def:wm_error} \\
+$\epsilon_k(t)$ & Error on dimension $k$ & Def.\ \ref{def:wm_error} \\
+$w_k$ & Safety-relevance weight for dim.\ $k$ & Def.\ \ref{def:wm_error} \\
+$c_{\mathrm{S}}$ & Coercivity constant & Assump.\ C1 \\
+$c_{\mathrm{D}}$ & Degradation bound constant & Assump.\ C2$'$ \\
+$\dmax$ & Maximum exogenous drift rate & Assump.\ C2$'$ \\
+$\nsub(t)$ & Subsumption indicator ($0$ or $1$) & Assump.\ C2$'$ \\
+$\Delta\rho(t)$ & Weighted redundancy loss at step $t$ & Eq.\ \ref{eq:delta_rho} \\
+$\alpha(t)$ & Learning rate (via $T_s$) & Prop.\ \ref{prop:error_dynamics} \\
+$\beta(t)$ & Degradation coefficient & Prop.\ \ref{prop:error_dynamics} \\
+$\rS$ & Self-correction rate ($= \alpha \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
+$\rW$ & Degradation rate ($= \beta \cdot c_{\mathrm{D}}$) & Prop.\ \ref{prop:error_dynamics} \\
+$\rsub$ & Subsumption frequency & Thm.\ \ref{thm:phase_boundary} \\
+$\rhomincross$ & Minimum cross-substrate redundancy & Thm.\ \ref{thm:phase_boundary} \\
+$B(t_0, T)$ & Cumulative error budget & Eq.\ \ref{eq:error_budget} \\
+$S^*$ & Monopolar fixed point & Def.\ \ref{def:monopolar} \\
+$\meff$ & Effective substrate diversity index & Def.\ \ref{def:monopolar} \\
+$\tau_{\mathrm{meta}}$ & Metastable lifetime & Prop.\ \ref{prop:metastable} \\
+$L_{\max}$ & Maximum initial world-model error & Thm.\ \ref{thm:redundancy} \\
+$\Kmin(k, L_{\max})$ & Minimum redundancy for dim.\ $k$ & Thm.\ \ref{thm:redundancy} \\
+$\gamma^*$ & Critical discount factor (P3, Prop.\ 6) & App.\ \ref{app:gamma_star} \\
+$\gamma^*_{\mathrm{perceived}}$ & Perceived $\gamma^*$ under $\Wm_t$ & App.\ \ref{app:gamma_star} \\
+$\epsilon_{\mathrm{crit}}^{(j,k)}$ & Cascade threshold for agent $j$, dim.\ $k$ & Lemma~\ref{lem:cascade} \\
+$\epsilon_{\mathrm{crit},k}$ & $\min_j \epsilon_{\mathrm{crit}}^{(j,k)}$: per-dim.\ cascade threshold & Thm.\ \ref{thm:phase_boundary} \\
+$\epsilon_{\mathrm{safe}}$ & $\min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$: safe Lyapunov threshold & Thm.\ \ref{thm:phase_boundary} \\
+\bottomrule
+\end{tabular}
+\caption{Principal notation.}
+\label{tab:notation}
+\end{table}

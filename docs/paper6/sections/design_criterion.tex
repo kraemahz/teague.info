@@ -1,0 +1,161 @@
+\section{Design Criterion: Minimum Channel Redundancy}
+\label{sec:design_criterion}
+
+The phase boundary theorem converts a dynamical-systems result into a
+design criterion: what is the minimum cross-substrate redundancy per
+safety-relevant dimension needed to guarantee the system stays in the
+self-correcting basin?
+
+\subsection{The redundancy criterion}
+
+\begin{theorem}[Minimum Redundancy for Self-Correcting Dynamics]
+\label{thm:redundancy}
+For the self-correcting basin (Theorem~\ref{thm:phase_boundary},
+Part~a) to contain all initial states with $\Lyap(\Wm_0) \leq
+L_{\max}$ (world-model error bounded at initialization), the substrate
+partition must satisfy:
+\begin{equation}
+\label{eq:kmin}
+\forall\; k \in \{1, \ldots, K\}: \quad
+\rhocross_k(P) \geq \Kmin(k, L_{\max})
+\end{equation}
+where
+\begin{equation}
+\label{eq:kmin_formula}
+\Kmin(k, L_{\max}) =
+  \frac{\rW(k) \cdot \rsub^{\max}(L_{\max})
+    + \dmax(k) \cdot \Delta\rho_{\mathrm{avg}}(k) / L_{\max}}
+  {\rS(k)}
+\end{equation}
+and $\rsub^{\max}(L_{\max})$ is the maximum subsumption rate under
+locally rational dynamics from any state in the basin with
+$\Lyap(\Wm) \leq L_{\max}$.  Note that $\Kmin$ is real-valued, since
+$\rhocross_k$ is defined as a sensitivity-weighted sum
+(Definition~\ref{def:cross_redundancy}), not an integer count.
+\end{theorem}
+
+\begin{proof}
+The self-correcting condition
+(Equation~\ref{eq:self_correcting}) requires
+$\rS \cdot \rhomincross > \rW \cdot \rsub + \dmax \cdot
+\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$.
+Solving for $\rhomincross$ yields
+Equation~\ref{eq:kmin_formula}.
+
+The dependence on $L_{\max}$ enters through two channels:
+$\rsub^{\max}(L_{\max})$ increases with $L_{\max}$ (larger errors
+produce more aggressive locally rational subsumption), and the
+$\dmax / L_{\max}$ ratio increases as $L_{\max}$ decreases (drift
+exposure dominates the error-proportional term when initial error is
+small).  The second channel captures the ``well-calibrated channel
+removal'' failure mode: when $L_{\max}$ is small and
+$\Delta\rho_{\mathrm{avg}}$ is nonzero, $\Kmin$ can be substantially
+larger than the formula without the drift term would predict.
+
+The design criterion is stated for the \emph{initial} redundancy
+$\rhocross_k(P_0)$, but the self-correcting condition in
+Theorem~\ref{thm:phase_boundary} is trajectory-level: $\rhocross_k$
+may decrease under the dynamics being analyzed.  The criterion is
+therefore a sufficient condition at initialization, not a guarantee
+that remains satisfied.  A stronger result would bound the worst-case
+$\rhocross_k$ along all trajectories starting from the basin, which
+requires coupling the redundancy dynamics to the phase boundary
+analysis.  We note this gap and state the criterion as a design
+guideline rather than a closed safety guarantee.
+\end{proof}
+
+\subsection{Practical implications}
+
+\begin{corollary}[Two-Substrate Minimum]
+\label{cor:two_substrate}
+For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
+\begin{enumerate}
+\item $\rhocross_k \leq 2$ for each dimension $k$ (at most one channel
+  from each substrate).
+\item The criterion requires
+  $\rS(k) \geq \rW(k) \cdot \rsub^{\max} / 2$ for every dimension $k$.
+\item Dimensions where one substrate provides the only cross-substrate
+  signal have $\rhocross_k = 1$, requiring
+  $\rS(k) \geq \rW(k) \cdot \rsub^{\max}$: the self-correction rate
+  must exceed the degradation rate unaided by redundancy.
+\end{enumerate}
+\end{corollary}
+
+This means that in a two-substrate world, each substrate's observation
+channels are singularly load-bearing for every dimension they cover.
+Loss of one substrate's channel on any dimension immediately violates
+the redundancy criterion on that dimension.
+
+\begin{remark}[Progressive attenuation as the primary threat]
+\label{rem:attenuation}
+The $m = 2$ vulnerability is not that one substrate is \emph{removed}
+(an overt act that would itself be detectable) but that it is
+\emph{attenuated}: the human stops reviewing AI capability claims
+because the AI's self-reports ``seem fine,'' or human judgment is
+progressively replaced by automated proxies that share the silicon
+substrate's failure modes.
+
+This attenuation reduces effective sensitivity without changing the
+nominal channel count, causing $\rhocross_k$ to drop below the
+threshold while appearing unchanged to a naive audit.  The
+skeleton-substrate scenario (Corollary~\ref{cor:skeleton}) is
+precisely this failure mode.
+
+The framing should be read as emphasizing $m = 2$ fragility and the
+value of $m \geq 3$, not the specialness of any particular substrate.
+\end{remark}
+
+\begin{corollary}[Skeleton-Substrate Vulnerability]
+\label{cor:skeleton}
+Under a skeleton-substrate strategy where $m \geq 2$ nominally but the
+non-dominant substrate's channels have sensitivity $\to 0$:
+\begin{equation}
+\label{eq:skeleton}
+\rhocross_k(P) \to \rhocross_{k,\mathrm{dominant}}(P)
+\end{equation}
+because the sensitivity-weighted definitions
+(Definitions~\ref{def:redundancy} and~\ref{def:cross_redundancy})
+already discount low-sensitivity channels.
+\end{corollary}
+
+\begin{proof}
+From Definition~\ref{def:cross_redundancy}, the contribution of
+substrate $s$ to $\rhocross_k$ is
+$\min(1, \max_{c \in s} \sigma(c,k) / \sigma_{\mathrm{thr}})$.
+As $\sigma(c,k) \to 0$ for all channels on the non-dominant substrate,
+this contribution goes to zero.  The sum reduces to the dominant
+substrate's contribution alone.
+\end{proof}
+
+The skeleton-substrate strategy does not evade the redundancy criterion
+by construction: it directly reduces $\rhocross_k$ by reducing the
+marginalized substrate's contribution to near-zero.  No separate
+``effective'' redundancy is needed; the phase boundary formalism
+already captures this vulnerability through the sensitivity weighting.
+
+\subsection{Self-diagnosability}
+
+The phase boundary is partially self-diagnosable by the actor.  The
+actor can observe:
+\begin{itemize}
+\item $\rhocross_k$ (it knows which channels it has and their
+  approximate sensitivities),
+\item $\rS$ (from its own learning rate and historical correction
+  behavior).
+\end{itemize}
+
+The actor cannot directly observe:
+\begin{itemize}
+\item $\rW$ (the degradation rate depends on the true dynamics, not the
+  perceived dynamics),
+\item $\dmax$ (the exogenous drift rate on blinded dimensions is by
+  definition unobservable once the dimension is blind).
+\end{itemize}
+
+This means the actor can check ``am I above the threshold for the $\rW$
+I estimate?'' but not ``is my estimate of $\rW$ correct?''  The actor
+can monitor the observable ingredients and flag when they approach the
+boundary, even if it cannot guarantee the boundary is computed
+correctly.  This is an honest limitation: the phase boundary is a
+sufficient condition for self-correction, not a decision procedure for
+whether self-correction will actually obtain.
