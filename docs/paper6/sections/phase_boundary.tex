@@ -11,13 +11,11 @@ Consider the coupled $(P, \Wm)$ dynamical system under locally rational
 transitions (Definition~\ref{def:transition}), with
 Assumptions~C1 and~C2$'$ (Section~\ref{sec:lyapunov}).  Define:
 \begin{itemize}
-\item $\rS^{\mathrm{eff}} = \inf_t \bigl[\alpha(t) \cdot c_{\mathrm{S}}
-  \cdot \rhomincross(P_t) + c_{\mathrm{V}} \cdot \nu(P_t,
-  \Wm_t)\bigr] / \rhomincross(P_t)$: the effective self-correction rate,
-  combining exogenous channel correction ($c_{\mathrm{S}}$) with the
-  endogenous calibration incentive ($c_{\mathrm{V}} \cdot \nu$, see
-  Assumption~C1).  When $c_{\mathrm{V}} = 0$, this reduces to
-  $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$,
+\item $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$: a lower bound on
+  the exogenous correction rate (from Assumption~C1's first term),
+\item $c_{\mathrm{V}}$, $\nu$: the endogenous correction constant and
+  $\volL$-sensitivity (from Assumption~C1's second term; set
+  $c_{\mathrm{V}} = 0$ for the purely exogenous model),
 \item $\rW = \sup_t \beta(t) \cdot c_{\mathrm{D}}$: an upper bound on
   the error-proportional degradation rate per subsumption step,
 \item $\dmax$: the maximum exogenous drift rate per dimension (from
@@ -59,7 +57,8 @@ whose radius is bounded by
 \begin{equation}
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
-  \overline{\Delta\rho}}{\rSeff \cdot \rhomincross - \rW \cdot \rsub}
+  \overline{\Delta\rho}}{(\rS + c_{\mathrm{V}} \nu / \rhomincross)
+  \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation}
 where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
 loss per subsumption step.  (We write $\overline{\Delta\rho}$

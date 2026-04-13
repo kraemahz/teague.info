@@ -55,10 +55,12 @@ such that the aggregate correction signal satisfies
 S(t) \geq \bigl(c_{\mathrm{S}} \cdot \rhomincross(P_t)
   + c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr) \cdot \Lyap(\Wm_t)
 \end{equation}
-whenever $\Lyap(\Wm_t) > 0$, where
-$\nu(P_t, \Wm_t) = \bigl|\partial \volL(G_t) / \partial
-\Lyap(\Wm_t)\bigr|$ is the $\volL$-sensitivity to calibration
-improvement.
+whenever $\Lyap(\Wm_t) > 0$ and either $\rhomincross(P_t) > 0$ or
+$\nu(P_t, \Wm_t) > 0$.  Here $\nu(P_t, \Wm_t) \geq 0$ is the
+$\volL$-sensitivity to calibration improvement: the marginal $\volL$
+gain from a unit reduction in $\Lyap$, evaluated at the current state
+along the decision chain (better calibration $\to$ better decisions
+$\to$ higher $\volL$).
 \end{assumption}
 
 The correction signal has two sources.  The first term,
@@ -100,7 +102,12 @@ channels, which provide more correction signal.  The destabilizing
 cascade runs in reverse: channel loss degrades the model, which
 produces worse decisions, which lose more channels.  The phase boundary
 separates these two regimes, and the endogenous $c_{\mathrm{V}} \cdot
-\nu$ term tips the balance toward the stabilizing side.
+\nu$ term tips the balance toward the stabilizing side.  The two
+cascades are asymmetric: degradation happens in discrete jumps
+(subsumption removes an agent and its channels at a single step),
+while recovery is continuous (calibration improves gradually through
+accumulated observations).  The system degrades in steps but recovers
+smoothly.
 \end{remark}
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
