@@ -35,8 +35,9 @@ $\overline{\Delta\rho}$, $\Delta\rho_{\mathrm{avg}}$ & Time-averaged weighted re
 $\Delta\rho_{\mathrm{avg}}(k)$ & Per-dim.\ time-averaged redundancy loss per sub.\ step & Thm.\ \ref{thm:redundancy} \\
 $\alpha(t)$ & Learning rate (via $T_s$) & Prop.\ \ref{prop:error_dynamics} \\
 $\beta(t)$ & Degradation coefficient & Prop.\ \ref{prop:error_dynamics} \\
-$\rS$ & Exogenous self-correction rate ($= \alpha \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
-$\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}$ & Total correction rate (exo.\ + endo.) & Thm.\ \ref{thm:phase_boundary} \\
+$\alphamin$ & Learning-rate floor: $\inf_t \alpha(t)$ & Thm.\ \ref{thm:phase_boundary} \\
+$\rS$ & Exogenous self-correction rate ($= \alphamin \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
+$\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$ & Total correction rate (exo.\ + endo.) & Thm.\ \ref{thm:phase_boundary} \\
 $\rW$ & Degradation rate ($= \beta \cdot c_{\mathrm{D}}$) & Prop.\ \ref{prop:error_dynamics} \\
 $\rsub$ & Subsumption frequency & Thm.\ \ref{thm:phase_boundary} \\
 $\rhomincross$ & Minimum cross-substrate redundancy & Thm.\ \ref{thm:phase_boundary} \\

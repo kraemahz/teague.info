@@ -74,18 +74,23 @@ and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$.  Iterating:
 \end{equation}
 
 The first term converges to zero when the geometric mean of $a_t$ is
-$< 1$ (which follows from $B < 0$).  The second term converges to a
-bounded steady-state value:
+$< 1$ (which follows from $B < 0$ in the linearized regime; see the
+inline proof of Theorem~\ref{thm:phase_boundary} for the precise
+connection via $\ln a_t \approx a_t - 1$).  The second term converges
+to a bounded steady-state value:
 \begin{equation*}
 \Lyap_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
   = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
-    {\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+    {\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot
+    \underline{\nu}
     - \rW \cdot \rsub}
 \end{equation*}
 Substituting $\bar{b} = \rsub \cdot \dmax \cdot
 \overline{\Delta\rho}$ (additive drift at frequency $\rsub$) and
-$1 - \bar{a} = \rS \cdot \rhomincross + c_{\mathrm{V}} \cdot
+$1 - \bar{a} = \rS \cdot \rhomincross + \alphamin \cdot
+c_{\mathrm{V}} \cdot
 \underline{\nu} - \rW \cdot \rsub$ (amortized contraction rate, with
+$\alphamin = \inf_t \alpha(t)$ and
 $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ bounding the endogenous
 term from C1) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
 (subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the

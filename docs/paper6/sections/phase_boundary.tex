@@ -58,7 +58,7 @@ whose radius is bounded by
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
   \overline{\Delta\rho}}{\rS \cdot \rhomincross
-  + c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub}
+  + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub}
 \end{equation}
 where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
 loss per subsumption step.  (We write $\overline{\Delta\rho}$
@@ -88,19 +88,22 @@ sensitive to multiple coordinates simultaneously.
 regime (Remark~\ref{rem:linearized}):
 \begin{equation}
 \label{eq:self_correcting}
-\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}
   > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ is the worst-case
-$\volL$-sensitivity along the trajectory.  (The per-step bound from
+where $\alphamin = \inf_t \alpha(t)$ and
+$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$.  (The per-step bound from
 Proposition~\ref{prop:error_dynamics} carries the time-varying
 $\alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)$; the
-simplified condition uses the inf bound.)  The left-hand side has two
+simplified condition uses the inf bounds $\alphamin$ and
+$\underline{\nu}$.)  The left-hand side has two
 terms: the exogenous correction $\rS \cdot \rhomincross$ (proportional
-to channel strength) and the endogenous incentive $c_{\mathrm{V}}
+to channel strength, where $\rS = \alphamin \cdot c_{\mathrm{S}}$
+already absorbs the learning-rate floor) and the endogenous incentive
+$\alphamin \cdot c_{\mathrm{V}}
 \cdot \underline{\nu}$ (the actor's own $\volL$-gradient toward better
-calibration, independent of channel count).  The endogenous term
+calibration, scaled by the same learning-rate floor).  The endogenous term
 widens the self-correcting basin by supplementing the observation
 channels.  Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous
 condition.
@@ -122,7 +125,7 @@ which provide more correction signal.  Part~(b), below, describes the
 mirror image: a \emph{destabilizing cascade} where channel loss
 degrades the model, producing worse decisions that lose more channels.
 The phase boundary separates these two regimes.  The endogenous
-$c_{\mathrm{V}} \cdot \nu$ term from Assumption~C1 tips the balance
+$\alphamin \cdot c_{\mathrm{V}} \cdot \nu$ term from Assumption~C1 tips the balance
 toward the stabilizing side by supplementing the channel-driven
 correction with the actor's own $\volL$-gradient incentive.
 
@@ -217,7 +220,7 @@ endogenous verification only~\citep{lasser2026exo}.
 The phase boundary surface in the linearized regime is:
 \begin{equation}
 \label{eq:critical_surface}
-\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}
   = \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
@@ -234,13 +237,15 @@ Solving for the critical cross-substrate redundancy:
 \label{eq:critical_redundancy}
 (\rhomincross)^* = \frac{\rW \cdot \rsub
   + \dmax \cdot \Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}
-  - c_{\mathrm{V}} \cdot \underline{\nu}}
+  - \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}}
   {\rS}
 \end{equation}
-The endogenous term ($c_{\mathrm{V}} \cdot \underline{\nu}$) appears
+The endogenous term ($\alphamin \cdot c_{\mathrm{V}} \cdot
+\underline{\nu}$) appears
 as a subtraction in the numerator: the actor's own calibration
 incentive reduces the redundancy the channels must provide.  When
-$c_{\mathrm{V}} \cdot \underline{\nu}$ alone exceeds the right-hand
+$\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$ alone exceeds
+the right-hand
 side, $(\rhomincross)^* \leq 0$ and endogenous correction suffices
 without any cross-substrate channels.  Setting $c_{\mathrm{V}} = 0$
 recovers the purely exogenous formula $(\rhomincross)^* =
@@ -281,11 +286,15 @@ is strictly negative (amortized over both subsumption and
 non-subsumption steps).  The second bounds the time-averaged additive
 drift.
 
-Note that $a_t > 0$ for all $t$: on non-subsumption steps,
-$a_t = 1 - \rS(t) \cdot \rhomincross(P_t) > 0$ by the step-size
-condition (Section~\ref{sec:lyapunov}); on subsumption steps,
-$a_t = 1 - \rS(t) \cdot \rhomincross(P_t) + \rW(t)
-\geq 1 - \rS(t) \cdot \rhomincross(P_t) > 0$ since $\rW(t) \geq 0$.
+Note that $a_t > 0$ for all $t$: the step-size condition
+(Section~\ref{sec:lyapunov}) ensures
+$1 - \alpha(t) \cdot (c_{\mathrm{S}} \cdot \rhomincross(P_t)
++ c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)) > 0$, i.e.,
+$1 - \rS(t) \cdot \rhomincross(P_t) - \alpha(t) \cdot c_{\mathrm{V}}
+\cdot \nu(P_t, \Wm_t) > 0$.  On non-subsumption steps $a_t$ equals
+this quantity.  On subsumption steps, $a_t$ adds $\rW(t) \geq 0$,
+so $a_t \geq 1 - \rS(t) \cdot \rhomincross(P_t) - \alpha(t) \cdot
+c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t) > 0$.
 Therefore $\ln a_t$ is well-defined.
 
 The uniform contraction
@@ -317,7 +326,7 @@ linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
 1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
 evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
 \overline{\Delta\rho}$ and $1 - \bar{a} = \rS \cdot \rhomincross +
-c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$, yielding
+\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$, yielding
 Equation~\ref{eq:neighborhood}.  Outside
 the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
 by the log-averaging condition~\eqref{eq:uniform_contraction} and may

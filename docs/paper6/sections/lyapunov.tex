@@ -93,8 +93,9 @@ rate $\rS \cdot \rhomincross$ alone.  In the phase boundary analysis
 (Section~\ref{sec:phase_boundary}), the time-varying endogenous term
 is bounded below by $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ to
 define the total correction rate $\rS \cdot \rhomincross +
-c_{\mathrm{V}} \cdot \underline{\nu}$
-(Remark~\ref{rem:stabilizing_cascade}).
+\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$
+(Remark~\ref{rem:stabilizing_cascade}), where
+$\alphamin = \inf_t \alpha(t)$.
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
 \label{ass:C2prime}
@@ -257,12 +258,13 @@ $\Delta\rho$ is spread across $T_{\mathrm{sub}}$ subsumption steps, the
 cumulative condition simplifies to
 \begin{equation}
 \label{eq:linearized}
-\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}
   > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ (the inf bound on
-$\nu$ over the window),
+where $\alphamin = \inf_t \alpha(t)$ and
+$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ (the inf bounds on
+$\alpha$ and $\nu$ over the window, respectively),
 $\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency, and
 $\Delta\rho_{\mathrm{avg}}$, $\Lyap_{\mathrm{avg}}$ are time-averaged
 quantities.  The $\dmax$ term makes the condition harder to satisfy

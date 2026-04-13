@@ -90,16 +90,31 @@ the entire state space.
 \label{prop:wamura}
 In the absence of controlled relaxation ($\rS = 0$ for Loop~3) and
 without endogenous calibration incentive on the risk dimension
-($c_{\mathrm{V}} \cdot \nu = 0$, because the actor cannot estimate
-$\nu$ on a dimension where exercise is prohibited), the phase boundary
+($\alphamin \cdot c_{\mathrm{V}} \cdot \nu = 0$; see derivation
+below), the phase boundary
 collapses: every non-trivial risk restriction is absorbing, and the
 framework converges to maximal restriction.
 \end{proposition}
 
 \begin{proof}
-With $\rS = 0$ and $c_{\mathrm{V}} \cdot \nu = 0$ (the actor cannot
-estimate the $\volL$-sensitivity on an unexercised dimension), the
-cumulative error budget $B(t_0, T)$ becomes
+With $\rS = 0$ and $\alphamin \cdot c_{\mathrm{V}} \cdot \nu = 0$,
+the cumulative error budget $B(t_0, T)$ becomes:
+
+\emph{Why $c_{\mathrm{V}} \cdot \nu = 0$ on the risk dimension.}
+The endogenous sensitivity $\nu(P_t, \Wm_t)$ measures the marginal
+$\volL$ gain from a unit reduction in $\Lyap$, evaluated along the
+decision chain: better calibration $\to$ better decisions $\to$ higher
+$\volL$.  On the risk dimension of Loop~3, exercise is prohibited by
+the restriction.  The actor therefore has no operational data from
+which to estimate how improving its risk calibration would change its
+decisions---the counterfactual ``what would happen if this capability
+were exercised?'' is precisely what the restriction prevents observing.
+Without an estimate of $\nu$, the actor cannot form the
+$\volL$-gradient that drives endogenous correction.  Formally:
+$\nu = \partial \volL / \partial \Lyap$ along the decision chain,
+but the chain is severed at the restriction step (the capability is
+never exercised, so the downstream $\volL$ consequences are
+unobservable), giving $\nu = 0$ on the restricted dimension.
 \begin{equation*}
 B(t_0, T) = \sum_{t \in \mathrm{sub}} \dmax \cdot \Delta\rho(t)
   + \sum_{t \in \mathrm{sub}} \rW \cdot \Lyap(\Wm_t)

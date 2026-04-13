@@ -25,7 +25,7 @@ where
   \frac{\rW \cdot \rsub^{\max}
     + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
     \Lyap_{\mathrm{avg}}
-    - c_{\mathrm{V}} \cdot \underline{\nu}}
+    - \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}}
   {\rS}
 \end{equation}
 $\rsub^{\max}$ is the maximum subsumption rate under
@@ -33,9 +33,11 @@ locally rational dynamics over the relevant trajectory window, and $\Delta\rho_{
 the time-averaged redundancy loss on dimension $k$ per subsumption
 step.  The exogenous rates $\rS$, $\rW$, $\dmax$ are the global
 bounds from Theorem~\ref{thm:phase_boundary}; the endogenous
-correction $c_{\mathrm{V}} \cdot \underline{\nu}$ appears as a
+correction $\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$
+appears as a
 subtraction in the numerator (it reduces the channel redundancy
-needed).  When $c_{\mathrm{V}} \cdot \underline{\nu}$ alone exceeds
+needed).  When $\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$
+alone exceeds
 the degradation terms, $\Kmin \leq 0$ and endogenous correction
 suffices; setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous
 formula.  The per-dimension dependence enters
@@ -60,15 +62,20 @@ $S(t) \geq (c_{\mathrm{S}} \cdot \rhomincross + c_{\mathrm{V}}
 \cdot \nu) \cdot \Lyap$.  For the per-dimension criterion, we
 attribute the exogenous correction proportionally: dimension $k$
 receives correction at rate $\rS \cdot \rhocross_k(P_t)$ from its
-covering channels, plus the aggregate endogenous term
-$c_{\mathrm{V}} \cdot \underline{\nu}$ distributed across all
-dimensions.  Each dimension has its own drift exposure
+covering channels.  The endogenous term $\alphamin \cdot
+c_{\mathrm{V}} \cdot \underline{\nu}$ is aggregate (it arises from
+the actor's overall $\volL$-gradient, not from any single
+dimension's channels).  We assign the full aggregate endogenous
+correction to each dimension's budget; this is conservative because
+the endogenous correction benefits all dimensions simultaneously,
+so each dimension's individual budget overstates the correction
+available to it alone.
+Each dimension has its own drift exposure
 $\dmax \cdot \Delta\rho_k(t)$, where $\Delta\rho_k$ is the
 redundancy loss on dimension $k$ specifically.  Requiring each
 dimension individually to satisfy the self-correcting condition
-(with the endogenous term distributed uniformly as a conservative
-bound) yields the per-dimension criterion: $\rS \cdot \rhocross_k +
-c_{\mathrm{V}} \cdot \underline{\nu} >
+yields the per-dimension criterion: $\rS \cdot \rhocross_k +
+\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} >
 \rW \cdot \rsub + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
 \Lyap_{\mathrm{avg}}$.  Solving for $\rhocross_k$ yields
 Equation~\ref{eq:kmin_formula}.  Note that $\Kmin$ increases as
@@ -111,13 +118,13 @@ For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
 \item $\rhocross_k \leq 2$ for each dimension $k$ (at most one channel
   from each substrate).
 \item The full criterion (Equation~\ref{eq:kmin_formula}) with
-  $\rhocross_k = 2$ requires $2 \rS + c_{\mathrm{V}} \cdot
-  \underline{\nu} \geq \rW \cdot \rsub^{\max} + \dmax \cdot
+  $\rhocross_k = 2$ requires $2 \rS + \alphamin \cdot c_{\mathrm{V}}
+  \cdot \underline{\nu} \geq \rW \cdot \rsub^{\max} + \dmax \cdot
   \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$ for every
   dimension $k$.
 \item Dimensions where one substrate provides the only cross-substrate
   signal have $\rhocross_k = 1$, requiring
-  $\rS + c_{\mathrm{V}} \cdot \underline{\nu} \geq
+  $\rS + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} \geq
   \rW \cdot \rsub^{\max} + \dmax \cdot
   \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$: exogenous
   correction plus endogenous incentive must together exceed
