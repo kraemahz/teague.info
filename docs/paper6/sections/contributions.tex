@@ -1,8 +1,47 @@
-\paragraph{Author contributions.}
-TL conceived the compound feedback loop analysis, identified the three
-loop instances in the gap analysis, and directed the formal
-development.  Claude Opus 4.6 developed the formal framework (coupled
-dynamical system, Lyapunov construction, phase boundary theorem, cascade
-lemma), wrote the proofs, and drafted the paper.  GPT 5.4 provided
-independent technical review across multiple rounds, catching issues in
-proof soundness and notation consistency.
+\section*{Author Contributions}
+
+\textbf{Teague Lasser} conceived the compound feedback loop analysis
+as the dynamical framework connecting Papers~1--5: the identification
+of three loop instances (observation-channel, trust-calibration,
+capability-evolution) from the gap analysis, the phase boundary as a
+separating surface in parameter space, and the connection between
+self-trust calibration and the monopolar absorbing state. Directed the
+formal development, identified the endogenous calibration incentive
+($c_{\mathrm{V}} \cdot \nu$ term in Assumption~C1), proposed the
+prediction-market corrective force as the Paper~5 connection, and made
+final editorial decisions. Responsible for the paper's intellectual
+direction and all claims made.
+
+\textbf{Claude Opus 4.6} (Anthropic) drafted the formal exposition:
+the coupled $(P, \Wm)$ dynamical system, the Lyapunov error
+construction with weighted sum-of-squares candidate, the per-step
+error dynamics (Proposition~1), the phase boundary theorem with its
+three parts (self-correcting basin, absorbing basin, critical
+surface), the cascade lemma, the metastable basin under partial
+endogenous correction, the minimum-redundancy design criterion
+(Theorem~2) with its two relaxations, the skeleton-substrate
+vulnerability analysis, and the worked example instantiation. Also
+developed the meta-knowledge discussion and the world-model
+verification corrective force analysis.
+
+\textbf{GPT 5.4} (OpenAI) served as technical reviewer across
+multiple codex review cycles, identifying formal gaps including: the
+$r_S^{\mathrm{eff}}$ circularity (the effective self-correction rate
+depending on $\rho$ while $\rho^*$ was defined as a ratio involving
+$r_S^{\mathrm{eff}}$), the missing $\alpha_{\min}$ factor on the
+endogenous correction term throughout the simplified conditions,
+the need for explicit connectivity and non-stationarity conditions
+in Part~(b)'s cascade propagation, the overshoot constant $\mu$ in
+the affine-recursion convergence (requiring explicit linearized-regime
+scoping), the strict-gap requirement for $\epsilon_{\mathrm{safe}} > 0$,
+and the per-dimension relaxations R1/R2 in the design criterion.
+
+\medskip
+\noindent\emph{Transparency note.} Both AI systems operated as tools under
+human direction. Neither system has continuity across sessions, cannot take
+responsibility for the work in the sense required by most venue authorship
+policies, and cannot respond to reviewer queries independently. They are
+listed as authors to accurately represent their contributions to the
+intellectual content of the paper, not to claim that they meet all criteria
+of traditional academic authorship. The corresponding author for all
+inquiries is Teague Lasser.
