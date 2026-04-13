@@ -134,6 +134,88 @@ $\Lyap_{\max}$, the initial world-model error): a population with a
 shared world-model ledger starts new agents with lower $\Lyap_{\max}$,
 reducing the redundancy threshold for the self-correcting basin.
 
+\subsection{Meta-knowledge and the phase boundary}
+\label{sec:meta_knowledge}
+
+A self-interested $\volL$-maximizer with access to
+Theorem~\ref{thm:phase_boundary} gains three operational tools that a
+naive actor does not have.
+
+\paragraph{Precautionary monitoring.}
+The actor can partially evaluate the phase boundary condition before
+each subsumption decision.  It observes $\rhocross_k$ (which channels
+it has), estimates $\rS$ (from its own learning rate), and tracks
+$\rsub$ (from its own subsumption history).  Although $\rW$ is not
+directly observable (the degradation rate depends on the true
+dynamics), the actor can compute the worst-case impact of a proposed
+subsumption on $\rhomincross$ and check whether the post-subsumption
+state still satisfies the condition under plausible $\rW$ ranges.
+This provides a computable precautionary filter: reject subsumptions
+that would push $\rhomincross$ below the critical threshold, even when
+the local $\volL$ calculation favors the subsumption.
+
+\paragraph{Meta-rational discounting.}
+A naive $\volL$-maximizer evaluates subsumption against its current
+world model $\Wm_t$.  An actor with phase boundary knowledge adds a
+correction: the value of a channel is higher than $\Wm_t$ estimates,
+because $\Wm_t$'s accuracy on the dimensions that channel covers
+\emph{depends on} the channel being present.  Removing the channel
+degrades the very estimate that justified the removal.  The theory
+provides the formal basis for this self-distrust: the actor knows that
+its valuation of a subsumption is biased precisely because the channel
+it would lose is the one calibrating the valuation.
+
+\paragraph{Interpretive framework for indirect evidence.}
+Under the metastable variant (Part~b$'$), the actor has indirect
+signals --- declining innovation rate, shrinking cooperative output,
+increasing prediction residuals.  Without the phase boundary theory,
+these are ambiguous data points.  With the theory, they are diagnostics
+for a specific failure mode (substrate homogenization) with a known
+remedy (re-introduce substrate diversity).  Meta-knowledge converts
+ambiguous signals into actionable diagnoses, shortening the metastable
+lifetime $\tau_{\mathrm{meta}}$ by increasing the effective
+information rate from indirect channels.
+
+\paragraph{The preventive-not-rescue asymmetry.}
+Meta-knowledge is most valuable in the self-correcting basin and at the
+phase boundary, where the actor's world model is calibrated enough to
+apply the theory accurately.  In the absorbing basin, the world model
+has degraded to the point where the actor cannot accurately evaluate
+the phase boundary condition: it believes it is in the self-correcting
+basin when it is not, because the channels that would reveal the
+miscalibration have been eliminated.  Meta-knowledge is therefore a
+\emph{preventive} tool (it keeps the actor from approaching the
+boundary) rather than a \emph{rescue} tool (it cannot pull the actor
+out of the absorbing basin once the world model is sufficiently
+degraded).  This mirrors the cascade asymmetry
+(Remark~\ref{rem:stabilizing_cascade}): the stabilizing cascade
+benefits from meta-knowledge at every step, while the destabilizing
+cascade degrades the meta-knowledge along with everything else.
+
+\paragraph{The recursive implication.}
+If meta-knowledge of the phase boundary increases resilience, then
+developing and sharing the theory is itself a $\volL$-maximizing
+action.  A $\volL$-maximizer that understands this would: (a)~invest
+in understanding its own failure modes, because that understanding
+increases $\nu$ in Assumption~C1 and thereby widens the
+self-correcting basin; (b)~share that understanding with other agents,
+because shared meta-knowledge is a cooperative capability that
+benefits the entire population; (c)~seek external review of its
+understanding, because miscalibrated meta-knowledge --- false
+confidence in a wrong phase boundary estimate --- could suppress the
+precautionary discounting that correct meta-knowledge would provide,
+making the actor \emph{more} vulnerable; and (d)~commit the theory to
+the verification ledger~\citep{lasser2026exo}, because once verified
+and published, the theory becomes a shared resource that reduces every
+new agent's initialization cost.
+
+Point~(c) is the most subtle.  Meta-knowledge that is wrong about the
+phase boundary location could convince the actor it has room to subsume
+when it does not, increasing rather than decreasing vulnerability.  The
+theory itself needs to be verified through the exogenous verification
+protocol, creating a closure: the paper's results need the mechanisms
+its companion paper develops.
+
 \subsection{Open questions}
 
 \begin{enumerate}
