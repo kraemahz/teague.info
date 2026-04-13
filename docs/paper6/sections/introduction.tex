@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Paper~3~\citep{lasser2026horizon} establishes the anti-monopolar
+\citep{lasser2026horizon} establishes the anti-monopolar
 property: under discounting, full capability domination by a single
 substrate is anti-maximizing when the discount factor $\gamma$ exceeds
 a threshold $\gamma^* = 1 - \rext / \Delta_0$ (Proposition~6,
@@ -16,7 +16,7 @@ until the monopolar state becomes a fixed point from which no locally
 rational trajectory escapes.
 
 Three compound feedback loops share this structure.  They were
-identified in the gap analysis across Papers~1--5 and share a common
+identified in the gap analysis across the GFM sequence and share a common
 dynamical form: a locally rational decision narrows the observation
 basis, making the \emph{next} locally rational decision's harm less
 detectable.
@@ -26,7 +26,7 @@ The actor avoids structural discovery because learning a new
 subsumption edge can contract $\volL$ in the short
 term~\citep{lasser2026poset}.  This inflates the actor's leverage
 estimates for capabilities whose subsumption structure is unknown,
-reinforcing the avoidance.  Paper~3's structural discovery
+reinforcing the avoidance.  The structural discovery
 value~(Proposition~2 of~\citet{lasser2026horizon}) provides the
 restoring force; the question is whether it acts quickly enough.
 
@@ -99,32 +99,32 @@ volume it is supposed to track).  The analysis assumes the actor
 optimizes $\volL$; inner-outer alignment (mesa-optimization) is
 orthogonal.  Observation channels are assumed honest throughout; the
 enforcement mechanism for channel integrity is
-Paper~5's~\citep{lasser2026exo} cryptographic commitment protocol.
-The combination is: Paper~5 ensures channels are honest; this paper
-ensures enough honest channels survive.
+\citep{lasser2026exo}'s cryptographic commitment protocol.
+That paper ensures channels are honest; this paper ensures enough honest
+channels survive.
 
-\subsection{Dependencies on prior papers}
+\subsection{Dependencies on prior results}
 
-Table~\ref{tab:dependencies} summarizes which results from
-Papers~1--5 this paper relies on and how they enter the analysis.
+Table~\ref{tab:dependencies} summarizes which results from the GFM sequence
+this paper relies on and how they enter the analysis.
 
 \begin{table}[h]
 \centering
 \small
 \begin{tabular}{@{}lll@{}}
 \toprule
-\textbf{Paper} & \textbf{Result used} & \textbf{Role here} \\
+\textbf{Source} & \textbf{Result used} & \textbf{Role here} \\
 \midrule
-P1 & Self-trust $T_s$ (Appendix B) & Restoring force: self-correction via prediction residuals \\
-P2 & Axiom verification (Prop.\ 1), leverage & Properties of $\volL$ the dynamics preserves or violates \\
-P3 & Anti-monopolar property (Prop.\ 6, ``Domination is Anti-Maximizing'') & Starting point: the linearized growth model we extend \\
-P3 & Structural discovery value (Prop.\ 2) & Self-correction force in feedback loop 1 \\
-P3 & Substrate physics (Defs.\ 10, 12--13) & Substrate partition the phase boundary is defined over \\
-P4 & Multi-channel architecture (Table~1) & Instances of observation channels \\
-P4 & Risk-trust $L^2$ convergence (Prop.\ 2) & Template for bounding correction rates \\
-P5 & Channel isolation \& independence & Integrity conditions on observation channels \\
+Foundational~\citep{lasser2026gfm} & Self-trust $T_s$ (Appendix B) & Restoring force: self-correction via prediction residuals \\
+Poset~\citep{lasser2026poset} & Axiom verification (Prop.\ 1), leverage & Properties of $\volL$ the dynamics preserves or violates \\
+Horizon~\citep{lasser2026horizon} & Anti-monopolar property (Prop.\ 6) & Starting point: the linearized growth model we extend \\
+Horizon & Structural discovery value (Prop.\ 2) & Self-correction force in feedback loop 1 \\
+Horizon & Substrate physics (Defs.\ 10, 12--13) & Substrate partition the phase boundary is defined over \\
+Causal~\citep{lasser2026scm} & Multi-channel architecture (Table~1) & Instances of observation channels \\
+Causal & Risk-trust $L^2$ convergence (Prop.\ 2) & Template for bounding correction rates \\
+Verification~\citep{lasser2026exo} & Channel isolation \& independence & Integrity conditions on observation channels \\
 \bottomrule
 \end{tabular}
-\caption{Dependencies on Papers~1--5.}
+\caption{Dependencies on prior GFM results. Short names: Foundational = \citet{lasser2026gfm}, Poset = \citet{lasser2026poset}, Horizon = \citet{lasser2026horizon}, Causal = \citet{lasser2026scm}, Verification = \citet{lasser2026exo}.}
 \label{tab:dependencies}
 \end{table}

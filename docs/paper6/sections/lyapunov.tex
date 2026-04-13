@@ -60,12 +60,12 @@ whenever $\Lyap(\Wm_t) > 0$ and $\rhomincross(P_t) > 0$.
 This states that aggregate correction is at least proportional to both
 the current error ($\Lyap$) and the available channel strength
 ($\rhomincross$).  The justification follows from the EWMA learning
-rule structure in Paper~4's risk-trust model: each observed channel
+rule structure in the risk-trust model of~\citet{lasser2026scm}: each observed channel
 drives its covered dimensions toward truth at a rate proportional to
 the error on that dimension (linear in the residual) and to the
 channel's effective sensitivity (captured in $\rho_k$).  Additivity
-across cross-substrate channels follows from Paper~5's channel
-independence property under the joint-factorization assumption.
+across cross-substrate channels follows from the channel
+independence property~\citep{lasser2026exo} under the joint-factorization assumption.
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
 \label{ass:C2prime}
@@ -148,7 +148,7 @@ degradation signal.  This decomposition holds when the world-model
 update separates into a correction component (driven by observation
 channels) and a degradation component (driven by channel loss and
 exogenous drift), with $\alpha(t)$ and $\beta(t)$ as their respective
-coefficients.  The EWMA learning rules from Paper~4's risk-trust model
+coefficients.  The EWMA learning rules from the risk-trust model~\citep{lasser2026scm}
 have exactly this structure: the update is linear in the residual (the
 correction component) with a coefficient proportional to the learning
 rate, and the drift component is separable by Lipschitz continuity of
@@ -238,8 +238,8 @@ Proposition~\ref{prop:error_dynamics} uses cross-substrate redundancy
 $\rhomincross$ rather than all-channel redundancy $\rho_{\min}$ because
 the coercivity bound C1 requires correction signals to be additive
 across channels.  Same-substrate channels may have correlated errors,
-breaking additivity.  Cross-substrate channels satisfy Paper~5's two
-distinct properties:
+breaking additivity.  Cross-substrate channels satisfy two
+distinct properties from~\citet{lasser2026exo}:
 \begin{enumerate}
 \item[(a)] \emph{Channel isolation} (unconditional): corruption on one
   substrate cannot propagate to channels on another substrate.
@@ -250,7 +250,7 @@ distinct properties:
 Isolation prevents corruption propagation; independence makes correction
 signals additive.  The Lyapunov bound uses additivity, which requires
 independence, which requires joint factorization (termed ``joint
-sufficiency'' in Paper~5).  If joint factorization fails (shared
+sufficiency'' in~\citet{lasser2026exo}).  If joint factorization fails (shared
 environmental noise affects both substrates), correction signals may
 be sub-additive, and the effective $\rhocross_k$ should be discounted
 accordingly.  Using $\rhomincross$ makes the bound valid without

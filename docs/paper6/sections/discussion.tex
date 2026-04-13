@@ -24,15 +24,15 @@ incentives for leverage blindness) improve the phase boundary for all.
 Without a mechanism for evidence generation against unfalsifiable risk
 claims, the entire state space is absorbing
 (Proposition~\ref{prop:wamura}).  The Wamura problem was called ``the
-most important open problem'' in Paper~3's discussion; the phase
+most important open problem'' in the discussion of~\citet{lasser2026horizon}; the phase
 boundary analysis explains why: it is the case where the
 self-correction rate is zero by construction, making the feedback loop
 absorbing regardless of all other parameters.
 
 \paragraph{4.\ Cross-substrate redundancy is the load-bearing quantity.}
 Same-substrate channels may share failure modes; cross-substrate
-channels are structurally independent (under Paper~5's channel
-isolation and, for additivity, the joint-factorization assumption).
+channels are structurally independent (under the channel
+isolation property of~\citet{lasser2026exo} and, for additivity, the joint-factorization assumption).
 The design criterion (Theorem~\ref{thm:redundancy}) is stated in terms
 of cross-substrate redundancy, making it robust to correlated failures
 within substrates.
@@ -64,10 +64,10 @@ cost of substantially more complex proofs.
 
 \paragraph{Honest-channel assumption.}
 The analysis assumes observation channels are honest: their signal is
-noisy but not adversarially manipulated.  Paper~5's cryptographic
-commitment protocol provides the enforcement mechanism for this
+noisy but not adversarially manipulated.  The cryptographic
+commitment protocol of~\citet{lasser2026exo} provides the enforcement mechanism for this
 assumption, and the two papers are designed to be read as complements:
-Paper~5 ensures channels are honest, this paper ensures enough honest
+the exogenous verification framework ensures channels are honest, this paper ensures enough honest
 channels survive.  But the boundary between ``noisy'' and
 ``adversarial'' is itself a modeling choice, and in practice the line
 is blurred by sophisticated manipulation strategies that operate within
@@ -102,11 +102,11 @@ boundary to account for the divergence between $\volL$ and the
 realized capability volume.  This extension is future work.
 
 \paragraph{Cryptographic verification.}
-Paper~5 addresses observation-channel integrity; this paper analyzes
+\citet{lasser2026exo} addresses observation-channel integrity; this paper analyzes
 the dynamical consequences of channel \emph{availability}.
-The combination is: Paper~5 ensures channels are honest, this paper
+The combination is: exogenous verification ensures channels are honest, this paper
 ensures enough honest channels survive.  A joint treatment---where
-the phase boundary accounts for both integrity failures (Paper~5) and
+the phase boundary accounts for both integrity failures~\citep{lasser2026exo} and
 availability failures (this paper)---would provide a stronger
 combined guarantee.
 

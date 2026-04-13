@@ -28,8 +28,8 @@ $a_j$ contributes its observation channels, and removing $a_j$ removes
 all channels rooted in $a_j$.
 \end{definition}
 
-This connects to Paper~4's multi-channel architecture
-(Table~1 of~\citet{lasser2026scm}): the five channels (capability
+This connects to the multi-channel architecture
+of~\citet{lasser2026scm}~(Table~1): the five channels (capability
 gating, causal attribution, behavioral residual, SPRT detection,
 correlational co-occurrence) are each instances of $c_i$ with specific
 substrate rootings and dimension coverage.
@@ -77,13 +77,13 @@ Cross-substrate redundancy is the load-bearing quantity for the phase
 boundary.  Same-substrate channels may share failure modes (correlated
 noise, common-cause miscalibration), while cross-substrate channels
 satisfy two distinct properties from
-Paper~5~\citep{lasser2026exo}:
+the exogenous verification framework~\citep{lasser2026exo}:
 \begin{enumerate}
 \item[(a)] \emph{Channel isolation} (unconditional): corruption on one
   substrate cannot propagate to channels on another substrate.
 \item[(b)] \emph{Channel independence} (conditional on the
   joint-factorization assumption---termed ``joint sufficiency'' in
-  Paper~5, Section~8.1, ``Integration with GFM''): channel
+  \citet{lasser2026exo}, Section~8.1, ``Integration with GFM''): channel
   outputs are statistically independent given the true state.
 \end{enumerate}
 Isolation prevents corruption propagation; independence makes correction
@@ -117,7 +117,7 @@ This is a modeling assumption.  In principle, removing an adversarial
 agent could \emph{improve} signal-to-noise on some channels by
 removing adversarial noise injection.  We assume honest channels
 throughout this paper; adversarial channel manipulation is
-Paper~5's domain.
+the domain of~\citet{lasser2026exo}.
 \end{remark}
 
 \begin{corollary}[Redundancy is Non-Increasing Under Subsumption]

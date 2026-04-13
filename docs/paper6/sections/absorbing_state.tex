@@ -74,7 +74,7 @@ Any reversal---re-introducing an agent from a new substrate---requires
 the actor to recognize that its current state is suboptimal.  By~(B1b),
 the cross-substrate cooperative growth rate $\rext$ is not inferrable
 from same-substrate observations, so $\hat{\rext} \to 0$.  With
-$\hat{\rext} = 0$, Paper~3's threshold becomes
+$\hat{\rext} = 0$, the discount-factor threshold~\citep{lasser2026horizon} becomes
 $\gamma^* = 1 - \hat{\rext}/\Delta_0 = 1$, making diversity appear
 never preferable.  By~(B1c), the actor does not perform exploratory
 re-introduction (negative expected value under $\Wm^*_{\mathrm{biased}}$).
@@ -129,7 +129,7 @@ A full derivation would require specifying the estimation procedure
 and verifying the regularity conditions; we state the bound as a
 scaling law.  During the metastable
 period, the population is monopolar and all verification is
-endogenous (Paper~5, Theorem~1), which may further degrade the
+endogenous~\citep[Theorem~1]{lasser2026exo}, which may further degrade the
 quality of the indirect evidence.
 \end{proposition}
 
@@ -165,17 +165,16 @@ locally rational therefore requires at least $\delta_{\rext}^2 /
 
 During this metastable period, all verification is endogenous: the
 dominant substrate verifies its own performance, with no
-cross-substrate witness (Paper~5, Theorem~1 on exogenous verification
-necessity).  The indirect evidence channel $g_k$ is itself endogenous
+cross-substrate witness~\citep[Theorem~1]{lasser2026exo}.  The indirect evidence channel $g_k$ is itself endogenous
 and therefore subject to the same gaming vulnerabilities that
-Paper~5's protocol is designed to prevent.  This may further slow the
+the exogenous verification protocol~\citep{lasser2026exo} is designed to prevent.  This may further slow the
 effective $I_k$, increasing the metastable lifetime beyond the
 information-theoretic lower bound.
 \end{proof}
 
-\subsection{Connection to Paper 3}
+\subsection{Connection to the anti-monopolar property}
 
-Paper~3's Proposition~6 proves that full domination is anti-maximizing:
+The anti-monopolar result~\citep[Proposition~6]{lasser2026horizon} proves that full domination is anti-maximizing:
 $V_\gamma^{\mathrm{div}} > V_\gamma^{\mathrm{dom}}$ for
 $\gamma > \gamma^*$.  Proposition~\ref{prop:absorbing} here shows that
 a \emph{miscalibrated} actor may not be able to compute this comparison,

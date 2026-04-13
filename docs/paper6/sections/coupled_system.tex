@@ -29,7 +29,7 @@ The state at time $t$ is the pair $S_t = (P_t, \Wm_t)$ where:
 \end{itemize}
 The state space is $\State = \Poset \times \mathcal{W}$ where $\Poset$
 is the space of valid capability posets (satisfying axioms M1--M6 from
-Paper~2~\citep{lasser2026poset}) and $\mathcal{W} = [0,1]^K$.
+the poset axioms M1--M6~\citep{lasser2026poset}) and $\mathcal{W} = [0,1]^K$.
 \end{definition}
 
 \subsection{Transition dynamics}
@@ -51,8 +51,8 @@ world model:
   \right]
 \end{equation}
 where $\gamma \in (0,1)$ is the discount factor from
-Paper~3~(Definition~1) and $H$ is the planning horizon.  The actor
-uses Paper~3's discounted objective $\Vdisc$ but evaluates it under
+the horizon framework~\citep{lasser2026horizon}~(Definition~1) and $H$ is the planning horizon.  The actor
+uses the discounted objective $\Vdisc$~\citep{lasser2026horizon} but evaluates it under
 $\Wm_t$ rather than the true dynamics.  When $\Wm_t = \Wm^*$
 (perfect calibration), $\pi_t$ recovers the true
 $\Vdisc$-optimal policy; when $\Wm_t \neq \Wm^*$, $\pi_t$ is the
@@ -73,11 +73,11 @@ served.
 
 \begin{remark}[Myopic vs.\ discounted]
 \label{rem:myopic}
-The discounted formulation is necessary for consistency with Paper~3's
-anti-monopolar result (Proposition~6), which compares discounted
+The discounted formulation is necessary for consistency with the
+anti-monopolar result~\citep[Proposition~6]{lasser2026horizon}, which compares discounted
 trajectory values.  A myopic (one-step) variant of the phase boundary
 exists---replace $\Vdisc$ with one-step $\Delta\volL$---but produces
-strictly weaker results: it cannot invoke Paper~3's $\gamma^*$
+strictly weaker results: it cannot invoke the $\gamma^*$ threshold~\citep{lasser2026horizon}
 threshold, and the self-correction guarantee applies only to immediate
 decisions, not trajectory-level convergence.  We analyze the discounted
 case throughout and note where the myopic specialization simplifies.
@@ -88,11 +88,11 @@ case throughout and note where the myopic specialization simplifies.
 Two forces govern the trajectory of $(P_t, \Wm_t)$.
 
 \paragraph{Restoring force (self-correction).}
-The self-trust mechanism $T_s$ (Paper~1, Appendix~B) detects
+The self-trust mechanism $T_s$~\citep[Appendix~B]{lasser2026gfm} detects
 miscalibration through prediction residuals: when the actor's
 predictions diverge from observations, $T_s$ increases the learning
 rate, correcting $\Wm$ toward the true dynamics.
-Paper~4's~\citep{lasser2026scm} risk-trust $L^2$ convergence
+The risk-trust $L^2$ convergence result of~\citet{lasser2026scm}
 (Proposition~2) provides a concrete bound on EWMA risk-trust
 convergence under stationarity.  We use this as a \emph{template} for
 bounding the correction rate $\rS$, extending it from the

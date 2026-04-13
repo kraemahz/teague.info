@@ -2,7 +2,7 @@
 \label{sec:unified_loops}
 
 The three compound feedback loops identified in the gap analysis across
-Papers~1--5 are instances of the same $(P, \Wm)$ dynamical system with
+the prior papers in this sequence~\citep{lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo} are instances of the same $(P, \Wm)$ dynamical system with
 different effective parameters.  This section maps each loop to the
 formalism and shows how the phase boundary specializes.
 
@@ -23,14 +23,14 @@ term.
   removes a potential correction to $\hat{\lambda}$.
 \item $\rW$: the rate at which leverage estimates drift due to
   un-learned structure.
-\item $\rS$: the rate at which Paper~3's structural discovery
-  value (Proposition~2, Definition~5) drives the actor toward
+\item $\rS$: the rate at which the structural discovery
+  value~\citep[Proposition~2, Definition~5]{lasser2026horizon} drives the actor toward
   learning structure.
 \end{itemize}
 
 \paragraph{Phase boundary specialization.}
 Self-correction dominates when the information value $I(d_1 \leq d_2)$
-(Paper~3, Definition~5) exceeds the immediate $\volL$ contraction from
+\citep[Definition~5]{lasser2026horizon}) exceeds the immediate $\volL$ contraction from
 discovery for a sufficient fraction of unknown edges.  The critical
 ratio becomes:
 \begin{equation}
@@ -40,8 +40,8 @@ ratio becomes:
   > \text{threshold}
 \end{equation}
 where the threshold is determined by the degradation and drift
-parameters from the general phase boundary.  This formalizes Paper~2's
-discussion of structural avoidance as a phase-boundary condition
+parameters from the general phase boundary.  This formalizes the
+discussion of structural avoidance in~\citet{lasser2026poset} as a phase-boundary condition
 rather than an informal concern.
 
 \subsection{Loop 2: Partial subsumption $\to$ world-model homogenization}
@@ -70,10 +70,10 @@ restriction.
 \item ``Observation channels'' lost: each restriction prevents the
   exercise events that would have generated Bayesian evidence about
   the risk claim (the verification asymmetry from
-  Paper~3, Remark~2).
+  \citet{lasser2026horizon}, Remark~2).
 \item $\rW$: the rate at which risk estimates drift due to
   un-exercised pathways (this is exactly the Wamura problem from
-  Paper~3).
+  \citet{lasser2026horizon}).
 \item $\rS$: the rate at which controlled relaxation protocols or
   natural exercise events provide counter-evidence.
 \end{itemize}
@@ -122,7 +122,7 @@ therefore met, and the cascade drives the system toward maximal
 restriction.
 
 This is the formal statement of why the Wamura problem was called
-``the most important open problem'' in Paper~3's discussion: without a
+``the most important open problem'' in the discussion of~\citet{lasser2026horizon}: without a
 mechanism to generate evidence against unfalsifiable risk claims, the
 feedback loop between restriction and evidence suppression is
 absorbing by default.

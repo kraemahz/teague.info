@@ -22,7 +22,7 @@ $\rho_k \cdot \epsilon_k^2$; summing across dimensions and bounding
 below by $\rhomincross \cdot \Lyap$ yields C1.  This follows from the
 EWMA-style learning rules: each channel's correction is linear in the
 residual and proportional to sensitivity.  Under the joint-factorization
-assumption (Paper~5), cross-substrate channels' corrections are
+assumption~\citep{lasser2026exo}, cross-substrate channels' corrections are
 independent and therefore additive.
 
 Assumption~C2$'$ (bounded degradation) requires two properties:
@@ -78,7 +78,7 @@ $1 - \bar{a} = \rS \cdot \rhomincross - \rW \cdot \rsub$ (amortized
 contraction rate) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
 (subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
 locally rational policy agrees with the true $\Vdisc$-optimal policy,
-and Paper~3's anti-monopolar property applies.
+and the anti-monopolar property~\citep{lasser2026horizon} applies.
 
 \paragraph{Step 5 (Part b): Cascade.}
 When $B > 0$ on some window and $\rhocross_k = 0$ for some dimension
@@ -95,8 +95,7 @@ Two co-evolution problems require careful handling:
   contraction condition holds along the trajectory, not just at the
   initial state.
 
-\item The self-correction rate $\alpha(t)$ depends on $T_s$
-  (Paper~1), which depends on the error history.  The EWMA structure
+\item The self-correction rate $\alpha(t)$ depends on $T_s$~\citep{lasser2026gfm}, which depends on the error history.  The EWMA structure
   of $T_s$ provides the necessary bound: $\alpha$ adapts monotonically
   in response to prediction residuals, so $\rS$ is bounded below by
   a function of the minimum $T_s$ along the trajectory.
@@ -259,10 +258,10 @@ $\epsilon_{\mathrm{crit}}^{(j_n,k_n)}$ is therefore a conservative upper bound
 at every cascade stage.
 \end{proof}
 
-\subsection{Connection to Paper 3's $\gamma^*$}
+\subsection{Connection to the discount-factor threshold $\gamma^*$}
 \label{app:gamma_star}
 
-Paper~3's Proposition~6 gives $\gamma^* = 1 - \rext / \Delta_0$ as the
+The anti-monopolar result~\citep[Proposition~6]{lasser2026horizon} gives $\gamma^* = 1 - \rext / \Delta_0$ as the
 critical discount factor for diversity dominance.  Under the coupled
 $(P, \Wm)$ dynamics, the actor does not know the true $\rext$; it uses
 $\hat{\rext} = \rext - \delta_{\rext}$.  The \emph{perceived}
@@ -287,4 +286,4 @@ self-balancing regime into a locally rational subsumption cascade.  The
 phase boundary from Theorem~\ref{thm:phase_boundary} characterizes
 when $\delta_{\rext}$ stays small enough that
 $\gamma^*_{\mathrm{perceived}}$ remains close to $\gamma^*$,
-preserving the effective reach of Paper~3's anti-monopolar result.
+preserving the effective reach of the anti-monopolar result~\citep{lasser2026horizon}.
