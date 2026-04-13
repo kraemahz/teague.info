@@ -53,7 +53,9 @@ $a_t$ satisfies $\frac{1}{T}\sum \ln a_t \leq \ln \bar{a} < 0$ and
 the time-averaged additive drift satisfies
 $\frac{1}{T}\sum b_t \leq \bar{b}$ (see Equation~\ref{eq:uniform_contraction}
 for notation)---then $\Lyap(\Wm_t)$ converges to a neighborhood of zero
-whose radius is bounded by
+whose radius is bounded by $\mu \cdot \bar{b}/(1 - \bar{a})$ in
+general (with overshoot constant $\mu$; see proof).  In the
+linearized regime (Remark~\ref{rem:linearized}), this evaluates to
 \begin{equation}
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
@@ -411,7 +413,7 @@ G_j\|_w^2$ implies $G_j(\Wm) > 0$.  Taking the minimum over agents:
 \begin{equation}
 \label{eq:eps_safe_bound}
 \epsilon_{\mathrm{safe}} \geq
-  \min_{j \in \mathcal{A}_{t^*}}
+  \min_{j \in \mathcal{A}_{t^*}^+}
   \frac{[G_j(\Wm^*)]^2}{\|\nabla_\epsilon G_j\|_w^2}
 \end{equation}
 This bound accounts for joint multi-coordinate perturbations and is

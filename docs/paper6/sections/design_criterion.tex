@@ -49,13 +49,18 @@ channel coverage per subsumption event.  Note that $\Kmin$ is
 real-valued, since $\rhocross_k$ is defined as a sensitivity-weighted
 sum (Definition~\ref{def:cross_redundancy}), not an integer count.
 
-\emph{Qualification:} this criterion is sufficient at initialization
-but is not a maintained invariant along trajectories.  The redundancy
-$\rhocross_k(P_t)$ may decrease under the dynamics being analyzed
-(Corollary~\ref{cor:redundancy_monotone}).  A stronger result would
-bound the worst-case $\rhocross_k$ along all trajectories starting
-from the basin, which requires coupling the redundancy dynamics to
-the phase boundary analysis (see proof for discussion).
+\emph{Qualification:} even at initialization, the per-dimension
+$\Kmin$ may underestimate the true required redundancy due to
+relaxations R1 and R2 (see proof).  Along trajectories, the
+redundancy $\rhocross_k(P_t)$ may further decrease under the dynamics
+being analyzed (Corollary~\ref{cor:redundancy_monotone}).  A stronger
+result would bound the worst-case $\rhocross_k$ along all trajectories
+starting from the basin, which requires coupling the redundancy
+dynamics to the phase boundary analysis (see proof for discussion).
+The aggregate condition (Equation~\ref{eq:self_correcting}) does not
+have these per-dimension relaxations and is the primary guarantee;
+the per-dimension $\Kmin$ serves as design guidance for allocating
+redundancy across dimensions.
 \end{theorem}
 
 \begin{proof}
