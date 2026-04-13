@@ -110,20 +110,57 @@ where the phase boundary accounts for both integrity
 failures~\citep{lasser2026exo} and availability failures (this paper)
 would provide a stronger combined guarantee.
 
-\paragraph{World-model verification and the public ledger.}
-The total correction rate $\rS \cdot \rhomincross + \alphamin \cdot
-c_{\mathrm{V}} \cdot \nu$ depends on the information environment.  In the minimal
-case (actor uses only its own observation channels), $\rS$ is bounded
-by the channel sensitivity of Definition~\ref{def:redundancy}.  If
-world-model predictions are committed to the verification ledger
-of~\citet{lasser2026exo}, the actor gains access to a faster
-correction channel: other agents whose models disagree can flag
-discrepancies through the ledger's verification protocol, providing
-corrections that are both direct (rather than inferred from behavioral
-residuals) and exogenously verified.  This increases the effective
-$\rS$ (each channel's correction rate improves) without increasing
-$\rhomincross$ (the channel count is unchanged), widening the
-self-correcting basin.
+\paragraph{World-model verification as a corrective force.}
+The self-trust feedback chain that creates the monopolar basin
+(Section~\ref{sec:absorbing_state}) has a specific vulnerability:
+the agent cannot observe its own calibration degradation because the
+channels that would report it have been attenuated.  The
+commit-then-reveal protocol of~\citet{lasser2026exo} provides a
+direct corrective force against this failure mode.
+
+If the agent commits world-model predictions to the verification
+ledger \emph{before} observing outcomes, the residuals between
+committed predictions and realized outcomes are an exogenous
+calibration signal that the agent cannot game: the commitment is
+cryptographic (the prediction cannot be changed after the fact)
+and the outcome verification is cross-substrate (the agent cannot
+self-report the outcome it committed to predict).  This is exactly
+the signal the monopolar basin lacks---an unfakeable measure of
+world-model quality on the dimensions the agent has stopped
+observing directly.
+
+The connection to prediction markets is immediate.  In a
+multi-agent setting, the verification ledger generalizes to a
+prediction market: agents commit predictions, stake reputation
+on outcomes, and calibration is scored publicly.  The market's
+information aggregation rate $I_{\mathrm{market}}$ replaces the
+single-channel $I_k$ in the metastable lifetime bound
+(Proposition~\ref{prop:metastable}), potentially shortening the
+escape time from the metastable basin dramatically.  A
+consistently miscalibrated agent loses stake, which is a
+$\volL$-legible signal: the agent's cooperative capabilities that
+depend on accurate predictions degrade in the ledger, producing a
+negative $\Delta\volL$ that the agent's own optimization pressure
+cannot ignore.
+
+Two design constraints apply.  First, the queries must be
+\emph{masked}: the agent should not know which dimensions of its
+world model are being tested, to prevent selective participation
+in predictions it expects to get right.  Second, the predictions
+must be on \emph{observable quantities} (what will metric $X$ be
+next period?) rather than internal state (what is your belief
+about $X$?), both to protect the agent's epistemic privacy and to
+ensure the outcome is independently verifiable.
+
+In the minimal case (single actor, no market), the operational
+instantiation is simpler: the user periodically poses calibration
+queries that the agent commits predictions to, and the user
+independently verifies the outcomes.  This is the exogenous
+trust-review channel from~\citet{lasser2026exo} applied to
+world-model calibration specifically.  Even this minimal version
+increases the effective $\rS$ (each query adds a correction
+signal) without increasing $\rhomincross$ (the channel count is
+unchanged), widening the self-correcting basin.
 
 If world models are not merely committed but \emph{shareable} (other
 agents can read and build on them), the ledger becomes a bootstrapping
