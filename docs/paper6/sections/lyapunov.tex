@@ -233,18 +233,18 @@ The per-step bound is no longer purely multiplicative (the additive
 $\dmax \cdot \Delta\rho$ term prevents clean products of factors).
 We therefore track the cumulative error budget over a window
 $[t_0, t_0 + T]$:
-\begin{equation}
+\begin{multline}
 \label{eq:error_budget}
 B(t_0, T) =
   \underbrace{\sum_{t \in \mathrm{sub}} \dmax \cdot \Delta\rho(t)}
     _{\text{drift exposure}}
   + \underbrace{\sum_{t \in \mathrm{sub}} \rW \cdot \Lyap(\Wm_t)}
-    _{\text{error-proportional degradation}}
+    _{\text{degradation}} \\
   - \underbrace{\sum_{t=t_0}^{t_0+T-1}
     \bigl(\rS \cdot \rhomincross(P_t)
     + \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr) \cdot
     \Lyap(\Wm_t)}_{\text{cumulative correction (exo.\ + endo.)}}
-\end{equation}
+\end{multline}
 where $\sum_{t \in \mathrm{sub}}$ ranges over the subsumption steps in
 the window.
 
