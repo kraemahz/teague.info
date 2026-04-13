@@ -50,6 +50,16 @@ outright removal, is the primary vulnerability.
 
 \subsection{Limitations}
 
+The failure modes studied here---progressive channel degradation,
+feedback-loop instability, and the gap between observable performance
+and actual alignment---are instances of the concrete safety problems
+identified by~\citet{amodei2016concrete}, specifically distributional
+shift (the agent's training distribution diverges from the deployment
+distribution as channels attenuate) and reward hacking (the agent's
+observable metrics remain good while the underlying objective
+degrades).  The phase boundary formalizes the conditions under which
+these problems become self-reinforcing.
+
 \paragraph{Linearized treatment.}
 The phase boundary is stated in a linearized regime (constant $\rS$,
 $\rW$, $\rsub$).  In the full dynamics these quantities are
@@ -129,10 +139,10 @@ the signal the monopolar basin lacks---an unfakeable measure of
 world-model quality on the dimensions the agent has stopped
 observing directly.
 
-The connection to prediction markets is immediate.  In a
-multi-agent setting, the verification ledger generalizes to a
-prediction market: agents commit predictions, stake reputation
-on outcomes, and calibration is scored publicly.  The market's
+The connection to prediction markets~\citep{hanson2003combinatorial}
+is immediate.  In a multi-agent setting, the verification ledger
+generalizes to a prediction market: agents commit predictions, stake
+reputation on outcomes, and calibration is scored publicly.  The market's
 information aggregation rate $I_{\mathrm{market}}$ replaces the
 single-channel $I_k$ in the metastable lifetime bound
 (Proposition~\ref{prop:metastable}), potentially shortening the
