@@ -2,9 +2,10 @@
 \label{sec:lyapunov}
 
 The phase boundary requires a scalar measure of world-model quality
-whose dynamics can be bounded.  We define this as a weighted
-sum-of-squares error and establish the per-step bounds that drive the
-rest of the analysis.
+whose dynamics can be bounded.  Following the standard Lyapunov
+stability framework~\citep{khalil2002nonlinear}, we define a
+candidate function as a weighted sum-of-squares error and establish
+the per-step bounds that drive the rest of the analysis.
 
 \subsection{Measuring world-model quality}
 
@@ -68,8 +69,9 @@ $\to$ higher $\volL$).
 The correction signal has two sources.  The first term,
 $c_{\mathrm{S}} \cdot \rhomincross$, is \emph{exogenous}: observation
 channels push the world model toward truth at a rate proportional to
-channel strength and current error.  This follows from the EWMA learning
-rule structure in the risk-trust model of~\citet{lasser2026scm}, with
+channel strength and current error.  This follows from the EWMA
+learning rule~\citep{wald1947sequential} structure in the risk-trust
+model of~\citet{lasser2026scm}, with
 additivity across cross-substrate channels under the channel
 independence property of~\citet{lasser2026exo}.
 

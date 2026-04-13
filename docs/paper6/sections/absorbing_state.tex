@@ -122,10 +122,11 @@ where $\delta_{\rext} = |\hat{\rext} - \rext|$ is the estimation
 error on the cross-substrate cooperative growth rate and $I_k$ is the
 information rate of the indirect channel (bits per step).  This bound
 is an information-theoretic scaling argument, not a rigorous proof:
-the quadratic numerator reflects the Cram\'er--Rao-type lower bound
-on estimation (reducing mean-squared error of a scalar parameter by
-$\epsilon^2$ from a channel with $I_k$ bits per step requires at
-least $\epsilon^2 / (2 I_k)$ steps under bounded mutual information).
+the quadratic numerator reflects the Cram\'er--Rao-type lower
+bound~\citep{cover2006elements} on estimation (reducing mean-squared
+error of a scalar parameter by $\epsilon^2$ from a channel with
+$I_k$ bits per step requires at least $\epsilon^2 / (2 I_k)$ steps
+under bounded mutual information).
 A full derivation would require specifying the estimation procedure
 and verifying the regularity conditions; we state the bound as a
 scaling law.  During the metastable
@@ -165,8 +166,9 @@ $\delta_{\rext}$.
 
 With $I_k$ bits of information per step about the true $\rext$, the
 mean-squared error of $\hat{\rext}$ decreases at rate at most $2 I_k$
-per step (the Cram\'er--Rao-type bound for sequential estimation under
-bounded mutual information per observation).  Reducing the MSE from
+per step (the Cram\'er--Rao-type bound for sequential
+estimation~\citep{cover2006elements} under bounded mutual information
+per observation).  Reducing the MSE from
 $\delta_{\rext}^2$ to the level at which re-introduction becomes
 locally rational therefore requires at least $\delta_{\rext}^2 /
 (2 I_k)$ steps.
