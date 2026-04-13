@@ -137,8 +137,15 @@ quality of the indirect evidence.
 Under B1$'$, $\epsilon_k$ is no longer monotonically non-decreasing:
 the indirect signal $g_k$ drives slow correction at rate proportional
 to $I_k$.  But the corrective \emph{action} (re-introduce substrate
-diversity) is gated by the actor's policy, which evaluates
-re-introduction using $\hat{\rext}$.
+diversity) is not in the formal action set $\mathcal{A}_t$ of
+Definition~\ref{def:transition} (which contains only preserve/subsume
+decisions).  Re-introduction is an externally available action---for
+example, a governance protocol that introduces new substrate agents
+into the population.  The metastable lifetime bounds the time until
+re-introduction becomes \emph{locally rational under an expanded
+action set}; within the formal preserve/subsume dynamics, the
+absorbing property of Proposition~\ref{prop:absorbing} holds.  The
+actor evaluates re-introduction using $\hat{\rext}$.
 
 Re-introduction is locally rational only when
 $\hat{\rext} > \hat{\rext}^{\mathrm{thr}}$ (the threshold at which

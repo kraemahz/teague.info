@@ -183,11 +183,18 @@ action-flip mechanism.  (The cascade is conditional on threshold
 crossing at each stage; non-stationarity is the generic driver but
 a dimension that happens to be environmentally stationary after
 blinding does not cascade further.)
-The trajectory converges to a neighborhood of the monopolar fixed
-point $S^*$ (Definition~\ref{def:monopolar}).  If the channel-coverage
-graph has disconnected components, the cascade is confined to the
-component containing $k$; convergence to full monopolarity requires
-connectivity.
+Under two additional structural conditions---connectivity of the
+agent-channel graph (each subsumption removes channels covering at
+least one new dimension, ensuring the cascade can reach all
+dimensions) and environmental non-stationarity on every blinded
+dimension (ensuring $\epsilon_{k'}$ grows past $\epsilon_{\mathrm{crit},k'}$
+at each cascade stage)---the trajectory converges to a neighborhood
+of the monopolar fixed point $S^*$ (Definition~\ref{def:monopolar}).
+If either condition fails partially, the cascade is confined: to
+the connected component containing $k$ (if the graph is disconnected),
+or to the set of non-stationary dimensions (if some blinded dimensions
+happen to be environmentally stationary).  Full monopolarity requires
+both connectivity and non-stationarity across all dimensions.
 
 This is a \emph{cumulative} condition on the trajectory, not a
 pointwise condition requiring contiguous subsumption steps.  The
@@ -285,12 +292,21 @@ sufficiently long windows $[t_0, t_0+T]$,
 \label{eq:uniform_contraction}
 \frac{1}{T} \sum_{t=t_0}^{t_0+T-1} \ln a_t \leq \ln \bar{a} < 0
 \qquad \text{and} \qquad
-\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} b_t \leq \bar{b}
+b_t \leq \bar{b} \;\;\text{for all } t
 \end{equation}
 The first condition states that the time-averaged log-contraction rate
 is strictly negative (amortized over both subsumption and
-non-subsumption steps).  The second bounds the time-averaged additive
-drift.
+non-subsumption steps).  The second bounds the additive drift
+\emph{per step} (not merely in average): since
+$b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$ and both $\dmax$
+and $\Delta\rho(t)$ are bounded per step by construction
+(C2$'$; $\Delta\rho(t)$ is the redundancy loss at a single step,
+bounded by the total redundancy of the poset), the per-step bound
+$\bar{b} = \dmax \cdot \max_t \Delta\rho(t)$ holds.  The per-step
+bound is needed (rather than the average bound) because the
+affine-recursion convergence theorem requires controlling the
+weighted suffix sums $\sum_s b_s \prod_{t>s} a_t$, where large
+individual $b_s$ terms are not averaged away by the product tail.
 
 Note that $a_t > 0$ for all $t$: the step-size condition
 (Section~\ref{sec:lyapunov}) ensures

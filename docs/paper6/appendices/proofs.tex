@@ -54,10 +54,11 @@ steps.
 \paragraph{Step 4 (Part a): Amortized contraction.}
 Define the amortized log-contraction rate over a window of $T$ steps.
 When the uniform contraction condition holds (the time-averaged
-$\ln a_t$ is strictly negative and the time-averaged additive drift
-$b_t$ is bounded), the geometric mean of per-step multiplicative
-factors is $< 1$, and the cumulative additive drift is dominated by
-the cumulative contraction.
+$\ln a_t$ is strictly negative and each $b_t$ is bounded per step),
+the geometric mean of per-step multiplicative factors is $< 1$, and
+the weighted suffix sums $\sum_s b_s \prod_{t>s} a_t$ are controlled
+by the per-step bound on $b_t$ combined with the exponential decay
+of the product tail.
 
 The formal argument uses the affine recursion comparison theorem.
 Write the per-step bound as:
@@ -157,12 +158,17 @@ Assume additionally:
 \item[(ii$'$)] \textbf{(Multi-dimensional monotonicity; needed for
   cascade propagation beyond the first trigger.)}  For every
   safety-relevant dimension $k'$ and every agent $a_{j'}$,
-  $\frac{\partial G_{j'}}{\partial \Wm[k']} < 0$ whenever
-  $\Wm[k'] \neq \Wm^*[k']$---that is, increasing error on
-  \emph{any} dimension monotonically decreases every agent's
-  preservation advantage.  Assumption~(ii) is the single-coordinate
-  special case; (ii$'$) extends it to the multi-coordinate regime
-  where multiple dimensions are simultaneously miscalibrated.
+  $\sign(\Wm[k'] - \Wm^*[k']) \cdot
+  \frac{\partial G_{j'}}{\partial \Wm[k']} < 0$ whenever
+  $\Wm[k'] \neq \Wm^*[k']$---that is, moving $\Wm[k']$ further
+  from $\Wm^*[k']$ (increasing the absolute error $\epsilon_{k'}$)
+  monotonically decreases every agent's preservation advantage,
+  regardless of the sign of the miscalibration.
+  Assumption~(ii) is the single-coordinate
+  special case (where the error direction is fixed by construction
+  of the path $\Wm(\epsilon)$); (ii$'$) extends it to the
+  multi-coordinate regime where multiple dimensions are simultaneously
+  miscalibrated with potentially different error signs.
 \end{enumerate}
 
 Define the cascade threshold for agent $a_j$ on dimension $k$:
@@ -252,7 +258,9 @@ attractive), provided assumption~(ii) holds uniformly across all
 dimensions---not just the original trigger dimension~$k$.  This
 requires a multi-dimensional monotonicity condition: for every
 previously-blinded dimension $k_i$ and every agent $a_{j_n}$ at
-cascade stage~$n$, $\frac{\partial G_{j_n}}{\partial \Wm[k_i]} < 0$.
+cascade stage~$n$,
+$\sign(\Wm[k_i] - \Wm^*[k_i]) \cdot
+\frac{\partial G_{j_n}}{\partial \Wm[k_i]} < 0$.
 This is assumption~(ii$'$) above, which is stated as an explicit
 condition of the lemma.  It is plausible for the
 subsumption-vs-preservation action gap (increasing error on any
