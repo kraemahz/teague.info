@@ -108,6 +108,29 @@ nonzero), the second term dominates and the condition is harder to
 satisfy, correctly diagnosing the ``removing a channel that was doing
 all the correction work'' failure mode.
 
+\begin{remark}[Stabilizing and destabilizing cascades]
+\label{rem:stabilizing_cascade}
+Part~(a) describes a \emph{stabilizing cascade}: as the world model
+improves ($\Lyap$ decreases), the actor makes better decisions, which
+preserve more cooperative capabilities, which preserve more channels,
+which provide more correction signal.  Part~(b), below, describes the
+mirror image: a \emph{destabilizing cascade} where channel loss
+degrades the model, producing worse decisions that lose more channels.
+The phase boundary separates these two regimes.  The endogenous
+$c_{\mathrm{V}} \cdot \nu$ term from Assumption~C1 tips the balance
+toward the stabilizing side by supplementing the channel-driven
+correction with the actor's own $\volL$-gradient incentive.
+
+The two cascades are asymmetric.  Degradation happens in discrete
+jumps: subsumption removes an agent and its channels at a single step.
+Recovery is continuous: calibration improves gradually through
+accumulated observations.  The system degrades in steps but recovers
+smoothly, which means the destabilizing cascade has discrete tipping
+points (the moment $\rhocross_k$ hits zero on a cascade dimension)
+while the stabilizing cascade has no corresponding threshold, only a
+smooth approach to full calibration.
+\end{remark}
+
 \medskip
 \noindent\textbf{Part~(b): Absorbing Basin.}
 Under Assumption~B1 (no endogenous correction on blind dimensions;

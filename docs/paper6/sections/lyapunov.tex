@@ -85,30 +85,11 @@ $\volL$.
 
 Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous correction
 model.  When $c_{\mathrm{V}} > 0$, the effective self-correction rate
-is $\rS^{\mathrm{eff}} = c_{\mathrm{S}} \cdot \rhomincross +
+is $\rSeff = c_{\mathrm{S}} \cdot \rhomincross +
 c_{\mathrm{V}} \cdot \nu$, which is strictly larger than the exogenous
-rate alone.  This widens the self-correcting basin of
-Theorem~\ref{thm:phase_boundary}: the phase boundary condition becomes
-easier to satisfy because the actor's endogenous incentive supplements
-the observation-channel correction.
-
-\begin{remark}[Stabilizing cascade]
-\label{rem:stabilizing_cascade}
-The endogenous correction term creates a stabilizing cascade that
-mirrors the destabilizing cascade of the absorbing basin.  As the world
-model improves ($\Lyap$ decreases), the actor makes better decisions,
-which preserve more cooperative capabilities, which preserve more
-channels, which provide more correction signal.  The destabilizing
-cascade runs in reverse: channel loss degrades the model, which
-produces worse decisions, which lose more channels.  The phase boundary
-separates these two regimes, and the endogenous $c_{\mathrm{V}} \cdot
-\nu$ term tips the balance toward the stabilizing side.  The two
-cascades are asymmetric: degradation happens in discrete jumps
-(subsumption removes an agent and its channels at a single step),
-while recovery is continuous (calibration improves gradually through
-accumulated observations).  The system degrades in steps but recovers
-smoothly.
-\end{remark}
+rate alone.  The consequences for the phase boundary are developed in
+Section~\ref{sec:phase_boundary}
+(Remark~\ref{rem:stabilizing_cascade}).
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
 \label{ass:C2prime}
