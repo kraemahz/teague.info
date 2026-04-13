@@ -136,20 +136,24 @@ instantiations of the unified system.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{@{}lllll@{}}
+\begin{tabular}{@{}lp{4.5cm}p{4.5cm}@{}}
 \toprule
-\textbf{Loop} & \textbf{$P_t$} & \textbf{$\Wm_t$} &
-\textbf{$\rS$ source} & \textbf{$\rW$ source} \\
+\textbf{Loop} & \textbf{Correction ($\rS$)} & \textbf{Degradation ($\rW$)} \\
 \midrule
-1. Structural avoidance & Known poset & Leverage estimates &
-  Discovery value (P3 Def.\ 5 / Prop.\ 2) & Un-learned structure \\
-2. Partial subsumption & Capability poset & Full accuracy vector &
-  $T_s$ self-trust (P1) & Channel loss \\
-3. Over-calibrated restriction & Unrestricted caps. & Risk estimates &
-  Controlled relaxation & Unfalsifiable risk \\
+1.\ Structural avoidance &
+  Discovery value~\citep{lasser2026horizon} drives learning of unknown poset edges &
+  Leverage estimates drift from un-learned structure \\[0.5em]
+2.\ Partial subsumption &
+  Self-trust $T_s$~\citep{lasser2026gfm} corrects world model via prediction residuals &
+  Subsumption removes observation channels \\[0.5em]
+3.\ Over-calibrated restriction &
+  Controlled relaxation generates counter-evidence &
+  Unfalsifiable risk claims accumulate under restriction \\
 \bottomrule
 \end{tabular}
-\caption{Three feedback loops as instances of the $(P, \Wm)$ system.}
+\caption{Three feedback loops as instances of the $(P, \Wm)$ system.
+  Each loop maps a correction source ($\rS$) and degradation source
+  ($\rW$) onto the phase boundary of Theorem~\ref{thm:phase_boundary}.}
 \label{tab:loops}
 \end{table}
 
