@@ -25,13 +25,15 @@ where
   \frac{\rW \cdot \rsub^{\max}
     + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
     \Lyap_{\mathrm{avg}}}
-  {\rS}
+  {\rSeff}
 \end{equation}
 $\rsub^{\max}$ is the maximum subsumption rate under
 locally rational dynamics over the relevant trajectory window, and $\Delta\rho_{\mathrm{avg}}(k)$ is
 the time-averaged redundancy loss on dimension $k$ per subsumption
-step.  The rates $\rS$, $\rW$, $\dmax$ are the global bounds from
-Theorem~\ref{thm:phase_boundary}; the per-dimension dependence enters
+step.  The rate $\rSeff$ is the effective correction rate from
+Theorem~\ref{thm:phase_boundary} (combining exogenous and endogenous
+correction); $\rW$, $\dmax$ are the global bounds from that theorem.
+The per-dimension dependence enters
 only through $\Delta\rho_{\mathrm{avg}}(k)$, which varies across
 dimensions because different dimensions lose different amounts of
 channel coverage per subsumption event.  Note that $\Kmin$ is
@@ -50,11 +52,12 @@ the phase boundary analysis (see proof for discussion).
 \begin{proof}
 The per-dimension dynamics (Proposition~\ref{prop:error_dynamics})
 give each dimension $k$ its own correction rate $\rS \cdot
-\rhocross_k(P_t)$ and its own drift exposure
-$\dmax \cdot \Delta\rho_k(t)$, where $\Delta\rho_k$ is the
-redundancy loss on dimension $k$ specifically.  Requiring each
-dimension individually to satisfy the self-correcting condition
-yields the per-dimension criterion: $\rS \cdot \rhocross_k >
+\rhocross_k(P_t) + \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu_k$ and
+its own drift exposure $\dmax \cdot \Delta\rho_k(t)$, where
+$\Delta\rho_k$ is the redundancy loss on dimension $k$ specifically.
+Requiring each dimension individually to satisfy the self-correcting
+condition (using the inf bound $\rSeff$ on the total correction rate)
+yields the per-dimension criterion: $\rSeff \cdot \rhocross_k >
 \rW \cdot \rsub + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
 \Lyap_{\mathrm{avg}}$.  Solving for $\rhocross_k$ yields
 Equation~\ref{eq:kmin_formula}.  Note that $\Kmin$ increases as
@@ -97,15 +100,15 @@ For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
 \item $\rhocross_k \leq 2$ for each dimension $k$ (at most one channel
   from each substrate).
 \item The full criterion (Equation~\ref{eq:kmin_formula}) requires
-  $\rS \geq (\rW \cdot \rsub^{\max} + \dmax \cdot
+  $\rSeff \geq (\rW \cdot \rsub^{\max} + \dmax \cdot
   \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}) / 2$ for every
   dimension $k$ (substituting $\rhocross_k = 2$).
 \item Dimensions where one substrate provides the only cross-substrate
   signal have $\rhocross_k = 1$, requiring
-  $\rS \geq \rW \cdot \rsub^{\max} + \dmax \cdot
+  $\rSeff \geq \rW \cdot \rsub^{\max} + \dmax \cdot
   \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$: the
-  self-correction rate must exceed both degradation and drift exposure
-  unaided by redundancy.
+  effective correction rate must exceed both degradation and drift
+  exposure unaided by redundancy.
 \end{enumerate}
 \end{corollary}
 

@@ -14,16 +14,22 @@ candidate (Definition~\ref{def:wm_error}).
 
 \paragraph{Step 2: Verify comparison functions.}
 Assumption~C1 (coercivity) requires showing that the aggregate
-correction signal is at least proportional to $\rhomincross(P_t) \cdot
-\Lyap(\Wm_t)$ (the product of minimum cross-substrate redundancy and
-total Lyapunov error).  The per-dimension argument: each channel
-covering dimension~$k$ corrects at a rate proportional to
+correction signal is at least proportional to
+$(c_{\mathrm{S}} \cdot \rhomincross(P_t) + c_{\mathrm{V}} \cdot
+\nu(P_t, \Wm_t)) \cdot \Lyap(\Wm_t)$.  The exogenous term: each
+channel covering dimension~$k$ corrects at a rate proportional to
 $\rho_k \cdot \epsilon_k^2$; summing across dimensions and bounding
-below by $\rhomincross \cdot \Lyap$ yields C1.  This follows from the
-EWMA-style learning rules: each channel's correction is linear in the
-residual and proportional to sensitivity.  Under the joint-factorization
-assumption~\citep{lasser2026exo}, cross-substrate channels' corrections are
-independent and therefore additive.
+below by $\rhomincross \cdot \Lyap$ yields the first term.  This
+follows from the EWMA-style learning rules: each channel's correction
+is linear in the residual and proportional to sensitivity.  Under the
+joint-factorization assumption~\citep{lasser2026exo}, cross-substrate
+channels' corrections are independent and therefore additive.  The
+endogenous term ($c_{\mathrm{V}} \cdot \nu$) arises from the actor's
+$\volL$-gradient: better calibration produces better decisions, which
+preserve more cooperative capabilities, increasing $\volL$.  The
+sensitivity $\nu$ measures this chain's marginal return; when $\nu > 0$
+the actor has an incentive to seek correction beyond what the channels
+provide.
 
 Assumption~C2$'$ (bounded degradation) requires two properties:
 \begin{enumerate}
@@ -39,9 +45,11 @@ Assumption~C2$'$ (bounded degradation) requires two properties:
 \paragraph{Step 3: Per-step bounds.}
 Apply the comparison functions to obtain
 Proposition~\ref{prop:error_dynamics}'s per-step bounds: contraction
-factor $(1 - \rS \cdot \rhomincross) < 1$ on non-subsumption steps;
-affine bound with factor $(1 - \rS \cdot \rhomincross + \rW)$ and
-additive kick $\dmax \cdot \Delta\rho$ on subsumption steps.
+factor $(1 - \rS \cdot \rhomincross - \alpha(t) \cdot c_{\mathrm{V}}
+\cdot \nu) < 1$ on non-subsumption steps; affine bound with factor
+$(1 - \rS \cdot \rhomincross - \alpha(t) \cdot c_{\mathrm{V}} \cdot
+\nu + \rW)$ and additive kick $\dmax \cdot \Delta\rho$ on subsumption
+steps.
 
 \paragraph{Step 4 (Part a): Amortized contraction.}
 Define the amortized log-contraction rate over a window of $T$ steps.

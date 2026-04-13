@@ -217,7 +217,7 @@ endogenous verification only~\citep{lasser2026exo}.
 The phase boundary surface in the linearized regime is:
 \begin{equation}
 \label{eq:critical_surface}
-\rS \cdot \rhomincross = \rW \cdot \rsub
+\rSeff \cdot \rhomincross = \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
 Below this surface (correction dominates both error-proportional growth
@@ -228,18 +228,21 @@ basin (under B1$'$) if the additional blindness and threshold-trigger
 conditions of Parts~(b)/(b$'$) are also met.
 
 The critical cross-substrate redundancy for a given
-$(\rS, \rW, \rsub, \dmax, \Delta\rho_{\mathrm{avg}},
+$(\rSeff, \rW, \rsub, \dmax, \Delta\rho_{\mathrm{avg}},
 \Lyap_{\mathrm{avg}})$ is:
 \begin{equation}
 \label{eq:critical_redundancy}
 (\rhomincross)^* = \frac{\rW \cdot \rsub
   + \dmax \cdot \Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}}
-  {\rS}
+  {\rSeff}
 \end{equation}
 This is the minimum effective cross-substrate redundancy per
 safety-relevant dimension needed to stay in the self-correcting basin.
-The $\dmax$ term means the threshold is \emph{higher} when subsumption
-removes channels covering well-calibrated dimensions (high
+The endogenous term ($c_{\mathrm{V}} \cdot \underline{\nu}$) in
+$\rSeff$ lowers the threshold: the actor's own calibration incentive
+supplements the channels, reducing the redundancy needed.  The
+$\dmax$ term raises the threshold when subsumption removes channels
+covering well-calibrated dimensions (high
 $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
 \end{theorem}
 
@@ -309,7 +312,7 @@ trajectory-specific constants $\bar{a}$ and $\bar{b}$.  In the
 linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
 1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
 evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
-\overline{\Delta\rho}$ and $1 - \bar{a} = \rS \cdot \rhomincross -
+\overline{\Delta\rho}$ and $1 - \bar{a} = \rSeff \cdot \rhomincross -
 \rW \cdot \rsub$, yielding Equation~\ref{eq:neighborhood}.  Outside
 the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
 by the log-averaging condition~\eqref{eq:uniform_contraction} and may
@@ -330,10 +333,11 @@ where $\pi^*(\Wm) = \arg\max_\pi \Vdisc(\pi, \Wm)$ is the locally
 rational policy (evaluated at the reference action set
 $\mathcal{A}_{t^*}$ at the time the system enters the neighborhood).
 Since $\mathcal{A}_{t^*}$ is finite
-(Definition~\ref{def:transition}) and each action gap $G_j(\Wm)$ is
-continuous with $G_j(\Wm^*) > 0$ for the optimal action (strict gap;
-this requires a unique optimum at $\Wm^*$, which holds generically for
-finite action sets), the set
+(Definition~\ref{def:transition}) and the optimal action at $\Wm^*$ is
+unique (i.e., $G_j(\Wm^*) > 0$ for the optimal action---a
+\emph{strict} gap, which holds generically for finite action sets and
+fails only on a measure-zero set of parameters), each action gap
+$G_j(\Wm)$ is continuous with $G_j(\Wm^*) > 0$.  Therefore the set
 $\{\Wm : \pi^*(\Wm) = \pi^*(\Wm^*)\}$ is open and contains $\Wm^*$,
 so $\epsilon_{\mathrm{safe}} > 0$.
 

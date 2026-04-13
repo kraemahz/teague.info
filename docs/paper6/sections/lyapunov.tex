@@ -235,8 +235,10 @@ B(t_0, T) =
     _{\text{drift exposure}}
   + \underbrace{\sum_{t \in \mathrm{sub}} \rW \cdot \Lyap(\Wm_t)}
     _{\text{error-proportional degradation}}
-  - \underbrace{\sum_{t=t_0}^{t_0+T-1} \rS \cdot \rhomincross(P_t) \cdot
-    \Lyap(\Wm_t)}_{\text{cumulative correction}}
+  - \underbrace{\sum_{t=t_0}^{t_0+T-1}
+    \bigl(\rS \cdot \rhomincross(P_t)
+    + \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr) \cdot
+    \Lyap(\Wm_t)}_{\text{cumulative correction (exo.\ + endo.)}}
 \end{equation}
 where $\sum_{t \in \mathrm{sub}}$ ranges over the subsumption steps in
 the window.
@@ -253,10 +255,12 @@ $\Delta\rho$ is spread across $T_{\mathrm{sub}}$ subsumption steps, the
 cumulative condition simplifies to
 \begin{equation}
 \label{eq:linearized}
-\rS \cdot \rhomincross > \rW \cdot \rsub
+\rSeff \cdot \rhomincross > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency and
+where $\rSeff = \rS + c_{\mathrm{V}} \cdot \underline{\nu} /
+\rhomincross$ (using the inf bound on $\nu$ over the window),
+$\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency, and
 $\Delta\rho_{\mathrm{avg}}$, $\Lyap_{\mathrm{avg}}$ are time-averaged
 quantities.  The $\dmax$ term makes the condition harder to satisfy
 when the rate of channel loss on well-calibrated dimensions is high
