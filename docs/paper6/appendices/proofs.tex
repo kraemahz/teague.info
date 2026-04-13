@@ -79,13 +79,15 @@ bounded steady-state value:
 \begin{equation*}
 \Lyap_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
   = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
-    {\rSeff \cdot \rhomincross - \rW \cdot \rsub}
+    {\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+    - \rW \cdot \rsub}
 \end{equation*}
 Substituting $\bar{b} = \rsub \cdot \dmax \cdot
 \overline{\Delta\rho}$ (additive drift at frequency $\rsub$) and
-$1 - \bar{a} = \rSeff \cdot \rhomincross - \rW \cdot \rsub$
-(amortized contraction rate, with $\rSeff$ using the inf bound on the
-endogenous term from C1) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
+$1 - \bar{a} = \rS \cdot \rhomincross + c_{\mathrm{V}} \cdot
+\underline{\nu} - \rW \cdot \rsub$ (amortized contraction rate, with
+$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ bounding the endogenous
+term from C1) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
 (subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
 locally rational policy agrees with the true $\Vdisc$-optimal policy,
 and the anti-monopolar property~\citep{lasser2026horizon} applies.

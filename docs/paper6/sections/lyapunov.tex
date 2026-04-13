@@ -15,9 +15,11 @@ The error of $\Wm_t$ on dimension $k$ is
 \label{eq:dim_error}
 \epsilon_k(t) = |\Wm_t[k] - \Wm^*[k]|
 \end{equation}
-where $\Wm^*[k]$ is the true value of dimension $k$ (the true leverage
-of capability $d$, the true risk of tuple $S$, the true effective
-substrate diversity, etc.).  The total error is:
+where $\Wm^*[k] = \Wm^*_t[k]$ is the true value of dimension $k$ at
+time $t$ (the true leverage of capability $d$, the true risk of
+tuple $S$, the true effective substrate diversity, etc.).  In general
+$\Wm^*$ is time-varying: the true state evolves as agents act; C2$'$
+bounds the drift rate via $\dmax$.  The total error is:
 \begin{equation}
 \label{eq:lyapunov}
 \Lyap(\Wm_t) = \sum_{k=1}^{K} w_k \, \epsilon_k(t)^2
@@ -90,8 +92,8 @@ c_{\mathrm{V}} \cdot \nu)$, strictly larger than the exogenous
 rate $\rS \cdot \rhomincross$ alone.  In the phase boundary analysis
 (Section~\ref{sec:phase_boundary}), the time-varying endogenous term
 is bounded below by $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ to
-define the effective rate $\rSeff = \rS +
-c_{\mathrm{V}} \cdot \underline{\nu} / \rhomincross$
+define the total correction rate $\rS \cdot \rhomincross +
+c_{\mathrm{V}} \cdot \underline{\nu}$
 (Remark~\ref{rem:stabilizing_cascade}).
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
@@ -255,11 +257,12 @@ $\Delta\rho$ is spread across $T_{\mathrm{sub}}$ subsumption steps, the
 cumulative condition simplifies to
 \begin{equation}
 \label{eq:linearized}
-\rSeff \cdot \rhomincross > \rW \cdot \rsub
+\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+  > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\rSeff = \rS + c_{\mathrm{V}} \cdot \underline{\nu} /
-\rhomincross$ (using the inf bound on $\nu$ over the window),
+where $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ (the inf bound on
+$\nu$ over the window),
 $\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency, and
 $\Delta\rho_{\mathrm{avg}}$, $\Lyap_{\mathrm{avg}}$ are time-averaged
 quantities.  The $\dmax$ term makes the condition harder to satisfy

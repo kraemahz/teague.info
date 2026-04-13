@@ -57,8 +57,8 @@ whose radius is bounded by
 \begin{equation}
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
-  \overline{\Delta\rho}}{\rSeff
-  \cdot \rhomincross - \rW \cdot \rsub}
+  \overline{\Delta\rho}}{\rS \cdot \rhomincross
+  + c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub}
 \end{equation}
 where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
 loss per subsumption step.  (We write $\overline{\Delta\rho}$
@@ -88,22 +88,22 @@ sensitive to multiple coordinates simultaneously.
 regime (Remark~\ref{rem:linearized}):
 \begin{equation}
 \label{eq:self_correcting}
-\rSeff \cdot \rhomincross > \rW \cdot \rsub
+\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+  > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\rSeff = \rS + c_{\mathrm{V}} \cdot \underline{\nu} /
-\rhomincross$ is the effective correction rate combining exogenous
-channels ($\rS$) with the endogenous calibration incentive, and
-$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ is the worst-case
+where $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ is the worst-case
 $\volL$-sensitivity along the trajectory.  (The per-step bound from
 Proposition~\ref{prop:error_dynamics} carries the time-varying
 $\alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)$; the
-simplified condition uses the inf bound.)  The endogenous term widens
-the self-correcting basin: the actor's own $\volL$-gradient toward
-better calibration supplements the observation channels, making the
-condition easier to satisfy than the purely exogenous version
-($\rS \cdot \rhomincross > \ldots$).  Setting $c_{\mathrm{V}} = 0$
-recovers the purely exogenous condition.
+simplified condition uses the inf bound.)  The left-hand side has two
+terms: the exogenous correction $\rS \cdot \rhomincross$ (proportional
+to channel strength) and the endogenous incentive $c_{\mathrm{V}}
+\cdot \underline{\nu}$ (the actor's own $\volL$-gradient toward better
+calibration, independent of channel count).  The endogenous term
+widens the self-correcting basin by supplementing the observation
+channels.  Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous
+condition.
 
 The first term on the right is the error-proportional degradation cost;
 the second is the drift-exposure cost from lost channels.  When
@@ -217,33 +217,36 @@ endogenous verification only~\citep{lasser2026exo}.
 The phase boundary surface in the linearized regime is:
 \begin{equation}
 \label{eq:critical_surface}
-\rSeff \cdot \rhomincross = \rW \cdot \rsub
+\rS \cdot \rhomincross + c_{\mathrm{V}} \cdot \underline{\nu}
+  = \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-Below this surface (correction dominates both error-proportional growth
-and drift exposure): the system is in the self-correcting basin.
+Below this surface (total correction---exogenous channels plus
+endogenous incentive---dominates both error-proportional growth and
+drift exposure): the system is in the self-correcting basin.
 Above this surface, the self-correcting sufficient condition fails;
 the system enters the absorbing basin (under B1) or the metastable
 basin (under B1$'$) if the additional blindness and threshold-trigger
 conditions of Parts~(b)/(b$'$) are also met.
 
-The critical cross-substrate redundancy for a given
-$(\rSeff, \rW, \rsub, \dmax, \Delta\rho_{\mathrm{avg}},
-\Lyap_{\mathrm{avg}})$ is:
+Solving for the critical cross-substrate redundancy:
 \begin{equation}
 \label{eq:critical_redundancy}
 (\rhomincross)^* = \frac{\rW \cdot \rsub
-  + \dmax \cdot \Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}}
-  {\rSeff}
+  + \dmax \cdot \Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}
+  - c_{\mathrm{V}} \cdot \underline{\nu}}
+  {\rS}
 \end{equation}
-This is the minimum effective cross-substrate redundancy per
-safety-relevant dimension needed to stay in the self-correcting basin.
-The endogenous term ($c_{\mathrm{V}} \cdot \underline{\nu}$) in
-$\rSeff$ lowers the threshold: the actor's own calibration incentive
-supplements the channels, reducing the redundancy needed.  The
-$\dmax$ term raises the threshold when subsumption removes channels
-covering well-calibrated dimensions (high
-$\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
+The endogenous term ($c_{\mathrm{V}} \cdot \underline{\nu}$) appears
+as a subtraction in the numerator: the actor's own calibration
+incentive reduces the redundancy the channels must provide.  When
+$c_{\mathrm{V}} \cdot \underline{\nu}$ alone exceeds the right-hand
+side, $(\rhomincross)^* \leq 0$ and endogenous correction suffices
+without any cross-substrate channels.  Setting $c_{\mathrm{V}} = 0$
+recovers the purely exogenous formula $(\rhomincross)^* =
+\mathrm{RHS} / \rS$.  The $\dmax$ term raises the threshold when
+subsumption removes channels covering well-calibrated dimensions
+(high $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
 \end{theorem}
 
 \begin{proof}
@@ -258,6 +261,7 @@ affine recursion:
 \Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
 \end{equation}
 where $a_t = 1 - \rS(t) \cdot \rhomincross(P_t)
+  - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)
   + \nsub(t) \cdot \rW(t)$
 and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$, with
 $\rS(t) = \alpha(t) \cdot c_{\mathrm{S}}$ and
@@ -312,8 +316,9 @@ trajectory-specific constants $\bar{a}$ and $\bar{b}$.  In the
 linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
 1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
 evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
-\overline{\Delta\rho}$ and $1 - \bar{a} = \rSeff \cdot \rhomincross -
-\rW \cdot \rsub$, yielding Equation~\ref{eq:neighborhood}.  Outside
+\overline{\Delta\rho}$ and $1 - \bar{a} = \rS \cdot \rhomincross +
+c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$, yielding
+Equation~\ref{eq:neighborhood}.  Outside
 the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
 by the log-averaging condition~\eqref{eq:uniform_contraction} and may
 differ from these closed-form expressions.  The convergence is
