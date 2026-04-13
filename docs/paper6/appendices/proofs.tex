@@ -183,9 +183,13 @@ Define the cascade threshold for agent $a_j$ on dimension $k$:
 dimension-$k$ error along the path; a lower bound on sensitivity
 gives an upper bound on the error needed to flip the action).  The
 per-dimension cascade threshold is $\epsilon_{\mathrm{crit},k} =
-\min_j \epsilon_{\mathrm{crit}}^{(j,k)}$, minimized over the agent
-set $\mathcal{A}_t$ (all agents available for subsumption at time
-$t$).
+\min_{j \in \mathcal{A}_t^+} \epsilon_{\mathrm{crit}}^{(j,k)}$,
+minimized over the set of \emph{preserve-optimal agents}
+$\mathcal{A}_t^+ = \{j \in \mathcal{A}_t : G_j(\Wm^*) > 0\}$.
+Agents that are truly subsume-optimal ($G_j(\Wm^*) \leq 0$) are
+excluded because their subsumption is correct regardless of
+$\epsilon_k$; only flips from correct-preserve to
+incorrect-subsume constitute cascade triggers.
 
 Then the cascade operates in two steps:
 \begin{enumerate}

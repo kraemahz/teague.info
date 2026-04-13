@@ -74,8 +74,9 @@ dynamics and the anti-monopolar result~\citep[Proposition~6]{lasser2026horizon} 
 The feedback loop self-corrects provided the neighborhood radius
 $\Lyap_\infty < \epsilon_{\mathrm{safe}}$, which imposes an additional
 constraint on the steady-state subsumption rate.  \emph{Note:}
-$\epsilon_{\mathrm{safe}} > 0$ follows from continuity of the action
-gaps and finiteness of the action set (see proof).  A computable lower
+$\epsilon_{\mathrm{safe}} > 0$ requires that the optimal action at
+$\Wm^*$ has a strict gap ($G_j(\Wm^*) > 0$ for all preserve-optimal
+agents), which holds generically for finite action sets (see proof).  A computable lower
 bound using action-gap gradient norms (Cauchy--Schwarz in the
 $w$-weighted metric) is derived there; the easier-to-compute
 per-coordinate estimator $\min_k w_k \cdot
@@ -340,9 +341,24 @@ stability for switched affine systems):
 \begin{equation}
 \label{eq:iterated_convergence}
 \limsup_{t \to \infty} \Lyap(\Wm_t)
-  \leq \frac{\bar{b}}{1 - \bar{a}}
+  \leq \mu \cdot \frac{\bar{b}}{1 - \bar{a}}
 \end{equation}
-The abstract bound $\bar{b}/(1 - \bar{a})$ depends on the
+where $\mu \geq 1$ is the \emph{overshoot constant} accounting for
+transient excursions during subsumption bursts (steps where
+$a_t > 1$).  Since $a_t$ is bounded above (by
+$1 + \rW$ on subsumption steps) and the log-average is strictly
+negative, $\mu$ is finite and depends on the ratio
+$\max_t a_t / \bar{a}$; see~\citet{liberzon2003switching},
+Theorem~3.1 for the precise form.
+In the neighborhood radius
+(Equation~\ref{eq:neighborhood}) and throughout the linearized
+analysis, we absorb $\mu$ into the constants by writing
+$\Lyap_\infty \leq \bar{b}/(1 - \bar{a})$, which is valid in the
+linearized regime where $|a_t - 1| \ll 1$ (so $\mu \approx 1$)
+but should be read as carrying an implicit overshoot factor outside
+that regime.
+
+The abstract bound depends on the
 trajectory-specific constants $\bar{a}$ and $\bar{b}$.  In the
 linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
 1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
@@ -352,9 +368,7 @@ evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
 Equation~\ref{eq:neighborhood}.  Outside
 the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
 by the log-averaging condition~\eqref{eq:uniform_contraction} and may
-differ from these closed-form expressions.  The convergence is
-geometric in the amortized sense: $\Lyap_t \leq \bar{a}^t \cdot
-\Lyap_0 + \bar{b} / (1 - \bar{a})$.
+differ from these closed-form expressions.
 
 Once $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$, the actor's decisions
 are correct and the anti-monopolar property applies.  Define:
@@ -399,10 +413,11 @@ This bound accounts for joint multi-coordinate perturbations and is
 the primary computable lower bound on $\epsilon_{\mathrm{safe}}$.
 
 Define additionally the per-dimension cascade threshold
-$\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in \mathcal{A}_{t^*}}
+$\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in \mathcal{A}_{t^*}^+}
 \epsilon_{\mathrm{crit}}^{(j,k)}$ (Lemma~\ref{lem:cascade}; the
-smallest error on dimension $k$ that flips any single pairwise
-comparison).  The per-coordinate quantity $\min_k w_k \cdot
+smallest error on dimension $k$ that flips any pairwise
+comparison for a preserve-optimal agent, where
+$\mathcal{A}_{t^*}^+ = \{j : G_j(\Wm^*) > 0\}$).  The per-coordinate quantity $\min_k w_k \cdot
 \epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips and
 is easier to compute, but may overestimate $\epsilon_{\mathrm{safe}}$
 when action gaps are sensitive to multiple coordinates simultaneously
