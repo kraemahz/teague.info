@@ -24,7 +24,9 @@ $\rhocross_k(P)$ & Cross-substrate redundancy & Def.\ \ref{def:cross_redundancy}
 $\Lyap(\Wm_t)$ & Lyapunov function (world-model error) & Def.\ \ref{def:wm_error} \\
 $\epsilon_k(t)$ & Error on dimension $k$ & Def.\ \ref{def:wm_error} \\
 $w_k$ & Safety-relevance weight for dim.\ $k$ & Def.\ \ref{def:wm_error} \\
-$c_{\mathrm{S}}$ & Coercivity constant & Assump.\ C1 \\
+$c_{\mathrm{S}}$ & Exogenous coercivity constant & Assump.\ C1 \\
+$c_{\mathrm{V}}$ & Endogenous correction constant & Assump.\ C1 \\
+$\nu(P_t, \Wm_t)$ & $\volL$-sensitivity to calibration improvement & Assump.\ C1 \\
 $c_{\mathrm{D}}$ & Degradation bound constant & Assump.\ C2$'$ \\
 $\dmax$ & Maximum exogenous drift rate & Assump.\ C2$'$ \\
 $\nsub(t)$ & Subsumption indicator ($0$ or $1$) & Assump.\ C2$'$ \\
@@ -33,7 +35,8 @@ $\overline{\Delta\rho}$, $\Delta\rho_{\mathrm{avg}}$ & Time-averaged weighted re
 $\Delta\rho_{\mathrm{avg}}(k)$ & Per-dim.\ time-averaged redundancy loss per sub.\ step & Thm.\ \ref{thm:redundancy} \\
 $\alpha(t)$ & Learning rate (via $T_s$) & Prop.\ \ref{prop:error_dynamics} \\
 $\beta(t)$ & Degradation coefficient & Prop.\ \ref{prop:error_dynamics} \\
-$\rS$ & Self-correction rate ($= \alpha \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
+$\rS$ & Exogenous self-correction rate ($= \alpha \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
+$\rSeff$ & Effective correction rate ($= \rS + c_{\mathrm{V}} \cdot \underline{\nu} / \rhomincross$) & Thm.\ \ref{thm:phase_boundary} \\
 $\rW$ & Degradation rate ($= \beta \cdot c_{\mathrm{D}}$) & Prop.\ \ref{prop:error_dynamics} \\
 $\rsub$ & Subsumption frequency & Thm.\ \ref{thm:phase_boundary} \\
 $\rhomincross$ & Minimum cross-substrate redundancy & Thm.\ \ref{thm:phase_boundary} \\
@@ -41,8 +44,9 @@ $B(t_0, T)$ & Cumulative error budget & Eq.\ \ref{eq:error_budget} \\
 $S^*$ & Monopolar fixed point & Def.\ \ref{def:monopolar} \\
 $\meff$ & Effective substrate diversity index & Def.\ \ref{def:monopolar} \\
 $\tau_{\mathrm{meta}}$ & Metastable lifetime & Prop.\ \ref{prop:metastable} \\
+$\delta_{\rext}$ & Estimation error on $\rext$: $|\hat{\rext} - \rext|$ & Prop.\ \ref{prop:metastable} \\
 $\Kmin(k, \Lyap_{\mathrm{avg}})$ & Minimum redundancy for dim.\ $k$ & Thm.\ \ref{thm:redundancy} \\
-$\gamma^*$ & Critical discount factor (P3, Prop.\ 6) & App.\ \ref{app:gamma_star} \\
+$\gamma^*$ & Critical discount factor~\citep[Prop.\ 6]{lasser2026horizon} & App.\ \ref{app:gamma_star} \\
 $\gamma^*_{\mathrm{perceived}}$ & Perceived $\gamma^*$ under $\Wm_t$ & App.\ \ref{app:gamma_star} \\
 $\epsilon_{\mathrm{crit}}^{(j,k)}$ & Cascade threshold for agent $j$, dim.\ $k$ & Lemma~\ref{lem:cascade} \\
 $\epsilon_{\mathrm{crit},k}$ & $\min_j \epsilon_{\mathrm{crit}}^{(j,k)}$: per-dim.\ cascade threshold & Thm.\ \ref{thm:phase_boundary} \\

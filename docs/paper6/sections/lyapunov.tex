@@ -84,11 +84,14 @@ estimate (through $\nu$) that better calibration produces higher
 $\volL$.
 
 Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous correction
-model.  When $c_{\mathrm{V}} > 0$, the effective self-correction rate
-is $\rSeff = c_{\mathrm{S}} \cdot \rhomincross +
-c_{\mathrm{V}} \cdot \nu$, which is strictly larger than the exogenous
-rate alone.  The consequences for the phase boundary are developed in
-Section~\ref{sec:phase_boundary}
+model.  When $c_{\mathrm{V}} > 0$, the total correction coefficient
+per step is $\alpha(t) \cdot (c_{\mathrm{S}} \cdot \rhomincross +
+c_{\mathrm{V}} \cdot \nu)$, strictly larger than the exogenous
+rate $\rS \cdot \rhomincross$ alone.  In the phase boundary analysis
+(Section~\ref{sec:phase_boundary}), the time-varying endogenous term
+is bounded below by $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ to
+define the effective rate $\rSeff = \rS +
+c_{\mathrm{V}} \cdot \underline{\nu} / \rhomincross$
 (Remark~\ref{rem:stabilizing_cascade}).
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
@@ -137,22 +140,24 @@ bounds.
 \begin{equation}
 \label{eq:contraction}
 \Lyap(\Wm_{t+1}) \leq \Lyap(\Wm_t) \cdot
-  \left(1 - \rS \cdot \rhomincross(P_t)\right)
+  \left(1 - \rS \cdot \rhomincross(P_t)
+  - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\right)
 \end{equation}
-where $\rS = \alpha(t) \cdot c_{\mathrm{S}}$ is the self-correction
-rate.  This is a strict contraction provided $0 < \rS \cdot
-\rhomincross(P_t) < 1$ (i.e., the step size is small enough that
-correction does not overshoot).  We assume throughout that $\alpha(t)$
-is chosen small enough to satisfy this bound; this is the standard
-step-size condition for EWMA-style learning rules and holds whenever
-$\alpha(t) \leq 1 / (c_{\mathrm{S}} \cdot \rhomincross(P_t))$.
+where $\rS = \alpha(t) \cdot c_{\mathrm{S}}$ is the exogenous
+self-correction rate and the $c_{\mathrm{V}} \cdot \nu$ term is the
+endogenous correction from Assumption~C1.  This is a strict contraction
+provided the total correction rate is positive and less than $1$; we
+assume throughout that $\alpha(t)$ is chosen small enough to satisfy
+this bound (the standard step-size condition for EWMA-style learning
+rules).
 
 \medskip
 \noindent\textbf{Subsumption steps} ($\nsub(t) = 1$):
 \begin{equation}
 \label{eq:expansion}
 \Lyap(\Wm_{t+1}) \leq \Lyap(\Wm_t) \cdot
-  \left(1 - \rS \cdot \rhomincross(P_t) + \rW\right)
+  \left(1 - \rS \cdot \rhomincross(P_t)
+  - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t) + \rW\right)
   + \dmax \cdot \Delta\rho(t)
 \end{equation}
 where $\rW = \beta(t) \cdot c_{\mathrm{D}}$ is the error-proportional
@@ -181,24 +186,28 @@ $f_{\Wm}$ (Assumption~C2$'$).
 For non-subsumption steps ($\nsub(t) = 0$), Assumption~C2$'$ gives
 $D(t) \leq \dmax \cdot \Delta\rho(t) = 0$ (since $P_{t+1} = P_t$
 when no subsumption occurs, $\Delta\rho(t) = 0$).  Applying
-Assumption~C1:
+Assumption~C1 (both terms):
 \begin{align*}
 \Lyap(\Wm_{t+1})
-&\leq \Lyap(\Wm_t) - \alpha(t) \cdot c_{\mathrm{S}} \cdot
-  \rhomincross(P_t) \cdot \Lyap(\Wm_t) \\
-&= \Lyap(\Wm_t) \cdot \left(1 - \rS \cdot \rhomincross(P_t)\right).
+&\leq \Lyap(\Wm_t) - \alpha(t) \cdot \bigl(c_{\mathrm{S}} \cdot
+  \rhomincross(P_t) + c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr)
+  \cdot \Lyap(\Wm_t) \\
+&= \Lyap(\Wm_t) \cdot \left(1 - \rS \cdot \rhomincross(P_t)
+  - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\right).
 \end{align*}
 
 For subsumption steps ($\nsub(t) = 1$), apply both assumptions:
 \begin{align*}
 \Lyap(\Wm_{t+1})
 &\leq \Lyap(\Wm_t)
-  - \alpha(t) \cdot c_{\mathrm{S}} \cdot \rhomincross(P_t) \cdot
-    \Lyap(\Wm_t)
-  + \beta(t) \cdot c_{\mathrm{D}} \cdot \Lyap(\Wm_t)
+  - \alpha(t) \cdot \bigl(c_{\mathrm{S}} \cdot \rhomincross(P_t)
+  + c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr) \cdot \Lyap(\Wm_t) \\
+&\quad + \beta(t) \cdot c_{\mathrm{D}} \cdot \Lyap(\Wm_t)
   + \beta(t) \cdot \dmax \cdot \Delta\rho(t) \\
 &= \Lyap(\Wm_t) \cdot
-  \left(1 - \rS \cdot \rhomincross(P_t) + \rW\right)
+  \left(1 - \rS \cdot \rhomincross(P_t)
+  - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)
+  + \rW\right)
   + \dmax \cdot \Delta\rho(t)
 \end{align*}
 where the last line uses the fact that C2$'$ bounds

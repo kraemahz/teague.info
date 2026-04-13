@@ -56,7 +56,8 @@ Write the per-step bound as:
 \begin{equation*}
 \Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
 \end{equation*}
-where $a_t = 1 - \rS \cdot \rhomincross(P_t) + \nsub(t) \cdot \rW$
+where $a_t = 1 - \rS \cdot \rhomincross(P_t) - \alpha(t) \cdot
+c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t) + \nsub(t) \cdot \rW$
 and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$.  Iterating:
 \begin{equation}
 \label{eq:iterated_bound}
@@ -70,12 +71,13 @@ bounded steady-state value:
 \begin{equation*}
 \Lyap_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
   = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
-    {\rS \cdot \rhomincross - \rW \cdot \rsub}
+    {\rSeff \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation*}
 Substituting $\bar{b} = \rsub \cdot \dmax \cdot
 \overline{\Delta\rho}$ (additive drift at frequency $\rsub$) and
-$1 - \bar{a} = \rS \cdot \rhomincross - \rW \cdot \rsub$ (amortized
-contraction rate) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
+$1 - \bar{a} = \rSeff \cdot \rhomincross - \rW \cdot \rsub$
+(amortized contraction rate, with $\rSeff$ using the inf bound on the
+endogenous term from C1) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
 (subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
 locally rational policy agrees with the true $\Vdisc$-optimal policy,
 and the anti-monopolar property~\citep{lasser2026horizon} applies.

@@ -57,7 +57,7 @@ whose radius is bounded by
 \begin{equation}
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
-  \overline{\Delta\rho}}{(\rS + c_{\mathrm{V}} \nu / \rhomincross)
+  \overline{\Delta\rho}}{\rSeff
   \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation}
 where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
@@ -91,14 +91,19 @@ regime (Remark~\ref{rem:linearized}):
 \rSeff \cdot \rhomincross > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-where $\rSeff = \rS + c_{\mathrm{V}} \cdot \nu / \rhomincross$ is the
-effective correction rate combining exogenous channels ($\rS$) with the
-endogenous calibration incentive ($c_{\mathrm{V}} \cdot \nu$).  The
-endogenous term widens the self-correcting basin: the actor's own
-$\volL$-gradient toward better calibration supplements the observation
-channels, making the condition easier to satisfy than the purely
-exogenous version ($\rS \cdot \rhomincross > \ldots$).  Setting
-$c_{\mathrm{V}} = 0$ recovers the purely exogenous condition.
+where $\rSeff = \rS + c_{\mathrm{V}} \cdot \underline{\nu} /
+\rhomincross$ is the effective correction rate combining exogenous
+channels ($\rS$) with the endogenous calibration incentive, and
+$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ is the worst-case
+$\volL$-sensitivity along the trajectory.  (The per-step bound from
+Proposition~\ref{prop:error_dynamics} carries the time-varying
+$\alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)$; the
+simplified condition uses the inf bound.)  The endogenous term widens
+the self-correcting basin: the actor's own $\volL$-gradient toward
+better calibration supplements the observation channels, making the
+condition easier to satisfy than the purely exogenous version
+($\rS \cdot \rhomincross > \ldots$).  Setting $c_{\mathrm{V}} = 0$
+recovers the purely exogenous condition.
 
 The first term on the right is the error-proportional degradation cost;
 the second is the drift-exposure cost from lost channels.  When
