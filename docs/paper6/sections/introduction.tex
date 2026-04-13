@@ -65,8 +65,9 @@ self-correcting trajectories from absorbing ones.
   (Section~\ref{sec:phase_boundary}).
   The central result: a characterized boundary in terms of the
   self-correction rate $\rS$, the error-proportional degradation rate
-  $\rW$, the subsumption frequency $\rsub$, and the exogenous drift
-  rate $\dmax$ from lost channels.  Below the boundary, the
+  $\rW$, the subsumption frequency $\rsub$, the exogenous drift
+  rate $\dmax$ from lost channels, and the minimum cross-substrate
+  redundancy $\rhomincross$.  Below the boundary, the
   Lyapunov function $\Lyap(\Wm_t)$ converges to a neighborhood of
   zero whose radius shrinks as subsumption ceases, and once inside
   that neighborhood the anti-monopolar property applies.  Above it, the system enters an
@@ -85,7 +86,8 @@ self-correcting trajectories from absorbing ones.
   cross-substrate redundancy per safety-relevant dimension needed to
   stay in the self-correcting basin (Theorem~\ref{thm:redundancy}).
   For two-substrate systems, each substrate's channels are singularly
-  load-bearing.
+  load-bearing (loss of one substrate's channel immediately violates
+  the criterion whenever $\Kmin > 1$ and leaves zero margin otherwise).
 \end{enumerate}
 
 \subsection{What this paper does not do}

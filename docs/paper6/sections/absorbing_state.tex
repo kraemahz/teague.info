@@ -106,24 +106,28 @@ information rate $I_k > 0$ bits per step.
 
 \begin{proposition}[Metastable Property under B1$'$]
 \label{prop:metastable}
-Under Assumption~B1$'$, $S^*$ is \emph{metastable}: the actor
+Under Assumption~B1$'$ together with B1b--B1c from
+Assumption~\ref{ass:B1}, $S^*$ is \emph{metastable}: the actor
 accumulates indirect evidence of degradation, but corrective action
 (re-introducing substrate diversity) requires the actor to evaluate a
 policy whose estimated benefit depends on $\hat{\rext}$---the very
-quantity that is miscalibrated.  The metastable lifetime satisfies
+quantity that is miscalibrated.  The metastable lifetime satisfies the information-theoretic bound
 \begin{equation}
 \label{eq:metastable_lifetime}
-\tau_{\mathrm{meta}} \geq
+\tau_{\mathrm{meta}} \gtrsim
   \frac{(\delta_{\rext})^2}{2 I_k}
 \end{equation}
 where $\delta_{\rext} = |\hat{\rext} - \rext|$ is the estimation
 error on the cross-substrate cooperative growth rate and $I_k$ is the
-information rate of the indirect channel (bits per step).  The
-quadratic numerator arises from the information-theoretic lower bound
-on estimation: reducing the mean-squared error of a scalar parameter
-by $\epsilon^2$ from a channel with $I_k$ bits per step requires at
-least $\epsilon^2 / (2 I_k)$ steps (the Cram\'er--Rao-type bound for
-sequential estimation under bounded mutual information).  During the metastable
+information rate of the indirect channel (bits per step).  This bound
+is an information-theoretic scaling argument, not a rigorous proof:
+the quadratic numerator reflects the Cram\'er--Rao-type lower bound
+on estimation (reducing mean-squared error of a scalar parameter by
+$\epsilon^2$ from a channel with $I_k$ bits per step requires at
+least $\epsilon^2 / (2 I_k)$ steps under bounded mutual information).
+A full derivation would require specifying the estimation procedure
+and verifying the regularity conditions; we state the bound as a
+scaling law.  During the metastable
 period, the population is monopolar and all verification is
 endogenous (Paper~5, Theorem~1), which may further degrade the
 quality of the indirect evidence.

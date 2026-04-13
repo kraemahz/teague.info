@@ -105,7 +105,7 @@ basins: correction on dimension~5 is present but inadequate.  Under
 continued attenuation, $\rhocross_5 \to 0$ and Part~(b) applies.  In
 practice the distinction is thin: at $\rhocross_5 = 0.01$, the error
 growth rate of $0.009$ per step overwhelms the correction rate of
-$0.001$, and $\epsilon_5$ crosses $\epsilon_{\mathrm{crit}}$ long
+$0.001$, and $\epsilon_5$ crosses $\epsilon_{\mathrm{crit},5}$ long
 before the last biological channel is formally removed.
 
 \paragraph{Phase 2: Cascade.}
@@ -117,20 +117,21 @@ effectively reducing $\rS$ system-wide.
 
 As $\rS$ drops, the self-correcting condition becomes harder to satisfy
 on dimensions that were marginally above the threshold.  If $\rS$ drops
-from 0.1 to 0.05, even dimensions with $\rhocross_k = 1$ fail
-(computing with the sensitivity-table value
+from 0.1 to 0.05, check the condition for dimensions with
+$\rhocross_k = 1$ (using the sensitivity-table value
 $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}} = 0.5$ from
 Table~\ref{tab:sensitivity}):
 \begin{equation*}
-0.05 \cdot 1 = 0.05 = \rW \cdot \rsub + \dmax \cdot
-  \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
-  = 0.05 \cdot 0.2 + 0.02 \cdot 0.5 = 0.02
+\underbrace{0.05 \cdot 1}_{= 0.05}
+  \;\stackrel{?}{>}\;
+  \underbrace{0.05 \cdot 0.2 + 0.02 \cdot 0.5}_{= 0.02}
 \end{equation*}
-Correction ($0.05$) still exceeds degradation ($0.02$) on these
-dimensions individually, but the continued decline in $\rS$ from the
-cascading self-trust failure eventually pushes the system past the
-critical surface.  When $\rS$ drops below $0.02$, all dimensions
-enter net degradation.  Once $\rhocross_k \to 0$ on the failing
+Correction ($0.05$) still exceeds degradation ($0.02$), so these
+dimensions remain in the self-correcting basin at $\rS = 0.05$.  But
+the margin has shrunk from $0.09$ to $0.03$.  The continued decline
+in $\rS$ from the cascading self-trust failure eventually pushes the
+system past the critical surface.  When $\rS$ drops below $0.02$,
+all dimensions enter net degradation.  Once $\rhocross_k \to 0$ on the failing
 dimensions, Part~(b) of the theorem applies and the Cascade Lemma
 (Appendix~\ref{app:cascade}) drives the system toward $S^*$.
 

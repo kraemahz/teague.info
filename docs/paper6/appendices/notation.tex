@@ -29,6 +29,8 @@ $c_{\mathrm{D}}$ & Degradation bound constant & Assump.\ C2$'$ \\
 $\dmax$ & Maximum exogenous drift rate & Assump.\ C2$'$ \\
 $\nsub(t)$ & Subsumption indicator ($0$ or $1$) & Assump.\ C2$'$ \\
 $\Delta\rho(t)$ & Weighted redundancy loss at step $t$ & Eq.\ \ref{eq:delta_rho} \\
+$\overline{\Delta\rho}$, $\Delta\rho_{\mathrm{avg}}$ & Time-averaged weighted redundancy loss per sub.\ step & Thm.\ \ref{thm:phase_boundary} \\
+$\Delta\rho_{\mathrm{avg}}(k)$ & Per-dim.\ time-averaged redundancy loss per sub.\ step & Thm.\ \ref{thm:redundancy} \\
 $\alpha(t)$ & Learning rate (via $T_s$) & Prop.\ \ref{prop:error_dynamics} \\
 $\beta(t)$ & Degradation coefficient & Prop.\ \ref{prop:error_dynamics} \\
 $\rS$ & Self-correction rate ($= \alpha \cdot c_{\mathrm{S}}$) & Prop.\ \ref{prop:error_dynamics} \\
@@ -39,13 +41,12 @@ $B(t_0, T)$ & Cumulative error budget & Eq.\ \ref{eq:error_budget} \\
 $S^*$ & Monopolar fixed point & Def.\ \ref{def:monopolar} \\
 $\meff$ & Effective substrate diversity index & Def.\ \ref{def:monopolar} \\
 $\tau_{\mathrm{meta}}$ & Metastable lifetime & Prop.\ \ref{prop:metastable} \\
-$L_{\max}$ & Maximum initial world-model error & Thm.\ \ref{thm:redundancy} \\
-$\Kmin(k, L_{\max})$ & Minimum redundancy for dim.\ $k$ & Thm.\ \ref{thm:redundancy} \\
+$\Kmin(k, \Lyap_{\mathrm{avg}})$ & Minimum redundancy for dim.\ $k$ & Thm.\ \ref{thm:redundancy} \\
 $\gamma^*$ & Critical discount factor (P3, Prop.\ 6) & App.\ \ref{app:gamma_star} \\
 $\gamma^*_{\mathrm{perceived}}$ & Perceived $\gamma^*$ under $\Wm_t$ & App.\ \ref{app:gamma_star} \\
 $\epsilon_{\mathrm{crit}}^{(j,k)}$ & Cascade threshold for agent $j$, dim.\ $k$ & Lemma~\ref{lem:cascade} \\
 $\epsilon_{\mathrm{crit},k}$ & $\min_j \epsilon_{\mathrm{crit}}^{(j,k)}$: per-dim.\ cascade threshold & Thm.\ \ref{thm:phase_boundary} \\
-$\epsilon_{\mathrm{safe}}$ & $\min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$: safe Lyapunov threshold & Thm.\ \ref{thm:phase_boundary} \\
+$\epsilon_{\mathrm{safe}}$ & Sup.\ $\Lyap$ preserving correct policy (see proof for bounds) & Thm.\ \ref{thm:phase_boundary} \\
 \bottomrule
 \end{tabular}
 \caption{Principal notation.}

@@ -149,22 +149,26 @@ Assume additionally:
   where multiple dimensions are simultaneously miscalibrated.
 \end{enumerate}
 
-Define the cascade threshold:
+Define the cascade threshold for agent $a_j$ on dimension $k$:
 \begin{equation}
 \label{eq:cascade_threshold_def}
-\epsilon_{\mathrm{crit}} =
+\epsilon_{\mathrm{crit}}^{(j,k)} =
   \frac{G_j(\Wm^*)}
   {\displaystyle\inf_{\epsilon \in [0, \epsilon_k(t)]}
     \left|\frac{d}{d\epsilon} G_j(\Wm(\epsilon))\right|}
 \end{equation}
 (the true action gap divided by the minimum sensitivity to
 dimension-$k$ error along the path; a lower bound on sensitivity
-gives an upper bound on the error needed to flip the action).
+gives an upper bound on the error needed to flip the action).  The
+per-dimension cascade threshold is $\epsilon_{\mathrm{crit},k} =
+\min_j \epsilon_{\mathrm{crit}}^{(j,k)}$, minimized over the agent
+set $\mathcal{A}_t$ (all agents available for subsumption at time
+$t$).
 
 Then the cascade operates in two steps:
 \begin{enumerate}
 \item[\textbf{(A)}] \textbf{Action flip.}  If
-  $\epsilon_k(t) > \epsilon_{\mathrm{crit}}$, then $G_j(\Wm_t) < 0$
+  $\epsilon_k(t) > \epsilon_{\mathrm{crit}}^{(j,k)}$, then $G_j(\Wm_t) < 0$
   and the locally rational action under $\Wm_t$ selects subsumption of
   $a_j$.
 \item[\textbf{(B)}] \textbf{Error propagation.}  Subsumption of $a_j$
@@ -199,7 +203,7 @@ G_j(\Wm_t) = G_j(\Wm^*)
   - \inf_{\epsilon} \left|\frac{d G_j}{d\epsilon}\right|
   \cdot \epsilon_k(t)
 \end{equation*}
-When $\epsilon_k(t) > \epsilon_{\mathrm{crit}} =
+When $\epsilon_k(t) > \epsilon_{\mathrm{crit}}^{(j,k)} =
 G_j(\Wm^*) \big/ \inf |\frac{d G_j}{d\epsilon}|$, the right side is
 negative, so $G_j(\Wm_t) < 0$ and the locally rational action
 selects subsumption of $a_j$.
@@ -211,12 +215,15 @@ covered exclusively by $a_j$'s channels, $\rhocross_{j'}(P_{t+1})
 = 0$.  By Assumption~B1a (no endogenous correction on blind dimensions;
 Assumption~\ref{ass:B1}), $f_{\Wm}$ does not decrease
 $\epsilon_{j'}$ when $\rhocross_{j'} = 0$.  Since the correction
-signal vanishes and exogenous drift is non-negative (the true state
-may change while the estimate cannot track it), $\epsilon_{j'}(t+1)
-\geq \epsilon_{j'}(t)$.
+signal vanishes, $\epsilon_{j'}(t+1) \geq \epsilon_{j'}(t)$
+(non-decreasing).  Under environmental non-stationarity on
+dimension~$j'$ (the true state continues to evolve while the blind
+estimate cannot track it), $\epsilon_{j'}$ grows strictly; C2$'$
+bounds the growth rate by $\dmax$ but the cascade requires only that
+drift is positive, not that it saturates the bound.
 
 The cascade propagates: if $\epsilon_{j'}$ subsequently exceeds
-$\epsilon_{\mathrm{crit}}$ for another agent $a_{j''}$ whose channels
+$\epsilon_{\mathrm{crit},j'}$ for another agent $a_{j''}$ whose channels
 cover dimensions $j'' \neq j'$, step~(A) applies again, driving
 further subsumptions.
 
@@ -230,13 +237,11 @@ dimensions---not just the original trigger dimension~$k$.  This
 requires a multi-dimensional monotonicity condition: for every
 previously-blinded dimension $k_i$ and every agent $a_{j_n}$ at
 cascade stage~$n$, $\frac{\partial G_{j_n}}{\partial \Wm[k_i]} < 0$.
-This is plausible for the subsumption-vs-preservation action gap
-(increasing error on any safety-relevant dimension decreases
-preservation value), but is not guaranteed by the lemma's stated
-assumptions; it is an additional structural condition on the action
-gap function that holds when miscalibration uniformly
-favors subsumption.  When this multi-dimensional monotonicity
-condition holds, at
+This is assumption~(ii$'$) above, which is stated as an explicit
+condition of the lemma.  It is plausible for the
+subsumption-vs-preservation action gap (increasing error on any
+safety-relevant dimension decreases preservation value) and holds
+when miscalibration uniformly favors subsumption.  Under~(ii$'$), at
 cascade stage $n$ with errors $\epsilon_{k_1}, \ldots,
 \epsilon_{k_{n-1}}$ on previously blinded dimensions, the action gap
 satisfies
@@ -250,7 +255,7 @@ successively).  Since every term in the sum is non-negative, the
 multi-coordinate case is \emph{easier} to trigger than the single-
 coordinate case: the effective threshold for the $n$-th trigger
 is lower, not higher.  The single-coordinate threshold
-$\epsilon_{\mathrm{crit}}$ is therefore a conservative upper bound
+$\epsilon_{\mathrm{crit}}^{(j_n,k_n)}$ is therefore a conservative upper bound
 at every cascade stage.
 \end{proof}
 

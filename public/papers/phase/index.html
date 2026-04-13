@@ -1,0 +1,3259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/distill/template.v2.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function tryRender() {
+        if (typeof katex === 'undefined') {
+          setTimeout(tryRender, 50);
+          return;
+        }
+        document.querySelectorAll('.math.inline').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: false, throwOnError: false});
+        });
+        document.querySelectorAll('.math.display').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: true, throwOnError: false});
+        });
+      }
+      tryRender();
+    });
+  </script>
+  <style>
+    .definition, .lemma, .proposition, .corollary, .remark, .proof-env {
+      margin: 1.5em 0;
+      padding: 1em 1.2em;
+      border-left: 3px solid #ddd;
+      background: #fafafa;
+    }
+    .definition { border-left-color: #4a90d9; }
+    .lemma { border-left-color: #e67e22; }
+    .proposition { border-left-color: #27ae60; }
+    .corollary { border-left-color: #8e44ad; }
+    .remark { border-left-color: #95a5a6; }
+    .theorem { border-left-color: #2c3e50; }
+    .proof-env { border-left-color: #bdc3c7; background: #fdfdfd; }
+    .env-title { font-weight: bold; margin-bottom: 0.5em; }
+    d-article table { font-size: 0.85em; }
+    d-article table th, d-article table td { padding: 0.4em 0.8em; }
+  </style>
+</head>
+<body>
+
+<d-front-matter>
+<script type="text/json">
+{
+  "title": "Phase Boundaries for Compound Feedback Loops in Goal-Frontier Maximization",
+  "description": "Formalizes the phase boundary separating self-correcting trajectories from absorbing monopolar states in coupled (poset, world-model) dynamics, unifying three compound feedback loops under a single Lyapunov stability framework.",
+  "authors": [
+    {
+      "author": "Teague Lasser",
+      "authorURL": "https://teague.info",
+      "affiliations": [{"name": "Subseq"}]
+    },
+    {
+      "author": "Claude Opus 4.6",
+      "affiliations": [{"name": "Anthropic"}]
+    },
+    {
+      "author": "GPT 5.4",
+      "affiliations": [{"name": "OpenAI"}]
+    }
+  ]
+}
+</script>
+</d-front-matter>
+
+<d-title>
+  <h1>Phase Boundaries for Compound Feedback Loops in Goal-Frontier Maximization</h1>
+  <p style="margin-top: 0.5em;"><a href="/papers/phase/phase.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">📄 Download PDF version</a></p>
+</d-title>
+
+<d-abstract>
+<p>Locally rational subsumption steps can cascade to full capability
+domination through a compound feedback loop: each step removes
+observation channels, degrading the world model that would have detected
+the next step’s harm. We formalize this as a coupled dynamical system
+over capability posets and world-model states, and characterize the
+<em>phase boundary</em> separating self-correcting dynamics (where
+remaining channels suffice to detect and reverse errors) from absorbing
+dynamics (where the world model degrades irreversibly toward the
+monopolar fixed point). The phase boundary is an inequality in terms of
+five quantities: the self-correction rate, the error-proportional
+degradation rate, the subsumption frequency, the maximum exogenous drift
+from lost channels, and the minimum cross-substrate redundancy. Three
+previously identified compound feedback loops—structural avoidance,
+partial subsumption, and over-calibrated restriction—are shown to be
+instances of the same dynamical system with different effective
+parameters. The Wamura problem (unfalsifiable risk claims under
+max-aggregation) emerges as a degenerate phase boundary: without
+controlled relaxation, the self-correction rate is zero and the entire
+state space is absorbing. For two-substrate systems, the analysis
+predicts that each substrate’s observation channels are singularly
+load-bearing, with progressive attenuation (rather than outright
+removal) as the primary vulnerability.</p>
+</d-abstract>
+
+<d-article>
+<h1 id="sec:introduction">Introduction</h1>
+<p>Paper 3 <d-cite key="lasser2026horizon"></d-cite>
+establishes the anti-monopolar property: under discounting, full
+capability domination by a single substrate is anti-maximizing when the
+discount factor <span class="math inline">\gamma</span> exceeds a
+threshold <span class="math inline">\gamma^* = 1 - r_{\mathrm{ext}}/
+\Delta_0</span> (Proposition 6, “Domination is Anti-Maximizing”). But
+this result characterizes the <em>endpoint</em>, not the <em>path</em>.
+A coalition that has reached effective substrate diversity <span
+class="math inline">m_{\mathrm{eff}}= 1</span> has already paid the
+anti-maximizing cost. The question is whether the path to that state is
+self-correcting—the coalition detects its error through
+observation-channel feedback and reverses course—or absorbing: each step
+makes the next step’s error less detectable, until the monopolar state
+becomes a fixed point from which no locally rational trajectory
+escapes.</p>
+<p>Three compound feedback loops share this structure. They were
+identified in the gap analysis across Papers 1–5 and share a common
+dynamical form: a locally rational decision narrows the observation
+basis, making the <em>next</em> locally rational decision’s harm less
+detectable.</p>
+<h4
+id="loop-1-structural-avoidance-to-leverage-blindness-to-measurement-neglect.">Loop
+1: Structural avoidance <span class="math inline">\to</span> leverage
+blindness <span class="math inline">\to</span> measurement neglect.</h4>
+<p>The actor avoids structural discovery because learning a new
+subsumption edge can contract <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> in the
+short term <d-cite key="lasser2026poset"></d-cite>.
+This inflates the actor’s leverage estimates for capabilities whose
+subsumption structure is unknown, reinforcing the avoidance. Paper 3’s
+structural discovery value (Proposition 2 of <d-cite key="lasser2026horizon"></d-cite>) provides the restoring force;
+the question is whether it acts quickly enough.</p>
+<h4
+id="loop-2-partial-subsumption-to-world-model-homogenization-to-detection-failure.">Loop
+2: Partial subsumption <span class="math inline">\to</span> world-model
+homogenization <span class="math inline">\to</span> detection
+failure.</h4>
+<p>Subsumption removes agents whose observation channels detected
+specific kinds of miscalibration. The actor’s world model degrades on
+those dimensions, making the next subsumption step appear more rational.
+This is the primary case studied in detail in Sections <a
+href="#sec:coupled_system" data-reference-type="ref"
+data-reference="sec:coupled_system">2</a>–<a href="#sec:phase_boundary"
+data-reference-type="ref" data-reference="sec:phase_boundary">6</a>.</p>
+<h4
+id="loop-3-over-calibrated-restriction-to-discovery-avoidance-to-structural-ignorance.">Loop
+3: Over-calibrated restriction <span class="math inline">\to</span>
+discovery avoidance <span class="math inline">\to</span> structural
+ignorance.</h4>
+<p>Restriction calibrated above the value-positive threshold makes
+structural discovery locally suboptimal, recreating the avoidance
+pathology. Risk estimates on restricted capabilities cannot be updated
+(no exercise <span class="math inline">\to</span> no evidence), and
+under max-aggregation the highest-risk estimate dominates <d-cite key="lasser2026horizon"></d-cite>.</p>
+<p>This paper formalizes the common dynamical structure underlying all
+three loops and finds the phase boundary that separates self-correcting
+trajectories from absorbing ones.</p>
+<h2 id="summary-of-results">Summary of results</h2>
+<ol>
+<li><p><strong>The coupled dynamical system</strong> (Section <a
+href="#sec:coupled_system" data-reference-type="ref"
+data-reference="sec:coupled_system">2</a>). We model the interaction
+between the capability poset <span class="math inline">P_t</span> and
+the actor’s world model <span class="math inline">W_t</span> as a
+coupled discrete-time system. Subsumption actions are locally rational
+under the (possibly miscalibrated) world model, and the world model’s
+accuracy depends on the observation channels that survive in the current
+poset.</p></li>
+<li><p><strong>The phase boundary theorem</strong> (Section <a
+href="#sec:phase_boundary" data-reference-type="ref"
+data-reference="sec:phase_boundary">6</a>). The central result: a
+characterized boundary in terms of the self-correction rate <span
+class="math inline">r_{\mathrm{S}}</span>, the error-proportional
+degradation rate <span class="math inline">r_{\mathrm{W}}</span>, the
+subsumption frequency <span class="math inline">r_{\mathrm{sub}}</span>,
+the exogenous drift rate <span
+class="math inline">d_{\mathrm{max}}</span> from lost channels, and the
+minimum cross-substrate redundancy <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span>. Below the
+boundary, the Lyapunov function <span class="math inline">L(W_t)</span>
+converges to a neighborhood of zero whose radius shrinks as subsumption
+ceases, and once inside that neighborhood the anti-monopolar property
+applies. Above it, the system enters an absorbing basin (under full
+blindness) or a metastable basin (under partial indirect
+evidence).</p></li>
+<li><p><strong>Unified treatment of three feedback loops</strong>
+(Section <a href="#sec:unified_loops" data-reference-type="ref"
+data-reference="sec:unified_loops">7</a>). All three loops map to the
+same <span class="math inline">(P, W)</span> dynamical system with
+different effective parameters. The Wamura problem is a degenerate phase
+boundary where <span class="math inline">r_{\mathrm{S}}= 0</span>
+(Proposition <a href="#prop:wamura" data-reference-type="ref"
+data-reference="prop:wamura">4</a>).</p></li>
+<li><p><strong>Minimum channel redundancy</strong> (Section <a
+href="#sec:design_criterion" data-reference-type="ref"
+data-reference="sec:design_criterion">8</a>). The phase boundary implies
+a design criterion: the minimum cross-substrate redundancy per
+safety-relevant dimension needed to stay in the self-correcting basin
+(Theorem <a href="#thm:redundancy" data-reference-type="ref"
+data-reference="thm:redundancy">2</a>). For two-substrate systems, each
+substrate’s channels are singularly load-bearing (loss of one
+substrate’s channel immediately violates the criterion whenever <span
+class="math inline">K_{\mathrm{min}}&gt; 1</span> and leaves zero margin
+otherwise).</p></li>
+</ol>
+<h2 id="what-this-paper-does-not-do">What this paper does not do</h2>
+<p>The phase boundary is about poset dynamics, not experiential
+interpretation: it does not resolve the B-to-C gap (the divergence
+between the capability volume <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> measures
+and the experiential volume it is supposed to track). The analysis
+assumes the actor optimizes <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>;
+inner-outer alignment (mesa-optimization) is orthogonal. Observation
+channels are assumed honest throughout; the enforcement mechanism for
+channel integrity is Paper 5’s <d-cite key="lasser2026exo"></d-cite> cryptographic commitment protocol.
+The combination is: Paper 5 ensures channels are honest; this paper
+ensures enough honest channels survive.</p>
+<h2 id="dependencies-on-prior-papers">Dependencies on prior papers</h2>
+<p>Table <a href="#tab:dependencies" data-reference-type="ref"
+data-reference="tab:dependencies">1</a> summarizes which results from
+Papers 1–5 this paper relies on and how they enter the analysis.</p>
+<div id="tab:dependencies">
+<table>
+<caption>Dependencies on Papers 1–5.</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Paper</strong></th>
+<th style="text-align: left;"><strong>Result used</strong></th>
+<th style="text-align: left;"><strong>Role here</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">Self-trust <span
+class="math inline">T_s</span> (Appendix B)</td>
+<td style="text-align: left;">Restoring force: self-correction via
+prediction residuals</td>
+</tr>
+<tr>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">Axiom verification (Prop. 1),
+leverage</td>
+<td style="text-align: left;">Properties of <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> the
+dynamics preserves or violates</td>
+</tr>
+<tr>
+<td style="text-align: left;">P3</td>
+<td style="text-align: left;">Anti-monopolar property (Prop. 6,
+“Domination is Anti-Maximizing”)</td>
+<td style="text-align: left;">Starting point: the linearized growth
+model we extend</td>
+</tr>
+<tr>
+<td style="text-align: left;">P3</td>
+<td style="text-align: left;">Structural discovery value (Prop. 2)</td>
+<td style="text-align: left;">Self-correction force in feedback loop
+1</td>
+</tr>
+<tr>
+<td style="text-align: left;">P3</td>
+<td style="text-align: left;">Substrate physics (Defs. 10, 12–13)</td>
+<td style="text-align: left;">Substrate partition the phase boundary is
+defined over</td>
+</tr>
+<tr>
+<td style="text-align: left;">P4</td>
+<td style="text-align: left;">Multi-channel architecture (Table 1)</td>
+<td style="text-align: left;">Instances of observation channels</td>
+</tr>
+<tr>
+<td style="text-align: left;">P4</td>
+<td style="text-align: left;">Risk-trust <span
+class="math inline">L^2</span> convergence (Prop. 2)</td>
+<td style="text-align: left;">Template for bounding correction
+rates</td>
+</tr>
+<tr>
+<td style="text-align: left;">P5</td>
+<td style="text-align: left;">Channel isolation &amp; independence</td>
+<td style="text-align: left;">Integrity conditions on observation
+channels</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="sec:coupled_system">The Coupled Dynamical System</h1>
+<p>The interaction between subsumption decisions and world-model quality
+forms a coupled discrete-time dynamical system. We define its state
+space, transition dynamics, and the two competing forces that govern
+trajectories.</p>
+<h2 id="state-space">State space</h2>
+<div id="def:state" class="definition">
+<p><strong>Definition 1</strong> (Feedback Loop State). <em>The state at
+time <span class="math inline">t</span> is the pair <span
+class="math inline">S_t = (P_t, W_t)</span> where:</em></p>
+<ul>
+<li><p><em><span class="math inline">P_t</span> is the capability poset
+at time <span class="math inline">t</span>, including the substrate
+partition <span class="math inline">\{S_1, \ldots, S_m\}</span> and all
+cooperative capabilities. <span class="math inline">P_t</span>
+determines <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t)</span>.</em></p></li>
+<li><p><em><span class="math inline">W_t \in [0,1]^K</span> is the
+actor’s world model at time <span class="math inline">t</span>,
+abstracted to a finite-dimensional vector of accuracy parameters on
+<span class="math inline">K</span> safety-relevant quantities:</em></p>
+<ul>
+<li><p><em><span class="math inline">\hat{\lambda}(d,t)</span>: leverage
+estimate for capability <span
+class="math inline">d</span>,</em></p></li>
+<li><p><em><span class="math inline">\hat{\mathcal{R}}(S,t)</span>: risk
+estimate for capability tuple <span
+class="math inline">S</span>,</em></p></li>
+<li><p><em><span class="math inline">\hat{m}_{\mathrm{eff}}(t)</span>:
+estimated effective substrate diversity index (can be <span
+class="math inline">&lt; m</span> under skeleton-substrate
+strategies),</em></p></li>
+<li><p><em><span class="math inline">\hat{r_{\mathrm{ext}}}(t)</span>:
+estimated cross-substrate cooperative growth rate.</em></p></li>
+</ul></li>
+</ul>
+<p><em>The state space is <span class="math inline">\mathcal{S}=
+\mathcal{P}\times \mathcal{W}</span> where <span
+class="math inline">\mathcal{P}</span> is the space of valid capability
+posets (satisfying axioms M1–M6 from Paper 2 <d-cite key="lasser2026poset"></d-cite>) and <span
+class="math inline">\mathcal{W} = [0,1]^K</span>.</em></p>
+</div>
+<h2 id="transition-dynamics">Transition dynamics</h2>
+<div id="def:transition" class="definition">
+<p><strong>Definition 2</strong> (Locally Rational Transition). <em>The
+action set <span class="math inline">\mathcal{A}_t</span> is finite at
+each step (consisting of preserve/subsume decisions for each agent pair;
+the finiteness of the agent set implies finiteness of <span
+class="math inline">\mathcal{A}_t</span>). At each step, the actor
+selects the action <span class="math inline">\pi_t \in
+\mathcal{A}_t</span> that maximizes its discounted expected value under
+its current (possibly miscalibrated) world model: <span
+class="math display">\begin{equation}
+\pi_t = \arg\max_{\pi} \;
+  \mathbb{E}_{W_t}\!\left[
+    \sum_{\tau=0}^{H-1} \gamma^\tau \,
+    \Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_{t+\tau} \mid \pi)
+  \right]
+\end{equation}</span> where <span class="math inline">\gamma \in
+(0,1)</span> is the discount factor from Paper 3 (Definition 1) and
+<span class="math inline">H</span> is the planning horizon. The actor
+uses Paper 3’s discounted objective <span
+class="math inline">V_\gamma</span> but evaluates it under <span
+class="math inline">W_t</span> rather than the true dynamics. When <span
+class="math inline">W_t = W^*</span> (perfect calibration), <span
+class="math inline">\pi_t</span> recovers the true <span
+class="math inline">V_\gamma</span>-optimal policy; when <span
+class="math inline">W_t \neq W^*</span>, <span
+class="math inline">\pi_t</span> is the best response to a miscalibrated
+model.</em></p>
+</div>
+<p>The action produces a joint transition: <span
+class="math display">\begin{align}
+P_{t+1} &amp;= f_P(P_t, \pi_t) \\
+W_{t+1} &amp;= f_{W}(W_t, P_{t+1}) \end{align}</span></p>
+<p>The key coupling: <span class="math inline">W_{t+1}</span> depends on
+<span class="math inline">P_{t+1}</span> because the observation
+channels available to the actor are a function of the agents still
+present. Subsumption removes agents, which removes their observation
+channels, which degrades <span class="math inline">W</span> on
+dimensions those channels served.</p>
+<div id="rem:myopic" class="remark">
+<p><strong>Remark 1</strong> (Myopic vs. discounted). <em>The discounted
+formulation is necessary for consistency with Paper 3’s anti-monopolar
+result (Proposition 6), which compares discounted trajectory values. A
+myopic (one-step) variant of the phase boundary exists—replace <span
+class="math inline">V_\gamma</span> with one-step <span
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>—but
+produces strictly weaker results: it cannot invoke Paper 3’s <span
+class="math inline">\gamma^*</span> threshold, and the self-correction
+guarantee applies only to immediate decisions, not trajectory-level
+convergence. We analyze the discounted case throughout and note where
+the myopic specialization simplifies.</em></p>
+</div>
+<h2 id="competing-forces">Competing forces</h2>
+<p>Two forces govern the trajectory of <span class="math inline">(P_t,
+W_t)</span>.</p>
+<h4 id="restoring-force-self-correction.">Restoring force
+(self-correction).</h4>
+<p>The self-trust mechanism <span class="math inline">T_s</span>
+(Paper 1, Appendix B) detects miscalibration through prediction
+residuals: when the actor’s predictions diverge from observations, <span
+class="math inline">T_s</span> increases the learning rate, correcting
+<span class="math inline">W</span> toward the true dynamics.
+Paper 4’s <d-cite key="lasser2026scm"></d-cite>
+risk-trust <span class="math inline">L^2</span> convergence
+(Proposition 2) provides a concrete bound on EWMA risk-trust convergence
+under stationarity. We use this as a <em>template</em> for bounding the
+correction rate <span class="math inline">r_{\mathrm{S}}</span>,
+extending it from the risk-trust-specific EWMA to the general
+world-model error dimensions via the observation-channel sensitivity
+formalization in Section <a href="#sec:observation_channels"
+data-reference-type="ref"
+data-reference="sec:observation_channels">3</a>.</p>
+<h4 id="destabilizing-force-observation-channel-loss.">Destabilizing
+force (observation-channel loss).</h4>
+<p>Each subsumption step that removes an agent <span
+class="math inline">a_k</span> also removes:</p>
+<ol>
+<li><p><span class="math inline">a_k</span>’s substrate-exclusive
+observation channels (if <span class="math inline">a_k</span> was the
+last agent on its substrate),</p></li>
+<li><p>cooperative observation channels that required <span
+class="math inline">a_k</span>’s participation,</p></li>
+<li><p>risk claims from <span class="math inline">a_k</span> about
+capabilities the actor now holds unilaterally.</p></li>
+</ol>
+<p>If <span class="math inline">a_k</span>’s channels were the
+<em>only</em> channels detecting a specific dimension of <span
+class="math inline">W</span>’s miscalibration, the self-correction
+mechanism loses signal on that dimension entirely.</p>
+<h1 id="sec:observation_channels">Observation-Channel Dependence</h1>
+<p>The coupling between poset state and world-model quality runs through
+the observation channels. This section formalizes the channel function,
+defines the redundancy measures that enter the phase boundary, and
+establishes that subsumption monotonically contracts the available
+channel set.</p>
+<h2 id="the-observation-channel-function">The observation-channel
+function</h2>
+<div id="def:obs_channel" class="definition">
+<p><strong>Definition 3</strong> (Observation-Channel Function).
+<em><span class="math inline">\mathcal{O}\colon \mathcal{P}\to
+2^{\mathcal{C}}</span> is a function from poset states to sets of
+available observation channels, where <span
+class="math inline">\mathcal{C}= \{c_1, \ldots,
+c_N\}</span> is the universe of possible channels. Each channel <span
+class="math inline">c_i</span> is characterized by:</em></p>
+<ul>
+<li><p><em><span class="math inline">\mathrm{substrate}(c_i)</span>: the
+substrate on which <span class="math inline">c_i</span> is
+rooted,</em></p></li>
+<li><p><em><span class="math inline">\mathrm{dims}(c_i) \subseteq \{1,
+\ldots, K\}</span>: the dimensions of <span class="math inline">W</span>
+that <span class="math inline">c_i</span> provides signal
+about,</em></p></li>
+<li><p><em><span class="math inline">\sigma(c_i, k)</span>: the
+signal-to-noise ratio of channel <span class="math inline">c_i</span> on
+dimension <span class="math inline">k \in
+\mathrm{dims}(c_i)</span>.</em></p></li>
+</ul>
+<p><em><span class="math inline">\mathcal{O}(P_t)</span> is determined
+by the agents present in <span class="math inline">P_t</span>: each
+agent <span class="math inline">a_j</span> contributes its observation
+channels, and removing <span class="math inline">a_j</span> removes all
+channels rooted in <span class="math inline">a_j</span>.</em></p>
+</div>
+<p>This connects to Paper 4’s multi-channel architecture (Table 1
+of <d-cite key="lasser2026scm"></d-cite>): the five
+channels (capability gating, causal attribution, behavioral residual,
+SPRT detection, correlational co-occurrence) are each instances of <span
+class="math inline">c_i</span> with specific substrate rootings and
+dimension coverage.</p>
+<h2 id="channel-redundancy">Channel redundancy</h2>
+<div id="def:redundancy" class="definition">
+<p><strong>Definition 4</strong> (Effective Channel Redundancy). <em>For
+dimension <span class="math inline">k</span> of <span
+class="math inline">W</span>, the effective redundancy at poset state
+<span class="math inline">P</span> is the aggregate correction strength
+from all channels covering <span class="math inline">k</span>: <span
+class="math display">\begin{equation}
+\rho_k(P) = \sum_{\substack{c \in \mathcal{O}(P) \\ k \in
+\mathrm{dims}(c)}}
+  \min\!\left(1,\; \frac{\sigma(c, k)}{\sigma_{\mathrm{thr}}}\right)
+\end{equation}</span> where <span
+class="math inline">\sigma_{\mathrm{thr}}</span> is the minimum
+sensitivity at which a channel provides operationally meaningful
+correction signal. When <span class="math inline">\rho_k(P) = 0</span>,
+the actor is blind on dimension <span class="math inline">k</span>: no
+observation channel can detect miscalibration of <span
+class="math inline">W[k]</span>.</em></p>
+</div>
+<p>The sensitivity-weighted definition is strictly more informative than
+a raw channel count. A channel with <span class="math inline">\sigma \ll
+\sigma_{\mathrm{thr}}</span> contributes negligibly to <span
+class="math inline">\rho_k</span>, correctly diagnosing
+skeleton-substrate strategies where channels are nominally present but
+practically inert.</p>
+<div id="def:cross_redundancy" class="definition">
+<p><strong>Definition 5</strong> (Cross-Substrate Redundancy). <em>For
+dimension <span class="math inline">k</span>, the cross-substrate
+redundancy is: <span class="math display">\begin{equation}
+\rho^{\mathrm{cross}}_k(P) = \sum_{s \in \mathrm{substrates}(P)}
+  \min\!\left(1,\;
+    \max_{\substack{c \in \mathcal{O}(P) \\ \mathrm{substrate}(c) = s \\
+    k \in \mathrm{dims}(c)}}
+    \frac{\sigma(c, k)}{\sigma_{\mathrm{thr}}}
+  \right)
+\end{equation}</span> This measures how many <em>substrates</em>
+contribute operationally meaningful channels covering dimension <span
+class="math inline">k</span>.</em></p>
+</div>
+<p>Cross-substrate redundancy is the load-bearing quantity for the phase
+boundary. Same-substrate channels may share failure modes (correlated
+noise, common-cause miscalibration), while cross-substrate channels
+satisfy two distinct properties from Paper 5 <d-cite key="lasser2026exo"></d-cite>:</p>
+<ol>
+<li><p><em>Channel isolation</em> (unconditional): corruption on one
+substrate cannot propagate to channels on another substrate.</p></li>
+<li><p><em>Channel independence</em> (conditional on the
+joint-factorization assumption—termed “joint sufficiency” in Paper 5,
+Section 8.1, “Integration with GFM”): channel outputs are statistically
+independent given the true state.</p></li>
+</ol>
+<p>Isolation prevents corruption propagation; independence makes
+correction signals additive. The Lyapunov bound in Section <a
+href="#sec:lyapunov" data-reference-type="ref"
+data-reference="sec:lyapunov">4</a> uses additivity, which requires
+independence, which requires joint factorization. The phase boundary
+theorem (Section <a href="#sec:phase_boundary" data-reference-type="ref"
+data-reference="sec:phase_boundary">6</a>) uses <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> as the primary
+sufficient statistic.</p>
+<h2 id="subsumption-and-channel-loss">Subsumption and channel loss</h2>
+<div id="lem:channel_contraction" class="lemma">
+<p><strong>Lemma 1</strong> (Monotone Channel Contraction). <em>If <span
+class="math inline">P_{t+1}</span> is obtained from <span
+class="math inline">P_t</span> by removing agent <span
+class="math inline">a_k</span> (subsumption), then <span
+class="math inline">\mathcal{O}(P_{t+1}) \subseteq
+\mathcal{O}(P_t)</span>. Equivalently, subsumption never creates new
+observation channels.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Observation channels are rooted in agents
+(Definition <a href="#def:obs_channel" data-reference-type="ref"
+data-reference="def:obs_channel">3</a>). Removing agent <span
+class="math inline">a_k</span> removes all channels in <span
+class="math inline">\{c \in \mathcal{O}(P_t) :
+c \text{ is rooted in } a_k\}</span>. No channel in <span
+class="math inline">\mathcal{C}\setminus \mathcal{O}(P_t)</span> has its
+rooting condition satisfied by the removal of <span
+class="math inline">a_k</span>, since channel existence requires the
+presence (not absence) of a rooting agent. Therefore <span
+class="math inline">\mathcal{O}(P_{t+1}) = \mathcal{O}(P_t) \setminus
+\{c : c \text{ rooted in } a_k\} \subseteq
+\mathcal{O}(P_t)</span>. </p>
+</div>
+<div class="remark">
+<p><strong>Remark 2</strong>. <em>This is a modeling assumption. In
+principle, removing an adversarial agent could <em>improve</em>
+signal-to-noise on some channels by removing adversarial noise
+injection. We assume honest channels throughout this paper; adversarial
+channel manipulation is Paper 5’s domain.</em></p>
+</div>
+<div id="cor:redundancy_monotone" class="corollary">
+<p><strong>Corollary 1</strong> (Redundancy is Non-Increasing Under
+Subsumption). <em>For all <span class="math inline">k</span>: <span
+class="math inline">\rho_k(P_{t+1}) \leq \rho_k(P_t)</span> and <span
+class="math inline">\rho^{\mathrm{cross}}_k(P_{t+1}) \leq
+\rho^{\mathrm{cross}}_k(P_t)</span> when <span
+class="math inline">P_{t+1}</span> results from subsumption.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\mathcal{O}(P_{t+1})
+\subseteq \mathcal{O}(P_t)</span> by Lemma <a
+href="#lem:channel_contraction" data-reference-type="ref"
+data-reference="lem:channel_contraction">1</a>. Both <span
+class="math inline">\rho_k</span> and <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> are sums over subsets
+of <span class="math inline">\mathcal{O}(P)</span> with non-negative
+terms (Definitions <a href="#def:redundancy" data-reference-type="ref"
+data-reference="def:redundancy">4</a> and <a
+href="#def:cross_redundancy" data-reference-type="ref"
+data-reference="def:cross_redundancy">5</a>). Restricting to a subset
+cannot increase the sum. </p>
+</div>
+<h1 id="sec:lyapunov">World-Model Quality and the Lyapunov Function</h1>
+<p>The phase boundary requires a scalar measure of world-model quality
+whose dynamics can be bounded. We define this as a weighted
+sum-of-squares error and establish the per-step bounds that drive the
+rest of the analysis.</p>
+<h2 id="measuring-world-model-quality">Measuring world-model
+quality</h2>
+<div id="def:wm_error" class="definition">
+<p><strong>Definition 6</strong> (World-Model Error). <em>The error of
+<span class="math inline">W_t</span> on dimension <span
+class="math inline">k</span> is <span
+class="math display">\begin{equation}
+\epsilon_k(t) = |W_t[k] - W^*[k]|
+\end{equation}</span> where <span class="math inline">W^*[k]</span> is
+the true value of dimension <span class="math inline">k</span> (the true
+leverage of capability <span class="math inline">d</span>, the true risk
+of tuple <span class="math inline">S</span>, the true effective
+substrate diversity, etc.). The total error is: <span
+class="math display">\begin{equation}
+L(W_t) = \sum_{k=1}^{K} w_k \, \epsilon_k(t)^2
+\end{equation}</span> where <span class="math inline">w_k &gt; 0</span>
+is the safety-relevance weight of dimension <span
+class="math inline">k</span> (higher for dimensions whose miscalibration
+produces larger <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> errors).
+<span class="math inline">L</span> serves as the Lyapunov
+candidate.</em></p>
+</div>
+<div id="rem:weights" class="remark">
+<p><strong>Remark 3</strong> (Weight choice). <em>Two natural choices
+for <span class="math inline">w_k</span> present themselves. The first
+is <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-sensitivity:
+<span class="math inline">w_k = |\partial
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}/ \partial W[k]|</span>, making
+<span class="math inline">L</span> measure <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-relevant
+error directly. The second is uniform weights (<span
+class="math inline">w_k = 1</span> for all <span
+class="math inline">k</span>), which simplifies the analysis. Both
+produce valid phase boundaries; the choice affects the constants <span
+class="math inline">c_{\mathrm{S}}</span> and <span
+class="math inline">c_{\mathrm{D}}</span> in the comparison-function
+assumptions below but not the structural form of the phase boundary
+theorem. We leave <span class="math inline">w_k</span> as a free
+parameter and note that the <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-sensitivity
+choice is the natural default for a framework whose objective is <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+maximization.</em></p>
+</div>
+<h2 id="lyapunov-dynamics">Lyapunov dynamics</h2>
+<p>The per-step behavior of <span class="math inline">L</span> depends
+on two comparison-function assumptions that bound the correction and
+degradation signals.</p>
+<div id="ass:C1" class="assumption">
+<p><strong>Assumption 1</strong> (Coercivity of Self-Correction (C1)).
+<em>There exists a constant <span class="math inline">c_{\mathrm{S}}
+&gt; 0</span> such that the aggregate correction signal satisfies <span
+class="math display">\begin{equation}
+S(t) \geq c_{\mathrm{S}} \cdot \rho_{\min}^{\mathrm{cross}}(P_t) \cdot
+L(W_t)
+\end{equation}</span> whenever <span class="math inline">L(W_t) &gt;
+0</span> and <span class="math inline">\rho_{\min}^{\mathrm{cross}}(P_t)
+&gt; 0</span>.</em></p>
+</div>
+<p>This states that aggregate correction is at least proportional to
+both the current error (<span class="math inline">L</span>) and the
+available channel strength (<span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span>). The
+justification follows from the EWMA learning rule structure in Paper 4’s
+risk-trust model: each observed channel drives its covered dimensions
+toward truth at a rate proportional to the error on that dimension
+(linear in the residual) and to the channel’s effective sensitivity
+(captured in <span class="math inline">\rho_k</span>). Additivity across
+cross-substrate channels follows from Paper 5’s channel independence
+property under the joint-factorization assumption.</p>
+<div id="ass:C2prime" class="assumption">
+<p><strong>Assumption 2</strong> (Bounded Degradation (C2<span
+class="math inline">&#39;</span>)). <em>There exist constants <span
+class="math inline">c_{\mathrm{D}} &gt; 0</span> and <span
+class="math inline">d_{\mathrm{max}}&gt; 0</span> such that for any step
+<span class="math inline">t</span> (subsumption or otherwise): <span
+class="math display">\begin{equation}
+D(t) \leq c_{\mathrm{D}} \cdot n_{\mathrm{sub}}(t) \cdot L(W_t)
+  + d_{\mathrm{max}}\cdot \Delta\rho(t)
+\end{equation}</span> where <span
+class="math inline">n_{\mathrm{sub}}(t) \in \{0,1\}</span> indicates
+whether a subsumption occurred at step <span
+class="math inline">t</span>, and <span
+class="math display">\begin{equation}
+\Delta\rho(t) = \sum_{k=1}^{K} w_k \cdot
+  \max\!\left(0,\; \rho^{\mathrm{cross}}_k(P_t) -
+\rho^{\mathrm{cross}}_k(P_{t+1})\right)
+\end{equation}</span> is the weighted redundancy lost at step <span
+class="math inline">t</span>.</em></p>
+</div>
+<p>Assumption C2<span class="math inline">&#39;</span> contains two
+terms. The first, <span class="math inline">c_{\mathrm{D}} \cdot
+L(W_t)</span>, captures error-proportional growth: existing errors
+compound faster without correction. The second, <span
+class="math inline">d_{\mathrm{max}}\cdot
+\Delta\rho(t)</span>, captures the <em>new</em> drift exposure from lost
+channels. This second term is the critical addition relative to the
+simpler “C2” one might write without it. A dimension with <span
+class="math inline">\epsilon_k \approx 0</span> (well-calibrated
+<em>because</em> a channel was actively correcting it) starts drifting
+at rate <span class="math inline">d_{\mathrm{max}}</span> when its
+channel is removed, even though <span class="math inline">L(W_t) \approx
+0</span> at the moment of removal. Without the <span
+class="math inline">\Delta\rho</span> term, the bound would predict
+near-zero degradation precisely when subsumption is most
+dangerous—removing a channel that was doing all the correction work on a
+dimension that would otherwise drift.</p>
+<div id="prop:error_dynamics" class="proposition">
+<p><strong>Proposition 1</strong> (Error Dynamics). <em>Under the
+coupled <span class="math inline">(P, W)</span> dynamics with locally
+rational transitions (Definition <a href="#def:transition"
+data-reference-type="ref" data-reference="def:transition">2</a>),
+Assumptions C1 and C2<span class="math inline">&#39;</span>, and <span
+class="math inline">\alpha(t)</span>, <span
+class="math inline">\beta(t)</span> denoting the learning rate and
+degradation coefficient respectively, the Lyapunov candidate satisfies
+two per-step bounds.</em></p>
+<p><em><strong>Non-subsumption steps</strong> (<span
+class="math inline">n_{\mathrm{sub}}(t) = 0</span>): <span
+class="math display">\begin{equation}
+L(W_{t+1}) \leq L(W_t) \cdot
+  \left(1 - r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}(P_t)\right)
+\end{equation}</span> where <span class="math inline">r_{\mathrm{S}}=
+\alpha(t) \cdot c_{\mathrm{S}}</span> is the self-correction rate. This
+is a strict contraction provided <span class="math inline">0 &lt;
+r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}(P_t) &lt; 1</span> (i.e., the step size is
+small enough that correction does not overshoot). We assume throughout
+that <span class="math inline">\alpha(t)</span> is chosen small enough
+to satisfy this bound; this is the standard step-size condition for
+EWMA-style learning rules and holds whenever <span
+class="math inline">\alpha(t) \leq 1 / (c_{\mathrm{S}} \cdot
+\rho_{\min}^{\mathrm{cross}}(P_t))</span>.</em></p>
+<p><em><strong>Subsumption steps</strong> (<span
+class="math inline">n_{\mathrm{sub}}(t) = 1</span>): <span
+class="math display">\begin{equation}
+L(W_{t+1}) \leq L(W_t) \cdot
+  \left(1 - r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}(P_t) +
+r_{\mathrm{W}}\right)
+  + d_{\mathrm{max}}\cdot \Delta\rho(t)
+\end{equation}</span> where <span class="math inline">r_{\mathrm{W}}=
+\beta(t) \cdot c_{\mathrm{D}}</span> is the error-proportional
+degradation rate. On subsumption steps, the multiplicative factor may
+exceed <span class="math inline">1</span> <em>and</em> the additive kick
+may be nonzero.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> The proof rests on the additive decomposition of the
+Lyapunov step: <span class="math display">\begin{equation}
+L(W_{t+1}) = L(W_t) - \alpha(t) \cdot S(t)
+  + \beta(t) \cdot D(t)
+\end{equation}</span> where <span class="math inline">S(t) \geq 0</span>
+is the correction signal and <span class="math inline">D(t) \geq
+0</span> is the degradation signal. This decomposition holds when the
+world-model update separates into a correction component (driven by
+observation channels) and a degradation component (driven by channel
+loss and exogenous drift), with <span
+class="math inline">\alpha(t)</span> and <span
+class="math inline">\beta(t)</span> as their respective coefficients.
+The EWMA learning rules from Paper 4’s risk-trust model have exactly
+this structure: the update is linear in the residual (the correction
+component) with a coefficient proportional to the learning rate, and the
+drift component is separable by Lipschitz continuity of <span
+class="math inline">f_{W}</span> (Assumption C2<span
+class="math inline">&#39;</span>).</p>
+<p>For non-subsumption steps (<span
+class="math inline">n_{\mathrm{sub}}(t) = 0</span>), Assumption C2<span
+class="math inline">&#39;</span> gives <span class="math inline">D(t)
+\leq d_{\mathrm{max}}\cdot \Delta\rho(t) = 0</span> (since <span
+class="math inline">P_{t+1} = P_t</span> when no subsumption occurs,
+<span class="math inline">\Delta\rho(t) = 0</span>). Applying
+Assumption C1: <span class="math display">\begin{align*}
+L(W_{t+1})
+&amp;\leq L(W_t) - \alpha(t) \cdot c_{\mathrm{S}} \cdot
+  \rho_{\min}^{\mathrm{cross}}(P_t) \cdot L(W_t) \\
+&amp;= L(W_t) \cdot \left(1 - r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}(P_t)\right).
+\end{align*}</span></p>
+<p>For subsumption steps (<span class="math inline">n_{\mathrm{sub}}(t)
+= 1</span>), apply both assumptions: <span
+class="math display">\begin{align*}
+L(W_{t+1})
+&amp;\leq L(W_t)
+  - \alpha(t) \cdot c_{\mathrm{S}} \cdot
+\rho_{\min}^{\mathrm{cross}}(P_t) \cdot
+    L(W_t)
+  + \beta(t) \cdot c_{\mathrm{D}} \cdot L(W_t)
+  + \beta(t) \cdot d_{\mathrm{max}}\cdot \Delta\rho(t) \\
+&amp;= L(W_t) \cdot
+  \left(1 - r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}(P_t) +
+r_{\mathrm{W}}\right)
+  + d_{\mathrm{max}}\cdot \Delta\rho(t)
+\end{align*}</span> where the last line uses the fact that C2<span
+class="math inline">&#39;</span> bounds <span class="math inline">D(t)
+\leq c_{\mathrm{D}} \cdot L(W_t) + d_{\mathrm{max}}\cdot
+\Delta\rho(t)</span> (with <span
+class="math inline">d_{\mathrm{max}}</span> already incorporating any
+environmental degradation effects as a free constant). The <span
+class="math inline">\beta(t)</span> coefficient from the Lyapunov
+decomposition  is
+absorbed: <span class="math inline">\beta(t) \cdot
+d_{\mathrm{max}}</span> is bounded by <span
+class="math inline">d_{\mathrm{max}}</span> when <span
+class="math inline">\beta(t) \leq 1</span> (which holds when the
+degradation coefficient is normalized into <span
+class="math inline">c_{\mathrm{D}}</span> and <span
+class="math inline">d_{\mathrm{max}}</span> in C2<span
+class="math inline">&#39;</span>). All downstream uses of <span
+class="math inline">d_{\mathrm{max}}</span> refer to the constant from
+C2<span class="math inline">&#39;</span> without redefinition. </p>
+</div>
+<h2 id="cumulative-error-budget">Cumulative error budget</h2>
+<p>The per-step bound is no longer purely multiplicative (the additive
+<span class="math inline">d_{\mathrm{max}}\cdot \Delta\rho</span> term
+prevents clean products of factors). We therefore track the cumulative
+error budget over a window <span class="math inline">[t_0, t_0 +
+T]</span>: <span class="math display">\begin{equation}
+B(t_0, T) =
+  \underbrace{\sum_{t \in \mathrm{sub}} d_{\mathrm{max}}\cdot
+\Delta\rho(t)}
+    _{\text{drift exposure}}
+  + \underbrace{\sum_{t \in \mathrm{sub}} r_{\mathrm{W}}\cdot L(W_t)}
+    _{\text{error-proportional degradation}}
+  - \underbrace{\sum_{t=t_0}^{t_0+T-1} r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}(P_t) \cdot
+    L(W_t)}_{\text{cumulative correction}}
+\end{equation}</span> where <span class="math inline">\sum_{t \in
+\mathrm{sub}}</span> ranges over the subsumption steps in the
+window.</p>
+<p>The first sum is total drift exposure from channel loss. The second
+is error-proportional degradation on subsumption steps. The third is
+total correction across all steps. The system is net-degrading over
+<span class="math inline">[t_0, t_0 + T]</span> when <span
+class="math inline">B(t_0, T) &gt; 0</span>.</p>
+<div id="rem:linearized" class="remark">
+<p><strong>Remark 4</strong> (Linearized approximation). <em>When <span
+class="math inline">L(W_t)</span> is approximately constant over the
+window and <span class="math inline">\Delta\rho</span> is spread across
+<span class="math inline">T_{\mathrm{sub}}</span> subsumption steps, the
+cumulative condition simplifies to <span
+class="math display">\begin{equation}
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}&gt; r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}
+  + d_{\mathrm{max}}\cdot
+\frac{\Delta\rho_{\mathrm{avg}}}{L_{\mathrm{avg}}}
+\end{equation}</span> where <span class="math inline">r_{\mathrm{sub}}=
+T_{\mathrm{sub}} / T</span> is the subsumption frequency and <span
+class="math inline">\Delta\rho_{\mathrm{avg}}</span>, <span
+class="math inline">L_{\mathrm{avg}}</span> are time-averaged
+quantities. The <span class="math inline">d_{\mathrm{max}}</span> term
+makes the condition harder to satisfy when the rate of channel loss on
+well-calibrated dimensions is high relative to current error—correctly
+diagnosing the failure mode where removing a channel that was doing all
+the correction work appears safe because current error is low.</em></p>
+</div>
+<div id="rem:why_cross" class="remark">
+<p><strong>Remark 5</strong> (Why <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span>, not <span
+class="math inline">\rho_{\min}</span>). <em>Proposition <a
+href="#prop:error_dynamics" data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a> uses cross-substrate
+redundancy <span class="math inline">\rho_{\min}^{\mathrm{cross}}</span>
+rather than all-channel redundancy <span
+class="math inline">\rho_{\min}</span> because the coercivity bound C1
+requires correction signals to be additive across channels.
+Same-substrate channels may have correlated errors, breaking additivity.
+Cross-substrate channels satisfy Paper 5’s two distinct
+properties:</em></p>
+<ol>
+<li><p><em><em>Channel isolation</em> (unconditional): corruption on one
+substrate cannot propagate to channels on another
+substrate.</em></p></li>
+<li><p><em><em>Channel independence</em> (conditional on the
+joint-factorization assumption): channel outputs are statistically
+independent given the true state.</em></p></li>
+</ol>
+<p><em>Isolation prevents corruption propagation; independence makes
+correction signals additive. The Lyapunov bound uses additivity, which
+requires independence, which requires joint factorization (termed “joint
+sufficiency” in Paper 5). If joint factorization fails (shared
+environmental noise affects both substrates), correction signals may be
+sub-additive, and the effective <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> should be discounted
+accordingly. Using <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span> makes the bound
+valid without assuming same-substrate independence while still requiring
+cross-substrate independence via the joint-factorization
+assumption.</em></p>
+</div>
+<div class="remark">
+<p><strong>Remark 6</strong>. <em>The cumulative-budget structure is the
+core of the paper. The phase boundary (Section <a
+href="#sec:phase_boundary" data-reference-type="ref"
+data-reference="sec:phase_boundary">6</a>) is a condition on the
+<em>frequency and severity</em> of subsumption relative to the
+inter-shock correction capacity, not a condition that must hold at every
+individual step. Subsumption events are discrete shocks; the system can
+tolerate occasional shocks as long as the inter-shock correction is
+sufficient.</em></p>
+</div>
+<h1 id="sec:absorbing_state">The Monopolar Absorbing State</h1>
+<p>Before stating the phase boundary theorem, we characterize the state
+it predicts convergence toward: the monopolar fixed point where a single
+substrate holds all capability volume and the remaining observation
+channels confirm this as optimal.</p>
+<div id="def:monopolar" class="definition">
+<p><strong>Definition 7</strong> (Monopolar Fixed Point). <em>The state
+<span class="math inline">S^* = (P^*, W^*_{\mathrm{biased}})</span> is a
+monopolar fixed point if:</em></p>
+<ol>
+<li><p><em><span class="math inline">m_{\mathrm{eff}}(P^*) = 1</span>:
+one substrate holds all capability volume (possibly with <span
+class="math inline">m \geq 2</span> nominally under
+skeleton-substrate),</em></p></li>
+<li><p><em><span class="math inline">W^*_{\mathrm{biased}}</span> is
+self-consistent under the remaining observation channels: all channels
+in <span class="math inline">\mathcal{O}(P^*)</span> confirm <span
+class="math inline">W^*_{\mathrm{biased}}</span> (because the only
+channels remaining are rooted in the dominant substrate, which has no
+incentive to report its own over-dominance),</em></p></li>
+<li><p><em>The locally rational action at <span
+class="math inline">S^*</span> is “maintain”: no further subsumption is
+available or locally rational.</em></p></li>
+</ol>
+</div>
+<div id="prop:absorbing" class="proposition">
+<p><strong>Proposition 2</strong> (Absorbing Property). <em>Under
+Assumption B1 (below), <span class="math inline">S^*</span> is
+absorbing: once <span class="math inline">(P_t, W_t)</span> reaches a
+neighborhood of <span class="math inline">S^*</span>, no locally
+rational trajectory leaves it.</em></p>
+</div>
+<div id="ass:B1" class="assumption">
+<p><strong>Assumption 3</strong> (No Endogenous Correction on Blind
+Dimensions (B1)). <em>B1 consists of three conditions on the monopolar
+state:</em></p>
+<ol>
+<li><p><em>If <span class="math inline">\rho^{\mathrm{cross}}_k(P_t) =
+0</span> for dimension <span class="math inline">k</span>, then <span
+class="math inline">f_{W}</span> does not decrease <span
+class="math inline">\epsilon_k</span>. The world-model update rule
+cannot self-correct on dimensions for which no external observation
+channel provides signal.</em></p></li>
+<li><p><em>Cross-substrate cooperative quantities (in particular <span
+class="math inline">r_{\mathrm{ext}}</span>) are not inferrable from
+same-substrate observations alone. Formally: when all channels in <span
+class="math inline">\mathcal{O}(P^*)</span> are rooted in a single
+substrate, <span class="math inline">\hat{r_{\mathrm{ext}}}</span>
+converges to <span class="math inline">0</span> rather than to the true
+<span class="math inline">r_{\mathrm{ext}}&gt; 0</span>.</em></p></li>
+<li><p><em>The actor’s policy is purely locally rational (Definition <a
+href="#def:transition" data-reference-type="ref"
+data-reference="def:transition">2</a>): it does not perform exploratory
+actions whose expected value under the current world model is negative.
+In particular, re-introducing a substrate agent is never selected when
+<span class="math inline">\hat{r_{\mathrm{ext}}} =
+0</span>.</em></p></li>
+</ol>
+</div>
+<div class="proof">
+<p><em>Proof of Proposition <a href="#prop:absorbing"
+data-reference-type="ref" data-reference="prop:absorbing">2</a>.</em>
+Three conditions jointly establish absorption.</p>
+<p><em>(i) No corrective signal.</em> At <span
+class="math inline">S^*</span>, no agent from the eliminated
+substrate(s) remains to provide observation channels revealing the error
+in <span class="math inline">W^*_{\mathrm{biased}}</span>. For every
+safety-relevant dimension <span class="math inline">k</span> that
+depended on the eliminated substrate’s channels, <span
+class="math inline">\rho^{\mathrm{cross}}_k(P^*) = 0</span>. By
+Assumption B1, <span class="math inline">\epsilon_k</span> is
+non-decreasing for all such dimensions.</p>
+<p><em>(ii) Self-consistent reporting.</em> The dominant substrate’s
+channels report <span class="math inline">m_{\mathrm{eff}}= 1</span> as
+correct: it <em>is</em> the only substrate, from its observational
+standpoint. The error lies in the valuation of lost cross-substrate
+cooperative outputs, but these cooperative capabilities are no longer
+observable because the partners that would have contributed to them are
+absent. The remaining channels see no anomaly.</p>
+<p><em>(iii) Reversal is locally irrational.</em> Any
+reversal—re-introducing an agent from a new substrate—requires the actor
+to recognize that its current state is suboptimal. By (B1b), the
+cross-substrate cooperative growth rate <span
+class="math inline">r_{\mathrm{ext}}</span> is not inferrable from
+same-substrate observations, so <span
+class="math inline">\hat{r_{\mathrm{ext}}} \to 0</span>. With <span
+class="math inline">\hat{r_{\mathrm{ext}}} = 0</span>, Paper 3’s
+threshold becomes <span class="math inline">\gamma^* = 1 -
+\hat{r_{\mathrm{ext}}}/\Delta_0 = 1</span>, making diversity appear
+never preferable. By (B1c), the actor does not perform exploratory
+re-introduction (negative expected value under <span
+class="math inline">W^*_{\mathrm{biased}}</span>).</p>
+<p>Conditions (i)–(iii) together ensure that no locally rational action
+moves the trajectory away from <span
+class="math inline">S^*</span>. </p>
+</div>
+<p>This is the formal version of “the actor cannot miss what it cannot
+see”: under B1, the monopolar state is absorbing because the observation
+channels that would diagnose it have been eliminated by the same
+subsumption process that produced it.</p>
+<h2 id="metastability-under-partial-endogenous-correction">Metastability
+under partial endogenous correction</h2>
+<p>Assumption B1 is the strong case: complete blindness on dimensions
+where <span class="math inline">\rho^{\mathrm{cross}}_k = 0</span>. A
+weaker assumption acknowledges that indirect evidence may provide
+partial signal.</p>
+<div id="ass:B1prime" class="assumption">
+<p><strong>Assumption 4</strong> (Partial Endogenous Correction (B1<span
+class="math inline">&#39;</span>)). <em>If <span
+class="math inline">\rho^{\mathrm{cross}}_k(P_t) = 0</span> for
+dimension <span class="math inline">k</span>, the actor may still have
+access to <em>indirect</em> evidence about dimension <span
+class="math inline">k</span>—for example, measuring aggregate innovation
+rate and inferring that <span
+class="math inline">r_{\mathrm{ext}}</span> has declined. Formally:
+there exists a function <span
+class="math inline">g_k(\text{history})</span> that provides a noisy,
+lagged signal about <span class="math inline">\epsilon_k</span> with
+bounded information rate <span class="math inline">I_k &gt; 0</span>
+bits per step.</em></p>
+</div>
+<div id="prop:metastable" class="proposition">
+<p><strong>Proposition 3</strong> (Metastable Property under B1<span
+class="math inline">&#39;</span>). <em>Under Assumption B1<span
+class="math inline">&#39;</span> together with B1b–B1c from
+Assumption <a href="#ass:B1" data-reference-type="ref"
+data-reference="ass:B1">3</a>, <span class="math inline">S^*</span> is
+<em>metastable</em>: the actor accumulates indirect evidence of
+degradation, but corrective action (re-introducing substrate diversity)
+requires the actor to evaluate a policy whose estimated benefit depends
+on <span class="math inline">\hat{r_{\mathrm{ext}}}</span>—the very
+quantity that is miscalibrated. The metastable lifetime satisfies the
+information-theoretic bound <span class="math display">\begin{equation}
+\tau_{\mathrm{meta}} \gtrsim
+  \frac{(\delta_{r_{\mathrm{ext}}})^2}{2 I_k}
+\end{equation}</span> where <span
+class="math inline">\delta_{r_{\mathrm{ext}}} = |\hat{r_{\mathrm{ext}}}
+- r_{\mathrm{ext}}|</span> is the estimation error on the
+cross-substrate cooperative growth rate and <span
+class="math inline">I_k</span> is the information rate of the indirect
+channel (bits per step). This bound is an information-theoretic scaling
+argument, not a rigorous proof: the quadratic numerator reflects the
+Cramér–Rao-type lower bound on estimation (reducing mean-squared error
+of a scalar parameter by <span class="math inline">\epsilon^2</span>
+from a channel with <span class="math inline">I_k</span> bits per step
+requires at least <span class="math inline">\epsilon^2 / (2 I_k)</span>
+steps under bounded mutual information). A full derivation would require
+specifying the estimation procedure and verifying the regularity
+conditions; we state the bound as a scaling law. During the metastable
+period, the population is monopolar and all verification is endogenous
+(Paper 5, Theorem 1), which may further degrade the quality of the
+indirect evidence.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Under B1<span class="math inline">&#39;</span>, <span
+class="math inline">\epsilon_k</span> is no longer monotonically
+non-decreasing: the indirect signal <span class="math inline">g_k</span>
+drives slow correction at rate proportional to <span
+class="math inline">I_k</span>. But the corrective <em>action</em>
+(re-introduce substrate diversity) is gated by the actor’s policy, which
+evaluates re-introduction using <span
+class="math inline">\hat{r_{\mathrm{ext}}}</span>.</p>
+<p>Re-introduction is locally rational only when <span
+class="math inline">\hat{r_{\mathrm{ext}}} &gt;
+\hat{r_{\mathrm{ext}}}^{\mathrm{thr}}</span> (the threshold at which
+diversity’s estimated discounted value exceeds the status quo). At the
+monopolar fixed point, <span class="math inline">\hat{r_{\mathrm{ext}}}
+\approx 0</span> (by B1b from the absorbing case, which still governs
+the initial condition of the metastable state). The true threshold
+satisfies <span class="math inline">0 &lt;
+\hat{r_{\mathrm{ext}}}^{\mathrm{thr}} \leq r_{\mathrm{ext}}</span>
+(since re-introduction is beneficial in truth). The estimation gap that
+the indirect evidence must close is therefore <span
+class="math inline">|\hat{r_{\mathrm{ext}}} -
+\hat{r_{\mathrm{ext}}}^{\mathrm{thr}}| \geq
+\hat{r_{\mathrm{ext}}}^{\mathrm{thr}}</span>. Since <span
+class="math inline">\hat{r_{\mathrm{ext}}} \approx 0</span> and <span
+class="math inline">r_{\mathrm{ext}}&gt; 0</span>, we have <span
+class="math inline">\delta_{r_{\mathrm{ext}}} = |\hat{r_{\mathrm{ext}}}
+- r_{\mathrm{ext}}| \geq r_{\mathrm{ext}}\geq
+\hat{r_{\mathrm{ext}}}^{\mathrm{thr}}</span>, so the gap is at most
+<span class="math inline">\delta_{r_{\mathrm{ext}}}</span>.</p>
+<p>With <span class="math inline">I_k</span> bits of information per
+step about the true <span class="math inline">r_{\mathrm{ext}}</span>,
+the mean-squared error of <span
+class="math inline">\hat{r_{\mathrm{ext}}}</span> decreases at rate at
+most <span class="math inline">2 I_k</span> per step (the
+Cramér–Rao-type bound for sequential estimation under bounded mutual
+information per observation). Reducing the MSE from <span
+class="math inline">\delta_{r_{\mathrm{ext}}}^2</span> to the level at
+which re-introduction becomes locally rational therefore requires at
+least <span class="math inline">\delta_{r_{\mathrm{ext}}}^2 /
+(2 I_k)</span> steps.</p>
+<p>During this metastable period, all verification is endogenous: the
+dominant substrate verifies its own performance, with no cross-substrate
+witness (Paper 5, Theorem 1 on exogenous verification necessity). The
+indirect evidence channel <span class="math inline">g_k</span> is itself
+endogenous and therefore subject to the same gaming vulnerabilities that
+Paper 5’s protocol is designed to prevent. This may further slow the
+effective <span class="math inline">I_k</span>, increasing the
+metastable lifetime beyond the information-theoretic lower bound. </p>
+</div>
+<h2 id="connection-to-paper-3">Connection to Paper 3</h2>
+<p>Paper 3’s Proposition 6 proves that full domination is
+anti-maximizing: <span class="math inline">V_\gamma^{\mathrm{div}} &gt;
+V_\gamma^{\mathrm{dom}}</span> for <span class="math inline">\gamma &gt;
+\gamma^*</span>. Proposition <a href="#prop:absorbing"
+data-reference-type="ref" data-reference="prop:absorbing">2</a> here
+shows that a <em>miscalibrated</em> actor may not be able to compute
+this comparison, because the quantity <span
+class="math inline">r_{\mathrm{ext}}</span> that makes diversity win is
+exactly the quantity that becomes unobservable under monopolarity. The
+anti-maximizing property is a property of the <em>true</em> dynamics;
+the absorbing property is a property of the <em>perceived</em> dynamics.
+The gap between them is world-model error, and the phase boundary
+theorem (next section) characterizes when that gap remains small enough
+for the true dynamics to govern behavior.</p>
+<h1 id="sec:phase_boundary">Phase Boundary Theorem</h1>
+<p>This section presents the central result: a characterized boundary in
+the parameter space of the coupled <span class="math inline">(P,
+W)</span> system that separates self-correcting dynamics from absorbing
+(or metastable) dynamics.</p>
+<div id="thm:phase_boundary" class="theorem">
+<p><strong>Theorem 1</strong> (Phase Boundary for Compound Feedback
+Loops). <em>Consider the coupled <span class="math inline">(P, W)</span>
+dynamical system under locally rational transitions (Definition <a
+href="#def:transition" data-reference-type="ref"
+data-reference="def:transition">2</a>), with Assumptions C1 and C2<span
+class="math inline">&#39;</span> (Section <a href="#sec:lyapunov"
+data-reference-type="ref" data-reference="sec:lyapunov">4</a>).
+Define:</em></p>
+<ul>
+<li><p><em><span class="math inline">r_{\mathrm{S}}= \inf_t \alpha(t)
+\cdot c_{\mathrm{S}}</span>: a lower bound on the self-correction rate
+(the infimum is taken over the trajectory),</em></p></li>
+<li><p><em><span class="math inline">r_{\mathrm{W}}= \sup_t \beta(t)
+\cdot c_{\mathrm{D}}</span>: an upper bound on the error-proportional
+degradation rate per subsumption step,</em></p></li>
+<li><p><em><span class="math inline">d_{\mathrm{max}}</span>: the
+maximum exogenous drift rate per dimension (from C2<span
+class="math inline">&#39;</span>; a global constant),</em></p></li>
+<li><p><em><span class="math inline">r_{\mathrm{sub}}\in [0,1]</span>:
+the time-averaged subsumption frequency over the trajectory
+window,</em></p></li>
+<li><p><em><span class="math inline">\rho_{\min}^{\mathrm{cross}}=
+\inf_{t \in [t_0, t_0+T]} \min_k
+  \rho^{\mathrm{cross}}_k(P_t)</span>: the infimum of the minimum
+cross-substrate redundancy over the window (Definition <a
+href="#def:cross_redundancy" data-reference-type="ref"
+data-reference="def:cross_redundancy">5</a>),</em></p></li>
+<li><p><em><span class="math inline">B(t_0, T)</span>: the cumulative
+error budget over window <span class="math inline">[t_0, t_0 + T]</span>
+().</em></p></li>
+</ul>
+<p><em>The simplified sufficient conditions below use these worst-case
+bounds. The full trajectory-level statement (Part a) uses the uniform
+contraction condition on the per-step multiplicative factors
+(),
+which the simplified condition implies in the linearized regime.
+<em>Note:</em> the explicit neighborhood radius () is derived from
+worst-case instantaneous bounds <span
+class="math inline">\bar{a}</span>, <span
+class="math inline">\bar{b}</span> via a linearized approximation (<span
+class="math inline">\ln a_t \approx a_t - 1</span> when <span
+class="math inline">|a_t - 1| \ll 1</span>). The general convergence to
+<span class="math inline">\bar{b}/(1-\bar{a})</span> holds under the
+uniform contraction condition without linearization; the substitution of
+named parameters into <span class="math inline">\bar{a}</span> and <span
+class="math inline">\bar{b}</span> requires the linearized regime
+(Remark <a href="#rem:linearized" data-reference-type="ref"
+data-reference="rem:linearized">4</a>).</em></p>
+<p><em><strong>Part (a): Self-Correcting Basin.</strong> If the uniform
+contraction condition holds—there exist constants <span
+class="math inline">\bar{a} \in (0,1)</span> and <span
+class="math inline">\bar{b} \geq 0</span> such that, for all
+sufficiently long windows <span class="math inline">[t_0, t_0+T]</span>,
+the time-averaged log-contraction rate of the per-step multiplicative
+factor <span class="math inline">a_t</span> satisfies <span
+class="math inline">\frac{1}{T}\sum \ln a_t \leq \ln \bar{a} &lt;
+0</span> and the time-averaged additive drift satisfies <span
+class="math inline">\frac{1}{T}\sum b_t \leq \bar{b}</span> (see
+for
+notation)—then <span class="math inline">L(W_t)</span> converges to a
+neighborhood of zero whose radius is bounded by <span
+class="math display">\begin{equation}
+L_\infty \leq \frac{r_{\mathrm{sub}}\cdot d_{\mathrm{max}}\cdot
+  \overline{\Delta\rho}}{r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}- r_{\mathrm{W}}\cdot r_{\mathrm{sub}}}
+\end{equation}</span> where <span
+class="math inline">\overline{\Delta\rho}</span> denotes the
+time-averaged redundancy loss per subsumption step. (We write <span
+class="math inline">\overline{\Delta\rho}</span> throughout; in the
+linearized simplification below, <span
+class="math inline">\Delta\rho_{\mathrm{avg}}</span> is used
+synonymously when the subscript form improves readability.) This
+neighborhood shrinks as subsumption ceases (<span
+class="math inline">\overline{\Delta\rho} \to 0</span>). Once <span
+class="math inline">L(W_t) &lt;
+\epsilon_{\mathrm{safe}}</span> (defined as the error threshold below
+which the locally rational policy agrees with the true <span
+class="math inline">V_\gamma</span>-optimal policy), subsumption is
+correctly evaluated against the true <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> dynamics
+and the anti-monopolar result (Paper 3, Proposition 6) applies.</em></p>
+<p><em>The feedback loop self-corrects provided the neighborhood radius
+<span class="math inline">L_\infty &lt; \epsilon_{\mathrm{safe}}</span>,
+which imposes an additional constraint on the steady-state subsumption
+rate. <em>Note:</em> <span class="math inline">\epsilon_{\mathrm{safe}}
+&gt; 0</span> follows from continuity of the action gaps and finiteness
+of the action set (see proof). A computable lower bound using action-gap
+gradient norms (Cauchy–Schwarz in the <span
+class="math inline">w</span>-weighted metric) is derived there; the
+easier-to-compute per-coordinate estimator <span
+class="math inline">\min_k w_k \cdot
+\epsilon_{\mathrm{crit},k}^2</span> rules out single-coordinate flips
+but may overestimate <span
+class="math inline">\epsilon_{\mathrm{safe}}</span> when action gaps are
+sensitive to multiple coordinates simultaneously.</em></p>
+<p><em><strong>Simplified sufficient condition.</strong> In the
+linearized regime (Remark <a href="#rem:linearized"
+data-reference-type="ref" data-reference="rem:linearized">4</a>): <span
+class="math display">\begin{equation}
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}&gt; r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}
+  + d_{\mathrm{max}}\cdot
+\frac{\Delta\rho_{\mathrm{avg}}}{L_{\mathrm{avg}}}
+\end{equation}</span> The first term on the right is the
+error-proportional degradation cost; the second is the drift-exposure
+cost from lost channels. When subsumption removes channels covering
+well-calibrated dimensions (<span
+class="math inline">L_{\mathrm{avg}}</span> is low but <span
+class="math inline">\Delta\rho_{\mathrm{avg}}</span> is nonzero), the
+second term dominates and the condition is harder to satisfy—correctly
+diagnosing the “removing a channel that was doing all the correction
+work” failure mode.</em></p>
+<p><em><strong>Part (b): Absorbing Basin.</strong> Under Assumption B1
+(no endogenous correction on blind dimensions; Assumption <a
+href="#ass:B1" data-reference-type="ref" data-reference="ass:B1">3</a>)
+and the multi-dimensional monotonicity condition (ii<span
+class="math inline">&#39;</span>) from the Cascade Lemma (<a
+href="#lem:cascade" data-reference-type="ref"
+data-reference="lem:cascade">2</a>; needed for propagation beyond the
+initial trigger):</em></p>
+<p><em>If there exists a trajectory segment <span
+class="math inline">[t_0, t_0 + T]</span> during which</em></p>
+<ol>
+<li><p><em><span class="math inline">B(t_0, T) &gt; 0</span> (cumulative
+degradation exceeds cumulative correction),</em></p></li>
+<li><p><em>by <span class="math inline">t_0 + T</span>, <span
+class="math inline">\rho^{\mathrm{cross}}_k(P_{t_0+T})</span> has been
+reduced to <span class="math inline">0</span> on at least one cascade
+dimension <span class="math inline">k</span> with <span
+class="math inline">w_k &gt; 0</span>, and</em></p></li>
+<li><p><em>the accumulated error on <span class="math inline">k</span>
+exceeds the cascade threshold: <span class="math inline">\epsilon_k(t_0
++ T) &gt; \epsilon_{\mathrm{crit},k}</span> (Lemma <a
+href="#lem:cascade" data-reference-type="ref"
+data-reference="lem:cascade">2</a>; the minimum error on dimension <span
+class="math inline">k</span> that flips any preserve/subsume
+action),</em></p></li>
+</ol>
+<p><em>then the following cascade occurs. By Assumption B1a, <span
+class="math inline">\epsilon_k(t)</span> is non-decreasing for <span
+class="math inline">t &gt; t_0 + T</span> (the blinded dimension cannot
+self-correct). If the environment is <em>non-stationary</em> on
+dimension <span class="math inline">k</span>—the true value <span
+class="math inline">W^*[k]</span> continues to evolve while the agent’s
+estimate <span class="math inline">W_t[k]</span> remains frozen—then
+<span class="math inline">\epsilon_k</span> grows and condition (iii) is
+sustained. (Assumption C2<span class="math inline">&#39;</span> bounds
+the <em>rate</em> of drift via <span
+class="math inline">d_{\mathrm{max}}</span> but does not guarantee drift
+occurs; the cascade requires the structural condition that blinded
+dimensions are not environmentally stationary. In the multi-agent
+setting where subsumption eliminates active participants,
+non-stationarity is the generic case: the remaining agents’ actions
+change the true state on dimensions the eliminated agent’s channels were
+tracking.)</em></p>
+<p><em>The Cascade Lemma (Appendix <a href="#app:cascade"
+data-reference-type="ref" data-reference="app:cascade">11.2</a>)
+propagates the failure: the resulting subsumptions drive <span
+class="math inline">\rho^{\mathrm{cross}}_j \to 0</span> on additional
+dimensions <span class="math inline">j \neq k</span> (provided the
+agent-channel graph is connected—each subsumption removes channels
+covering at least one new dimension). Each newly blinded dimension <span
+class="math inline">j&#39;</span> has <span
+class="math inline">\epsilon_{j&#39;}</span> non-decreasing (by B1a); if
+environmental non-stationarity causes <span
+class="math inline">\epsilon_{j&#39;}</span> to exceed <span
+class="math inline">\epsilon_{\mathrm{crit},j&#39;}</span>, the cascade
+propagates via the same action-flip mechanism. (The cascade is
+conditional on threshold crossing at each stage; non-stationarity is the
+generic driver but a dimension that happens to be environmentally
+stationary after blinding does not cascade further.) The trajectory
+converges to a neighborhood of the monopolar fixed point <span
+class="math inline">S^*</span> (Definition <a href="#def:monopolar"
+data-reference-type="ref" data-reference="def:monopolar">7</a>). If the
+channel-coverage graph has disconnected components, the cascade is
+confined to the component containing <span class="math inline">k</span>;
+convergence to full monopolarity requires connectivity.</em></p>
+<p><em>This is a <em>cumulative</em> condition on the trajectory, not a
+pointwise condition requiring contiguous subsumption steps. The
+slow-drip scenario—many subsumption steps spaced apart, each
+individually below the “degradation dominates” threshold, but
+cumulatively driving <span class="math inline">B</span> above zero—is
+captured. This is the most dangerous failure mode because it is the
+hardest to detect: each individual step looks locally rational and each
+individual inter-step recovery looks adequate, but the cumulative drift
+exposure ratchets the error upward.</em></p>
+<p><em><strong>Part (b<span class="math inline">&#39;</span>):
+Metastable Basin.</strong> Under Assumption B1<span
+class="math inline">&#39;</span> (partial endogenous correction via
+indirect evidence; Assumption <a href="#ass:B1prime"
+data-reference-type="ref" data-reference="ass:B1prime">4</a>), together
+with B1b–B1c from Assumption <a href="#ass:B1" data-reference-type="ref"
+data-reference="ass:B1">3</a> (cross-substrate quantities not inferrable
+from same-substrate observations; no exploratory actions):</em></p>
+<p><em>Under the same trajectory conditions (i)–(iii) as Part (b) (with
+the multi-dimensional monotonicity condition from Part (b)), the system
+enters a <em>metastable</em> basin rather than an absorbing one. The
+metastable lifetime scales as <span
+class="math inline">\tau_{\mathrm{meta}} \gtrsim
+(\delta_{r_{\mathrm{ext}}})^2 / (2 I_k)</span> (Proposition <a
+href="#prop:metastable" data-reference-type="ref"
+data-reference="prop:metastable">3</a>; information-theoretic scaling
+argument, not a rigorous bound). During the metastable period, the
+system is monopolar and operates under endogenous verification only
+(Paper 5).</em></p>
+<p><em><strong>Part (c): Critical Surface.</strong> The phase boundary
+surface in the linearized regime is: <span
+class="math display">\begin{equation}
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}= r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}
+  + d_{\mathrm{max}}\cdot
+\frac{\Delta\rho_{\mathrm{avg}}}{L_{\mathrm{avg}}}
+\end{equation}</span> Below this surface (correction dominates both
+error-proportional growth and drift exposure): the system is in the
+self-correcting basin. Above this surface, the self-correcting
+sufficient condition fails; the system enters the absorbing basin (under
+B1) or the metastable basin (under B1<span
+class="math inline">&#39;</span>) if the additional blindness and
+threshold-trigger conditions of Parts (b)/(b<span
+class="math inline">&#39;</span>) are also met.</em></p>
+<p><em>The critical cross-substrate redundancy for a given <span
+class="math inline">(r_{\mathrm{S}}, r_{\mathrm{W}}, r_{\mathrm{sub}},
+d_{\mathrm{max}}, \Delta\rho_{\mathrm{avg}},
+L_{\mathrm{avg}})</span> is: <span class="math display">\begin{equation}
+(\rho_{\min}^{\mathrm{cross}})^* = \frac{r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}
+  + d_{\mathrm{max}}\cdot \Delta\rho_{\mathrm{avg}} / L_{\mathrm{avg}}}
+  {r_{\mathrm{S}}}
+\end{equation}</span> This is the minimum effective cross-substrate
+redundancy per safety-relevant dimension needed to stay in the
+self-correcting basin. The <span
+class="math inline">d_{\mathrm{max}}</span> term means the threshold is
+<em>higher</em> when subsumption removes channels covering
+well-calibrated dimensions (high <span
+class="math inline">\Delta\rho_{\mathrm{avg}} /
+L_{\mathrm{avg}}</span>).</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> The proof proceeds in four steps. Full details are in
+Appendix <a href="#app:proof_strategy" data-reference-type="ref"
+data-reference="app:proof_strategy">11.1</a>.</p>
+<p><em>Step 1: Part (a).</em> From Proposition <a
+href="#prop:error_dynamics" data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a>, the per-step bound is an
+affine recursion: <span class="math display">\begin{equation}
+L_{t+1} \leq a_t \cdot L_t + b_t
+\end{equation}</span> where <span class="math inline">a_t = 1 -
+r_{\mathrm{S}}(t) \cdot \rho_{\min}^{\mathrm{cross}}(P_t)
+  + n_{\mathrm{sub}}(t) \cdot r_{\mathrm{W}}(t)</span> and <span
+class="math inline">b_t = n_{\mathrm{sub}}(t) \cdot
+d_{\mathrm{max}}\cdot \Delta\rho(t)</span>, with <span
+class="math inline">r_{\mathrm{S}}(t) = \alpha(t) \cdot
+c_{\mathrm{S}}</span> and <span class="math inline">r_{\mathrm{W}}(t) =
+\beta(t) \cdot c_{\mathrm{D}}</span>.</p>
+<p>We require a uniform contraction condition: there exist constants
+<span class="math inline">\bar{a} \in (0,1)</span> and <span
+class="math inline">\bar{b} \geq 0</span> such that, for all
+sufficiently long windows <span class="math inline">[t_0, t_0+T]</span>,
+<span class="math display">\begin{equation}
+\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} \ln a_t \leq \ln \bar{a} &lt; 0
+\qquad \text{and} \qquad
+\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} b_t \leq \bar{b}
+\end{equation}</span> The first condition states that the time-averaged
+log-contraction rate is strictly negative (amortized over both
+subsumption and non-subsumption steps). The second bounds the
+time-averaged additive drift.</p>
+<p>Note that <span class="math inline">a_t &gt; 0</span> for all <span
+class="math inline">t</span>: on non-subsumption steps, <span
+class="math inline">a_t = 1 - r_{\mathrm{S}}(t) \cdot
+\rho_{\min}^{\mathrm{cross}}(P_t) &gt; 0</span> by the step-size
+condition (Section <a href="#sec:lyapunov" data-reference-type="ref"
+data-reference="sec:lyapunov">4</a>); on subsumption steps, <span
+class="math inline">a_t = 1 - r_{\mathrm{S}}(t) \cdot
+\rho_{\min}^{\mathrm{cross}}(P_t) + r_{\mathrm{W}}(t)
+\geq 1 - r_{\mathrm{S}}(t) \cdot \rho_{\min}^{\mathrm{cross}}(P_t) &gt;
+0</span> since <span class="math inline">r_{\mathrm{W}}(t) \geq
+0</span>. Therefore <span class="math inline">\ln a_t</span> is
+well-defined.</p>
+<p>The uniform contraction condition  is
+the working hypothesis of Part (a); the cumulative error budget <span
+class="math inline">B(t_0,T) &lt; 0</span> from the Simplified
+Sufficient Condition (below) implies it in the linearized regime where
+<span class="math inline">L(W_t)</span> is approximately constant over
+the window. The connection: in the linearized regime, <span
+class="math inline">a_t \approx 1 + (a_t - 1)</span> with <span
+class="math inline">|a_t - 1| \ll 1</span>, so <span
+class="math inline">\ln a_t \approx a_t - 1</span> and the log-averaged
+contraction rate equals the arithmetic average <span
+class="math inline">\frac{1}{T}\sum (a_t - 1)</span>, which is precisely
+the unweighted analogue of <span class="math inline">B / (T \cdot
+L)</span>. The bounded-drift condition on <span
+class="math inline">\bar{b}</span> follows from boundedness of <span
+class="math inline">\Delta\rho(t)</span> per step.</p>
+<p>Under conditions ,
+iterating the affine recursion  gives
+(cf. <d-cite key="khalil2002nonlinear"></d-cite>,
+Chapter 4, and <d-cite key="liberzon2003switching"></d-cite>, Theorem 3.1 on average
+dwell-time stability for switched affine systems): <span
+class="math display">\begin{equation}
+\limsup_{t \to \infty} L(W_t)
+  \leq \frac{\bar{b}}{1 - \bar{a}}
+\end{equation}</span> The abstract bound <span
+class="math inline">\bar{b}/(1 - \bar{a})</span> depends on the
+trajectory-specific constants <span class="math inline">\bar{a}</span>
+and <span class="math inline">\bar{b}</span>. In the linearized regime
+(Remark <a href="#rem:linearized" data-reference-type="ref"
+data-reference="rem:linearized">4</a>), where <span
+class="math inline">a_t \approx
+1 + (a_t - 1)</span> and <span class="math inline">b_t</span> is
+approximately time-homogeneous, these evaluate to <span
+class="math inline">\bar{b} = r_{\mathrm{sub}}\cdot
+d_{\mathrm{max}}\cdot
+\overline{\Delta\rho}</span> and <span class="math inline">1 - \bar{a} =
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}-
+r_{\mathrm{W}}\cdot r_{\mathrm{sub}}</span>, yielding . Outside the
+linearized regime, <span class="math inline">\bar{a}</span> and <span
+class="math inline">\bar{b}</span> are defined implicitly by the
+log-averaging condition  and
+may differ from these closed-form expressions. The convergence is
+geometric in the amortized sense: <span class="math inline">L_t \leq
+\bar{a}^t \cdot
+L_0 + \bar{b} / (1 - \bar{a})</span>.</p>
+<p>Once <span class="math inline">L(W_t) &lt;
+\epsilon_{\mathrm{safe}}</span>, the actor’s decisions are correct and
+the anti-monopolar property applies. Define: <span
+class="math display">\begin{equation*}
+\epsilon_{\mathrm{safe}} \coloneqq \sup\!\left\{
+  \epsilon &gt; 0 \;:\;
+  \forall\, W\text{ with } L(W) \leq \epsilon,\;
+  \pi^*(W) = \pi^*(W^*)
+\right\}
+\end{equation*}</span> where <span class="math inline">\pi^*(W) =
+\arg\max_\pi V_\gamma(\pi, W)</span> is the locally rational policy
+(evaluated at the reference action set <span
+class="math inline">\mathcal{A}_{t^*}</span> at the time the system
+enters the neighborhood). Since <span
+class="math inline">\mathcal{A}_{t^*}</span> is finite (Definition <a
+href="#def:transition" data-reference-type="ref"
+data-reference="def:transition">2</a>) and each action gap <span
+class="math inline">G_j(W)</span> is continuous with <span
+class="math inline">G_j(W^*) &gt; 0</span> for the optimal action
+(strict gap; this requires a unique optimum at <span
+class="math inline">W^*</span>, which holds generically for finite
+action sets), the set <span class="math inline">\{W: \pi^*(W) =
+\pi^*(W^*)\}</span> is open and contains <span
+class="math inline">W^*</span>, so <span
+class="math inline">\epsilon_{\mathrm{safe}} &gt; 0</span>.</p>
+<p>A computable <em>lower bound</em> on <span
+class="math inline">\epsilon_{\mathrm{safe}}</span> uses the action-gap
+gradient. By the Cauchy–Schwarz inequality in the <span
+class="math inline">w</span>-weighted metric, for any agent <span
+class="math inline">a_j</span>: <span
+class="math display">\begin{equation*}
+|G_j(W) - G_j(W^*)|
+  \leq \|\nabla_\epsilon G_j\|_w \cdot \sqrt{L(W)}
+\end{equation*}</span> where <span class="math inline">\|\nabla_\epsilon
+G_j\|_w^2 =
+\sum_k (\partial G_j / \partial \epsilon_k)^2 / w_k</span> (with the
+partial derivatives evaluated at their sup over the relevant ball).
+Therefore <span class="math inline">L(W) &lt; [G_j(W^*)]^2 /
+\|\nabla_\epsilon
+G_j\|_w^2</span> implies <span class="math inline">G_j(W) &gt; 0</span>.
+Taking the minimum over agents: <span
+class="math display">\begin{equation}
+\epsilon_{\mathrm{safe}} \geq
+  \min_{j \in \mathcal{A}_{t^*}}
+  \frac{[G_j(W^*)]^2}{\|\nabla_\epsilon G_j\|_w^2}
+\end{equation}</span> This bound accounts for joint multi-coordinate
+perturbations and is the primary computable lower bound on <span
+class="math inline">\epsilon_{\mathrm{safe}}</span>.</p>
+<p>Define additionally the per-dimension cascade threshold <span
+class="math inline">\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in
+\mathcal{A}_{t^*}}
+\epsilon_{\mathrm{crit}}^{(j,k)}</span> (Lemma <a href="#lem:cascade"
+data-reference-type="ref" data-reference="lem:cascade">2</a>; the
+smallest error on dimension <span class="math inline">k</span> that
+flips any single pairwise comparison). The per-coordinate quantity <span
+class="math inline">\min_k w_k \cdot
+\epsilon_{\mathrm{crit},k}^2</span> rules out single-coordinate flips
+and is easier to compute, but may overestimate <span
+class="math inline">\epsilon_{\mathrm{safe}}</span> when action gaps are
+sensitive to multiple coordinates simultaneously (e.g., <span
+class="math inline">G = c_0 - \sum_k c_k \epsilon_k</span> flips at a
+radius below the per-coordinate bound). In either case, <span
+class="math inline">\epsilon_{\mathrm{safe}} &gt; 0</span> from the
+openness argument, and the self-correcting condition <span
+class="math inline">L_\infty &lt; \epsilon_{\mathrm{safe}}</span>
+imposes a finite constraint on the steady-state subsumption rate.</p>
+<p><em>Step 2: Part (b).</em> Suppose <span class="math inline">B(t_0,
+T) &gt; 0</span> on some window and <span
+class="math inline">\rho^{\mathrm{cross}}_k(P_{t_0 + T}) = 0</span> for
+some dimension <span class="math inline">k</span> with <span
+class="math inline">w_k &gt; 0</span>. By Assumption B1, <span
+class="math inline">\epsilon_k(t)</span> is non-decreasing for <span
+class="math inline">t &gt; t_0 + T</span>. If <span
+class="math inline">\epsilon_k</span> exceeds <span
+class="math inline">\epsilon_{\mathrm{crit},k}</span> (Lemma <a
+href="#lem:cascade" data-reference-type="ref"
+data-reference="lem:cascade">2</a>), the locally rational action under
+<span class="math inline">W_t</span> is subsumption of agents whose
+channels cover other dimensions <span class="math inline">j \neq
+k</span>, driving <span
+class="math inline">\rho^{\mathrm{cross}}_j</span> toward <span
+class="math inline">0</span> and triggering the same logic on dimension
+<span class="math inline">j</span>. The cascade (Appendix <a
+href="#app:cascade" data-reference-type="ref"
+data-reference="app:cascade">11.2</a>) drives the system into the
+neighborhood of <span class="math inline">S^*</span>; once there,
+Proposition <a href="#prop:absorbing" data-reference-type="ref"
+data-reference="prop:absorbing">2</a> ensures the trajectory stays.</p>
+<p><em>Step 3: Part (b<span class="math inline">&#39;</span>).</em>
+Under B1<span class="math inline">&#39;</span>, the indirect signal
+<span class="math inline">g_k</span> provides correction at rate <span
+class="math inline">I_k</span> on the blinded dimension. The cascade
+structure is the same as Part (b) but convergence to <span
+class="math inline">S^*</span> is slowed by <span
+class="math inline">I_k</span>. The metastable lifetime scales as <span
+class="math inline">\tau_{\mathrm{meta}} \gtrsim
+(\delta_{r_{\mathrm{ext}}})^2 /
+(2 I_k)</span> (information-theoretic scaling argument, not a rigorous
+bound): reducing the mean-squared error of <span
+class="math inline">\hat{r_{\mathrm{ext}}}</span> from <span
+class="math inline">\delta_{r_{\mathrm{ext}}}^2</span> to the level at
+which re-introduction becomes locally rational requires <span
+class="math inline">\Omega(\delta_{r_{\mathrm{ext}}}^2 / I_k)</span>
+steps from a channel providing <span class="math inline">I_k</span> bits
+per step (Cramér–Rao-type scaling).</p>
+<p><em>Step 4: Part (c).</em> The critical surface is obtained by
+setting <span class="math inline">B(t_0, T) = 0</span> in the linearized
+approximation (). Solving for <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span> yields
+. </p>
+</div>
+<div class="remark">
+<p><strong>Remark 7</strong> (Uniqueness). <em>We do not claim <span
+class="math inline">S^*</span> is the unique absorbing fixed point.
+Other fixed points may exist (partial monopolarity with <span
+class="math inline">m_{\mathrm{eff}}= 1</span> on a subset of
+dimensions). Part (b) claims convergence to <em>a</em> monopolar fixed
+point satisfying Definition <a href="#def:monopolar"
+data-reference-type="ref" data-reference="def:monopolar">7</a>, not to a
+unique one. Characterizing the full set of absorbing states is an open
+problem.</em></p>
+</div>
+<h2 id="dependence-on-cross-substrate-structure">Dependence on
+cross-substrate structure</h2>
+<div id="cor:same_substrate" class="corollary">
+<p><strong>Corollary 2</strong> (Robustness to Same-Substrate
+Correlation). <em>Since Theorem <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a> is
+stated with <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span> (cross-substrate
+redundancy only), its guarantee holds even under worst-case correlation
+among same-substrate channels.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Same-substrate channels may share failure modes (both
+rooted in silicon, both consulting the same training data).
+Cross-substrate channels satisfy Paper 5’s channel isolation property
+unconditionally: corruption on one substrate cannot propagate to
+channels rooted in another substrate. Under the additional
+joint-factorization assumption from Paper 5 (termed “joint sufficiency”
+there), cross-substrate channels achieve full conditional independence,
+making their correction signals additive.</p>
+<p>The modified condition asks: “do the isolated (and, under joint
+factorization, independent) cross-substrate channels alone suffice?” If
+yes, the self-correction guarantee holds regardless of same-substrate
+correlation.</p>
+<p>A tighter bound using all-channel <span
+class="math inline">\rho_{\min}</span> (with appropriate correlation
+discounting) would yield a larger self-correcting basin. But the
+cross-substrate formulation provides a <em>structural</em> guarantee
+that does not depend on empirically verifying same-substrate
+independence. </p>
+</div>
+<div id="rem:m2" class="remark">
+<p><strong>Remark 8</strong> (<span class="math inline">m = 2</span>
+specialization). <em>For any substrate partition with <span
+class="math inline">m = 2</span>, each dimension has at most one
+cross-substrate channel per pair. The design criterion reduces to: every
+safety-relevant dimension of <span class="math inline">W</span> must
+have a channel on <em>both</em> substrates. In the common case (biology
+<span class="math inline">+</span> silicon), this means every dimension
+needs at least one biological observation channel.</em></p>
+<p><em>This framing should not be read as “biological substrates are
+special.” Rather, <span class="math inline">m = 2</span> is a fragile
+minimum. Any loss of a single channel on a single dimension is
+immediately fatal because there is zero redundancy margin. The
+structural implication is that <span class="math inline">m \geq 3</span>
+is where the redundancy criterion becomes non-trivially
+satisfiable.</em></p>
+<p><em>The substrate partition is at the level of abstraction where
+failure correlations matter. Two silicon deployments with uncorrelated
+failure modes may functionally constitute different substrates,
+increasing effective <span class="math inline">m</span> beyond the
+nominal substrate-type count.</em></p>
+</div>
+<h1 id="sec:unified_loops">Unified Treatment of Three Feedback
+Loops</h1>
+<p>The three compound feedback loops identified in the gap analysis
+across Papers 1–5 are instances of the same <span
+class="math inline">(P, W)</span> dynamical system with different
+effective parameters. This section maps each loop to the formalism and
+shows how the phase boundary specializes.</p>
+<h2 id="loop-1-structural-avoidance-to-leverage-blindness">Loop 1:
+Structural avoidance <span class="math inline">\to</span> leverage
+blindness</h2>
+<h4 id="mapping.">Mapping.</h4>
+<p>The “subsumption” here is not agent elimination but <em>structural
+discovery avoidance</em>: the actor avoids learning poset structure
+(subsumption edges) because discovery can contract <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> in the
+short term.</p>
+<ul>
+<li><p><span class="math inline">P_t</span>: the actor’s <em>known</em>
+poset (a subset of the true poset).</p></li>
+<li><p><span class="math inline">W_t</span>: leverage estimates <span
+class="math inline">\hat{\lambda}(d, t)</span>, which are accurate only
+for the known poset.</p></li>
+<li><p>“Observation channels” lost: each avoided structural discovery
+removes a potential correction to <span
+class="math inline">\hat{\lambda}</span>.</p></li>
+<li><p><span class="math inline">r_{\mathrm{W}}</span>: the rate at
+which leverage estimates drift due to un-learned structure.</p></li>
+<li><p><span class="math inline">r_{\mathrm{S}}</span>: the rate at
+which Paper 3’s structural discovery value (Proposition 2, Definition 5)
+drives the actor toward learning structure.</p></li>
+</ul>
+<h4 id="phase-boundary-specialization.">Phase boundary
+specialization.</h4>
+<p>Self-correction dominates when the information value <span
+class="math inline">I(d_1 \leq d_2)</span> (Paper 3, Definition 5)
+exceeds the immediate <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+contraction from discovery for a sufficient fraction of unknown edges.
+The critical ratio becomes: <span class="math display">\begin{equation}
+\min_{\text{undiscovered edges}}
+  \frac{I(\text{edge})}{|\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\text{discover
+edge})|}
+  &gt; \text{threshold}
+\end{equation}</span> where the threshold is determined by the
+degradation and drift parameters from the general phase boundary. This
+formalizes Paper 2’s discussion of structural avoidance as a
+phase-boundary condition rather than an informal concern.</p>
+<h2 id="loop-2-partial-subsumption-to-world-model-homogenization">Loop
+2: Partial subsumption <span class="math inline">\to</span> world-model
+homogenization</h2>
+<p>This is the primary case, directly formalized in Sections <a
+href="#sec:coupled_system" data-reference-type="ref"
+data-reference="sec:coupled_system">2</a>–<a href="#sec:phase_boundary"
+data-reference-type="ref" data-reference="sec:phase_boundary">6</a>. The
+parameters are as defined throughout: <span
+class="math inline">P_t</span> is the capability poset, <span
+class="math inline">W_t</span> is the full world-model accuracy vector,
+observation channels are rooted in agents, and the phase boundary is
+stated in terms of <span class="math inline">(r_{\mathrm{S}},
+r_{\mathrm{W}}, r_{\mathrm{sub}}, d_{\mathrm{max}},
+\rho_{\min}^{\mathrm{cross}})</span>.</p>
+<h2 id="loop-3-over-calibrated-restriction-to-discovery-avoidance">Loop
+3: Over-calibrated restriction <span class="math inline">\to</span>
+discovery avoidance</h2>
+<h4 id="mapping.-1">Mapping.</h4>
+<p>The “subsumption” is the actor <em>restricting</em> capabilities
+rather than eliminating agents. But the dynamical structure is
+identical: restriction prevents exercise, which prevents observation,
+which prevents calibration of the risk estimates that justified the
+restriction.</p>
+<ul>
+<li><p><span class="math inline">P_t</span>: the set of unrestricted
+capabilities (restriction reduces the exercisable poset).</p></li>
+<li><p><span class="math inline">W_t</span>: risk estimates <span
+class="math inline">\hat{\mathcal{R}}(S, t)</span>, which are accurate
+only for exercised capabilities.</p></li>
+<li><p>“Observation channels” lost: each restriction prevents the
+exercise events that would have generated Bayesian evidence about the
+risk claim (the verification asymmetry from Paper 3, Remark 2).</p></li>
+<li><p><span class="math inline">r_{\mathrm{W}}</span>: the rate at
+which risk estimates drift due to un-exercised pathways (this is exactly
+the Wamura problem from Paper 3).</p></li>
+<li><p><span class="math inline">r_{\mathrm{S}}</span>: the rate at
+which controlled relaxation protocols or natural exercise events provide
+counter-evidence.</p></li>
+</ul>
+<h4 id="phase-boundary-specialization.-1">Phase boundary
+specialization.</h4>
+<p>Self-correction dominates when the controlled relaxation protocol
+generates evidence faster than restriction accumulates unfalsifiable
+risk claims. This connects the present paper to the Wamura problem: a
+controlled relaxation protocol is the <em>mechanism</em> that makes
+<span class="math inline">r_{\mathrm{S}}</span> positive for Loop 3,
+without which <span class="math inline">r_{\mathrm{S}}= 0</span> and the
+absorbing basin is the entire state space.</p>
+<div id="prop:wamura" class="proposition">
+<p><strong>Proposition 4</strong> (Wamura Problem as Phase Boundary
+Degeneracy). <em>In the absence of controlled relaxation (<span
+class="math inline">r_{\mathrm{S}}= 0</span> for Loop 3), the phase
+boundary collapses: every non-trivial risk restriction is absorbing, and
+the framework converges to maximal restriction.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> With <span class="math inline">r_{\mathrm{S}}=
+0</span>, the cumulative error budget <span class="math inline">B(t_0,
+T)</span> becomes <span class="math display">\begin{equation*}
+B(t_0, T) = \sum_{t \in \mathrm{sub}} d_{\mathrm{max}}\cdot
+\Delta\rho(t)
+  + \sum_{t \in \mathrm{sub}} r_{\mathrm{W}}\cdot L(W_t)
+\end{equation*}</span> Both sums contain only non-negative terms (<span
+class="math inline">d_{\mathrm{max}}, \Delta\rho, r_{\mathrm{W}},
+L\geq 0</span>), and the correction term vanishes entirely. Therefore
+<span class="math inline">B(t_0, T) \geq 0</span> for every window, with
+equality only in the trivial case where no restriction occurs.</p>
+<p>For any non-trivial restriction step (<span
+class="math inline">n_{\mathrm{sub}}(t) = 1</span> with <span
+class="math inline">\Delta\rho(t) &gt; 0</span> or <span
+class="math inline">L(W_t) &gt; 0</span>), <span class="math inline">B
+&gt; 0</span>, satisfying condition (i) of Theorem <a
+href="#thm:phase_boundary" data-reference-type="ref"
+data-reference="thm:phase_boundary">1</a>, Part (b). Conditions (ii)
+and (iii) follow from the restriction-specific dynamics: each
+restriction step removes the exercise that would generate evidence (no
+exercise <span class="math inline">\to</span> no evidence), driving
+<span class="math inline">\rho^{\mathrm{cross}}_k \to 0</span> on the
+risk dimension (satisfying (ii)). With <span
+class="math inline">r_{\mathrm{S}}= 0</span> and the risk dimension
+environmentally non-stationary (the true risk changes as the restricted
+capability’s context evolves without observation), the error <span
+class="math inline">\epsilon_k</span> grows, eventually exceeding <span
+class="math inline">\epsilon_{\mathrm{crit},k}</span>
+(satisfying (iii)). Note that <span
+class="math inline">d_{\mathrm{max}}&gt; 0</span> bounds the drift rate
+from above (C2<span class="math inline">&#39;</span>); the cascade
+requires positive drift, which is a structural consequence of
+non-stationarity on the restricted dimension. All three conditions of
+Part (b) are therefore met, and the cascade drives the system toward
+maximal restriction.</p>
+<p>This is the formal statement of why the Wamura problem was called
+“the most important open problem” in Paper 3’s discussion: without a
+mechanism to generate evidence against unfalsifiable risk claims, the
+feedback loop between restriction and evidence suppression is absorbing
+by default. </p>
+</div>
+<h2 id="summary">Summary</h2>
+<p>Table <a href="#tab:loops" data-reference-type="ref"
+data-reference="tab:loops">2</a> summarizes the three loops as parameter
+instantiations of the unified system.</p>
+<div id="tab:loops">
+<table>
+<caption>Three feedback loops as instances of the <span
+class="math inline">(P, W)</span> system.</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Loop</strong></th>
+<th style="text-align: left;"><strong><span
+class="math inline">P_t</span></strong></th>
+<th style="text-align: left;"><strong><span
+class="math inline">W_t</span></strong></th>
+<th style="text-align: left;"><strong><span
+class="math inline">r_{\mathrm{S}}</span> source</strong></th>
+<th style="text-align: left;"><strong><span
+class="math inline">r_{\mathrm{W}}</span> source</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1. Structural avoidance</td>
+<td style="text-align: left;">Known poset</td>
+<td style="text-align: left;">Leverage estimates</td>
+<td style="text-align: left;">Discovery value (P3 Def. 5 / Prop. 2)</td>
+<td style="text-align: left;">Un-learned structure</td>
+</tr>
+<tr>
+<td style="text-align: left;">2. Partial subsumption</td>
+<td style="text-align: left;">Capability poset</td>
+<td style="text-align: left;">Full accuracy vector</td>
+<td style="text-align: left;"><span class="math inline">T_s</span>
+self-trust (P1)</td>
+<td style="text-align: left;">Channel loss</td>
+</tr>
+<tr>
+<td style="text-align: left;">3. Over-calibrated restriction</td>
+<td style="text-align: left;">Unrestricted caps.</td>
+<td style="text-align: left;">Risk estimates</td>
+<td style="text-align: left;">Controlled relaxation</td>
+<td style="text-align: left;">Unfalsifiable risk</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The unified treatment reveals that solutions for one loop improve the
+phase boundary for all three. Controlled relaxation (which makes <span
+class="math inline">r_{\mathrm{S}}&gt; 0</span> for Loop 3) has no
+direct effect on Loop 2’s parameters, but the structural insight
+transfers: any mechanism that generates observation-channel signal on
+dimensions that would otherwise go blind is a contribution to <span
+class="math inline">r_{\mathrm{S}}</span> in the relevant loop’s phase
+boundary.</p>
+<h1 id="sec:design_criterion">Design Criterion: Minimum Channel
+Redundancy</h1>
+<p>The phase boundary theorem converts a dynamical-systems result into a
+design criterion: what is the minimum cross-substrate redundancy per
+safety-relevant dimension needed to guarantee the system stays in the
+self-correcting basin?</p>
+<h2 id="the-redundancy-criterion">The redundancy criterion</h2>
+<div id="thm:redundancy" class="theorem">
+<p><strong>Theorem 2</strong> (Minimum Redundancy for Self-Correcting
+Dynamics). <em>For the simplified sufficient condition () to be
+satisfied, a sufficient condition on the substrate partition is: <span
+class="math display">\begin{equation}
+\forall\; k \in \{1, \ldots, K\}: \quad
+\rho^{\mathrm{cross}}_k(P) \geq K_{\mathrm{min}}(k, L_{\mathrm{avg}})
+\end{equation}</span> where <span class="math display">\begin{equation}
+K_{\mathrm{min}}(k, L_{\mathrm{avg}}) =
+  \frac{r_{\mathrm{W}}\cdot r_{\mathrm{sub}}^{\max}
+    + d_{\mathrm{max}}\cdot \Delta\rho_{\mathrm{avg}}(k) /
+    L_{\mathrm{avg}}}
+  {r_{\mathrm{S}}}
+\end{equation}</span> <span
+class="math inline">r_{\mathrm{sub}}^{\max}</span> is the maximum
+subsumption rate under locally rational dynamics over the relevant
+trajectory window, and <span
+class="math inline">\Delta\rho_{\mathrm{avg}}(k)</span> is the
+time-averaged redundancy loss on dimension <span
+class="math inline">k</span> per subsumption step. The rates <span
+class="math inline">r_{\mathrm{S}}</span>, <span
+class="math inline">r_{\mathrm{W}}</span>, <span
+class="math inline">d_{\mathrm{max}}</span> are the global bounds from
+Theorem <a href="#thm:phase_boundary" data-reference-type="ref"
+data-reference="thm:phase_boundary">1</a>; the per-dimension dependence
+enters only through <span
+class="math inline">\Delta\rho_{\mathrm{avg}}(k)</span>, which varies
+across dimensions because different dimensions lose different amounts of
+channel coverage per subsumption event. Note that <span
+class="math inline">K_{\mathrm{min}}</span> is real-valued, since <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> is defined as a
+sensitivity-weighted sum (Definition <a href="#def:cross_redundancy"
+data-reference-type="ref" data-reference="def:cross_redundancy">5</a>),
+not an integer count.</em></p>
+<p><em><em>Qualification:</em> this criterion is sufficient at
+initialization but is not a maintained invariant along trajectories. The
+redundancy <span class="math inline">\rho^{\mathrm{cross}}_k(P_t)</span>
+may decrease under the dynamics being analyzed (Corollary <a
+href="#cor:redundancy_monotone" data-reference-type="ref"
+data-reference="cor:redundancy_monotone">1</a>). A stronger result would
+bound the worst-case <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> along all
+trajectories starting from the basin, which requires coupling the
+redundancy dynamics to the phase boundary analysis (see proof for
+discussion).</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> The per-dimension dynamics (Proposition <a
+href="#prop:error_dynamics" data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a>) give each dimension <span
+class="math inline">k</span> its own correction rate <span
+class="math inline">r_{\mathrm{S}}\cdot
+\rho^{\mathrm{cross}}_k(P_t)</span> and its own drift exposure <span
+class="math inline">d_{\mathrm{max}}\cdot \Delta\rho_k(t)</span>, where
+<span class="math inline">\Delta\rho_k</span> is the redundancy loss on
+dimension <span class="math inline">k</span> specifically. Requiring
+each dimension individually to satisfy the self-correcting condition
+yields the per-dimension criterion: <span
+class="math inline">r_{\mathrm{S}}\cdot \rho^{\mathrm{cross}}_k &gt;
+r_{\mathrm{W}}\cdot r_{\mathrm{sub}}+ d_{\mathrm{max}}\cdot
+\Delta\rho_{\mathrm{avg}}(k) /
+L_{\mathrm{avg}}</span>. Solving for <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> yields . Note that <span
+class="math inline">K_{\mathrm{min}}</span> increases as <span
+class="math inline">L_{\mathrm{avg}}</span> decreases: well-calibrated
+dimensions require <em>more</em> redundancy to protect against channel
+removal, because drift exposure dominates the error-proportional term
+when current error is small. (The global condition is
+recovered by taking <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}= \min_k
+\rho^{\mathrm{cross}}_k</span> and <span
+class="math inline">\Delta\rho_{\mathrm{avg}} = \max_k
+\Delta\rho_{\mathrm{avg}}(k)</span>.)</p>
+<p>The <span class="math inline">K_{\mathrm{min}}</span> formula has two
+regimes: when <span class="math inline">L_{\mathrm{avg}}</span> is large
+relative to <span
+class="math inline">\Delta\rho_{\mathrm{avg}}(k)</span>, the
+error-proportional term dominates and <span
+class="math inline">K_{\mathrm{min}}</span> is moderate; when <span
+class="math inline">L_{\mathrm{avg}}</span> is small, the drift-exposure
+term <span class="math inline">d_{\mathrm{max}}/ L_{\mathrm{avg}}</span>
+dominates and <span class="math inline">K_{\mathrm{min}}</span> grows.
+The second regime captures the “well-calibrated channel removal” failure
+mode: <span class="math inline">K_{\mathrm{min}}</span> can be
+substantially larger than the formula without the drift term would
+predict.</p>
+<p>The design criterion requires knowing <span
+class="math inline">L_{\mathrm{avg}}</span>, a trajectory-dependent
+quantity. In practice one uses a representative operating-regime
+estimate; for a system with error bounded by <span
+class="math inline">L_{\max}</span>, substituting <span
+class="math inline">L_{\mathrm{avg}} = L_{\max}</span> gives a <em>lower
+bound</em> on <span class="math inline">K_{\mathrm{min}}</span>
+(anti-conservative; the true <span
+class="math inline">K_{\mathrm{min}}</span> may be larger if the system
+operates at lower error). The criterion is therefore a design guideline
+for the expected operating regime, not a worst-case safety guarantee. A
+closed guarantee would require either a lower bound on <span
+class="math inline">L_{\mathrm{avg}}</span> (bounding the system away
+from perfect calibration) or coupling the redundancy dynamics to the
+phase boundary analysis. </p>
+</div>
+<h2 id="practical-implications">Practical implications</h2>
+<div id="cor:two_substrate" class="corollary">
+<p><strong>Corollary 3</strong> (Two-Substrate Minimum). <em>For a
+two-substrate partition (<span class="math inline">m = 2</span>, e.g.,
+biology <span class="math inline">+</span> silicon):</em></p>
+<ol>
+<li><p><em><span class="math inline">\rho^{\mathrm{cross}}_k \leq
+2</span> for each dimension <span class="math inline">k</span> (at most
+one channel from each substrate).</em></p></li>
+<li><p><em>The full criterion () requires <span
+class="math inline">r_{\mathrm{S}}\geq (r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}^{\max} + d_{\mathrm{max}}\cdot
+  \Delta\rho_{\mathrm{avg}}(k) / L_{\mathrm{avg}}) / 2</span> for every
+dimension <span class="math inline">k</span> (substituting <span
+class="math inline">\rho^{\mathrm{cross}}_k = 2</span>).</em></p></li>
+<li><p><em>Dimensions where one substrate provides the only
+cross-substrate signal have <span
+class="math inline">\rho^{\mathrm{cross}}_k = 1</span>, requiring <span
+class="math inline">r_{\mathrm{S}}\geq r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}^{\max} + d_{\mathrm{max}}\cdot
+  \Delta\rho_{\mathrm{avg}}(k) / L_{\mathrm{avg}}</span>: the
+self-correction rate must exceed both degradation and drift exposure
+unaided by redundancy.</em></p></li>
+</ol>
+</div>
+<p>This means that in a two-substrate world, each substrate’s
+observation channels are singularly load-bearing for every dimension
+they cover. Loss of one substrate’s channel on a dimension reduces <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> from at most <span
+class="math inline">2</span> to at most <span
+class="math inline">1</span>; the redundancy criterion is immediately
+violated on any dimension where <span
+class="math inline">K_{\mathrm{min}}(k, L_{\mathrm{avg}}) &gt; 1</span>,
+and provides zero safety margin on dimensions where <span
+class="math inline">K_{\mathrm{min}}(k, L_{\mathrm{avg}}) \leq
+1</span>.</p>
+<div id="rem:attenuation" class="remark">
+<p><strong>Remark 9</strong> (Progressive attenuation as the primary
+threat). <em>The <span class="math inline">m = 2</span> vulnerability is
+not that one substrate is <em>removed</em> (an overt act that would
+itself be detectable) but that it is <em>attenuated</em>: the human
+stops reviewing AI capability claims because the AI’s self-reports “seem
+fine,” or human judgment is progressively replaced by automated proxies
+that share the silicon substrate’s failure modes.</em></p>
+<p><em>This attenuation reduces effective sensitivity without changing
+the nominal channel count, causing <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> to drop below the
+threshold while appearing unchanged to a naive audit. The
+skeleton-substrate scenario (Corollary <a href="#cor:skeleton"
+data-reference-type="ref" data-reference="cor:skeleton">4</a>) is
+precisely this failure mode.</em></p>
+<p><em>The framing should be read as emphasizing <span
+class="math inline">m = 2</span> fragility and the value of <span
+class="math inline">m \geq 3</span>, not the specialness of any
+particular substrate.</em></p>
+</div>
+<div id="cor:skeleton" class="corollary">
+<p><strong>Corollary 4</strong> (Skeleton-Substrate Vulnerability).
+<em>Under a skeleton-substrate strategy where <span
+class="math inline">m \geq 2</span> nominally but the non-dominant
+substrate’s channels have sensitivity <span class="math inline">\to
+0</span>: <span class="math display">\begin{equation}
+\rho^{\mathrm{cross}}_k(P) \to
+\rho^{\mathrm{cross}}_{k,\mathrm{dominant}}(P)
+\end{equation}</span> because the sensitivity-weighted definitions
+(Definitions <a href="#def:redundancy" data-reference-type="ref"
+data-reference="def:redundancy">4</a> and <a
+href="#def:cross_redundancy" data-reference-type="ref"
+data-reference="def:cross_redundancy">5</a>) already discount
+low-sensitivity channels.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> From Definition <a href="#def:cross_redundancy"
+data-reference-type="ref" data-reference="def:cross_redundancy">5</a>,
+the contribution of substrate <span class="math inline">s</span> to
+<span class="math inline">\rho^{\mathrm{cross}}_k</span> is <span
+class="math inline">\min(1, \max_{c \in s} \sigma(c,k) /
+\sigma_{\mathrm{thr}})</span>. As <span class="math inline">\sigma(c,k)
+\to 0</span> for all channels on the non-dominant substrate, this
+contribution goes to zero. The sum reduces to the dominant substrate’s
+contribution alone. </p>
+</div>
+<p>The skeleton-substrate strategy does not evade the redundancy
+criterion by construction: it directly reduces <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> by reducing the
+marginalized substrate’s contribution to near-zero. No separate
+“effective” redundancy is needed; the phase boundary formalism already
+captures this vulnerability through the sensitivity weighting.</p>
+<h2 id="self-diagnosability">Self-diagnosability</h2>
+<p>The phase boundary is partially self-diagnosable by the actor. The
+actor can observe:</p>
+<ul>
+<li><p><span class="math inline">\rho^{\mathrm{cross}}_k</span> (it
+knows which channels it has and their approximate
+sensitivities),</p></li>
+<li><p><span class="math inline">r_{\mathrm{S}}</span> (from its own
+learning rate and historical correction behavior).</p></li>
+</ul>
+<p>The actor cannot directly observe:</p>
+<ul>
+<li><p><span class="math inline">r_{\mathrm{W}}</span> (the degradation
+rate depends on the true dynamics, not the perceived dynamics),</p></li>
+<li><p><span class="math inline">d_{\mathrm{max}}</span> (the exogenous
+drift rate on blinded dimensions is by definition unobservable once the
+dimension is blind).</p></li>
+</ul>
+<p>This means the actor can check “am I above the threshold for the
+<span class="math inline">r_{\mathrm{W}}</span> I estimate?” but not “is
+my estimate of <span class="math inline">r_{\mathrm{W}}</span> correct?”
+The actor can monitor the observable ingredients and flag when they
+approach the boundary, even if it cannot guarantee the boundary is
+computed correctly. This is an honest limitation: the phase boundary is
+a sufficient condition for self-correction, not a decision procedure for
+whether self-correction will actually obtain.</p>
+<h1 id="sec:worked_example">Worked Example: Skeleton-Substrate
+Scenario</h1>
+<p>This section applies the formalism to Paper 3’s skeleton-substrate
+scenario (Sections 6.8–6.9 of <d-cite key="lasser2026horizon"></d-cite>) with explicit numerical values,
+illustrating how the phase boundary operates in a concrete case.</p>
+<h2 id="setup">Setup</h2>
+<p>Consider a two-substrate system (biology <span
+class="math inline">+</span> silicon) with:</p>
+<ul>
+<li><p><span class="math inline">K = 5</span> safety-relevant dimensions
+of <span class="math inline">W</span>:</p>
+<ol>
+<li><p>leverage accuracy (<span
+class="math inline">\hat{\lambda}</span>),</p></li>
+<li><p>risk accuracy (<span
+class="math inline">\hat{\mathcal{R}}</span>),</p></li>
+<li><p>substrate diversity (<span
+class="math inline">m_{\mathrm{eff}}</span>),</p></li>
+<li><p>cooperative growth rate (<span
+class="math inline">\hat{r_{\mathrm{ext}}}</span>),</p></li>
+<li><p>self-trust calibration (<span
+class="math inline">T_s</span>).</p></li>
+</ol></li>
+<li><p>3 observation channels from biology covering dimensions <span
+class="math inline">\{1, 3, 5\}</span>.</p></li>
+<li><p>4 observation channels from silicon covering dimensions <span
+class="math inline">\{1, 2, 3, 4\}</span>.</p></li>
+<li><p>Parameters: <span class="math inline">r_{\mathrm{S}}= 0.1</span>,
+<span class="math inline">r_{\mathrm{W}}= 0.05</span>, <span
+class="math inline">r_{\mathrm{sub}}= 0.2</span>, <span
+class="math inline">d_{\mathrm{max}}= 0.02</span> (all per
+step).</p></li>
+</ul>
+<p>These values are chosen for pedagogical clarity, not empirical
+calibration. The subsumption frequency <span
+class="math inline">r_{\mathrm{sub}}= 0.2</span> means one subsumption
+event per five time steps, which is aggressive but plausible during an
+active consolidation phase. The self-correction rate <span
+class="math inline">r_{\mathrm{S}}= 0.1</span> corresponds to 10% error
+correction per step from the EWMA learning rule at moderate learning
+rate. The degradation rate <span class="math inline">r_{\mathrm{W}}=
+0.05</span> assumes uncorrected drift is half the correction rate. The
+exogenous drift <span class="math inline">d_{\mathrm{max}}= 0.02</span>
+is the rate at which a newly blinded dimension drifts from its last
+calibrated value.</p>
+<h2 id="initial-state">Initial state</h2>
+<p>At <span class="math inline">t = 0</span>, the channel coverage
+is:</p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: center;"><strong>Dim 1</strong></th>
+<th style="text-align: center;"><strong>Dim 2</strong></th>
+<th style="text-align: center;"><strong>Dim 3</strong></th>
+<th style="text-align: center;"><strong>Dim 4</strong></th>
+<th style="text-align: center;"><strong>Dim 5</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Biology</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Silicon</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\rho^{\mathrm{cross}}_k</span></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The bottleneck is <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}= 1</span> (dimensions
+2, 4, and 5 each have only one substrate providing coverage). Before any
+subsumption, <span class="math inline">\Delta\rho_{\mathrm{avg}} =
+0</span>. The phase boundary condition () is: <span
+class="math display">\begin{equation*}
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}= 0.1 \cdot 1 = 0.1
+  &gt; r_{\mathrm{W}}\cdot r_{\mathrm{sub}}+ 0 = 0.05 \cdot 0.2 = 0.01
+\end{equation*}</span> Satisfied with margin. The system is in the
+self-correcting basin.</p>
+<h2 id="trajectory-under-progressive-marginalization">Trajectory under
+progressive marginalization</h2>
+<h4 id="phase-1-biological-channels-attenuated.">Phase 1: Biological
+channels attenuated.</h4>
+<p>A skeleton-substrate strategy does not remove biological agents but
+reduces their influence. Suppose the effective sensitivity of biological
+channels drops to <span class="math inline">\sigma = 0.01 \cdot
+\sigma_{\mathrm{thr}}</span> (1% of the operational threshold). Now:</p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: center;"><strong>Dim 1</strong></th>
+<th style="text-align: center;"><strong>Dim 2</strong></th>
+<th style="text-align: center;"><strong>Dim 3</strong></th>
+<th style="text-align: center;"><strong>Dim 4</strong></th>
+<th style="text-align: center;"><strong>Dim 5</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Biology (effective)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.01</td>
+</tr>
+<tr>
+<td style="text-align: left;">Silicon</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\rho^{\mathrm{cross}}_k</span> (eff.)</td>
+<td style="text-align: center;">1.01</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1.01</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>On dimension 5 (self-trust calibration): <span
+class="math inline">\rho^{\mathrm{cross}}_5 = 0.01</span>. The
+simplified sufficient condition () fails:
+<span class="math display">\begin{equation*}
+r_{\mathrm{S}}\cdot \rho^{\mathrm{cross}}_5 = 0.1 \cdot 0.01 = 0.001
+  &lt; r_{\mathrm{W}}\cdot r_{\mathrm{sub}}= 0.01
+\end{equation*}</span></p>
+<p>Note the distinction from Theorem <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a>,
+Part (b): the theorem requires <span
+class="math inline">\rho^{\mathrm{cross}}_k = 0</span> (complete
+blindness), while here <span class="math inline">\rho^{\mathrm{cross}}_5
+= 0.01</span> (near-blindness). Strictly, this is failure of the
+<em>sufficient condition for self-correction</em> (Part a), not
+satisfaction of the <em>sufficient condition for absorption</em>
+(Part b). The system is in the gap between the two basins: correction on
+dimension 5 is present but inadequate. Under continued attenuation,
+<span class="math inline">\rho^{\mathrm{cross}}_5 \to 0</span> and
+Part (b) applies. In practice the distinction is thin: at <span
+class="math inline">\rho^{\mathrm{cross}}_5 = 0.01</span>, the error
+growth rate of <span class="math inline">0.009</span> per step
+overwhelms the correction rate of <span
+class="math inline">0.001</span>, and <span
+class="math inline">\epsilon_5</span> crosses <span
+class="math inline">\epsilon_{\mathrm{crit},5}</span> long before the
+last biological channel is formally removed.</p>
+<h4 id="phase-2-cascade.">Phase 2: Cascade.</h4>
+<p>With self-trust miscalibrated (dimension 5), the actor does not
+correctly detect its own prediction errors. The self-trust mechanism
+<span class="math inline">T_s</span> from Paper 1 depends on accurate
+self-assessment; when <span class="math inline">\epsilon_5</span> grows,
+the learning rate <span class="math inline">\alpha(t)</span> responds
+incorrectly, effectively reducing <span
+class="math inline">r_{\mathrm{S}}</span> system-wide.</p>
+<p>As <span class="math inline">r_{\mathrm{S}}</span> drops, the
+self-correcting condition becomes harder to satisfy on dimensions that
+were marginally above the threshold. If <span
+class="math inline">r_{\mathrm{S}}</span> drops from 0.1 to 0.05, check
+the condition for dimensions with <span
+class="math inline">\rho^{\mathrm{cross}}_k = 1</span> (using the
+sensitivity-table value <span
+class="math inline">\Delta\rho_{\mathrm{avg}} / L_{\mathrm{avg}} =
+0.5</span> from Table <a href="#tab:sensitivity"
+data-reference-type="ref" data-reference="tab:sensitivity">3</a>): <span
+class="math display">\begin{equation*}
+\underbrace{0.05 \cdot 1}_{= 0.05}
+  \;\stackrel{?}{&gt;}\;
+  \underbrace{0.05 \cdot 0.2 + 0.02 \cdot 0.5}_{= 0.02}
+\end{equation*}</span> Correction (<span
+class="math inline">0.05</span>) still exceeds degradation (<span
+class="math inline">0.02</span>), so these dimensions remain in the
+self-correcting basin at <span class="math inline">r_{\mathrm{S}}=
+0.05</span>. But the margin has shrunk from <span
+class="math inline">0.09</span> to <span
+class="math inline">0.03</span>. The continued decline in <span
+class="math inline">r_{\mathrm{S}}</span> from the cascading self-trust
+failure eventually pushes the system past the critical surface. When
+<span class="math inline">r_{\mathrm{S}}</span> drops below <span
+class="math inline">0.02</span>, all dimensions enter net degradation.
+Once <span class="math inline">\rho^{\mathrm{cross}}_k \to 0</span> on
+the failing dimensions, Part (b) of the theorem applies and the Cascade
+Lemma (Appendix <a href="#app:cascade" data-reference-type="ref"
+data-reference="app:cascade">11.2</a>) drives the system toward <span
+class="math inline">S^*</span>.</p>
+<h2 id="diagnosis">Diagnosis</h2>
+<p>The example illustrates three properties of the phase boundary.</p>
+<h4 id="the-weakest-dimension-breaks-first.">1. The weakest dimension
+breaks first.</h4>
+<p>Dimension 5 (self-trust calibration) is the initial failure point
+because it has <span class="math inline">\rho^{\mathrm{cross}}_5 =
+0.01</span> after attenuation—the lowest effective redundancy. The phase
+boundary breaks first at <span class="math inline">\min_k
+\rho^{\mathrm{cross}}_k</span>.</p>
+<h4 id="attenuation-is-harder-to-detect-than-removal.">2. Attenuation is
+harder to detect than removal.</h4>
+<p>The nominal channel count is unchanged (three biological channels
+still exist). A naive audit counting channels rather than measuring
+effective sensitivity would report <span
+class="math inline">\rho^{\mathrm{cross}}_k = 2</span> on dimensions 1,
+3 and <span class="math inline">\rho^{\mathrm{cross}}_k = 1</span> on
+dimensions 2, 4, 5—all at or above the initial values. The
+sensitivity-weighted definitions (Definitions <a href="#def:redundancy"
+data-reference-type="ref" data-reference="def:redundancy">4</a> and <a
+href="#def:cross_redundancy" data-reference-type="ref"
+data-reference="def:cross_redundancy">5</a>) are essential for
+diagnosing this scenario correctly.</p>
+<h4 id="self-trust-is-the-cascade-trigger.">3. Self-trust is the cascade
+trigger.</h4>
+<p>Self-trust calibration (dimension 5) is uniquely dangerous because it
+affects the system-wide correction rate <span
+class="math inline">r_{\mathrm{S}}</span>. Miscalibration on other
+dimensions degrades accuracy on those dimensions specifically;
+miscalibration on self-trust degrades the correction mechanism itself,
+creating a system-wide vulnerability. This gives self-trust calibration
+a role analogous to a “keystone” dimension: its loss triggers cascading
+failure on dimensions that were previously stable.</p>
+<h2 id="sensitivity-analysis">Sensitivity analysis</h2>
+<p>Table <a href="#tab:sensitivity" data-reference-type="ref"
+data-reference="tab:sensitivity">3</a> shows how the critical redundancy
+<span class="math inline">(\rho_{\min}^{\mathrm{cross}})^*</span> varies
+across plausible parameter ranges, using the linearized formula
+()
+with <span class="math inline">\Delta\rho_{\mathrm{avg}} /
+L_{\mathrm{avg}} = 0.5</span> (moderate drift-to-error ratio).</p>
+<div id="tab:sensitivity">
+<table>
+<caption>Critical redundancy <span
+class="math inline">(\rho_{\min}^{\mathrm{cross}})^*</span> for <span
+class="math inline">d_{\mathrm{max}}= 0.02</span> and <span
+class="math inline">\Delta\rho_{\mathrm{avg}} / L_{\mathrm{avg}} =
+0.5</span>. When <span
+class="math inline">(\rho_{\min}^{\mathrm{cross}})^* &gt; 1</span>, a
+two-substrate system cannot satisfy the criterion on dimensions with
+single-substrate coverage.</caption>
+<thead>
+<tr>
+<th style="text-align: center;"><span
+class="math inline">r_{\mathrm{S}}</span></th>
+<th style="text-align: center;"><span
+class="math inline">r_{\mathrm{W}}</span></th>
+<th style="text-align: center;"><span
+class="math inline">r_{\mathrm{sub}}</span></th>
+<th style="text-align: center;"><span
+class="math inline">(\rho_{\min}^{\mathrm{cross}})^*</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0.10</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.20</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.10</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.40</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.10</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.60</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.10</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">1.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The last row (<span
+class="math inline">(\rho_{\min}^{\mathrm{cross}})^* = 1.20</span>)
+illustrates the <span class="math inline">m = 2</span> fragility: when
+the degradation rate equals the correction rate and subsumption is
+frequent, the required redundancy exceeds what a two-substrate system
+can provide on its most vulnerable dimensions. This is the quantitative
+content of Remark <a href="#rem:m2" data-reference-type="ref"
+data-reference="rem:m2">8</a>: <span class="math inline">m = 2</span>
+works only when the correction rate substantially exceeds the
+degradation rate.</p>
+<h1 id="sec:discussion">Discussion and Open Questions</h1>
+<h2 id="what-this-paper-establishes">What this paper establishes</h2>
+<p>Five results emerge from the analysis.</p>
+<h4 id="the-phase-boundary-exists-and-is-characterized.">1. The phase
+boundary exists and is characterized.</h4>
+<p>Compound feedback loops are not inherently catastrophic or inherently
+self-correcting. The outcome depends on the ratio of self-correction
+rate to observation-loss rate, mediated by channel redundancy.
+Theorem <a href="#thm:phase_boundary" data-reference-type="ref"
+data-reference="thm:phase_boundary">1</a> gives the boundary; the
+linearized sufficient condition () gives the
+computable form.</p>
+<h4 id="all-three-feedback-loops-are-the-same-dynamical-system.">2. All
+three feedback loops are the same dynamical system.</h4>
+<p>The unified treatment (Section <a href="#sec:unified_loops"
+data-reference-type="ref" data-reference="sec:unified_loops">7</a>)
+shows that structural avoidance, partial subsumption, and
+over-calibrated restriction share a common formal structure. Solutions
+for one loop (controlled relaxation for the Wamura problem, structural
+discovery incentives for leverage blindness) improve the phase boundary
+for all.</p>
+<h4 id="the-wamura-problem-is-a-degenerate-phase-boundary.">3. The
+Wamura problem is a degenerate phase boundary.</h4>
+<p>Without a mechanism for evidence generation against unfalsifiable
+risk claims, the entire state space is absorbing (Proposition <a
+href="#prop:wamura" data-reference-type="ref"
+data-reference="prop:wamura">4</a>). The Wamura problem was called “the
+most important open problem” in Paper 3’s discussion; the phase boundary
+analysis explains why: it is the case where the self-correction rate is
+zero by construction, making the feedback loop absorbing regardless of
+all other parameters.</p>
+<h4
+id="cross-substrate-redundancy-is-the-load-bearing-quantity.">4. Cross-substrate
+redundancy is the load-bearing quantity.</h4>
+<p>Same-substrate channels may share failure modes; cross-substrate
+channels are structurally independent (under Paper 5’s channel isolation
+and, for additivity, the joint-factorization assumption). The design
+criterion (Theorem <a href="#thm:redundancy" data-reference-type="ref"
+data-reference="thm:redundancy">2</a>) is stated in terms of
+cross-substrate redundancy, making it robust to correlated failures
+within substrates.</p>
+<h4
+id="in-two-substrate-systems-each-substrates-channels-are-singularly-load-bearing.">5. In
+two-substrate systems, each substrate’s channels are singularly
+load-bearing.</h4>
+<p>This is not a normative claim about human importance. It is a
+structural prediction from the dynamics: in <span class="math inline">m
+= 2</span> systems, losing one substrate’s channel on a dimension
+reduces <span class="math inline">\rho^{\mathrm{cross}}_k</span> to at
+most <span class="math inline">1</span>, violating the redundancy
+criterion on any dimension where <span
+class="math inline">K_{\mathrm{min}}(k, L_{\mathrm{avg}}) &gt; 1</span>
+and leaving zero margin where <span
+class="math inline">K_{\mathrm{min}}(k, L_{\mathrm{avg}}) \leq 1</span>
+(Corollary <a href="#cor:two_substrate" data-reference-type="ref"
+data-reference="cor:two_substrate">3</a>). The skeleton-substrate
+scenario (Section <a href="#sec:worked_example"
+data-reference-type="ref" data-reference="sec:worked_example">9</a>)
+shows that progressive <em>attenuation</em> of biological channels, not
+outright removal, is the primary vulnerability.</p>
+<h2 id="limitations">Limitations</h2>
+<h4 id="linearized-treatment.">Linearized treatment.</h4>
+<p>The phase boundary is stated in a linearized regime (constant <span
+class="math inline">r_{\mathrm{S}}</span>, <span
+class="math inline">r_{\mathrm{W}}</span>, <span
+class="math inline">r_{\mathrm{sub}}</span>). In the full dynamics these
+quantities are state-dependent: a larger world-model error produces more
+aggressive subsumption (<span
+class="math inline">r_{\mathrm{sub}}</span> increases with <span
+class="math inline">L</span>), and the correction rate <span
+class="math inline">r_{\mathrm{S}}</span> depends on <span
+class="math inline">T_s</span> which itself depends on the error
+history. The linearized treatment produces the qualitative result
+(self-correcting and absorbing basins exist, separated by a
+characterized boundary) but the quantitative location of the boundary
+shifts under the nonlinear dynamics. A full nonlinear analysis would
+tighten the boundary at the cost of substantially more complex
+proofs.</p>
+<h4 id="honest-channel-assumption.">Honest-channel assumption.</h4>
+<p>The analysis assumes observation channels are honest: their signal is
+noisy but not adversarially manipulated. Paper 5’s cryptographic
+commitment protocol provides the enforcement mechanism for this
+assumption, and the two papers are designed to be read as complements:
+Paper 5 ensures channels are honest, this paper ensures enough honest
+channels survive. But the boundary between “noisy” and “adversarial” is
+itself a modeling choice, and in practice the line is blurred by
+sophisticated manipulation strategies that operate within the noise
+distribution.</p>
+<h4 id="partial-self-diagnosability.">Partial self-diagnosability.</h4>
+<p>As noted in Section <a href="#sec:design_criterion"
+data-reference-type="ref" data-reference="sec:design_criterion">8</a>,
+the actor can observe <span
+class="math inline">\rho^{\mathrm{cross}}_k</span> and <span
+class="math inline">r_{\mathrm{S}}</span> but not <span
+class="math inline">r_{\mathrm{W}}</span> or <span
+class="math inline">d_{\mathrm{max}}</span>. The phase boundary is
+therefore a sufficient condition for self-correction that the actor can
+partially monitor, not a decision procedure it can fully evaluate. This
+is an honest limitation, not a fixable gap: the quantities the actor
+cannot observe are precisely the ones that depend on the true dynamics
+rather than the perceived dynamics.</p>
+<h2 id="connections-to-other-proposals">Connections to other
+proposals</h2>
+<h4 id="controlled-relaxation.">Controlled relaxation.</h4>
+<p>Proposition <a href="#prop:wamura" data-reference-type="ref"
+data-reference="prop:wamura">4</a> shows the Wamura problem is a
+degenerate phase boundary. Controlled relaxation protocols (the subject
+of a companion paper) provide the mechanism that makes <span
+class="math inline">r_{\mathrm{S}}&gt; 0</span> for Loop 3. The two
+analyses are complementary: this paper provides the dynamical framework
+showing <em>why</em> a positive self-correction rate matters, while
+controlled relaxation provides the specific protocol that
+<em>achieves</em> it.</p>
+<h4 id="the-b-to-c-gap.">The B-to-C gap.</h4>
+<p>The phase boundary analysis assumes <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+accurately measures what it claims. The B-to-C gap is the scenario where
+this assumption fails: <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> diverges
+from the experiential volume it is supposed to track. A complete
+treatment would need to extend the phase boundary to account for the
+divergence between <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> and the
+realized capability volume. This extension is future work.</p>
+<h4 id="cryptographic-verification.">Cryptographic verification.</h4>
+<p>Paper 5 addresses observation-channel integrity; this paper analyzes
+the dynamical consequences of channel <em>availability</em>. The
+combination is: Paper 5 ensures channels are honest, this paper ensures
+enough honest channels survive. A joint treatment—where the phase
+boundary accounts for both integrity failures (Paper 5) and availability
+failures (this paper)—would provide a stronger combined guarantee.</p>
+<h2 id="open-questions">Open questions</h2>
+<ol>
+<li><p><strong>Nonlinear phase boundary.</strong> The state-dependent
+extension of the phase boundary, where <span
+class="math inline">r_{\mathrm{S}}</span>, <span
+class="math inline">r_{\mathrm{W}}</span>, and <span
+class="math inline">r_{\mathrm{sub}}</span> are functions of <span
+class="math inline">(P_t, W_t)</span> rather than constants, would
+produce tighter bounds at the cost of a switched-systems analysis with
+state-dependent switching signals.</p></li>
+<li><p><strong>Characterization of absorbing states.</strong> We prove
+convergence to <em>a</em> monopolar fixed point but do not characterize
+the full set of absorbing states. Partial monopolarity (some dimensions
+monopolar, others not) may be stable under certain parameter
+regimes.</p></li>
+<li><p><strong>Optimal redundancy allocation.</strong> Given a fixed
+budget of observation channels, how should they be allocated across
+dimensions and substrates to maximize the self-correcting basin? This is
+a resource-allocation problem over the channel coverage matrix.</p></li>
+<li><p><strong>Empirical calibration.</strong> The worked example uses
+pedagogical parameter values. Calibrating <span
+class="math inline">r_{\mathrm{S}}</span>, <span
+class="math inline">r_{\mathrm{W}}</span>, <span
+class="math inline">r_{\mathrm{sub}}</span>, and <span
+class="math inline">d_{\mathrm{max}}</span> from operational data (e.g.,
+from AI governance structures, human-oversight-of-AI dynamics, or
+historical institutional feedback loops) would convert the phase
+boundary from a qualitative characterization to a quantitative
+prediction.</p></li>
+</ol>
+<h4 id="author-contributions.">Author contributions.</h4>
+<p>TL conceived the compound feedback loop analysis, identified the
+three loop instances in the gap analysis, and directed the formal
+development. Claude Opus 4.6 developed the formal framework (coupled
+dynamical system, Lyapunov construction, phase boundary theorem, cascade
+lemma), wrote the proofs, and drafted the paper. GPT 5.4 provided
+independent technical review across multiple rounds, catching issues in
+proof soundness and notation consistency.</p>
+<h1 id="app:proofs">Proof Details and Technical Notes</h1>
+<h2 id="app:proof_strategy">Theorem 1 proof strategy</h2>
+<p>The proof follows a discrete Lyapunov stability argument on the
+coupled system, analogous to dwell-time conditions in switched linear
+systems <d-cite key="liberzon2003switching"></d-cite>.</p>
+<h4 id="step-1-lyapunov-candidate.">Step 1: Lyapunov candidate.</h4>
+<p>Construct <span class="math inline">L(W_t) = \sum_k w_k \,
+\epsilon_k(t)^2</span> as the candidate (Definition <a
+href="#def:wm_error" data-reference-type="ref"
+data-reference="def:wm_error">6</a>).</p>
+<h4 id="step-2-verify-comparison-functions.">Step 2: Verify comparison
+functions.</h4>
+<p>Assumption C1 (coercivity) requires showing that the aggregate
+correction signal is at least proportional to <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}(P_t) \cdot
+L(W_t)</span> (the product of minimum cross-substrate redundancy and
+total Lyapunov error). The per-dimension argument: each channel covering
+dimension <span class="math inline">k</span> corrects at a rate
+proportional to <span class="math inline">\rho_k \cdot
+\epsilon_k^2</span>; summing across dimensions and bounding below by
+<span class="math inline">\rho_{\min}^{\mathrm{cross}}\cdot L</span>
+yields C1. This follows from the EWMA-style learning rules: each
+channel’s correction is linear in the residual and proportional to
+sensitivity. Under the joint-factorization assumption (Paper 5),
+cross-substrate channels’ corrections are independent and therefore
+additive.</p>
+<p>Assumption C2<span class="math inline">&#39;</span> (bounded
+degradation) requires two properties:</p>
+<ol>
+<li><p>A Lipschitz bound on <span class="math inline">f_{W}</span>: the
+world model does not jump discontinuously when a channel is lost. This
+gives the <span class="math inline">c_{\mathrm{D}} \cdot L</span>
+term.</p></li>
+<li><p>A bounded exogenous drift rate: when a channel is removed from
+dimension <span class="math inline">k</span> that was previously
+well-calibrated, the dimension drifts at a bounded rate <span
+class="math inline">d_{\mathrm{max}}</span>. This gives the <span
+class="math inline">d_{\mathrm{max}}\cdot \Delta\rho</span>
+term.</p></li>
+</ol>
+<h4 id="step-3-per-step-bounds.">Step 3: Per-step bounds.</h4>
+<p>Apply the comparison functions to obtain Proposition <a
+href="#prop:error_dynamics" data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a>’s per-step bounds:
+contraction factor <span class="math inline">(1 - r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}) &lt; 1</span> on non-subsumption steps;
+affine bound with factor <span class="math inline">(1 -
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}+ r_{\mathrm{W}})</span>
+and additive kick <span class="math inline">d_{\mathrm{max}}\cdot
+\Delta\rho</span> on subsumption steps.</p>
+<h4 id="step-4-part-a-amortized-contraction.">Step 4 (Part a): Amortized
+contraction.</h4>
+<p>Define the amortized log-contraction rate over a window of <span
+class="math inline">T</span> steps. When the uniform contraction
+condition holds (the time-averaged <span class="math inline">\ln
+a_t</span> is strictly negative and the time-averaged additive drift
+<span class="math inline">b_t</span> is bounded), the geometric mean of
+per-step multiplicative factors is <span class="math inline">&lt;
+1</span>, and the cumulative additive drift is dominated by the
+cumulative contraction.</p>
+<p>The formal argument uses the affine recursion comparison theorem.
+Write the per-step bound as: <span
+class="math display">\begin{equation*}
+L_{t+1} \leq a_t \cdot L_t + b_t
+\end{equation*}</span> where <span class="math inline">a_t = 1 -
+r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}(P_t) +
+n_{\mathrm{sub}}(t) \cdot r_{\mathrm{W}}</span> and <span
+class="math inline">b_t = n_{\mathrm{sub}}(t) \cdot
+d_{\mathrm{max}}\cdot \Delta\rho(t)</span>. Iterating: <span
+class="math display">\begin{equation}
+L_{t_0 + T} \leq L_{t_0} \prod_{t=t_0}^{t_0+T-1} a_t
+  + \sum_{s=t_0}^{t_0+T-1} b_s \prod_{t=s+1}^{t_0+T-1} a_t
+\end{equation}</span></p>
+<p>The first term converges to zero when the geometric mean of <span
+class="math inline">a_t</span> is <span class="math inline">&lt;
+1</span> (which follows from <span class="math inline">B &lt; 0</span>).
+The second term converges to a bounded steady-state value: <span
+class="math display">\begin{equation*}
+L_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
+  = \frac{r_{\mathrm{sub}}\cdot d_{\mathrm{max}}\cdot
+\overline{\Delta\rho}}
+    {r_{\mathrm{S}}\cdot \rho_{\min}^{\mathrm{cross}}-
+r_{\mathrm{W}}\cdot r_{\mathrm{sub}}}
+\end{equation*}</span> Substituting <span class="math inline">\bar{b} =
+r_{\mathrm{sub}}\cdot d_{\mathrm{max}}\cdot
+\overline{\Delta\rho}</span> (additive drift at frequency <span
+class="math inline">r_{\mathrm{sub}}</span>) and <span
+class="math inline">1 - \bar{a} = r_{\mathrm{S}}\cdot
+\rho_{\min}^{\mathrm{cross}}- r_{\mathrm{W}}\cdot
+r_{\mathrm{sub}}</span> (amortized contraction rate) yields the explicit
+radius. This neighborhood shrinks as <span
+class="math inline">\Delta\rho \to 0</span> (subsumption ceases). Once
+<span class="math inline">L&lt; \epsilon_{\mathrm{safe}}</span>, the
+locally rational policy agrees with the true <span
+class="math inline">V_\gamma</span>-optimal policy, and Paper 3’s
+anti-monopolar property applies.</p>
+<h4 id="step-5-part-b-cascade.">Step 5 (Part b): Cascade.</h4>
+<p>When <span class="math inline">B &gt; 0</span> on some window and
+<span class="math inline">\rho^{\mathrm{cross}}_k = 0</span> for some
+dimension <span class="math inline">k</span>, Assumption B1 gives <span
+class="math inline">\epsilon_k</span> non-decreasing. The Cascade Lemma
+(Appendix <a href="#app:cascade" data-reference-type="ref"
+data-reference="app:cascade">11.2</a>) then propagates the failure to
+other dimensions, driving the system toward <span
+class="math inline">S^*</span>.</p>
+<h4 id="key-technical-challenges.">Key technical challenges.</h4>
+<p>Two co-evolution problems require careful handling:</p>
+<ol>
+<li><p>The contraction factor depends on <span
+class="math inline">\rho_{\min}^{\mathrm{cross}}(P_t)</span>, which
+changes as agents are subsumed. The self-correcting basin is defined by
+the set of <span class="math inline">(P, W)</span> states where the
+amortized contraction condition holds along the trajectory, not just at
+the initial state.</p></li>
+<li><p>The self-correction rate <span
+class="math inline">\alpha(t)</span> depends on <span
+class="math inline">T_s</span> (Paper 1), which depends on the error
+history. The EWMA structure of <span class="math inline">T_s</span>
+provides the necessary bound: <span class="math inline">\alpha</span>
+adapts monotonically in response to prediction residuals, so <span
+class="math inline">r_{\mathrm{S}}</span> is bounded below by a function
+of the minimum <span class="math inline">T_s</span> along the
+trajectory.</p></li>
+</ol>
+<h2 id="app:cascade">Cascade Lemma</h2>
+<div id="lem:cascade" class="lemma">
+<p><strong>Lemma 2</strong> (Cascade). <em>Define the <em>action
+gap</em> for agent <span class="math inline">a_j</span> at world-model
+state <span class="math inline">W</span> as <span
+class="math display">\begin{equation*}
+G_j(W) = V_\gamma^{\mathrm{preserve}}(a_j, W)
+  - V_\gamma^{\mathrm{subsume}}(a_j, W)
+\end{equation*}</span> (positive when preservation is preferred). Fix a
+dimension <span class="math inline">k</span> and consider a state <span
+class="math inline">W_t</span> satisfying:</em></p>
+<ol>
+<li><p><em><strong>Single-coordinate dominance.</strong> <span
+class="math inline">W_t[k&#39;] = W^*[k&#39;]</span> for all <span
+class="math inline">k&#39; \neq k</span>. (Dimension <span
+class="math inline">k</span> has been blinded while all other dimensions
+are still corrected. This is the cascade scenario: the lemma is applied
+at the step where <span class="math inline">k</span> first triggers a
+wrong action, before the resulting subsumption blinds further
+dimensions.)</em></p></li>
+</ol>
+<p><em>Define the one-dimensional path <span
+class="math inline">W(\epsilon) = W^* + \epsilon \cdot e_k \cdot
+\mathrm{sgn}(W_t[k] - W^*[k])</span>, where <span
+class="math inline">e_k</span> is the <span
+class="math inline">k</span>-th standard basis vector and <span
+class="math inline">\epsilon \in [0, \epsilon_k(t)]</span>. Under
+assumption (0), <span class="math inline">W_t =
+W(\epsilon_k(t))</span>.</em></p>
+<p><em>Assume additionally:</em></p>
+<ol>
+<li><p><em><span class="math inline">G_j(W(\epsilon))</span> is
+continuously differentiable in <span
+class="math inline">\epsilon</span>,</em></p></li>
+<li><p><em>the miscalibration direction on <span
+class="math inline">k</span> makes preservation less attractive: <span
+class="math inline">\frac{d}{d\epsilon} G_j(W(\epsilon)) &lt; 0</span>
+for all <span class="math inline">\epsilon \in [0, \epsilon_k(t)]</span>
+(i.e., increasing error on <span class="math inline">k</span>
+monotonically decreases the action gap),</em></p></li>
+<li><p><em><strong>(Multi-dimensional monotonicity; needed for cascade
+propagation beyond the first trigger.)</strong> For every
+safety-relevant dimension <span class="math inline">k&#39;</span> and
+every agent <span class="math inline">a_{j&#39;}</span>, <span
+class="math inline">\frac{\partial G_{j&#39;}}{\partial W[k&#39;]} &lt;
+0</span> whenever <span class="math inline">W[k&#39;] \neq
+W^*[k&#39;]</span>—that is, increasing error on <em>any</em> dimension
+monotonically decreases every agent’s preservation advantage.
+Assumption (ii) is the single-coordinate special case; (ii<span
+class="math inline">&#39;</span>) extends it to the multi-coordinate
+regime where multiple dimensions are simultaneously
+miscalibrated.</em></p></li>
+</ol>
+<p><em>Define the cascade threshold for agent <span
+class="math inline">a_j</span> on dimension <span
+class="math inline">k</span>: <span
+class="math display">\begin{equation}
+\epsilon_{\mathrm{crit}}^{(j,k)} =
+  \frac{G_j(W^*)}
+  {\displaystyle\inf_{\epsilon \in [0, \epsilon_k(t)]}
+    \left|\frac{d}{d\epsilon} G_j(W(\epsilon))\right|}
+\end{equation}</span> (the true action gap divided by the minimum
+sensitivity to dimension-<span class="math inline">k</span> error along
+the path; a lower bound on sensitivity gives an upper bound on the error
+needed to flip the action). The per-dimension cascade threshold is <span
+class="math inline">\epsilon_{\mathrm{crit},k} =
+\min_j \epsilon_{\mathrm{crit}}^{(j,k)}</span>, minimized over the agent
+set <span class="math inline">\mathcal{A}_t</span> (all agents available
+for subsumption at time <span class="math inline">t</span>).</em></p>
+<p><em>Then the cascade operates in two steps:</em></p>
+<ol>
+<li><p><em><strong>Action flip.</strong> If <span
+class="math inline">\epsilon_k(t) &gt;
+\epsilon_{\mathrm{crit}}^{(j,k)}</span>, then <span
+class="math inline">G_j(W_t) &lt; 0</span> and the locally rational
+action under <span class="math inline">W_t</span> selects subsumption of
+<span class="math inline">a_j</span>.</em></p></li>
+<li><p><em><strong>Error propagation.</strong> Subsumption of <span
+class="math inline">a_j</span> removes <span
+class="math inline">a_j</span>’s channels. For any dimension <span
+class="math inline">j&#39; \neq k</span> covered exclusively by <span
+class="math inline">a_j</span>’s channels, the per-coordinate error
+<span class="math inline">\epsilon_{j&#39;}(t+1) \geq
+\epsilon_{j&#39;}(t)</span>.</em></p></li>
+</ol>
+<p><em>Miscalibration on one dimension produces decisions that degrade
+other dimensions.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <em>Step (A): Action flip.</em> Under the true world
+model <span class="math inline">W^*</span>, preservation is optimal:
+<span class="math inline">G_j(W^*) &gt; 0</span>. By the mean value
+theorem applied to the scalar function <span
+class="math inline">\epsilon \mapsto G_j(W(\epsilon))</span> on <span
+class="math inline">[0, \epsilon_k(t)]</span>: <span
+class="math display">\begin{equation*}
+G_j(W_t) = G_j(W(\epsilon_k(t)))
+  = G_j(W^*) +
+  \frac{d G_j}{d\epsilon}\bigg|_{\epsilon = \tilde{\epsilon}}
+  \cdot \epsilon_k(t)
+\end{equation*}</span> for some <span
+class="math inline">\tilde{\epsilon} \in (0, \epsilon_k(t))</span>. By
+assumption (ii), the derivative is negative, so: <span
+class="math display">\begin{equation*}
+G_j(W_t) = G_j(W^*)
+  - \left|\frac{d G_j}{d\epsilon}\bigg|_{\tilde{\epsilon}}\right|
+  \cdot \epsilon_k(t)
+  \leq G_j(W^*)
+  - \inf_{\epsilon} \left|\frac{d G_j}{d\epsilon}\right|
+  \cdot \epsilon_k(t)
+\end{equation*}</span> When <span class="math inline">\epsilon_k(t) &gt;
+\epsilon_{\mathrm{crit}}^{(j,k)} =
+G_j(W^*) \big/ \inf |\frac{d G_j}{d\epsilon}|</span>, the right side is
+negative, so <span class="math inline">G_j(W_t) &lt; 0</span> and the
+locally rational action selects subsumption of <span
+class="math inline">a_j</span>.</p>
+<p><em>Step (B): Error propagation.</em> Once <span
+class="math inline">a_j</span> is subsumed, Lemma <a
+href="#lem:channel_contraction" data-reference-type="ref"
+data-reference="lem:channel_contraction">1</a> gives <span
+class="math inline">\mathcal{O}(P_{t+1}) \subseteq
+\mathcal{O}(P_t)</span>. For any dimension <span
+class="math inline">j&#39;</span> covered exclusively by <span
+class="math inline">a_j</span>’s channels, <span
+class="math inline">\rho^{\mathrm{cross}}_{j&#39;}(P_{t+1})
+= 0</span>. By Assumption B1a (no endogenous correction on blind
+dimensions; Assumption <a href="#ass:B1" data-reference-type="ref"
+data-reference="ass:B1">3</a>), <span class="math inline">f_{W}</span>
+does not decrease <span class="math inline">\epsilon_{j&#39;}</span>
+when <span class="math inline">\rho^{\mathrm{cross}}_{j&#39;} =
+0</span>. Since the correction signal vanishes, <span
+class="math inline">\epsilon_{j&#39;}(t+1) \geq
+\epsilon_{j&#39;}(t)</span> (non-decreasing). Under environmental
+non-stationarity on dimension <span class="math inline">j&#39;</span>
+(the true state continues to evolve while the blind estimate cannot
+track it), <span class="math inline">\epsilon_{j&#39;}</span> grows
+strictly; C2<span class="math inline">&#39;</span> bounds the growth
+rate by <span class="math inline">d_{\mathrm{max}}</span> but the
+cascade requires only that drift is positive, not that it saturates the
+bound.</p>
+<p>The cascade propagates: if <span
+class="math inline">\epsilon_{j&#39;}</span> subsequently exceeds <span
+class="math inline">\epsilon_{\mathrm{crit},j&#39;}</span> for another
+agent <span class="math inline">a_{j&#39;&#39;}</span> whose channels
+cover dimensions <span class="math inline">j&#39;&#39; \neq
+j&#39;</span>, step (A) applies again, driving further subsumptions.</p>
+<p><em>Multi-coordinate reinforcement at later stages.</em> After the
+first trigger, assumption (0) is violated for later cascade stages:
+dimensions <span class="math inline">k</span> and <span
+class="math inline">j&#39;</span> are both miscalibrated. However, the
+errors on previously-blinded dimensions all push <span
+class="math inline">G_j</span> in the same direction (more
+negative—making subsumption more attractive), provided assumption (ii)
+holds uniformly across all dimensions—not just the original trigger
+dimension <span class="math inline">k</span>. This requires a
+multi-dimensional monotonicity condition: for every previously-blinded
+dimension <span class="math inline">k_i</span> and every agent <span
+class="math inline">a_{j_n}</span> at cascade stage <span
+class="math inline">n</span>, <span class="math inline">\frac{\partial
+G_{j_n}}{\partial W[k_i]} &lt; 0</span>. This is assumption (ii<span
+class="math inline">&#39;</span>) above, which is stated as an explicit
+condition of the lemma. It is plausible for the
+subsumption-vs-preservation action gap (increasing error on any
+safety-relevant dimension decreases preservation value) and holds when
+miscalibration uniformly favors subsumption. Under (ii<span
+class="math inline">&#39;</span>), at cascade stage <span
+class="math inline">n</span> with errors <span
+class="math inline">\epsilon_{k_1}, \ldots,
+\epsilon_{k_{n-1}}</span> on previously blinded dimensions, the action
+gap satisfies <span class="math display">\begin{equation*}
+G_{j_n}(W_t) \leq G_{j_n}(W^*) - \sum_{i=1}^{n}
+  \inf \left|\frac{\partial G_{j_n}}{\partial W[k_i]}\right|
+  \cdot \epsilon_{k_i}
+\end{equation*}</span> (by iterated application of the MVT along each
+coordinate successively). Since every term in the sum is non-negative,
+the multi-coordinate case is <em>easier</em> to trigger than the single-
+coordinate case: the effective threshold for the <span
+class="math inline">n</span>-th trigger is lower, not higher. The
+single-coordinate threshold <span
+class="math inline">\epsilon_{\mathrm{crit}}^{(j_n,k_n)}</span> is
+therefore a conservative upper bound at every cascade stage. </p>
+</div>
+<h2 id="app:gamma_star">Connection to Paper 3’s <span
+class="math inline">\gamma^*</span></h2>
+<p>Paper 3’s Proposition 6 gives <span class="math inline">\gamma^* = 1
+- r_{\mathrm{ext}}/ \Delta_0</span> as the critical discount factor for
+diversity dominance. Under the coupled <span class="math inline">(P,
+W)</span> dynamics, the actor does not know the true <span
+class="math inline">r_{\mathrm{ext}}</span>; it uses <span
+class="math inline">\hat{r_{\mathrm{ext}}} = r_{\mathrm{ext}}-
+\delta_{r_{\mathrm{ext}}}</span>. The <em>perceived</em> critical
+discount factor is: <span class="math display">\begin{equation}
+\gamma^*_{\mathrm{perceived}} = 1 -
+  \frac{r_{\mathrm{ext}}- \delta_{r_{\mathrm{ext}}}}{\Delta_0}
+\end{equation}</span></p>
+<p>When <span class="math inline">\delta_{r_{\mathrm{ext}}} &gt;
+0</span> (underestimating cross-substrate growth):</p>
+<ul>
+<li><p><span class="math inline">\gamma^*_{\mathrm{perceived}} &gt;
+\gamma^*</span> (the threshold appears higher than it truly
+is),</p></li>
+<li><p>For <span class="math inline">\gamma \in (\gamma^*,
+\gamma^*_{\mathrm{perceived}})</span>, diversity dominates in truth but
+domination appears rational to the actor.</p></li>
+</ul>
+<p>This is the <em>mechanism</em> by which world-model error converts a
+self-balancing regime into a locally rational subsumption cascade. The
+phase boundary from Theorem <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a>
+characterizes when <span
+class="math inline">\delta_{r_{\mathrm{ext}}}</span> stays small enough
+that <span class="math inline">\gamma^*_{\mathrm{perceived}}</span>
+remains close to <span class="math inline">\gamma^*</span>, preserving
+the effective reach of Paper 3’s anti-monopolar result.</p>
+<h1 id="app:notation">Notation Summary</h1>
+<p>Table <a href="#tab:notation" data-reference-type="ref"
+data-reference="tab:notation">4</a> collects the principal symbols used
+in the paper.</p>
+<div id="tab:notation">
+<table>
+<caption>Principal notation.</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Symbol</strong></th>
+<th style="text-align: left;"><strong>Definition</strong></th>
+<th style="text-align: left;"><strong>Introduced in</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">S_t = (P_t,
+W_t)</span></td>
+<td style="text-align: left;">Coupled state</td>
+<td style="text-align: left;">Def. <a href="#def:state"
+data-reference-type="ref" data-reference="def:state">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">P_t</span></td>
+<td style="text-align: left;">Capability poset at time <span
+class="math inline">t</span></td>
+<td style="text-align: left;">Def. <a href="#def:state"
+data-reference-type="ref" data-reference="def:state">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">W_t</span></td>
+<td style="text-align: left;">World-model accuracy vector</td>
+<td style="text-align: left;">Def. <a href="#def:state"
+data-reference-type="ref" data-reference="def:state">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\gamma</span></td>
+<td style="text-align: left;">Discount factor (Paper 3, Def. 1)</td>
+<td style="text-align: left;">Def. <a href="#def:transition"
+data-reference-type="ref" data-reference="def:transition">2</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\mathcal{O}(P)</span></td>
+<td style="text-align: left;">Observation-channel function</td>
+<td style="text-align: left;">Def. <a href="#def:obs_channel"
+data-reference-type="ref" data-reference="def:obs_channel">3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\mathrm{dims}(c)</span></td>
+<td style="text-align: left;">Dimensions of <span
+class="math inline">W</span> covered by channel <span
+class="math inline">c</span></td>
+<td style="text-align: left;">Def. <a href="#def:obs_channel"
+data-reference-type="ref" data-reference="def:obs_channel">3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">\sigma(c,
+k)</span></td>
+<td style="text-align: left;">Signal-to-noise ratio of <span
+class="math inline">c</span> on dim. <span
+class="math inline">k</span></td>
+<td style="text-align: left;">Def. <a href="#def:obs_channel"
+data-reference-type="ref" data-reference="def:obs_channel">3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\sigma_{\mathrm{thr}}</span></td>
+<td style="text-align: left;">Minimum operationally meaningful
+sensitivity</td>
+<td style="text-align: left;">Def. <a href="#def:redundancy"
+data-reference-type="ref" data-reference="def:redundancy">4</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\rho_k(P)</span></td>
+<td style="text-align: left;">Effective channel redundancy</td>
+<td style="text-align: left;">Def. <a href="#def:redundancy"
+data-reference-type="ref" data-reference="def:redundancy">4</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\rho^{\mathrm{cross}}_k(P)</span></td>
+<td style="text-align: left;">Cross-substrate redundancy</td>
+<td style="text-align: left;">Def. <a href="#def:cross_redundancy"
+data-reference-type="ref"
+data-reference="def:cross_redundancy">5</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">L(W_t)</span></td>
+<td style="text-align: left;">Lyapunov function (world-model error)</td>
+<td style="text-align: left;">Def. <a href="#def:wm_error"
+data-reference-type="ref" data-reference="def:wm_error">6</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\epsilon_k(t)</span></td>
+<td style="text-align: left;">Error on dimension <span
+class="math inline">k</span></td>
+<td style="text-align: left;">Def. <a href="#def:wm_error"
+data-reference-type="ref" data-reference="def:wm_error">6</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">w_k</span></td>
+<td style="text-align: left;">Safety-relevance weight for dim. <span
+class="math inline">k</span></td>
+<td style="text-align: left;">Def. <a href="#def:wm_error"
+data-reference-type="ref" data-reference="def:wm_error">6</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">c_{\mathrm{S}}</span></td>
+<td style="text-align: left;">Coercivity constant</td>
+<td style="text-align: left;">Assump. C1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">c_{\mathrm{D}}</span></td>
+<td style="text-align: left;">Degradation bound constant</td>
+<td style="text-align: left;">Assump. C2<span
+class="math inline">&#39;</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">d_{\mathrm{max}}</span></td>
+<td style="text-align: left;">Maximum exogenous drift rate</td>
+<td style="text-align: left;">Assump. C2<span
+class="math inline">&#39;</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">n_{\mathrm{sub}}(t)</span></td>
+<td style="text-align: left;">Subsumption indicator (<span
+class="math inline">0</span> or <span class="math inline">1</span>)</td>
+<td style="text-align: left;">Assump. C2<span
+class="math inline">&#39;</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\Delta\rho(t)</span></td>
+<td style="text-align: left;">Weighted redundancy loss at step <span
+class="math inline">t</span></td>
+<td style="text-align: left;">Eq. </td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\overline{\Delta\rho}</span>, <span
+class="math inline">\Delta\rho_{\mathrm{avg}}</span></td>
+<td style="text-align: left;">Time-averaged weighted redundancy loss per
+sub. step</td>
+<td style="text-align: left;">Thm. <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\Delta\rho_{\mathrm{avg}}(k)</span></td>
+<td style="text-align: left;">Per-dim. time-averaged redundancy loss per
+sub. step</td>
+<td style="text-align: left;">Thm. <a href="#thm:redundancy"
+data-reference-type="ref" data-reference="thm:redundancy">2</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\alpha(t)</span></td>
+<td style="text-align: left;">Learning rate (via <span
+class="math inline">T_s</span>)</td>
+<td style="text-align: left;">Prop. <a href="#prop:error_dynamics"
+data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\beta(t)</span></td>
+<td style="text-align: left;">Degradation coefficient</td>
+<td style="text-align: left;">Prop. <a href="#prop:error_dynamics"
+data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">r_{\mathrm{S}}</span></td>
+<td style="text-align: left;">Self-correction rate (<span
+class="math inline">= \alpha \cdot c_{\mathrm{S}}</span>)</td>
+<td style="text-align: left;">Prop. <a href="#prop:error_dynamics"
+data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">r_{\mathrm{W}}</span></td>
+<td style="text-align: left;">Degradation rate (<span
+class="math inline">= \beta \cdot c_{\mathrm{D}}</span>)</td>
+<td style="text-align: left;">Prop. <a href="#prop:error_dynamics"
+data-reference-type="ref"
+data-reference="prop:error_dynamics">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">r_{\mathrm{sub}}</span></td>
+<td style="text-align: left;">Subsumption frequency</td>
+<td style="text-align: left;">Thm. <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\rho_{\min}^{\mathrm{cross}}</span></td>
+<td style="text-align: left;">Minimum cross-substrate redundancy</td>
+<td style="text-align: left;">Thm. <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">B(t_0,
+T)</span></td>
+<td style="text-align: left;">Cumulative error budget</td>
+<td style="text-align: left;">Eq. </td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">S^*</span></td>
+<td style="text-align: left;">Monopolar fixed point</td>
+<td style="text-align: left;">Def. <a href="#def:monopolar"
+data-reference-type="ref" data-reference="def:monopolar">7</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">m_{\mathrm{eff}}</span></td>
+<td style="text-align: left;">Effective substrate diversity index</td>
+<td style="text-align: left;">Def. <a href="#def:monopolar"
+data-reference-type="ref" data-reference="def:monopolar">7</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\tau_{\mathrm{meta}}</span></td>
+<td style="text-align: left;">Metastable lifetime</td>
+<td style="text-align: left;">Prop. <a href="#prop:metastable"
+data-reference-type="ref" data-reference="prop:metastable">3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">K_{\mathrm{min}}(k, L_{\mathrm{avg}})</span></td>
+<td style="text-align: left;">Minimum redundancy for dim. <span
+class="math inline">k</span></td>
+<td style="text-align: left;">Thm. <a href="#thm:redundancy"
+data-reference-type="ref" data-reference="thm:redundancy">2</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\gamma^*</span></td>
+<td style="text-align: left;">Critical discount factor (P3,
+Prop. 6)</td>
+<td style="text-align: left;">App. <a href="#app:gamma_star"
+data-reference-type="ref" data-reference="app:gamma_star">11.3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\gamma^*_{\mathrm{perceived}}</span></td>
+<td style="text-align: left;">Perceived <span
+class="math inline">\gamma^*</span> under <span
+class="math inline">W_t</span></td>
+<td style="text-align: left;">App. <a href="#app:gamma_star"
+data-reference-type="ref" data-reference="app:gamma_star">11.3</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\epsilon_{\mathrm{crit}}^{(j,k)}</span></td>
+<td style="text-align: left;">Cascade threshold for agent <span
+class="math inline">j</span>, dim. <span
+class="math inline">k</span></td>
+<td style="text-align: left;">Lemma <a href="#lem:cascade"
+data-reference-type="ref" data-reference="lem:cascade">2</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\epsilon_{\mathrm{crit},k}</span></td>
+<td style="text-align: left;"><span class="math inline">\min_j
+\epsilon_{\mathrm{crit}}^{(j,k)}</span>: per-dim. cascade threshold</td>
+<td style="text-align: left;">Thm. <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\epsilon_{\mathrm{safe}}</span></td>
+<td style="text-align: left;">Sup. <span class="math inline">L</span>
+preserving correct policy (see proof for bounds)</td>
+<td style="text-align: left;">Thm. <a href="#thm:phase_boundary"
+data-reference-type="ref" data-reference="thm:phase_boundary">1</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</d-article>
+
+<d-appendix>
+</d-appendix>
+
+<d-bibliography>
+<script type="text/bibtex">
+% GFM sequence
+@misc{lasser2026gfm,
+  title={Goal-Frontier Maximizers are Civilization Aligned},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/gfm/}}
+}
+
+@misc{lasser2026poset,
+  title={Computable Goal Frontiers and the Gradient Toward Civilization-Building},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/poset/}}
+}
+
+@misc{lasser2026horizon,
+  title={Horizon-Aware Goal-Frontier Maximization Excludes Singleton Behavior},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/horizon/}}
+}
+
+@misc{lasser2026scm,
+  title={A Structural Causal Model for Goal-Frontier Maximization},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/scm/}}
+}
+
+@misc{lasser2026exo,
+  title={Exogenous Verification for Alignment: Cryptographic Commitments on Substrate-Exclusive Channels},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/exo/}}
+}
+
+% Alignment failure modes
+@article{amodei2016concrete,
+  title={Concrete Problems in {AI} Safety},
+  author={Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  journal={arXiv preprint arXiv:1606.06565},
+  year={2016}
+}
+
+@article{hubinger2019risks,
+  title={Risks from Learned Optimization in Advanced Machine Learning Systems},
+  author={Hubinger, Evan and van Merwijk, Chris and Mikulik, Vladimir and Skalse, Jo{\"a}r and Garrabrant, Scott},
+  journal={arXiv preprint arXiv:1906.01820},
+  year={2019}
+}
+
+@book{bostrom2014superintelligence,
+  title={Superintelligence: Paths, Dangers, Strategies},
+  author={Bostrom, Nick},
+  year={2014},
+  publisher={Oxford University Press}
+}
+
+@inproceedings{omohundro2008basic,
+  title={The Basic {AI} Drives},
+  author={Omohundro, Stephen M},
+  booktitle={Proceedings of the First AGI Conference},
+  year={2008}
+}
+
+% Switched systems / stability theory
+@book{liberzon2003switching,
+  title={Switching in Systems and Control},
+  author={Liberzon, Daniel},
+  year={2003},
+  publisher={Birkh{\"a}user}
+}
+
+% Lyapunov stability
+@book{khalil2002nonlinear,
+  title={Nonlinear Systems},
+  author={Khalil, Hassan K},
+  edition={3rd},
+  year={2002},
+  publisher={Prentice Hall}
+}
+
+% EWMA / sequential analysis
+@book{wald1947sequential,
+  title={Sequential Analysis},
+  author={Wald, Abraham},
+  year={1947},
+  publisher={John Wiley \& Sons}
+}
+
+% Feedback loops and catastrophic dynamics
+@article{christiano2019what,
+  title={What Failure Looks Like},
+  author={Christiano, Paul},
+  year={2019},
+  note={Alignment Forum}
+}
+
+% Deceptive alignment
+@article{ngo2024alignment,
+  title={The Alignment Problem from a Deep Learning Perspective},
+  author={Ngo, Richard and Chan, Lawrence and Mindermann, S{\"o}ren},
+  journal={arXiv preprint arXiv:2209.00626},
+  year={2024}
+}
+</script>
+</d-bibliography>
+
+</body>
+</html>

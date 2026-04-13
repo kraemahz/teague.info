@@ -105,11 +105,21 @@ Therefore $B(t_0, T) \geq 0$ for every window, with equality only in
 the trivial case where no restriction occurs.
 
 For any non-trivial restriction step ($\nsub(t) = 1$ with
-$\Delta\rho(t) > 0$ or $\Lyap(\Wm_t) > 0$), $B > 0$ and Part~(b)
-of Theorem~\ref{thm:phase_boundary} applies.  Every restriction step
-reduces observation (no exercise produces no evidence), increasing
-world-model error on the risk dimension, making the next restriction
-appear more justified under the miscalibrated model.
+$\Delta\rho(t) > 0$ or $\Lyap(\Wm_t) > 0$), $B > 0$, satisfying
+condition~(i) of Theorem~\ref{thm:phase_boundary}, Part~(b).
+Conditions~(ii) and~(iii) follow from the restriction-specific
+dynamics: each restriction step removes the exercise that would
+generate evidence (no exercise $\to$ no evidence), driving
+$\rhocross_k \to 0$ on the risk dimension (satisfying~(ii)).  With
+$\rS = 0$ and the risk dimension environmentally non-stationary (the
+true risk changes as the restricted capability's context evolves
+without observation), the error $\epsilon_k$ grows, eventually
+exceeding $\epsilon_{\mathrm{crit},k}$ (satisfying~(iii)).  Note that
+$\dmax > 0$ bounds the drift rate from above (C2$'$); the cascade
+requires positive drift, which is a structural consequence of
+non-stationarity on the restricted dimension.  All three conditions of Part~(b) are
+therefore met, and the cascade drives the system toward maximal
+restriction.
 
 This is the formal statement of why the Wamura problem was called
 ``the most important open problem'' in Paper~3's discussion: without a

@@ -10,28 +10,33 @@ self-correcting basin?
 
 \begin{theorem}[Minimum Redundancy for Self-Correcting Dynamics]
 \label{thm:redundancy}
-For the self-correcting basin (Theorem~\ref{thm:phase_boundary},
-Part~a) to contain all initial states with $\Lyap(\Wm_0) \leq
-L_{\max}$ (world-model error bounded at initialization), a sufficient
-condition on the \emph{initial} substrate partition is:
+For the simplified sufficient condition
+(Equation~\ref{eq:self_correcting}) to be satisfied, a sufficient
+condition on the substrate partition is:
 \begin{equation}
 \label{eq:kmin}
 \forall\; k \in \{1, \ldots, K\}: \quad
-\rhocross_k(P) \geq \Kmin(k, L_{\max})
+\rhocross_k(P) \geq \Kmin(k, \Lyap_{\mathrm{avg}})
 \end{equation}
 where
 \begin{equation}
 \label{eq:kmin_formula}
-\Kmin(k, L_{\max}) =
-  \frac{\rW(k) \cdot \rsub^{\max}(L_{\max})
-    + \dmax(k) \cdot \Delta\rho_{\mathrm{avg}}(k) / L_{\max}}
-  {\rS(k)}
+\Kmin(k, \Lyap_{\mathrm{avg}}) =
+  \frac{\rW \cdot \rsub^{\max}
+    + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
+    \Lyap_{\mathrm{avg}}}
+  {\rS}
 \end{equation}
-and $\rsub^{\max}(L_{\max})$ is the maximum subsumption rate under
-locally rational dynamics from any state in the basin with
-$\Lyap(\Wm) \leq L_{\max}$.  Note that $\Kmin$ is real-valued, since
-$\rhocross_k$ is defined as a sensitivity-weighted sum
-(Definition~\ref{def:cross_redundancy}), not an integer count.
+$\rsub^{\max}$ is the maximum subsumption rate under
+locally rational dynamics over the relevant trajectory window, and $\Delta\rho_{\mathrm{avg}}(k)$ is
+the time-averaged redundancy loss on dimension $k$ per subsumption
+step.  The rates $\rS$, $\rW$, $\dmax$ are the global bounds from
+Theorem~\ref{thm:phase_boundary}; the per-dimension dependence enters
+only through $\Delta\rho_{\mathrm{avg}}(k)$, which varies across
+dimensions because different dimensions lose different amounts of
+channel coverage per subsumption event.  Note that $\Kmin$ is
+real-valued, since $\rhocross_k$ is defined as a sensitivity-weighted
+sum (Definition~\ref{def:cross_redundancy}), not an integer count.
 
 \emph{Qualification:} this criterion is sufficient at initialization
 but is not a maintained invariant along trajectories.  The redundancy
@@ -43,33 +48,44 @@ the phase boundary analysis (see proof for discussion).
 \end{theorem}
 
 \begin{proof}
-The self-correcting condition
-(Equation~\ref{eq:self_correcting}) requires
-$\rS \cdot \rhomincross > \rW \cdot \rsub + \dmax \cdot
-\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$.
-Solving for $\rhomincross$ yields
-Equation~\ref{eq:kmin_formula}.
+The per-dimension dynamics (Proposition~\ref{prop:error_dynamics})
+give each dimension $k$ its own correction rate $\rS \cdot
+\rhocross_k(P_t)$ and its own drift exposure
+$\dmax \cdot \Delta\rho_k(t)$, where $\Delta\rho_k$ is the
+redundancy loss on dimension $k$ specifically.  Requiring each
+dimension individually to satisfy the self-correcting condition
+yields the per-dimension criterion: $\rS \cdot \rhocross_k >
+\rW \cdot \rsub + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
+\Lyap_{\mathrm{avg}}$.  Solving for $\rhocross_k$ yields
+Equation~\ref{eq:kmin_formula}.  Note that $\Kmin$ increases as
+$\Lyap_{\mathrm{avg}}$ decreases: well-calibrated dimensions require
+\emph{more} redundancy to protect against channel removal, because
+drift exposure dominates the error-proportional term when current
+error is small.  (The global condition
+Equation~\ref{eq:self_correcting} is recovered by taking
+$\rhomincross = \min_k \rhocross_k$ and
+$\Delta\rho_{\mathrm{avg}} = \max_k \Delta\rho_{\mathrm{avg}}(k)$.)
 
-The dependence on $L_{\max}$ enters through two channels:
-$\rsub^{\max}(L_{\max})$ increases with $L_{\max}$ (larger errors
-produce more aggressive locally rational subsumption), and the
-$\dmax / L_{\max}$ ratio increases as $L_{\max}$ decreases (drift
-exposure dominates the error-proportional term when initial error is
-small).  The second channel captures the ``well-calibrated channel
-removal'' failure mode: when $L_{\max}$ is small and
-$\Delta\rho_{\mathrm{avg}}$ is nonzero, $\Kmin$ can be substantially
-larger than the formula without the drift term would predict.
+The $\Kmin$ formula has two regimes: when $\Lyap_{\mathrm{avg}}$ is
+large relative to $\Delta\rho_{\mathrm{avg}}(k)$, the
+error-proportional term dominates and $\Kmin$ is moderate; when
+$\Lyap_{\mathrm{avg}}$ is small, the drift-exposure term
+$\dmax / \Lyap_{\mathrm{avg}}$ dominates and $\Kmin$ grows.  The
+second regime captures the ``well-calibrated channel removal'' failure
+mode: $\Kmin$ can be substantially larger than the formula without the
+drift term would predict.
 
-The design criterion is stated for the \emph{initial} redundancy
-$\rhocross_k(P_0)$, but the self-correcting condition in
-Theorem~\ref{thm:phase_boundary} is trajectory-level: $\rhocross_k$
-may decrease under the dynamics being analyzed.  The criterion is
-therefore a sufficient condition at initialization, not a guarantee
-that remains satisfied.  A stronger result would bound the worst-case
-$\rhocross_k$ along all trajectories starting from the basin, which
-requires coupling the redundancy dynamics to the phase boundary
-analysis.  We note this gap and state the criterion as a design
-guideline rather than a closed safety guarantee.
+The design criterion requires knowing $\Lyap_{\mathrm{avg}}$, a
+trajectory-dependent quantity.  In practice one uses a representative
+operating-regime estimate; for a system with error bounded by
+$L_{\max}$, substituting $\Lyap_{\mathrm{avg}} = L_{\max}$ gives a
+\emph{lower bound} on $\Kmin$ (anti-conservative; the true $\Kmin$
+may be larger if the system operates at lower error).  The criterion
+is therefore a design guideline for the expected operating regime, not
+a worst-case safety guarantee.  A closed guarantee would require
+either a lower bound on $\Lyap_{\mathrm{avg}}$ (bounding the system
+away from perfect calibration) or coupling the redundancy dynamics to
+the phase boundary analysis.
 \end{proof}
 
 \subsection{Practical implications}
@@ -80,19 +96,26 @@ For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
 \begin{enumerate}
 \item $\rhocross_k \leq 2$ for each dimension $k$ (at most one channel
   from each substrate).
-\item The criterion requires
-  $\rS(k) \geq \rW(k) \cdot \rsub^{\max} / 2$ for every dimension $k$.
+\item The full criterion (Equation~\ref{eq:kmin_formula}) requires
+  $\rS \geq (\rW \cdot \rsub^{\max} + \dmax \cdot
+  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}) / 2$ for every
+  dimension $k$ (substituting $\rhocross_k = 2$).
 \item Dimensions where one substrate provides the only cross-substrate
   signal have $\rhocross_k = 1$, requiring
-  $\rS(k) \geq \rW(k) \cdot \rsub^{\max}$: the self-correction rate
-  must exceed the degradation rate unaided by redundancy.
+  $\rS \geq \rW \cdot \rsub^{\max} + \dmax \cdot
+  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$: the
+  self-correction rate must exceed both degradation and drift exposure
+  unaided by redundancy.
 \end{enumerate}
 \end{corollary}
 
 This means that in a two-substrate world, each substrate's observation
 channels are singularly load-bearing for every dimension they cover.
-Loss of one substrate's channel on any dimension immediately violates
-the redundancy criterion on that dimension.
+Loss of one substrate's channel on a dimension reduces $\rhocross_k$
+from at most $2$ to at most $1$; the redundancy criterion is
+immediately violated on any dimension where
+$\Kmin(k, \Lyap_{\mathrm{avg}}) > 1$, and provides zero safety margin
+on dimensions where $\Kmin(k, \Lyap_{\mathrm{avg}}) \leq 1$.
 
 \begin{remark}[Progressive attenuation as the primary threat]
 \label{rem:attenuation}

@@ -36,7 +36,10 @@ Paper~2~\citep{lasser2026poset}) and $\mathcal{W} = [0,1]^K$.
 
 \begin{definition}[Locally Rational Transition]
 \label{def:transition}
-At each step, the actor selects the action $\pi_t$ that maximizes its
+The action set $\mathcal{A}_t$ is finite at each step (consisting of
+preserve/subsume decisions for each agent pair; the finiteness of the
+agent set implies finiteness of $\mathcal{A}_t$).  At each step, the
+actor selects the action $\pi_t \in \mathcal{A}_t$ that maximizes its
 discounted expected value under its current (possibly miscalibrated)
 world model:
 \begin{equation}

@@ -69,14 +69,15 @@ dynamics and the anti-monopolar result (Paper~3, Proposition~6) applies.
 
 The feedback loop self-corrects provided the neighborhood radius
 $\Lyap_\infty < \epsilon_{\mathrm{safe}}$, which imposes an additional
-constraint on the steady-state subsumption rate.  \emph{Note:} the
-computable lower bound on $\epsilon_{\mathrm{safe}}$ (derived in
-the proof) rules out single-coordinate action flips but not joint
-multi-coordinate flips where no single $\epsilon_k$ exceeds its
-critical threshold but the combined effect still flips an action.
-The self-correcting basin may therefore be smaller than the explicit
-bound suggests; see the proof for a tighter (but parameter-dependent)
-alternative using action-gap gradient norms.
+constraint on the steady-state subsumption rate.  \emph{Note:}
+$\epsilon_{\mathrm{safe}} > 0$ follows from continuity of the action
+gaps and finiteness of the action set (see proof).  A computable lower
+bound using action-gap gradient norms (Cauchy--Schwarz in the
+$w$-weighted metric) is derived there; the easier-to-compute
+per-coordinate estimator $\min_k w_k \cdot
+\epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips but
+may overestimate $\epsilon_{\mathrm{safe}}$ when action gaps are
+sensitive to multiple coordinates simultaneously.
 
 \medskip
 \noindent\textbf{Simplified sufficient condition.}  In the linearized
@@ -97,13 +98,15 @@ all the correction work'' failure mode.
 \medskip
 \noindent\textbf{Part~(b): Absorbing Basin.}
 Under Assumption~B1 (no endogenous correction on blind dimensions;
-Assumption~\ref{ass:B1}):
+Assumption~\ref{ass:B1}) and the multi-dimensional monotonicity
+condition (ii$'$) from the Cascade Lemma~(\ref{lem:cascade}; needed
+for propagation beyond the initial trigger):
 
 If there exists a trajectory segment $[t_0, t_0 + T]$ during which
 \begin{enumerate}
 \item[(i)] $B(t_0, T) > 0$ (cumulative degradation exceeds cumulative
   correction),
-\item[(ii)] by $t_0 + T$, $\rhocross_k(P_t)$ has been reduced to $0$
+\item[(ii)] by $t_0 + T$, $\rhocross_k(P_{t_0+T})$ has been reduced to $0$
   on at least one cascade dimension $k$ with $w_k > 0$, and
 \item[(iii)] the accumulated error on $k$ exceeds the cascade
   threshold: $\epsilon_k(t_0 + T) > \epsilon_{\mathrm{crit},k}$
@@ -111,17 +114,31 @@ If there exists a trajectory segment $[t_0, t_0 + T]$ during which
   flips any preserve/subsume action),
 \end{enumerate}
 then the following cascade occurs.  By Assumption~B1a,
-$\epsilon_k(t)$ is non-decreasing for $t > t_0 + T$.  Moreover, when
-$\dmax > 0$ the exogenous drift from C2$'$ ensures that $\epsilon_k$
-\emph{grows} (the true state evolves while the blind estimate cannot
-track it), so error accumulates and condition~(iii) is sustained.
+$\epsilon_k(t)$ is non-decreasing for $t > t_0 + T$ (the blinded
+dimension cannot self-correct).  If the environment is
+\emph{non-stationary} on dimension $k$---the true value $\Wm^*[k]$
+continues to evolve while the agent's estimate $\Wm_t[k]$ remains
+frozen---then $\epsilon_k$ grows and condition~(iii) is sustained.
+(Assumption~C2$'$ bounds the \emph{rate} of drift via $\dmax$ but does
+not guarantee drift occurs; the cascade requires the structural
+condition that blinded dimensions are not environmentally stationary.
+In the multi-agent setting where subsumption eliminates active
+participants, non-stationarity is the generic case: the remaining
+agents' actions change the true state on dimensions the eliminated
+agent's channels were tracking.)
 
 The Cascade Lemma (Appendix~\ref{app:cascade}) propagates the failure:
 the resulting subsumptions drive $\rhocross_j \to 0$ on additional
 dimensions $j \neq k$ (provided the agent-channel graph is
 connected---each subsumption removes channels covering at least one
-new dimension), and each newly blinded dimension accumulates error
-past its cascade threshold by the same $\dmax > 0$ drift mechanism.
+new dimension).  Each newly blinded dimension $j'$ has
+$\epsilon_{j'}$ non-decreasing (by B1a); if environmental
+non-stationarity causes $\epsilon_{j'}$ to exceed
+$\epsilon_{\mathrm{crit},j'}$, the cascade propagates via the same
+action-flip mechanism.  (The cascade is conditional on threshold
+crossing at each stage; non-stationarity is the generic driver but
+a dimension that happens to be environmentally stationary after
+blinding does not cascade further.)
 The trajectory converges to a neighborhood of the monopolar fixed
 point $S^*$ (Definition~\ref{def:monopolar}).  If the channel-coverage
 graph has disconnected components, the cascade is confined to the
@@ -141,14 +158,18 @@ error upward.
 \medskip
 \noindent\textbf{Part~(b$'$): Metastable Basin.}
 Under Assumption~B1$'$ (partial endogenous correction via indirect
-evidence; Assumption~\ref{ass:B1prime}):
+evidence; Assumption~\ref{ass:B1prime}), together with B1b--B1c from
+Assumption~\ref{ass:B1} (cross-substrate quantities not inferrable from
+same-substrate observations; no exploratory actions):
 
-Under the same trajectory conditions~(i)--(iii) as Part~(b), the system
+Under the same trajectory conditions~(i)--(iii) as Part~(b) (with the
+multi-dimensional monotonicity condition from Part~(b)), the system
 enters a \emph{metastable} basin rather than an absorbing one.  The
-metastable lifetime $\tau_{\mathrm{meta}} \geq (\delta_{\rext})^2 /
-(2 I_k)$ (Proposition~\ref{prop:metastable}).  During the metastable period, the
-system is monopolar and operates under endogenous verification only
-(Paper~5).
+metastable lifetime scales as $\tau_{\mathrm{meta}} \gtrsim
+(\delta_{\rext})^2 / (2 I_k)$ (Proposition~\ref{prop:metastable};
+information-theoretic scaling argument, not a rigorous bound).  During
+the metastable period, the system is monopolar and operates under
+endogenous verification only (Paper~5).
 
 \medskip
 \noindent\textbf{Part~(c): Critical Surface.}
@@ -160,8 +181,10 @@ The phase boundary surface in the linearized regime is:
 \end{equation}
 Below this surface (correction dominates both error-proportional growth
 and drift exposure): the system is in the self-correcting basin.
-Above this surface: the system is in the absorbing basin (under B1) or
-the metastable basin (under B1$'$).
+Above this surface, the self-correcting sufficient condition fails;
+the system enters the absorbing basin (under B1) or the metastable
+basin (under B1$'$) if the additional blindness and threshold-trigger
+conditions of Parts~(b)/(b$'$) are also met.
 
 The critical cross-substrate redundancy for a given
 $(\rS, \rW, \rsub, \dmax, \Delta\rho_{\mathrm{avg}},
@@ -263,32 +286,50 @@ are correct and the anti-monopolar property applies.  Define:
 \right\}
 \end{equation*}
 where $\pi^*(\Wm) = \arg\max_\pi \Vdisc(\pi, \Wm)$ is the locally
-rational policy.  Since the action set is finite
+rational policy (evaluated at the reference action set
+$\mathcal{A}_{t^*}$ at the time the system enters the neighborhood).
+Since $\mathcal{A}_{t^*}$ is finite
 (Definition~\ref{def:transition}) and each action gap $G_j(\Wm)$ is
-continuous with $G_j(\Wm^*) > 0$ for the optimal action, the set
+continuous with $G_j(\Wm^*) > 0$ for the optimal action (strict gap;
+this requires a unique optimum at $\Wm^*$, which holds generically for
+finite action sets), the set
 $\{\Wm : \pi^*(\Wm) = \pi^*(\Wm^*)\}$ is open and contains $\Wm^*$,
 so $\epsilon_{\mathrm{safe}} > 0$.
 
-A computable \emph{sufficient condition} for $\Lyap <
-\epsilon_{\mathrm{safe}}$ uses the per-dimension cascade thresholds.
-Define $\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in
-\mathcal{A}_t} \epsilon_{\mathrm{crit}}^{(j,k)}$
-(Lemma~\ref{lem:cascade}, minimized over all agents; the smallest
-error on dimension $k$ that could flip any single pairwise
-comparison).  Then $\epsilon_{\mathrm{safe}} \geq \min_k \, w_k \cdot
-(\epsilon_{\mathrm{crit},k})^2$: for any $\Wm$ with
-$\Lyap(\Wm) < \min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$, we
-have $\epsilon_k < \epsilon_{\mathrm{crit},k}$ for every $k$ (since
-$\Lyap \geq w_k \cdot \epsilon_k^2$), and by definition of
-$\epsilon_{\mathrm{crit},k}$ no single-coordinate perturbation flips
-any pairwise action gap.  Since additionally the Lyapunov ball
-$\{\Wm : \Lyap(\Wm) \leq \epsilon\}$ is contained in the open
-correct-policy region for sufficiently small $\epsilon$ (by the
-openness established above), the per-coordinate bound provides a
-sufficient---if conservative---estimate.  (A tighter bound using
-$\min_j G_j(\Wm^*) / \|\nabla G_j\|$ would account for joint
-multi-coordinate perturbations but requires gradient-norm estimates
-we do not derive here.)
+A computable \emph{lower bound} on $\epsilon_{\mathrm{safe}}$ uses the
+action-gap gradient.  By the Cauchy--Schwarz inequality in the
+$w$-weighted metric, for any agent $a_j$:
+\begin{equation*}
+|G_j(\Wm) - G_j(\Wm^*)|
+  \leq \|\nabla_\epsilon G_j\|_w \cdot \sqrt{\Lyap(\Wm)}
+\end{equation*}
+where $\|\nabla_\epsilon G_j\|_w^2 =
+\sum_k (\partial G_j / \partial \epsilon_k)^2 / w_k$ (with the
+partial derivatives evaluated at their sup over the relevant ball).
+Therefore $\Lyap(\Wm) < [G_j(\Wm^*)]^2 / \|\nabla_\epsilon
+G_j\|_w^2$ implies $G_j(\Wm) > 0$.  Taking the minimum over agents:
+\begin{equation}
+\label{eq:eps_safe_bound}
+\epsilon_{\mathrm{safe}} \geq
+  \min_{j \in \mathcal{A}_{t^*}}
+  \frac{[G_j(\Wm^*)]^2}{\|\nabla_\epsilon G_j\|_w^2}
+\end{equation}
+This bound accounts for joint multi-coordinate perturbations and is
+the primary computable lower bound on $\epsilon_{\mathrm{safe}}$.
+
+Define additionally the per-dimension cascade threshold
+$\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in \mathcal{A}_{t^*}}
+\epsilon_{\mathrm{crit}}^{(j,k)}$ (Lemma~\ref{lem:cascade}; the
+smallest error on dimension $k$ that flips any single pairwise
+comparison).  The per-coordinate quantity $\min_k w_k \cdot
+\epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips and
+is easier to compute, but may overestimate $\epsilon_{\mathrm{safe}}$
+when action gaps are sensitive to multiple coordinates simultaneously
+(e.g., $G = c_0 - \sum_k c_k \epsilon_k$ flips at a radius below the
+per-coordinate bound).  In either case,
+$\epsilon_{\mathrm{safe}} > 0$ from the openness argument, and the
+self-correcting condition $\Lyap_\infty < \epsilon_{\mathrm{safe}}$
+imposes a finite constraint on the steady-state subsumption rate.
 
 \emph{Step 2: Part~(b).}
 Suppose $B(t_0, T) > 0$ on some window and
@@ -307,12 +348,13 @@ trajectory stays.
 Under B1$'$, the indirect signal $g_k$ provides correction at rate
 $I_k$ on the blinded dimension.  The cascade structure is the same as
 Part~(b) but convergence to $S^*$ is slowed by $I_k$.  The metastable
-lifetime $\tau_{\mathrm{meta}} \geq (\delta_{\rext})^2 / (2 I_k)$
-emerges from the Cram\'er--Rao-type bound on sequential estimation:
-reducing the mean-squared error of $\hat{\rext}$ from
+lifetime scales as $\tau_{\mathrm{meta}} \gtrsim (\delta_{\rext})^2 /
+(2 I_k)$ (information-theoretic scaling argument, not a rigorous
+bound): reducing the mean-squared error of $\hat{\rext}$ from
 $\delta_{\rext}^2$ to the level at which re-introduction becomes
-locally rational requires at least $\delta_{\rext}^2 / (2 I_k)$
-steps from a channel providing $I_k$ bits per step.
+locally rational requires $\Omega(\delta_{\rext}^2 / I_k)$
+steps from a channel providing $I_k$ bits per step
+(Cram\'er--Rao-type scaling).
 
 \emph{Step 4: Part~(c).}
 The critical surface is obtained by setting $B(t_0, T) = 0$ in the
