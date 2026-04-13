@@ -48,24 +48,60 @@ assumptions that bound the correction and degradation signals.
 
 \begin{assumption}[Coercivity of Self-Correction (C1)]
 \label{ass:C1}
-There exists a constant $c_{\mathrm{S}} > 0$ such that the aggregate
-correction signal satisfies
+There exist constants $c_{\mathrm{S}} > 0$ and $c_{\mathrm{V}} \geq 0$
+such that the aggregate correction signal satisfies
 \begin{equation}
 \label{eq:C1}
-S(t) \geq c_{\mathrm{S}} \cdot \rhomincross(P_t) \cdot \Lyap(\Wm_t)
+S(t) \geq \bigl(c_{\mathrm{S}} \cdot \rhomincross(P_t)
+  + c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)\bigr) \cdot \Lyap(\Wm_t)
 \end{equation}
-whenever $\Lyap(\Wm_t) > 0$ and $\rhomincross(P_t) > 0$.
+whenever $\Lyap(\Wm_t) > 0$, where
+$\nu(P_t, \Wm_t) = \bigl|\partial \volL(G_t) / \partial
+\Lyap(\Wm_t)\bigr|$ is the $\volL$-sensitivity to calibration
+improvement.
 \end{assumption}
 
-This states that aggregate correction is at least proportional to both
-the current error ($\Lyap$) and the available channel strength
-($\rhomincross$).  The justification follows from the EWMA learning
-rule structure in the risk-trust model of~\citet{lasser2026scm}: each observed channel
-drives its covered dimensions toward truth at a rate proportional to
-the error on that dimension (linear in the residual) and to the
-channel's effective sensitivity (captured in $\rho_k$).  Additivity
-across cross-substrate channels follows from the channel
-independence property~\citep{lasser2026exo} under the joint-factorization assumption.
+The correction signal has two sources.  The first term,
+$c_{\mathrm{S}} \cdot \rhomincross$, is \emph{exogenous}: observation
+channels push the world model toward truth at a rate proportional to
+channel strength and current error.  This follows from the EWMA learning
+rule structure in the risk-trust model of~\citet{lasser2026scm}, with
+additivity across cross-substrate channels under the channel
+independence property of~\citet{lasser2026exo}.
+
+The second term, $c_{\mathrm{V}} \cdot \nu$, is \emph{endogenous}: the
+actor is rewarded for improving its own calibration because better
+calibration produces better decisions, which preserve more cooperative
+capabilities, which increase $\volL$.  The sensitivity $\nu$ measures
+how much $\volL$ improves per unit of calibration improvement.  When
+$\nu > 0$, the actor has a $\volL$-gradient incentive to seek
+correction even beyond what the observation channels provide.  This
+endogenous pressure is what drives the actor to seek exogenous
+feedback: the actor \emph{wants} to be better calibrated because it can
+estimate (through $\nu$) that better calibration produces higher
+$\volL$.
+
+Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous correction
+model.  When $c_{\mathrm{V}} > 0$, the effective self-correction rate
+is $\rS^{\mathrm{eff}} = c_{\mathrm{S}} \cdot \rhomincross +
+c_{\mathrm{V}} \cdot \nu$, which is strictly larger than the exogenous
+rate alone.  This widens the self-correcting basin of
+Theorem~\ref{thm:phase_boundary}: the phase boundary condition becomes
+easier to satisfy because the actor's endogenous incentive supplements
+the observation-channel correction.
+
+\begin{remark}[Stabilizing cascade]
+\label{rem:stabilizing_cascade}
+The endogenous correction term creates a stabilizing cascade that
+mirrors the destabilizing cascade of the absorbing basin.  As the world
+model improves ($\Lyap$ decreases), the actor makes better decisions,
+which preserve more cooperative capabilities, which preserve more
+channels, which provide more correction signal.  The destabilizing
+cascade runs in reverse: channel loss degrades the model, which
+produces worse decisions, which lose more channels.  The phase boundary
+separates these two regimes, and the endogenous $c_{\mathrm{V}} \cdot
+\nu$ term tips the balance toward the stabilizing side.
+\end{remark}
 
 \begin{assumption}[Bounded Degradation (C2$'$)]
 \label{ass:C2prime}

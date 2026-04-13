@@ -102,13 +102,37 @@ boundary to account for the divergence between $\volL$ and the
 realized capability volume.  This extension is future work.
 
 \paragraph{Cryptographic verification.}
-\citet{lasser2026exo} addresses observation-channel integrity; this paper analyzes
-the dynamical consequences of channel \emph{availability}.
-The combination is: exogenous verification ensures channels are honest, this paper
-ensures enough honest channels survive.  A joint treatment---where
-the phase boundary accounts for both integrity failures~\citep{lasser2026exo} and
-availability failures (this paper)---would provide a stronger
-combined guarantee.
+\citet{lasser2026exo} addresses observation-channel integrity; this paper
+analyzes the dynamical consequences of channel \emph{availability}.
+The combination is: exogenous verification ensures channels are honest,
+this paper ensures enough honest channels survive.  A joint treatment
+where the phase boundary accounts for both integrity
+failures~\citep{lasser2026exo} and availability failures (this paper)
+would provide a stronger combined guarantee.
+
+\paragraph{World-model verification and the public ledger.}
+The self-correction rate $\rSeff$ depends on the information
+environment.  In the minimal case (actor uses only its own observation
+channels), $\rS$ is bounded by the channel sensitivity of
+Definition~\ref{def:redundancy}.  If world-model predictions are
+committed to the verification ledger of~\citet{lasser2026exo}, the
+actor gains access to a faster correction channel: other agents whose
+models disagree can flag discrepancies through the ledger's
+verification protocol, providing corrections that are both direct
+(rather than inferred from behavioral residuals) and exogenously
+verified.  This increases $\rSeff$ without increasing $\rhomincross$
+(the channel count is unchanged, but each channel's effective
+correction rate improves), widening the self-correcting basin.
+
+If world models are not merely committed but \emph{shareable} (other
+agents can read and build on them), the ledger becomes a bootstrapping
+mechanism: new agents enter the population with a calibrated world
+model derived from the public record rather than from scratch
+observation.  This addresses the initialization sensitivity of
+Theorem~\ref{thm:redundancy} (the design criterion depends on
+$\Lyap_{\max}$, the initial world-model error): a population with a
+shared world-model ledger starts new agents with lower $\Lyap_{\max}$,
+reducing the redundancy threshold for the self-correcting basin.
 
 \subsection{Open questions}
 

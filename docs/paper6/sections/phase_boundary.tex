@@ -11,8 +11,13 @@ Consider the coupled $(P, \Wm)$ dynamical system under locally rational
 transitions (Definition~\ref{def:transition}), with
 Assumptions~C1 and~C2$'$ (Section~\ref{sec:lyapunov}).  Define:
 \begin{itemize}
-\item $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$: a lower bound on
-  the self-correction rate (the infimum is taken over the trajectory),
+\item $\rS^{\mathrm{eff}} = \inf_t \bigl[\alpha(t) \cdot c_{\mathrm{S}}
+  \cdot \rhomincross(P_t) + c_{\mathrm{V}} \cdot \nu(P_t,
+  \Wm_t)\bigr] / \rhomincross(P_t)$: the effective self-correction rate,
+  combining exogenous channel correction ($c_{\mathrm{S}}$) with the
+  endogenous calibration incentive ($c_{\mathrm{V}} \cdot \nu$, see
+  Assumption~C1).  When $c_{\mathrm{V}} = 0$, this reduces to
+  $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$,
 \item $\rW = \sup_t \beta(t) \cdot c_{\mathrm{D}}$: an upper bound on
   the error-proportional degradation rate per subsumption step,
 \item $\dmax$: the maximum exogenous drift rate per dimension (from
@@ -54,7 +59,7 @@ whose radius is bounded by
 \begin{equation}
 \label{eq:neighborhood}
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
-  \overline{\Delta\rho}}{\rS \cdot \rhomincross - \rW \cdot \rsub}
+  \overline{\Delta\rho}}{\rSeff \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation}
 where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
 loss per subsumption step.  (We write $\overline{\Delta\rho}$
@@ -84,15 +89,24 @@ sensitive to multiple coordinates simultaneously.
 regime (Remark~\ref{rem:linearized}):
 \begin{equation}
 \label{eq:self_correcting}
-\rS \cdot \rhomincross > \rW \cdot \rsub
+\rSeff \cdot \rhomincross > \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
+where $\rSeff = \rS + c_{\mathrm{V}} \cdot \nu / \rhomincross$ is the
+effective correction rate combining exogenous channels ($\rS$) with the
+endogenous calibration incentive ($c_{\mathrm{V}} \cdot \nu$).  The
+endogenous term widens the self-correcting basin: the actor's own
+$\volL$-gradient toward better calibration supplements the observation
+channels, making the condition easier to satisfy than the purely
+exogenous version ($\rS \cdot \rhomincross > \ldots$).  Setting
+$c_{\mathrm{V}} = 0$ recovers the purely exogenous condition.
+
 The first term on the right is the error-proportional degradation cost;
 the second is the drift-exposure cost from lost channels.  When
 subsumption removes channels covering well-calibrated dimensions
 ($\Lyap_{\mathrm{avg}}$ is low but $\Delta\rho_{\mathrm{avg}}$ is
 nonzero), the second term dominates and the condition is harder to
-satisfy---correctly diagnosing the ``removing a channel that was doing
+satisfy, correctly diagnosing the ``removing a channel that was doing
 all the correction work'' failure mode.
 
 \medskip
