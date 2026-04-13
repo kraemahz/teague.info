@@ -10,9 +10,11 @@ self-correcting basin?
 
 \begin{theorem}[Minimum Redundancy for Self-Correcting Dynamics]
 \label{thm:redundancy}
-For the simplified sufficient condition
-(Equation~\ref{eq:self_correcting}) to be satisfied, a sufficient
-condition on the substrate partition is:
+The following per-dimension criterion is a necessary condition
+derived from the aggregate simplified sufficient condition
+(Equation~\ref{eq:self_correcting}); it is stated per-dimension for
+design guidance but inherits two relaxations from the derivation
+(see proof and qualifications below):
 \begin{equation}
 \label{eq:kmin}
 \forall\; k \in \{1, \ldots, K\}: \quad
@@ -84,14 +86,29 @@ yields the per-dimension criterion: $\rS \cdot \rhocross_k +
 \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} >
 \rW \cdot \rsub + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
 \Lyap_{\mathrm{avg}}$.  Solving for $\rhocross_k$ yields
-Equation~\ref{eq:kmin_formula}.  Note that $\Kmin$ increases as
+Equation~\ref{eq:kmin_formula}.  Two relaxations enter:
+\begin{enumerate}
+\item[(R1)] The denominator uses $\Lyap_{\mathrm{avg}}$ (the
+  aggregate time-averaged error across all dimensions), not a
+  per-dimension error.  If dimension~$k$ is well-calibrated but
+  other dimensions carry large error, $\Lyap_{\mathrm{avg}}$ is
+  inflated, making the drift term $\dmax \cdot
+  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$ artificially
+  small and $\Kmin(k)$ artificially low.  For conservative use,
+  substitute $\Lyap_{\mathrm{avg}} = w_k \cdot
+  \epsilon_{k,\mathrm{avg}}^2$ (the per-dimension contribution).
+\item[(R2)] The endogenous term is credited in full to each dimension
+  (see caveat above).  For conservative use, set $c_{\mathrm{V}} = 0$.
+\end{enumerate}
+Note that $\Kmin$ increases as
 $\Lyap_{\mathrm{avg}}$ decreases: well-calibrated dimensions require
 \emph{more} redundancy to protect against channel removal, because
 drift exposure dominates the error-proportional term when current
 error is small.  (The global condition
 Equation~\ref{eq:self_correcting} is recovered by taking
 $\rhomincross = \min_k \rhocross_k$ and
-$\Delta\rho_{\mathrm{avg}} = \max_k \Delta\rho_{\mathrm{avg}}(k)$.)
+$\Delta\rho_{\mathrm{avg}} = \max_k \Delta\rho_{\mathrm{avg}}(k)$;
+the aggregate condition does not have relaxations R1 or R2.)
 
 The $\Kmin$ formula has two regimes: when $\Lyap_{\mathrm{avg}}$ is
 large relative to $\Delta\rho_{\mathrm{avg}}(k)$, the

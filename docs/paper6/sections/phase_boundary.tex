@@ -399,8 +399,13 @@ $w$-weighted metric, for any agent $a_j$:
   \leq \|\nabla_\epsilon G_j\|_w \cdot \sqrt{\Lyap(\Wm)}
 \end{equation*}
 where $\|\nabla_\epsilon G_j\|_w^2 =
-\sum_k (\partial G_j / \partial \epsilon_k)^2 / w_k$ (with the
-partial derivatives evaluated at their sup over the relevant ball).
+\sum_k (\partial G_j / \partial \epsilon_k)^2 / w_k$, with the
+partial derivatives evaluated at their sup over the ball
+$\{\Wm : \Lyap(\Wm) \leq \Lyap_\infty\}$ (i.e., the neighborhood
+from Equation~\ref{eq:neighborhood}).  If a global Lipschitz
+constant $L_G$ for the action gaps is available, $\|\nabla_\epsilon
+G_j\|_w$ can be replaced by $L_G$, eliminating the dependence on
+the neighborhood radius.
 Therefore $\Lyap(\Wm) < [G_j(\Wm^*)]^2 / \|\nabla_\epsilon
 G_j\|_w^2$ implies $G_j(\Wm) > 0$.  Taking the minimum over agents:
 \begin{equation}
