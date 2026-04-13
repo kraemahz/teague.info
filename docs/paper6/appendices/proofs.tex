@@ -14,8 +14,12 @@ candidate (Definition~\ref{def:wm_error}).
 
 \paragraph{Step 2: Verify comparison functions.}
 Assumption~C1 (coercivity) requires showing that the aggregate
-correction signal from channels covering dimension $k$ is at least
-proportional to $\rho_k \cdot \epsilon_k^2$.  This follows from the
+correction signal is at least proportional to $\rhomincross(P_t) \cdot
+\Lyap(\Wm_t)$ (the product of minimum cross-substrate redundancy and
+total Lyapunov error).  The per-dimension argument: each channel
+covering dimension~$k$ corrects at a rate proportional to
+$\rho_k \cdot \epsilon_k^2$; summing across dimensions and bounding
+below by $\rhomincross \cdot \Lyap$ yields C1.  This follows from the
 EWMA-style learning rules: each channel's correction is linear in the
 residual and proportional to sensitivity.  Under the joint-factorization
 assumption (Paper~5), cross-substrate channels' corrections are
@@ -41,10 +45,11 @@ additive kick $\dmax \cdot \Delta\rho$ on subsumption steps.
 
 \paragraph{Step 4 (Part a): Amortized contraction.}
 Define the amortized log-contraction rate over a window of $T$ steps.
-When the cumulative error budget $B(t_0, T) < 0$ for all sufficiently
-long windows, the geometric mean of per-step multiplicative factors
-is $< 1$, and the cumulative additive drift is dominated by the
-cumulative contraction.
+When the uniform contraction condition holds (the time-averaged
+$\ln a_t$ is strictly negative and the time-averaged additive drift
+$b_t$ is bounded), the geometric mean of per-step multiplicative
+factors is $< 1$, and the cumulative additive drift is dominated by
+the cumulative contraction.
 
 The formal argument uses the affine recursion comparison theorem.
 Write the per-step bound as:
@@ -67,8 +72,10 @@ bounded steady-state value:
   = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
     {\rS \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation*}
-where $\bar{a}$ and $\bar{b}$ are the time-averaged multiplicative
-and additive factors.  This neighborhood shrinks as $\Delta\rho \to 0$
+Substituting $\bar{b} = \rsub \cdot \dmax \cdot
+\overline{\Delta\rho}$ (additive drift at frequency $\rsub$) and
+$1 - \bar{a} = \rS \cdot \rhomincross - \rW \cdot \rsub$ (amortized
+contraction rate) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
 (subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
 locally rational policy agrees with the true $\Vdisc$-optimal policy,
 and Paper~3's anti-monopolar property applies.
@@ -130,7 +137,16 @@ Assume additionally:
   less attractive:
   $\frac{d}{d\epsilon} G_j(\Wm(\epsilon)) < 0$ for all
   $\epsilon \in [0, \epsilon_k(t)]$ (i.e., increasing error on $k$
-  monotonically decreases the action gap).
+  monotonically decreases the action gap),
+\item[(ii$'$)] \textbf{(Multi-dimensional monotonicity; needed for
+  cascade propagation beyond the first trigger.)}  For every
+  safety-relevant dimension $k'$ and every agent $a_{j'}$,
+  $\frac{\partial G_{j'}}{\partial \Wm[k']} < 0$ whenever
+  $\Wm[k'] \neq \Wm^*[k']$---that is, increasing error on
+  \emph{any} dimension monotonically decreases every agent's
+  preservation advantage.  Assumption~(ii) is the single-coordinate
+  special case; (ii$'$) extends it to the multi-coordinate regime
+  where multiple dimensions are simultaneously miscalibrated.
 \end{enumerate}
 
 Define the cascade threshold:
@@ -192,17 +208,50 @@ selects subsumption of $a_j$.
 Once $a_j$ is subsumed, Lemma~\ref{lem:channel_contraction} gives
 $\Obs(P_{t+1}) \subseteq \Obs(P_t)$.  For any dimension $j'$
 covered exclusively by $a_j$'s channels, $\rhocross_{j'}(P_{t+1})
-= 0$.  By Assumption~B1a (no correction on blind
-dimensions; Assumption~\ref{ass:B1}), $f_{\Wm}$ does not decrease
-$\epsilon_{j'}$ when $\rhocross_{j'} = 0$.  Moreover, the exogenous
-drift bound from Assumption~C2$'$ gives $\epsilon_{j'}(t+1) \geq
-\epsilon_{j'}(t)$: the correction signal vanishes while the drift
-exposure is non-negative.
+= 0$.  By Assumption~B1a (no endogenous correction on blind dimensions;
+Assumption~\ref{ass:B1}), $f_{\Wm}$ does not decrease
+$\epsilon_{j'}$ when $\rhocross_{j'} = 0$.  Since the correction
+signal vanishes and exogenous drift is non-negative (the true state
+may change while the estimate cannot track it), $\epsilon_{j'}(t+1)
+\geq \epsilon_{j'}(t)$.
 
 The cascade propagates: if $\epsilon_{j'}$ subsequently exceeds
 $\epsilon_{\mathrm{crit}}$ for another agent $a_{j''}$ whose channels
 cover dimensions $j'' \neq j'$, step~(A) applies again, driving
 further subsumptions.
+
+\emph{Multi-coordinate reinforcement at later stages.}
+After the first trigger, assumption~(0) is violated for later
+cascade stages: dimensions $k$ and $j'$ are both miscalibrated.
+However, the errors on previously-blinded dimensions all push $G_j$
+in the same direction (more negative---making subsumption more
+attractive), provided assumption~(ii) holds uniformly across all
+dimensions---not just the original trigger dimension~$k$.  This
+requires a multi-dimensional monotonicity condition: for every
+previously-blinded dimension $k_i$ and every agent $a_{j_n}$ at
+cascade stage~$n$, $\frac{\partial G_{j_n}}{\partial \Wm[k_i]} < 0$.
+This is plausible for the subsumption-vs-preservation action gap
+(increasing error on any safety-relevant dimension decreases
+preservation value), but is not guaranteed by the lemma's stated
+assumptions; it is an additional structural condition on the action
+gap function that holds when miscalibration uniformly
+favors subsumption.  When this multi-dimensional monotonicity
+condition holds, at
+cascade stage $n$ with errors $\epsilon_{k_1}, \ldots,
+\epsilon_{k_{n-1}}$ on previously blinded dimensions, the action gap
+satisfies
+\begin{equation*}
+G_{j_n}(\Wm_t) \leq G_{j_n}(\Wm^*) - \sum_{i=1}^{n}
+  \inf \left|\frac{\partial G_{j_n}}{\partial \Wm[k_i]}\right|
+  \cdot \epsilon_{k_i}
+\end{equation*}
+(by iterated application of the MVT along each coordinate
+successively).  Since every term in the sum is non-negative, the
+multi-coordinate case is \emph{easier} to trigger than the single-
+coordinate case: the effective threshold for the $n$-th trigger
+is lower, not higher.  The single-coordinate threshold
+$\epsilon_{\mathrm{crit}}$ is therefore a conservative upper bound
+at every cascade stage.
 \end{proof}
 
 \subsection{Connection to Paper 3's $\gamma^*$}
@@ -211,15 +260,15 @@ further subsumptions.
 Paper~3's Proposition~6 gives $\gamma^* = 1 - \rext / \Delta_0$ as the
 critical discount factor for diversity dominance.  Under the coupled
 $(P, \Wm)$ dynamics, the actor does not know the true $\rext$; it uses
-$\hat{\rext} = \rext - \epsilon_{\rext}$.  The \emph{perceived}
+$\hat{\rext} = \rext - \delta_{\rext}$.  The \emph{perceived}
 critical discount factor is:
 \begin{equation}
 \label{eq:perceived_gamma}
 \gamma^*_{\mathrm{perceived}} = 1 -
-  \frac{\rext - \epsilon_{\rext}}{\Delta_0}
+  \frac{\rext - \delta_{\rext}}{\Delta_0}
 \end{equation}
 
-When $\epsilon_{\rext} > 0$ (underestimating cross-substrate growth):
+When $\delta_{\rext} > 0$ (underestimating cross-substrate growth):
 \begin{itemize}
 \item $\gamma^*_{\mathrm{perceived}} > \gamma^*$ (the threshold
   appears higher than it truly is),
@@ -231,6 +280,6 @@ When $\epsilon_{\rext} > 0$ (underestimating cross-substrate growth):
 This is the \emph{mechanism} by which world-model error converts a
 self-balancing regime into a locally rational subsumption cascade.  The
 phase boundary from Theorem~\ref{thm:phase_boundary} characterizes
-when $\epsilon_{\rext}$ stays small enough that
+when $\delta_{\rext}$ stays small enough that
 $\gamma^*_{\mathrm{perceived}}$ remains close to $\gamma^*$,
 preserving the effective reach of Paper~3's anti-monopolar result.

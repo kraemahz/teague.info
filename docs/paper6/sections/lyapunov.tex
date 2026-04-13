@@ -177,9 +177,16 @@ For subsumption steps ($\nsub(t) = 1$), apply both assumptions:
   \left(1 - \rS \cdot \rhomincross(P_t) + \rW\right)
   + \dmax \cdot \Delta\rho(t)
 \end{align*}
-where the last line absorbs $\beta(t)$ into $\dmax$ (redefining
-$\dmax$ to include the degradation coefficient, which is permissible
-since $\dmax$ is a free constant in C2$'$).
+where the last line uses the fact that C2$'$ bounds
+$D(t) \leq c_{\mathrm{D}} \cdot \Lyap(\Wm_t) + \dmax \cdot
+\Delta\rho(t)$ (with $\dmax$ already incorporating any environmental
+degradation effects as a free constant).  The $\beta(t)$ coefficient
+from the Lyapunov decomposition~\eqref{eq:lyap_decomposition} is
+absorbed: $\beta(t) \cdot \dmax$ is bounded by $\dmax$ when
+$\beta(t) \leq 1$ (which holds when the degradation coefficient is
+normalized into $c_{\mathrm{D}}$ and $\dmax$ in C2$'$).  All
+downstream uses of $\dmax$ refer to the constant from C2$'$ without
+redefinition.
 \end{proof}
 
 \subsection{Cumulative error budget}
@@ -242,11 +249,12 @@ distinct properties:
 \end{enumerate}
 Isolation prevents corruption propagation; independence makes correction
 signals additive.  The Lyapunov bound uses additivity, which requires
-independence, which requires joint factorization.  If joint factorization
-fails (shared environmental noise affects both substrates), correction
-signals may be sub-additive, and the effective $\rhocross_k$ should be
-discounted accordingly.  Using $\rhomincross$ makes the bound valid
-without assuming same-substrate independence while still requiring
+independence, which requires joint factorization (termed ``joint
+sufficiency'' in Paper~5).  If joint factorization fails (shared
+environmental noise affects both substrates), correction signals may
+be sub-additive, and the effective $\rhocross_k$ should be discounted
+accordingly.  Using $\rhomincross$ makes the bound valid without
+assuming same-substrate independence while still requiring
 cross-substrate independence via the joint-factorization assumption.
 \end{remark}
 

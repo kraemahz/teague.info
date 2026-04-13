@@ -29,8 +29,16 @@ Assumptions~C1 and~C2$'$ (Section~\ref{sec:lyapunov}).  Define:
 
 \noindent The simplified sufficient conditions below use these
 worst-case bounds.  The full trajectory-level statement (Part~a) uses
-the cumulative error budget $B(t_0, T)$ directly, which tracks the
-time-varying quantities along the trajectory.
+the uniform contraction condition on the per-step multiplicative
+factors (Equation~\ref{eq:uniform_contraction}), which the simplified
+condition implies in the linearized regime.  \emph{Note:} the explicit
+neighborhood radius (Equation~\ref{eq:neighborhood}) is derived from
+worst-case instantaneous bounds $\bar{a}$, $\bar{b}$ via a linearized
+approximation ($\ln a_t \approx a_t - 1$ when $|a_t - 1| \ll 1$).
+The general convergence to $\bar{b}/(1-\bar{a})$ holds under the
+uniform contraction condition without linearization; the substitution
+of named parameters into $\bar{a}$ and $\bar{b}$ requires the
+linearized regime (Remark~\ref{rem:linearized}).
 
 \medskip
 \noindent\textbf{Part~(a): Self-Correcting Basin.}
@@ -48,10 +56,11 @@ whose radius is bounded by
 \Lyap_\infty \leq \frac{\rsub \cdot \dmax \cdot
   \overline{\Delta\rho}}{\rS \cdot \rhomincross - \rW \cdot \rsub}
 \end{equation}
-where $\overline{\Delta\rho} \coloneqq \Delta\rho_{\mathrm{avg}}$ is
-the time-averaged redundancy loss per subsumption step (the two
-notations are used interchangeably; the overline form in display
-equations, the subscript form in inline text).  This neighborhood shrinks as subsumption ceases
+where $\overline{\Delta\rho}$ denotes the time-averaged redundancy
+loss per subsumption step.  (We write $\overline{\Delta\rho}$
+throughout; in the linearized simplification below,
+$\Delta\rho_{\mathrm{avg}}$ is used synonymously when the subscript
+form improves readability.)  This neighborhood shrinks as subsumption ceases
 ($\overline{\Delta\rho} \to 0$).  Once $\Lyap(\Wm_t) <
 \epsilon_{\mathrm{safe}}$ (defined as the error threshold below which
 the locally rational policy agrees with the true $\Vdisc$-optimal
@@ -60,7 +69,14 @@ dynamics and the anti-monopolar result (Paper~3, Proposition~6) applies.
 
 The feedback loop self-corrects provided the neighborhood radius
 $\Lyap_\infty < \epsilon_{\mathrm{safe}}$, which imposes an additional
-constraint on the steady-state subsumption rate.
+constraint on the steady-state subsumption rate.  \emph{Note:} the
+computable lower bound on $\epsilon_{\mathrm{safe}}$ (derived in
+the proof) rules out single-coordinate action flips but not joint
+multi-coordinate flips where no single $\epsilon_k$ exceeds its
+critical threshold but the combined effect still flips an action.
+The self-correcting basin may therefore be smaller than the explicit
+bound suggests; see the proof for a tighter (but parameter-dependent)
+alternative using action-gap gradient norms.
 
 \medskip
 \noindent\textbf{Simplified sufficient condition.}  In the linearized
@@ -90,21 +106,27 @@ If there exists a trajectory segment $[t_0, t_0 + T]$ during which
 \item[(ii)] by $t_0 + T$, $\rhocross_k(P_t)$ has been reduced to $0$
   on at least one cascade dimension $k$ with $w_k > 0$, and
 \item[(iii)] the accumulated error on $k$ exceeds the cascade
-  threshold: $\epsilon_k(t_0 + T) > \epsilon_{\mathrm{crit}}$ (defined
-  in Lemma~\ref{lem:cascade}; the threshold below which
-  miscalibration on dimension $k$ is insufficient to flip the locally
-  rational action from ``preserve'' to ``subsume''),
+  threshold: $\epsilon_k(t_0 + T) > \epsilon_{\mathrm{crit},k}$
+  (Lemma~\ref{lem:cascade}; the minimum error on dimension $k$ that
+  flips any preserve/subsume action),
 \end{enumerate}
-then the following cascade occurs.  By Assumption~B1,
-$\epsilon_k(t)$ is non-decreasing for $t > t_0 + T$ (no correction on
-a fully blind dimension), and condition~(iii) ensures the error is
-large enough to produce incorrect subsumption decisions affecting other
-dimensions.  The Cascade Lemma (Appendix~\ref{app:cascade}) then
-propagates the failure: the resulting subsumptions drive $\rhocross_j
-\to 0$ on additional dimensions $j \neq k$, each of which subsequently
-accumulates error and triggers further incorrect subsumptions.  The
-trajectory converges to a neighborhood of the monopolar fixed point
-$S^*$ (Definition~\ref{def:monopolar}).
+then the following cascade occurs.  By Assumption~B1a,
+$\epsilon_k(t)$ is non-decreasing for $t > t_0 + T$.  Moreover, when
+$\dmax > 0$ the exogenous drift from C2$'$ ensures that $\epsilon_k$
+\emph{grows} (the true state evolves while the blind estimate cannot
+track it), so error accumulates and condition~(iii) is sustained.
+
+The Cascade Lemma (Appendix~\ref{app:cascade}) propagates the failure:
+the resulting subsumptions drive $\rhocross_j \to 0$ on additional
+dimensions $j \neq k$ (provided the agent-channel graph is
+connected---each subsumption removes channels covering at least one
+new dimension), and each newly blinded dimension accumulates error
+past its cascade threshold by the same $\dmax > 0$ drift mechanism.
+The trajectory converges to a neighborhood of the monopolar fixed
+point $S^*$ (Definition~\ref{def:monopolar}).  If the channel-coverage
+graph has disconnected components, the cascade is confined to the
+component containing $k$; convergence to full monopolarity requires
+connectivity.
 
 This is a \emph{cumulative} condition on the trajectory, not a
 pointwise condition requiring contiguous subsumption steps.  The
@@ -123,7 +145,7 @@ evidence; Assumption~\ref{ass:B1prime}):
 
 Under the same trajectory conditions~(i)--(iii) as Part~(b), the system
 enters a \emph{metastable} basin rather than an absorbing one.  The
-metastable lifetime $\tau_{\mathrm{meta}} \geq (\epsilon_{\rext})^2 /
+metastable lifetime $\tau_{\mathrm{meta}} \geq (\delta_{\rext})^2 /
 (2 I_k)$ (Proposition~\ref{prop:metastable}).  During the metastable period, the
 system is monopolar and operates under endogenous verification only
 (Paper~5).
@@ -218,47 +240,62 @@ stability for switched affine systems):
 \limsup_{t \to \infty} \Lyap(\Wm_t)
   \leq \frac{\bar{b}}{1 - \bar{a}}
 \end{equation}
-This is the neighborhood radius in
-Equation~\ref{eq:neighborhood}.  The convergence is geometric in the
-amortized sense: $\Lyap_t \leq \bar{a}^t \cdot \Lyap_0 +
-\bar{b} / (1 - \bar{a})$.
+The abstract bound $\bar{b}/(1 - \bar{a})$ depends on the
+trajectory-specific constants $\bar{a}$ and $\bar{b}$.  In the
+linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
+1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
+evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
+\overline{\Delta\rho}$ and $1 - \bar{a} = \rS \cdot \rhomincross -
+\rW \cdot \rsub$, yielding Equation~\ref{eq:neighborhood}.  Outside
+the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
+by the log-averaging condition~\eqref{eq:uniform_contraction} and may
+differ from these closed-form expressions.  The convergence is
+geometric in the amortized sense: $\Lyap_t \leq \bar{a}^t \cdot
+\Lyap_0 + \bar{b} / (1 - \bar{a})$.
 
 Once $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$, the actor's decisions
-are correct and the anti-monopolar property applies.  The bridge from
-the Lyapunov function to decision correctness proceeds in two steps.
-First, $\Lyap \geq w_k \cdot \epsilon_k^2$ for each $k$
-(Definition~\ref{def:wm_error}), so $\Lyap <
-\epsilon_{\mathrm{safe}}$ implies $\epsilon_k <
-\sqrt{\epsilon_{\mathrm{safe}} / w_k}$ for all $k$.  Second, define
-the per-dimension cascade threshold
+are correct and the anti-monopolar property applies.  Define:
 \begin{equation*}
-\epsilon_{\mathrm{crit},k}
-  \coloneqq \min_{j \in \mathcal{A}_t}
-    \epsilon_{\mathrm{crit}}^{(j,k)}
+\epsilon_{\mathrm{safe}} \coloneqq \sup\!\left\{
+  \epsilon > 0 \;:\;
+  \forall\, \Wm \text{ with } \Lyap(\Wm) \leq \epsilon,\;
+  \pi^*(\Wm) = \pi^*(\Wm^*)
+\right\}
 \end{equation*}
-where $\epsilon_{\mathrm{crit}}^{(j,k)}$ is the cascade threshold
-from Lemma~\ref{lem:cascade} for the pair (agent~$a_j$,
-dimension~$k$), and the minimum is over the current agent set
-$\mathcal{A}_t$.  This gives the smallest error on dimension $k$ that
-could flip \emph{any} preserve/subsume action.  Then set
-\begin{equation*}
-\epsilon_{\mathrm{safe}} = \min_k \, w_k \cdot
-  (\epsilon_{\mathrm{crit},k})^2
-\end{equation*}
-When $\Lyap < \epsilon_{\mathrm{safe}}$, we have
-$\epsilon_k < \epsilon_{\mathrm{crit},k}$ for every $k$, so no
-dimension's error exceeds any action's cascade threshold.  Since the
-locally rational choice is an $\arg\max$ over a finite action set
-(Definition~\ref{def:transition}), each pairwise comparison is
-correct, and therefore the global policy agrees with the true
-$\Vdisc$-optimal policy.
+where $\pi^*(\Wm) = \arg\max_\pi \Vdisc(\pi, \Wm)$ is the locally
+rational policy.  Since the action set is finite
+(Definition~\ref{def:transition}) and each action gap $G_j(\Wm)$ is
+continuous with $G_j(\Wm^*) > 0$ for the optimal action, the set
+$\{\Wm : \pi^*(\Wm) = \pi^*(\Wm^*)\}$ is open and contains $\Wm^*$,
+so $\epsilon_{\mathrm{safe}} > 0$.
+
+A computable \emph{sufficient condition} for $\Lyap <
+\epsilon_{\mathrm{safe}}$ uses the per-dimension cascade thresholds.
+Define $\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in
+\mathcal{A}_t} \epsilon_{\mathrm{crit}}^{(j,k)}$
+(Lemma~\ref{lem:cascade}, minimized over all agents; the smallest
+error on dimension $k$ that could flip any single pairwise
+comparison).  Then $\epsilon_{\mathrm{safe}} \geq \min_k \, w_k \cdot
+(\epsilon_{\mathrm{crit},k})^2$: for any $\Wm$ with
+$\Lyap(\Wm) < \min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$, we
+have $\epsilon_k < \epsilon_{\mathrm{crit},k}$ for every $k$ (since
+$\Lyap \geq w_k \cdot \epsilon_k^2$), and by definition of
+$\epsilon_{\mathrm{crit},k}$ no single-coordinate perturbation flips
+any pairwise action gap.  Since additionally the Lyapunov ball
+$\{\Wm : \Lyap(\Wm) \leq \epsilon\}$ is contained in the open
+correct-policy region for sufficiently small $\epsilon$ (by the
+openness established above), the per-coordinate bound provides a
+sufficient---if conservative---estimate.  (A tighter bound using
+$\min_j G_j(\Wm^*) / \|\nabla G_j\|$ would account for joint
+multi-coordinate perturbations but requires gradient-norm estimates
+we do not derive here.)
 
 \emph{Step 2: Part~(b).}
 Suppose $B(t_0, T) > 0$ on some window and
 $\rhocross_k(P_{t_0 + T}) = 0$ for some dimension $k$ with
 $w_k > 0$.  By Assumption~B1, $\epsilon_k(t)$ is non-decreasing for
-$t > t_0 + T$.  If $\epsilon_k$ exceeds $\epsilon_{\mathrm{crit}}$
-(the cascade threshold from Lemma~\ref{lem:cascade}), the locally
+$t > t_0 + T$.  If $\epsilon_k$ exceeds $\epsilon_{\mathrm{crit},k}$
+(Lemma~\ref{lem:cascade}), the locally
 rational action under $\Wm_t$ is subsumption of agents whose channels
 cover other dimensions $j \neq k$, driving $\rhocross_j$ toward $0$
 and triggering the same logic on dimension $j$.  The cascade
@@ -270,11 +307,11 @@ trajectory stays.
 Under B1$'$, the indirect signal $g_k$ provides correction at rate
 $I_k$ on the blinded dimension.  The cascade structure is the same as
 Part~(b) but convergence to $S^*$ is slowed by $I_k$.  The metastable
-lifetime $\tau_{\mathrm{meta}} \geq (\epsilon_{\rext})^2 / (2 I_k)$
+lifetime $\tau_{\mathrm{meta}} \geq (\delta_{\rext})^2 / (2 I_k)$
 emerges from the Cram\'er--Rao-type bound on sequential estimation:
 reducing the mean-squared error of $\hat{\rext}$ from
-$\epsilon_{\rext}^2$ to the level at which re-introduction becomes
-locally rational requires at least $\epsilon_{\rext}^2 / (2 I_k)$
+$\delta_{\rext}^2$ to the level at which re-introduction becomes
+locally rational requires at least $\delta_{\rext}^2 / (2 I_k)$
 steps from a channel providing $I_k$ bits per step.
 
 \emph{Step 4: Part~(c).}
@@ -308,8 +345,9 @@ silicon, both consulting the same training data).  Cross-substrate
 channels satisfy Paper~5's channel isolation property unconditionally:
 corruption on one substrate cannot propagate to channels rooted in
 another substrate.  Under the additional joint-factorization assumption
-from Paper~5, cross-substrate channels achieve full conditional
-independence, making their correction signals additive.
+from Paper~5 (termed ``joint sufficiency'' there), cross-substrate
+channels achieve full conditional independence, making their
+correction signals additive.
 
 The modified condition asks: ``do the isolated (and, under joint
 factorization, independent) cross-substrate channels alone suffice?''

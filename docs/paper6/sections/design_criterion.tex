@@ -12,8 +12,8 @@ self-correcting basin?
 \label{thm:redundancy}
 For the self-correcting basin (Theorem~\ref{thm:phase_boundary},
 Part~a) to contain all initial states with $\Lyap(\Wm_0) \leq
-L_{\max}$ (world-model error bounded at initialization), the substrate
-partition must satisfy:
+L_{\max}$ (world-model error bounded at initialization), a sufficient
+condition on the \emph{initial} substrate partition is:
 \begin{equation}
 \label{eq:kmin}
 \forall\; k \in \{1, \ldots, K\}: \quad
@@ -32,6 +32,14 @@ locally rational dynamics from any state in the basin with
 $\Lyap(\Wm) \leq L_{\max}$.  Note that $\Kmin$ is real-valued, since
 $\rhocross_k$ is defined as a sensitivity-weighted sum
 (Definition~\ref{def:cross_redundancy}), not an integer count.
+
+\emph{Qualification:} this criterion is sufficient at initialization
+but is not a maintained invariant along trajectories.  The redundancy
+$\rhocross_k(P_t)$ may decrease under the dynamics being analyzed
+(Corollary~\ref{cor:redundancy_monotone}).  A stronger result would
+bound the worst-case $\rhocross_k$ along all trajectories starting
+from the basin, which requires coupling the redundancy dynamics to
+the phase boundary analysis (see proof for discussion).
 \end{theorem}
 
 \begin{proof}

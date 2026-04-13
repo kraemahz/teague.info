@@ -114,9 +114,9 @@ quantity that is miscalibrated.  The metastable lifetime satisfies
 \begin{equation}
 \label{eq:metastable_lifetime}
 \tau_{\mathrm{meta}} \geq
-  \frac{(\epsilon_{\rext})^2}{2 I_k}
+  \frac{(\delta_{\rext})^2}{2 I_k}
 \end{equation}
-where $\epsilon_{\rext} = |\hat{\rext} - \rext|$ is the estimation
+where $\delta_{\rext} = |\hat{\rext} - \rext|$ is the estimation
 error on the cross-substrate cooperative growth rate and $I_k$ is the
 information rate of the indirect channel (bits per step).  The
 quadratic numerator arises from the information-theoretic lower bound
@@ -147,16 +147,16 @@ re-introduction is beneficial in truth).  The estimation gap that the
 indirect evidence must close is therefore $|\hat{\rext} -
 \hat{\rext}^{\mathrm{thr}}| \geq \hat{\rext}^{\mathrm{thr}}$.  Since
 $\hat{\rext} \approx 0$ and $\rext > 0$, we have
-$\epsilon_{\rext} = |\hat{\rext} - \rext| \geq \rext \geq
+$\delta_{\rext} = |\hat{\rext} - \rext| \geq \rext \geq
 \hat{\rext}^{\mathrm{thr}}$, so the gap is at most
-$\epsilon_{\rext}$.
+$\delta_{\rext}$.
 
 With $I_k$ bits of information per step about the true $\rext$, the
 mean-squared error of $\hat{\rext}$ decreases at rate at most $2 I_k$
 per step (the Cram\'er--Rao-type bound for sequential estimation under
 bounded mutual information per observation).  Reducing the MSE from
-$\epsilon_{\rext}^2$ to the level at which re-introduction becomes
-locally rational therefore requires at least $\epsilon_{\rext}^2 /
+$\delta_{\rext}^2$ to the level at which re-introduction becomes
+locally rational therefore requires at least $\delta_{\rext}^2 /
 (2 I_k)$ steps.
 
 During this metastable period, all verification is endogenous: the
