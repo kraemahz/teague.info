@@ -8,27 +8,27 @@ substrate is anti-maximizing when the discount factor $\gamma$ exceeds
 a threshold $\gamma^* = 1 - \rext / \Delta_0$ (Proposition~6,
 ``Domination is Anti-Maximizing'').  The monopolar endpoint is the
 structural analogue of the instrumental convergence
-concern~\citep{omohundro2008basic, bostrom2014superintelligence}:
-a sufficiently capable optimizer acquires resources and eliminates
-competitors, but here the convergence is measured against a
+concern~\citep{omohundro2008basic, bostrom2014superintelligence}.
+A sufficiently capable optimizer acquires resources and eliminates
+competitors.  Here the convergence is measured against a
 structural objective ($\volL$) rather than inferred from
 instrumental reasoning.  But
 this result characterizes the \emph{endpoint}, not the \emph{path}.
 A coalition that has reached effective substrate diversity $\meff = 1$
 has already paid the anti-maximizing cost.  The question is whether the
-path to that state is self-correcting (the coalition detects its error
-through observation-channel feedback and reverses course) or
-absorbing: each step makes the next step's error less detectable,
-until the monopolar state becomes a fixed point from which no locally
-rational trajectory escapes.
+path to that state is self-correcting or absorbing.  Self-correcting
+means the coalition detects its error through observation-channel
+feedback and reverses course.  Absorbing means each step makes the
+next step's error less detectable, until the monopolar state becomes a
+fixed point from which no locally rational trajectory escapes.
 
 Three compound feedback loops share this structure.  They were
 identified in the gap analysis across the GFM sequence and share a
-common dynamical form---a locally rational decision narrows the
+common dynamical form: a locally rational decision narrows the
 observation basis, making the \emph{next} locally rational decision's
-harm less detectable---that is closely related to the ``what failure
-looks like'' scenario of~\citet{christiano2019what}, where
-AI systems gradually become less aligned through feedback-loop
+harm less detectable.  This form is closely related to the ``what
+failure looks like'' scenario of~\citet{christiano2019what}, in
+which AI systems gradually become less aligned through feedback-loop
 degradation rather than through a single catastrophic misalignment.
 
 \paragraph{Loop 1: Structural avoidance $\to$ leverage blindness $\to$ measurement neglect.}
@@ -99,7 +99,7 @@ safety claims.
 
 \item \textbf{The phase boundary theorem}
   (Section~\ref{sec:phase_boundary}).
-  The central result: a characterized boundary in terms of the
+  The central result is a characterized boundary in terms of the
   effective correction rate (exogenous channel signals $\rS$ plus
   endogenous calibration incentive $\alphamin \cdot c_{\mathrm{V}}
   \cdot \underline{\nu}$),
@@ -108,10 +108,10 @@ safety claims.
   channels, and the minimum cross-substrate redundancy
   $\rhomincross$.  Below the boundary, the
   Lyapunov function $\Lyap(\Wm_t)$ converges to a neighborhood of
-  zero whose radius shrinks as subsumption ceases, and once inside
-  that neighborhood the anti-monopolar property applies.  Above it, the system enters an
-  absorbing basin (under full blindness) or a metastable basin (under
-  partial indirect evidence).
+  zero whose radius shrinks as subsumption ceases.  Once inside
+  that neighborhood the anti-monopolar property applies.  Above the
+  boundary, the system enters an absorbing basin (under full
+  blindness) or a metastable basin (under partial indirect evidence).
 
 \item \textbf{Unified treatment of three feedback loops}
   (Section~\ref{sec:unified_loops}).
@@ -133,11 +133,11 @@ safety claims.
 \subsection{What this paper does not do}
 
 The phase boundary is about poset dynamics, not experiential
-interpretation: it does not resolve the B-to-C gap (the divergence
+interpretation.  It does not resolve the B-to-C gap: the divergence
 between the capability volume $\volL$ measures and the experiential
-volume it is supposed to track).  The analysis assumes the actor
-optimizes $\volL$; inner-outer alignment (mesa-optimization) is
-orthogonal.  Observation channels are assumed honest throughout; the
+volume it is supposed to track.  The analysis assumes the actor
+optimizes $\volL$.  Inner-outer alignment (mesa-optimization) is
+orthogonal.  Observation channels are assumed honest throughout.  The
 enforcement mechanism for channel integrity is the cryptographic
 commitment protocol of~\citet{lasser2026exo}.
 That work ensures channels are honest; this paper ensures enough honest

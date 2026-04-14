@@ -78,10 +78,10 @@ $\Lyap_\infty < \epsilon_{\mathrm{safe}}$, which imposes an additional
 constraint on the steady-state subsumption rate.  \emph{Note:}
 $\epsilon_{\mathrm{safe}} > 0$ requires that the optimal action at
 $\Wm^*$ has a strict gap ($G_j(\Wm^*) > 0$ for all preserve-optimal
-agents), which holds generically for finite action sets (see proof).  A computable lower
-bound using action-gap gradient norms (Cauchy--Schwarz in the
-$w$-weighted metric) is derived there; the easier-to-compute
-per-coordinate estimator $\min_k w_k \cdot
+agents).  This holds generically for finite action sets (see proof).
+A computable lower bound using action-gap gradient norms
+(Cauchy--Schwarz in the $w$-weighted metric) is derived there.  The
+easier-to-compute per-coordinate estimator $\min_k w_k \cdot
 \epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips but
 may overestimate $\epsilon_{\mathrm{safe}}$ when action gaps are
 sensitive to multiple coordinates simultaneously.
@@ -136,8 +136,8 @@ The two cascades are asymmetric.  Degradation happens in discrete
 jumps: subsumption removes an agent and its channels at a single step.
 Recovery is continuous: calibration improves gradually through
 accumulated observations.  The system degrades in steps but recovers
-smoothly, which means the destabilizing cascade has discrete tipping
-points (the moment $\rhocross_k$ hits zero on a cascade dimension)
+smoothly.  The destabilizing cascade therefore has discrete tipping
+points (the moment $\rhocross_k$ hits zero on a cascade dimension),
 while the stabilizing cascade has no corresponding threshold, only a
 smooth approach to full calibration.
 \end{remark}
@@ -201,13 +201,13 @@ both connectivity and non-stationarity across all dimensions.
 
 This is a \emph{cumulative} condition on the trajectory, not a
 pointwise condition requiring contiguous subsumption steps.  The
-slow-drip scenario---many subsumption steps spaced apart, each
-individually below the ``degradation dominates'' threshold, but
-cumulatively driving $B$ above zero---is captured.  This is the most
-dangerous failure mode because it is the hardest to detect: each
-individual step looks locally rational and each individual inter-step
-recovery looks adequate, but the cumulative drift exposure ratchets the
-error upward.
+slow-drip scenario is captured: many subsumption steps spaced apart,
+each individually below the ``degradation dominates'' threshold, but
+cumulatively driving $B$ above zero.  This is the most dangerous
+failure mode because it is the hardest to detect.  Each individual
+step looks locally rational and each individual inter-step recovery
+looks adequate, but the cumulative drift exposure ratchets the error
+upward.
 
 \medskip
 \noindent\textbf{Part~(b$'$): Metastable Basin.}
@@ -262,13 +262,12 @@ The endogenous term ($\alphamin \cdot c_{\mathrm{V}} \cdot
 as a subtraction in the numerator: the actor's own calibration
 incentive reduces the redundancy the channels must provide.  When
 $\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$ alone exceeds
-the right-hand
-side, $(\rhomincross)^* \leq 0$ and endogenous correction suffices
-without any cross-substrate channels.  Setting $c_{\mathrm{V}} = 0$
-recovers the purely exogenous formula $(\rhomincross)^* =
-\mathrm{RHS} / \rS$.  The $\dmax$ term raises the threshold when
-subsumption removes channels covering well-calibrated dimensions
-(high $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
+the right-hand side, $(\rhomincross)^* \leq 0$.  Endogenous correction
+then suffices without any cross-substrate channels.  Setting
+$c_{\mathrm{V}} = 0$ recovers the purely exogenous formula
+$(\rhomincross)^* = \mathrm{RHS} / \rS$.  The $\dmax$ term raises the
+threshold when subsumption removes channels covering well-calibrated
+dimensions (high $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
 \end{theorem}
 
 \begin{proof}
@@ -493,11 +492,11 @@ dimension~3 to zero (the cooperative-output channel becomes silent),
 but biological channels on dimension~2 remain active and silicon
 channels on dimensions 1--2 remain active.  The state
 $(\rhocross_1, \rhocross_2, \rhocross_3) = (1, 2, 0)$ is then a
-\emph{partial} monopolar fixed point: dimension~3 is in the
-absorbing regime (no cross-substrate witness, Theorem~1(b)
-triggers) while dimensions 1 and 2 remain in the self-correcting
-regime.  The actor's world model on dimension~3 is unverifiable,
-while its world model on dimensions 1 and 2 remains calibrated.
+\emph{partial} monopolar fixed point.  Dimension~3 is in the
+absorbing regime (no cross-substrate witness, Theorem~1(b) triggers),
+while dimensions 1 and 2 remain in the self-correcting regime.  The
+actor's world model on dimension~3 is unverifiable, while its world
+model on dimensions 1 and 2 remains calibrated.
 
 Operationally, this looks like a population whose actors can
 accurately track individual capabilities (dimensions 1--2 are
@@ -505,8 +504,8 @@ healthy) but cannot track the cross-substrate cooperation that gives
 those capabilities their $\volL$-contribution (dimension~3 is
 blinded).  The actor may correctly infer that capabilities are
 growing while failing to notice that cooperative value is
-collapsing.  This is arguably the modal failure mode in practice:
-the easier-to-measure dimensions remain observable, and the
+collapsing.  This is arguably the modal failure mode in practice.
+The easier-to-measure dimensions remain observable, and the
 harder-to-measure dimensions are the first to lose their
 cross-substrate channels.  A full characterization of which subsets
 of $\{1, \ldots, K\}$ support partial monopolarity under which
@@ -553,10 +552,11 @@ every safety-relevant dimension of $\Wm$ must have a channel on
 means every dimension needs at least one biological observation channel.
 
 This framing should not be read as ``biological substrates are
-special.''  Rather, $m = 2$ is a fragile minimum.  Any loss of a single
-channel on a single dimension is immediately fatal because there is zero
-redundancy margin.  The structural implication is that $m \geq 3$ is
-where the redundancy criterion becomes non-trivially satisfiable.
+special.''  Rather, $m = 2$ is a fragile minimum.  Any loss of a
+single channel on a single dimension is immediately fatal because
+there is zero redundancy margin.  The structural implication: $m \geq
+3$ is where the redundancy criterion becomes non-trivially
+satisfiable.
 
 The substrate partition is at the level of abstraction where failure
 correlations matter.  Two silicon deployments with uncorrelated failure

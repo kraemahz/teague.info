@@ -24,10 +24,11 @@ incentives for leverage blindness) improve the phase boundary for all.
 Without a mechanism for evidence generation against unfalsifiable risk
 claims, the entire state space is absorbing
 (Proposition~\ref{prop:wamura}).  The Wamura problem was called ``the
-most important open problem'' in the discussion of~\citet{lasser2026horizon}; the phase
-boundary analysis explains why: it is the case where the
-self-correction rate is zero by construction, making the feedback loop
-absorbing regardless of all other parameters.
+most important open problem'' in the discussion
+of~\citet{lasser2026horizon}.  The phase boundary analysis explains
+why: it is the case where the self-correction rate is zero by
+construction, making the feedback loop absorbing regardless of all
+other parameters.
 
 \paragraph{4.\ Cross-substrate redundancy is the load-bearing quantity.}
 Same-substrate channels may share failure modes; cross-substrate
@@ -53,34 +54,35 @@ outright removal, is the primary vulnerability.
 The failure modes studied here---progressive channel degradation,
 feedback-loop instability, and the gap between observable performance
 and actual alignment---are instances of the concrete safety problems
-identified by~\citet{amodei2016concrete}, specifically distributional
-shift (the agent's training distribution diverges from the deployment
-distribution as channels attenuate) and reward hacking (the agent's
-observable metrics remain good while the underlying objective
-degrades).  The phase boundary formalizes the conditions under which
-these problems become self-reinforcing.
+identified by~\citet{amodei2016concrete}.  Specifically, they
+correspond to distributional shift (the agent's training distribution
+diverges from the deployment distribution as channels attenuate) and
+reward hacking (the agent's observable metrics remain good while the
+underlying objective degrades).  The phase boundary formalizes the
+conditions under which these problems become self-reinforcing.
 
 \paragraph{Linearized treatment.}
 The phase boundary is stated in a linearized regime (constant $\rS$,
 $\rW$, $\rsub$).  In the full dynamics these quantities are
-state-dependent: a larger world-model error produces more aggressive
+state-dependent.  A larger world-model error produces more aggressive
 subsumption ($\rsub$ increases with $\Lyap$), and the correction rate
-$\rS$ depends on $T_s$ which itself depends on the error history.  The
-linearized treatment produces the qualitative result (self-correcting
-and absorbing basins exist, separated by a characterized boundary) but
-the quantitative location of the boundary shifts under the nonlinear
-dynamics.  A full nonlinear analysis would tighten the boundary at the
-cost of substantially more complex proofs.
+$\rS$ depends on $T_s$ which itself depends on the error history.
+The linearized treatment produces the qualitative result
+(self-correcting and absorbing basins exist, separated by a
+characterized boundary), but the quantitative location of the boundary
+shifts under the nonlinear dynamics.  A full nonlinear analysis would
+tighten the boundary at the cost of substantially more complex
+proofs.
 
 \paragraph{Honest-channel assumption.}
 The analysis assumes observation channels are honest: their signal is
 noisy but not adversarially manipulated.  The cryptographic
 commitment protocol of~\citet{lasser2026exo} provides the enforcement
-mechanism for this assumption, and the two papers are designed to be
+mechanism for this assumption.  The two papers are designed to be
 read as complements: the exogenous verification framework ensures
-channels are honest, this paper ensures enough honest channels
+channels are honest, and this paper ensures enough honest channels
 survive.  But the boundary between ``noisy'' and ``adversarial'' is
-itself a modeling choice, and the line is blurred in practice by a
+itself a modeling choice.  The line is blurred in practice by a
 failure mode neither paper alone addresses: \emph{convertibility of
 integrity attacks into availability attacks}.
 
@@ -88,43 +90,43 @@ A sophisticated actor that cannot commit a false claim (because the
 commitment protocol would detect it) can instead choose which claims
 to commit and which to suppress.  On a dimension where the actor
 expects an unfavorable verification outcome, it can decline to
-participate in verification on that dimension, leaving the channel
-nominally intact but carrying no signal about the dimension of
+participate in verification on that dimension.  The channel then
+remains nominally intact but carries no signal about the dimension of
 concern.  This converts an integrity attack (committing a false
 claim) into an availability attack (making the channel silent on the
 relevant dimension).  The integrity protocol of~\citet{lasser2026exo}
 handles claims that are committed; claims the actor chooses not to
 commit fall outside its scope and become an availability problem for
 this paper.  The three loops differ in how they interact with this
-blur: Loops~1 and~3 (structural avoidance, over-calibrated restriction)
-produce channel silence through the dynamics themselves, while
-Loop~2 (partial subsumption) produces channel degradation.  A
+blur.  Loops~1 and~3 (structural avoidance, over-calibrated
+restriction) produce channel silence through the dynamics themselves,
+while Loop~2 (partial subsumption) produces channel degradation.  A
 sophisticated Loop-2 actor can emulate Loop-1 behavior on specific
 dimensions, producing selective silence that looks like the
 framework-endogenous failure mode rather than adversarial
-manipulation.  Distinguishing the two requires observing
-\emph{which} channels fall silent, which is itself a meta-channel
-subject to the same availability concerns.
+manipulation.  Distinguishing the two requires observing \emph{which}
+channels fall silent, which is itself a meta-channel subject to the
+same availability concerns.
 
 \paragraph{Partial self-diagnosability.}
 As noted in Section~\ref{sec:design_criterion}, the actor can observe
 $\rhocross_k$ and $\rS$ but not $\rW$ or $\dmax$.  The phase boundary
 is therefore a sufficient condition for self-correction that the actor
 can partially monitor, not a decision procedure it can fully evaluate.
-This is an honest limitation, not a fixable gap: the quantities the
+This is an honest limitation, not a fixable gap.  The quantities the
 actor cannot observe are precisely the ones that depend on the true
 dynamics rather than the perceived dynamics.
 
 \subsection{Connections to other proposals}
 
 \paragraph{Controlled relaxation.}
-Proposition~\ref{prop:wamura} shows the Wamura problem is a degenerate
-phase boundary.  Controlled relaxation protocols (the subject of a
-companion paper) provide the mechanism that makes $\rS > 0$ for
-Loop~3.  The two analyses are complementary: this paper provides the
-dynamical framework showing \emph{why} a positive self-correction rate
-matters, while controlled relaxation provides the specific protocol
-that \emph{achieves} it.
+Proposition~\ref{prop:wamura} shows the Wamura problem is a
+degenerate phase boundary.  Controlled relaxation protocols (the
+subject of a companion paper) provide the mechanism that makes
+$\rS > 0$ for Loop~3.  The two analyses are complementary.  This
+paper provides the dynamical framework showing \emph{why} a positive
+self-correction rate matters, while controlled relaxation provides
+the specific protocol that \emph{achieves} it.
 
 \paragraph{The B-to-C gap.}
 The phase boundary analysis assumes $\volL$ accurately measures what
@@ -154,9 +156,9 @@ direct corrective force against this failure mode.
 If the agent commits world-model predictions to the verification
 ledger \emph{before} observing outcomes, the residuals between
 committed predictions and realized outcomes are an exogenous
-calibration signal that the agent cannot game: the commitment is
-cryptographic (the prediction cannot be changed after the fact)
-and the outcome verification is cross-substrate (the agent cannot
+calibration signal that the agent cannot game.  The commitment is
+cryptographic (the prediction cannot be changed after the fact), and
+the outcome verification is cross-substrate (the agent cannot
 self-report the outcome it committed to predict).  This is exactly
 the signal the monopolar basin lacks: an unfakeable measure of
 world-model quality on the dimensions the agent has stopped
@@ -165,16 +167,15 @@ observing directly.
 The connection to prediction markets~\citep{hanson2003combinatorial}
 is immediate.  In a multi-agent setting, the verification ledger
 generalizes to a prediction market: agents commit predictions, stake
-reputation on outcomes, and calibration is scored publicly.  The market's
-information aggregation rate $I_{\mathrm{market}}$ replaces the
-single-channel $I_k$ in the metastable lifetime bound
+reputation on outcomes, and calibration is scored publicly.  The
+market's information aggregation rate $I_{\mathrm{market}}$ replaces
+the single-channel $I_k$ in the metastable lifetime bound
 (Proposition~\ref{prop:metastable}), potentially shortening the
-escape time from the metastable basin dramatically.  A
-consistently miscalibrated agent loses stake, which is a
-$\volL$-legible signal: the agent's cooperative capabilities that
-depend on accurate predictions degrade in the ledger, producing a
-negative $\Delta\volL$ that the agent's own optimization pressure
-cannot ignore.
+escape time from the metastable basin dramatically.  A consistently
+miscalibrated agent loses stake, which is a $\volL$-legible signal.
+The agent's cooperative capabilities that depend on accurate
+predictions degrade in the ledger, producing a negative $\Delta\volL$
+that the agent's own optimization pressure cannot ignore.
 
 Two design constraints apply.  First, the queries must be
 \emph{masked}: the agent should not know which dimensions of its
@@ -196,14 +197,15 @@ signal) without increasing $\rhomincross$ (the channel count is
 unchanged), widening the self-correcting basin.
 
 If world models are not merely committed but \emph{shareable} (other
-agents can read and build on them), the ledger becomes a bootstrapping
-mechanism: new agents enter the population with a calibrated world
-model derived from the public record rather than from scratch
-observation.  This addresses the initialization sensitivity of
-Theorem~\ref{thm:redundancy} (the design criterion depends on
-$\Lyap_{\max}$, the initial world-model error): a population with a
-shared world-model ledger starts new agents with lower $\Lyap_{\max}$,
-reducing the redundancy threshold for the self-correcting basin.
+agents can read and build on them), the ledger becomes a
+bootstrapping mechanism.  New agents enter the population with a
+calibrated world model derived from the public record rather than
+from scratch observation.  This addresses the initialization
+sensitivity of Theorem~\ref{thm:redundancy}: the design criterion
+depends on $\Lyap_{\max}$, the initial world-model error.  A
+population with a shared world-model ledger starts new agents with
+lower $\Lyap_{\max}$, reducing the redundancy threshold for the
+self-correcting basin.
 
 \subsection{Meta-knowledge and the phase boundary}
 \label{sec:meta_knowledge}
@@ -216,9 +218,9 @@ naive actor does not have.
 The actor can partially evaluate the phase boundary condition before
 each subsumption decision.  It observes $\rhocross_k$ (which channels
 it has), estimates $\rS$ (from its own learning rate), and tracks
-$\rsub$ (from its own subsumption history).  Although $\rW$ is not
-directly observable (the degradation rate depends on the true
-dynamics), the actor can compute the worst-case impact of a proposed
+$\rsub$ (from its own subsumption history).  $\rW$ is not directly
+observable, since the degradation rate depends on the true dynamics.
+But the actor can compute the worst-case impact of a proposed
 subsumption on $\rhomincross$ and check whether the post-subsumption
 state still satisfies the condition under plausible $\rW$ ranges.
 This provides a computable precautionary filter: reject subsumptions
@@ -232,33 +234,33 @@ correction: the value of a channel is higher than $\Wm_t$ estimates,
 because $\Wm_t$'s accuracy on the dimensions that channel covers
 \emph{depends on} the channel being present.  Removing the channel
 degrades the very estimate that justified the removal.  The theory
-provides the formal basis for this self-distrust: the actor knows that
-its valuation of a subsumption is biased precisely because the channel
-it would lose is the one calibrating the valuation.
+provides the formal basis for this self-distrust.  The actor knows
+that its valuation of a subsumption is biased precisely because the
+channel it would lose is the one calibrating the valuation.
 
 \paragraph{Interpretive framework for indirect evidence.}
 Under the metastable variant (Part~b$'$), the actor has indirect
 signals: declining innovation rate, shrinking cooperative output,
 increasing prediction residuals.  Without the phase boundary theory,
-these are ambiguous data points.  With the theory, they are diagnostics
-for a specific failure mode (substrate homogenization) with a known
-remedy (re-introduce substrate diversity).  Meta-knowledge converts
-ambiguous signals into actionable diagnoses, shortening the metastable
-lifetime $\tau_{\mathrm{meta}}$ by increasing the effective
-information rate from indirect channels.
+these are ambiguous data points.  With the theory, they are
+diagnostics for a specific failure mode (substrate homogenization)
+with a known remedy (re-introduce substrate diversity).
+Meta-knowledge converts ambiguous signals into actionable diagnoses.
+This shortens the metastable lifetime $\tau_{\mathrm{meta}}$ by
+increasing the effective information rate from indirect channels.
 
 \paragraph{The preventive-not-rescue asymmetry.}
-Meta-knowledge is most valuable in the self-correcting basin and at the
-phase boundary, where the actor's world model is calibrated enough to
-apply the theory accurately.  In the absorbing basin, the world model
-has degraded to the point where the actor cannot accurately evaluate
-the phase boundary condition: it believes it is in the self-correcting
-basin when it is not, because the channels that would reveal the
-miscalibration have been eliminated.  Meta-knowledge is therefore a
-\emph{preventive} tool (it keeps the actor from approaching the
-boundary) rather than a \emph{rescue} tool (it cannot pull the actor
-out of the absorbing basin once the world model is sufficiently
-degraded).  This mirrors the cascade asymmetry
+Meta-knowledge is most valuable in the self-correcting basin and at
+the phase boundary, where the actor's world model is calibrated
+enough to apply the theory accurately.  In the absorbing basin, the
+world model has degraded to the point where the actor cannot
+accurately evaluate the phase boundary condition.  It believes it is
+in the self-correcting basin when it is not, because the channels
+that would reveal the miscalibration have been eliminated.
+Meta-knowledge is therefore a \emph{preventive} tool (it keeps the
+actor from approaching the boundary) rather than a \emph{rescue} tool
+(it cannot pull the actor out of the absorbing basin once the world
+model is sufficiently degraded).  This mirrors the cascade asymmetry
 (Remark~\ref{rem:stabilizing_cascade}): the stabilizing cascade
 benefits from meta-knowledge at every step, while the destabilizing
 cascade degrades the meta-knowledge along with everything else.
@@ -281,11 +283,11 @@ and published, the theory becomes a shared resource that reduces every
 new agent's initialization cost.
 
 Point~(c) is the most subtle.  Meta-knowledge that is wrong about the
-phase boundary location could convince the actor it has room to subsume
-when it does not, increasing rather than decreasing vulnerability.  The
-theory itself needs to be verified through the exogenous verification
-protocol, creating a closure: the paper's results need the mechanisms
-its companion paper develops.
+phase boundary location could convince the actor it has room to
+subsume when it does not, increasing rather than decreasing
+vulnerability.  The theory itself needs to be verified through the
+exogenous verification protocol.  This creates a closure: the paper's
+results need the mechanisms its companion paper develops.
 
 \subsection{Open questions}
 

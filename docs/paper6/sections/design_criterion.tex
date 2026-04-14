@@ -100,9 +100,9 @@ bound a rigorous sufficient condition rather than a heuristic:
   $w_k \cdot \epsilon_{k,\mathrm{avg}}^2$, not the aggregate
   $\Lyap_{\mathrm{avg}} = \sum_j w_j \epsilon_{j,\mathrm{avg}}^2$.
   Since $w_k \cdot \epsilon_{k,\mathrm{avg}}^2 \leq
-  \Lyap_{\mathrm{avg}}$, the per-dimension denominator is smaller,
-  making the drift term $\dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
-  (w_k \cdot \epsilon_{k,\mathrm{avg}}^2)$ \emph{larger} and
+  \Lyap_{\mathrm{avg}}$, the per-dimension denominator is smaller.
+  This makes the drift term $\dmax \cdot \Delta\rho_{\mathrm{avg}}(k)
+  / (w_k \cdot \epsilon_{k,\mathrm{avg}}^2)$ \emph{larger} and
   $\Kmincons(k)$ larger (more conservative) than a formula using
   $\Lyap_{\mathrm{avg}}$.  This fixes the relaxation R1 noted in prior
   drafts: a well-calibrated dimension $k$ does not have its required
@@ -130,14 +130,14 @@ $\epsilon_{k,\mathrm{avg}}$, which is trajectory-dependent.  For a
 system whose worst-case operating error on dimension $k$ is bounded
 by $\epsilon_{k,\max}$, substituting $\epsilon_{k,\mathrm{avg}} =
 \epsilon_{k,\max}$ gives a lower bound on $\Kmincons(k)$ that is
-sufficient only for trajectories that do not reach lower error.  Well-
-calibrated dimensions ($\epsilon_{k,\mathrm{avg}} \to 0$) require
-increasingly more redundancy to guard against drift exposure, the
-``removing a channel that was doing all the correction work''
-failure mode.  This is a feature of the conservative substitution R1:
-the per-dimension formula diverges as $\epsilon_{k,\mathrm{avg}}
-\to 0$, correctly flagging that subsumption of the sole corrector
-of a well-calibrated dimension is never safe.
+sufficient only for trajectories that do not reach lower error.
+Well-calibrated dimensions ($\epsilon_{k,\mathrm{avg}} \to 0$) require
+increasingly more redundancy to guard against drift exposure: the
+``removing a channel that was doing all the correction work'' failure
+mode.  This is a feature of the conservative substitution R1.  The
+per-dimension formula diverges as $\epsilon_{k,\mathrm{avg}} \to 0$,
+correctly flagging that subsumption of the sole corrector of a
+well-calibrated dimension is never safe.
 \end{proof}
 
 \subsection{Practical implications}
@@ -162,27 +162,28 @@ For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
 \end{enumerate}
 \end{corollary}
 
-This means that in a two-substrate world, each substrate's observation
-channels are singularly load-bearing for every dimension they cover.
-Loss of one substrate's channel on a dimension reduces $\rhocross_k$
-from at most $2$ to at most $1$; the redundancy criterion is
-immediately violated on any dimension where $\Kmincons(k) > 1$, and
-provides zero safety margin on dimensions where $\Kmincons(k) \leq 1$.
+This means that in a two-substrate world, each substrate's
+observation channels are singularly load-bearing for every dimension
+they cover.  Loss of one substrate's channel on a dimension reduces
+$\rhocross_k$ from at most $2$ to at most $1$.  The redundancy
+criterion is then immediately violated on any dimension where
+$\Kmincons(k) > 1$, and provides zero safety margin on dimensions
+where $\Kmincons(k) \leq 1$.
 
 \begin{remark}[Progressive attenuation as the primary threat]
 \label{rem:attenuation}
 The $m = 2$ vulnerability is not that one substrate is \emph{removed}
 (an overt act that would itself be detectable) but that it is
-\emph{attenuated}: the human stops reviewing AI capability claims
-because the AI's self-reports ``seem fine,'' or human judgment is
-progressively replaced by automated proxies that share the silicon
+\emph{attenuated}.  Either the human stops reviewing AI capability
+claims because the AI's self-reports ``seem fine,'' or human judgment
+is progressively replaced by automated proxies that share the silicon
 substrate's failure modes.
 
 This attenuation reduces effective sensitivity without changing the
-nominal channel count, causing $\rhocross_k$ to drop below the
-threshold while appearing unchanged to a naive audit.  The
-skeleton-substrate scenario (Corollary~\ref{cor:skeleton}) is
-precisely this failure mode.
+nominal channel count.  $\rhocross_k$ then drops below the threshold
+while appearing unchanged to a naive audit.  The skeleton-substrate
+scenario (Corollary~\ref{cor:skeleton}) is precisely this failure
+mode.
 
 The framing should be read as emphasizing $m = 2$ fragility and the
 value of $m \geq 3$, not the specialness of any particular substrate.
@@ -235,10 +236,10 @@ The actor cannot directly observe:
   definition unobservable once the dimension is blind).
 \end{itemize}
 
-This means the actor can check ``am I above the threshold for the $\rW$
-I estimate?'' but not ``is my estimate of $\rW$ correct?''  The actor
-can monitor the observable ingredients and flag when they approach the
-boundary, even if it cannot guarantee the boundary is computed
-correctly.  This is an honest limitation: the phase boundary is a
-sufficient condition for self-correction, not a decision procedure for
-whether self-correction will actually obtain.
+This means the actor can check ``am I above the threshold for the
+$\rW$ I estimate?'' but not ``is my estimate of $\rW$ correct?''  The
+actor can monitor the observable ingredients and flag when they
+approach the boundary, even if it cannot guarantee the boundary is
+computed correctly.  This is an honest limitation.  The phase boundary
+is a sufficient condition for self-correction, not a decision
+procedure for whether self-correction will actually obtain.

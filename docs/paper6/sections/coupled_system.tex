@@ -67,21 +67,21 @@ P_{t+1} &= f_P(P_t, \pi_t) \label{eq:poset_transition} \\
 
 The key coupling: $\Wm_{t+1}$ depends on $P_{t+1}$ because the
 observation channels available to the actor are a function of the
-agents still present.  Subsumption removes agents, which removes their
-observation channels, which degrades $\Wm$ on dimensions those channels
-served.
+agents still present.  Subsumption removes agents, which removes
+their observation channels.  This in turn degrades $\Wm$ on
+dimensions those channels served.
 
 \begin{remark}[Myopic vs.\ discounted]
 \label{rem:myopic}
 The discounted formulation is necessary for consistency with the
-anti-monopolar result~\citep[Proposition~6]{lasser2026horizon}, which compares discounted
-trajectory values.  A myopic (one-step) variant of the phase boundary
-exists---replace $\Vdisc$ with one-step $\Delta\volL$---but produces
-strictly weaker results: it cannot invoke the $\gamma^*$
-threshold~\citep{lasser2026horizon}, and the self-correction
-guarantee applies only to immediate
-decisions, not trajectory-level convergence.  We analyze the discounted
-case throughout and note where the myopic specialization simplifies.
+anti-monopolar result~\citep[Proposition~6]{lasser2026horizon}, which
+compares discounted trajectory values.  A myopic (one-step) variant of
+the phase boundary exists---replace $\Vdisc$ with one-step
+$\Delta\volL$---but produces strictly weaker results.  It cannot
+invoke the $\gamma^*$ threshold~\citep{lasser2026horizon}, and the
+self-correction guarantee applies only to immediate decisions, not
+trajectory-level convergence.  We analyze the discounted case
+throughout and note where the myopic specialization simplifies.
 \end{remark}
 
 \subsection{Competing forces}

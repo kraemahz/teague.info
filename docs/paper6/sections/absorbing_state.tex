@@ -4,17 +4,17 @@
 Before stating the phase boundary theorem, we characterize the
 failure mode it diagnoses.  The monopolar absorbing state is what
 happens when a highly capable agent progressively cuts itself off
-from external feedback.  The agent does not become incompetent; it
+from external feedback.  The agent does not become incompetent.  It
 remains capable enough that its predictions rarely exceed the
 minimum threshold of surprise that would trigger self-correction.
 But its world model degenerates along dimensions it can no longer
-observe: it cannot detect that cross-substrate cooperative
+observe.  The agent cannot detect that cross-substrate cooperative
 capabilities have degraded, because the channels that would have
 reported the degradation have been attenuated or eliminated.  The
 result is an agent whose self-trust is high, whose observable
 performance appears adequate, and whose actual cooperative
-capability has collapsed: a failure mode that is stable precisely
-because the agent lacks the information to recognize it.  This is
+capability has collapsed.  This failure mode is stable precisely
+because the agent lacks the information to recognize it.  It is
 the dynamical-systems formalization of the deceptive alignment concern
 of~\citet{hubinger2019risks} and~\citet{ngo2024alignment}: not
 deliberate deception, but a structural outcome where the agent's
@@ -212,14 +212,15 @@ lifetime beyond the scaling bound.
 
 \subsection{Connection to the anti-monopolar property}
 
-The anti-monopolar result~\citep[Proposition~6]{lasser2026horizon} proves that full domination is anti-maximizing:
+The anti-monopolar result~\citep[Proposition~6]{lasser2026horizon}
+proves that full domination is anti-maximizing:
 $V_\gamma^{\mathrm{div}} > V_\gamma^{\mathrm{dom}}$ for
 $\gamma > \gamma^*$.  Proposition~\ref{prop:absorbing} here shows that
-a \emph{miscalibrated} actor may not be able to compute this comparison,
-because the quantity $\rext$ that makes diversity win is exactly the
-quantity that becomes unobservable under monopolarity.  The
-anti-maximizing property is a property of the \emph{true} dynamics; the
-absorbing property is a property of the \emph{perceived} dynamics.  The
-gap between them is world-model error, and the phase boundary theorem
-(next section) characterizes when that gap remains small enough for the
-true dynamics to govern behavior.
+a \emph{miscalibrated} actor may not be able to compute this
+comparison.  The quantity $\rext$ that makes diversity win is exactly
+the quantity that becomes unobservable under monopolarity.  The
+anti-maximizing property is a property of the \emph{true} dynamics;
+the absorbing property is a property of the \emph{perceived} dynamics.
+The gap between them is world-model error.  The phase boundary theorem
+(next section) characterizes when that gap remains small enough for
+the true dynamics to govern behavior.

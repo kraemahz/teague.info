@@ -113,17 +113,17 @@ decision chain: better calibration $\to$ better decisions $\to$ higher
 $\volL$.  On the risk dimension of Loop~3, exercise is prohibited by
 the restriction.  The actor therefore has no operational data from
 which to estimate how improving its risk calibration would change its
-decisions; the counterfactual ``what would happen if this capability
-were exercised?'' is precisely what the restriction prevents observing.
-Without an estimate of $\nu$, the actor cannot form the
-$\volL$-gradient that drives endogenous correction.  Formally:
-$\nu = \partial \volL / \partial \Lyap$ along the decision chain,
-but the chain is severed at the restriction step (the capability is
+decisions.  The counterfactual ``what would happen if this capability
+were exercised?'' is precisely what the restriction prevents
+observing.  Without an estimate of $\nu$, the actor cannot form the
+$\volL$-gradient that drives endogenous correction.  Formally,
+$\nu = \partial \volL / \partial \Lyap$ along the decision chain.
+The chain is severed at the restriction step: the capability is
 never exercised, so the downstream $\volL$ consequences are
-unobservable), giving $\nu = 0$ on the restricted dimension.
+unobservable.  This gives $\nu = 0$ on the restricted dimension.
 (As noted in Assumption~\ref{ass:C1}, $\nu$ is an objective
 marginal sensitivity, but the endogenous correction operates through
-the actor's gradient computation; when the chain is severed on a
+the actor's gradient computation.  When the chain is severed on a
 dimension, $c_{\mathrm{V}} \cdot \nu = 0$ \emph{effectively} on that
 dimension regardless of the objective value.)
 \begin{equation*}
@@ -139,18 +139,18 @@ For any non-trivial restriction step ($\nsub(t) = 1$ with
 $\Delta\rho(t) > 0$ or $\Lyap(\Wm_t) > 0$), $B > 0$, satisfying
 condition~(i) of Theorem~\ref{thm:phase_boundary}, Part~(b).
 Conditions~(ii) and~(iii) follow from the restriction-specific
-dynamics: each restriction step removes the exercise that would
+dynamics.  Each restriction step removes the exercise that would
 generate evidence (no exercise $\to$ no evidence), driving
 $\rhocross_k \to 0$ on the risk dimension (satisfying~(ii)).  With
-$\rS = 0$ and the risk dimension environmentally non-stationary (the
+$\rS = 0$ and the risk dimension environmentally non-stationary---the
 true risk changes as the restricted capability's context evolves
-without observation), the error $\epsilon_k$ grows, eventually
+without observation---the error $\epsilon_k$ grows, eventually
 exceeding $\epsilon_{\mathrm{crit},k}$ (satisfying~(iii)).  Note that
-$\dmax > 0$ bounds the drift rate from above (C2$'$); the cascade
+$\dmax > 0$ bounds the drift rate from above (C2$'$).  The cascade
 requires positive drift, which is a structural consequence of
-non-stationarity on the restricted dimension.  All three conditions of Part~(b) are
-therefore met, and the cascade drives the system toward maximal
-restriction.
+non-stationarity on the restricted dimension.  All three conditions
+of Part~(b) are therefore met, and the cascade drives the system
+toward maximal restriction.
 
 This is the formal statement of why the Wamura problem was called
 ``the most important open problem'' in the discussion of~\citet{lasser2026horizon}: without a

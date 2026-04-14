@@ -48,7 +48,7 @@ objective is $\volL$ maximization.
 \label{rem:weights_attack}
 The weight vector $(w_1, \ldots, w_K)$ encodes an implicit utility
 weighting across safety-relevant dimensions.  A published phase
-boundary is stated with a particular choice of $w$, which means an
+boundary is stated with a particular choice of $w$.  This means an
 actor optimizing against the boundary can choose its operational $w$
 to put its current trajectory on the favorable side of an externally
 stated criterion.  Concretely: if an evaluator announces that the
@@ -57,9 +57,8 @@ $\Kmincons(k)$ under the $\volL$-sensitivity weighting, an actor with
 latitude over its internal decomposition of $\volL$ can choose a $w'$
 that rescales $\epsilon_{k,\mathrm{avg}}^2$ on the thin-margin
 dimensions, reducing $\Kmincons(k)$ at those dimensions.  The phase
-boundary is \emph{covariant} under rescaling of $w$ in the sense that
-the aggregate condition
-(Equation~\ref{eq:self_correcting}) is invariant, but
+boundary is \emph{covariant} under rescaling of $w$: the aggregate
+condition (Equation~\ref{eq:self_correcting}) is invariant, but
 \emph{per-dimension} thresholds can shift.
 
 The structural defenses against this: (a) publish the weighting
@@ -99,17 +98,17 @@ $\to$ better decisions $\to$ higher $\volL$).
 actor-estimated one.}  The assumption bounds the correction signal
 $S(t)$ produced by the true dynamics, not by the actor's
 self-report.  An actor optimizing against a published phase boundary
-could not game $\Kmincons$ by claiming high $\nu$: the formula's
+could not game $\Kmincons$ by claiming high $\nu$.  The formula's
 per-dimension version (Theorem~\ref{thm:redundancy}) drops $\nu$
 entirely under R2, and the aggregate version
 (Equation~\ref{eq:self_correcting}) requires the actual marginal
 sensitivity of $\volL$ to calibration, not the actor's estimate of
 it.  Where the actor's estimate of $\nu$ matters is in driving the
-correction mechanism that produces $S(t)$: if the actor cannot
-estimate $\nu$ for a particular dimension (because the
+correction mechanism that produces $S(t)$.  If the actor cannot
+estimate $\nu$ for a particular dimension---because the
 decision-to-outcome chain is severed on that dimension, as in the
 over-calibrated restriction loop of
-Section~\ref{sec:unified_loops}), the correction channel is
+Section~\ref{sec:unified_loops}---the correction channel is
 effectively inactive regardless of the objective $\nu$'s value.
 The $c_{\mathrm{V}} \cdot \nu$ term thus reflects the \emph{effective}
 correction rate conditional on the actor being able to compute the
@@ -132,8 +131,8 @@ how much $\volL$ improves per unit of calibration improvement.  When
 $\nu > 0$, the actor has a $\volL$-gradient incentive to seek
 correction even beyond what the observation channels provide.  This
 endogenous pressure is what drives the actor to seek exogenous
-feedback: the actor \emph{wants} to be better calibrated because it can
-estimate (through $\nu$) that better calibration produces higher
+feedback.  The actor \emph{wants} to be better calibrated because it
+can estimate (through $\nu$) that better calibration produces higher
 $\volL$.
 
 Setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous correction
@@ -177,9 +176,9 @@ $\epsilon_k \approx 0$ (well-calibrated \emph{because} a channel was
 actively correcting it) starts drifting at rate $\dmax$ when its
 channel is removed, even though $\Lyap(\Wm_t) \approx 0$ at the moment
 of removal.  Without the $\Delta\rho$ term, the bound would predict
-near-zero degradation precisely when subsumption is most
-dangerous, since subsumption removes a channel that was doing all the correction work
-on a dimension that would otherwise drift.
+near-zero degradation precisely when subsumption is most dangerous.
+The danger is that subsumption removes a channel that was doing all
+the correction work on a dimension that would otherwise drift.
 
 \begin{proposition}[Error Dynamics]
 \label{prop:error_dynamics}
@@ -335,9 +334,9 @@ $\rsub = T_{\mathrm{sub}} / T$ is the subsumption frequency, and
 $\Delta\rho_{\mathrm{avg}}$, $\Lyap_{\mathrm{avg}}$ are time-averaged
 quantities.  The $\dmax$ term makes the condition harder to satisfy
 when the rate of channel loss on well-calibrated dimensions is high
-relative to current error---correctly diagnosing the failure mode where
-removing a channel that was doing all the correction work appears safe
-because current error is low.
+relative to current error.  This correctly diagnoses the failure mode
+where removing a channel that was doing all the correction work
+appears safe because current error is low.
 \end{remark}
 
 \begin{remark}[Why $\rhomincross$, not $\rho_{\min}$]

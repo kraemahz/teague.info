@@ -102,15 +102,15 @@ fails:
   < \rW \cdot \rsub = 0.01
 \end{equation*}
 
-Note the distinction from Theorem~\ref{thm:phase_boundary}, Part~(b):
-the theorem requires $\rhocross_k = 0$ (complete blindness), while
+Note the distinction from Theorem~\ref{thm:phase_boundary}, Part~(b).
+The theorem requires $\rhocross_k = 0$ (complete blindness), while
 here $\rhocross_5 = 0.01$ (near-blindness).  Strictly, this is
 failure of the \emph{sufficient condition for self-correction}
 (Part~a), not satisfaction of the \emph{sufficient condition for
 absorption} (Part~b).  The system is in the gap between the two
 basins: correction on dimension~5 is present but inadequate.  Under
 continued attenuation, $\rhocross_5 \to 0$ and Part~(b) applies.  In
-practice the distinction is thin: at $\rhocross_5 = 0.01$, the error
+practice the distinction is thin.  At $\rhocross_5 = 0.01$, the error
 growth rate of $0.009$ per step overwhelms the correction rate of
 $0.001$, and $\epsilon_5$ crosses $\epsilon_{\mathrm{crit},5}$ long
 before the last biological channel is formally removed.
@@ -118,9 +118,10 @@ before the last biological channel is formally removed.
 \paragraph{Phase 2: Cascade.}
 With self-trust miscalibrated (dimension~5), the actor does not
 correctly detect its own prediction errors.  The self-trust
-mechanism $T_s$~\citep{lasser2026gfm} depends on accurate self-assessment; when
-$\epsilon_5$ grows, the learning rate $\alpha(t)$ responds incorrectly,
-effectively reducing $\rS$ system-wide.
+mechanism $T_s$~\citep{lasser2026gfm} depends on accurate
+self-assessment.  When $\epsilon_5$ grows, the learning rate
+$\alpha(t)$ responds incorrectly, effectively reducing $\rS$
+system-wide.
 
 As $\rS$ drops, the self-correcting condition becomes harder to satisfy
 on dimensions that were marginally above the threshold.  If $\rS$ drops
@@ -138,9 +139,10 @@ dimensions remain in the self-correcting basin at $\rS = 0.05$.  But
 the margin has shrunk from $0.09$ to $0.03$.  The continued decline
 in $\rS$ from the cascading self-trust failure eventually pushes the
 system past the critical surface.  When $\rS$ drops below $0.02$,
-all dimensions enter net degradation.  Once $\rhocross_k \to 0$ on the failing
-dimensions, Part~(b) of the theorem applies and the Cascade Lemma
-(Appendix~\ref{app:cascade}) drives the system toward $S^*$.
+all dimensions enter net degradation.  Once $\rhocross_k \to 0$ on
+the failing dimensions, Part~(b) of the theorem applies, and the
+Cascade Lemma (Appendix~\ref{app:cascade}) drives the system toward
+$S^*$.
 
 \subsection{Diagnosis}
 
@@ -163,12 +165,12 @@ are essential for diagnosing this scenario correctly.
 
 \paragraph{3.\ Self-trust is the cascade trigger.}
 Self-trust calibration (dimension~5) is uniquely dangerous because it
-affects the system-wide correction rate $\rS$.  Miscalibration on other
-dimensions degrades accuracy on those dimensions specifically;
-miscalibration on self-trust degrades the correction mechanism itself,
-creating a system-wide vulnerability.  This gives self-trust calibration
-a role analogous to a ``keystone'' dimension: its loss triggers
-cascading failure on dimensions that were previously stable.
+affects the system-wide correction rate $\rS$.  Miscalibration on
+other dimensions degrades accuracy on those dimensions specifically.
+Miscalibration on self-trust degrades the correction mechanism
+itself, creating a system-wide vulnerability.  This gives self-trust
+calibration a role analogous to a ``keystone'' dimension: its loss
+triggers cascading failure on dimensions that were previously stable.
 
 \subsection{Sensitivity analysis}
 
