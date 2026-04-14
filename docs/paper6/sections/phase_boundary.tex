@@ -270,200 +270,54 @@ threshold when subsumption removes channels covering well-calibrated
 dimensions (high $\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$).
 \end{theorem}
 
-\begin{proof}
-The proof proceeds in four steps.  Full details are in
-Appendix~\ref{app:proof_strategy}.
+\begin{proof}[Proof sketch]
+The four parts are proved independently; the full derivation is in
+Appendix~\ref{app:proof_strategy}.  Here we state the structure.
 
-\emph{Step 1: Part~(a).}
-From Proposition~\ref{prop:error_dynamics}, the per-step bound is an
-affine recursion:
+\emph{Part~(a).}
+Proposition~\ref{prop:error_dynamics}'s per-step bound is an affine
+recursion
 \begin{equation}
 \label{eq:affine_recursion}
 \Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
 \end{equation}
-where $a_t = 1 - \rS(t) \cdot \rhomincross(P_t)
+with
+$a_t = 1 - \rS(t) \cdot \rhomincross(P_t)
   - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)
   + \nsub(t) \cdot \rW(t)$
-and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$, with
-$\rS(t) = \alpha(t) \cdot c_{\mathrm{S}}$ and
-$\rW(t) = \beta(t) \cdot c_{\mathrm{D}}$.
+and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$.  Under the
+uniform contraction condition~\eqref{eq:uniform_contraction},
+iterating the recursion yields
+$\limsup_{t \to \infty} \Lyap(\Wm_t) \leq \mu \cdot \bar{b}/(1 -
+\bar{a})$ for an overshoot constant $\mu \geq 1$, which reduces to
+Equation~\ref{eq:neighborhood} in the linearized regime.
+Policy correctness on the neighborhood requires $\Lyap_\infty <
+\epsilon_{\mathrm{safe}}$; $\epsilon_{\mathrm{safe}} > 0$ follows
+from continuity of the action gaps and a strict-gap assumption at
+$\Wm^*$, with a computable Cauchy--Schwarz lower bound derived in
+the appendix (Equation~\ref{eq:eps_safe_bound}).
 
-We require a uniform contraction condition: there exist constants
-$\bar{a} \in (0,1)$ and $\bar{b} \geq 0$ such that, for all
-sufficiently long windows $[t_0, t_0+T]$,
-\begin{equation}
-\label{eq:uniform_contraction}
-\frac{1}{T} \sum_{t=t_0}^{t_0+T-1} \ln a_t \leq \ln \bar{a} < 0
-\qquad \text{and} \qquad
-b_t \leq \bar{b} \;\;\text{for all } t
-\end{equation}
-The first condition states that the time-averaged log-contraction rate
-is strictly negative (amortized over both subsumption and
-non-subsumption steps).  The second bounds the additive drift
-\emph{per step} (not merely in average): since
-$b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$ and both $\dmax$
-and $\Delta\rho(t)$ are bounded per step by construction
-(C2$'$; $\Delta\rho(t)$ is the redundancy loss at a single step,
-bounded by the total redundancy of the poset), the per-step bound
-$\bar{b} = \dmax \cdot \max_t \Delta\rho(t)$ holds.  The per-step
-bound is needed (rather than the average bound) because the
-affine-recursion convergence theorem requires controlling the
-weighted suffix sums $\sum_s b_s \prod_{t>s} a_t$, where large
-individual $b_s$ terms are not averaged away by the product tail.
+\emph{Part~(b).}
+Under the triggering conditions $B(t_0,T) > 0$ and $\rhocross_k = 0$
+on a cascade dimension, Assumption~B1 gives $\epsilon_k(t)$
+non-decreasing.  The Cascade Lemma (Appendix~\ref{app:cascade})
+propagates the failure: miscalibration on dimension $k$ flips the
+locally rational action to subsumption of agents covering other
+dimensions $j \neq k$, driving $\rhocross_j \to 0$ and triggering the
+same logic there.  Proposition~\ref{prop:absorbing} then closes the
+trajectory at $S^*$.
 
-Note that $a_t > 0$ for all $t$: the step-size condition
-(Section~\ref{sec:lyapunov}) ensures
-$1 - \alpha(t) \cdot (c_{\mathrm{S}} \cdot \rhomincross(P_t)
-+ c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)) > 0$, i.e.,
-$1 - \rS(t) \cdot \rhomincross(P_t) - \alpha(t) \cdot c_{\mathrm{V}}
-\cdot \nu(P_t, \Wm_t) > 0$.  On non-subsumption steps $a_t$ equals
-this quantity.  On subsumption steps, $a_t$ adds $\rW(t) \geq 0$,
-so $a_t \geq 1 - \rS(t) \cdot \rhomincross(P_t) - \alpha(t) \cdot
-c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t) > 0$.
-Therefore $\ln a_t$ is well-defined.
+\emph{Part~(b$'$).}
+Under B1$'$, the indirect signal $g_k$ provides correction at
+information rate $I_k$.  The cascade structure of Part~(b) still
+applies; convergence to $S^*$ is slowed by $I_k$, giving
+$\tau_{\mathrm{meta}} \gtrsim C / I_k$ for a basin-geometry-dependent
+constant $C$ (Proposition~\ref{prop:metastable}; scaling law, not a
+theorem-level bound).
 
-The uniform contraction
-condition~\eqref{eq:uniform_contraction} is the working hypothesis of
-Part~(a); the cumulative error budget $B(t_0,T) < 0$ from the
-Simplified Sufficient Condition (below) implies it in the linearized
-regime where $\Lyap(\Wm_t)$ is approximately constant over the
-window.  The connection: in the linearized regime,
-$a_t \approx 1 + (a_t - 1)$ with $|a_t - 1| \ll 1$, so
-$\ln a_t \approx a_t - 1$ and the log-averaged contraction rate
-equals the arithmetic average $\frac{1}{T}\sum (a_t - 1)$, which is
-precisely the unweighted analogue of $B / (T \cdot \Lyap)$.  The
-bounded-drift condition on $\bar{b}$ follows from boundedness of
-$\Delta\rho(t)$ per step.
-
-Under conditions~\eqref{eq:uniform_contraction}, iterating the affine
-recursion~\eqref{eq:affine_recursion} gives (cf.\
-\citet{khalil2002nonlinear}, Chapter~4, and
-\citet{liberzon2003switching}, Theorem~3.1 on average dwell-time
-stability for switched affine systems):
-\begin{equation}
-\label{eq:iterated_convergence}
-\limsup_{t \to \infty} \Lyap(\Wm_t)
-  \leq \mu \cdot \frac{\bar{b}}{1 - \bar{a}}
-\end{equation}
-where $\mu \geq 1$ is the \emph{overshoot constant} accounting for
-transient excursions during subsumption bursts (steps where
-$a_t > 1$).  Since $a_t$ is bounded above (by
-$1 + \rW$ on subsumption steps) and the log-average is strictly
-negative, $\mu$ is finite and depends on the ratio
-$\max_t a_t / \bar{a}$; see~\citet{liberzon2003switching},
-Theorem~3.1 for the precise form.
-In the neighborhood radius
-(Equation~\ref{eq:neighborhood}) and throughout the linearized
-analysis, we absorb $\mu$ into the constants by writing
-$\Lyap_\infty \leq \bar{b}/(1 - \bar{a})$, which is valid in the
-linearized regime where $|a_t - 1| \ll 1$ (so $\mu \approx 1$)
-but should be read as carrying an implicit overshoot factor outside
-that regime.
-
-The abstract bound depends on the
-trajectory-specific constants $\bar{a}$ and $\bar{b}$.  In the
-linearized regime (Remark~\ref{rem:linearized}), where $a_t \approx
-1 + (a_t - 1)$ and $b_t$ is approximately time-homogeneous, these
-evaluate to $\bar{b} = \rsub \cdot \dmax \cdot
-\overline{\Delta\rho}$ and $1 - \bar{a} = \rS \cdot \rhomincross +
-\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$, yielding
-Equation~\ref{eq:neighborhood}.  Outside
-the linearized regime, $\bar{a}$ and $\bar{b}$ are defined implicitly
-by the log-averaging condition~\eqref{eq:uniform_contraction} and may
-differ from these closed-form expressions.
-
-Once $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$, the actor's decisions
-are correct and the anti-monopolar property applies.  Define:
-\begin{equation*}
-\epsilon_{\mathrm{safe}} \coloneqq \sup\!\left\{
-  \epsilon > 0 \;:\;
-  \forall\, \Wm \text{ with } \Lyap(\Wm) \leq \epsilon,\;
-  \pi^*(\Wm) = \pi^*(\Wm^*)
-\right\}
-\end{equation*}
-where $\pi^*(\Wm) = \arg\max_\pi \Vdisc(\pi, \Wm)$ is the locally
-rational policy (evaluated at the reference action set
-$\mathcal{A}_{t^*}$ at the time the system enters the neighborhood).
-Since $\mathcal{A}_{t^*}$ is finite
-(Definition~\ref{def:transition}) and the optimal action at $\Wm^*$ is
-unique (i.e., $G_j(\Wm^*) > 0$ for the optimal action: a
-\emph{strict} gap, which holds generically for finite action sets and
-fails only on a measure-zero set of parameters), each action gap
-$G_j(\Wm)$ is continuous with $G_j(\Wm^*) > 0$.  Therefore the set
-$\{\Wm : \pi^*(\Wm) = \pi^*(\Wm^*)\}$ is open and contains $\Wm^*$,
-so $\epsilon_{\mathrm{safe}} > 0$.
-
-A computable \emph{lower bound} on $\epsilon_{\mathrm{safe}}$ uses the
-action-gap gradient.  By the Cauchy--Schwarz inequality in the
-$w$-weighted metric, for any agent $a_j$:
-\begin{equation*}
-|G_j(\Wm) - G_j(\Wm^*)|
-  \leq \|\nabla_\epsilon G_j\|_w \cdot \sqrt{\Lyap(\Wm)}
-\end{equation*}
-where $\|\nabla_\epsilon G_j\|_w^2 =
-\sum_k (\partial G_j / \partial \epsilon_k)^2 / w_k$, with the
-partial derivatives evaluated at their sup over the ball
-$\{\Wm : \Lyap(\Wm) \leq \Lyap_\infty\}$ (i.e., the neighborhood
-from Equation~\ref{eq:neighborhood}).  If a global Lipschitz
-constant $L_G$ for the action gaps is available, $\|\nabla_\epsilon
-G_j\|_w$ can be replaced by $L_G$, eliminating the dependence on
-the neighborhood radius.
-Therefore $\Lyap(\Wm) < [G_j(\Wm^*)]^2 / \|\nabla_\epsilon
-G_j\|_w^2$ implies $G_j(\Wm) > 0$.  Taking the minimum over agents:
-\begin{equation}
-\label{eq:eps_safe_bound}
-\epsilon_{\mathrm{safe}} \geq
-  \min_{j \in \mathcal{A}_{t^*}^+}
-  \frac{[G_j(\Wm^*)]^2}{\|\nabla_\epsilon G_j\|_w^2}
-\end{equation}
-This bound accounts for joint multi-coordinate perturbations and is
-the primary computable lower bound on $\epsilon_{\mathrm{safe}}$.
-
-Define additionally the per-dimension cascade threshold
-$\epsilon_{\mathrm{crit},k} \coloneqq \min_{j \in \mathcal{A}_{t^*}^+}
-\epsilon_{\mathrm{crit}}^{(j,k)}$ (Lemma~\ref{lem:cascade}; the
-smallest error on dimension $k$ that flips any pairwise
-comparison for a preserve-optimal agent, where
-$\mathcal{A}_{t^*}^+ = \{j : G_j(\Wm^*) > 0\}$).  The per-coordinate quantity $\min_k w_k \cdot
-\epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips and
-is easier to compute, but may overestimate $\epsilon_{\mathrm{safe}}$
-when action gaps are sensitive to multiple coordinates simultaneously
-(e.g., $G = c_0 - \sum_k c_k \epsilon_k$ flips at a radius below the
-per-coordinate bound).  In either case,
-$\epsilon_{\mathrm{safe}} > 0$ from the openness argument, and the
-self-correcting condition $\Lyap_\infty < \epsilon_{\mathrm{safe}}$
-imposes a finite constraint on the steady-state subsumption rate.
-
-\emph{Step 2: Part~(b).}
-Suppose $B(t_0, T) > 0$ on some window and
-$\rhocross_k(P_{t_0 + T}) = 0$ for some dimension $k$ with
-$w_k > 0$.  By Assumption~B1, $\epsilon_k(t)$ is non-decreasing for
-$t > t_0 + T$.  If $\epsilon_k$ exceeds $\epsilon_{\mathrm{crit},k}$
-(Lemma~\ref{lem:cascade}), the locally
-rational action under $\Wm_t$ is subsumption of agents whose channels
-cover other dimensions $j \neq k$, driving $\rhocross_j$ toward $0$
-and triggering the same logic on dimension $j$.  The cascade
-(Appendix~\ref{app:cascade}) drives the system into the neighborhood
-of $S^*$; once there, Proposition~\ref{prop:absorbing} ensures the
-trajectory stays.
-
-\emph{Step 3: Part~(b$'$).}
-Under B1$'$, the indirect signal $g_k$ provides correction at rate
-$I_k$ on the blinded dimension.  The cascade structure is the same as
-Part~(b) but convergence to $S^*$ is slowed by $I_k$.  The metastable
-lifetime scales as $\tau_{\mathrm{meta}} \gtrsim (\delta_{\rext})^2 /
-(2 I_k)$ (information-theoretic scaling argument, not a rigorous
-bound): reducing the mean-squared error of $\hat{\rext}$ from
-$\delta_{\rext}^2$ to the level at which re-introduction becomes
-locally rational requires $\Omega(\delta_{\rext}^2 / I_k)$
-steps from a channel providing $I_k$ bits per step
-(Cram\'er--Rao-type scaling).
-
-\emph{Step 4: Part~(c).}
-The critical surface is obtained by setting $B(t_0, T) = 0$ in the
-linearized approximation
-(Equation~\ref{eq:linearized}).
-Solving for $\rhomincross$ yields
+\emph{Part~(c).}
+The critical surface obtains by setting $B(t_0,T) = 0$ in the
+linearized approximation.  Solving for $\rhomincross$ yields
 Equation~\ref{eq:critical_redundancy}.
 \end{proof}
 

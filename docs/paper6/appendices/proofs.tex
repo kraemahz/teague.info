@@ -1,123 +1,239 @@
 \section{Proof Details and Technical Notes}
 \label{app:proofs}
 
-\subsection{Theorem 1 proof strategy}
+\subsection{Proof of Theorem 1 (full derivation)}
 \label{app:proof_strategy}
 
-The proof follows a discrete Lyapunov stability argument on the coupled
-system, analogous to dwell-time conditions in switched linear
-systems~\citep{liberzon2003switching}.
+The argument is a discrete Lyapunov stability analysis on the coupled
+$(P, \Wm)$ system, in the spirit of dwell-time conditions for
+switched linear systems~\citep{liberzon2003switching}.  We use
+$\Lyap(\Wm_t) = \sum_k w_k \epsilon_k(t)^2$
+(Definition~\ref{def:wm_error}) throughout.
 
-\paragraph{Step 1: Lyapunov candidate.}
-Construct $\Lyap(\Wm_t) = \sum_k w_k \, \epsilon_k(t)^2$ as the
-candidate (Definition~\ref{def:wm_error}).
+\subsubsection*{Verification of C1 and C2$'$ as comparison bounds}
 
-\paragraph{Step 2: Verify comparison functions.}
-Assumption~C1 (coercivity) requires showing that the aggregate
-correction signal is at least proportional to
-$(c_{\mathrm{S}} \cdot \rhomincross(P_t) + c_{\mathrm{V}} \cdot
-\nu(P_t, \Wm_t)) \cdot \Lyap(\Wm_t)$.  The exogenous term: each
-channel covering dimension~$k$ corrects at a rate proportional to
-$\rho_k \cdot \epsilon_k^2$; summing across dimensions and bounding
-below by $\rhomincross \cdot \Lyap$ yields the first term.  This
-follows from the EWMA-style learning rules: each channel's correction
-is linear in the residual and proportional to sensitivity.  Under the
-joint-factorization assumption~\citep{lasser2026exo}, cross-substrate
-channels' corrections are independent and therefore additive.  The
-endogenous term ($c_{\mathrm{V}} \cdot \nu$) arises from the actor's
-$\volL$-gradient: better calibration produces better decisions, which
-preserve more cooperative capabilities, increasing $\volL$.  The
-sensitivity $\nu$ measures this chain's marginal return; when $\nu > 0$
-the actor has an incentive to seek correction beyond what the channels
-provide.
+Assumption~C1 decomposes the aggregate correction rate into an
+exogenous channel term and an endogenous $\volL$-gradient term.
+\emph{Exogenous.}  For each dimension $k$, each channel covering $k$
+delivers an EWMA-style correction linear in the residual and
+proportional to its sensitivity; summing within $k$ gives a rate
+proportional to $\rho_k \cdot \epsilon_k^2$, and bounding below by
+$\rhomincross$ across dimensions yields the first term.  Under the
+joint-factorization assumption of~\citet{lasser2026exo},
+cross-substrate channels' correction signals are conditionally
+independent and additive.  \emph{Endogenous.}  The term
+$c_{\mathrm{V}} \cdot \nu \cdot \Lyap$ arises from the actor's
+$\volL$-gradient: better calibration yields better decisions, which
+preserve more cooperative capabilities and raise $\volL$; $\nu$
+measures this chain's marginal return along the decision chain
+(Assumption~\ref{ass:C1}).
 
-Assumption~C2$'$ (bounded degradation) requires two properties:
-\begin{enumerate}
-\item[(i)] A Lipschitz bound on $f_{\Wm}$: the world model does not
-  jump discontinuously when a channel is lost.  This gives the
-  $c_{\mathrm{D}} \cdot \Lyap$ term.
-\item[(ii)] A bounded exogenous drift rate: when a channel is removed
-  from dimension $k$ that was previously well-calibrated, the
-  dimension drifts at a bounded rate $\dmax$.  This gives the
-  $\dmax \cdot \Delta\rho$ term.
-\end{enumerate}
+Assumption~C2$'$ supplies the matching upper bound, decomposing
+degradation into a Lipschitz term (the world model does not jump
+discontinuously on channel loss, giving $c_{\mathrm{D}} \cdot \Lyap$)
+and an exogenous drift kick (channels removed from well-calibrated
+dimensions drift at a bounded rate $\dmax$, giving
+$\dmax \cdot \Delta\rho$).  Proposition~\ref{prop:error_dynamics}
+converts C1 and C2$'$ into the per-step affine bound used throughout
+the proof.
 
-\paragraph{Step 3: Per-step bounds.}
-Apply the comparison functions to obtain
-Proposition~\ref{prop:error_dynamics}'s per-step bounds: contraction
-factor $(1 - \rS \cdot \rhomincross - \alpha(t) \cdot c_{\mathrm{V}}
-\cdot \nu) < 1$ on non-subsumption steps; affine bound with factor
-$(1 - \rS \cdot \rhomincross - \alpha(t) \cdot c_{\mathrm{V}} \cdot
-\nu + \rW)$ and additive kick $\dmax \cdot \Delta\rho$ on subsumption
-steps.
+\subsubsection*{Proof of Part~(a): self-correcting basin}
 
-\paragraph{Step 4 (Part a): Amortized contraction.}
-Define the amortized log-contraction rate over a window of $T$ steps.
-When the uniform contraction condition holds (the time-averaged
-$\ln a_t$ is strictly negative and each $b_t$ is bounded per step),
-the geometric mean of per-step multiplicative factors is $< 1$.  The
-weighted suffix sums $\sum_s b_s \prod_{t>s} a_t$ are then controlled
-by the per-step bound on $b_t$ combined with the exponential decay
-of the product tail.
-
-The formal argument uses the affine recursion comparison theorem.
-Write the per-step bound as:
+\paragraph{The affine recursion.}
+Proposition~\ref{prop:error_dynamics} gives the per-step bound
 \begin{equation*}
 \Lyap_{t+1} \leq a_t \cdot \Lyap_t + b_t
 \end{equation*}
-where $a_t = 1 - \rS \cdot \rhomincross(P_t) - \alpha(t) \cdot
-c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t) + \nsub(t) \cdot \rW$
-and $b_t = \nsub(t) \cdot \dmax \cdot \Delta\rho(t)$.  Iterating:
+with
+\begin{align*}
+a_t &= 1 - \rS(t) \cdot \rhomincross(P_t)
+   - \alpha(t) \cdot c_{\mathrm{V}} \cdot \nu(P_t, \Wm_t)
+   + \nsub(t) \cdot \rW(t), \\
+b_t &= \nsub(t) \cdot \dmax \cdot \Delta\rho(t).
+\end{align*}
+Iterating over a window $[t_0, t_0 + T]$:
 \begin{equation}
 \label{eq:iterated_bound}
 \Lyap_{t_0 + T} \leq \Lyap_{t_0} \prod_{t=t_0}^{t_0+T-1} a_t
-  + \sum_{s=t_0}^{t_0+T-1} b_s \prod_{t=s+1}^{t_0+T-1} a_t
+  + \sum_{s=t_0}^{t_0+T-1} b_s \prod_{t=s+1}^{t_0+T-1} a_t.
 \end{equation}
 
-The first term converges to zero when the geometric mean of $a_t$ is
-$< 1$ (which follows from $B < 0$ in the linearized regime; see the
-inline proof of Theorem~\ref{thm:phase_boundary} for the precise
-connection via $\ln a_t \approx a_t - 1$).  The second term converges
-to a bounded steady-state value:
+\paragraph{The uniform contraction condition.}
+For~\eqref{eq:iterated_bound} to yield a bounded limit, we need
+aggregate multiplicative decay and bounded additive drift over
+sufficiently long windows.  The condition, used in
+Theorem~\ref{thm:phase_boundary}(a), is:
+\begin{equation}
+\label{eq:uniform_contraction}
+\exists\, \bar{a} \in (0,1),\ \bar{b} \geq 0,\ T^* > 0:\ \forall T \geq T^*,\quad
+\frac{1}{T}\!\!\sum_{t=t_0}^{t_0+T-1}\!\! \ln a_t \leq \ln \bar{a},
+\quad
+\frac{1}{T}\!\!\sum_{t=t_0}^{t_0+T-1}\!\! b_t \leq \bar{b}.
+\end{equation}
+The log-average form is the natural object because the first term of
+\eqref{eq:iterated_bound} is a product; equivalently, the geometric
+mean of $a_t$ is at most $\bar{a}$.  We require $a_t > 0$ throughout,
+which holds whenever $\rW(t) \cdot \nsub(t) < 1$ (a step cannot more
+than wipe out the current error); this is a weak condition on
+per-step degradation and holds under C2$'$ for any finite learning
+rate.
+
+\paragraph{Convergence under~\eqref{eq:uniform_contraction}.}
+Applying AM--GM to the product in~\eqref{eq:iterated_bound},
+$\prod_{t=t_0}^{t_0+T-1} a_t \leq \bar{a}^T$, so the first term decays
+geometrically.  For the second term, group the tail products by
+suffix length: a step with additive kick $b_s$ at position $s$
+contributes at most $b_s \cdot \bar{a}^{T-1-s}$ to $\Lyap_{t_0+T}$ in
+the worst case (when all subsequent $a_t$ attain the upper bound
+$\bar{a}$).  However, individual $a_t$ may exceed $\bar{a}$ on
+subsumption steps even though the geometric mean is bounded.  Define
+the \emph{overshoot constant}
 \begin{equation*}
-\Lyap_{\infty} \leq \frac{\bar{b}}{1 - \bar{a}}
-  = \frac{\rsub \cdot \dmax \cdot \overline{\Delta\rho}}
-    {\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot
-    \underline{\nu}
-    - \rW \cdot \rsub}
+\mu = \sup_{N \geq 1} \sup_{t_0}\ \frac{1}{\bar{a}^N} \cdot
+  \max_{0 \leq s \leq N-1} \prod_{t=t_0+s+1}^{t_0+N} a_t,
 \end{equation*}
-Substituting $\bar{b} = \rsub \cdot \dmax \cdot
-\overline{\Delta\rho}$ (additive drift at frequency $\rsub$) and
+which is finite whenever the burst length of $a_t > \bar{a}$ is
+uniformly bounded (a consequence of $\rsub$ being bounded below~1 and
+$\rW$ being bounded above; see~\citet[Ch.~2]{liberzon2003switching}
+for the switched-systems analogue).  Summing the geometric series:
+\begin{equation}
+\label{eq:steady_state_bound}
+\limsup_{T \to \infty} \Lyap_{t_0+T}
+  \leq \frac{\mu \cdot \bar{b}}{1 - \bar{a}}.
+\end{equation}
+
+\paragraph{Linearized regime.}
+When $|a_t - 1| \ll 1$ for all $t$ (the moderate-step regime of
+Remark~\ref{rem:linearized}), $\ln a_t \approx a_t - 1$, so
+\eqref{eq:uniform_contraction} is equivalent to
+$\frac{1}{T}\sum (1 - a_t) \geq 1 - \bar{a}$.  Substituting the
+worst-case values $\alphamin = \inf_t \alpha(t)$,
+$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$, and the time-averaged
+$\overline{\Delta\rho}$ yields
 $1 - \bar{a} = \rS \cdot \rhomincross + \alphamin \cdot
-c_{\mathrm{V}} \cdot
-\underline{\nu} - \rW \cdot \rsub$ (amortized contraction rate, with
-$\alphamin = \inf_t \alpha(t)$ and
-$\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$ bounding the endogenous
-term from C1) yields the explicit radius.  This neighborhood shrinks as $\Delta\rho \to 0$
-(subsumption ceases).  Once $\Lyap < \epsilon_{\mathrm{safe}}$, the
-locally rational policy agrees with the true $\Vdisc$-optimal policy,
-and the anti-monopolar property~\citep{lasser2026horizon} applies.
+c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$ and
+$\bar{b} = \rsub \cdot \dmax \cdot \overline{\Delta\rho}$.  With
+$\mu = 1$ in this regime (no overshoot when steps are small),
+\eqref{eq:steady_state_bound} reduces to
+Equation~\ref{eq:neighborhood}.
 
-\paragraph{Step 5 (Part b): Cascade.}
-When $B > 0$ on some window and $\rhocross_k = 0$ for some dimension
-$k$, Assumption~B1 gives $\epsilon_k$ non-decreasing.  The Cascade
-Lemma (Appendix~\ref{app:cascade}) then propagates the failure to
-other dimensions, driving the system toward $S^*$.
+\paragraph{Policy correctness: $\epsilon_{\mathrm{safe}} > 0$.}
+Define
+\begin{equation*}
+\epsilon_{\mathrm{safe}} = \sup \{\epsilon > 0 :
+  \forall \Wm \text{ with } \Lyap(\Wm) \leq \epsilon,\
+  \pi^*(\Wm) = \pi^*(\Wm^*)\},
+\end{equation*}
+where $\pi^*(\Wm)$ is the locally rational policy under world model
+$\Wm$.  For a finite action set at each decision point, $\pi^*$ is
+determined by the signs of finitely many action gaps $\{G_j\}$.  At
+$\Wm^*$, each preserve-optimal agent has $G_j(\Wm^*) > 0$ (the strict
+gap assumption); each subsume-optimal agent has $G_j(\Wm^*) < 0$.
+Continuity of $G_j$ in $\Wm$ then gives an open neighborhood of
+$\Wm^*$ on which every sign is preserved, hence
+$\epsilon_{\mathrm{safe}} > 0$.
 
-\paragraph{Key technical challenges.}
-Two co-evolution problems require careful handling:
-\begin{enumerate}
-\item The contraction factor depends on $\rhomincross(P_t)$, which
-  changes as agents are subsumed.  The self-correcting basin is
-  defined by the set of $(P, \Wm)$ states where the amortized
-  contraction condition holds along the trajectory, not just at the
-  initial state.
+A computable lower bound follows from Cauchy--Schwarz in the
+$w$-weighted metric.  Writing
+$G_j(\Wm) - G_j(\Wm^*) = \int_0^1 \nabla G_j(\Wm_\tau) \cdot
+(\Wm - \Wm^*) \, d\tau$
+along any path $\Wm_\tau$ from $\Wm^*$ to $\Wm$,
+Cauchy--Schwarz gives
+$|G_j(\Wm) - G_j(\Wm^*)| \leq \|\nabla G_j\|_{w^{-1}} \cdot \sqrt{\Lyap(\Wm)}$
+where $\|\cdot\|_{w^{-1}}$ is the dual norm with weights $1/w_k$.
+An action flip on agent $j$ requires
+$|G_j(\Wm) - G_j(\Wm^*)| \geq G_j(\Wm^*)$, so:
+\begin{equation}
+\label{eq:eps_safe_bound}
+\epsilon_{\mathrm{safe}} \geq
+  \min_{j \in \mathcal{A}^+}
+  \left( \frac{G_j(\Wm^*)}
+              {\sup_{\Wm \in \mathcal{N}} \|\nabla G_j(\Wm)\|_{w^{-1}}} \right)^2,
+\end{equation}
+where $\mathcal{A}^+$ is the set of preserve-optimal agents and
+$\mathcal{N}$ is a neighborhood containing the trajectory.  The bound
+is conservative (it assumes the action gap can respond to full
+multi-coordinate error simultaneously) but finite whenever the strict
+gap holds.  A cheaper per-coordinate estimator
+$\min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$ rules out
+single-coordinate flips but does not bound multi-coordinate flips,
+so~\eqref{eq:eps_safe_bound} is the correct object for policy
+correctness on the whole neighborhood.
 
-\item The self-correction rate $\alpha(t)$ depends on $T_s$~\citep{lasser2026gfm}, which depends on the error history.  The EWMA structure
-  of $T_s$ provides the necessary bound: $\alpha$ adapts monotonically
-  in response to prediction residuals, so $\rS$ is bounded below by
-  a function of the minimum $T_s$ along the trajectory.
-\end{enumerate}
+\paragraph{Closing Part~(a).}
+Combining~\eqref{eq:steady_state_bound} with the policy-correctness
+condition $\Lyap_\infty < \epsilon_{\mathrm{safe}}$:  once the
+trajectory enters the $\epsilon_{\mathrm{safe}}$-neighborhood of
+$\Wm^*$, the locally rational policy agrees with the true
+$\Vdisc$-optimal policy and the anti-monopolar
+result~\citep[Proposition~6]{lasser2026horizon} applies.  As
+subsumption ceases ($\overline{\Delta\rho} \to 0$), $\bar{b} \to 0$
+and the neighborhood shrinks to~$\{0\}$.
+
+\paragraph{Co-evolution caveats.}
+Two dependencies complicate the fixed-parameter reading.  First, the
+contraction factor $a_t$ depends on $\rhomincross(P_t)$, which evolves
+as subsumption proceeds; the self-correcting basin is defined over
+trajectories, not initial states.  Second, $\alpha(t)$ depends on
+$T_s$~\citep{lasser2026gfm}, which depends on the error history; the
+EWMA structure of $T_s$ makes $\alpha$ monotone in prediction
+residuals, so $\rS$ is bounded below by a function of the minimum
+$T_s$ along the trajectory.  The uniform contraction
+condition~\eqref{eq:uniform_contraction} is the object that survives
+both dependencies because it is stated in terms of time averages of
+the actual $a_t$, not instantaneous parameter values.
+
+\subsubsection*{Proof of Part~(b): absorbing basin}
+
+The triggering conditions are (i) $B(t_0, T) > 0$
+(Equation~\ref{eq:error_budget}), (ii) $\rhocross_k = 0$ on a cascade
+dimension $k$, and (iii) $\epsilon_k > \epsilon_{\mathrm{crit},k}$.
+Under B1a, (ii) gives $\epsilon_k$ non-decreasing; environmental
+non-stationarity on $k$ then keeps (iii) satisfied.  The Cascade
+Lemma~\ref{lem:cascade} converts miscalibration on $k$ into action
+flips on agents covering dimensions $j \neq k$; each resulting
+subsumption drives $\rhocross_j \to 0$ on at least one new dimension
+(agent-channel graph connectivity) and the per-coordinate cascade
+threshold $\epsilon_{\mathrm{crit},j}$ is crossed there too under
+non-stationarity.  Iterating across dimensions, the trajectory
+converges to a neighborhood of $S^*$
+(Definition~\ref{def:monopolar}).  The per-coordinate cascade
+threshold is the correct object here because Part~(b) concerns
+propagation through dimensions sequentially; the aggregate
+$\epsilon_{\mathrm{safe}}$ bound of~\eqref{eq:eps_safe_bound} is
+a sufficient condition for the entire neighborhood to be safe, while
+$\epsilon_{\mathrm{crit},k}$ is the necessary threshold for the
+\emph{specific} action flip on dimension~$k$.
+
+\subsubsection*{Proof of Part~(b$'$): metastable basin}
+
+Under B1$'$ (Assumption~\ref{ass:B1prime}), the indirect signal $g_k$
+provides residual correction at information rate $I_k$, so
+$\epsilon_k$ is no longer non-decreasing once the trajectory enters
+the absorbing basin of Part~(b).  The cascade-trigger analysis of
+Part~(b) still applies (B1$'$ does not remove the triggering
+mechanism, only the irreversibility), but escape from the basin is
+now possible through $g_k$.  The lifetime $\tau_{\mathrm{meta}}$ is
+set by the competition between the basin depth and the information
+rate.  Proposition~\ref{prop:metastable} gives the scaling law
+$\tau_{\mathrm{meta}} \gtrsim C/I_k$, where the constant $C$ depends
+on the basin geometry near $S^*$ and is not characterized as a
+theorem-level bound.  The proof of Proposition~\ref{prop:metastable}
+itself (by the mean first-passage argument of Kramers-type escape)
+is deferred.
+
+\subsubsection*{Proof of Part~(c): critical surface}
+
+Setting $B(t_0, T) = 0$ in the linearized regime of
+Part~(a)---equivalently, requiring $(1 - \bar{a}) = 0$---gives
+$\rS \cdot \rhomincross + \alphamin \cdot c_{\mathrm{V}} \cdot
+\underline{\nu} = \rW \cdot \rsub + \dmax \cdot
+\Delta\rho_{\mathrm{avg}} / \Lyap_{\mathrm{avg}}$.  Solving for
+$\rhomincross$ under the standing assumption $\rS > 0$ yields
+Equation~\ref{eq:critical_redundancy}.  The surface is linearized: the
+nonlinear generalization, where $\rS$, $\rW$, and $\rsub$ depend on
+$(P_t, \Wm_t)$, would produce a state-dependent critical surface
+rather than a hyperplane (see Section~\ref{sec:discussion}).
 
 \subsection{Cascade Lemma}
 \label{app:cascade}
