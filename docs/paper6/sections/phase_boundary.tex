@@ -38,10 +38,12 @@ condition implies in the linearized regime.  \emph{Note:} the explicit
 neighborhood radius (Equation~\ref{eq:neighborhood}) is derived from
 worst-case instantaneous bounds $\bar{a}$, $\bar{b}$ via a linearized
 approximation ($\ln a_t \approx a_t - 1$ when $|a_t - 1| \ll 1$).
-The general convergence to $\bar{b}/(1-\bar{a})$ holds under the
-uniform contraction condition without linearization; the substitution
-of named parameters into $\bar{a}$ and $\bar{b}$ requires the
-linearized regime (Remark~\ref{rem:linearized}).
+The general convergence to $\mu \cdot \bar{b}/(1-\bar{a})$ holds under
+the uniform contraction condition without linearization ($\mu$ is the
+overshoot constant defined in the appendix); the substitution of named
+parameters into $\bar{a}$ and $\bar{b}$, and the drop of $\mu$ to 1
+at linearization order, require the linearized regime
+(Remark~\ref{rem:linearized}).
 
 \medskip
 \noindent\textbf{Part~(a): Self-Correcting Basin.}
@@ -80,7 +82,8 @@ $\epsilon_{\mathrm{safe}} > 0$ requires that the optimal action at
 $\Wm^*$ has a strict gap ($G_j(\Wm^*) > 0$ for all preserve-optimal
 agents).  This holds generically for finite action sets (see proof).
 A computable lower bound using action-gap gradient norms
-(Cauchy--Schwarz in the $w$-weighted metric) is derived there.  The
+(Cauchy--Schwarz in the dual $w^{-1}$-weighted norm, induced by the
+$w$-weighted metric on $\Wm$-space) is derived there.  The
 easier-to-compute per-coordinate estimator $\min_k w_k \cdot
 \epsilon_{\mathrm{crit},k}^2$ rules out single-coordinate flips but
 may overestimate $\epsilon_{\mathrm{safe}}$ when action gaps are

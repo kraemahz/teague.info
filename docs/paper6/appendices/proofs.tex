@@ -68,15 +68,20 @@ Theorem~\ref{thm:phase_boundary}(a), is:
 \exists\, \bar{a} \in (0,1),\ \bar{b} \geq 0,\ T^* > 0:\ \forall T \geq T^*,\quad
 \frac{1}{T}\!\!\sum_{t=t_0}^{t_0+T-1}\!\! \ln a_t \leq \ln \bar{a},
 \quad
-\frac{1}{T}\!\!\sum_{t=t_0}^{t_0+T-1}\!\! b_t \leq \bar{b}.
+b_t \leq \bar{b} \text{ pointwise}.
 \end{equation}
-The log-average form is the natural object because the first term of
-\eqref{eq:iterated_bound} is a product; equivalently, the geometric
-mean of $a_t$ is at most $\bar{a}$.  We require $a_t > 0$ throughout,
-which holds whenever $\rW(t) \cdot \nsub(t) < 1$ (a step cannot more
-than wipe out the current error); this is a weak condition on
-per-step degradation and holds under C2$'$ for any finite learning
-rate.
+The log-average form is the natural object for $a_t$ because the first
+term of \eqref{eq:iterated_bound} is a product; equivalently, the
+geometric mean of $a_t$ is at most $\bar{a}$.  The pointwise bound on
+$b_t$ is stronger than a time-average bound but is what the
+suffix-weighted sum in \eqref{eq:iterated_bound} requires: individual
+large $b_s$ terms are not averaged away by the tail product.  A pointwise
+bound follows from C2$'$ with $\bar{b} = \dmax \cdot \overline{\Delta\rho}$
+(applied at each subsumption step; non-subsumption steps have
+$b_t = 0$).  We require $a_t > 0$ throughout, which holds whenever
+$\rW(t) \cdot \nsub(t) < 1$ (a step cannot more than wipe out the
+current error); this is a weak condition on per-step degradation and
+holds under C2$'$ for any finite learning rate.
 
 \paragraph{Convergence under~\eqref{eq:uniform_contraction}.}
 Applying AM--GM to the product in~\eqref{eq:iterated_bound},
@@ -92,10 +97,14 @@ the \emph{overshoot constant}
 \mu = \sup_{N \geq 1} \sup_{t_0}\ \frac{1}{\bar{a}^N} \cdot
   \max_{0 \leq s \leq N-1} \prod_{t=t_0+s+1}^{t_0+N} a_t,
 \end{equation*}
-which is finite whenever the burst length of $a_t > \bar{a}$ is
-uniformly bounded (a consequence of $\rsub$ being bounded below~1 and
-$\rW$ being bounded above; see~\citet[Ch.~2]{liberzon2003switching}
-for the switched-systems analogue).  Summing the geometric series:
+which is finite whenever an average-dwell-time condition holds: the
+number of consecutive subsumption steps (during which $a_t > \bar{a}$)
+within any window of length $N$ is at most $\lambda \cdot N + N_0$ for
+constants $\lambda \in [0,1)$ and $N_0 \geq 0$.  This is the dwell-time
+formulation of~\citet[Ch.~2]{liberzon2003switching} and is stronger
+than $\rsub < 1$ (which bounds only asymptotic density).  Under
+dwell-time, burst length is uniformly bounded and $\mu < \infty$.
+Summing the geometric series:
 \begin{equation}
 \label{eq:steady_state_bound}
 \limsup_{T \to \infty} \Lyap_{t_0+T}
@@ -104,18 +113,23 @@ for the switched-systems analogue).  Summing the geometric series:
 
 \paragraph{Linearized regime.}
 When $|a_t - 1| \ll 1$ for all $t$ (the moderate-step regime of
-Remark~\ref{rem:linearized}), $\ln a_t \approx a_t - 1$, so
-\eqref{eq:uniform_contraction} is equivalent to
-$\frac{1}{T}\sum (1 - a_t) \geq 1 - \bar{a}$.  Substituting the
-worst-case values $\alphamin = \inf_t \alpha(t)$,
+Remark~\ref{rem:linearized}; cf.\ Equation~\ref{eq:linearized}),
+$\ln a_t \approx a_t - 1$, so \eqref{eq:uniform_contraction} is
+equivalent to $\frac{1}{T}\sum (1 - a_t) \geq 1 - \bar{a}$.
+Substituting the worst-case values $\alphamin = \inf_t \alpha(t)$,
 $\underline{\nu} = \inf_t \nu(P_t, \Wm_t)$, and the time-averaged
-$\overline{\Delta\rho}$ yields
-$1 - \bar{a} = \rS \cdot \rhomincross + \alphamin \cdot
-c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot \rsub$ and
-$\bar{b} = \rsub \cdot \dmax \cdot \overline{\Delta\rho}$.  With
-$\mu = 1$ in this regime (no overshoot when steps are small),
-\eqref{eq:steady_state_bound} reduces to
-Equation~\ref{eq:neighborhood}.
+$\overline{\Delta\rho}$ yields $1 - \bar{a} = \rS \cdot \rhomincross
++ \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} - \rW \cdot
+\rsub$.  For the additive term, only subsumption steps contribute
+nonzero $b_s$; in the suffix-weighted sum
+$\sum_s b_s \prod_{t>s} a_t$, the density of contributing positions
+is $\rsub$ and each is bounded pointwise by
+$\dmax \cdot \overline{\Delta\rho}$.  The effective $\bar{b}$ in the
+linearized steady-state formula is therefore
+$\rsub \cdot \dmax \cdot \overline{\Delta\rho}$.  In the linearized
+regime, $\mu = 1 + O(\max_t |a_t - \bar{a}|^2)$, which we drop at
+the order of the linearization, so~\eqref{eq:steady_state_bound}
+reduces to Equation~\ref{eq:neighborhood}.
 
 \paragraph{Policy correctness: $\epsilon_{\mathrm{safe}} > 0$.}
 Define
@@ -151,14 +165,20 @@ $|G_j(\Wm) - G_j(\Wm^*)| \geq G_j(\Wm^*)$, so:
               {\sup_{\Wm \in \mathcal{N}} \|\nabla G_j(\Wm)\|_{w^{-1}}} \right)^2,
 \end{equation}
 where $\mathcal{A}^+$ is the set of preserve-optimal agents and
-$\mathcal{N}$ is a neighborhood containing the trajectory.  The bound
-is conservative (it assumes the action gap can respond to full
-multi-coordinate error simultaneously) but finite whenever the strict
-gap holds.  A cheaper per-coordinate estimator
-$\min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$ rules out
-single-coordinate flips but does not bound multi-coordinate flips,
-so~\eqref{eq:eps_safe_bound} is the correct object for policy
-correctness on the whole neighborhood.
+$\mathcal{N} = \{\Wm : \Lyap(\Wm) \leq \Lyap_\infty\}$ is the
+steady-state neighborhood from~\eqref{eq:steady_state_bound}.  The
+self-consistency is that $\Lyap_\infty$ enters both the bound and
+$\mathcal{N}$; in practice one takes the smallest $\mathcal{N}$
+containing the trajectory and iterates the self-consistency condition
+$\Lyap_\infty < \epsilon_{\mathrm{safe}}(\mathcal{N})$ to closure.
+The bound~\eqref{eq:eps_safe_bound} is conservative because
+$\|\nabla G_j\|_{w^{-1}}$ is taken as its supremum over the entire
+neighborhood, not the value along the actual trajectory.  A cheaper
+per-coordinate estimator $\min_k w_k \cdot \epsilon_{\mathrm{crit},k}^2$
+rules out single-coordinate flips but does not bound multi-coordinate
+flips (where the action gap responds to error on several dimensions
+simultaneously), so~\eqref{eq:eps_safe_bound} is the correct object
+for policy correctness on the whole neighborhood.
 
 \paragraph{Closing Part~(a).}
 Combining~\eqref{eq:steady_state_bound} with the policy-correctness
