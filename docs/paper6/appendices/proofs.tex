@@ -160,7 +160,7 @@ Assume additionally:
   safety-relevant dimension $k'$ and every agent $a_{j'}$,
   $\sign(\Wm[k'] - \Wm^*[k']) \cdot
   \frac{\partial G_{j'}}{\partial \Wm[k']} < 0$ whenever
-  $\Wm[k'] \neq \Wm^*[k']$---that is, moving $\Wm[k']$ further
+  $\Wm[k'] \neq \Wm^*[k']$; that is, moving $\Wm[k']$ further
   from $\Wm^*[k']$ (increasing the absolute error $\epsilon_{k'}$)
   monotonically decreases every agent's preservation advantage,
   regardless of the sign of the miscalibration.
@@ -257,9 +257,9 @@ further subsumptions.
 After the first trigger, assumption~(0) is violated for later
 cascade stages: dimensions $k$ and $j'$ are both miscalibrated.
 However, the errors on previously-blinded dimensions all push $G_j$
-in the same direction (more negative---making subsumption more
+in the same direction (more negative, making subsumption more
 attractive), provided assumption~(ii) holds uniformly across all
-dimensions---not just the original trigger dimension~$k$.  This
+dimensions, not just the original trigger dimension~$k$.  This
 requires a multi-dimensional monotonicity condition: for every
 previously-blinded dimension $k_i$ and every agent $a_{j_n}$ at
 cascade stage~$n$,

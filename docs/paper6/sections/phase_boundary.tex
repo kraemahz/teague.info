@@ -45,14 +45,14 @@ linearized regime (Remark~\ref{rem:linearized}).
 
 \medskip
 \noindent\textbf{Part~(a): Self-Correcting Basin.}
-If the uniform contraction condition holds---there exist constants
+If the uniform contraction condition holds (there exist constants
 $\bar{a} \in (0,1)$ and $\bar{b} \geq 0$ such that, for all
 sufficiently long windows $[t_0, t_0+T]$, the time-averaged
 log-contraction rate of the per-step multiplicative factor
 $a_t$ satisfies $\frac{1}{T}\sum \ln a_t \leq \ln \bar{a} < 0$ and
 the time-averaged additive drift satisfies
-$\frac{1}{T}\sum b_t \leq \bar{b}$ (see Equation~\ref{eq:uniform_contraction}
-for notation)---then $\Lyap(\Wm_t)$ converges to a neighborhood of zero
+$\frac{1}{T}\sum b_t \leq \bar{b}$; see Equation~\ref{eq:uniform_contraction}
+for notation), then $\Lyap(\Wm_t)$ converges to a neighborhood of zero
 whose radius is bounded by $\mu \cdot \bar{b}/(1 - \bar{a})$ in
 general (with overshoot constant $\mu$; see proof).  In the
 linearized regime (Remark~\ref{rem:linearized}), this evaluates to
@@ -177,7 +177,7 @@ agent's channels were tracking.)
 The Cascade Lemma (Appendix~\ref{app:cascade}) propagates the failure:
 the resulting subsumptions drive $\rhocross_j \to 0$ on additional
 dimensions $j \neq k$ (provided the agent-channel graph is
-connected---each subsumption removes channels covering at least one
+connected, so each subsumption removes channels covering at least one
 new dimension).  Each newly blinded dimension $j'$ has
 $\epsilon_{j'}$ non-decreasing (by B1a); if environmental
 non-stationarity causes $\epsilon_{j'}$ to exceed
@@ -186,12 +186,12 @@ action-flip mechanism.  (The cascade is conditional on threshold
 crossing at each stage; non-stationarity is the generic driver but
 a dimension that happens to be environmentally stationary after
 blinding does not cascade further.)
-Under two additional structural conditions---connectivity of the
-agent-channel graph (each subsumption removes channels covering at
+Under two additional structural conditions (connectivity of the
+agent-channel graph, so each subsumption removes channels covering at
 least one new dimension, ensuring the cascade can reach all
-dimensions) and environmental non-stationarity on every blinded
-dimension (ensuring $\epsilon_{k'}$ grows past $\epsilon_{\mathrm{crit},k'}$
-at each cascade stage)---the trajectory converges to a neighborhood
+dimensions; and environmental non-stationarity on every blinded
+dimension, ensuring $\epsilon_{k'}$ grows past $\epsilon_{\mathrm{crit},k'}$
+at each cascade stage), the trajectory converges to a neighborhood
 of the monopolar fixed point $S^*$ (Definition~\ref{def:monopolar}).
 If either condition fails partially, the cascade is confined: to
 the connected component containing $k$ (if the graph is disconnected),
@@ -235,9 +235,9 @@ The phase boundary surface in the linearized regime is:
   = \rW \cdot \rsub
   + \dmax \cdot \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
 \end{equation}
-Below this surface (total correction---exogenous channels plus
-endogenous incentive---dominates both error-proportional growth and
-drift exposure): Part~(a)'s contraction condition is satisfied,
+Below this surface, where total correction (exogenous channels plus
+endogenous incentive) dominates both error-proportional growth and
+drift exposure, Part~(a)'s contraction condition is satisfied,
 so $\Lyap$ converges to the bounded neighborhood of
 Equation~\ref{eq:neighborhood}.  The system is in the
 self-correcting basin provided additionally that $\Lyap_\infty <
@@ -387,7 +387,7 @@ rational policy (evaluated at the reference action set
 $\mathcal{A}_{t^*}$ at the time the system enters the neighborhood).
 Since $\mathcal{A}_{t^*}$ is finite
 (Definition~\ref{def:transition}) and the optimal action at $\Wm^*$ is
-unique (i.e., $G_j(\Wm^*) > 0$ for the optimal action---a
+unique (i.e., $G_j(\Wm^*) > 0$ for the optimal action: a
 \emph{strict} gap, which holds generically for finite action sets and
 fails only on a measure-zero set of parameters), each action gap
 $G_j(\Wm)$ is continuous with $G_j(\Wm^*) > 0$.  Therefore the set
