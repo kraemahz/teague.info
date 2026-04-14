@@ -1,0 +1,231 @@
+\section{Detection Sensitivity and the Bayesian Update}
+\label{sec:detection_sensitivity}
+
+The Bayesian update in Section~\ref{sec:relaxation_protocol}
+depends on the detector's false-negative rate $\beta(\testdur)$
+over the test window.  This section characterizes $\beta$ in
+terms of the multi-channel detection architecture
+of~\citep[Table~1]{lasser2026scm} and records the per-test
+evidence strength that follows.
+
+\subsection{The detection model}
+
+Within a single test, $A_n = 1$ means the pathway activates at
+some point during the $\testdur$-step window; $O_n = 1$ means the
+detector records contraction during that window.  The detection
+sensitivity $\beta$ mediates between them:
+$\beta = \Pr(O_n = 0 \mid A_n = 1)$.
+
+\begin{assumption}[Activation Duration]
+\label{ass:D0}
+When the pathway activates during a test ($A_n = 1$), the
+activation persists for $k_{\mathrm{act}}$ consecutive steps,
+where $k_{\mathrm{act}}$ is either (a)~a fixed parameter of the
+pathway (determined by
+~\citep[Definition~2]{lasser2026horizon}'s exercise-pathway
+structure), or (b)~drawn from a distribution $K$ with known or
+bounded support.  The per-test false-negative rate $\beta$
+depends on $k_{\mathrm{act}}$: the detector has
+$\min(k_{\mathrm{act}}, \testdur)$ steps to detect activation.
+For the default analysis we assume
+$k_{\mathrm{act}} \geq \testdur$ (persistent activation); the
+transient case $k_{\mathrm{act}} < \testdur$ is handled as a
+sensitivity analysis below.
+\end{assumption}
+
+\begin{definition}[Detection Sensitivity]
+\label{def:detection_sensitivity}
+For a test $T = (R, \Xirestrict, \scope, \testdur, \damagebound)$
+monitoring pathway $\Pathway = (\pi_1, \ldots, \pi_L)$, the
+per-step detection probability on channel $c_i$ is
+$$
+\delta_i
+   = \Pr(c_i \text{ detects activation at } t'
+         \mid \Pathway \text{ activates at } t').
+$$
+The aggregate per-step detection probability across all active
+channels is
+\begin{equation}
+\label{eq:delta_agg}
+\deltaagg = 1 - \prod_{c_i \in \mathcal{O}(P_t) \cap \mathcal{C}_{\scope}}
+  (1 - \delta_i),
+\end{equation}
+where $\mathcal{C}_{\scope}$ is the set of channels that cover
+the scope $\scope$.
+\end{definition}
+
+\begin{assumption}[Cross-Channel Independence]
+\label{ass:D1}
+Detection events on distinct channels are conditionally
+independent given the latent activation state $A_n$.  This is
+justified for cross-substrate channels by channel
+isolation~\citep[Proposition~5]{lasser2026exo} (unconditional),
+and for same-substrate channels under the joint-factorization
+assumption of~\citep[Proposition~6]{lasser2026exo} (conditional
+on committed verification).  When
+Assumption~\ref{ass:D1} fails (correlated same-substrate
+channels without committed verification), the product
+formula~\eqref{eq:delta_agg} is optimistic; a conservative
+fallback uses only the cross-substrate channels,
+\begin{equation}
+\label{eq:delta_agg_conservative}
+\deltaagg^{\mathrm{cons}}
+  = 1 - \prod_{c_i \in \mathcal{O}(P_t) \cap \mathcal{C}_{\scope}
+              :\ \mathrm{cross\text{-}substrate}} (1 - \delta_i).
+\end{equation}
+\end{assumption}
+
+\begin{assumption}[Temporal Independence or Mixing]
+\label{ass:D2}
+Conditional on the latent activation state $A_n$, detection
+outcomes at distinct time steps within a test window are either
+(a)~independent (memoryless detectors) or (b)~satisfy a mixing
+condition with mixing time
+$\testmix \ll \testdur$.  Without Assumption~\ref{ass:D2},
+persistent detector outages or common-cause failures can produce
+correlated misses across time steps, making $\beta$ decay slower
+than exponential.  Under (b), the effective number of
+independent detection opportunities in $\testdur$ steps is
+$\testdur / \testmix$ rather than $\testdur$.
+\end{assumption}
+
+Under Assumptions~\ref{ass:D0}--\ref{ass:D2} with persistent
+activation, the window-level false-negative rate satisfies
+\begin{equation}
+\label{eq:beta_window}
+\beta(\testdur) \leq (1 - \deltaagg)^{\testdur / \testmix}.
+\end{equation}
+Under the memoryless case (\ref{ass:D2}(a)), $\testmix = 1$ and
+$\beta(\testdur) = (1 - \deltaagg)^{\testdur}$.  For transient
+pathways with activation duration $k < \testdur$, replace
+$\testdur$ by $\min(k, \testdur)$ throughout.
+
+\subsection{Detection-sensitivity bounds}
+
+\begin{proposition}[Detection Sensitivity Bounds]
+\label{prop:detection_bounds}
+Under the multi-channel architecture
+of~\citep[Table~1]{lasser2026scm} and
+Assumptions~\ref{ass:D0}--\ref{ass:D2}:
+\begin{itemize}
+\item[(a)] $\beta(\testdur)$ is monotonically decreasing in
+  $\testdur$: longer tests have lower false-negative rates.
+\item[(b)] For any $\epsilon_\beta \in (0, 1)$, the minimum test
+  duration required to achieve $\beta(\testdur) \leq
+  \epsilon_\beta$ is
+  \begin{equation}
+  \label{eq:tau_min}
+  \testmin = \left\lceil
+    \frac{\log \epsilon_\beta}{\log(1 - \deltaagg)}
+  \right\rceil,
+  \end{equation}
+  rescaled by $\testmix$ under the mixing case of
+  Assumption~\ref{ass:D2}(b).
+\item[(c)] If at least one cross-substrate channel covers
+  $\scope$ with detection probability $\deltacross > 0$, then
+  even without Assumption~\ref{ass:D1} for same-substrate
+  channels,
+  \begin{equation}
+  \label{eq:cross_substrate_bound}
+  \beta(\testdur) \leq (1 - \deltacross)^{\testdur / \testmix},
+  \end{equation}
+  which converges to zero exponentially in $\testdur$ at rate
+  $1/\testmix$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Part~(a) is immediate from~\eqref{eq:beta_window}: adding more
+independent detection opportunities monotonically decreases the
+product.  Part~(b) inverts the bound
+in~\eqref{eq:beta_window}.  Part~(c) uses that cross-substrate
+channels satisfy Assumption~\ref{ass:D1} unconditionally
+by~\citep[Proposition~5]{lasser2026exo}, so the product formula
+is exact for them; temporal independence follows from
+Assumption~\ref{ass:D2}(a) or (b).
+\end{proof}
+
+Part~(c) is the substrate-diversity dividend for detection:
+cross-substrate channels provide independent detection
+opportunities that same-substrate channels may not (due to
+correlated failures), and their isolation is unconditional.
+
+\subsection{Evidence strength of a single test}
+
+\begin{proposition}[Evidence Strength of Controlled Relaxation]
+\label{prop:evidence_strength}
+After a controlled relaxation test $T$ with outcome
+$O_n \in \{0, 1\}$, using the binary model of
+Section~\ref{sec:relaxation_protocol} ($H_0$: $\theta = 0$ vs.\
+$H_1$: $\theta = \thetaone$ with fixed likelihoods):
+\begin{itemize}
+\item[(a)] \textbf{Evidence for $R$ ($O_n = 1$, contraction
+  detected).}
+  \begin{equation}
+  \label{eq:log_L1}
+  \Delta \logit = \log \Lone
+    = \log \frac{\thetaone (1 - \beta) + (1 - \thetaone) \alphafp}{\alphafp}.
+  \end{equation}
+  This is a positive constant under
+  Assumption~\ref{ass:T1} ($\Lone > 1$).  For the common case
+  $\thetaone = 1$: $\Delta \logit = \log((1 - \beta)/\alphafp)$.
+\item[(b)] \textbf{Evidence against $R$ ($O_n = 0$, no
+  contraction detected).}
+  \begin{equation}
+  \label{eq:log_L0}
+  \Delta \logit = \log \Lzero
+    = \log \frac{\thetaone \beta + (1 - \thetaone)(1 - \alphafp)}{1 - \alphafp}.
+  \end{equation}
+  This is a negative constant under
+  Assumption~\ref{ass:T1} ($\Lzero < 1$).  For $\thetaone = 1$:
+  $\Delta \logit = \log(\beta / (1 - \alphafp))$.  The
+  denominator $(1 - \alphafp)$ is material when $\alphafp$ is
+  non-negligible and was missing in a naive derivation that
+  assumed $\alphafp = 0$.
+\item[(c)] \textbf{Comparison with the restricted regime.}
+  Under the restricted regime
+  (Proposition~\ref{prop:asym_evidence}), the capability is not
+  exercised, so both outcomes have likelihood ratio~$1$ (no
+  update).  Under controlled relaxation the capability is
+  exercised
+  (Assumption~\ref{ass:T5}), so both $\Lzero$ and $\Lone$ are
+  non-unit and both outcomes are informative.
+\item[(d)] \textbf{Effect of $\thetaone$.}
+  The alternative hypothesis $\thetaone$ affects evidence
+  strength:
+  \begin{itemize}
+  \item $\thetaone = 1$: $\Lone = (1-\beta)/\alphafp$, $\Lzero =
+    \beta/(1-\alphafp)$.  Maximum evidence per test.
+  \item $\thetaone < 1$: $\Lone$ decreases and $|\log \Lzero|$
+    decreases.  Less evidence per test, but the alternative may
+    be more realistic for stochastically activating pathways.
+  \end{itemize}
+  The choice of $\thetaone$ is a modelling decision that does
+  not affect convergence (Theorem~\ref{thm:convergence} holds
+  for any $\thetaone \in (0, 1]$ under
+  Assumption~\ref{ass:T1}), only the rate.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Direct from the fixed likelihood ratios~\eqref{eq:L_defs}.  The
+log-odds form follows from~\eqref{eq:update_pos} and
+\eqref{eq:update_neg}: $\logit \pR(t^+) = \logit \pR(t) +
+\log(\Pr(O_n \mid H_1) / \Pr(O_n \mid H_0))$.
+\end{proof}
+
+\begin{remark}[Integration with log-odds aggregation]
+\label{rem:log_odds_integration}
+The log-odds evidence from
+Proposition~\ref{prop:evidence_strength} feeds directly into the
+log-odds risk aggregation
+of~\citep[Definition~5]{lasser2026scm} as an additional
+evidence channel.  The controlled-relaxation test produces
+evidence with the same structure as an individual agent's risk
+assessment---a log-odds contribution weighted by trust.  The
+trust weight on this evidence is~$1$ (the observation is direct,
+not mediated by an agent's report), making test outcomes the
+highest-trust evidence the aggregation can receive.  This is by
+design: direct observation under controlled conditions is the
+gold standard for empirical risk assessment.
+\end{remark}

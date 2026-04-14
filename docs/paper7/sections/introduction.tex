@@ -1,0 +1,240 @@
+\section{Introduction}
+\label{sec:introduction}
+
+The risk machinery of Goal-Frontier
+Maximization~\citep{lasser2026horizon} identifies the
+max-aggregation pathology as the most important open problem the
+paper names.  The conservative max operator, combined with the
+verification asymmetry inherent in risk prevention, produces
+overcaution that is structurally irresolvable within the existing
+framework: a risk claim that successfully prevents catastrophe
+generates no observation that could lower the risk estimate, because
+the very success of the restriction is what prevents the
+counterfactual test.
+
+This is a distinct problem from the compound feedback loops analysed
+in~\citep{lasser2026phase}.  That work asks: when does partial
+subsumption self-correct versus cascade?  The present paper asks:
+when the framework correctly restricts a risky capability, how does
+it ever learn that the restriction was unnecessary?  The two
+problems reinforce each other:~\citep[Proposition~3]{lasser2026phase}
+shows the restriction-verification gap is a degenerate phase
+boundary with zero self-correction rate ($\rS = 0$), but the phase
+boundary machinery does not by itself supply the missing
+self-correction mechanism.
+
+The paper is named for Mayor Kotoku Wamura's legacy: the oversized
+floodgate at Fudai~\citep[Discussion]{lasser2026poset} that was
+ridiculed for decades as wasteful overcaution until the 2011 Tohoku
+tsunami proved it exactly right.  The \emph{Wamura problem} is the
+formal version: when prevention works, the evidence for prevention
+disappears.
+
+\subsection{The structural problem}
+
+Three ingredients combine to produce the pathology.
+
+\paragraph{Max-aggregation.}
+The risk framework of~\citep{lasser2026horizon} takes the maximum
+over agents' risk estimates, meaning a single high-risk claim from
+any agent constrains the capability tuple.  This is conservative by
+design---it prevents the framework from dismissing minority risk
+warnings---but it means a single overly cautious agent can lock a
+capability indefinitely.
+
+\paragraph{Verification asymmetry.}
+The monotonicity
+result~\citep[Proposition~1]{lasser2026exo} shows that as an
+agent's capabilities grow, the verification asymmetry between what
+it can demonstrate and what can be externally verified is
+non-decreasing.  Applied to risk claims: verifying a risk (observing
+catastrophe) is operationally straightforward; verifying safety
+(observing non-catastrophe under exercise) requires the exercise to
+happen, which the restriction prevents.
+
+\paragraph{Neutral-prior bootstrap.}
+When a new capability is discovered and no exercise history exists,
+the framework initializes with a neutral
+prior~\citep[Discussion]{lasser2026horizon}.  Combined with
+max-aggregation, a single agent assigning high risk to the new
+capability immediately restricts it, and the restriction then
+prevents the evidence accumulation that would revise the estimate.
+
+\medskip
+
+The three ingredients compose into a ratchet: risk claims can raise
+$\pR$ but the restricted regime provides no mechanism to lower it.
+We formalize this ratchet in
+Section~\ref{sec:verification_asymmetry}, introduce controlled
+relaxation protocols as the structural resolution in
+Section~\ref{sec:relaxation_protocol}, and prove the damage-bound
+and convergence theorems in
+Sections~\ref{sec:damage_guarantees}--\ref{sec:convergence}.
+
+\subsection{Framing precondition: vol\_P as an operational target}
+\label{sec:framing_precondition}
+
+All results in this paper are stated in terms of $\volL$ dynamics
+and Bayesian updates on risk claims about $\volL$-contraction.  We
+assume throughout that $\volL$ is an operationally meaningful
+target, in the sense inherited
+from~\citep{lasser2026gfm,lasser2026phase}: improving $\volL$
+corresponds to an improvement in the experiential capability volume
+the framework is designed to protect.  This is the precondition
+under which the damage-bound and convergence claims carry their
+safety interpretation.  If $\volL$ diverges from the experiential
+target (the B-to-C gap~\citep{lasser2026gfm}), the damage tolerance
+$\damagebound$ bounds contraction on the wrong quantity and every
+subsequent result inherits the divergence.  Controlled relaxation
+does not close the B-to-C gap; it resolves the restriction-to-risk
+feedback gap that exists \emph{above} the B-to-C precondition.
+
+\subsection{Summary of results}
+
+\begin{enumerate}
+\item \textbf{Formalization of the Wamura asymmetry}
+  (Section~\ref{sec:verification_asymmetry}).
+  We define risk-restriction pairs and their two observation
+  regimes, then prove that under the restricted regime the
+  Bayesian update has trivial likelihood ratio: successful
+  prevention is observationally indistinguishable from unnecessary
+  prevention (Proposition~\ref{prop:asym_evidence}).  Combined
+  with max-aggregation and neutral-prior initialization, this
+  produces monotone overcaution
+  (Proposition~\ref{prop:monotone_overcaution}) and an asymptotic
+  lockup corollary.
+
+\item \textbf{Controlled relaxation protocol}
+  (Section~\ref{sec:relaxation_protocol}).
+  A controlled relaxation test lifts the restriction within a
+  bounded sub-poset $\scope$ for a fixed duration $\testdur$,
+  under continuous multi-channel monitoring, with an
+  instantaneous-damage safety cutoff at the tolerance
+  $\damagebound$.  The test is formalized as a simple binary
+  hypothesis problem ($H_0$: pathway harmless, $H_1$: pathway
+  dangerous with fixed activation probability $\thetaone$) with
+  fixed per-test likelihood ratios $\Lzero < 1 < \Lone$.
+
+\item \textbf{Damage bound}
+  (Section~\ref{sec:damage_guarantees}).
+  Theorem~\ref{thm:damage_bound} bounds the worst-case $\volL$
+  contraction during a test by $\damagebound$ during the test
+  window and $2\damagebound$ post-reinstatement, under a scope
+  construction (Definition~\ref{def:test_scope}) whose
+  cooperative-closure condition explicitly accounts for
+  cross-boundary forward-reachability.
+
+\item \textbf{Convergence theorem}
+  (Section~\ref{sec:convergence}).
+  Theorem~\ref{thm:convergence} shows that under repeated
+  controlled relaxation with fixed parameters, the posterior
+  $\pR$ converges almost surely to the correct hypothesis, with
+  exponential rate given by the Kullback--Leibler divergence
+  between the observation distributions under $H_0$ and $H_1$.
+  Finite-sample corollaries give explicit bounds on the number of
+  tests required to clear a false risk claim.
+
+\item \textbf{Integration}
+  (Section~\ref{sec:integration}).
+  The protocol preserves the self-balancing property of $\volL$
+  (Proposition~\ref{prop:preserve_balance}), provides empirical
+  arbitration for inter-agent risk disagreement
+  (Proposition~\ref{prop:empirical_arbitration}), and extends the
+  multi-channel detection architecture
+  of~\citep{lasser2026scm} with a sixth, actively generated
+  channel (Lemma~\ref{lem:sixth_channel}).
+\end{enumerate}
+
+\subsection{What this paper does not do}
+\label{sec:not_do}
+
+\begin{itemize}
+\item
+\textbf{It does not replace max-aggregation.}  Log-odds risk
+aggregation~\citep[Definition~5]{lasser2026scm} already provides
+an alternative for the multi-agent case.  The verification
+asymmetry we resolve persists under \emph{any} aggregation rule
+whenever a risk claim prevents the exercise that would generate
+evidence.  Controlled relaxation is orthogonal to the choice of
+aggregator.
+
+\item
+\textbf{It does not address observation-channel integrity under
+adversarial conditions.}  The commitment protocols
+of~\citep{lasser2026exo} handle that.  We assume honest
+observation channels and honest (but possibly miscalibrated) risk
+assessors throughout.
+
+\item
+\textbf{It does not resolve the B-to-C gap.}  Controlled
+relaxation generates evidence about $\volL$-contraction claims,
+not about experiential value.  Convergence of $\pR$ to truth
+translates into convergence of the restriction landscape only
+insofar as $\volL$ tracks the experiential target; the
+precondition from Section~\ref{sec:framing_precondition} is
+inherited.
+
+\item
+\textbf{It does not claim that controlled relaxation is always
+preferable to structural resolution.}
+Section~\ref{sec:meta_policy} places the test-initiation decision
+against the information value of a structural
+argument~\citep[Proposition~2]{lasser2026horizon}: when a
+structural resolution is available (for example, a proof that
+the pathway is mechanically infeasible), it is strictly
+preferable to any controlled relaxation test.
+\end{itemize}
+
+\subsection{Dependencies on prior results}
+
+Table~\ref{tab:dependencies7} summarizes which results
+from~\citep{lasser2026gfm, lasser2026poset, lasser2026horizon,
+lasser2026scm, lasser2026exo, lasser2026phase} this paper relies
+on and how they enter the analysis.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{2.0cm}p{5.6cm}p{6.0cm}@{}}
+\toprule
+\textbf{Source} & \textbf{Result used} & \textbf{Role here} \\
+\midrule
+Poset        & Axiom verification (Prop.~1), benchmark refinement
+             & $\volL$ properties preserved under relaxation;
+               complementary evidence source \\
+Horizon      & Exercise Pathway (Def.~2), Concentration Risk (Def.~3),
+               Risk Claim (Def.~4), Preemptive Restriction (Prop.~1)
+             & The risk machinery the protocol operates within \\
+Horizon      & Structural discovery value (Prop.~2), anti-monopolar
+               property (Prop.~6)
+             & Value framework for test-cost vs.\ restriction-cost
+               comparison \\
+Causal       & Risk-Trust Dynamics (Def.~4), Log-Odds Risk
+               Aggregation (Def.~5), $L^2$ Convergence (Prop.~2)
+             & Bayesian update machinery that processes test
+               outcomes \\
+Causal       & Multi-channel architecture (Table~1), Causal
+               Attribution (Def.~2)
+             & Formalizing what ``observing the outcome'' means
+               during a test \\
+Verification & Verification Asymmetry (Def.~2), Monotonicity
+               (Prop.~1), Exercise Protocol (Def.~12), Risk Claim
+               Protocol (Def.~13)
+             & The formal verification-asymmetry framework the
+               protocol resolves \\
+Verification & Channel Isolation (Prop.~5), Channel Independence
+               (Prop.~6)
+             & Integrity conditions on test observations \\
+Phase        & Phase boundary (Thm.~1), Wamura problem as
+               degeneracy (Prop.~3)
+             & Controlled relaxation makes $\rS > 0$ for Loop~3 \\
+\bottomrule
+\end{tabular}
+\caption{Dependencies on prior results.
+  Poset~=~\citet{lasser2026poset},
+  Horizon~=~\citet{lasser2026horizon},
+  Causal~=~\citet{lasser2026scm},
+  Verification~=~\citet{lasser2026exo},
+  Phase~=~\citet{lasser2026phase}.}
+\label{tab:dependencies7}
+\end{table}

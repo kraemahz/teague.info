@@ -1,0 +1,160 @@
+\section{Integration with Prior Results}
+\label{sec:integration}
+
+This section records how controlled relaxation extends the
+existing GFM machinery: it preserves self-balancing, resolves
+inter-agent risk disagreement, and extends the multi-channel
+detection architecture with a sixth, actively generated channel.
+
+\subsection{Preservation of self-balancing}
+
+\begin{proposition}[Controlled Relaxation Preserves Self-Balancing]
+\label{prop:preserve_balance}
+The self-balancing property of $\volL$
+(\citep[Theorem~1]{lasser2026horizon}, self-balancing of the
+discounted value under capability dynamics) is preserved under
+controlled relaxation:
+\begin{itemize}
+\item[(a)] During the test window ($\Xirestrict$ lifted within
+  $\scope$), the capability tuple $(d_1, \ldots, d_k)$ is
+  exercisable, which by weak-monotonicity axiom~M4
+  of~\citep[Proposition~1]{lasser2026poset} means $\volL$ is at
+  least as large as under restriction, minus the possible
+  damage bounded by $\damagebound$.  The net effect on $\volL$
+  is bounded by
+  $[-\damagebound, +\Delta_{\mathrm{unrestrict}}]$ where
+  $\Delta_{\mathrm{unrestrict}} \geq 0$ is the $\volL$ gain from
+  lifting the restriction.
+\item[(b)] After the test, the updated risk estimate
+  $\pR(t + \testdur)$ more accurately reflects the true risk, so
+  the restriction
+  criterion~\citep[Proposition~1]{lasser2026horizon} is applied
+  against a more accurate estimate.  If the risk was genuinely
+  low, the restriction is lifted and $\volL$ permanently
+  increases; if the risk was genuinely high, the restriction is
+  maintained with higher confidence and $\volL$ is unchanged
+  (the restriction was already in place).
+\item[(c)] Over repeated tests
+  (Theorem~\ref{thm:convergence}), the risk estimates converge
+  to truth, and the restriction landscape converges to the
+  optimal restriction set---the set of tuples that are
+  genuinely risky.  This is a stronger self-balancing guarantee
+  than the static version: not only does $\volL$ self-balance
+  against perturbations, but the restriction landscape itself
+  converges to the truth-tracking configuration.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Parts~(a) and (b) are direct consequences of
+Theorem~\ref{thm:damage_bound} and the criterion
+of~\citep[Proposition~1]{lasser2026horizon} applied to the
+updated $\pR$.  Part~(c) follows from
+Theorem~\ref{thm:convergence}: under
+Assumptions~\ref{ass:T1}--\ref{ass:T5}, the posterior converges
+almost surely to the correct hypothesis; iterating this over
+all restricted tuples yields convergence of the restriction
+landscape.  Technical details in
+Appendix~\ref{app:proof_preserve_balance}.
+\end{proof}
+
+\subsection{Empirical arbitration across disagreeing agents}
+
+\begin{proposition}[Risk-Claim Consensus via Empirical Arbitration]
+\label{prop:empirical_arbitration}
+When multiple agents disagree on the risk of a capability tuple
+($a_j$ assigns $\pR^{(j)} \gg \pR^{(k)}$ for agents $j, k$),
+controlled relaxation provides an empirical arbitration
+mechanism.
+\begin{itemize}
+\item[(a)] Under max-aggregation of the risk
+  estimates~\citep{lasser2026horizon}, agent $a_j$'s high
+  estimate locks the capability.  Under log-odds
+  aggregation~\citep[Definition~5]{lasser2026scm}, the
+  disagreement produces a moderate aggregate that may or may
+  not trigger restriction.
+\item[(b)] In either case, if the capability is restricted,
+  controlled relaxation generates evidence that updates both
+  agents' estimates toward the truth
+  (Theorem~\ref{thm:convergence}).  After sufficient tests, the
+  agents' posteriors converge, and the disagreement is resolved
+  by data rather than by aggregation-rule choice.
+\item[(c)] The convergence rate depends on each agent's prior
+  weight (how strongly they hold their belief), but
+  Assumption~\ref{ass:T4} (prior support) and the KL-positivity
+  of Theorem~\ref{thm:convergence}(d) guarantee convergence
+  regardless of prior: even a strongly held false risk claim is
+  eventually overwhelmed by repeated controlled-relaxation
+  evidence.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Part~(a) restates the aggregation-rule behaviour
+of~\citep{lasser2026horizon, lasser2026scm}.  Parts~(b)
+and~(c) follow directly from Theorem~\ref{thm:convergence}
+applied independently to each agent's posterior, using
+identical evidence streams.
+\end{proof}
+
+\subsection{A sixth detection channel}
+
+\begin{lemma}[Controlled Relaxation as a Sixth Detection Channel]
+\label{lem:sixth_channel}
+The controlled relaxation test adds a sixth channel to the
+five-channel attribution
+architecture~\citep[Table~1]{lasser2026scm}:
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{4.0cm}p{4.2cm}p{4.2cm}@{}}
+\toprule
+\textbf{Channel} & \textbf{Source} & \textbf{Signal} \\
+\midrule
+1. Capability gating
+  & Exercise outcomes
+  & Binary (pass/fail) \\
+2. Causal attribution
+  & SCM interventions
+  & Continuous ($\Delta \volL$) \\
+3. Behavioural residual
+  & Agent policy
+  & Continuous (deviation) \\
+4. SPRT detection
+  & Sequential test
+  & Binary (accept/reject) \\
+5. Correlational co-occurrence
+  & Pattern matching
+  & Continuous (correlation) \\
+\textbf{6. Controlled relaxation}
+  & \textbf{Direct exercise under monitoring}
+  & \textbf{Binary (contraction / no contraction) plus
+    continuous ($\volL$ delta)} \\
+\bottomrule
+\end{tabular}
+\caption{Extended detection architecture, adding controlled
+  relaxation as a sixth channel.  Rows 1--5
+  from~\citep[Table~1]{lasser2026scm}.}
+\label{tab:sixth_channel}
+\end{table}
+
+\noindent The sixth channel is distinct from the others in that
+it is \emph{actively generated} rather than passively observed.
+The framework designs the observation (by constructing the
+scope and lifting the restriction), rather than waiting for the
+observation to arrive.  This active-experiment property makes
+it the only channel that can generate evidence \emph{against} a
+risk claim under the verification asymmetry.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+The sixth channel's signal is
+$O_n \in \{0, 1\}$ plus the measured
+$\Delta \volL$ during the test window.  Its isolation and
+independence properties inherit from
+Assumptions~\ref{ass:D1}--\ref{ass:D2} combined with channel
+isolation~\citep[Proposition~5]{lasser2026exo}: the active-exercise
+signal is cross-substrate-isolated from the
+agent-claim channel because it arises from direct poset-state
+measurement rather than agent-mediated report.
+\end{proof}

@@ -1,0 +1,207 @@
+\section{Controlled Relaxation Protocol}
+\label{sec:relaxation_protocol}
+
+The structural root of the Wamura problem is that evidence
+\emph{against} a risk claim requires exercise of the restricted
+capability, which the restriction prevents.  Controlled relaxation
+breaks this deadlock by creating bounded, monitored exercise
+windows that generate genuine Bayesian evidence while bounding
+maximum damage.
+
+\subsection{The test object}
+
+\begin{definition}[Controlled Relaxation Test]
+\label{def:cr_test}
+A \emph{controlled relaxation test}
+$T = (R, \Xirestrict, \scope, \testdur, \damagebound)$ for a
+risk-restriction pair $(R, \Xirestrict)$ consists of:
+\begin{itemize}
+\item The risk-restriction pair $(R, \Xirestrict)$ being tested;
+\item A \emph{test scope} $\scope \subseteq P$: a bounded sub-poset
+  within which $\Xirestrict$ is temporarily lifted.  The scope
+  determines maximum $\volL$ exposure
+  (Section~\ref{sec:damage_guarantees});
+\item A \emph{test duration} $\testdur \in \mathbb{N}$: the number
+  of time steps for which $\Xirestrict$ is lifted within $\scope$;
+  after $\testdur$ steps, $\Xirestrict$ is reinstated regardless of
+  outcome;
+\item A \emph{damage tolerance} $\damagebound > 0$: the maximum
+  acceptable $\volL$-contraction from the test if the risk
+  materializes.  $\damagebound$ is set by the meta-policy
+  (Section~\ref{sec:meta_policy}) or by the user as a safety bound.
+\end{itemize}
+\end{definition}
+
+\subsection{Protocol phases}
+
+\paragraph{Phase 1: Scope selection.}
+Identify a sub-poset $\scope$ such that
+\begin{itemize}
+\item[(i)] the predicted pathway $\Pathway$ is exercisable within
+  $\scope$ (the prerequisite capabilities are available);
+\item[(ii)] the maximum $\volL$-contraction from any exercise
+  pathway within $\scope$ is bounded by $\damagebound$
+  (Theorem~\ref{thm:damage_bound});
+\item[(iii)] no other controlled relaxation test is currently
+  running on a scope $\scope'$ that overlaps with $\scope$
+  (isolation, to prevent cascading test failures).
+\end{itemize}
+
+\paragraph{Phase 2: Relaxation.}
+Within scope $\scope$, lift $\Xirestrict$ for $\testdur$ time steps.
+During the test window:
+\begin{itemize}
+\item Monitor for the predicted contraction pathway using the
+  multi-channel detection architecture
+  of~\citep[Table~1]{lasser2026scm}: capability gating, causal
+  attribution, behavioural residuals, SPRT detection,
+  correlational co-occurrence.
+\item Record all observations in the test log with timestamps and
+  channel attributions (formalized in
+  Section~\ref{sec:detection_sensitivity}).
+\item If $\volL$-contraction within $\scope$ exceeds $\damagebound$
+  at any step, immediately reinstate $\Xirestrict$ and terminate
+  the test early (safety cutoff).
+\end{itemize}
+
+\paragraph{Phase 3: Observation and Bayesian update.}
+We separate the latent event (pathway activation) from the
+observed event (detection alarm).  The model is a \emph{simple
+binary hypothesis test} with fixed likelihoods throughout:
+
+\begin{itemize}
+\item $A_n \in \{0, 1\}$: indicator that the pathway activates
+  during test $n$ (latent; not directly observed);
+\item $O_n \in \{0, 1\}$: indicator that contraction is detected
+  during test $n$ (observed);
+\item $H_0$: the pathway is harmless---activation probability
+  $\theta = 0$ (pathway never activates even when exercised);
+\item $H_1$: the pathway is dangerous---activation probability
+  $\theta = \thetaone$ for a fixed $\thetaone \in (0, 1]$
+  (pathway activates with known probability $\thetaone$ when
+  exercised).
+\end{itemize}
+
+The choice of $\thetaone$ parametrizes the alternative hypothesis
+as a fixed point in $(0, 1]$.  The conservative default is
+$\thetaone = 1$ (``if the pathway is dangerous at all, it
+activates every time the capability is exercised''), which
+produces the strongest evidence per test.  A more nuanced
+$\thetaone < 1$ reduces evidence per test but may be more
+realistic for stochastically activating pathways.  Under either
+choice, $\thetaone$ is fixed across the test sequence and is
+\emph{not} a free parameter in the likelihood.
+
+\paragraph{Observation model.}
+The detector is characterised by sensitivity and specificity:
+\begin{align*}
+\Pr(O_n = 1 \mid A_n = 1) &= 1 - \beta(\testdur)
+  \qquad (\text{true-positive rate}),\\
+\Pr(O_n = 1 \mid A_n = 0) &= \alphafp
+  \qquad (\text{false-positive rate}),
+\end{align*}
+where $\beta(\testdur)$ is the false-negative rate over the test
+window (characterised in Section~\ref{sec:detection_sensitivity})
+and $\alphafp \in [0, 1)$ is the per-test false-positive rate of
+the aggregate detector.
+
+\paragraph{Fixed per-hypothesis likelihoods.}
+Marginalizing over $A_n$ under each hypothesis gives, under $H_1$:
+\begin{align}
+\label{eq:lik_h1}
+\Pr(O_n = 1 \mid H_1)
+  &= \thetaone (1 - \beta) + (1 - \thetaone) \alphafp, \\
+\Pr(O_n = 0 \mid H_1)
+  &= \thetaone \beta + (1 - \thetaone) (1 - \alphafp),
+\nonumber
+\end{align}
+and under $H_0$:
+\begin{align}
+\label{eq:lik_h0}
+\Pr(O_n = 1 \mid H_0) &= \alphafp,\\
+\Pr(O_n = 0 \mid H_0) &= 1 - \alphafp.
+\nonumber
+\end{align}
+These are \emph{fixed numbers} determined by $(\thetaone, \beta,
+\alphafp)$, not functions of a free parameter.  This is what makes
+the binary test well-defined.
+
+\paragraph{Likelihood ratios.}
+Define the per-test likelihood ratios
+\begin{align}
+\label{eq:L_defs}
+\Lone &= \frac{\Pr(O_n = 1 \mid H_1)}{\Pr(O_n = 1 \mid H_0)}
+   = \frac{\thetaone (1 - \beta) + (1 - \thetaone) \alphafp}{\alphafp},\\
+\Lzero &= \frac{\Pr(O_n = 0 \mid H_1)}{\Pr(O_n = 0 \mid H_0)}
+   = \frac{\thetaone \beta + (1 - \thetaone) (1 - \alphafp)}{1 - \alphafp}.
+\nonumber
+\end{align}
+Under the identifiability assumption
+(Assumption~\ref{ass:T1} in Section~\ref{sec:convergence}) we will
+have $\Lzero < 1$ and $\Lone > 1$; both are fixed scalars
+depending only on $(\thetaone, \beta, \alphafp)$.
+
+\paragraph{Posterior updates.}
+For outcome $O_n = 1$ (contraction detected),
+\begin{equation}
+\label{eq:update_pos}
+\pR(t^+) = \frac{\pR(t) \, \Lone}{\pR(t) \, \Lone + (1 - \pR(t))},
+\qquad
+\logit \pR(t^+) = \logit \pR(t) + \log \Lone.
+\end{equation}
+For outcome $O_n = 0$ (no contraction detected),
+\begin{equation}
+\label{eq:update_neg}
+\pR(t^+) = \frac{\pR(t) \, \Lzero}{\pR(t) \, \Lzero + (1 - \pR(t))},
+\qquad
+\logit \pR(t^+) = \logit \pR(t) + \log \Lzero.
+\end{equation}
+Because $\Lzero < 1$ under Assumption~\ref{ass:T1}, each
+no-contraction observation pushes the posterior toward $H_0$.
+This is what breaks the Wamura asymmetry.
+
+\begin{remark}[Contrast with the restricted regime]
+\label{rem:regime_contrast}
+Under the restricted regime
+(Proposition~\ref{prop:asym_evidence}), $A_n = 0$ with certainty
+(the restriction prevents activation), so both outcome likelihoods
+collapse to the common value and the effective $\Lzero = \Lone =
+1$: the posterior is unchanged.  Under controlled relaxation, the
+capability is exercised (Assumption~\ref{ass:T5} in
+Section~\ref{sec:convergence}), activation can occur, and the
+detector can observe it---making both outcomes informative and
+breaking the ratchet.
+\end{remark}
+
+\begin{remark}[Continuous extension]
+\label{rem:continuous_extension}
+The binary formulation ($H_0$ versus $H_1$ with fixed $\thetaone$)
+is sufficient for the operational question ``should this
+restriction be maintained?'' and avoids the dimensional mismatch
+between a binary posterior and a continuous activation rate.  A
+continuous extension placing a prior $\pi(\theta)$ on $[0,1]$
+could estimate the exact activation rate but requires latent-state
+augmentation for the posterior update: the latent $A_n$ makes the
+model non-conjugate with a Beta prior, unlike the standard
+Beta--Binomial.  We defer this extension to future work; the
+binary formulation is what the Wamura problem requires.
+\end{remark}
+
+\subsection{Connection to the phase boundary}
+\label{sec:connection_phase_boundary}
+
+\citet{lasser2026phase} show that feedback loop~3 (over-calibrated
+restriction $\to$ discovery avoidance $\to$ structural ignorance)
+has a degenerate phase boundary when the self-correction rate
+$\rS = 0$ for that
+loop~\citep[Proposition~3]{lasser2026phase}.  The self-correction
+rate is zero precisely because the Wamura asymmetry prevents
+evidence accumulation on the restricted dimension.  Controlled
+relaxation makes $\rS > 0$ by injecting exercise-regime
+observations into the evidence stream: the log-odds update
+of~\eqref{eq:update_pos}--\eqref{eq:update_neg} has nonzero
+expected drift toward the true hypothesis under
+Assumption~\ref{ass:T1}, and that drift is the restoring force
+required by the design criterion
+of~\citep[Theorem~2]{lasser2026phase} to lift Loop~3 off the
+phase-boundary degeneracy.

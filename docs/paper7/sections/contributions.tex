@@ -1,0 +1,67 @@
+\section*{Author Contributions}
+
+\textbf{Teague Lasser} identified the Wamura problem as a
+structural gap in the risk framework
+of~\citep{lasser2026horizon} and named it after the Fudai
+floodgate.  Directed the formal development: the
+risk-restriction-pair abstraction, the two-regime observation
+model, controlled relaxation as a mechanism that breaks the
+verification asymmetry by generating exercise-regime
+observations, the scope-bounding construction, and the
+cooperative-closure condition required to prevent cross-boundary
+cascades.  Identified the link between the Loop~3 degeneracy
+of~\citep[Proposition~3]{lasser2026phase} and the
+zero-likelihood-ratio structure of
+Proposition~\ref{prop:asym_evidence}, and proposed the binary
+hypothesis formulation with fixed $\thetaone$ as the
+dimensionally consistent way to state convergence.  Made final
+editorial decisions and is responsible for the paper's
+intellectual direction and all claims made.
+
+\textbf{Claude Opus 4.6} (Anthropic) drafted the formal
+exposition: the risk-restriction pair and observation-regime
+definitions (Section~\ref{sec:verification_asymmetry}), the
+controlled-relaxation-test object with its three protocol
+phases (Section~\ref{sec:relaxation_protocol}), the damage-bound
+theorem with its cooperative-closure condition and
+pathway-enumeration lemma (Section~\ref{sec:damage_guarantees}),
+the detection-sensitivity characterization and evidence-strength
+proposition (Section~\ref{sec:detection_sensitivity}), the
+convergence theorem with its KL-divergence rate form and
+finite-sample corollaries (Section~\ref{sec:convergence}), the
+meta-policy for test initiation and scheduling
+(Section~\ref{sec:meta_policy}), the worked-example
+instantiation with three-regime summary table
+(Section~\ref{sec:worked_example}), and the integration results
+connecting the protocol to self-balancing, empirical
+arbitration, and the multi-channel detection architecture
+(Section~\ref{sec:integration}).
+
+\textbf{GPT 5.4} (OpenAI) served as technical reviewer across
+multiple codex review cycles of the outline, identifying formal
+gaps including: the dimensional mismatch between a continuous
+$\theta$ prior and a binary posterior (driving the choice of
+the fixed-$\thetaone$ formulation); the missing $(1 - \alphafp)$
+denominator in the naive no-contraction log-odds update
+(corrected in Proposition~\ref{prop:evidence_strength}(b)); the
+need for cooperative closure to forward-reachable external
+pathways in Definition~\ref{def:test_scope}(ii) rather than
+only the pathways originating in $\scope$; the latent-variable
+structure separating $A_n$ (pathway activation) from $O_n$
+(detection outcome) in Section~\ref{sec:relaxation_protocol};
+and the need for explicit identifiability, specification, and
+independence assumptions (T1--T5) before
+Theorem~\ref{thm:convergence}'s almost-sure claim follows from
+the strong law of large numbers.
+
+\medskip
+\noindent\emph{Transparency note.}
+Both AI systems operated as tools under human direction.
+Neither system has continuity across sessions, cannot take
+responsibility for the work in the sense required by most
+venue authorship policies, and cannot respond to reviewer
+queries independently.  They are listed as authors to
+accurately represent their contributions to the intellectual
+content of the paper, not to claim that they meet all criteria
+of traditional academic authorship.  The corresponding author
+for all inquiries is Teague Lasser.

@@ -1,0 +1,175 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What this paper accomplishes}
+
+\paragraph{Breaks the Wamura problem.}
+Theorem~\ref{thm:convergence} shows that controlled relaxation
+drives risk estimates to truth at exponential rate, converting
+``permanent overcaution'' into ``temporary overcaution with a
+characterized resolution time.''  This closes the most important
+named open problem of~\citep{lasser2026horizon}.
+
+\paragraph{Provides a damage-bounded mechanism.}
+Theorem~\ref{thm:damage_bound} bounds the maximum damage from a
+test by the user-controllable parameter $\damagebound$.
+Controlled relaxation is therefore safe to deploy: the cost of
+learning is bounded even when the risk turns out to be real, and
+the cooperative-closure condition of
+Definition~\ref{def:test_scope}(ii) prevents cross-boundary
+cascades through shared cooperative capabilities.
+
+\paragraph{Integrates with the existing machinery.}
+Propositions~\ref{prop:preserve_balance},
+\ref{prop:empirical_arbitration} and Lemma~\ref{lem:sixth_channel}
+show that the protocol preserves the self-balancing property of
+$\volL$, resolves inter-agent risk disagreements, and extends
+the multi-channel detection architecture.  The protocol is
+additive to the existing framework, not a replacement.
+
+\paragraph{Resolves the Loop 3 phase-boundary degeneracy.}
+The degenerate phase boundary $\rS = 0$ for Loop~3
+in~\citep[Proposition~3]{lasser2026phase} arises precisely
+because the Wamura asymmetry eliminates the exogenous
+correction rate on the restricted dimension.  Controlled
+relaxation makes $\rS > 0$ for Loop~3 (via the exercise-regime
+observations of Section~\ref{sec:relaxation_protocol}),
+restoring the phase boundary to the non-degenerate form that
+the design criterion
+of~\citep[Theorem~2]{lasser2026phase} requires for
+self-correction.  The two papers are complementary: one
+characterizes when self-correction works in aggregate; this one
+supplies the micro-mechanism that makes self-correction work
+for the restriction-specific feedback loop.
+
+\subsection{Limitations}
+
+\paragraph{B-to-C gap inheritance.}
+All results are stated in terms of $\volL$.
+Section~\ref{sec:framing_precondition} records that $\damagebound$
+bounds contraction of $\volL$, not of the experiential target
+directly; if the gap between them is large, even a
+controlled-relaxation-clean restriction landscape need not
+correspond to experiential optimality.  The gap-closure programme
+is a separate research direction, noted
+in~\citep{lasser2026gfm} and outside the scope of this paper.
+
+\paragraph{Honest-channel assumption.}
+We assume honest observation channels throughout.  Adversarial
+manipulation of the detection signal---a compromised channel
+reporting fabricated contraction or concealing genuine
+contraction---falls outside the scope of the proof and is the
+domain of the commitment protocols of~\citep{lasser2026exo}.
+Controlled relaxation composes cleanly with those
+protocols---the ledger of~\citep[Section~5]{lasser2026exo} can
+record test outcomes as committed observations---but the
+composition itself is not formalized here.
+
+\paragraph{Identifiability under misspecification.}
+Assumption~\ref{ass:T2} requires the Bayesian observation model
+to match the true data-generating process.  If $\alphafp$ or
+$\beta$ are misspecified, Theorem~\ref{thm:convergence}'s
+log-likelihood-ratio argument still converges, but it converges
+to the wrong hypothesis: under the misspecified model, the
+posterior concentrates on whichever hypothesis is closer in
+KL-divergence to the true distribution, not on the true
+hypothesis.  Detector calibration is therefore a prerequisite
+for the convergence guarantee to carry its safety
+interpretation.
+
+\subsection{Open questions}
+
+\paragraph{Damage-tolerance calibration.}
+The tolerance $\damagebound$ is a free parameter that trades off
+learning speed against risk exposure.  Options include
+\begin{itemize}
+\item a fixed fraction of $\volL$ (e.g.,
+  $\damagebound = 0.01 \cdot \volL$);
+\item proportional to restriction cost
+  ($\damagebound = c \cdot |\Delta \volL(\Xirestrict)|$);
+\item proportional to information value
+  ($\damagebound = c' \cdot \IV(T)$);
+\item user-set per test (maximum safety, maximum user burden).
+\end{itemize}
+The worked example (Section~\ref{sec:worked_example}) shows that
+even small $\damagebound$ produces rapid convergence when
+detection sensitivity is high, so the answer may depend more on
+the detection architecture than on $\damagebound$ itself.
+
+\paragraph{Transient versus persistent pathways.}
+Section~\ref{sec:detection_sensitivity} assumes persistent
+pathway activation (Assumption~\ref{ass:D0}).  Some risk
+pathways may be transient---they produce a brief contraction
+that the detector could miss at low sampling rate.  The current
+formulation handles transient pathways via
+$\beta(\testdur) = (1 - \deltaagg)^{\min(k, \testdur)}$ where
+$k$ is the pathway duration, but if $k = 1$ then
+$\beta = 1 - \deltaagg$ may be non-negligible.  Whether the
+protocol should require longer test windows for suspected
+transient pathways, or whether the detection architecture should
+raise its sampling rate during tests, is an engineering choice
+left open here.
+
+\paragraph{Adversarial risk claimants.}
+Assumption~\ref{ass:T3}(a) rules out adaptation by the tested
+agent.  What happens when an agent strategically inflates risk
+claims to lock competitors' capabilities?  The controlled
+relaxation protocol still works (it generates evidence
+regardless of the claimant's intent), but the meta-policy for
+test initiation may need to be more aggressive when strategic
+inflation is suspected.  Detection of strategic inflation is a
+variant of the scorpion-detection
+problem~\citep[Propositions~3--4]{lasser2026scm}: an agent
+whose risk claims are systematically disconfirmed by
+controlled-relaxation tests should see its risk-trust
+$\Trisk_j$ decrease, eventually down-weighting its future
+claims in aggregation.  Whether the meta-policy should
+explicitly model this adversarial case, or whether the
+trust-dynamics response is sufficient, is an open design
+question.
+
+\subsection{Relationship to prior and subsequent papers}
+
+\paragraph{Prior papers.}
+The protocol sits downstream of and draws on:
+\begin{itemize}
+\item \citet{lasser2026poset} for axiomatic properties of
+  $\volL$ preserved under relaxation;
+\item \citet{lasser2026horizon} for the risk machinery (exercise
+  pathways, concentration risk, restriction criterion) the
+  protocol operates within;
+\item \citet{lasser2026scm} for the multi-channel detection
+  architecture that supplies $\deltaagg$ and the log-odds
+  aggregation into which test outcomes feed;
+\item \citet{lasser2026exo} for the verification-asymmetry
+  framing and the cross-substrate isolation that justifies the
+  conservative detection bound
+  (Proposition~\ref{prop:detection_bounds}(c));
+\item \citet{lasser2026phase} for the dynamical-systems context:
+  Loop~3's degenerate phase boundary is the problem this paper
+  solves.
+\end{itemize}
+
+\paragraph{Forward connections.}
+Controlled relaxation generates exercise events that increase
+realized-capability volume $\vol_{\mathrm{R}}$: when a capability
+is locked by a false risk claim, $\vol_{\mathrm{R}}$ is
+artificially suppressed, and lifting the lock lets the
+capability contribute to $\vol_{\mathrm{R}}$.  The convergence
+of the restriction landscape
+(Proposition~\ref{prop:preserve_balance}(c)) implies that
+$\vol_{\mathrm{R}} / \volL$ approaches its true value as false
+restrictions clear, partially closing the B-to-C gap for the
+class of capabilities locked by the Wamura problem.  A full
+treatment of this partial closure is beyond the scope of this
+paper.
+
+The protocol also provides a clean experimental signal for
+structure learning: the SCM
+of~\citep[Definition~1]{lasser2026scm} can use designed-experiment
+observations from controlled relaxation (where the intervention
+is known and the outcome is observed) as ground-truth data
+points for calibrating structural confidence.  This is strictly
+more informative than passive observational data and could
+accelerate SCM calibration beyond the rates achievable under
+passive observation alone.

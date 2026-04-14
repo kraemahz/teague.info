@@ -1,0 +1,137 @@
+\section{Meta-Policy for Test Initiation}
+\label{sec:meta_policy}
+
+Not every restriction should be tested.  Controlled relaxation
+carries costs: the damage tolerance $\damagebound$ is a real (if
+bounded) risk, the test consumes monitoring resources, and
+concurrent tests raise the chance of correlated failures.  The
+meta-policy determines when a test is worth running.
+
+\subsection{When to test}
+
+\begin{definition}[Test Initiation Criteria]
+\label{def:test_initiation}
+A controlled relaxation test for risk-restriction pair
+$(R, \Xirestrict)$ is initiated when all of the following hold.
+\begin{itemize}
+\item[(i)] \textbf{Stale restriction.}  $\Xirestrict$ has
+  persisted for at least $T_{\mathrm{stale}}$ time steps without
+  new supporting evidence for $R$.  ``New supporting evidence''
+  means any observation that increased $\pR$ via a Bayesian
+  update (not merely the passage of time under restriction, which
+  provides no evidence by
+  Proposition~\ref{prop:asym_evidence}).
+\item[(ii)] \textbf{Favourable cost-benefit.}  The expected
+  information value of the test exceeds the expected damage cost,
+  \begin{equation}
+  \label{eq:iv_criterion}
+  \IV(T)
+     = \mathbb{E}_{O}\bigl[
+         \KL(\pR^{\mathrm{post}} \,\|\, \pR^{\mathrm{prior}})
+        \bigr]
+     > \damagebound \cdot \pR(t),
+  \end{equation}
+  where the expectation is over the test outcome weighted by its
+  probability and $\damagebound \cdot \pR(t)$ is the expected
+  damage (tolerance times probability the risk materializes).
+\item[(iii)] \textbf{Scope isolation.}  No other controlled
+  relaxation test is currently running on a scope $\scope'$ that
+  overlaps with $\scope$.
+\item[(iv)] \textbf{User approval (when applicable).}  If the
+  damage tolerance $\damagebound$ exceeds a user-configured
+  threshold $\damagebound_{\mathrm{user}}$, the test requires
+  explicit user approval before initiation.  This is the safety
+  valve: the framework can initiate low-damage tests
+  autonomously but must ask the user before high-damage tests.
+  The threshold $\damagebound_{\mathrm{user}}$ is analogous to
+  the self-trust pause threshold in the GFM harness
+  constitution.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Connection to structural discovery value]
+\label{rem:structural_preference}
+Criterion~(ii) is a specialization of the structural discovery
+value of~\citep[Definition~5,
+Proposition~2]{lasser2026horizon}: a structural discovery that
+would resolve the risk claim has information value
+$\IV_{\mathrm{struct}}$; a controlled relaxation test has
+information value $\IV(T)$.  The framework should prefer
+whichever is cheaper: if a structural argument can resolve the
+claim without exercise (for example, proving the pathway is
+mechanically infeasible), that is strictly better than any
+controlled relaxation test.  Controlled relaxation is the
+fallback when no structural resolution is available---the
+empirical arbitration mechanism for claims that resist formal
+resolution.
+\end{remark}
+
+\subsection{Test parameter optimization}
+
+\begin{proposition}[Optimal Test Duration]
+\label{prop:tau_opt}
+For fixed scope $\scope$ and damage tolerance $\damagebound$,
+the test duration $\testdur$ that maximizes the expected
+information value per unit of risk exposure is
+\begin{equation}
+\label{eq:tau_opt}
+\testopt = \arg\max_{\tau}
+  \frac{\IV(T(\tau))}{\damagebound \cdot \Pr(\text{contraction in } \tau \text{ steps})}.
+\end{equation}
+Under the exponential detection model
+$\beta(\tau) = (1 - \deltaagg)^{\tau}$
+(Assumption~\ref{ass:D2}(a)) and persistent activation
+(Assumption~\ref{ass:D0}),
+\begin{equation}
+\label{eq:tau_opt_explicit}
+\testopt \approx \left\lceil \frac{-1}{\log(1 - \deltaagg)} \right\rceil,
+\end{equation}
+the time constant of the exponential detection process---the
+number of steps for the miss probability to decay by a factor
+of $e$.  For $\deltaagg \ll 1$ this is approximately
+$1/\deltaagg$; for $\deltaagg$ close to $1$, $\testopt = 1$
+suffices.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The information value $\IV$ scales as $|\log \beta(\tau)|$ for
+the no-contraction case, which grows linearly in $\tau$.  The
+risk exposure grows as
+$1 - (1 - \pR^{\mathrm{true}} \deltaagg)^{\tau}
+ \approx \pR^{\mathrm{true}} \deltaagg \tau$
+for small $\tau$.  The ratio $\IV/\mathrm{risk}$ peaks when the
+marginal information gain equals the marginal risk increase,
+which occurs at $\tau \approx 1/\deltaagg$.  Running longer
+provides diminishing returns ($\beta$ is already small); running
+shorter wastes the test setup cost.
+\end{proof}
+
+\subsection{Scheduling multiple tests}
+
+\begin{definition}[Test Schedule]
+\label{def:test_schedule}
+A \emph{test schedule}
+$\Sigma = \{(R_i, \Xirestrict_i, \scope_i, \tau_i,
+   \damagebound_i)\}_{i=1}^{N}$
+is a set of controlled relaxation tests to be run.  The schedule
+is \emph{feasible} if:
+\begin{itemize}
+\item[(i)] all scopes $\scope_i$ are pairwise non-overlapping;
+\item[(ii)] the aggregate damage tolerance
+  $\sum_i \damagebound_i \leq \damagebound_{\mathrm{total}}$ is
+  within the framework's total damage budget;
+\item[(iii)] tests are prioritized by their
+  information-value-to-cost ratio
+  $\IV(T_i) / \damagebound_i$ (highest ratio first).
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Scheduling is a constrained knapsack]
+\label{rem:knapsack}
+The scheduling problem is a variant of the knapsack problem
+with isolation constraints (non-overlapping scopes).  For small
+numbers of concurrent tests, greedy selection by
+$\IV / \damagebound$ with scope-conflict checking is
+sufficient; for large-scale deployment, integer-programming
+formulations are available.
+\end{remark}

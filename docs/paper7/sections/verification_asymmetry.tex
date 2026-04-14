@@ -1,0 +1,166 @@
+\section{The Verification Asymmetry}
+\label{sec:verification_asymmetry}
+
+This section isolates the mechanism that makes the max-aggregation
+pathology structurally irresolvable within the existing risk
+framework, by formalizing the two observation regimes induced by a
+risk-restriction pair and showing that one of them produces
+trivial Bayesian updates.
+
+\subsection{Formalizing the asymmetry}
+
+\begin{definition}[Risk-Restriction Pair]
+\label{def:risk_restriction}
+A \emph{risk-restriction pair} $(R, \Xirestrict)$ consists of:
+\begin{itemize}
+\item A \emph{risk claim}
+  $R = (a_j, (d_1, \ldots, d_k), \Pathway, \pR)$, where $a_j$ is
+  the claiming agent, $(d_1, \ldots, d_k)$ is the capability tuple
+  under concern, $\Pathway$ is the predicted exercise
+  pathway~\citep[Definition~2]{lasser2026horizon} that would
+  produce $\volL$-contraction, and $\pR \in (0, 1]$ is $a_j$'s
+  claimed probability that $\Pathway$ activates if the tuple is
+  exercised.
+\item A \emph{restriction} $\Xirestrict$: the preemptive
+  restriction of a keystone capability $d_{j^*}$ in the tuple
+  (in the sense
+  of~\citep[Proposition~1]{lasser2026horizon}), which prevents
+  exercise of $\Pathway$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Observation Regimes]
+\label{def:obs_regime}
+Under a risk-restriction pair $(R, \Xirestrict)$, the
+\emph{observation regime} at time $t$ is one of:
+\begin{itemize}
+\item \emph{Restricted regime} ($\Xirestrict$ active): the
+  capability tuple is restricted; $\Pathway$ cannot activate.
+  The only observations available are indirect---behavioural
+  signals from $a_j$, correlational evidence from related
+  capabilities, and time-passage without incident (uninformative
+  because the restriction is what prevents the test).
+\item \emph{Exercise regime} ($\Xirestrict$ lifted): the
+  capability tuple is exercised; $\Pathway$ may or may not
+  activate.  Direct observation of activation or non-activation
+  is available.
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Asymmetric Evidence Under Restriction]
+\label{prop:asym_evidence}
+Let $\pR(t)$ denote the posterior probability that risk claim $R$
+is valid at time $t$.  Under the restricted regime:
+\begin{itemize}
+\item[(a)] If the pathway were to activate (counterfactual
+  contraction observed under a hypothetical exercise), the
+  standard Bayesian update yields
+  $$\pR(t+1) = \pR(t) \cdot
+     \frac{\Pr(\text{contraction} \mid R \text{ valid})}
+          {\Pr(\text{contraction})}$$
+  with
+  $\Pr(\text{contraction} \mid R \text{ valid})
+     > \Pr(\text{contraction} \mid R \text{ invalid})$,
+  which increases $\pR$.
+\item[(b)] Under the restricted regime, no exercise occurs, so
+  $$\pR(t+1) = \pR(t).$$
+  The posterior is unchanged because the restriction prevents
+  the observation that would update it.  The absence of
+  contraction under restriction is consistent with both $R$
+  being valid (the restriction correctly prevented it) and $R$
+  being invalid (there was nothing to prevent).
+\end{itemize}
+Part~(b) is the \emph{Wamura asymmetry}: successful prevention is
+observationally equivalent to unnecessary prevention.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Direct from the Bayesian update rule and the counterfactual
+structure.  Under restriction, the likelihood ratio
+$\Pr(\text{no contraction} \mid R \text{ valid}, \Xirestrict)
+ / \Pr(\text{no contraction} \mid R \text{ invalid}, \Xirestrict)
+ = 1$
+because both hypotheses predict no contraction when the pathway
+is blocked.  Likelihood ratio~$1$ means the posterior equals the
+prior: no information is gained.  The (a) direction is the
+standard Bayes-positive update; the asymmetry in (a) versus (b)
+is what produces the Wamura ratchet.
+\end{proof}
+
+\begin{remark}[Connection to substrate-level asymmetry]
+\label{rem:substrate_asym}
+The verification-asymmetry definition
+of~\citep[Definition~2]{lasser2026exo} is the substrate-level
+version of this result: a digital agent can demonstrate
+capability possession (positive claim) far more easily than an
+external observer can verify capability absence (negative claim).
+Proposition~\ref{prop:asym_evidence} is the risk-framework
+specialization: a risk claim can be confirmed by observing
+catastrophe but cannot be disconfirmed by observing
+non-catastrophe-under-restriction.  The monotonicity
+result~\citep[Proposition~1]{lasser2026exo} ensures the
+substrate-level asymmetry is non-decreasing in capability scale;
+Proposition~\ref{prop:asym_evidence} inherits the same monotone
+character for the risk-framework projection.
+\end{remark}
+
+\subsection{The overcaution accumulation dynamic}
+
+\begin{proposition}[Monotone Overcaution Under Max-Aggregation]
+\label{prop:monotone_overcaution}
+Under max-aggregation of risk estimates~\citep{lasser2026horizon}
+and neutral-prior initialization:
+\begin{itemize}
+\item[(a)] For any newly discovered capability tuple $(d_1,
+  \ldots, d_k)$ with no exercise history, there exists a
+  threshold $p_{\mathrm{thresh}} > 0$ such that if any agent $a_j$
+  assigns $\pR(0) > p_{\mathrm{thresh}}$, the tuple is
+  immediately restricted, by the preemptive restriction
+  criterion of~\citep[Proposition~1]{lasser2026horizon}.
+\item[(b)] Once restricted, $\pR(t) = \pR(0)$ for all $t > 0$
+  under the restricted regime, by
+  Proposition~\ref{prop:asym_evidence}(b).
+\item[(c)] The number of restricted capability tuples is
+  monotonically non-decreasing over time: new tuples may be
+  discovered and restricted, but no restricted tuple is
+  unrestricted through the standard evidence-accumulation
+  mechanism.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Part~(a) follows from the restriction criterion
+of~\citep[Proposition~1]{lasser2026horizon}: it compares
+$\Risk_j$ against the restriction cost, and for any tuple a
+sufficiently high $\pR$ exceeds the threshold.  Part~(b) is
+Proposition~\ref{prop:asym_evidence}(b).  Part~(c) is immediate
+from (b): no evidence accumulates to reduce $\pR$ below
+$p_{\mathrm{thresh}}$, and the existing framework contains no
+mechanism that generates exercise-regime observations for
+restricted tuples.
+\end{proof}
+
+\begin{corollary}[Asymptotic Lockup]
+\label{cor:lockup}
+In the limit of many capability discoveries, the fraction of the
+capability poset under active restriction grows monotonically,
+bounded below by the fraction of tuples for which at least one
+agent assigned $\pR(0) > p_{\mathrm{thresh}}$.  If agents are
+systematically overcautious ($\pR(0)$ exceeds the true risk on
+many tuples), the locked fraction can grow without bound
+relative to the truly risky fraction, producing $\volL$
+contraction that the framework cannot distinguish from genuine
+safety.
+\end{corollary}
+
+The corollary is the formal expression of the Fudai floodgate
+intuition taken to its pathological limit: if every agent assigns
+moderately high initial risk to every newly discovered
+capability, and no mechanism in the framework is able to
+differentiate genuine risk from overcaution, the poset contracts
+under restriction without any mechanism for reversal.  This is
+precisely the degenerate phase boundary of Loop~3
+in~\citep[Proposition~3]{lasser2026phase}: the self-correction
+rate $\rS$ is zero because no exogenous signal on the restricted
+dimension exists.  The remainder of the paper constructs the
+missing mechanism.

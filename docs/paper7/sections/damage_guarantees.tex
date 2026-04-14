@@ -1,0 +1,185 @@
+\section{Scope-Bounding and Damage Guarantees}
+\label{sec:damage_guarantees}
+
+Section~\ref{sec:relaxation_protocol} treated the damage tolerance
+$\damagebound$ as a parameter; here we show that the scope
+construction makes $\damagebound$ an enforceable upper bound on
+the worst-case $\volL$-contraction during and after a test, even
+when cooperative capabilities can propagate contraction outside
+the nominal scope.
+
+\subsection{Formalizing test scope}
+
+\begin{definition}[Test Scope]
+\label{def:test_scope}
+A \emph{test scope} $\scope$ for risk claim
+$R = (a_j, (d_1, \ldots, d_k), \Pathway, \pR)$ is a sub-poset of
+$P$ satisfying:
+\begin{itemize}
+\item[(i)] \textbf{Pathway containment.}
+  $\Pathway$ is exercisable within $\scope$: all prerequisite
+  capabilities are present in $\scope$, and all intermediate
+  poset transitions along $\Pathway$ remain within $\scope$.
+\item[(ii)] \textbf{Forward-reachable cooperative closure.}
+  For every cooperative capability $c$ in the full poset $P$ that
+  involves at least one capability in $\scope$ and at least one
+  capability in $P \setminus \scope$, the maximum
+  $\volL$-contraction along any pathway within $\scope$ that
+  modifies $c$ is included in $\maxcon(\scope)$.  Furthermore, if
+  modification of $c$ can causally enable (unlock) an exercise
+  pathway in $P \setminus \scope$---that is, there exists a
+  pathway $\Pathway_{\mathrm{ext}}$ in $P \setminus \scope$ whose
+  prerequisites include a state change in $c$---then the expected
+  contraction from $\Pathway_{\mathrm{ext}}$, weighted by its
+  activation probability, is also included in $\maxcon(\scope)$.
+  This transitive-closure condition prevents a test within
+  $\scope$ from triggering a cascade outside $\scope$ through
+  cross-boundary cooperative capabilities.
+\item[(iii)] \textbf{Irreversibility bound.}
+  For each exercise pathway within $\scope$, the fraction of the
+  pathway's $\volL$-contraction that is irreversible (cannot be
+  recovered by reinstating $\Xirestrict$) is bounded by a known
+  constant $\deltairrev(\Pathway) \leq \damagebound$.  Pathways
+  with $\deltairrev > \damagebound$ are excluded from the scope.
+\item[(iv)] \textbf{Scope minimality.}
+  $\scope$ is inclusion-minimal subject to
+  (i)--(iii): no proper sub-poset of $\scope$ satisfies all three
+  conditions.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Constructibility of the scope]
+\label{rem:constructibility}
+Condition~(i) is computable from the exercise-pathway definition
+of~\citep[Definition~2]{lasser2026horizon}: enumerate the
+prerequisite set and all intermediate states.  Condition~(ii)
+requires computing the cooperative capabilities that span
+$\scope$ and $P \setminus \scope$---the \emph{cooperative
+surface} of $\scope$---and then forward-reachability analysis:
+for each boundary cooperative, enumerate external pathways whose
+prerequisites include a state change in that cooperative.  This
+is more expensive than simple pathway enumeration (exponential
+in the depth of the forward-reachability chain) but is necessary
+to prevent cascading damage through cooperative-capability
+spillover.  In practice the forward-reachability depth is
+bounded by the poset diameter and most cooperative capabilities
+have low fan-out.  Condition~(iii) requires a pathway-level
+reversibility analysis; most capability restrictions are
+reversible (reinstatement restores the prior state), but
+information-disclosure and trust-degradation pathways may have
+irreversible components.
+\end{remark}
+
+\subsection{The damage-bound theorem}
+
+\begin{theorem}[Damage Bound for Controlled Relaxation]
+\label{thm:damage_bound}
+Let $T = (R, \Xirestrict, \scope, \testdur, \damagebound)$ be a
+controlled relaxation test with test scope $\scope$ satisfying
+Definition~\ref{def:test_scope}.  Then:
+\begin{itemize}
+\item[(a)] \textbf{Maximum instantaneous damage.}  At any step
+  $t' \in \{t, t+1, \ldots, t + \testdur\}$ during the test,
+  $$
+  \volL(G_{t'}) \geq \volL(G_t) - \maxcon(\scope),
+  $$
+  where $\maxcon(\scope)$ is the maximum $\volL$-contraction
+  achievable by any exercise pathway within $\scope$.  Under the
+  scope-selection constraint
+  $\maxcon(\scope) \leq \damagebound$, the instantaneous damage
+  is bounded by $\damagebound$.
+\item[(b)] \textbf{Partial reversibility under reinstatement.}
+  If the safety cutoff triggers at some step
+  $t' < t + \testdur$ (contraction within $\scope$ exceeds
+  $\damagebound$), reinstating $\Xirestrict$ at $t' + 1$ gives
+  $$
+  \volL(G_{t'+1}) \geq \volL(G_t) - \damagebound
+       - \deltairrev^{\max},
+  $$
+  where
+  $\deltairrev^{\max} = \max_{\Pathway' \subseteq \scope}
+      \deltairrev(\Pathway')$
+  is the maximum irreversible component across all pathways in
+  the scope (Definition~\ref{def:test_scope}(iii)).  By the scope
+  construction $\deltairrev^{\max} \leq \damagebound$, so total
+  post-reinstatement damage is bounded by $2\damagebound$.
+\item[(c)] \textbf{Scope isolation under cooperative closure.}
+  If no other test is running on an overlapping scope
+  (Definition~\ref{def:cr_test}, Phase~1, condition~(iii)) and
+  $\scope$ satisfies cooperative closure
+  (Definition~\ref{def:test_scope}(ii)), then the damage from
+  test~$T$ that propagates to $P \setminus \scope$ is bounded by
+  the cooperative-surface terms already included in
+  $\maxcon(\scope)$.  Formally: for any capability $d \notin
+  \scope$ that is not part of any cooperative capability spanning
+  $\scope$ and $P \setminus \scope$, the exercise probabilities
+  of $d$'s pathways are unchanged during the test.  For
+  cooperative capabilities spanning the boundary, the
+  contraction contribution is included in $\maxcon(\scope)$ by
+  Definition~\ref{def:test_scope}(ii).
+\end{itemize}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Part~(a) follows from the pathway-enumeration construction of
+$\maxcon$ under finite pathway length, and the scope-selection
+constraint.  Part~(b) decomposes the contraction at the cutoff
+step into its reversible and irreversible components; the
+reversible component is restored by reinstating $\Xirestrict$,
+the irreversible component is bounded above by $\damagebound$
+under Definition~\ref{def:test_scope}(iii).  Part~(c) is the
+direct consequence of cooperative closure: cross-boundary
+cooperative terms are accounted for in $\maxcon(\scope)$ by
+construction, and all other boundary capabilities are untouched
+by the test.  Full derivation is in Appendix~\ref{app:proofs},
+Section~\ref{app:proof_damage_bound}.
+\end{proof}
+
+\begin{remark}[Why not $\deltairrev \leq 0$?]
+\label{rem:why_not_zero}
+The preemptive restriction
+criterion~\citep[Proposition~1]{lasser2026horizon} is an ex-ante
+cost-benefit comparison justifying the initial restriction; it
+does not guarantee that reinstatement after partial pathway
+execution fully recovers the pre-test state.  Irreversible state
+changes during the test (information disclosure to adversaries,
+trust degradation, poset structural changes not reversed by
+restriction alone) create a gap between the pre-test $\volL$ and
+the post-reinstatement $\volL$.
+Definition~\ref{def:test_scope}(iii) bounds this gap by
+requiring the scope to exclude pathways with large irreversible
+components.
+\end{remark}
+
+\begin{lemma}[Computable max\_contraction]
+\label{lem:computable_maxcon}
+For a finite sub-poset $\scope$ with bounded pathway length $L$,
+$\maxcon(\scope)$ is computable in $O(|\scope|^L)$ time by
+exhaustive pathway enumeration.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Pathway length is bounded
+in~\citep[Definition~2]{lasser2026horizon}.  The number of
+pathways is at most $|\scope|^L$ (each step selects a capability
+in $\scope$).  The $\volL$-contraction along each pathway is
+computable from the axioms
+M1--M6~\citep[Proposition~1]{lasser2026poset}.  Take the maximum
+across enumerated pathways and add the cooperative-surface terms
+from Definition~\ref{def:test_scope}(ii), which are finite by
+the bounded-fan-out structure of the cooperative surface.
+\end{proof}
+
+\begin{remark}[Computational tractability]
+\label{rem:computability}
+The $O(|\scope|^L)$ bound is exponential in pathway length but
+polynomial in scope size for fixed $L$.  Practical deployment
+requires either (a)~short pathway restrictions ($L \leq 3$,
+say), (b)~approximate bounds using the concentration-risk
+formula
+of~\citep[Definition~3]{lasser2026horizon} as an upper bound on
+$\maxcon$, or (c)~structural decomposition of $\scope$ into
+independent sub-scopes.  This is an engineering consideration,
+not a theoretical limitation---the bound exists and is
+computable; the question is computational cost.
+\end{remark}

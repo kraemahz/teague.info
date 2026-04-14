@@ -1,0 +1,250 @@
+\section{Convergence of Risk Estimates}
+\label{sec:convergence}
+
+This section states and proves the central convergence result:
+under repeated controlled relaxation with fixed parameters, the
+posterior $\pR$ converges almost surely to the correct
+hypothesis.  The result is stated in the simple binary
+hypothesis framework of Section~\ref{sec:relaxation_protocol}.
+
+\subsection{Formulation}
+
+The convergence result is stated in the \emph{binary hypothesis}
+framework ($H_0$: $\theta = 0$; $H_1$: $\theta = \thetaone > 0$
+for a fixed $\thetaone$).  This is the dimensionally consistent
+formulation: $\pR$ is the posterior probability of $H_1$ and
+converges to $0$ or $1$, not to a fractional activation rate.
+
+The continuous estimation problem (inferring the exact value of
+$\theta^{\mathrm{true}} \in [0, 1]$) is strictly harder: it
+requires a continuous prior $\pi(\theta)$ and produces a
+posterior density, not a point estimate.  The binary formulation
+suffices for the operational question ``should this restriction
+be maintained?'' and is what the Wamura problem requires.
+
+\subsection{Assumptions}
+
+\begin{assumption}[Identifiable Binary Model]
+\label{ass:T1}
+The observation model of
+Section~\ref{sec:relaxation_protocol} discriminates $H_0$ from
+$H_1$: the likelihood ratios satisfy $\Lzero < 1$ and
+$\Lone > 1$.  Equivalently,
+$\thetaone (1 - \beta) > \thetaone \alphafp$, which holds
+whenever $(1 - \beta) > \alphafp$ (the detector has nontrivial
+power), satisfied whenever at least one channel with nonzero
+sensitivity covers the scope
+(Proposition~\ref{prop:detection_bounds}(c)).
+\end{assumption}
+
+\begin{assumption}[Correct Likelihood Specification]
+\label{ass:T2}
+The observation model used in the Bayesian update (sensitivity
+$1 - \beta$, specificity $1 - \alphafp$, and fixed alternative
+$\thetaone$) matches the true data-generating process.
+Misspecification (e.g., the actual false-positive rate differs
+from the assumed $\alphafp$) produces convergence to the wrong
+hypothesis (Discussion,
+Section~\ref{sec:discussion}).
+\end{assumption}
+
+\begin{assumption}[Inter-Test Independence]
+\label{ass:T3}
+Test outcomes $\{O_n\}$ are conditionally independent given the
+true state of the world ($H_0$ or $H_1$).  This requires:
+(a)~no adaptation by the tested agent between tests (the agent
+does not learn to evade detection based on prior results);
+(b)~the detector's false-positive and false-negative rates are
+stable across tests (no detector degradation); and (c)~the
+poset state is approximately stationary between tests (the
+scope $\scope$ remains valid).  Failure of (a) is the
+adversarial case (Open Question~3,
+Section~\ref{sec:discussion}).
+\end{assumption}
+
+\begin{assumption}[Prior Support]
+\label{ass:T4}
+The prior $\pR(0) \in (0, 1)$: neither hypothesis is assigned
+probability zero a priori.  This is a standard requirement for
+Bayesian consistency: if $\pR(0) = 0$ (resp.\ $= 1$), no amount
+of evidence can move the posterior.  In practice, the
+neutral-prior initialization of~\citep{lasser2026horizon}
+assigns $\pR(0)$ in a neighbourhood of $0.5$.
+\end{assumption}
+
+\begin{assumption}[Capability Exercise During Test]
+\label{ass:T5}
+During the test window, the capability tuple
+$(d_1, \ldots, d_k)$ is actually exercised---the conditions for
+pathway activation are present, not merely that the restriction
+is lifted.  Without Assumption~\ref{ass:T5}, $O_n = 0$ is
+ambiguous between ``the pathway is safe'' and ``nobody tried.''
+In practice the scope-selection phase (Phase~1) enforces
+Assumption~\ref{ass:T5}: the scope is constructed to include
+prerequisite capabilities, and the protocol actively invokes
+the tuple rather than waiting.  When the assumption cannot be
+guaranteed (e.g., the pathway requires a specific environmental
+trigger), the evidential weight of $O_n = 0$ must be discounted
+by the probability $p_{\mathrm{ex}}$ that the capability was
+actually exercised:
+$\Pr(O_n = 0 \mid H_1)
+   = p_{\mathrm{ex}} [\thetaone \beta + (1 - \thetaone)(1 - \alphafp)]
+     + (1 - p_{\mathrm{ex}})(1 - \alphafp)$.
+\end{assumption}
+
+\subsection{Main result}
+
+\begin{theorem}[Convergence Under Repeated Controlled Relaxation]
+\label{thm:convergence}
+Let $\{T_n\}_{n=1}^{\infty}$ be a sequence of controlled
+relaxation tests for a risk-restriction pair
+$(R, \Xirestrict)$ with fixed parameters
+$(\scope, \testdur, \damagebound)$, under the binary formulation
+$H_0$ ($\theta = 0$) versus $H_1$ ($\theta = \thetaone$).  Under
+Assumptions~\ref{ass:T1}--\ref{ass:T5}:
+\begin{itemize}
+\item[(a)] \textbf{Almost-sure convergence.}  Under the true
+  hypothesis $H_j$ ($j \in \{0, 1\}$), the posterior converges
+  almost surely to the correct value:
+  $$
+  H_0 \text{ true}: \quad \pR(t_n) \xrightarrow{\mathrm{a.s.}} 0;
+  \qquad
+  H_1 \text{ true}: \quad \pR(t_n) \xrightarrow{\mathrm{a.s.}} 1.
+  $$
+\item[(b)] \textbf{Rate under $H_0$ (pathway harmless).}  Every
+  test produces $O_n = 0$ with probability $1 - \alphafp$ and
+  $O_n = 1$ with probability $\alphafp$.  Conditional on a
+  run of $n$ tests with all $O_n = 0$,
+  $$
+  \logit \pR(t_n) = \logit \pR(0) + n \log \Lzero,
+  $$
+  so $\pR \to 0$ geometrically at rate $|\log \Lzero|$ per test.
+\item[(c)] \textbf{Rate under $H_1$ (pathway dangerous).}  Each
+  test produces $O_n = 1$ with probability
+  $\Pr(O = 1 \mid H_1) = \thetaone (1 - \beta)
+    + (1 - \thetaone) \alphafp$.  The log-odds update on
+  $O_n = 1$ is $\log \Lone > 0$, which is large when
+  $(1 - \beta) \gg \alphafp$.  For $\thetaone$ close to $1$ and
+  small $\beta$, a single detection suffices to push $\pR$
+  above $1 - \delta$ for any fixed $\delta > 0$.  The expected
+  number of tests to reach $\pR > 1 - \delta$ is
+  $O\bigl(1 / [\thetaone (1 - \beta)]\bigr)$.
+\item[(d)] \textbf{General convergence rate (KL form).}  The
+  log-posterior converges at a rate given by the KL divergence
+  between the true observation distribution and the alternative:
+  \begin{align*}
+  H_0 \text{ true}: \
+    &\KL(\Pr(O \mid H_0) \,\|\, \Pr(O \mid H_1)) \\
+    &\quad = (1 - \alphafp) \log(1/\Lzero)
+       + \alphafp \log(1/\Lone), \\
+  H_1 \text{ true}: \
+    &\KL(\Pr(O \mid H_1) \,\|\, \Pr(O \mid H_0)) \\
+    &\quad = \Pr(O = 1 \mid H_1) \log \Lone
+       + \Pr(O = 0 \mid H_1) \log \Lzero.
+  \end{align*}
+  Both rates are strictly positive under
+  Assumption~\ref{ass:T1}, confirming exponential convergence
+  in both directions.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Under Assumptions~\ref{ass:T1}--\ref{ass:T4}, the log-likelihood
+ratio
+$\Lambda_n = \sum_{i=1}^n \log(\Pr(O_i \mid H_1)/\Pr(O_i \mid H_0))$
+is a sum of i.i.d.\ bounded random variables (bounded because
+$\Lzero, \Lone$ are fixed positive constants and
+$O_i \in \{0, 1\}$).  Under the true hypothesis $H_j$, the
+expected increment is $\pm \KL(\Pr(O \mid H_j) \,\|\,
+\Pr(O \mid H_{1-j}))$, strictly nonzero by
+Assumption~\ref{ass:T1} and the positivity of KL on
+non-identical distributions.  The strong law of large
+numbers~\citep[Ch.~6]{cover2006elements} gives
+$\Lambda_n / n \to \pm \KL$ a.s., hence
+$\Lambda_n \to \pm \infty$ a.s., hence $\pR(t_n) \to 1$ (under
+$H_1$) or $\to 0$ (under $H_0$).  Part~(b) follows from
+direct summation under the run of $n$ all-negative tests;
+Part~(c) from the geometric distribution of first detection;
+Part~(d) from the definition of KL applied to the binary outcome
+distribution (Chernoff's result
+in~\citet{chernoff1952measure} gives the associated
+large-deviation exponent).  Full derivation in
+Appendix~\ref{app:proof_convergence}.
+\end{proof}
+
+\subsection{Finite-sample guarantees}
+
+\begin{corollary}[Minimum Tests to Clear a False Claim]
+\label{cor:n_clear}
+To reduce a false risk claim from prior $\pR(0)$ to posterior
+$\pR \leq p_{\mathrm{clear}}$ when $H_0$ is true and all $n$
+tests produce $O_n = 0$ (no spurious false positives), the
+required number of tests satisfies
+\begin{equation}
+\label{eq:n_clear}
+N_{\mathrm{clear}} \geq \left\lceil
+  \frac{\log \bigl(p_{\mathrm{clear}} (1 - \pR(0)) / (\pR(0)(1 - p_{\mathrm{clear}}))\bigr)}
+       {\log \Lzero}
+\right\rceil,
+\end{equation}
+where $\Lzero = [\thetaone \beta + (1 - \thetaone)(1 - \alphafp)]/(1 - \alphafp)$.
+Note $\Lzero < 1$ by Assumption~\ref{ass:T1}, so the
+right-hand side is positive.  When $\alphafp \ll 1$,
+$\Lzero \approx \thetaone \beta + (1 - \thetaone)$ and the
+formula reduces approximately to
+$$
+N_{\mathrm{clear}} \approx \left\lceil
+  \frac{\logit p_{\mathrm{clear}} - \logit \pR(0)}
+       {\log(\thetaone \beta + 1 - \thetaone)}
+\right\rceil.
+$$
+\end{corollary}
+
+\begin{proof}[Proof sketch]
+From~\eqref{eq:update_neg} applied $n$ times,
+$\logit \pR(t_n) = \logit \pR(0) + n \log \Lzero$.  Setting
+$\logit \pR(t_n) \leq \logit p_{\mathrm{clear}}$ and solving
+for $n$ yields the bound.
+\end{proof}
+
+\begin{remark}[Concrete numbers]
+\label{rem:concrete_numbers}
+For $\thetaone = 1$, $\beta = 0.1$, $\alphafp = 0.01$,
+$\pR(0) = 0.5$, and $p_{\mathrm{clear}} = 0.01$:
+$\Lzero = (1 \cdot 0.1 + 0 \cdot 0.99) / 0.99 = 0.101$, and
+$$
+N_{\mathrm{clear}} = \left\lceil
+  \frac{\log\bigl(0.01 \cdot 0.5 / (0.5 \cdot 0.99)\bigr)}{\log 0.101}
+\right\rceil = \lceil 2.006 \rceil = 3 \text{ tests}.
+$$
+Three controlled relaxation tests suffice to clear a false risk
+claim from a neutral prior to $1\%$ residual risk, given $90\%$
+detection sensitivity and $1\%$ false-positive rate.  The
+correction from including $\alphafp$ adds approximately one
+test compared with the naive $\beta^N$ estimate.  This
+illustrates the power of direct observation: the verification
+asymmetry that makes the Wamura problem seem intractable is
+broken by a small number of well-designed tests.
+\end{remark}
+
+\begin{corollary}[EWMA-Risk-Trust Convergence]
+\label{cor:ewma}
+When test outcomes are fed into the risk-trust EWMA
+of~\citep[Definition~4]{lasser2026scm} rather than a pure
+Bayesian update, the convergence is governed by the EWMA
+forgetting factor $\alpha_{\mathrm{risk}}$: the risk-trust
+variance $\sigma_j^{\mathrm{risk},2}(t_n)$ converges to
+$\mu_j^{\mathrm{risk}}$ in $L^2$ at the rate established
+in~\citep[Proposition~2]{lasser2026scm}, with the variance
+bound
+$$
+\limsup_{t \to \infty}
+  \Var\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
+  \leq \frac{1 - \alpha_{\mathrm{risk}}}{1 + \alpha_{\mathrm{risk}}}
+       \, C_{\mathrm{dep}} \, \nu_j^{\mathrm{risk}}.
+$$
+Controlled-relaxation observations have lower variance than
+passive observations (test conditions are controlled), so
+$C_{\mathrm{dep}}$ may be smaller than in the passive case,
+tightening the variance bound.
+\end{corollary}

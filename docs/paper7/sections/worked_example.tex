@@ -1,0 +1,183 @@
+\section{Worked Example: Canonical Wamura Scenario}
+\label{sec:worked_example}
+
+We instantiate the protocol on a canonical Wamura scenario
+adapted from~\citep[Discussion]{lasser2026horizon}, showing the
+behaviour under both a false risk claim and a genuine risk.
+
+\subsection{Setup}
+
+A newly discovered capability tuple $(d_1, d_2)$ is flagged by
+agent $a_j$ as having a potential exercise pathway.  Agent $a_j$
+assigns $\pR(0) = 0.7$ (moderately high confidence that the
+pathway is dangerous).  The preemptive restriction
+criterion~\citep[Proposition~1]{lasser2026horizon} triggers
+because $\pR(0)$ exceeds the threshold, and keystone $d_1$ is
+restricted.  We analyse both ground truths:
+\begin{itemize}
+\item $H_0$ (pathway is harmless; $\theta = 0$),
+\item $H_1$ (pathway is genuinely dangerous; $\thetaone = 1$).
+\end{itemize}
+
+\paragraph{Parameters.}
+\begin{itemize}
+\item Prior: $\pR(0) = 0.7$ (probability of $H_1$).
+\item Alternative hypothesis: $\thetaone = 1$ (``if the pathway
+  is dangerous, it activates every time the capability is
+  exercised'').
+\item Aggregate per-step detection probability: $\deltaagg = 0.95$
+  (the multi-channel architecture detects activation with $95\%$
+  per-step probability).
+\item Test duration: $\testdur = 3$ steps.  The
+  $\testopt$ bound (Proposition~\ref{prop:tau_opt}) gives
+  $\testopt = \lceil -1/\log(1 - 0.95) \rceil = \lceil 0.334
+  \rceil = 1$; we use $\testdur = 3$ for additional sensitivity
+  margin.
+\item Window false-negative rate:
+  $\beta(3) = (1 - 0.95)^3 = 1.25 \times 10^{-4}$.
+\item False-positive rate: $\alphafp = 0.01$.
+\item Damage tolerance: $\damagebound = 0.02 \cdot \volL$ ($2\%$
+  of total capability volume).
+\end{itemize}
+
+\subsection{Without controlled relaxation (the Wamura problem)}
+
+Under the standard framework without controlled relaxation,
+Proposition~\ref{prop:asym_evidence}(b) gives $\pR(t) = 0.7$ for
+all $t$.  The restriction $\Xirestrict$ remains in force
+indefinitely; $\volL$ is permanently reduced by the restriction
+cost $|\Delta \volL(\text{restrict } d_1)|$ for the rest of time.
+The ground truth never surfaces; the $70\%$ estimate persists
+forever.
+
+\subsection{With controlled relaxation, ground truth $H_0$}
+
+\paragraph{Test~1.}
+Initiation criteria met (restriction is stale,
+$\IV > \damagebound \cdot \pR$).  Scope $\scope$ constructed
+around $\{d_1, d_2\}$ with $\maxcon(\scope) = 0.015 \cdot \volL <
+\damagebound$.
+
+Outcome: no contraction observed.  Under $H_0$, the pathway
+never activates, so $O_n = 1$ only via a false positive:
+$\Pr(O_n = 1 \mid H_0) = \alphafp = 0.01$; hence
+$\Pr(O_n = 0 \mid H_0) = 0.99$.  Using
+Equation~\eqref{eq:lik_h1} with $\thetaone = 1$:
+$$
+\Pr(O_n = 0 \mid H_1)
+   = 1 \cdot \beta + 0 \cdot (1 - \alphafp)
+   = 1.25 \times 10^{-4}.
+$$
+The likelihood ratio is
+$$
+\Lzero = \frac{1.25 \times 10^{-4}}{0.99}
+       \approx 1.263 \times 10^{-4}.
+$$
+Applying~\eqref{eq:update_neg},
+$$
+\pR(t_1) = \frac{0.7 \cdot 1.263 \times 10^{-4}}
+                {0.7 \cdot 1.263 \times 10^{-4} + 0.3}
+        \approx 2.95 \times 10^{-4}.
+$$
+A single test with no contraction drops $\pR$ from $0.7$ to
+$\approx 3 \times 10^{-4}$.  The dramatic drop reflects the high
+detection sensitivity: under $H_1$ with $\thetaone = 1$, the
+detector would have caught the activation with probability
+$1 - \beta = 99.99\%$.  Absence of detection is extremely
+unlikely under $H_1$ and expected under $H_0$.
+
+\paragraph{Test~2 (confirmation).}
+$\pR(t_1)$ is already well below most reasonable restriction
+thresholds, so the restriction is lifted.  If the meta-policy
+calls for a confirmation test,
+$$
+\pR(t_2) = \frac{\pR(t_1) \cdot \Lzero}
+                {\pR(t_1) \cdot \Lzero + (1 - \pR(t_1))}
+        \approx 3.7 \times 10^{-8}.
+$$
+
+Equation~\eqref{eq:n_clear} with the worked-example parameters
+($\Lzero \approx 1.263 \times 10^{-4}$, $\pR(0) = 0.7$,
+$p_{\mathrm{clear}} = 0.01$) gives
+$$
+N_{\mathrm{clear}}
+  = \left\lceil
+    \frac{\log\bigl(0.01 \cdot 0.3 /(0.7 \cdot 0.99)\bigr)}
+         {\log 1.263 \times 10^{-4}}
+  \right\rceil
+  = \lceil 0.606 \rceil = 1 \text{ test}.
+$$
+A single test suffices because the per-test likelihood ratio is
+so extreme (the detector would catch a real pathway with
+$99.99\%$ probability).  The worked example confirms this:
+after one test, $\pR$ is already $3 \times 10^{-4}$.  The
+second test is a confirmation that drives $\pR$ to negligible
+levels.
+
+\subsection{With controlled relaxation, ground truth $H_1$}
+
+Suppose instead the ground truth is $H_1$: the pathway is
+genuinely dangerous with $\thetaone = 1$.  For test~1 with
+$\testdur = 3$,
+$$
+\Pr(O_n = 1 \mid H_1)
+   = 1 \cdot (1 - 1.25 \times 10^{-4})
+     + 0 \cdot 0.01
+   = 0.999875.
+$$
+The test detects contraction with near-certainty.  The
+likelihood ratio is
+$$
+\Lone = \frac{0.999875}{0.01} = 99.9875.
+$$
+Applying~\eqref{eq:update_pos},
+$$
+\pR(t_1) = \frac{0.7 \cdot 99.9875}
+                {0.7 \cdot 99.9875 + 0.3}
+        = \frac{69.991}{70.291}
+        \approx 0.9957.
+$$
+The risk estimate increases from $0.7$ to $0.996$, and the
+restriction is reinforced.  Maximum damage during the test was
+bounded by $\damagebound = 0.02 \cdot \volL$, which the
+cooperative-closure scope construction guarantees.
+
+\subsection{Summary}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{3.6cm}p{2.0cm}p{2.2cm}p{2.2cm}p{3.0cm}@{}}
+\toprule
+\textbf{Scenario} & \textbf{Ground truth} & \textbf{Tests to resolve} & \textbf{Final $\pR$} & \textbf{Damage incurred} \\
+\midrule
+False alarm, no CR
+  & $H_0$
+  & $\infty$ (never resolves)
+  & $0.70$
+  & $0$ during test, but permanent $\volL$ loss from restriction \\
+False alarm, with CR
+  & $H_0$
+  & $1$ ($+1$ confirmation)
+  & $3.7 \times 10^{-8}$
+  & $0$ (pathway did not activate) \\
+True risk, with CR
+  & $H_1$
+  & $1$
+  & $0.996$
+  & $\leq \damagebound = 0.02 \cdot \volL$ (bounded by
+    Theorem~\ref{thm:damage_bound}) \\
+\bottomrule
+\end{tabular}
+\caption{Behaviour of controlled relaxation on the canonical
+  Wamura scenario.  CR~=~controlled relaxation.}
+\label{tab:worked_example}
+\end{table}
+
+Table~\ref{tab:worked_example} collects the three cases.  The
+framework without controlled relaxation never resolves a false
+alarm; with controlled relaxation, a single test (backed by a
+$95\%$-per-step multi-channel detector) suffices to clear the
+false alarm to $3 \times 10^{-4}$ posterior, and a single
+detection suffices to confirm a genuine risk to $99.6\%$
+posterior.  Both outcomes carry bounded damage.

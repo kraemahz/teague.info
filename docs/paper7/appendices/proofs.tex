@@ -1,0 +1,355 @@
+\section{Proof Details and Technical Notes}
+\label{app:proofs}
+
+This appendix collects the full derivations behind the body's
+proof sketches, with particular attention to the rigorous form
+of the damage bound (Theorem~\ref{thm:damage_bound}) and the
+almost-sure convergence result (Theorem~\ref{thm:convergence}).
+
+\subsection{Proof of Proposition~\ref{prop:asym_evidence}}
+\label{app:proof_asym_evidence}
+
+We record the full Bayesian calculation that underlies the
+Wamura asymmetry.
+
+Let $R$ denote the event ``risk claim $R$ is valid''
+(equivalently, $H_1$ holds for the corresponding binary claim)
+and $\neg R$ its complement.  Let $C$ denote the event
+``contraction observed.''  Under the restricted regime with
+$\Xirestrict$ active, the physical dynamics guarantee
+$\Pr(C \mid R, \Xirestrict) = \Pr(C \mid \neg R, \Xirestrict)
+= 0$: no exercise, no contraction.  The likelihood ratio at any
+time step $t$ is therefore
+$$
+\mathcal{L}(t) =
+  \frac{\Pr(\text{no contraction} \mid R, \Xirestrict)}
+       {\Pr(\text{no contraction} \mid \neg R, \Xirestrict)}
+  = \frac{1 - 0}{1 - 0} = 1.
+$$
+Bayes' rule gives
+$$
+\pR(t+1) = \frac{\pR(t) \cdot 1}
+                {\pR(t) \cdot 1 + (1 - \pR(t)) \cdot 1}
+        = \pR(t),
+$$
+proving part~(b).  For part~(a), the counterfactual in which
+the restriction is lifted for a single step and contraction is
+observed gives
+$\Pr(C \mid R, \text{exercise}) > \Pr(C \mid \neg R,
+\text{exercise})$ (the pathway can activate under $R$ and
+cannot under $\neg R$), so the counterfactual update
+increases $\pR$.
+
+\subsection{Proof of Proposition~\ref{prop:monotone_overcaution}
+and Corollary~\ref{cor:lockup}}
+
+\paragraph{Part~(a).}
+The restriction
+criterion~\citep[Proposition~1]{lasser2026horizon} restricts
+$d_{j^*}$ when
+$\Risk_{j^*}(d_1, \ldots, d_k; a_j, t) >
+|\Delta \volL(G_t \mid \text{restrict } d_{j^*})|$.
+For any fixed capability tuple and keystone $d_{j^*}$, the
+right-hand side is a bounded constant (restriction cost does
+not depend on $\pR$).  The left-hand side is monotone in
+$\pR$ because concentration risk is the probability-weighted
+expected contraction.  There is therefore a threshold
+$p_{\mathrm{thresh}} > 0$ above which the restriction fires.
+
+\paragraph{Part~(b).}
+Direct from Proposition~\ref{prop:asym_evidence}(b): under the
+restricted regime the posterior is unchanged.
+
+\paragraph{Part~(c).}
+Consider the set
+$\mathcal{R}(t) = \{\text{restricted tuples at time } t\}$.
+New discoveries may add tuples to $\mathcal{R}(t)$.  No
+mechanism in the existing framework removes tuples: removal
+would require $\pR$ to drop below $p_{\mathrm{thresh}}$, which
+part~(b) rules out.  Hence
+$\mathcal{R}(t) \subseteq \mathcal{R}(t+1)$ for all $t$.
+
+\paragraph{Corollary~\ref{cor:lockup}.}
+The lower bound follows by counting tuples whose initial
+neutral-prior assignment from at least one agent exceeded
+$p_{\mathrm{thresh}}$; these are immediately restricted
+(part~(a)) and remain restricted (part~(b)).  If the agent
+distribution is systematically overcautious, the fraction of
+such tuples grows with the size of the discovered poset.
+
+\subsection{Proof of Theorem~\ref{thm:damage_bound}
+(full derivation)}
+\label{app:proof_damage_bound}
+
+We supply the rigorous version of the proof sketch in
+Section~\ref{sec:damage_guarantees}.  The technical content is
+(i)~justifying the finite computation of $\maxcon(\scope)$,
+(ii)~bounding the irreversible component at the safety cutoff,
+and (iii)~showing that cross-boundary cooperative terms are
+exhaustively covered by the cooperative-closure condition.
+
+\paragraph{Setup.}
+Fix a test
+$T = (R, \Xirestrict, \scope, \testdur, \damagebound)$ with
+scope $\scope$ satisfying Definition~\ref{def:test_scope}.
+Denote by $\Pi(\scope) = \{\Pathway'_1, \ldots,
+\Pathway'_M\}$ the finite set of exercise pathways with
+prerequisites in $\scope$ and intermediate transitions in
+$\scope$; this set is finite by the bounded-pathway-length
+property of~\citep[Definition~2]{lasser2026horizon} and
+Lemma~\ref{lem:computable_maxcon}.  Denote by
+$\partial \scope$ the cooperative surface: the set of
+cooperative capabilities involving at least one element of
+$\scope$ and at least one element of $P \setminus \scope$.
+
+\paragraph{Part~(a): instantaneous bound.}
+At any step $t' \in \{t, \ldots, t + \testdur\}$ during the
+test, the realized contraction is the sum of contractions along
+activated pathways in $\Pi(\scope)$ plus any cooperative-surface
+contributions induced by those activations.  By
+Definition~\ref{def:test_scope}(ii), the cooperative-surface
+contributions are included in $\maxcon(\scope)$.  Any pathway
+$\Pathway' \in \Pi(\scope)$ contributes at most its maximum
+$|\Delta \volL(\Pathway')|$, which by the axioms
+M1--M6~\citep[Proposition~1]{lasser2026poset} is a
+well-defined, finite, non-negative scalar.  The total
+instantaneous contraction is therefore bounded by
+$\max_{\Pathway' \in \Pi(\scope)} |\Delta \volL(\Pathway')|
+ + \text{(cooperative-surface terms)} = \maxcon(\scope)$.
+Under the scope-selection constraint
+$\maxcon(\scope) \leq \damagebound$
+(Definition~\ref{def:cr_test}, Phase~1, condition~(ii)), we
+obtain $\volL(G_{t'}) \geq \volL(G_t) - \damagebound$.
+
+\paragraph{Part~(b): post-cutoff reversibility.}
+Suppose the safety cutoff triggers at step $t' <
+t + \testdur$.  The realized contraction at $t'$ decomposes as
+$$
+\Delta \volL(G_{t'} \mid G_t)
+  = \Delta^{\mathrm{rev}}(t' \mid t)
+  + \Delta^{\mathrm{irrev}}(t' \mid t),
+$$
+where $\Delta^{\mathrm{rev}}$ is the contraction recoverable by
+reinstating $\Xirestrict$ (capability-availability changes) and
+$\Delta^{\mathrm{irrev}}$ is the irreversible component
+(information disclosure, trust degradation, non-reversible
+poset structural changes).
+Reinstatement at $t' + 1$ restores $\Delta^{\mathrm{rev}}$ to
+zero by construction (the restriction re-blocks
+availability-based pathways), leaving
+$\volL(G_{t'+1}) = \volL(G_t)
+ - \damagebound - \Delta^{\mathrm{irrev}}(t' \mid t)$.
+By Definition~\ref{def:test_scope}(iii),
+$\Delta^{\mathrm{irrev}}(t' \mid t)
+ \leq \deltairrev^{\max} \leq \damagebound$,
+giving
+$\volL(G_{t'+1}) \geq \volL(G_t) - 2\damagebound$.
+
+\paragraph{Part~(c): scope isolation.}
+Decompose $P$ into
+$\scope \sqcup \partial \scope \sqcup (P \setminus (\scope \cup
+\partial \scope))$.  For any $d \in P \setminus (\scope \cup
+\partial \scope)$, $d$ is not in any cooperative capability
+spanning $\scope$ and $P \setminus \scope$, and no pathway in
+$\Pi(\scope)$ has prerequisites or intermediate transitions
+touching $d$.  Hence the exercise probability of $d$'s pathways
+is unchanged during the test (by the locality property of
+pathway definition
+in~\citep[Definition~2]{lasser2026horizon}).  For
+$c \in \partial \scope$, the forward-reachability closure
+condition Definition~\ref{def:test_scope}(ii) guarantees that
+the expected contraction from any $\Pathway_{\mathrm{ext}}$ in
+$P \setminus \scope$ whose prerequisites include a state
+change in $c$ is already included in $\maxcon(\scope)$.  Hence
+any cross-boundary cascade is bounded by the
+$\maxcon(\scope)$-budget and therefore by $\damagebound$.
+
+\subsection{Proof of Lemma~\ref{lem:computable_maxcon}}
+
+Pathway length in $\Pi(\scope)$ is bounded by $L$
+(\citep[Definition~2]{lasser2026horizon}).  The number of
+distinct pathways is at most $|\scope|^L$: at each of the $L$
+steps we choose one of at most $|\scope|$ capabilities.  For
+each pathway, the contraction magnitude is computable from the
+volume axioms M1--M6~\citep[Proposition~1]{lasser2026poset}
+in $O(|\scope|)$ time (enumerating the affected capability
+tuple).  Enumerating the cooperative surface
+$\partial \scope$ and forward-reachability chains is polynomial
+in $|P|$ for fixed depth.  Taking the maximum across enumerated
+pathways and adding cooperative-surface terms yields
+$\maxcon(\scope)$ in $O(|\scope|^L \cdot |\scope|) =
+O(|\scope|^{L+1})$ time, which matches the asserted
+$O(|\scope|^L)$ bound up to the bounded pathway-evaluation
+factor.
+
+\subsection{Proof of Proposition~\ref{prop:detection_bounds}}
+
+\paragraph{Part~(a).}
+Let $p_\tau = \Pr(\text{miss in single window of length } \tau
+\mid A_n = 1)$.  Under Assumptions~\ref{ass:D0}--\ref{ass:D2}
+with persistent activation, the window decomposes into
+$\tau / \testmix$ independent opportunities (exact if
+$\testmix = 1$, upper-bound if $\testmix > 1$).  Each
+opportunity misses with probability $1 - \deltaagg$.  Hence
+$p_\tau \leq (1 - \deltaagg)^{\tau/\testmix}$, decreasing in
+$\tau$.
+
+\paragraph{Part~(b).}
+Inverting the bound: if $\beta(\testdur) \leq \epsilon_\beta$,
+then $(1 - \deltaagg)^{\testdur/\testmix} \leq \epsilon_\beta$,
+i.e., $\testdur \geq \testmix \log \epsilon_\beta / \log(1 -
+\deltaagg)$; taking ceilings gives the claim.
+
+\paragraph{Part~(c).}
+Cross-substrate channels satisfy
+Assumption~\ref{ass:D1} unconditionally by
+\citep[Proposition~5]{lasser2026exo}, so the product formula
+is exact.  Temporal independence follows from
+Assumption~\ref{ass:D2}(a) or (b).  Restricting the product
+to cross-substrate channels yields~\eqref{eq:cross_substrate_bound}.
+
+\subsection{Proof of Theorem~\ref{thm:convergence} (full
+derivation)}
+\label{app:proof_convergence}
+
+We supply the rigorous a.s.-convergence argument.  The sketch
+in Section~\ref{sec:convergence} reduces to the strong law of
+large numbers; here we verify the conditions and spell out the
+quantitative rate.
+
+\paragraph{The log-likelihood random walk.}
+Define
+$$
+\ell_n = \log \frac{\Pr(O_n \mid H_1)}{\Pr(O_n \mid H_0)}
+  \in \{\log \Lone, \log \Lzero\},
+$$
+so that
+$\logit \pR(t_n) = \logit \pR(0) + \sum_{i=1}^n \ell_i$.
+Under Assumption~\ref{ass:T3}, the $O_n$ are conditionally
+i.i.d.\ given the true hypothesis.  Under
+Assumption~\ref{ass:T2}, the likelihoods in the definition of
+$\ell_n$ match the true data-generating distribution.  Under
+Assumption~\ref{ass:T1}, $\log \Lone \in (0, +\infty)$ and
+$\log \Lzero \in (-\infty, 0)$; both are finite (the
+likelihoods are bounded strictly away from $0$ and $1$ because
+$\alphafp \in (0, 1)$ and $\beta \in (0, 1)$ imply
+$\Pr(O = 0 \mid H_1), \Pr(O = 1 \mid H_0) > 0$ and strictly
+less than $1$; the non-degenerate-detector regime of
+Assumption~\ref{ass:T1} rules out the boundary cases
+$\alphafp = 0$ and $\beta = 0$).  Hence $\ell_n$ is a bounded
+i.i.d.\ sequence.
+
+\paragraph{Drift under each hypothesis.}
+Under the true hypothesis $H_j$,
+$$
+\mathbb{E}_{H_j}[\ell_n]
+   = \Pr(O = 1 \mid H_j) \log \Lone
+     + \Pr(O = 0 \mid H_j) \log \Lzero.
+$$
+Under $H_1$ this equals
+$\KL(\Pr(\cdot \mid H_1) \,\|\, \Pr(\cdot \mid H_0)) > 0$;
+under $H_0$ it equals
+$-\KL(\Pr(\cdot \mid H_0) \,\|\, \Pr(\cdot \mid H_1)) < 0$.
+Both are strictly nonzero by Assumption~\ref{ass:T1} (the
+two hypothesis-conditional distributions differ, so their KL
+divergence is strictly positive).
+
+\paragraph{Strong law of large numbers.}
+By the strong law (e.g.,
+\citep[Ch.~6]{cover2006elements}) applied to the bounded
+i.i.d.\ sequence $\{\ell_n\}$,
+$$
+\frac{1}{n} \sum_{i=1}^n \ell_i
+   \xrightarrow{\mathrm{a.s.}} \mathbb{E}_{H_j}[\ell_n]
+$$
+under the true hypothesis $H_j$.  Hence
+$\sum_{i=1}^n \ell_i \to +\infty$ a.s.\ under $H_1$ and
+$\to -\infty$ a.s.\ under $H_0$.  Translating to $\pR$ via the
+logistic map ($\pR = \sigma(\logit \pR)$),
+$\pR(t_n) \to 1$ a.s.\ under $H_1$ and $\to 0$ a.s.\ under
+$H_0$.  This establishes Part~(a).
+
+\paragraph{Part~(b) (run under $H_0$).}
+Conditional on all $O_i = 0$, each $\ell_i = \log \Lzero$, so
+$\sum_{i=1}^n \ell_i = n \log \Lzero$.  Hence
+$\logit \pR(t_n) = \logit \pR(0) + n \log \Lzero$, and
+$\pR(t_n) \to 0$ at geometric rate $|\log \Lzero|$.  The
+unconditional statement under $H_0$ simply replaces
+``conditional on all $O_i = 0$'' with an expected drift
+$(1 - \alphafp) \log \Lzero + \alphafp \log \Lone$, which is
+$-\KL(\Pr(\cdot \mid H_0) \,\|\, \Pr(\cdot \mid H_1))$; again
+strictly negative.
+
+\paragraph{Part~(c) (rate under $H_1$).}
+Each test produces $O_n = 1$ with probability
+$q_1 = \Pr(O = 1 \mid H_1) = \thetaone(1 - \beta) + (1 -
+\thetaone)\alphafp$.  The first detection is a geometrically
+distributed stopping time $\tau_1$ with mean $1/q_1$.  The
+log-odds update on $O = 1$ is $\log \Lone > 0$.  For
+$\thetaone$ close to $1$ and small $\beta$, a single detection
+update $\logit \pR + \log \Lone$ exceeds any fixed threshold
+$\logit(1 - \delta)$, so the expected time to reach
+$\pR > 1 - \delta$ is $O(1/q_1) = O(1/[\thetaone(1 - \beta)])$
+as stated.
+
+\paragraph{Part~(d) (KL form).}
+The drift-rate statements above rewrite to
+\begin{align*}
+H_0: \ -\mathbb{E}_{H_0}[\ell_n]
+  &= (1 - \alphafp) \log(1/\Lzero) + \alphafp \log(1/\Lone) \\
+  &= \KL(\Pr(\cdot \mid H_0) \,\|\, \Pr(\cdot \mid H_1)), \\
+H_1: \ \mathbb{E}_{H_1}[\ell_n]
+  &= \Pr(O = 1 \mid H_1) \log \Lone
+    + \Pr(O = 0 \mid H_1) \log \Lzero \\
+  &= \KL(\Pr(\cdot \mid H_1) \,\|\, \Pr(\cdot \mid H_0)).
+\end{align*}
+Both are strictly positive under Assumption~\ref{ass:T1}, so
+Chernoff's large-deviations result~\citep{chernoff1952measure}
+gives the corresponding exponent on the probability of
+misclassification: $\Pr(\pR(t_n) < 1/2 \mid H_1)$ decays at
+least as fast as $\exp(-n \cdot \KL_{H_1})$ for some
+$\KL_{H_1} > 0$, and symmetrically for $H_0$.
+
+\subsection{Proof of Corollary~\ref{cor:n_clear}}
+
+Under $H_0$ with all $n$ tests producing $O_n = 0$,
+$\logit \pR(t_n) = \logit \pR(0) + n \log \Lzero$.  Setting
+$\logit \pR(t_n) \leq \logit p_{\mathrm{clear}}$ and solving
+for $n$:
+$$
+n \geq \frac{\logit p_{\mathrm{clear}} - \logit \pR(0)}
+             {\log \Lzero}.
+$$
+Using $\logit x = \log(x/(1-x))$, the numerator equals
+$\log(p_{\mathrm{clear}}(1 - \pR(0)) / (\pR(0)(1 -
+p_{\mathrm{clear}})))$.  Note $\log \Lzero < 0$, so the
+inequality direction flips when dividing; taking the ceiling
+gives~\eqref{eq:n_clear}.
+
+\subsection{Proof of Proposition~\ref{prop:preserve_balance}}
+\label{app:proof_preserve_balance}
+
+\paragraph{Part~(a).}
+Axiom~M4 (weak monotonicity) of $\volL$
+\citep[Proposition~1]{lasser2026poset} gives that adding
+capabilities to $P$ (equivalently, lifting a restriction)
+never decreases $\volL$ ignoring risk effects.  Subtracting
+the worst-case risk effect, bounded by $\damagebound$ during
+the test and by $2\damagebound$ post-cutoff
+(Theorem~\ref{thm:damage_bound}), gives the stated interval.
+
+\paragraph{Part~(b).}
+The restriction
+criterion~\citep[Proposition~1]{lasser2026horizon} depends on
+$\pR$; replacing the pre-test $\pR$ with the post-test
+$\pR(t + \testdur)$ produces a criterion evaluated against a
+more accurate estimate.  If $\pR(t + \testdur) <
+p_{\mathrm{thresh}}$, the criterion no longer fires and the
+restriction is lifted; otherwise it is maintained.
+
+\paragraph{Part~(c).}
+Theorem~\ref{thm:convergence} establishes that $\pR(t_n) \to
+\mathbf{1}_{H_1}$ a.s.\ for each tuple.  Since the restriction
+criterion is continuous in $\pR$ and restricts iff $\pR \geq
+p_{\mathrm{thresh}}$, the restriction decisions converge to
+$\{\text{restrict} : \text{genuinely risky}\}$ a.s.
