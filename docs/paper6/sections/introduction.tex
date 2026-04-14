@@ -106,11 +106,12 @@ safety claims.
   the error-proportional degradation rate $\rW$, the subsumption
   frequency $\rsub$, the exogenous drift rate $\dmax$ from lost
   channels, and the minimum cross-substrate redundancy
-  $\rhomincross$.  Below the boundary, the
-  Lyapunov function $\Lyap(\Wm_t)$ converges to a neighborhood of
-  zero whose radius shrinks as subsumption ceases.  Once inside
-  that neighborhood the anti-monopolar property applies.  Above the
-  boundary, the system enters an absorbing basin (under full
+  $\rhomincross$.  When correction exceeds degradation (the safe
+  side of the inequality), the Lyapunov function $\Lyap(\Wm_t)$
+  converges to a neighborhood of zero whose radius shrinks as
+  subsumption ceases, and the anti-monopolar property applies once
+  the trajectory enters that neighborhood.  When degradation exceeds
+  correction, the system enters an absorbing basin (under full
   blindness) or a metastable basin (under partial indirect evidence).
 
 \item \textbf{Unified treatment of three feedback loops}

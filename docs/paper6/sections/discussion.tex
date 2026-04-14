@@ -22,8 +22,10 @@ incentives for leverage blindness) improve the phase boundary for all.
 
 \paragraph{3.\ The Wamura problem is a degenerate phase boundary.}
 Without a mechanism for evidence generation against unfalsifiable risk
-claims, the entire state space is absorbing
-(Proposition~\ref{prop:wamura}).  The Wamura problem was called ``the
+claims, the self-correcting sufficient condition fails for every
+configuration (Proposition~\ref{prop:wamura}); absorption on the risk
+dimension then follows whenever the Part~(b) blindness and cascade
+conditions are also met.  The Wamura problem was called ``the
 most important open problem'' in the discussion
 of~\citet{lasser2026horizon}.  The phase boundary analysis explains
 why: it is the case where the self-correction rate is zero by
@@ -61,10 +63,13 @@ reward hacking (the agent's observable metrics remain good while the
 underlying objective degrades).  The phase boundary formalizes the
 conditions under which these problems become self-reinforcing.
 
-\paragraph{Linearized treatment.}
-The phase boundary is stated in a linearized regime (constant $\rS$,
-$\rW$, $\rsub$).  In the full dynamics these quantities are
-state-dependent.  A larger world-model error produces more aggressive
+\paragraph{Linearized simplified condition.}
+Theorem~\ref{thm:phase_boundary}(a) is stated generally via a uniform
+contraction condition that admits time-varying per-step rates.  The
+simplified sufficient condition and the critical surface
+(Equations~\ref{eq:self_correcting} and~\ref{eq:critical_surface}) are
+stated in a linearized regime with constant $\rS$, $\rW$, and
+$\rsub$.  In the full dynamics these quantities are state-dependent.  A larger world-model error produces more aggressive
 subsumption ($\rsub$ increases with $\Lyap$), and the correction rate
 $\rS$ depends on $T_s$ which itself depends on the error history.
 The linearized treatment produces the qualitative result
