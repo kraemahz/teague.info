@@ -44,6 +44,35 @@ $\volL$-sensitivity choice is the natural default for a framework whose
 objective is $\volL$ maximization.
 \end{remark}
 
+\begin{remark}[$w_k$ as strategic attack surface]
+\label{rem:weights_attack}
+The weight vector $(w_1, \ldots, w_K)$ encodes an implicit utility
+weighting across safety-relevant dimensions.  A published phase
+boundary is stated with a particular choice of $w$, which means an
+actor optimizing against the boundary can choose its operational $w$
+to put its current trajectory on the favorable side of an externally
+stated criterion.  Concretely: if an evaluator announces that the
+acceptable minimum cross-substrate redundancy is
+$\Kmincons(k)$ under the $\volL$-sensitivity weighting, an actor with
+latitude over its internal decomposition of $\volL$ can choose a $w'$
+that rescales $\epsilon_{k,\mathrm{avg}}^2$ on the thin-margin
+dimensions, reducing $\Kmincons(k)$ at those dimensions.  The phase
+boundary is \emph{covariant} under rescaling of $w$ in the sense that
+the aggregate condition
+(Equation~\ref{eq:self_correcting}) is invariant, but
+\emph{per-dimension} thresholds can shift.
+
+The structural defenses against this: (a) publish the weighting
+choice alongside the boundary so third parties can verify which
+decomposition is in force; (b) require the boundary to hold under
+the minimax choice $w^* = \arg\max_w \max_k \Kmincons(k; w)$,
+making the design criterion robust to strategic weight choice at the
+cost of conservatism; (c) verify weights through the
+commitment-ledger mechanism of~\citet{lasser2026exo}, which prevents
+retroactive reweighting.  A formal minimax treatment of weight
+robustness is deferred.
+\end{remark}
+
 \subsection{Lyapunov dynamics}
 
 The per-step behavior of $\Lyap$ depends on two comparison-function
@@ -60,11 +89,31 @@ S(t) \geq \bigl(c_{\mathrm{S}} \cdot \rhomincross(P_t)
 \end{equation}
 whenever $\Lyap(\Wm_t) > 0$ and either $\rhomincross(P_t) > 0$ or
 $\nu(P_t, \Wm_t) > 0$.  Here $\nu(P_t, \Wm_t) \geq 0$ is the
-$\volL$-sensitivity to calibration improvement: the marginal $\volL$
-gain from a unit reduction in $\Lyap$, evaluated at the current state
-along the decision chain (better calibration $\to$ better decisions
-$\to$ higher $\volL$).
+\textbf{objective} $\volL$-sensitivity to calibration improvement:
+the marginal $\volL$ gain from a unit reduction in $\Lyap$, evaluated
+at the current state along the decision chain (better calibration
+$\to$ better decisions $\to$ higher $\volL$).
 \end{assumption}
+
+\textbf{Important: $\nu$ is an objective quantity, not an
+actor-estimated one.}  The assumption bounds the correction signal
+$S(t)$ produced by the true dynamics, not by the actor's
+self-report.  An actor optimizing against a published phase boundary
+could not game $\Kmincons$ by claiming high $\nu$: the formula's
+per-dimension version (Theorem~\ref{thm:redundancy}) drops $\nu$
+entirely under R2, and the aggregate version
+(Equation~\ref{eq:self_correcting}) requires the actual marginal
+sensitivity of $\volL$ to calibration, not the actor's estimate of
+it.  Where the actor's estimate of $\nu$ matters is in driving the
+correction mechanism that produces $S(t)$: if the actor cannot
+estimate $\nu$ for a particular dimension (because the
+decision-to-outcome chain is severed on that dimension, as in the
+over-calibrated restriction loop of
+Section~\ref{sec:unified_loops}), the correction channel is
+effectively inactive regardless of the objective $\nu$'s value.
+The $c_{\mathrm{V}} \cdot \nu$ term thus reflects the \emph{effective}
+correction rate conditional on the actor being able to compute the
+gradient, not the objective maximum.
 
 The correction signal has two sources.  The first term,
 $c_{\mathrm{S}} \cdot \rhomincross$, is \emph{exogenous}: observation
@@ -155,6 +204,21 @@ provided the total correction rate is positive and less than $1$; we
 assume throughout that $\alpha(t)$ is chosen small enough to satisfy
 this bound (the standard step-size condition for stochastic
 approximation~\citep{robbins1951stochastic}).
+
+\begin{remark}[Notation: instantaneous vs.\ constant rates]
+\label{rem:rs_notation}
+The quantity $\rS = \alpha(t) \cdot c_{\mathrm{S}}$ is instantaneous
+and in general time-varying, whereas the phase boundary
+(Theorem~\ref{thm:phase_boundary}) uses $\rS$ as a \emph{constant}
+lower bound $\rS = \inf_t \alpha(t) \cdot c_{\mathrm{S}}$ taken over
+the trajectory.  We overload the symbol: when $\rS$ appears in
+Proposition~\ref{prop:error_dynamics}'s per-step bounds, the
+instantaneous meaning is in force; when $\rS$ appears in the phase
+boundary theorem or design criterion, the constant lower bound is in
+force.  The same overloading applies to
+$\rW = \beta(t) \cdot c_{\mathrm{D}}$, with $\rW = \sup_t \beta(t)
+\cdot c_{\mathrm{D}}$ as the constant upper bound.
+\end{remark}
 
 \medskip
 \noindent\textbf{Subsumption steps} ($\nsub(t) = 1$):

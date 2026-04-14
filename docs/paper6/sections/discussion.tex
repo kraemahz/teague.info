@@ -42,7 +42,7 @@ This is not a normative claim about human importance.  It is a
 structural prediction from the dynamics: in $m = 2$ systems, losing one
 substrate's channel on a dimension reduces $\rhocross_k$ to at most
 $1$, violating the redundancy criterion on any dimension where
-$\Kmin(k, \Lyap_{\mathrm{avg}}) > 1$ and leaving zero margin where $\Kmin(k, \Lyap_{\mathrm{avg}}) \leq 1$
+$\Kmincons(k) > 1$ and leaving zero margin where $\Kmincons(k) \leq 1$
 (Corollary~\ref{cor:two_substrate}).
 The skeleton-substrate scenario (Section~\ref{sec:worked_example})
 shows that progressive \emph{attenuation} of biological channels, not
@@ -75,13 +75,36 @@ cost of substantially more complex proofs.
 \paragraph{Honest-channel assumption.}
 The analysis assumes observation channels are honest: their signal is
 noisy but not adversarially manipulated.  The cryptographic
-commitment protocol of~\citet{lasser2026exo} provides the enforcement mechanism for this
-assumption, and the two papers are designed to be read as complements:
-the exogenous verification framework ensures channels are honest, this paper ensures enough honest
-channels survive.  But the boundary between ``noisy'' and
-``adversarial'' is itself a modeling choice, and in practice the line
-is blurred by sophisticated manipulation strategies that operate within
-the noise distribution.
+commitment protocol of~\citet{lasser2026exo} provides the enforcement
+mechanism for this assumption, and the two papers are designed to be
+read as complements: the exogenous verification framework ensures
+channels are honest, this paper ensures enough honest channels
+survive.  But the boundary between ``noisy'' and ``adversarial'' is
+itself a modeling choice, and the line is blurred in practice by a
+failure mode neither paper alone addresses: \emph{convertibility of
+integrity attacks into availability attacks}.
+
+A sophisticated actor that cannot commit a false claim (because the
+commitment protocol would detect it) can instead choose which claims
+to commit and which to suppress.  On a dimension where the actor
+expects an unfavorable verification outcome, it can decline to
+participate in verification on that dimension, leaving the channel
+nominally intact but carrying no signal about the dimension of
+concern.  This converts an integrity attack (committing a false
+claim) into an availability attack (making the channel silent on the
+relevant dimension).  The integrity protocol of~\citet{lasser2026exo}
+handles claims that are committed; claims the actor chooses not to
+commit fall outside its scope and become an availability problem for
+this paper.  The three loops differ in how they interact with this
+blur: Loops~1 and~3 (structural avoidance, over-calibrated restriction)
+produce channel silence through the dynamics themselves, while
+Loop~2 (partial subsumption) produces channel degradation.  A
+sophisticated Loop-2 actor can emulate Loop-1 behavior on specific
+dimensions---producing selective silence that looks like the
+framework-endogenous failure mode rather than adversarial
+manipulation.  Distinguishing the two requires observing
+\emph{which} channels fall silent, which is itself a meta-channel
+subject to the same availability concerns.
 
 \paragraph{Partial self-diagnosability.}
 As noted in Section~\ref{sec:design_criterion}, the actor can observe

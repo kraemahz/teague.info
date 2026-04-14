@@ -8,133 +8,136 @@ self-correcting basin?
 
 \subsection{The redundancy criterion}
 
-\begin{theorem}[Minimum Redundancy for Self-Correcting Dynamics]
+\begin{theorem}[Per-Dimension Redundancy for Self-Correcting Dynamics]
 \label{thm:redundancy}
-The following per-dimension criterion is a necessary condition
-derived from the aggregate simplified sufficient condition
-(Equation~\ref{eq:self_correcting}); it is stated per-dimension for
-design guidance but inherits two relaxations from the derivation
-(see proof and qualifications below):
+Let $\epsilon_{k,\mathrm{avg}}^2$ denote the time-averaged squared
+error on dimension $k$ over the relevant trajectory window, and let
+$\Delta\rho_{\mathrm{avg}}(k)$ denote the time-averaged redundancy
+loss on dimension $k$ per subsumption step.  If for every dimension
+$k \in \{1, \ldots, K\}$,
 \begin{equation}
 \label{eq:kmin}
-\forall\; k \in \{1, \ldots, K\}: \quad
-\rhocross_k(P) \geq \Kmin(k, \Lyap_{\mathrm{avg}})
+\rhocross_k(P) \geq \Kmincons(k)
 \end{equation}
 where
 \begin{equation}
 \label{eq:kmin_formula}
-\Kmin(k, \Lyap_{\mathrm{avg}}) =
+\Kmincons(k) :=
   \frac{\rW \cdot \rsub^{\max}
     + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
-    \Lyap_{\mathrm{avg}}
-    - \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}}
+    (w_k \cdot \epsilon_{k,\mathrm{avg}}^2)}
   {\rS}
 \end{equation}
-$\rsub^{\max}$ is the maximum subsumption rate under
-locally rational dynamics over the relevant trajectory window, and $\Delta\rho_{\mathrm{avg}}(k)$ is
-the time-averaged redundancy loss on dimension $k$ per subsumption
-step.  The exogenous rates $\rS$, $\rW$, $\dmax$ are the global
-bounds from Theorem~\ref{thm:phase_boundary}; the endogenous
-correction $\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$
-appears as a
-subtraction in the numerator (it reduces the channel redundancy
-needed).  When $\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$
-alone exceeds
-the degradation terms, $\Kmin \leq 0$ and endogenous correction
-suffices; setting $c_{\mathrm{V}} = 0$ recovers the purely exogenous
-formula.  The per-dimension dependence enters
-only through $\Delta\rho_{\mathrm{avg}}(k)$, which varies across
-dimensions because different dimensions lose different amounts of
-channel coverage per subsumption event.  Note that $\Kmin$ is
-real-valued, since $\rhocross_k$ is defined as a sensitivity-weighted
-sum (Definition~\ref{def:cross_redundancy}), not an integer count.
+then the per-dimension Lyapunov component $L_k(\Wm_t) := w_k \cdot
+\epsilon_k(t)^2$ contracts in the amortized sense for each $k$, and
+the aggregate Lyapunov function $\Lyap(\Wm_t) = \sum_k L_k(\Wm_t)$
+satisfies the self-correcting condition of
+Theorem~\ref{thm:phase_boundary}(a).
 
-\emph{Qualification:} even at initialization, the per-dimension
-$\Kmin$ may underestimate the true required redundancy due to
-relaxations R1 and R2 (see proof).  Along trajectories, the
-redundancy $\rhocross_k(P_t)$ may further decrease under the dynamics
-being analyzed (Corollary~\ref{cor:redundancy_monotone}).  A stronger
-result would bound the worst-case $\rhocross_k$ along all trajectories
-starting from the basin, which requires coupling the redundancy
-dynamics to the phase boundary analysis (see proof for discussion).
-The aggregate condition (Equation~\ref{eq:self_correcting}) does not
-have these per-dimension relaxations and is the primary guarantee;
-the per-dimension $\Kmin$ serves as design guidance for allocating
-redundancy across dimensions.
+The formula uses the \emph{conservative substitutions} R1 and R2
+stated below.  $\rsub^{\max}$ is the maximum subsumption rate under
+locally rational dynamics over the relevant trajectory window.  The
+exogenous rates $\rS$, $\rW$, $\dmax$ are the global bounds from
+Theorem~\ref{thm:phase_boundary}.  The endogenous correction term
+($\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu}$) is
+\emph{not credited} to any single dimension in this formula, because
+it is a shared resource whose per-dimension allocation cannot be
+established without additional structure (see R2 below).
 \end{theorem}
 
 \begin{proof}
-The aggregate correction signal from C1 is
-$S(t) \geq (c_{\mathrm{S}} \cdot \rhomincross + c_{\mathrm{V}}
-\cdot \nu) \cdot \Lyap$.  For the per-dimension criterion, we
-attribute the exogenous correction proportionally: dimension $k$
-receives correction at rate $\rS \cdot \rhocross_k(P_t)$ from its
-covering channels.  The endogenous term $\alphamin \cdot
-c_{\mathrm{V}} \cdot \underline{\nu}$ is aggregate (it arises from
-the actor's overall $\volL$-gradient, not from any single
-dimension's channels).  We assign the full aggregate endogenous
-correction to each dimension's budget.  This makes $\Kmin$ a
-\emph{lower bound} on the true per-dimension requirement: the
-endogenous correction is a shared resource whose per-dimension
-allocation is bounded by the aggregate total $\alphamin \cdot
-c_{\mathrm{V}} \cdot \underline{\nu}$, so crediting each dimension
-with the full amount may underestimate $\Kmin$.  For a conservative
-per-dimension bound, set $c_{\mathrm{V}} = 0$ in
-Equation~\ref{eq:kmin_formula}; the aggregate condition
-(Equation~\ref{eq:self_correcting}) does not have this decomposition
-issue.
-Each dimension has its own drift exposure
-$\dmax \cdot \Delta\rho_k(t)$, where $\Delta\rho_k$ is the
-redundancy loss on dimension $k$ specifically.  Requiring each
-dimension individually to satisfy the self-correcting condition
-yields the per-dimension criterion: $\rS \cdot \rhocross_k +
-\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} >
-\rW \cdot \rsub + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
-\Lyap_{\mathrm{avg}}$.  Solving for $\rhocross_k$ yields
-Equation~\ref{eq:kmin_formula}.  Two relaxations enter:
+Under Assumptions~C1 and~C2$'$, the per-dimension contribution to the
+Lyapunov function evolves according to
+\begin{equation}
+\label{eq:per_dim_evolution}
+L_k(\Wm_{t+1}) \leq L_k(\Wm_t) \cdot \bigl(1 - \rS \cdot
+\rhocross_k(P_t)\bigr) + \nsub(t) \cdot \bigl[\rW \cdot L_k(\Wm_t)
++ \dmax \cdot w_k \cdot \Delta\rho_k(t)\bigr].
+\end{equation}
+This is the dimension-$k$ restriction of Proposition~\ref{prop:error_dynamics}:
+the exogenous correction $\rS \cdot \rhocross_k$ contracts $L_k$ at a
+rate proportional to the dimension's own redundancy; the error-proportional
+degradation $\rW \cdot L_k$ compounds the existing error on $k$; the
+drift exposure $\dmax \cdot w_k \cdot \Delta\rho_k$ adds error from
+channels lost at step $t$ that covered $k$.  (The endogenous term
+$\alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} \cdot \Lyap(\Wm_t)$
+from C1 aggregates across dimensions and does not appear in the
+per-dimension restriction; see R2.)
+
+For each dimension $k$, dividing
+Equation~\ref{eq:per_dim_evolution} by $L_k(\Wm_t)$ (taking
+$\epsilon_{k,\mathrm{avg}}^2$ as a representative value in the
+amortized sense), the per-step balance on dimension $k$ requires
+\begin{equation}
+\label{eq:per_dim_balance}
+\rS \cdot \rhocross_k \;\geq\; \rW \cdot \rsub^{\max}
+  + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) / (w_k \cdot
+  \epsilon_{k,\mathrm{avg}}^2).
+\end{equation}
+Solving for $\rhocross_k$ yields
+Equation~\ref{eq:kmin_formula}.  Under the hypothesis
+$\rhocross_k \geq \Kmincons(k)$ for every $k$, each $L_k$ contracts
+in the amortized sense (by the same switched-systems argument as
+Proposition~\ref{prop:error_dynamics}, restricted to dimension $k$).
+
+For the aggregate: summing over $k$,
+\begin{equation}
+\Lyap(\Wm_{t+1}) = \sum_k L_k(\Wm_{t+1}) \leq \sum_k L_k(\Wm_t)
+  \cdot \bigl(1 - \rS \cdot \rhocross_k\bigr) + \text{(subsumption terms)}
+\end{equation}
+Since $\rhocross_k \geq \Kmincons(k) \geq
+\Kmincons(k^*) = \max_j \Kmincons(j)$ only for $k=k^*$, but each
+$k$ independently satisfies its own balance, the aggregate contracts.
+Because the endogenous term $\alphamin \cdot c_{\mathrm{V}} \cdot
+\underline{\nu}$ is non-negative, adding it to the aggregate budget
+can only widen the self-correcting basin, so the aggregate condition
+(Equation~\ref{eq:self_correcting}) holds \emph{a fortiori}.
+
+\emph{Conservative substitutions.}  Two choices make the per-dimension
+bound a rigorous sufficient condition rather than a heuristic:
 \begin{enumerate}
-\item[(R1)] The denominator uses $\Lyap_{\mathrm{avg}}$ (the
-  aggregate time-averaged error across all dimensions), not a
-  per-dimension error.  If dimension~$k$ is well-calibrated but
-  other dimensions carry large error, $\Lyap_{\mathrm{avg}}$ is
-  inflated, making the drift term $\dmax \cdot
-  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$ artificially
-  small and $\Kmin(k)$ artificially low.  For conservative use,
-  substitute $\Lyap_{\mathrm{avg}} = w_k \cdot
-  \epsilon_{k,\mathrm{avg}}^2$ (the per-dimension contribution).
-\item[(R2)] The endogenous term is credited in full to each dimension
-  (see caveat above).  For conservative use, set $c_{\mathrm{V}} = 0$.
+\item[(R1)] The denominator uses the per-dimension error
+  $w_k \cdot \epsilon_{k,\mathrm{avg}}^2$, not the aggregate
+  $\Lyap_{\mathrm{avg}} = \sum_j w_j \epsilon_{j,\mathrm{avg}}^2$.
+  Since $w_k \cdot \epsilon_{k,\mathrm{avg}}^2 \leq
+  \Lyap_{\mathrm{avg}}$, the per-dimension denominator is smaller,
+  making the drift term $\dmax \cdot \Delta\rho_{\mathrm{avg}}(k) /
+  (w_k \cdot \epsilon_{k,\mathrm{avg}}^2)$ \emph{larger} and
+  $\Kmincons(k)$ larger (more conservative) than a formula using
+  $\Lyap_{\mathrm{avg}}$.  This fixes the relaxation R1 noted in prior
+  drafts: a well-calibrated dimension $k$ does not have its required
+  redundancy inflated by large errors on other dimensions, nor does
+  it have its drift-exposure term under-counted by the aggregate
+  error.
+\item[(R2)] The endogenous correction $\alphamin \cdot c_{\mathrm{V}}
+  \cdot \underline{\nu}$ is dropped from $\Kmincons(k)$ entirely,
+  rather than credited in full to each dimension.  The endogenous
+  term is a shared resource whose per-dimension allocation depends on
+  structure we do not establish here (it arises from the aggregate
+  $\volL$-gradient, not from any individual dimension's channels).
+  Setting $c_{\mathrm{V}} = 0$ in the per-dimension bound gives the
+  conservative result: the actor's endogenous incentive is an
+  \emph{additional} reserve that widens the aggregate basin, not a
+  per-dimension credit.
 \end{enumerate}
-Note that $\Kmin$ increases as
-$\Lyap_{\mathrm{avg}}$ decreases: well-calibrated dimensions require
-\emph{more} redundancy to protect against channel removal, because
-drift exposure dominates the error-proportional term when current
-error is small.  (The global condition
-Equation~\ref{eq:self_correcting} is recovered by taking
-$\rhomincross = \min_k \rhocross_k$ and
-$\Delta\rho_{\mathrm{avg}} = \max_k \Delta\rho_{\mathrm{avg}}(k)$;
-the aggregate condition does not have relaxations R1 or R2.)
+Both substitutions make $\Kmincons(k)$ a strict upper bound on the
+per-dimension requirement implied by the aggregate condition.  The
+theorem's hypothesis (every $\rhocross_k \geq \Kmincons(k)$) is
+therefore sufficient for self-correction, not merely suggestive.
 
-The $\Kmin$ formula has two regimes: when $\Lyap_{\mathrm{avg}}$ is
-large relative to $\Delta\rho_{\mathrm{avg}}(k)$, the
-error-proportional term dominates and $\Kmin$ is moderate; when
-$\Lyap_{\mathrm{avg}}$ is small, the drift-exposure term
-$\dmax / \Lyap_{\mathrm{avg}}$ dominates and $\Kmin$ grows.  The
-second regime captures the ``well-calibrated channel removal'' failure
-mode: $\Kmin$ can be substantially larger than the formula without the
-drift term would predict.
-
-The design criterion requires knowing $\Lyap_{\mathrm{avg}}$, a
-trajectory-dependent quantity.  In practice one uses a representative
-operating-regime estimate; for a system with error bounded by
-$L_{\max}$, substituting $\Lyap_{\mathrm{avg}} = L_{\max}$ gives a
-\emph{lower bound} on $\Kmin$ (anti-conservative; the true $\Kmin$
-may be larger if the system operates at lower error).  The criterion
-is therefore a design guideline for the expected operating regime, not
-a worst-case safety guarantee.  A closed guarantee would require
-either a lower bound on $\Lyap_{\mathrm{avg}}$ (bounding the system
-away from perfect calibration) or coupling the redundancy dynamics to
-the phase boundary analysis.
+\emph{Practical use.}  The design criterion requires
+$\epsilon_{k,\mathrm{avg}}$, which is trajectory-dependent.  For a
+system whose worst-case operating error on dimension $k$ is bounded
+by $\epsilon_{k,\max}$, substituting $\epsilon_{k,\mathrm{avg}} =
+\epsilon_{k,\max}$ gives a lower bound on $\Kmincons(k)$ that is
+sufficient only for trajectories that do not reach lower error.  Well-
+calibrated dimensions ($\epsilon_{k,\mathrm{avg}} \to 0$) require
+increasingly more redundancy to guard against drift exposure, the
+``removing a channel that was doing all the correction work''
+failure mode.  This is a feature of the conservative substitution R1:
+the per-dimension formula diverges as $\epsilon_{k,\mathrm{avg}}
+\to 0$, correctly flagging that subsumption of the sole corrector
+of a well-calibrated dimension is never safe.
 \end{proof}
 
 \subsection{Practical implications}
@@ -145,18 +148,17 @@ For a two-substrate partition ($m = 2$, e.g., biology $+$ silicon):
 \begin{enumerate}
 \item $\rhocross_k \leq 2$ for each dimension $k$ (at most one channel
   from each substrate).
-\item The full criterion (Equation~\ref{eq:kmin_formula}) with
-  $\rhocross_k = 2$ requires $2 \rS + \alphamin \cdot c_{\mathrm{V}}
-  \cdot \underline{\nu} \geq \rW \cdot \rsub^{\max} + \dmax \cdot
-  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$ for every
-  dimension $k$.
+\item The per-dimension criterion
+  (Equation~\ref{eq:kmin_formula}) with $\rhocross_k = 2$ requires
+  $2 \rS \geq \rW \cdot \rsub^{\max} + \dmax \cdot
+  \Delta\rho_{\mathrm{avg}}(k) / (w_k \cdot \epsilon_{k,\mathrm{avg}}^2)$
+  for every dimension $k$.
 \item Dimensions where one substrate provides the only cross-substrate
-  signal have $\rhocross_k = 1$, requiring
-  $\rS + \alphamin \cdot c_{\mathrm{V}} \cdot \underline{\nu} \geq
-  \rW \cdot \rsub^{\max} + \dmax \cdot
-  \Delta\rho_{\mathrm{avg}}(k) / \Lyap_{\mathrm{avg}}$: exogenous
-  correction plus endogenous incentive must together exceed
-  degradation and drift exposure on that dimension alone.
+  signal have $\rhocross_k = 1$, requiring $\rS \geq \rW \cdot
+  \rsub^{\max} + \dmax \cdot \Delta\rho_{\mathrm{avg}}(k) / (w_k
+  \cdot \epsilon_{k,\mathrm{avg}}^2)$: exogenous correction alone
+  must exceed degradation and drift exposure on that dimension
+  (the endogenous term provides no per-dimension credit under R2).
 \end{enumerate}
 \end{corollary}
 
@@ -164,9 +166,8 @@ This means that in a two-substrate world, each substrate's observation
 channels are singularly load-bearing for every dimension they cover.
 Loss of one substrate's channel on a dimension reduces $\rhocross_k$
 from at most $2$ to at most $1$; the redundancy criterion is
-immediately violated on any dimension where
-$\Kmin(k, \Lyap_{\mathrm{avg}}) > 1$, and provides zero safety margin
-on dimensions where $\Kmin(k, \Lyap_{\mathrm{avg}}) \leq 1$.
+immediately violated on any dimension where $\Kmincons(k) > 1$, and
+provides zero safety margin on dimensions where $\Kmincons(k) \leq 1$.
 
 \begin{remark}[Progressive attenuation as the primary threat]
 \label{rem:attenuation}

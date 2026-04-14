@@ -59,6 +59,32 @@ This paper formalizes the common dynamical structure underlying all
 three loops and finds the phase boundary that separates
 self-correcting trajectories from absorbing ones.
 
+\subsection{Framing precondition: vol\_P as an operational target}
+\label{sec:framing_precondition}
+
+All results in this paper are stated in terms of $\volL$ dynamics and
+$\volL$-error $\Lyap(\Wm_t)$.  We assume throughout that $\volL$ is an
+operationally meaningful target: that is, improving $\volL$ corresponds
+to an improvement in the experiential capability volume the framework
+is designed to protect.  This is the precondition under which all the
+bounds and convergence claims of this paper carry their safety
+interpretation.  If $\volL$ diverges from the experiential target
+(the \emph{B-to-C gap}~\citep{lasser2026gfm}), $\Lyap$ measures error
+against the wrong quantity and every subsequent result inherits the
+divergence.
+
+This is not a minor limitation to be deferred.  The B-to-C gap is
+the precondition for the framework itself, not a correction to be
+layered on top.  A complete safety result would require establishing
+that $\volL$ tracks the experiential target closely enough over the
+operating regime that $\Lyap$-based bounds translate into
+experiential-capability-volume bounds.  Establishing this is a
+distinct research program (the realized-capability-volume
+construction, in preparation); we import its assumption.  Readers who
+doubt $\volL$ is operationally meaningful should read this paper's
+results as conditional on that assumption holding, not as absolute
+safety claims.
+
 \subsection{Summary of results}
 
 \begin{enumerate}
@@ -99,7 +125,8 @@ self-correcting trajectories from absorbing ones.
   stay in the self-correcting basin (Theorem~\ref{thm:redundancy}).
   For two-substrate systems, each substrate's channels are singularly
   load-bearing (loss of one substrate's channel immediately violates
-  the criterion whenever $\Kmin > 1$ and leaves zero margin otherwise).
+  the criterion whenever $\Kmincons > 1$ and leaves zero margin
+  otherwise).
 \end{enumerate}
 
 \subsection{What this paper does not do}

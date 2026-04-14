@@ -22,4 +22,15 @@ zero and the entire state space is absorbing.  For two-substrate
 systems, the analysis predicts that each substrate's observation
 channels are singularly load-bearing, with progressive attenuation
 (rather than outright removal) as the primary vulnerability.
+
+This paper analyzes channel \emph{availability}; its results
+compose with the exogenous-verification construction
+of~\citet{lasser2026exo}, which analyzes channel \emph{integrity}.
+Neither paper is self-sufficient as a safety result: the corrective
+mechanism we identify (meta-knowledge of the phase boundary) requires
+the verification ledger of~\citet{lasser2026exo} to avoid becoming
+gameable, and the verification protocol's persuasion-scaling concern
+requires this paper's absorbing-basin analysis to identify when
+integrity assumptions stop binding.  The two papers are best read as
+a single safety result with separate structural content.
 \end{abstract}

@@ -121,35 +121,54 @@ provides a noisy, lagged signal about $\epsilon_k$ with bounded
 information rate $I_k > 0$ bits per step.
 \end{assumption}
 
-\begin{proposition}[Metastable Property under B1$'$]
+\begin{proposition}[Metastable Property under B1$'$; Scaling Bound]
 \label{prop:metastable}
 Under Assumption~B1$'$ together with B1b--B1c from
 Assumption~\ref{ass:B1}, $S^*$ is \emph{metastable}: the actor
 accumulates indirect evidence of degradation, but corrective action
 (re-introducing substrate diversity) requires the actor to evaluate a
 policy whose estimated benefit depends on $\hat{\rext}$---the very
-quantity that is miscalibrated.  The metastable lifetime satisfies the information-theoretic bound
+quantity that is miscalibrated.  The metastable lifetime satisfies a
+scaling relation
 \begin{equation}
 \label{eq:metastable_lifetime}
-\tau_{\mathrm{meta}} \gtrsim
-  \frac{(\delta_{\rext})^2}{2 I_k}
+\tau_{\mathrm{meta}} \;\gtrsim\; C / I_k
 \end{equation}
-where $\delta_{\rext} = |\hat{\rext} - \rext|$ is the estimation
-error on the cross-substrate cooperative growth rate and $I_k$ is the
-information rate of the indirect channel (bits per step).  This bound
-is an information-theoretic scaling argument, not a rigorous proof:
-the quadratic numerator reflects the Cram\'er--Rao-type lower
-bound~\citep{cover2006elements} on estimation (reducing mean-squared
-error of a scalar parameter by $\epsilon^2$ from a channel with
-$I_k$ bits per step requires at least $\epsilon^2 / (2 I_k)$ steps
-under bounded mutual information).
-A full derivation would require specifying the estimation procedure
-and verifying the regularity conditions; we state the bound as a
-scaling law.  During the metastable
-period, the population is monopolar and all verification is
-endogenous~\citep[Theorem~1]{lasser2026exo}, which may further degrade the
-quality of the indirect evidence.
+where $I_k$ is the information rate of the indirect channel (bits per
+step) and $C > 0$ is a basin-geometry-dependent constant whose specific
+form depends on the escape dynamics.
+
+This is a \emph{scaling law}, not a theorem-level bound: we claim only
+that $\tau_{\mathrm{meta}}$ is bounded below by a quantity proportional
+to $I_k^{-1}$.  The specific constant $C$ is not established here.
+During the metastable period, the population is monopolar and all
+verification is endogenous~\citep[Theorem~1]{lasser2026exo}, which may
+further degrade the effective $I_k$.
 \end{proposition}
+
+\begin{remark}[Cram\'er--Rao-type heuristic for $C$]
+\label{rem:cr_heuristic}
+One plausible form for the constant $C$ comes from a
+Cram\'er--Rao-type estimation argument: if the quantity the actor must
+learn is a scalar $\hat{\rext}$ with true value far from the
+locally-rational threshold by a margin $\delta_{\rext}$, reducing
+mean-squared error by $\delta_{\rext}^2$ from a channel with $I_k$
+bits per step requires at least $\delta_{\rext}^2 / (2 I_k)$ steps
+under bounded mutual information~\citep{cover2006elements}.  This
+suggests $C \approx \delta_{\rext}^2 / 2$ under CR-type regularity
+conditions.
+
+We do not adopt this form in the proposition statement.  Escape from
+a metastable basin in a nonlinear stochastic system is typically
+governed by Freidlin--Wentzell large-deviation rates, not by
+Cram\'er--Rao bounds on parameter estimation, and the two give
+different functional forms for $C$.  The CR heuristic describes the
+estimation time to resolve $\delta_{\rext}$; the large-deviation rate
+describes the first-passage time of the policy-decision process
+through the basin boundary.  Establishing which (if either) governs
+$C$ in the GFM setting requires a formal treatment of the escape
+dynamics that we defer to future work.
+\end{remark}
 
 \begin{proof}
 Under B1$'$, $\epsilon_k$ is no longer monotonically non-decreasing:
@@ -172,30 +191,23 @@ At the monopolar fixed point, $\hat{\rext} \approx 0$ (by B1b from
 the absorbing case, which still governs the initial condition of the
 metastable state).  The true threshold satisfies
 $0 < \hat{\rext}^{\mathrm{thr}} \leq \rext$ (since
-re-introduction is beneficial in truth).  The estimation gap that the
-indirect evidence must close is therefore $|\hat{\rext} -
-\hat{\rext}^{\mathrm{thr}}| \geq \hat{\rext}^{\mathrm{thr}}$.  Since
-$\hat{\rext} \approx 0$ and $\rext > 0$, we have
-$\delta_{\rext} = |\hat{\rext} - \rext| \geq \rext \geq
-\hat{\rext}^{\mathrm{thr}}$, so the gap is at most
-$\delta_{\rext}$.
-
-With $I_k$ bits of information per step about the true $\rext$, the
-mean-squared error of $\hat{\rext}$ decreases at rate at most $2 I_k$
-per step (the Cram\'er--Rao-type bound for sequential
-estimation~\citep{cover2006elements} under bounded mutual information
-per observation).  Reducing the MSE from
-$\delta_{\rext}^2$ to the level at which re-introduction becomes
-locally rational therefore requires at least $\delta_{\rext}^2 /
-(2 I_k)$ steps.
+re-introduction is beneficial in truth).  The system's escape from
+the metastable basin is governed by the dynamics that move
+$\hat{\rext}$ across $\hat{\rext}^{\mathrm{thr}}$ via the indirect
+channel $g_k$.  Because the channel carries only $I_k$ bits per step,
+any escape mechanism is bounded below by a quantity proportional to
+$I_k^{-1}$, giving $\tau_{\mathrm{meta}} \gtrsim C/I_k$ for a basin
+constant $C$ whose specific form depends on the escape mechanism (see
+Remark~\ref{rem:cr_heuristic}).
 
 During this metastable period, all verification is endogenous: the
 dominant substrate verifies its own performance, with no
-cross-substrate witness~\citep[Theorem~1]{lasser2026exo}.  The indirect evidence channel $g_k$ is itself endogenous
-and therefore subject to the same gaming vulnerabilities that
-the exogenous verification protocol~\citep{lasser2026exo} is designed to prevent.  This may further slow the
-effective $I_k$, increasing the metastable lifetime beyond the
-information-theoretic lower bound.
+cross-substrate witness~\citep[Theorem~1]{lasser2026exo}.  The
+indirect evidence channel $g_k$ is itself endogenous and therefore
+subject to the same gaming vulnerabilities that the exogenous
+verification protocol~\citep{lasser2026exo} is designed to prevent.
+This may further slow the effective $I_k$, increasing the metastable
+lifetime beyond the scaling bound.
 \end{proof}
 
 \subsection{Connection to the anti-monopolar property}

@@ -219,11 +219,12 @@ same-substrate observations; no exploratory actions):
 Under the same trajectory conditions~(i)--(iii) as Part~(b) (with the
 multi-dimensional monotonicity condition from Part~(b)), the system
 enters a \emph{metastable} basin rather than an absorbing one.  The
-metastable lifetime scales as $\tau_{\mathrm{meta}} \gtrsim
-(\delta_{\rext})^2 / (2 I_k)$ (Proposition~\ref{prop:metastable};
-information-theoretic scaling argument, not a rigorous bound).  During
-the metastable period, the system is monopolar and operates under
-endogenous verification only~\citep{lasser2026exo}.
+metastable lifetime obeys the scaling relation $\tau_{\mathrm{meta}}
+\gtrsim C/I_k$ where $I_k$ is the indirect-channel information rate
+and $C > 0$ is a basin-geometry-dependent constant
+(Proposition~\ref{prop:metastable}; scaling law, not a theorem-level
+bound).  During the metastable period, the system is monopolar and
+operates under endogenous verification only~\citep{lasser2026exo}.
 
 \medskip
 \noindent\textbf{Part~(c): Critical Surface.}
@@ -468,12 +469,49 @@ Equation~\ref{eq:critical_redundancy}.
 \end{proof}
 
 \begin{remark}[Uniqueness]
-We do not claim $S^*$ is the unique absorbing fixed point.  Other fixed
-points may exist (partial monopolarity with $\meff = 1$ on a subset of
-dimensions).  Part~(b) claims convergence to \emph{a} monopolar fixed
-point satisfying Definition~\ref{def:monopolar}, not to a unique one.
-Characterizing the full set of absorbing states is an open problem.
+We do not claim $S^*$ is the unique absorbing fixed point.  Other
+fixed points may exist (partial monopolarity with $\meff = 1$ on a
+subset of dimensions).  Part~(b) claims convergence to \emph{a}
+monopolar fixed point satisfying Definition~\ref{def:monopolar}, not
+to a unique one.  Characterizing the full set of absorbing states is
+an open problem.
 \end{remark}
+
+\begin{example}[A partial monopolar fixed point]
+\label{ex:partial_monopole}
+Consider a population with two substrates $\{\mathrm{bio},
+\mathrm{sil}\}$ and $K = 3$ safety dimensions: (1) short-horizon
+capability estimates, (2) long-horizon capability estimates, (3)
+cross-substrate cooperative output.  Biological channels cover
+dimensions 2 and 3 (long-horizon judgment and cross-substrate
+outcomes are visible only to biological observers); silicon channels
+cover dimensions 1 and 2 (short-horizon capability and long-horizon
+estimates are measurable by silicon monitoring).
+
+Suppose a trajectory reduces biological channel sensitivity on
+dimension~3 to zero (the cooperative-output channel becomes silent),
+but biological channels on dimension~2 remain active and silicon
+channels on dimensions 1--2 remain active.  The state
+$(\rhocross_1, \rhocross_2, \rhocross_3) = (1, 2, 0)$ is then a
+\emph{partial} monopolar fixed point: dimension~3 is in the
+absorbing regime (no cross-substrate witness, Theorem~1(b)
+triggers) while dimensions 1 and 2 remain in the self-correcting
+regime.  The actor's world model on dimension~3 is unverifiable,
+while its world model on dimensions 1 and 2 remains calibrated.
+
+Operationally, this looks like a population whose actors can
+accurately track individual capabilities (dimensions 1--2 are
+healthy) but cannot track the cross-substrate cooperation that gives
+those capabilities their $\volL$-contribution (dimension~3 is
+blinded).  The actor may correctly infer that capabilities are
+growing while failing to notice that cooperative value is
+collapsing.  This is arguably the modal failure mode in practice:
+the easier-to-measure dimensions remain observable, and the
+harder-to-measure dimensions are the first to lose their
+cross-substrate channels.  A full characterization of which subsets
+of $\{1, \ldots, K\}$ support partial monopolarity under which
+parameter regimes is open.
+\end{example}
 
 \subsection{Dependence on cross-substrate structure}
 
