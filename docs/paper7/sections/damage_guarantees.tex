@@ -105,17 +105,22 @@ Definition~\ref{def:test_scope}.  Then:
   post-reinstatement damage is bounded by $2\damagebound$.
 \item[(c)] \textbf{Scope isolation under cooperative closure.}
   If no other test is running on an overlapping scope
-  (Definition~\ref{def:cr_test}, Phase~1, condition~(iii)) and
-  $\scope$ satisfies cooperative closure
-  (Definition~\ref{def:test_scope}(ii)), then the damage from
+  (Definition~\ref{def:cr_test}, Phase~1, condition~(iii))
+  and $\scope$ satisfies cooperative closure
+  (Definition~\ref{def:test_scope}(ii)), then a cooperative-closed
+  $\scope$ exists (Lemma~\ref{lem:computable_maxcon} gives a
+  constructive enumeration of the cooperative surface and its
+  forward-reachability closure), the cross-boundary contribution
+  to contraction is finite and enumerable, and the damage from
   test~$T$ that propagates to $P \setminus \scope$ is bounded by
-  the cooperative-surface terms already included in
-  $\maxcon(\scope)$.  Formally: for any capability $d \notin
-  \scope$ that is not part of any cooperative capability spanning
-  $\scope$ and $P \setminus \scope$, the exercise probabilities
-  of $d$'s pathways are unchanged during the test.  For
-  cooperative capabilities spanning the boundary, the
-  contraction contribution is included in $\maxcon(\scope)$ by
+  the cooperative-surface terms that Definition~\ref{def:test_scope}(ii)
+  requires to be included in $\maxcon(\scope)$.  Formally: for
+  any capability $d \notin \scope$ that is not part of any
+  cooperative capability spanning $\scope$ and $P \setminus \scope$,
+  the exercise probabilities of $d$'s pathways are unchanged
+  during the test.  The substantive content of part~(c) is
+  therefore the existence and tractability of the closure; the
+  containment bound follows by construction from
   Definition~\ref{def:test_scope}(ii).
 \end{itemize}
 \end{theorem}

@@ -32,7 +32,11 @@ restricted.  We analyse both ground truths:
   $\testopt$ bound (Proposition~\ref{prop:tau_opt}) gives
   $\testopt = \lceil -1/\log(1 - 0.95) \rceil = \lceil 0.334
   \rceil = 1$; we use $\testdur = 3$ for additional sensitivity
-  margin.
+  margin.  Running $\testdur > \testopt$ reduces $\beta$
+  further (each extra step multiplies the miss probability by
+  $1 - \deltaagg$) at the cost of extending the damage-exposure
+  window, a conservative trade-off that the worked example
+  illustrates but does not optimize.
 \item Window false-negative rate:
   $\beta(3) = (1 - 0.95)^3 = 1.25 \times 10^{-4}$.
 \item False-positive rate: $\alphafp = 0.01$.
@@ -87,8 +91,9 @@ $1 - \beta = 99.99\%$.  Absence of detection is extremely
 unlikely under $H_1$ and expected under $H_0$.
 
 \paragraph{Test~2 (confirmation).}
-$\pR(t_1)$ is already well below most reasonable restriction
-thresholds, so the restriction is lifted.  If the meta-policy
+$\pR(t_1) \approx 3 \times 10^{-4}$ is already below the typical
+restriction threshold $p_{\mathrm{thresh}}$~\citep[Proposition~1]{lasser2026horizon},
+so the restriction is lifted.  If the meta-policy
 calls for a confirmation test,
 $$
 \pR(t_2) = \frac{\pR(t_1) \cdot \Lzero}

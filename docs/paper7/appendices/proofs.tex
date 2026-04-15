@@ -152,10 +152,13 @@ $\scope \sqcup \partial \scope \sqcup (P \setminus (\scope \cup
 \partial \scope)$, $d$ is not in any cooperative capability
 spanning $\scope$ and $P \setminus \scope$, and no pathway in
 $\Pi(\scope)$ has prerequisites or intermediate transitions
-touching $d$.  Hence the exercise probability of $d$'s pathways
-is unchanged during the test (by the locality property of
-pathway definition
-in~\citep[Definition~2]{lasser2026horizon}).  For
+touching $d$.  Since a pathway's exercise probability
+\citep[Definition~2]{lasser2026horizon} is a function of its
+prerequisite set and intermediate transitions, and the test
+modifies only capability-availability within $\scope$ (the
+only capabilities that change status during the test), the
+exercise probability of $d$'s pathways is unchanged during
+the test.  For
 $c \in \partial \scope$, the forward-reachability closure
 condition Definition~\ref{def:test_scope}(ii) guarantees that
 the expected contraction from any $\Pathway_{\mathrm{ext}}$ in
@@ -173,14 +176,20 @@ steps we choose one of at most $|\scope|$ capabilities.  For
 each pathway, the contraction magnitude is computable from the
 volume axioms M1--M6~\citep[Proposition~1]{lasser2026poset}
 in $O(|\scope|)$ time (enumerating the affected capability
-tuple).  Enumerating the cooperative surface
-$\partial \scope$ and forward-reachability chains is polynomial
-in $|P|$ for fixed depth.  Taking the maximum across enumerated
-pathways and adding cooperative-surface terms yields
-$\maxcon(\scope)$ in $O(|\scope|^L \cdot |\scope|) =
-O(|\scope|^{L+1})$ time, which matches the asserted
+tuple).  Under the simplifying assumption that
+cooperative-surface forward-reachability depth is bounded by
+the same constant $L$ that bounds pathway length (satisfied
+whenever cross-boundary cascades cannot chain more than
+pathway-length-many cooperative hops before terminating),
+enumerating the cooperative surface $\partial \scope$ and its
+forward-reachability chains is $O(|P|^L)$.  Taking the maximum
+across enumerated pathways and adding cooperative-surface
+terms yields $\maxcon(\scope)$ in $O(|\scope|^L \cdot |\scope|
++ |P|^L) = O(|P|^{L+1})$ time, which matches the asserted
 $O(|\scope|^L)$ bound up to the bounded pathway-evaluation
-factor.
+factor and the cooperative-surface contribution.  When the
+cooperative forward-reachability depth $L'$ exceeds $L$, the
+bound becomes $O(|P|^{\max(L+1, L')})$.
 
 \subsection{Proof of Proposition~\ref{prop:detection_bounds}}
 
@@ -227,8 +236,13 @@ so that
 $\logit \pR(t_n) = \logit \pR(0) + \sum_{i=1}^n \ell_i$.
 Under Assumption~\ref{ass:T3}, the $O_n$ are conditionally
 i.i.d.\ given the true hypothesis.  Under
-Assumption~\ref{ass:T2}, the likelihoods in the definition of
-$\ell_n$ match the true data-generating distribution.  Under
+Assumption~\ref{ass:T5}, every test exercises the capability,
+so the fixed-binary likelihoods of
+Section~\ref{sec:relaxation_protocol} (not the
+$p_{\mathrm{ex}}$-discounted partial-exercise forms of
+Assumption~\ref{ass:T5}) are the correct ones.  Under
+Assumption~\ref{ass:T2}, those likelihoods match the true
+data-generating distribution.  Under
 Assumption~\ref{ass:T1}, $\log \Lone \in (0, +\infty)$ and
 $\log \Lzero \in (-\infty, 0)$; both are finite (the
 likelihoods are bounded strictly away from $0$ and $1$ because
@@ -265,7 +279,10 @@ $$
 under the true hypothesis $H_j$.  Hence
 $\sum_{i=1}^n \ell_i \to +\infty$ a.s.\ under $H_1$ and
 $\to -\infty$ a.s.\ under $H_0$.  Translating to $\pR$ via the
-logistic map ($\pR = \sigma(\logit \pR)$),
+logistic map ($\pR = \sigma(\logit \pR)$), which is
+well-defined at the initial point because
+$\pR(0) \in (0, 1)$ by Assumption~\ref{ass:T4} (so
+$\logit \pR(0)$ is finite),
 $\pR(t_n) \to 1$ a.s.\ under $H_1$ and $\to 0$ a.s.\ under
 $H_0$.  This establishes Part~(a).
 
