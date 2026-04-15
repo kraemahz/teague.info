@@ -1028,8 +1028,269 @@ pursued in parallel. However:
 
 ---
 
+## Proposal 6: GFM as a Microfoundation for Capability Economics
+
+*This proposal is structurally different from Proposals 1–5. Those close
+safety gaps in the GFM framework itself. This one positions the framework's
+positive content against the adjacent welfare-economics literature and
+establishes what GFM contributes there. Sequenced as a companion / follow-up
+to Proposal 3 (B-to-C gap / revealed-sacrifice observation); scheduled for the
+Paper 9 slot.*
+
+### (a) Gap(s) Closed
+
+**Primary:** The meta-framing gap. The GFM sequence develops a formal
+structural theory of rational agency that has testable content beyond AI
+alignment, but the sequence presents itself as alignment-specific. This
+mis-scopes the framework's contribution and forecloses cross-pollination with
+welfare economics, where the capability approach (Sen 1985, Nussbaum 2000) has
+long argued for capability-based welfare measurement but lacks the formal
+machinery that GFM supplies.
+
+**Secondary:** The unfalsifiability problem of utility theory. Standard
+microeconomic utility theory is underspecified — it accepts any revealed
+preference ordering as "the utility function" and imposes no structure on
+what counts as a good. This makes it unfalsifiable in practice, which is an
+asymmetry standard economics has lived with for decades. GFM imposes
+structure (poset, axioms M1–M6, cooperative capabilities, leverage) that
+generates structural predictions utility theory cannot.
+
+**Secondary:** The boundary of Proposal 3. Proposal 3's revealed-sacrifice
+observation channel uses voluntary trades as the empirical entry point for
+bounding $\mathrm{vol}_R$. This is already an economics-adjacent move; the
+present proposal makes the adjacency explicit and argues for the deeper
+claim that GFM is the formal microfoundation the capability-economics
+tradition has been missing.
+
+### (b) Core Technical Approach
+
+**Core thesis.** Goal-Frontier Maximization provides a formal microfoundation
+for the Sen–Nussbaum capability approach to welfare economics. Standard
+microeconomic utility theory emerges as a special case of GFM under a
+fungibility collapse (the capability poset reduces to a single-dimension
+money axis, cooperative capabilities vanish, individuation becomes irrelevant).
+At finer scales where non-fungibility and cooperative structure dominate, GFM
+diverges from utility-theoretic predictions in ways that match observed
+behavior better.
+
+**The correspondence claim.** Let $\mathcal{P}_{\mathrm{std}}$ denote the
+"standard-economics poset": a single-dimension capability space where each
+capability is purchasing power at some positive real magnitude, no
+cooperative capabilities exist, and agents are perfectly revealed through
+market prices. Claim: an actor maximizing $\mathrm{vol}_P$ on
+$\mathcal{P}_{\mathrm{std}}$ behaves exactly as a money-maximizing expected-
+utility agent. The reduction is the sense in which standard economics is a
+special case of GFM.
+
+**Where GFM diverges.** Four structural features GFM has that utility theory
+lacks:
+
+1. **Non-fungibility is native.** Distinct capability dimensions are distinct
+   by construction via the poset structure, not by assertion via preference
+   shape. The boat-purchase example: in utility theory, we assert the agent's
+   utility function values the boat over equal-dollar spending elsewhere — a
+   redescription, not an explanation. In GFM, the agent trades purchasing
+   power for a bundle $\{$water access, social, fishing$\}$ that populates
+   specific poset dimensions previously empty in their capability set.
+
+2. **Cooperative capabilities are native.** The boat enables cooperative
+   capabilities (social gatherings on water, fishing trips with friends)
+   that cannot be synthesized from the priced components alone. Utility theory
+   handles complementarity via ad hoc cross-partial-derivative terms;
+   GFM represents cooperative structure explicitly as first-class poset
+   elements.
+
+3. **Anti-monopolar reasoning is native.** The $\gamma^*$ threshold from
+   [Lasser, 2026c] Proposition 6 gives a structural reason why over-
+   accumulation is self-defeating in the long run. Utility theory has no
+   analog — standard accumulation models get diminishing returns from
+   concave utility (which is an assumption, not a structural result) or
+   risk aversion (which is an ad hoc preference shape).
+
+4. **Individuation without interpersonal comparison.** Standard economics
+   quietly assumes dollar-denominated utility is interpersonally comparable
+   whenever GDP is cited as a welfare proxy. GFM aggregates over a shared
+   poset via $\mathrm{vol}_P$ with cooperative terms, dissolving the
+   interpersonal-comparison problem: you are measuring the same poset
+   structure, not comparing different agents' utilities.
+
+**Connection to existing lineages.** The proposal should situate GFM against
+three adjacent traditions:
+
+- **Sen–Nussbaum capability approach.** Sen's work argues that wellbeing is
+  capability-structured rather than utility-structured; Nussbaum provides a
+  substantive list of central capabilities. GFM is the formal/measure-
+  theoretic descendant: poset structure, axioms, measure-theoretic
+  $\mathrm{vol}_P$, cooperative capabilities. The relationship is analogous
+  to expected utility theory's formalization of Bentham's felicific calculus.
+
+- **Becker's household production.** Becker's insight that utility is produced
+  via household combinations of time, market goods, and capabilities
+  (Becker 1965, 1981) is captured in GFM via cooperative capabilities.
+  Becker's household production functions are almost arbitrarily flexible;
+  GFM imposes poset structure that is more predictively bite-y.
+
+- **Stiglitz–Sen–Fitoussi (2009) and the beyond-GDP literature.** The report's
+  argument that GDP measures poorly capture welfare because they miss
+  non-market production, quality-of-life capabilities, and distributional
+  equity is vindicated by the GFM framing: GDP approximates a macro-level
+  $\mathrm{vol}_P$ projection onto the fungible-money dimension, missing
+  everything off that axis.
+
+**The empirical bridge.** Proposal 3's revealed-sacrifice channel is the
+empirical entry point connecting GFM to observable economic data. Purchase
+records, time-use surveys, labor-supply data, public-commitment ledgers —
+all are revealed-sacrifice data in the GFM sense. The capability-economics
+microfoundation paper uses this bridge to show that GFM's structural
+predictions are testable against existing economic data, not merely
+theoretical.
+
+### (c) Formal Machinery Needed
+
+1. **The correspondence theorem.** State and prove precisely: an actor
+   maximizing $\mathrm{vol}_P$ on $\mathcal{P}_{\mathrm{std}}$ (single-
+   dimension fungible poset, no cooperative capabilities) is observationally
+   equivalent to a money-maximizing expected-utility agent. This establishes
+   standard economics as a special case and delimits where GFM's
+   additional content lives.
+
+2. **The structural-prediction class.** Identify the class of agent decisions
+   where GFM makes predictions that utility theory does not. Candidates:
+   bundle purchases where the bundle's value is non-decomposable into
+   priced-component values (cooperative capability terms); decisions where
+   the agent faces poset-structural leverage asymmetries (choosing a
+   high-leverage capability over higher-priced low-leverage options);
+   decisions across distinct capability dimensions (time-for-money vs.
+   money-for-experience trades). For each, specify the prediction GFM makes
+   and the alternative prediction utility theory would make (if any).
+
+3. **The residual-class theorem for economic observation.** Under the
+   revealed-sacrifice channel from Proposal 3, the observable lower bound
+   on $\mathrm{vol}_R$ is constructive for capabilities within the
+   trade-observable subset. The residual — capabilities realized without
+   any trade event — is characterized. In standard economics this residual
+   is invisible (the trade-observation framework doesn't reach it at all).
+   In GFM it is named and bounded.
+
+4. **The $\mathcal{P}_{\mathrm{std}}$ reduction in measure-theoretic form.**
+   Show that $\mathrm{vol}_P$ restricted to $\mathcal{P}_{\mathrm{std}}$
+   reduces to the standard money-wealth measure (sum of dollar values), up
+   to normalization. The axioms M1–M6 specialize to trivial forms on a
+   single-dimension poset. This is the technical content of the
+   correspondence claim.
+
+5. **Empirical testable implications.** List the specific predictions GFM
+   makes that should be observable in existing economic datasets:
+   - Cross-sectional: agents whose existing capability bundles are
+     missing specific dimensions should be observed making high-value
+     sacrifices to acquire those dimensions (the bundle-completion
+     prediction).
+   - Longitudinal: agents with saturated capability bundles in a
+     dimension should be observed making low-value sacrifices in that
+     dimension and high-value sacrifices in new dimensions (the
+     saturation-transition prediction).
+   - Cooperative: sacrifices that unlock cooperative capabilities should
+     be observed to be higher-magnitude than sacrifices for isolated
+     capabilities with the same priced-component cost (the cooperative
+     premium).
+   - Anti-monopolar: at the population scale, capability diversity should
+     correlate with long-run welfare more strongly than total capability
+     magnitude (the $\gamma^*$ threshold observed empirically).
+
+### (d) Complete Result Criteria
+
+A complete result would provide:
+
+1. **A correspondence theorem** rigorously establishing standard
+   microeconomic utility theory as the fungibility-collapse special case
+   of GFM.
+
+2. **A structural-prediction class** with explicit empirical content —
+   decisions where GFM and utility theory give different predictions, with
+   the GFM prediction being testable against existing or easily-collected
+   economic data.
+
+3. **An empirical testability demonstration** — one or two worked examples
+   showing that GFM predicts correctly on well-documented anomalies that
+   standard utility theory struggles with (the voluntary-depreciating-asset
+   purchase being the canonical example).
+
+4. **A positioning section against the capability-economics tradition** —
+   Sen, Nussbaum, Becker, Stiglitz–Sen–Fitoussi, with clear statements of
+   what GFM adds (formal poset structure, measure-theoretic vol_P, axiom-
+   based derivation) and what it does not (normative content — which
+   capabilities should count as central is not answered by GFM's formal
+   apparatus).
+
+5. **A residual-class statement** that honestly acknowledges where GFM's
+   observational apparatus does not reach (capabilities realized purely
+   privately, without any trade or sacrifice signal), mirroring Proposal 3's
+   honest residual.
+
+### (e) Dependencies
+
+- **Requires:** Proposal 3 (revealed-sacrifice observation channel) for the
+  empirical bridge. Without the observation channel, the paper's testability
+  claims are hypothetical; with it, they are grounded.
+
+- **Draws on:** All of [Lasser, 2026a–f] — the full sequence — for the
+  formal structure: poset (P2), axioms M1–M6 (P2), vol_P self-balancing
+  (P2 Thm 1), anti-monopolar property (P3 Prop 6), cooperative capabilities
+  (P2), leverage (P2), individuation (P3), phase boundary (P6 Thm 1),
+  controlled relaxation and revealed sacrifice (P7, P8).
+
+- **Extends:** The sequence's positioning. Papers 1–8 establish the formal
+  machinery and close specific safety gaps. Paper 9 argues the machinery's
+  positive content has implications beyond AI alignment — that the framework
+  is, among other things, a theory of rational economic agency that stands
+  on its own merits against the existing microeconomic literature.
+
+- **Does NOT require:** Resolution of mesa-optimization, compound feedback
+  loops at full generality, or the hard problem of consciousness. The paper
+  explicitly stays within the formal scope of the sequence and does not
+  claim to resolve the experiential-value problem (the subjectivity of what
+  counts as a capability is handled the same way Paper 8 handles it — via
+  revealed sacrifice observation, not via normative adjudication).
+
+### (f) What the paper does NOT do
+
+Worth stating up front in the paper to avoid overclaiming:
+
+1. **Does not replace standard economics.** At the macro level with liquid
+   markets, standard economics works. GFM is a microfoundation that has
+   standard economics as a special case; it is not a replacement.
+
+2. **Does not provide a normative list of capabilities.** Nussbaum's list
+   and similar efforts are normative — they assert which capabilities
+   should count as central to human flourishing. GFM's formal machinery is
+   neutral on this question; it provides the structural apparatus for
+   reasoning about whatever capabilities an analyst or a framework-user
+   chooses to include.
+
+3. **Does not solve the subjectivity problem.** What counts as a capability
+   is partly culturally and individually contingent. GFM handles this the
+   way Paper 8 does — by taking the revealed-sacrifice channel as the
+   empirical entry point rather than asserting capabilities from above.
+   The subjectivity is not resolved; it is displaced to a point where the
+   framework can work with it rather than around it.
+
+4. **Does not unify AI alignment with welfare economics.** The paper is a
+   positioning paper: it argues that GFM's content is relevant to both
+   fields. It does not claim to derive alignment conclusions from economic
+   premises or vice versa.
+
+### (g) Suggested title
+
+"Goal-Frontier Maximization as a Microfoundation for Capability Economics"
+
+Alternatives: "Capability-Theoretic Microfoundations: A Formal Framework";
+"From Utility to Capabilities: GFM as an Economic Microfoundation."
+
+---
+
 *Proposals 1–3 generated 2026-04-08 by the GFM harness paper-proposals feature loop.*
 *Proposal 4 added 2026-04-08 from out-of-band capability-claim verification review.*
 *Proposal 5 added 2026-04-09 from Paper 4 multi-channel attribution discussion.*
-*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb), lesson_capability_self_assertion, Paper 4 §3.4 (multi-channel attribution subsection).*
-*Source papers: docs/paper (P1), docs/paper2 (P2), docs/paper3 (P3), docs/paper4 (P4), docs/paper5_notes.md (P5n).*
+*Proposal 6 added 2026-04-14 from research discussion connecting Paper 8's revealed-sacrifice channel to the welfare-economics capability approach lineage. Scheduled for Paper 9 slot (displacing Proposal 5 to Paper 10+).*
+*Input: [GFM Safety Gap Analysis](gfm_safety_gap_analysis.md) (commit 6565cbb), lesson_capability_self_assertion, Paper 4 §3.4 (multi-channel attribution subsection), Paper 8 reframing memo (docs/paper8/paper8_reframing_revealed_sacrifice.md).*
+*Source papers: docs/paper (P1), docs/paper2 (P2), docs/paper3 (P3), docs/paper4 (P4), docs/paper5_notes.md (P5n), docs/paper6 (P6, compiled), docs/paper7 (P7, compiled).*
