@@ -1,49 +1,29 @@
 \begin{abstract}
-A capability regime in which agents continuously discover and
-escalate new capabilities faster than any generation can experience
-their risks through ordinary operation forces a sharper question than
-the classical risk-management literature addresses: how do we preserve
-safety without requiring the incalculable cost-of-life that produced
-the historical markers of prior eras---the tsunami stones at Fudai
-that warned, in stone and across centuries, against construction
-below the inundation line?  The historical-markers mechanism requires
-a first catastrophe to write the markers.  In a capability landscape
-whose technological cadence outpaces any community's lived
-experience, the first catastrophe is the last opportunity to learn
-the lesson, and the markers that would have warned the next
-generation cannot be relied on to exist.  Risks with realisation
-timelines far exceeding the practical observational window produce a
-structural pathology in the Goal-Frontier Maximization risk
-framework: a restriction justified by such a risk cannot be revised
-through observation because the evidence that would revise it cannot
-arrive within the decision cycle, and the alternative mechanism
----waiting for the catastrophe that would make the evidence
-available---is the failure mode we are trying to avoid.  We call this
-the \emph{Wamura problem}, after the tsunami-preparedness case at
-Fudai; the historical case is motivating rather than directly soluble
-by our construction, because Fudai had ignored historical evidence
-available (centuries-old tsunami stones) rather than lacking it.  The
-paper addresses the harder complementary case, in which no such
-historical record exists or can be expected to exist on the
-technology's cadence.  We formalize the structural
-asymmetry, prove that max-aggregation with neutral-prior initialization
+A restriction justified by a long-timeline risk cannot be revised
+through observation: the evidence that would revise it cannot
+arrive within any practical decision cycle, and waiting for the
+catastrophe that would generate the evidence is the failure mode
+the restriction was meant to prevent.  We call this the
+\emph{Wamura problem}.  We formalize the structural asymmetry,
+prove that max-aggregation with neutral-prior initialization
 produces monotone overcaution absent external intervention, and
-introduce \emph{controlled relaxation protocols}: bounded, monitored
-exercise windows that generate genuine Bayesian evidence about risk
-claims while provably bounding maximum damage.  Two central results
-follow.  First, a scope-construction theorem bounds the damage from a
-test by a user-set parameter $\damagebound$ even when cross-boundary
-cooperative capabilities could propagate the test's effects.  Second,
-under a simple binary hypothesis framework with fixed likelihoods, a
-convergence theorem shows that repeated controlled relaxation drives
-risk estimates almost surely to truth at exponential rate, with the
-rate given by the Kullback--Leibler divergence between the observation
-distributions.  We further extend the protocol to
-\emph{keystone-refinement tests}, which handle the common real-world
-case where a restriction is not obsolete but misconfigured---the
-underlying risk pathway still operates, but technological progress has
-made narrower keystones available that would block it without blocking
-adjacent benign pathways.  The protocol closes the most important open
-problem named in~\citep{lasser2026horizon} and resolves the
-degenerate-phase-boundary case of~\citep[Proposition~4]{lasser2026phase}.
+introduce \emph{controlled relaxation protocols}: bounded,
+monitored exercise windows that generate genuine Bayesian evidence
+about risk claims while provably bounding maximum damage.  A
+scope-construction theorem bounds the damage from a test by a
+user-set parameter $\damagebound$ even when cross-boundary
+cooperative capabilities could propagate the test's effects.  A
+convergence theorem shows that repeated controlled relaxation
+drives risk estimates almost surely to truth at exponential rate,
+with the rate given by the Kullback--Leibler divergence between
+the observation distributions.  We extend the protocol to
+\emph{keystone-refinement tests}, which handle the common case
+where a restriction is not obsolete but misconfigured: the
+underlying risk pathway still operates, but technological
+progress has made narrower keystones available that would block
+it without blocking adjacent benign pathways.  The protocol
+closes the most important open problem named
+in~\citep{lasser2026horizon} and resolves the
+degenerate-phase-boundary case
+of~\citep[Proposition~4]{lasser2026phase}.
 \end{abstract}

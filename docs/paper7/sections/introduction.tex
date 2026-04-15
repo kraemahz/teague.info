@@ -1,16 +1,34 @@
 \section{Introduction}
 \label{sec:introduction}
 
+How do we preserve safety in a regime where agents continuously
+discover and escalate new capabilities faster than any generation
+can experience their risks through ordinary operation?  The
+classical mechanism is catastrophe-as-teacher: a first occurrence
+writes historical markers---tsunami stones, disaster records,
+institutional memory, building-code revisions, pharmacovigilance
+regimes---that subsequent generations consult in lieu of the
+experiment they cannot run.  The mechanism has two preconditions.
+The first catastrophe must have already been paid for; the markers
+must still survive in a form the framework can read.  Neither
+condition holds for capabilities that did not exist in previous
+generations, which is precisely the regime the framework's own
+$\volL$-maximising dynamics generate.  This paper constructs a
+formal alternative: a mechanism for generating the evidential
+content that historical markers would have recorded, within a
+bounded damage budget chosen by the framework rather than the
+next generation.
+
 The risk machinery of Goal-Frontier
-Maximization~\citep{lasser2026horizon} identifies the
-max-aggregation pathology as the most important open problem the
-paper names.  The conservative max operator, combined with the
-verification asymmetry inherent in risk prevention, produces
-overcaution that is structurally irresolvable within the existing
-framework: a risk claim that successfully prevents catastrophe
-generates no observation that could lower the risk estimate, because
-the very success of the restriction is what prevents the
-counterfactual test.
+Maximization~\citep{lasser2026horizon} frames the problem
+precisely.  The max-aggregation pathology is identified as the
+most important open problem of the sequence: the conservative
+max operator, combined with the verification asymmetry inherent
+in risk prevention, produces overcaution that is structurally
+irresolvable within the existing framework---a risk claim that
+successfully prevents catastrophe generates no observation that
+could lower the risk estimate, because the very success of the
+restriction is what prevents the counterfactual test.
 
 This is a distinct problem from the compound feedback loops analysed
 in~\citep{lasser2026phase}.  That work asks: when does partial
@@ -58,27 +76,6 @@ discovered, each imposing a restriction; (ii) existing long-timeline
 restrictions cannot be revised through observation.  The ratio of
 restriction-imposing decisions to restriction-revising decisions
 approaches infinity on the long-timeline subset.
-
-The situation forces the sharper question.  Historically, the
-long-timeline-risk problem has been solved by catastrophe-as-teacher:
-a first occurrence generates historical markers
-(tsunami stones, contamination memorials, disaster records,
-institutional memory) that subsequent generations can consult in lieu
-of the experiment they are unable to run.  This mechanism is
-available only if the first catastrophe has already been paid for
-and the markers still survive in a form the framework can read.
-Neither condition holds for capabilities that did not exist in
-previous generations.  In a regime where agents continuously
-escalate new capabilities---by design, under the framework's own
-$\volL$-maximising dynamics---the technological cadence outpaces the
-accumulation of historical markers.  For a novel capability discovered
-at time $t_0$ with realisation timeline $T$, markers from prior
-instances do not exist if no prior instance occurred; and waiting
-for the catastrophe that would produce them is the failure mode the
-framework's restriction regime is meant to prevent.  Controlled
-relaxation is the construction that generates the evidential content
-historical markers would have recorded, without paying the cost that
-would have produced them.
 
 Three mechanisms compose with the timeline mismatch to produce the
 pathology.
