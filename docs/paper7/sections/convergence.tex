@@ -254,6 +254,61 @@ test compared with the naive $\beta^N$ estimate.  This
 illustrates the power of direct observation: the verification
 asymmetry that makes the Wamura problem seem intractable is
 broken by a small number of well-designed tests.
+
+Sensitivity of $N_{\mathrm{clear}}$ to the model parameters
+(computed from~\eqref{eq:n_clear} with $\thetaone = 1$
+throughout):
+
+\begin{center}
+\small
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$\beta$ & $\alphafp$ & $\pR(0)$ & $p_{\mathrm{clear}}$ & $\Lzero$ & $N_{\mathrm{clear}}$ \\
+\midrule
+0.10 & 0.01 & 0.50 & 0.01 & 0.101 & 3 \\
+0.10 & 0.01 & 0.70 & 0.01 & 0.101 & 3 \\
+0.10 & 0.01 & 0.90 & 0.01 & 0.101 & 4 \\
+0.01 & 0.01 & 0.50 & 0.01 & 0.0101 & 1 \\
+0.30 & 0.01 & 0.50 & 0.01 & 0.303 & 4 \\
+0.50 & 0.01 & 0.50 & 0.01 & 0.505 & 7 \\
+0.10 & 0.05 & 0.50 & 0.01 & 0.105 & 3 \\
+0.10 & 0.20 & 0.50 & 0.01 & 0.125 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The detection-sensitivity parameter $\beta$ dominates the count;
+the false-positive rate $\alphafp$ contributes weakly until
+$\alphafp \to (1-\beta)$, where the likelihood ratio $\Lzero$
+approaches $1$ and convergence stalls.  For $\thetaone < 1$
+(realistic activation rates below the maximum), $\Lzero$
+increases toward $1$ proportionally to $1 - \thetaone$, and
+$N_{\mathrm{clear}}$ grows accordingly.
+\end{remark}
+
+\begin{remark}[Robustness to $p_{\mathrm{ex}}$ misestimation]
+\label{rem:pex_robustness}
+The convergence rate of Theorem~\ref{thm:convergence} is stated
+under the full-exercise regime of Assumption~\ref{ass:T5}
+($p_{\mathrm{ex}} = 1$), with the partial-exercise variant
+discounted by a known $p_{\mathrm{ex}} \in (0, 1]$.  In practice
+the test designer cannot directly observe $p_{\mathrm{ex}}$; it
+depends on environmental contingencies during the test window
+and may be inferable only after the fact.  A robust variant
+uses a conservative lower bound $p_{\mathrm{ex}}^{\min} \leq
+p_{\mathrm{ex}}$, yielding likelihoods $\Lzero^{\mathrm{cons}}
+\geq \Lzero$ and $\Lone^{\mathrm{cons}} \leq \Lone$ that
+under-state the evidence in the convergence-conservative
+direction.  Under Assumption~\ref{ass:T1} applied to the
+conservative likelihoods (the modeled $\Lzero^{\mathrm{cons}}
+< 1 < \Lone^{\mathrm{cons}}$), the convergent hypothesis is
+unchanged and the rate is bounded below by $\KL$ computed with
+the conservative likelihoods.  The qualitative fact that the
+test was conducted within the scope is sufficient for
+convergence; only the rate degrades under under-estimation of
+$p_{\mathrm{ex}}$.  The misspecification regime in which the
+convergent hypothesis flips is delineated in
+Section~\ref{sec:discussion}, Limitations.
 \end{remark}
 
 \begin{corollary}[EWMA-Risk-Trust Convergence]

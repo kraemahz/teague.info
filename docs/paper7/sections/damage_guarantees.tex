@@ -217,3 +217,32 @@ independent sub-scopes.  This is an engineering consideration,
 not a theoretical limitation---the bound exists and is
 computable; the question is computational cost.
 \end{remark}
+
+\begin{corollary}[Damage bound under conservative over-approximation]
+\label{cor:over_approx_safety}
+Let $\maxcon^\star(\scope) \geq \maxcon(\scope)$ be any
+over-approximation of the maximum scope contraction.  A
+scope-selection rule that requires $\maxcon^\star(\scope) \leq
+\damagebound$ continues to satisfy the damage bound of
+Theorem~\ref{thm:damage_bound}: worst-case $\volL$-contraction
+during the test is $\leq \maxcon(\scope) \leq
+\maxcon^\star(\scope) \leq \damagebound$, and the post-cutoff
+bound $2\damagebound$ inherits unchanged.  Cooperative-closure
+enumeration cost is therefore tradeable against scope
+conservatism: deployers may accept a narrower $\scope$ chosen
+under a cheaper-to-compute over-approximation of the
+cooperative surface and still preserve the safety guarantee,
+at the cost of feasibility (some otherwise-feasible scopes will
+be rejected).
+\end{corollary}
+
+\begin{proof}[Proof sketch]
+Direct.  By assumption $\maxcon(\scope) \leq
+\maxcon^\star(\scope) \leq \damagebound$, so
+Theorem~\ref{thm:damage_bound}(a)'s inequality $\volL(G_{t'})
+\geq \volL(G_t) - \maxcon(\scope) \geq \volL(G_t) -
+\damagebound$ holds.  Parts~(b) and~(c) follow analogously
+since the cooperative-surface terms in
+Definition~\ref{def:test_scope}(ii) are upper-bounded by
+$\maxcon^\star(\scope)$.
+\end{proof}

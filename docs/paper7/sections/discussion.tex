@@ -93,9 +93,52 @@ log-likelihood-ratio argument still converges, but it converges
 to the wrong hypothesis: under the misspecified model, the
 posterior concentrates on whichever hypothesis is closer in
 KL-divergence to the true distribution, not on the true
-hypothesis.  Detector calibration is therefore a prerequisite
-for the convergence guarantee to carry its safety
-interpretation.
+hypothesis.  A concrete sign-preservation bound delineates the
+safe region: the convergent hypothesis is correct iff the
+modeled likelihoods $\Lzero$ and $\Lone$ have the correct sign
+relative to the true distribution---formally,
+$E_{H_0^{\mathrm{true}}}[\log L] < 0$ and
+$E_{H_1^{\mathrm{true}}}[\log L] > 0$.  In the binary model,
+this reduces to: if Assumption~\ref{ass:T1} holds for the
+modeled $(\beta, \alphafp)$ and the true $(\beta^\star,
+\alphafp^\star)$ jointly satisfy
+$(1 - \beta^\star)/\alphafp^\star > 1$ and
+$\beta^\star/(1 - \alphafp^\star) < 1$ (i.e., the true detector
+also has nontrivial power), then the convergent hypothesis is
+correct, with rate degraded by the KL gap between modeled and
+true distributions.  Misspecification flips the convergent
+hypothesis only when the modeled detector is qualitatively
+miscalibrated (modeled $\Lone$ on the wrong side of $1$);
+quantitative misestimation only slows convergence.  Detector
+calibration is therefore a prerequisite for the convergence
+guarantee to carry its safety interpretation, but the bound is
+robust to plausible-magnitude calibration error.
+
+\paragraph{Scope-existence for densely cooperative capabilities.}
+Remark~\ref{rem:scope_existence} names scope existence as a
+scheduling precondition that must be enforced by the meta-policy
+before a CR test is initiated.  For application domains where
+cooperative-capability structure is dense, this precondition is
+more than a technical caveat.  AI capability spaces in
+particular have the property that almost every capability
+cooperates with almost every other through the shared
+computational substrate; in such spaces, $\maxcon(P)$ on the full
+poset may dominate any acceptable $\damagebound$, and any scope
+satisfying Definition~\ref{def:test_scope} may be similarly
+infeasible.  We do not have a quantitative estimate for how
+often feasible scopes exist in AI capability domains.  For some
+risk classes---capabilities with strongly localised cooperative
+structure (e.g., specific tool-use patterns confined to a
+domain)---feasible scopes plausibly exist; for others
+(capabilities with broad cooperative reach, e.g., general
+reasoning) they may not.  When feasible scopes do not exist, the
+alternative mechanisms named in
+Remark~\ref{rem:scope_existence}---structural discovery
+\citep[Proposition~2]{lasser2026horizon} or scope-refinement
+that trades coverage for feasibility---must be deployed instead.
+Controlled relaxation is not a universal remedy for the Wamura
+problem; it is a remedy for the subset of risks where bounded
+scopes exist.
 
 \subsection{Open questions}
 

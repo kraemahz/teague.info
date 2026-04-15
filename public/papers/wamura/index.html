@@ -344,6 +344,18 @@ actors are human oversight bodies, cryptographically committed automated
 systems, or combinations thereof; the implementation of trust is a
 domain-specific design decision outside the scope of the formal
 construction.</p>
+<p>A practical asymmetry across these domains is worth naming
+explicitly. Three of the four (chemical contamination, nuclear dual-use,
+pandemic preparedness) sit on top of pre-existing institutional
+infrastructure built for exactly this kind of bounded empirical test:
+the EPA, the IAEA, biosafety committees and BSL-tiered containment. The
+fourth, AI capability restriction, has no comparable infrastructure
+today. The protocol’s deployability in the AI case is therefore
+conditional on institutional development that this paper does not
+provide and does not estimate the cost of. We claim the formal
+apparatus, not the institutional readiness; the gap between the two is
+load-bearing for the AI application and should be acknowledged rather
+than elided.</p>
 <h2 id="sec:not_do">What this paper does not do</h2>
 <ul>
 <li><p><strong>It does not replace max-aggregation.</strong> Log-odds
@@ -905,13 +917,33 @@ phase boundary when the self-correction rate <span
 class="math inline">r_{\mathrm{S}}= 0</span> for that loop <d-cite key="lasser2026phase"></d-cite>. The
 self-correction rate is zero precisely because the Wamura asymmetry
 prevents evidence accumulation on the restricted dimension. Controlled
-relaxation makes <span class="math inline">r_{\mathrm{S}}&gt; 0</span>
-by injecting exercise-regime observations into the evidence stream: the
-log-odds update of – has nonzero expected
-drift toward the true hypothesis under Assumption <a href="#ass:T1"
-data-reference-type="ref" data-reference="ass:T1">4</a>, and that drift
-is the restoring force required by the design criterion of <d-cite key="lasser2026phase"></d-cite> to lift Loop 3 off
-the phase-boundary degeneracy.</p>
+relaxation injects discrete observation events at scheduled test times,
+producing a positive <em>time-averaged</em> exogenous correction rate
+<span class="math inline">r_{\mathrm{S}}^{\mathrm{avg}} &gt; 0</span> on
+the restricted dimension. The compositional detail is worth being
+explicit about: <span class="math inline">r_{\mathrm{S}}</span> as
+defined in <d-cite key="lasser2026phase"></d-cite>
+is <span class="math inline">\inf_t \alpha(t) \cdot
+c_{\mathrm{S}}</span>, an infimum over the trajectory. Between CR test
+events the per-step rate <span class="math inline">\alpha(t) \cdot
+c_{\mathrm{S}}</span> on the restricted dimension is zero, so the
+inf-form <span class="math inline">r_{\mathrm{S}}</span> may remain zero
+even with periodic testing. The phase-boundary condition that actually
+closes the proof, however, is the uniform-contraction condition on
+<em>time-averaged</em> log-multiplicative factors <d-cite key="lasser2026phase"></d-cite>; the inf-form <span
+class="math inline">r_{\mathrm{S}}</span> is upstream notational
+convenience. CR delivers a positive time-average via the discrete
+log-odds drift of –, which has nonzero
+expected magnitude per test under Assumption <a href="#ass:T1"
+data-reference-type="ref" data-reference="ass:T1">4</a>. The Wamura
+degeneracy that <d-cite key="lasser2026phase"></d-cite> characterises is the case where the
+rate is identically zero across all <span class="math inline">t</span>
+(no exogenous channel exists at all on the restricted dimension); CR
+resolves that degeneracy by creating exogenous channel events,
+satisfying the uniform-contraction condition in time-average without
+requiring the inf to be positive between scheduled tests. The restoring
+force that lifts Loop 3 off the phase-boundary degeneracy is therefore
+the time-averaged drift, not an instantaneous rate.</p>
 <h1 id="sec:damage_guarantees">Scope-Bounding and Damage Guarantees</h1>
 <p>Section <a href="#sec:relaxation_protocol" data-reference-type="ref"
 data-reference="sec:relaxation_protocol">3</a> treated the damage
@@ -1172,6 +1204,44 @@ independent sub-scopes. This is an engineering consideration, not a
 theoretical limitation—the bound exists and is computable; the question
 is computational cost.</em></p>
 </div>
+<div id="cor:over_approx_safety" class="corollary">
+<p><strong>Corollary 2</strong> (Damage bound under conservative
+over-approximation). <em>Let <span
+class="math inline">\mathrm{max\_contraction}^\star(S) \geq
+\mathrm{max\_contraction}(S)</span> be any over-approximation of the
+maximum scope contraction. A scope-selection rule that requires <span
+class="math inline">\mathrm{max\_contraction}^\star(S) \leq
+\epsilon</span> continues to satisfy the damage bound of Theorem <a
+href="#thm:damage_bound" data-reference-type="ref"
+data-reference="thm:damage_bound">1</a>: worst-case <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction
+during the test is <span class="math inline">\leq
+\mathrm{max\_contraction}(S) \leq
+\mathrm{max\_contraction}^\star(S) \leq \epsilon</span>, and the
+post-cutoff bound <span class="math inline">2\epsilon</span> inherits
+unchanged. Cooperative-closure enumeration cost is therefore tradeable
+against scope conservatism: deployers may accept a narrower <span
+class="math inline">S</span> chosen under a cheaper-to-compute
+over-approximation of the cooperative surface and still preserve the
+safety guarantee, at the cost of feasibility (some otherwise-feasible
+scopes will be rejected).</em></p>
+</div>
+<div class="proof">
+<p><em>Proof sketch.</em> Direct. By assumption <span
+class="math inline">\mathrm{max\_contraction}(S) \leq
+\mathrm{max\_contraction}^\star(S) \leq \epsilon</span>, so Theorem <a
+href="#thm:damage_bound" data-reference-type="ref"
+data-reference="thm:damage_bound">1</a>(a)’s inequality <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_{t&#39;})
+\geq {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t) -
+\mathrm{max\_contraction}(S) \geq
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t) -
+\epsilon</span> holds. Parts (b) and (c) follow analogously since the
+cooperative-surface terms in Definition <a href="#def:test_scope"
+data-reference-type="ref" data-reference="def:test_scope">4</a>(ii) are
+upper-bounded by <span
+class="math inline">\mathrm{max\_contraction}^\star(S)</span>. </p>
+</div>
 <h1 id="sec:detection_sensitivity">Detection Sensitivity and the
 Bayesian Update</h1>
 <p>The Bayesian update in Section <a href="#sec:relaxation_protocol"
@@ -1329,6 +1399,41 @@ data-reference="ass:D2">3</a>(a) or (b). </p>
 cross-substrate channels provide independent detection opportunities
 that same-substrate channels may not (due to correlated failures), and
 their isolation is unconditional.</p>
+<div id="rem:cross_substrate_rate" class="remark">
+<p><strong>Remark 9</strong> (Cross-substrate-only rate recovery).
+<em>The interaction between Assumptions <a href="#ass:D1"
+data-reference-type="ref" data-reference="ass:D1">2</a> (cross-channel
+independence) and <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a> (temporal independence) is subtle. A
+common-cause failure mode that violates <a href="#ass:D1"
+data-reference-type="ref" data-reference="ass:D1">2</a> for
+same-substrate channels (e.g., a shared software dependency that
+miscalibrates an entire silicon detector cohort) typically also
+violates <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a> for the same-substrate temporal stream
+(the failure persists across time). The actually-dangerous regime is
+therefore <em>joint</em> same-substrate failure across channels and
+across time. The conservative bound <span
+class="math inline">\delta_{\mathrm{agg}}^{\mathrm{cons}}</span> of 
+protects against both simultaneously: cross-substrate channels, by <d-cite key="lasser2026exo"></d-cite>’s unconditional
+channel-isolation, satisfy <a href="#ass:D1" data-reference-type="ref"
+data-reference="ass:D1">2</a> <em>and</em> <a href="#ass:D2"
+data-reference-type="ref" data-reference="ass:D2">3</a>(a) without
+further assumption, because the temporal failure of a biological
+observer is independent of the temporal failure of a silicon observer.
+Under <span class="math inline">\delta_{\mathrm{agg}}^{\mathrm{cons}}
+&gt; 0</span>, Theorem <a href="#thm:convergence"
+data-reference-type="ref" data-reference="thm:convergence">2</a>’s KL
+rate is recovered up to a factor that depends only on the ratio of
+cross-substrate to all-channel detection probability: <span
+class="math inline">\mathrm{KL}^{\mathrm{cons}} /
+\mathrm{KL}^{\mathrm{full}} \geq
+\delta_{\mathrm{agg}}^{\mathrm{cons}} / \delta_{\mathrm{agg}}</span> in
+the regime <span class="math inline">\delta_{\mathrm{agg}}\ll 1</span>,
+with equality in the limit of a single dominant channel. Convergence is
+preserved unconditionally; the constant factor degradation is the cost
+of the joint failure mode.</em></p>
+</div>
 <h2 id="evidence-strength-of-a-single-test">Evidence strength of a
 single test</h2>
 <div id="prop:evidence_strength" class="proposition">
@@ -1413,7 +1518,7 @@ class="math inline">\mathop{\mathrm{logit}}p_R(t^+) =
 \log(\Pr(O_n \mid H_1) / \Pr(O_n \mid H_0))</span>. </p>
 </div>
 <div id="rem:log_odds_integration" class="remark">
-<p><strong>Remark 9</strong> (Integration with log-odds aggregation).
+<p><strong>Remark 10</strong> (Integration with log-odds aggregation).
 <em>The log-odds evidence from Proposition <a
 href="#prop:evidence_strength" data-reference-type="ref"
 data-reference="prop:evidence_strength">4</a> feeds directly into the
@@ -1634,7 +1739,7 @@ href="#app:proof_convergence" data-reference-type="ref"
 data-reference="app:proof_convergence">12.6</a>. </p>
 </div>
 <div id="rem:convergence_depends_on_damage" class="remark">
-<p><strong>Remark 10</strong> (Dependence on Theorem <a
+<p><strong>Remark 11</strong> (Dependence on Theorem <a
 href="#thm:damage_bound" data-reference-type="ref"
 data-reference="thm:damage_bound">1</a>). <em>Theorem <a
 href="#thm:convergence" data-reference-type="ref"
@@ -1674,7 +1779,7 @@ data-reference="thm:convergence">2</a> does not apply.</em></p>
 </div>
 <h2 id="finite-sample-guarantees">Finite-sample guarantees</h2>
 <div id="cor:n_clear" class="corollary">
-<p><strong>Corollary 2</strong> (Minimum Tests to Clear a False Claim).
+<p><strong>Corollary 3</strong> (Minimum Tests to Clear a False Claim).
 <em>Under the operating assumptions of Theorem <a
 href="#thm:convergence" data-reference-type="ref"
 data-reference="thm:convergence">2</a> (full-exercise regime of
@@ -1716,7 +1821,7 @@ class="math inline">\mathop{\mathrm{logit}}p_R(t_n) \leq
 class="math inline">n</span> yields the bound. </p>
 </div>
 <div id="rem:concrete_numbers" class="remark">
-<p><strong>Remark 11</strong> (Concrete numbers). <em>For <span
+<p><strong>Remark 12</strong> (Concrete numbers). <em>For <span
 class="math inline">\theta_1= 1</span>, <span class="math inline">\beta
 = 0.1</span>, <span class="math inline">\alpha_{\mathrm{fp}}=
 0.01</span>, <span class="math inline">p_R(0) = 0.5</span>, and <span
@@ -1736,9 +1841,145 @@ class="math inline">\beta^N</span> estimate. This illustrates the power
 of direct observation: the verification asymmetry that makes the Wamura
 problem seem intractable is broken by a small number of well-designed
 tests.</em></p>
+<p><em>Sensitivity of <span
+class="math inline">N_{\mathrm{clear}}</span> to the model parameters
+(computed from  with <span
+class="math inline">\theta_1= 1</span> throughout):</em></p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><em><span
+class="math inline">\beta</span></em></th>
+<th style="text-align: center;"><em><span
+class="math inline">\alpha_{\mathrm{fp}}</span></em></th>
+<th style="text-align: center;"><em><span
+class="math inline">p_R(0)</span></em></th>
+<th style="text-align: center;"><em><span
+class="math inline">p_{\mathrm{clear}}</span></em></th>
+<th style="text-align: center;"><em><span
+class="math inline">L_0</span></em></th>
+<th style="text-align: center;"><em><span
+class="math inline">N_{\mathrm{clear}}</span></em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><em>0.10</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.101</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.10</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.70</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.101</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.10</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.90</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.101</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.0101</em></td>
+<td style="text-align: center;"><em>1</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.30</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.303</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.505</em></td>
+<td style="text-align: center;"><em>7</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.10</em></td>
+<td style="text-align: center;"><em>0.05</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.105</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr>
+<td style="text-align: center;"><em>0.10</em></td>
+<td style="text-align: center;"><em>0.20</em></td>
+<td style="text-align: center;"><em>0.50</em></td>
+<td style="text-align: center;"><em>0.01</em></td>
+<td style="text-align: center;"><em>0.125</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em>The detection-sensitivity parameter <span
+class="math inline">\beta</span> dominates the count; the false-positive
+rate <span class="math inline">\alpha_{\mathrm{fp}}</span> contributes
+weakly until <span class="math inline">\alpha_{\mathrm{fp}}\to
+(1-\beta)</span>, where the likelihood ratio <span
+class="math inline">L_0</span> approaches <span
+class="math inline">1</span> and convergence stalls. For <span
+class="math inline">\theta_1&lt; 1</span> (realistic activation rates
+below the maximum), <span class="math inline">L_0</span> increases
+toward <span class="math inline">1</span> proportionally to <span
+class="math inline">1 - \theta_1</span>, and <span
+class="math inline">N_{\mathrm{clear}}</span> grows
+accordingly.</em></p>
+</div>
+<div id="rem:pex_robustness" class="remark">
+<p><strong>Remark 13</strong> (Robustness to <span
+class="math inline">p_{\mathrm{ex}}</span> misestimation). <em>The
+convergence rate of Theorem <a href="#thm:convergence"
+data-reference-type="ref" data-reference="thm:convergence">2</a> is
+stated under the full-exercise regime of Assumption <a href="#ass:T5"
+data-reference-type="ref" data-reference="ass:T5">8</a> (<span
+class="math inline">p_{\mathrm{ex}} = 1</span>), with the
+partial-exercise variant discounted by a known <span
+class="math inline">p_{\mathrm{ex}} \in (0, 1]</span>. In practice the
+test designer cannot directly observe <span
+class="math inline">p_{\mathrm{ex}}</span>; it depends on environmental
+contingencies during the test window and may be inferable only after the
+fact. A robust variant uses a conservative lower bound <span
+class="math inline">p_{\mathrm{ex}}^{\min} \leq
+p_{\mathrm{ex}}</span>, yielding likelihoods <span
+class="math inline">L_0^{\mathrm{cons}}
+\geq L_0</span> and <span class="math inline">L_1^{\mathrm{cons}} \leq
+L_1</span> that under-state the evidence in the convergence-conservative
+direction. Under Assumption <a href="#ass:T1" data-reference-type="ref"
+data-reference="ass:T1">4</a> applied to the conservative likelihoods
+(the modeled <span class="math inline">L_0^{\mathrm{cons}}
+&lt; 1 &lt; L_1^{\mathrm{cons}}</span>), the convergent hypothesis is
+unchanged and the rate is bounded below by <span
+class="math inline">\mathrm{KL}</span> computed with the conservative
+likelihoods. The qualitative fact that the test was conducted within the
+scope is sufficient for convergence; only the rate degrades under
+under-estimation of <span class="math inline">p_{\mathrm{ex}}</span>.
+The misspecification regime in which the convergent hypothesis flips is
+delineated in Section <a href="#sec:discussion"
+data-reference-type="ref" data-reference="sec:discussion">11</a>,
+Limitations.</em></p>
 </div>
 <div id="cor:ewma" class="corollary">
-<p><strong>Corollary 3</strong> (EWMA-Risk-Trust Convergence). <em>When
+<p><strong>Corollary 4</strong> (EWMA-Risk-Trust Convergence). <em>When
 test outcomes are fed into the risk-trust EWMA of <d-cite key="lasser2026scm"></d-cite> rather than a pure Bayesian update,
 the <span class="math inline">L^2</span> convergence bound below is
 regime-independent: it depends on the EWMA forgetting factor <span
@@ -1811,7 +2052,7 @@ constitution.</em></p></li>
 </ul>
 </div>
 <div id="rem:structural_preference" class="remark">
-<p><strong>Remark 12</strong> (Connection to structural discovery
+<p><strong>Remark 14</strong> (Connection to structural discovery
 value). <em>Criterion (ii) is a specialization of the structural
 discovery value of <d-cite key="lasser2026horizon"></d-cite>: a structural discovery that
 would resolve the risk claim has information value <span
@@ -1890,7 +2131,7 @@ ratio <span class="math inline">\mathrm{IV}(T_i) / \epsilon_i</span>
 </ul>
 </div>
 <div id="rem:knapsack" class="remark">
-<p><strong>Remark 13</strong> (Scheduling is a constrained knapsack).
+<p><strong>Remark 15</strong> (Scheduling is a constrained knapsack).
 <em>The scheduling problem is a variant of the knapsack problem with
 isolation constraints (non-overlapping scopes). For small numbers of
 concurrent tests, greedy selection by <span
@@ -2053,7 +2294,7 @@ practice, with <span class="math inline">\delta_{\mathrm{agg}}=
 <span class="math inline">0.95</span>), triggering the Phase 2 safety
 cutoff. Per Remark <a href="#rem:convergence_depends_on_damage"
 data-reference-type="ref"
-data-reference="rem:convergence_depends_on_damage">10</a>, the cutoff
+data-reference="rem:convergence_depends_on_damage">11</a>, the cutoff
 event is an <span class="math inline">O_n = 1</span> observation and the
 full-window <span class="math inline">L_1=
 99.9875</span> used above is slightly conservative relative to the
@@ -2177,7 +2418,7 @@ narrower structures impose less restriction on adjacent
 capabilities.</em></p>
 </div>
 <div id="rem:technology_drift" class="remark">
-<p><strong>Remark 14</strong> (Technology drift). <em>The set of
+<p><strong>Remark 16</strong> (Technology drift). <em>The set of
 candidate keystone structures evolves with technology. A keystone that
 was <span class="math inline">\preceq</span>-minimal at time <span
 class="math inline">t_0</span> may become non-minimal at <span
@@ -2232,7 +2473,7 @@ remains blocking. Under the scope and damage apparatus already proved
 for CR, the refinement test inherits the damage bound and convergence
 theorems.</p>
 <div id="cor:refinement_damage" class="corollary">
-<p><strong>Corollary 4</strong> (Keystone-refinement under CR damage
+<p><strong>Corollary 5</strong> (Keystone-refinement under CR damage
 bound). <em>A keystone-refinement test satisfies the damage bound of
 Theorem <a href="#thm:damage_bound" data-reference-type="ref"
 data-reference="thm:damage_bound">1</a>: worst-case <span
@@ -2255,7 +2496,7 @@ data-reference="thm:damage_bound">1</a>(c)) apply without
 modification.</em></p>
 </div>
 <div id="cor:refinement_convergence" class="corollary">
-<p><strong>Corollary 5</strong> (Convergence of refinement tests).
+<p><strong>Corollary 6</strong> (Convergence of refinement tests).
 <em>Under the operating assumptions of Theorem <a
 href="#thm:convergence" data-reference-type="ref"
 data-reference="thm:convergence">2</a> (full-exercise regime), repeated
@@ -2271,7 +2512,7 @@ data-reference="thm:convergence">2</a>(d) applied to the refinement-test
 observation model.</em></p>
 </div>
 <div id="rem:two_failure_modes" class="remark">
-<p><strong>Remark 15</strong> (Two failure modes of a restriction).
+<p><strong>Remark 17</strong> (Two failure modes of a restriction).
 <em>A restriction can be wrong in two ways:</em></p>
 <ul>
 <li><p><em>The pathway no longer activates at all; the risk has
@@ -2287,7 +2528,7 @@ blocking structure <span class="math inline">K_{\mathrm{narrow}} \prec
   K_{\mathrm{current}}</span> available. Detected by keystone-refinement
 testing (Corollary <a href="#cor:refinement_convergence"
 data-reference-type="ref"
-data-reference="cor:refinement_convergence">5</a>): the current
+data-reference="cor:refinement_convergence">6</a>): the current
 framework finds that <span
 class="math inline">K_{\mathrm{narrow}}</span> suffices and the
 difference keystones can be released.</em></p></li>
@@ -2301,7 +2542,7 @@ candidate: a restriction that cannot be fully lifted may still admit
 refinement.</em></p>
 </div>
 <div id="rem:refinement_policy" class="remark">
-<p><strong>Remark 16</strong> (Meta-policy for refinement). <em>The
+<p><strong>Remark 18</strong> (Meta-policy for refinement). <em>The
 test-initiation criteria of Section <a href="#sec:meta_policy"
 data-reference-type="ref" data-reference="sec:meta_policy">7</a> extend
 to refinement. The information value of a refinement test is the
@@ -2604,6 +2845,43 @@ cross-substrate-isolated from the agent-claim channel because it arises
 from direct poset-state measurement rather than agent-mediated
 report. </p>
 </div>
+<div id="rem:outcome_vs_occurrence" class="remark">
+<p><strong>Remark 19</strong> (Test outcome vs. test occurrence).
+<em>The independence claim above holds at the level of test
+<em>outcome</em> given test <em>occurrence</em>: <span
+class="math inline">O_n</span> is independent of agent reports
+conditional on the test having been run. The test <em>occurrence</em>
+itself, however, is a function of the meta-policy (Section <a
+href="#sec:meta_policy" data-reference-type="ref"
+data-reference="sec:meta_policy">7</a>), which reads from agent reports
+to decide whether a restriction is stale and whether the cost–benefit
+favours testing. For the log-odds aggregation of <d-cite key="lasser2026scm"></d-cite>, the distinction matters only if the
+aggregation conditions on test-occurrence when combining evidence with
+other channels; the protocol does not. The joint-factorization
+assumption of <d-cite key="lasser2026exo"></d-cite>
+is satisfied in the outcome-conditional-on-occurrence sense, not in the
+occurrence-marginal sense.</em></p>
+</div>
+<div id="rem:trust_weight_composition" class="remark">
+<p><strong>Remark 20</strong> (Trust-weight composition with detection
+integrity). <em>The trust weight of <span class="math inline">1</span>
+on the CR channel above presupposes that the detection apparatus is
+correctly calibrated and the scope correctly constructed. Both are
+themselves subject to integrity constraints. A robust composition caps
+the CR-channel trust weight by the integrity guarantee of the underlying
+detection apparatus: <span class="math inline">w_{\mathrm{CR}} = \min(1,
+w_{\mathrm{integrity}})</span>, where <span
+class="math inline">w_{\mathrm{integrity}}</span> is obtained from the
+cryptographic commitment apparatus of <d-cite key="lasser2026exo"></d-cite> when one applies, or from the
+institutional integrity assessment otherwise. Under this composition,
+integrity failures in the detection apparatus propagate to the risk
+estimate with bounded weight rather than full weight; weight-<span
+class="math inline">1</span> trust on the CR channel is the special case
+<span class="math inline">w_{\mathrm{integrity}} \geq 1</span>, which is
+rarely defensible in practice. The composition makes explicit that the
+CR channel’s trust inherits from the trust mechanism rather than being
+independent of it.</em></p>
+</div>
 <h1 id="sec:discussion">Discussion</h1>
 <h2 id="what-this-paper-accomplishes">What this paper accomplishes</h2>
 <h4 id="breaks-the-wamura-problem.">Breaks the Wamura problem.</h4>
@@ -2707,8 +2985,59 @@ data-reference="thm:convergence">2</a>’s log-likelihood-ratio argument
 still converges, but it converges to the wrong hypothesis: under the
 misspecified model, the posterior concentrates on whichever hypothesis
 is closer in KL-divergence to the true distribution, not on the true
-hypothesis. Detector calibration is therefore a prerequisite for the
-convergence guarantee to carry its safety interpretation.</p>
+hypothesis. A concrete sign-preservation bound delineates the safe
+region: the convergent hypothesis is correct iff the modeled likelihoods
+<span class="math inline">L_0</span> and <span
+class="math inline">L_1</span> have the correct sign relative to the
+true distribution—formally, <span
+class="math inline">E_{H_0^{\mathrm{true}}}[\log L] &lt; 0</span> and
+<span class="math inline">E_{H_1^{\mathrm{true}}}[\log L] &gt; 0</span>.
+In the binary model, this reduces to: if Assumption <a href="#ass:T1"
+data-reference-type="ref" data-reference="ass:T1">4</a> holds for the
+modeled <span class="math inline">(\beta, \alpha_{\mathrm{fp}})</span>
+and the true <span class="math inline">(\beta^\star,
+\alpha_{\mathrm{fp}}^\star)</span> jointly satisfy <span
+class="math inline">(1 - \beta^\star)/\alpha_{\mathrm{fp}}^\star &gt;
+1</span> and <span class="math inline">\beta^\star/(1 -
+\alpha_{\mathrm{fp}}^\star) &lt; 1</span> (i.e., the true detector also
+has nontrivial power), then the convergent hypothesis is correct, with
+rate degraded by the KL gap between modeled and true distributions.
+Misspecification flips the convergent hypothesis only when the modeled
+detector is qualitatively miscalibrated (modeled <span
+class="math inline">L_1</span> on the wrong side of <span
+class="math inline">1</span>); quantitative misestimation only slows
+convergence. Detector calibration is therefore a prerequisite for the
+convergence guarantee to carry its safety interpretation, but the bound
+is robust to plausible-magnitude calibration error.</p>
+<h4
+id="scope-existence-for-densely-cooperative-capabilities.">Scope-existence
+for densely cooperative capabilities.</h4>
+<p>Remark <a href="#rem:scope_existence" data-reference-type="ref"
+data-reference="rem:scope_existence">6</a> names scope existence as a
+scheduling precondition that must be enforced by the meta-policy before
+a CR test is initiated. For application domains where
+cooperative-capability structure is dense, this precondition is more
+than a technical caveat. AI capability spaces in particular have the
+property that almost every capability cooperates with almost every other
+through the shared computational substrate; in such spaces, <span
+class="math inline">\mathrm{max\_contraction}(P)</span> on the full
+poset may dominate any acceptable <span
+class="math inline">\epsilon</span>, and any scope satisfying
+Definition <a href="#def:test_scope" data-reference-type="ref"
+data-reference="def:test_scope">4</a> may be similarly infeasible. We do
+not have a quantitative estimate for how often feasible scopes exist in
+AI capability domains. For some risk classes—capabilities with strongly
+localised cooperative structure (e.g., specific tool-use patterns
+confined to a domain)—feasible scopes plausibly exist; for others
+(capabilities with broad cooperative reach, e.g., general reasoning)
+they may not. When feasible scopes do not exist, the alternative
+mechanisms named in Remark <a href="#rem:scope_existence"
+data-reference-type="ref"
+data-reference="rem:scope_existence">6</a>—structural discovery <d-cite key="lasser2026horizon"></d-cite> or
+scope-refinement that trades coverage for feasibility—must be deployed
+instead. Controlled relaxation is not a universal remedy for the Wamura
+problem; it is a remedy for the subset of risks where bounded scopes
+exist.</p>
 <h2 id="open-questions">Open questions</h2>
 <h4 id="damage-tolerance-calibration.">Damage-tolerance
 calibration.</h4>
@@ -3273,7 +3602,7 @@ class="math inline">\mathrm{KL}_{H_1} &gt; 0</span>, and symmetrically
 for <span class="math inline">H_0</span>.</p>
 <h2 id="proof-of-corollary-corn_clear">Proof of Corollary <a
 href="#cor:n_clear" data-reference-type="ref"
-data-reference="cor:n_clear">2</a></h2>
+data-reference="cor:n_clear">3</a></h2>
 <p>Under <span class="math inline">H_0</span> with all <span
 class="math inline">n</span> tests producing <span
 class="math inline">O_n = 0</span>, <span
@@ -3672,14 +4001,14 @@ class="math inline">N_{\mathrm{clear}}</span></td>
 <td style="text-align: left;">Tests required to clear a false claim to
 <span class="math inline">p_{\mathrm{clear}}</span></td>
 <td style="text-align: left;">Cor. <a href="#cor:n_clear"
-data-reference-type="ref" data-reference="cor:n_clear">2</a></td>
+data-reference-type="ref" data-reference="cor:n_clear">3</a></td>
 </tr>
 <tr>
 <td style="text-align: left;"><span
 class="math inline">p_{\mathrm{clear}}</span></td>
 <td style="text-align: left;">Target posterior for clearing</td>
 <td style="text-align: left;">Cor. <a href="#cor:n_clear"
-data-reference-type="ref" data-reference="cor:n_clear">2</a></td>
+data-reference-type="ref" data-reference="cor:n_clear">3</a></td>
 </tr>
 <tr>
 <td style="text-align: left;"><span

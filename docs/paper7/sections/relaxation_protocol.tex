@@ -232,11 +232,30 @@ $\rS = 0$ for that
 loop~\citep[Proposition~4]{lasser2026phase}.  The self-correction
 rate is zero precisely because the Wamura asymmetry prevents
 evidence accumulation on the restricted dimension.  Controlled
-relaxation makes $\rS > 0$ by injecting exercise-regime
-observations into the evidence stream: the log-odds update
-of~\eqref{eq:update_pos}--\eqref{eq:update_neg} has nonzero
-expected drift toward the true hypothesis under
-Assumption~\ref{ass:T1}, and that drift is the restoring force
-required by the design criterion
-of~\citep[Theorem~2]{lasser2026phase} to lift Loop~3 off the
-phase-boundary degeneracy.
+relaxation injects discrete observation events at scheduled
+test times, producing a positive \emph{time-averaged} exogenous
+correction rate $\rS^{\mathrm{avg}} > 0$ on the restricted
+dimension.  The compositional detail is worth being explicit
+about: $\rS$ as defined in~\citep{lasser2026phase} is
+$\inf_t \alpha(t) \cdot c_{\mathrm{S}}$, an infimum over the
+trajectory.  Between CR test events the per-step rate
+$\alpha(t) \cdot c_{\mathrm{S}}$ on the restricted dimension is
+zero, so the inf-form $\rS$ may remain zero even with periodic
+testing.  The phase-boundary condition that actually closes the
+proof, however, is the uniform-contraction condition on
+\emph{time-averaged} log-multiplicative factors
+\citep[Theorem~1(a) and Eq.~30]{lasser2026phase}; the inf-form
+$\rS$ is upstream notational convenience.  CR delivers a positive
+time-average via the discrete log-odds drift
+of~\eqref{eq:update_pos}--\eqref{eq:update_neg}, which has
+nonzero expected magnitude per test under
+Assumption~\ref{ass:T1}.  The Wamura degeneracy that
+\citep[Proposition~4]{lasser2026phase} characterises is the case
+where the rate is identically zero across all $t$ (no exogenous
+channel exists at all on the restricted dimension); CR resolves
+that degeneracy by creating exogenous channel events, satisfying
+the uniform-contraction condition in time-average without
+requiring the inf to be positive between scheduled tests.  The
+restoring force that lifts Loop~3 off the phase-boundary
+degeneracy is therefore the time-averaged drift, not an
+instantaneous rate.

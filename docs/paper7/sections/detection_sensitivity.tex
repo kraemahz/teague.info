@@ -150,6 +150,35 @@ cross-substrate channels provide independent detection
 opportunities that same-substrate channels may not (due to
 correlated failures), and their isolation is unconditional.
 
+\begin{remark}[Cross-substrate-only rate recovery]
+\label{rem:cross_substrate_rate}
+The interaction between Assumptions~\ref{ass:D1}
+(cross-channel independence) and~\ref{ass:D2} (temporal
+independence) is subtle.  A common-cause failure mode that
+violates~\ref{ass:D1} for same-substrate channels (e.g., a shared
+software dependency that miscalibrates an entire silicon
+detector cohort) typically also violates~\ref{ass:D2} for the
+same-substrate temporal stream (the failure persists across
+time).  The actually-dangerous regime is therefore
+\emph{joint} same-substrate failure across channels and across
+time.  The conservative bound $\deltaagg^{\mathrm{cons}}$
+of~\eqref{eq:delta_agg_conservative} protects against both
+simultaneously: cross-substrate channels, by~\citep[Proposition~5]{lasser2026exo}'s
+unconditional channel-isolation, satisfy~\ref{ass:D1}
+\emph{and}~\ref{ass:D2}(a) without further assumption, because
+the temporal failure of a biological observer is independent of
+the temporal failure of a silicon observer.  Under
+$\deltaagg^{\mathrm{cons}} > 0$, Theorem~\ref{thm:convergence}'s
+KL rate is recovered up to a factor that depends only on the
+ratio of cross-substrate to all-channel detection probability:
+$\KL^{\mathrm{cons}} / \KL^{\mathrm{full}} \geq
+\deltaagg^{\mathrm{cons}} / \deltaagg$ in the regime
+$\deltaagg \ll 1$, with equality in the limit of a single
+dominant channel.  Convergence is preserved unconditionally; the
+constant factor degradation is the cost of the joint failure
+mode.
+\end{remark}
+
 \subsection{Evidence strength of a single test}
 
 \begin{proposition}[Evidence Strength of Controlled Relaxation]

@@ -158,3 +158,43 @@ signal is cross-substrate-isolated from the
 agent-claim channel because it arises from direct poset-state
 measurement rather than agent-mediated report.
 \end{proof}
+
+\begin{remark}[Test outcome vs.\ test occurrence]
+\label{rem:outcome_vs_occurrence}
+The independence claim above holds at the level of test
+\emph{outcome} given test \emph{occurrence}: $O_n$ is
+independent of agent reports conditional on the test having
+been run.  The test \emph{occurrence} itself, however, is a
+function of the meta-policy (Section~\ref{sec:meta_policy}),
+which reads from agent reports to decide whether a restriction
+is stale and whether the cost--benefit favours testing.  For
+the log-odds aggregation
+of~\citep[Definition~5]{lasser2026scm}, the distinction matters
+only if the aggregation conditions on test-occurrence when
+combining evidence with other channels; the protocol does not.
+The joint-factorization assumption
+of~\citep{lasser2026exo} is satisfied in the
+outcome-conditional-on-occurrence sense, not in the
+occurrence-marginal sense.
+\end{remark}
+
+\begin{remark}[Trust-weight composition with detection integrity]
+\label{rem:trust_weight_composition}
+The trust weight of $1$ on the CR channel above presupposes
+that the detection apparatus is correctly calibrated and the
+scope correctly constructed.  Both are themselves subject to
+integrity constraints.  A robust composition caps the
+CR-channel trust weight by the integrity guarantee of the
+underlying detection apparatus:
+$w_{\mathrm{CR}} = \min(1, w_{\mathrm{integrity}})$, where
+$w_{\mathrm{integrity}}$ is obtained from the cryptographic
+commitment apparatus of~\citep{lasser2026exo} when one applies,
+or from the institutional integrity assessment otherwise.  Under
+this composition, integrity failures in the detection apparatus
+propagate to the risk estimate with bounded weight rather than
+full weight; weight-$1$ trust on the CR channel is the special
+case $w_{\mathrm{integrity}} \geq 1$, which is rarely defensible
+in practice.  The composition makes explicit that the CR
+channel's trust inherits from the trust mechanism rather than
+being independent of it.
+\end{remark}
