@@ -1,43 +1,24 @@
 \section{Notation Summary}
 \label{app:notation}
 
-Table~\ref{tab:notation7} collects the principal symbols used in
-the paper.  Symbols inherited from earlier
-papers~\citep{lasser2026poset, lasser2026horizon,
-lasser2026scm, lasser2026exo, lasser2026phase} retain their
-meanings and are cited rather than redefined.
+Table~\ref{tab:notation7} collects the principal symbols specific
+to this paper.  Symbols inherited from earlier
+papers~\citep{lasser2026poset, lasser2026horizon, lasser2026scm,
+lasser2026exo, lasser2026phase}---including $\volL$
+(capability volume), $G_t$ (global capability graph), $P$, $P_t$
+(capability poset), $\Pathway$ (exercise pathway), $\Risk$,
+$\Risk_j$ (concentration risk), $a_j$ (agent index), and
+$T^{\mathrm{risk}}_j$ (risk-trust factor)---retain their original
+meanings and are not redefined here.
 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{@{}p{3.0cm}p{7.5cm}p{4.2cm}@{}}
+\begin{tabular}{@{}p{3.0cm}p{7.6cm}p{3.9cm}@{}}
 \toprule
 \textbf{Symbol} & \textbf{Definition} & \textbf{Introduced in} \\
 \midrule
-\multicolumn{3}{l}{\emph{Inherited machinery}} \\
-$\volL$
-  & Capability volume
-  & \citep[Axiom system]{lasser2026poset} \\
-$G_t$
-  & Global capability graph at time $t$
-  & \citep{lasser2026horizon} \\
-$P$, $P_t$
-  & Capability poset (full / at time $t$)
-  & \citep{lasser2026poset, lasser2026phase} \\
-$\Pathway$
-  & Exercise pathway
-  & \citep[Def.~2]{lasser2026horizon} \\
-$\Risk$, $\Risk_j$
-  & Concentration risk (total / keystone-indexed)
-  & \citep[Def.~3]{lasser2026horizon} \\
-$a_j$
-  & Agent index
-  & \citep{lasser2026horizon} \\
-$T^{\mathrm{risk}}_j$
-  & Risk-trust factor of agent $a_j$
-  & \citep[Def.~4]{lasser2026scm} \\
-\midrule
-\multicolumn{3}{l}{\emph{Risk-restriction pair and observation regimes}} \\
+\multicolumn{3}{l}{\emph{Risk-restriction object}} \\
 $R$
   & Risk claim
     $(a_j, (d_1, \ldots, d_k), \Pathway, \pR)$
@@ -48,138 +29,75 @@ $\Xirestrict$
 $\pR$, $\pR(t)$
   & Posterior probability the risk claim is valid
   & Def.~\ref{def:risk_restriction} \\
-Restricted regime
-  & $\Xirestrict$ active; pathway cannot activate
-  & Def.~\ref{def:obs_regime} \\
-Exercise regime
-  & $\Xirestrict$ lifted; pathway may activate
-  & Def.~\ref{def:obs_regime} \\
 $p_{\mathrm{thresh}}$
-  & Restriction-triggering threshold for $\pR$
+  & Restriction-firing threshold for $\pR$
   & Prop.~\ref{prop:monotone_overcaution} \\
 \midrule
-\multicolumn{3}{l}{\emph{Controlled relaxation test object}} \\
+\multicolumn{3}{l}{\emph{Controlled relaxation test}} \\
 $T$
-  & Controlled relaxation test
+  & CR test tuple
     $(R, \Xirestrict, \scope, \testdur, \damagebound)$
   & Def.~\ref{def:cr_test} \\
 $\scope \subseteq P$
   & Test scope (bounded sub-poset)
-  & Def.~\ref{def:cr_test}, Def.~\ref{def:test_scope} \\
-$\testdur \in \mathbb{N}$
-  & Test duration (steps)
-  & Def.~\ref{def:cr_test} \\
-$\damagebound > 0$
-  & Damage tolerance (max.\ acceptable $\volL$-contraction)
-  & Def.~\ref{def:cr_test} \\
-$\maxcon(\scope)$
-  & Max.\ $\volL$-contraction over all pathways in $\scope$
-  & Def.~\ref{def:test_scope}, Lem.~\ref{lem:computable_maxcon} \\
-$\deltairrev(\Pathway)$
-  & Irreversible fraction of a pathway's contraction
+  & Def.~\ref{def:cr_test}, \ref{def:test_scope} \\
+$\testdur \in \mathbb{N}$,\ $\testopt$,\ $\testmin$
+  & Test duration; info-value-optimal; target-$\epsilon_\beta$ minimum
+  & Def.~\ref{def:cr_test}, Prop.~\ref{prop:tau_opt}, \ref{prop:detection_bounds} \\
+$\damagebound$,\ $\damagebound_{\mathrm{user}}$,\ $\damagebound_{\mathrm{total}}$
+  & Damage tolerance; user ceiling; aggregate budget
+  & Def.~\ref{def:cr_test}, \ref{def:test_initiation}, \ref{def:test_schedule} \\
+$\maxcon(\scope)$,\ $\partial \scope$
+  & Max.\ $\volL$-contraction in $\scope$; cooperative surface
+  & Lem.~\ref{lem:computable_maxcon} \\
+$\deltairrev$,\ $\deltairrev^{\max}$
+  & Irreversible pathway fraction; maximum within scope
   & Def.~\ref{def:test_scope}(iii) \\
-$\deltairrev^{\max}$
-  & $\max_{\Pathway} \deltairrev(\Pathway)$ within scope
-  & Thm.~\ref{thm:damage_bound}(b) \\
-$\partial \scope$
-  & Cooperative surface of $\scope$
-  & App.~\ref{app:proof_damage_bound} \\
 \midrule
-\multicolumn{3}{l}{\emph{Binary observation model}} \\
-$A_n \in \{0,1\}$
-  & Latent pathway-activation indicator, test $n$
+\multicolumn{3}{l}{\emph{Binary observation model and detection}} \\
+$A_n$,\ $O_n \in \{0,1\}$
+  & Latent activation; observed contraction at test $n$
   & Sec.~\ref{sec:relaxation_protocol} \\
-$O_n \in \{0,1\}$
-  & Observed contraction indicator, test $n$
+$H_0$,\ $H_1$
+  & Pathway-harmless ($\theta = 0$) vs.\ -dangerous ($\theta = \thetaone$)
   & Sec.~\ref{sec:relaxation_protocol} \\
-$H_0$
-  & Pathway-harmless hypothesis ($\theta = 0$)
+$\thetaone$,\ $\beta$,\ $\alphafp$
+  & Activation rate ($H_1$); false-negative; false-positive
   & Sec.~\ref{sec:relaxation_protocol} \\
-$H_1$
-  & Pathway-dangerous hypothesis ($\theta = \thetaone$)
-  & Sec.~\ref{sec:relaxation_protocol} \\
-$\thetaone \in (0,1]$
-  & Fixed activation rate under $H_1$
-  & Sec.~\ref{sec:relaxation_protocol} \\
-$\beta$, $\beta(\testdur)$
-  & False-negative rate over test window
-  & Sec.~\ref{sec:relaxation_protocol},
-    Def.~\ref{def:detection_sensitivity} \\
-$\alphafp$
-  & Per-test false-positive rate
-  & Sec.~\ref{sec:relaxation_protocol} \\
-$\Lzero$, $\Lone$
-  & Per-test likelihood ratios for $O=0$ and $O=1$
+$\Lzero$,\ $\Lone$
+  & Per-test likelihood ratios for $O = 0$, $O = 1$
   & Eq.~\eqref{eq:L_defs} \\
-$\logit p = \log(p / (1-p))$
-  & Log-odds transform
-  & Eq.~\eqref{eq:update_pos} \\
+$\delta_i$,\ $\deltaagg$
+  & Per-channel; aggregate detection probability
+  & Def.~\ref{def:detection_sensitivity}, Eq.~\eqref{eq:delta_agg} \\
+$\deltacross$,\ $\deltaagg^{\mathrm{cons}}$
+  & Cross-substrate; conservative aggregate
+  & Prop.~\ref{prop:detection_bounds}(c), Eq.~\eqref{eq:delta_agg_conservative} \\
+$\testmix$,\ $k_{\mathrm{act}}$
+  & Detector mixing time; activation duration
+  & Ass.~\ref{ass:D0}--\ref{ass:D2} \\
 \midrule
-\multicolumn{3}{l}{\emph{Detection architecture}} \\
-$\delta_i$
-  & Per-step detection probability of channel $c_i$
-  & Def.~\ref{def:detection_sensitivity} \\
-$\deltaagg$
-  & Aggregate per-step detection probability
-  & Eq.~\eqref{eq:delta_agg} \\
-$\deltaagg^{\mathrm{cons}}$
-  & Conservative cross-substrate-only aggregate
-  & Eq.~\eqref{eq:delta_agg_conservative} \\
-$\deltacross$
-  & Per-step detection from cross-substrate channel(s)
-  & Prop.~\ref{prop:detection_bounds}(c) \\
-$\testmix$
-  & Detector mixing time
-  & Ass.~\ref{ass:D2} \\
-$k_{\mathrm{act}}$
-  & Activation duration (steps)
-  & Ass.~\ref{ass:D0} \\
-$\testmin$
-  & Minimum test duration for target $\epsilon_\beta$
-  & Prop.~\ref{prop:detection_bounds}(b) \\
-\midrule
-\multicolumn{3}{l}{\emph{Convergence and meta-policy}} \\
-$\KL(\cdot \,\|\, \cdot)$
+\multicolumn{3}{l}{\emph{Convergence, meta-policy, refinement}} \\
+$\KL$
   & Kullback--Leibler divergence
   & Thm.~\ref{thm:convergence}(d) \\
-$N_{\mathrm{clear}}$
-  & Tests required to clear a false claim to $p_{\mathrm{clear}}$
+$N_{\mathrm{clear}}$,\ $p_{\mathrm{clear}}$
+  & Tests required to clear a false claim; target posterior
   & Cor.~\ref{cor:n_clear} \\
-$p_{\mathrm{clear}}$
-  & Target posterior for clearing
-  & Cor.~\ref{cor:n_clear} \\
-$\IV(T)$
-  & Expected information value of test $T$
-  & Eq.~\eqref{eq:iv_criterion} \\
-$T_{\mathrm{stale}}$
-  & Minimum age of restriction before re-test
-  & Def.~\ref{def:test_initiation}(i) \\
-$\damagebound_{\mathrm{user}}$
-  & User-controlled ceiling on autonomous $\damagebound$
-  & Def.~\ref{def:test_initiation}(iv) \\
-$\testopt$
-  & Information-value-optimal test duration
-  & Prop.~\ref{prop:tau_opt} \\
+$\IV(T)$,\ $T_{\mathrm{stale}}$
+  & Expected information value; minimum re-test age
+  & Def.~\ref{def:test_initiation} \\
 $\Sigma$
   & Test schedule
   & Def.~\ref{def:test_schedule} \\
-$\damagebound_{\mathrm{total}}$
-  & Aggregate damage budget across concurrent tests
-  & Def.~\ref{def:test_schedule}(ii) \\
-\midrule
-\multicolumn{3}{l}{\emph{Keystone refinement}} \\
 $\keystonestruct$
-  & Keystone structure (capabilities whose restriction
-    realises $\Xirestrict$)
+  & Keystone structure realising $\Xirestrict$
   & Def.~\ref{def:keystone_structure} \\
-$\keystonestruct_1 \preceq \keystonestruct_2$
-  & Keystone partial order ($\subseteq$ on blocking structures)
-  & Def.~\ref{def:keystone_order} \\
-$\keystonestruct \vdash \Pathway$
-  & Structure $\keystonestruct$ blocks pathway $\Pathway$
-  & Def.~\ref{def:keystone_structure} \\
+$\keystonestruct_1 \preceq \keystonestruct_2$,\ $\keystonestruct \vdash \Pathway$
+  & Keystone partial order; ``blocks pathway'' relation
+  & Def.~\ref{def:keystone_structure}--\ref{def:keystone_order} \\
 \bottomrule
 \end{tabular}
-\caption{Principal notation.}
+\caption{Principal notation specific to this paper.}
 \label{tab:notation7}
 \end{table}
