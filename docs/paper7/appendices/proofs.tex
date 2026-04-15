@@ -152,11 +152,12 @@ $\scope \sqcup \partial \scope \sqcup (P \setminus (\scope \cup
 \partial \scope)$, $d$ is not in any cooperative capability
 spanning $\scope$ and $P \setminus \scope$, and no pathway in
 $\Pi(\scope)$ has prerequisites or intermediate transitions
-touching $d$.  Since a pathway's exercise probability
-\citep[Definition~2]{lasser2026horizon} is a function of its
-prerequisite set and intermediate transitions, and the test
-modifies only capability-availability within $\scope$ (the
-only capabilities that change status during the test), the
+touching $d$.  The test modifies only capability-availability
+within $\scope$ (the only capabilities whose status changes),
+so the induced subgraph of $G_t$ restricted to $d$'s pathway
+support is unchanged.  Since a pathway's exercise probability
+\citep[Definition~2]{lasser2026horizon} takes $G_t$ as an
+argument, and the relevant portion of $G_t$ is invariant, the
 exercise probability of $d$'s pathways is unchanged during
 the test.  For
 $c \in \partial \scope$, the forward-reachability closure
@@ -182,14 +183,13 @@ the same constant $L$ that bounds pathway length (satisfied
 whenever cross-boundary cascades cannot chain more than
 pathway-length-many cooperative hops before terminating),
 enumerating the cooperative surface $\partial \scope$ and its
-forward-reachability chains is $O(|P|^L)$.  Taking the maximum
-across enumerated pathways and adding cooperative-surface
-terms yields $\maxcon(\scope)$ in $O(|\scope|^L \cdot |\scope|
-+ |P|^L) = O(|P|^{L+1})$ time, which matches the asserted
-$O(|\scope|^L)$ bound up to the bounded pathway-evaluation
-factor and the cooperative-surface contribution.  When the
-cooperative forward-reachability depth $L'$ exceeds $L$, the
-bound becomes $O(|P|^{\max(L+1, L')})$.
+forward-reachability chains is $O(|P|^{L'})$.  Taking the
+maximum across enumerated pathways and adding
+cooperative-surface terms yields $\maxcon(\scope)$ in
+$O(|\scope|^L \cdot |\scope| + |P|^{L'}) = O(|\scope|^{L+1}
++ |P|^{L'})$ time, matching Lemma~\ref{lem:computable_maxcon}'s
+statement.  When $L' \leq L$, the second term is dominated and
+the bound simplifies to $O(|P|^{L+1})$.
 
 \subsection{Proof of Proposition~\ref{prop:detection_bounds}}
 

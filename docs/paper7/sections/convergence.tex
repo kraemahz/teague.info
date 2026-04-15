@@ -101,7 +101,9 @@ relaxation tests for a risk-restriction pair
 $(R, \Xirestrict)$ with fixed parameters
 $(\scope, \testdur, \damagebound)$, under the binary formulation
 $H_0$ ($\theta = 0$) versus $H_1$ ($\theta = \thetaone$).  Under
-Assumptions~\ref{ass:T1}--\ref{ass:T5}:
+Assumptions~\ref{ass:T1}--\ref{ass:T5} in the full-exercise
+regime of Assumption~\ref{ass:T5} ($p_{\mathrm{ex}} = 1$,
+enforced by scope construction in Phase~1):
 \begin{itemize}
 \item[(a)] \textbf{Almost-sure convergence.}  Under the true
   hypothesis $H_j$ ($j \in \{0, 1\}$), the posterior converges
@@ -171,6 +173,23 @@ in~\citet{chernoff1952measure} gives the associated
 large-deviation exponent).  Full derivation in
 Appendix~\ref{app:proof_convergence}.
 \end{proof}
+
+\begin{remark}[Dependence on Theorem~\ref{thm:damage_bound}]
+\label{rem:convergence_depends_on_damage}
+Theorem~\ref{thm:convergence} is stated under the operating
+assumptions of Theorem~\ref{thm:damage_bound}: each test $T_n$
+is assumed to run with a feasible scope and to complete within
+the damage bound $\damagebound$.  When the safety cutoff of
+Theorem~\ref{thm:damage_bound}(b) fires, the resulting
+outcome is coded as $O_n = 0$ for the update (no contraction
+observed within the truncated window) with likelihood ratio
+$\Lzero$; the additional irreversible component from
+Theorem~\ref{thm:damage_bound}(b) does not affect the Bayesian
+update, only the realised $\volL$ loss.  If no feasible scope
+exists (Remark~\ref{rem:scope_existence}), the sequence
+$\{T_n\}$ is not realisable and Theorem~\ref{thm:convergence}
+does not apply.
+\end{remark}
 
 \subsection{Finite-sample guarantees}
 

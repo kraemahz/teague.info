@@ -140,6 +140,24 @@ by the test.  Full derivation is in Appendix~\ref{app:proofs},
 Section~\ref{app:proof_damage_bound}.
 \end{proof}
 
+\begin{remark}[Scope existence as a scheduling precondition]
+\label{rem:scope_existence}
+Theorem~\ref{thm:damage_bound} is stated conditionally on the
+existence of a scope satisfying Definition~\ref{def:test_scope}.
+For posets with dense cross-boundary cooperative structure, the
+cooperative-closure requirement may force $\scope = P$, in which
+case $\maxcon(P) \leq \damagebound$ may fail and no test is
+schedulable.  The feasibility condition is enforced by the
+meta-policy (Section~\ref{sec:meta_policy}, Definition~6,
+Phase~1); Theorem~\ref{thm:damage_bound} applies only when the
+meta-policy reports a feasible scope.  When no feasible scope
+exists, the restriction persists and the Wamura problem is not
+resolved for that specific risk claim by controlled relaxation;
+alternative mechanisms (structural discovery via
+\citep[Proposition~2]{lasser2026horizon}, or scope-refinement
+that trades coverage for feasibility) must apply.
+\end{remark}
+
 \begin{remark}[Why not $\deltairrev \leq 0$?]
 \label{rem:why_not_zero}
 The preemptive restriction
@@ -158,27 +176,35 @@ components.
 
 \begin{lemma}[Computable max\_contraction]
 \label{lem:computable_maxcon}
-For a finite sub-poset $\scope$ with bounded pathway length $L$,
-$\maxcon(\scope)$ is computable in $O(|\scope|^L)$ time by
-exhaustive pathway enumeration.
+For a finite sub-poset $\scope$ with bounded pathway length $L$
+and bounded cooperative-surface forward-reachability depth
+$L'$, $\maxcon(\scope)$ is computable in
+$O(|\scope|^{L+1} + |P|^{L'})$ time by exhaustive pathway
+enumeration together with enumeration of cross-boundary
+cooperative chains.  When the simplifying assumption $L' \leq L$
+holds (cross-boundary cascades cannot chain more than
+pathway-length-many cooperative hops), the bound simplifies to
+$O(|P|^{L+1})$.
 \end{lemma}
 
 \begin{proof}[Proof sketch]
 Pathway length is bounded
 in~\citep[Definition~2]{lasser2026horizon}.  The number of
-pathways is at most $|\scope|^L$ (each step selects a capability
-in $\scope$).  The $\volL$-contraction along each pathway is
-computable from the axioms
-M1--M6~\citep[Proposition~1]{lasser2026poset}.  Take the maximum
-across enumerated pathways and add the cooperative-surface terms
-from Definition~\ref{def:test_scope}(ii), which are finite by
-the bounded-fan-out structure of the cooperative surface.
+internal pathways is at most $|\scope|^L$ (each step selects a
+capability in $\scope$); each pathway contraction is computable
+from the axioms M1--M6~\citep[Proposition~1]{lasser2026poset} in
+$O(|\scope|)$ time.  The cooperative-surface terms from
+Definition~\ref{def:test_scope}(ii) require enumerating
+cross-boundary cooperative chains to depth $L'$, costing
+$O(|P|^{L'})$ in the worst case.  Take the maximum across
+internal pathways and add cooperative-surface terms.
 \end{proof}
 
 \begin{remark}[Computational tractability]
 \label{rem:computability}
-The $O(|\scope|^L)$ bound is exponential in pathway length but
-polynomial in scope size for fixed $L$.  Practical deployment
+The bound is exponential in pathway length and
+forward-reachability depth but polynomial in scope size for
+fixed $L, L'$.  Practical deployment
 requires either (a)~short pathway restrictions ($L \leq 3$,
 say), (b)~approximate bounds using the concentration-risk
 formula
