@@ -90,8 +90,11 @@ Definition~\ref{def:test_scope}.  Then:
   is bounded by $\damagebound$.
 \item[(b)] \textbf{Partial reversibility under reinstatement.}
   If the safety cutoff triggers at some step
-  $t' < t + \testdur$ (contraction within $\scope$ exceeds
-  $\damagebound$), reinstating $\Xirestrict$ at $t' + 1$ gives
+  $t' < t + \testdur$ (the detector reports contraction within
+  $\scope$ exceeding $\damagebound$; see
+  Section~\ref{sec:relaxation_protocol} Phase~2 for the
+  single-detector convention), reinstating $\Xirestrict$ at
+  $t' + 1$ gives
   $$
   \volL(G_{t'+1}) \geq \volL(G_t) - \damagebound
        - \deltairrev^{\max},

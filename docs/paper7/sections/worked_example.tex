@@ -147,9 +147,18 @@ $$
         \approx 0.9957.
 $$
 The risk estimate increases from $0.7$ to $0.996$, and the
-restriction is reinforced.  Maximum damage during the test was
-bounded by $\damagebound = 0.02 \cdot \volL$, which the
-cooperative-closure scope construction guarantees.
+restriction is reinforced.  In practice, with
+$\deltaagg = 0.95$, the detector almost surely fires at step~1
+(probability $0.95$), triggering the Phase~2 safety cutoff.
+Per Remark~\ref{rem:convergence_depends_on_damage}, the cutoff
+event is an $O_n = 1$ observation and the full-window $\Lone =
+99.9875$ used above is slightly conservative relative to the
+single-step likelihood ratio $(1-\beta)/\alphafp = 95$.  The
+realised damage is bounded by $2 \damagebound = 0.04 \cdot
+\volL$ by Theorem~\ref{thm:damage_bound}(b) (cutoff-truncated
+test with irreversible component $\leq \damagebound$), not by
+$\damagebound$ alone---the cooperative-closure scope
+construction guarantees both bounds.
 
 \subsection{Summary}
 
@@ -174,8 +183,8 @@ True risk, with CR
   & $H_1$
   & $1$
   & $0.996$
-  & $\leq \damagebound = 0.02 \cdot \volL$ (bounded by
-    Theorem~\ref{thm:damage_bound}) \\
+  & $\leq 2\damagebound = 0.04 \cdot \volL$ (cutoff-truncated
+    test, Theorem~\ref{thm:damage_bound}(b)) \\
 \bottomrule
 \end{tabular}
 \caption{Behaviour of controlled relaxation on the canonical
