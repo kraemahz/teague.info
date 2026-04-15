@@ -71,17 +71,24 @@ structure $\keystonestruct_{\mathrm{narrow}} \prec
 \label{def:refinement_test}
 A \emph{keystone-refinement test} for risk claim $R$ with current
 restriction realised by $\keystonestruct_{\mathrm{current}}$ is a
-controlled relaxation test
-$T = (R, \Xirestrict_{\mathrm{narrow}}, \scope, \testdur,
-\damagebound)$ where $\Xirestrict_{\mathrm{narrow}}$ is the
-restriction induced by
-$\keystonestruct_{\mathrm{narrow}} \prec
-\keystonestruct_{\mathrm{current}}$; the test lifts the
-\emph{difference}
+controlled relaxation test in the slots of
+Definition~\ref{def:cr_test} with the third slot taken to be the
+restriction \emph{being lifted}:
+$T = (R, \Xirestrict_{\mathrm{lifted}}, \scope, \testdur,
+\damagebound)$, where
+$\Xirestrict_{\mathrm{lifted}}$ is the restriction induced by the
+keystone difference
 $\keystonestruct_{\mathrm{current}} \setminus
-\keystonestruct_{\mathrm{narrow}}$ while keeping
-$\keystonestruct_{\mathrm{narrow}}$ restricted, under the scope and
-damage-bound conditions of Definition~\ref{def:cr_test}.
+\keystonestruct_{\mathrm{narrow}}$ for some candidate
+$\keystonestruct_{\mathrm{narrow}} \prec
+\keystonestruct_{\mathrm{current}}$.  The narrower structure
+$\keystonestruct_{\mathrm{narrow}}$ remains in force throughout
+the test as ambient restriction during $\scope$; the test asks
+whether $\keystonestruct_{\mathrm{narrow}} \vdash \Pathway$ holds
+empirically by exercising only the released keystones.  The
+scope-construction and damage-bound conditions of
+Definition~\ref{def:cr_test} apply unchanged with
+$\Xirestrict := \Xirestrict_{\mathrm{lifted}}$.
 \end{definition}
 
 The restriction is not fully lifted; only the keystones outside the
@@ -98,10 +105,14 @@ Theorem~\ref{thm:damage_bound}: worst-case
 $\volL$-contraction during the test is $\leq \damagebound$ and
 post-reinstatement is $\leq 2 \damagebound$.  The test is a
 specialisation of Definition~\ref{def:cr_test} with
-$\Xirestrict = \Xirestrict_{\mathrm{narrow}}$; the scope-bound
-construction (Definition~\ref{def:test_scope}) and the
-cooperative-closure argument (Theorem~\ref{thm:damage_bound}(c))
-apply without modification.
+$\Xirestrict := \Xirestrict_{\mathrm{lifted}}$
+(Definition~\ref{def:refinement_test}); $\maxcon(\scope)$ is
+computed over pathways that the released keystones permit,
+holding the unreleased $\keystonestruct_{\mathrm{narrow}}$
+restricted as ambient.  The scope-bound construction
+(Definition~\ref{def:test_scope}) and the cooperative-closure
+argument (Theorem~\ref{thm:damage_bound}(c)) apply without
+modification.
 \end{corollary}
 
 \begin{corollary}[Convergence of refinement tests]
@@ -140,10 +151,8 @@ A restriction can be wrong in two ways:
 Both modes are addressed by the same CR apparatus; the distinction
 is in which restriction the test probes (the full
 $\Xirestrict_{\mathrm{current}}$ for Mode A, the reduced
-$\Xirestrict_{\mathrm{narrow}}$ for Mode B).  A test sequence that
-has failed to detect $H_0$ under Mode A testing may still succeed
-under Mode B testing against a narrower candidate, so the two
-modes are not exclusive: restrictions that cannot be fully lifted
+$\Xirestrict_{\mathrm{narrow}}$ for Mode B).  A Mode A failure does not preclude Mode B success against a
+narrower candidate: a restriction that cannot be fully lifted
 may still admit refinement.
 \end{remark}
 
