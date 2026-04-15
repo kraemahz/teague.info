@@ -59,9 +59,13 @@ During the test window:
 \item Record all observations in the test log with timestamps and
   channel attributions (formalized in
   Section~\ref{sec:detection_sensitivity}).
-\item If $\volL$-contraction within $\scope$ exceeds $\damagebound$
-  at any step, immediately reinstate $\Xirestrict$ and terminate
-  the test early (safety cutoff).
+\item If the detection channel reports $\volL$-contraction within
+  $\scope$ exceeding $\damagebound$ at any step, immediately
+  reinstate $\Xirestrict$ and terminate the test early (safety
+  cutoff).  The cutoff and the Bayesian-update observable $O_n$
+  (Phase~3) read from the same noisy detector; a cutoff event is
+  therefore a detection event in the sense of $O_n = 1$, not a
+  separate exact-contraction channel.
 \end{itemize}
 
 \paragraph{Phase 3: Observation and Bayesian update.}

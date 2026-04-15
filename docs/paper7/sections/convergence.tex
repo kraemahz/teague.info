@@ -178,24 +178,34 @@ Appendix~\ref{app:proof_convergence}.
 \label{rem:convergence_depends_on_damage}
 Theorem~\ref{thm:convergence} is stated under the operating
 assumptions of Theorem~\ref{thm:damage_bound}: each test $T_n$
-is assumed to run with a feasible scope and to complete within
-the damage bound $\damagebound$.  When the safety cutoff of
-Theorem~\ref{thm:damage_bound}(b) fires, the resulting
-outcome is coded as $O_n = 0$ for the update (no contraction
-observed within the truncated window) with likelihood ratio
-$\Lzero$; the additional irreversible component from
-Theorem~\ref{thm:damage_bound}(b) does not affect the Bayesian
-update, only the realised $\volL$ loss.  If no feasible scope
-exists (Remark~\ref{rem:scope_existence}), the sequence
-$\{T_n\}$ is not realisable and Theorem~\ref{thm:convergence}
-does not apply.
+is assumed to run with a feasible scope.  Because the Phase~2
+safety-cutoff reads from the same noisy detector that supplies
+$O_n$ (Section~\ref{sec:relaxation_protocol}), a cutoff event
+\emph{is} an $O_n = 1$ observation with likelihood ratio
+$\Lone$---the cutoff fires precisely because the detector
+alarmed, so the cutoff is evidence for $H_1$, not a distinct
+event outside the observation model.  The window-truncation from
+early cutoff does mean the effective $\beta$ for that particular
+test is smaller than $\beta(\testdur)$ (the miss probability
+within $k \leq \testdur$ steps is $(1-\deltaagg)^k$); using the
+full-window $\Lone$ for a truncated test is therefore slightly
+conservative (understates the evidence) but remains a valid
+per-test lower bound on $|\Delta_{\log\mathrm{odds}}|$.  The
+irreversible-damage component from
+Theorem~\ref{thm:damage_bound}(b) affects the realised $\volL$
+loss, not the Bayesian update.  If no feasible scope exists
+(Remark~\ref{rem:scope_existence}), the sequence $\{T_n\}$ is
+not realisable and Theorem~\ref{thm:convergence} does not apply.
 \end{remark}
 
 \subsection{Finite-sample guarantees}
 
 \begin{corollary}[Minimum Tests to Clear a False Claim]
 \label{cor:n_clear}
-To reduce a false risk claim from prior $\pR(0)$ to posterior
+Under the operating assumptions of
+Theorem~\ref{thm:convergence} (full-exercise regime of
+Assumption~\ref{ass:T5}, $p_{\mathrm{ex}} = 1$), to reduce a
+false risk claim from prior $\pR(0)$ to posterior
 $\pR \leq p_{\mathrm{clear}}$ when $H_0$ is true and all $n$
 tests produce $O_n = 0$ (no spurious false positives), the
 required number of tests satisfies
@@ -250,12 +260,16 @@ broken by a small number of well-designed tests.
 \label{cor:ewma}
 When test outcomes are fed into the risk-trust EWMA
 of~\citep[Definition~4]{lasser2026scm} rather than a pure
-Bayesian update, the convergence is governed by the EWMA
-forgetting factor $\alpha_{\mathrm{risk}}$: the risk-trust
-variance $\sigma_j^{\mathrm{risk},2}(t_n)$ converges to
-$\mu_j^{\mathrm{risk}}$ in $L^2$ at the rate established
-in~\citep[Proposition~2]{lasser2026scm}, with the variance
-bound
+Bayesian update, the $L^2$ convergence bound below is
+regime-independent: it depends on the EWMA forgetting factor
+$\alpha_{\mathrm{risk}}$ and the dependency constant
+$C_{\mathrm{dep}}$, not on the per-observation likelihood
+form, so it holds under both the full-exercise and
+partial-exercise regimes of Assumption~\ref{ass:T5}.  The
+risk-trust variance $\sigma_j^{\mathrm{risk},2}(t_n)$
+converges to $\mu_j^{\mathrm{risk}}$ in $L^2$ at the rate
+established in~\citep[Proposition~2]{lasser2026scm}, with the
+variance bound
 $$
 \limsup_{t \to \infty}
   \Var\bigl[\sigma_j^{\mathrm{risk},2}(t)\bigr]
