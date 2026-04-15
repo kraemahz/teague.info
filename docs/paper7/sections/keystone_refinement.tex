@@ -1,0 +1,278 @@
+\section{Keystone-refinement tests}
+\label{sec:keystone_refinement}
+
+The machinery of
+Sections~\ref{sec:relaxation_protocol}--\ref{sec:convergence}
+addresses one failure mode of a long-timeline restriction: the
+restriction is \emph{obsolete}---the pathway no longer activates when
+exercised, so the restriction can be lifted entirely.  In practice a
+second failure mode is more common: the restriction is
+\emph{misconfigured}---the pathway still activates and lifting the
+restriction wholesale would remain dangerous, but technological
+progress has made narrower keystones available that would block the
+risk pathway without blocking adjacent benign pathways.  This section
+extends the controlled relaxation construction to handle the
+misconfiguration case.
+
+\subsection{Keystone structures and their partial order}
+
+A restriction $\Xirestrict$ is realised by restricting specific
+keystone capabilities in the tuple that would otherwise enable the
+risk pathway~\citep[Proposition~1]{lasser2026horizon}.  Different
+choices of which capabilities to restrict may block the same
+pathway.  We make this explicit.
+
+\begin{definition}[Keystone structure]
+\label{def:keystone_structure}
+Given a risk claim
+$R = (a_j, (d_1, \ldots, d_k), \Pathway, \pR)$, a
+\emph{keystone structure} for $R$ is a subset
+$\keystonestruct \subseteq \{d_1, \ldots, d_k\}$ whose restriction
+blocks the exercise pathway $\Pathway$: if every $d \in
+\keystonestruct$ is restricted, $\Pathway$ is not exercisable.  Write
+$\keystonestruct \vdash \Pathway$ when this holds.
+\end{definition}
+
+\begin{definition}[Keystone partial order]
+\label{def:keystone_order}
+Given two keystone structures $\keystonestruct_1, \keystonestruct_2$
+that both block $\Pathway$, write
+$\keystonestruct_1 \preceq \keystonestruct_2$ iff
+$\keystonestruct_1 \subseteq \keystonestruct_2$.  The relation
+$\preceq$ is a partial order on blocking keystone structures; a
+$\preceq$-minimal element is a \emph{minimal blocking keystone
+structure}.  Restriction cost is monotone along $\preceq$: narrower
+structures impose less restriction on adjacent capabilities.
+\end{definition}
+
+\begin{remark}[Technology drift]
+\label{rem:technology_drift}
+The set of candidate keystone structures evolves with technology.
+A keystone that was $\preceq$-minimal at time $t_0$ may become
+non-minimal at $t_1 > t_0$ if new capability differentiation
+(for instance, new manufacturing tolerances, new detection
+methods, or new isolation protocols) produces a finer keystone
+$\keystonestruct' \prec \keystonestruct$ that still blocks the
+pathway.  The framework's channel for surfacing such finer
+structures is the structural discovery
+value~\citep[Proposition~2]{lasser2026horizon}: if structural
+discovery reveals a new capability that enables a narrower
+blocking structure, the discovery is value-positive regardless of
+whether the refinement is subsequently accepted.
+\end{remark}
+
+\subsection{Refinement tests as controlled relaxation}
+
+A keystone-refinement test probes whether a candidate narrower
+structure $\keystonestruct_{\mathrm{narrow}} \prec
+\keystonestruct_{\mathrm{current}}$ still blocks $\Pathway$.
+
+\begin{definition}[Keystone-refinement test]
+\label{def:refinement_test}
+A \emph{keystone-refinement test} for risk claim $R$ with current
+restriction realised by $\keystonestruct_{\mathrm{current}}$ is a
+controlled relaxation test
+$T = (R, \Xirestrict_{\mathrm{narrow}}, \scope, \testdur,
+\damagebound)$ where $\Xirestrict_{\mathrm{narrow}}$ is the
+restriction induced by
+$\keystonestruct_{\mathrm{narrow}} \prec
+\keystonestruct_{\mathrm{current}}$; the test lifts the
+\emph{difference}
+$\keystonestruct_{\mathrm{current}} \setminus
+\keystonestruct_{\mathrm{narrow}}$ while keeping
+$\keystonestruct_{\mathrm{narrow}}$ restricted, under the scope and
+damage-bound conditions of Definition~\ref{def:cr_test}.
+\end{definition}
+
+The restriction is not fully lifted; only the keystones outside the
+narrower structure are released.  The risk pathway must therefore
+route through $\keystonestruct_{\mathrm{narrow}}$ to activate, and
+$\keystonestruct_{\mathrm{narrow}}$ remains blocking.  Under the
+scope and damage apparatus already proved for CR, the refinement
+test inherits the damage bound and convergence theorems.
+
+\begin{corollary}[Keystone-refinement under CR damage bound]
+\label{cor:refinement_damage}
+A keystone-refinement test satisfies the damage bound of
+Theorem~\ref{thm:damage_bound}: worst-case
+$\volL$-contraction during the test is $\leq \damagebound$ and
+post-reinstatement is $\leq 2 \damagebound$.  The test is a
+specialisation of Definition~\ref{def:cr_test} with
+$\Xirestrict = \Xirestrict_{\mathrm{narrow}}$; the scope-bound
+construction (Definition~\ref{def:test_scope}) and the
+cooperative-closure argument (Theorem~\ref{thm:damage_bound}(c))
+apply without modification.
+\end{corollary}
+
+\begin{corollary}[Convergence of refinement tests]
+\label{cor:refinement_convergence}
+Under the operating assumptions of
+Theorem~\ref{thm:convergence} (full-exercise regime), repeated
+keystone-refinement tests of
+$\keystonestruct_{\mathrm{narrow}}$ converge almost surely to the
+correct binary hypothesis: $H_0$ that
+$\keystonestruct_{\mathrm{narrow}} \vdash \Pathway$ (the narrower
+structure blocks the pathway) versus $H_1$ that it does not.
+Convergence rate is the KL-divergence rate of
+Theorem~\ref{thm:convergence}(d) applied to the refinement-test
+observation model.
+\end{corollary}
+
+\begin{remark}[Two failure modes of a restriction]
+\label{rem:two_failure_modes}
+A restriction can be wrong in two ways:
+\begin{itemize}
+\item[\textbf{Mode A (Obsolete).}]  The pathway no longer activates
+  at all; the risk has disappeared from the current context.
+  Detected by controlled relaxation of the full restriction
+  (Theorem~\ref{thm:convergence}): $\pR$ converges to the
+  $H_0$-consistent value with $L_0 < 1$ per test.
+\item[\textbf{Mode B (Misconfigured).}]  The pathway still
+  activates if the restriction is lifted wholesale, but
+  technological differentiation has made a narrower blocking
+  structure $\keystonestruct_{\mathrm{narrow}} \prec
+  \keystonestruct_{\mathrm{current}}$ available.  Detected by
+  keystone-refinement testing
+  (Corollary~\ref{cor:refinement_convergence}): the current
+  framework finds that $\keystonestruct_{\mathrm{narrow}}$
+  suffices and the difference keystones can be released.
+\end{itemize}
+Both modes are addressed by the same CR apparatus; the distinction
+is in which restriction the test probes (the full
+$\Xirestrict_{\mathrm{current}}$ for Mode A, the reduced
+$\Xirestrict_{\mathrm{narrow}}$ for Mode B).  A test sequence that
+has failed to detect $H_0$ under Mode A testing may still succeed
+under Mode B testing against a narrower candidate, so the two
+modes are not exclusive: restrictions that cannot be fully lifted
+may still admit refinement.
+\end{remark}
+
+\begin{remark}[Meta-policy for refinement]
+\label{rem:refinement_policy}
+The test-initiation criteria of
+Section~\ref{sec:meta_policy} extend to refinement.  The
+information value of a refinement test is the expected reduction
+in restriction cost from adopting
+$\keystonestruct_{\mathrm{narrow}}$ if the test confirms it, minus
+the test's expected damage.  When a structural argument is
+available that $\keystonestruct_{\mathrm{narrow}} \vdash \Pathway$
+(for instance, a mechanical proof that the released keystones
+cannot participate in $\Pathway$), the structural argument is
+strictly preferable~\citep[Proposition~2]{lasser2026horizon}:
+refinement testing should be reserved for cases where the
+structural argument is unavailable or contested.
+\end{remark}
+
+\subsection{Worked example: nuclear dual-use keystone refinement}
+\label{sec:nuclear_example}
+
+The nuclear scenario from~\citep[Definition~2,
+discussion]{lasser2026horizon} illustrates Mode B in practice.  The
+capability tuple is $(d_1, d_2, d_3) = (\text{nuclear physics},
+\text{enrichment}, \text{weapons machining})$.  The exercise
+pathway $\Pathway = $ ``build and detonate a fission weapon''
+leads to large $\volL$-contraction proportional to the number of
+agents destroyed.
+
+\paragraph{Historical keystone choice.}
+Mid-20th-century technology did not operationally distinguish
+reactor-grade enrichment (3--5\% fissile content, using standard
+centrifuge cascades) from weapons-grade enrichment (90\%+, using
+the same cascade technology reconfigured for higher stage count).
+A centrifuge cascade capable of the former could in principle be
+reconfigured for the latter; separation at the level of individual
+keystones was not feasible.  The broad keystone structure
+\[
+\keystonestruct_{\mathrm{current}}
+   = \{d_1, d_2, d_3\}
+\]
+(restrict all three capabilities broadly) was adopted and blocks
+$\Pathway$ at maximum restriction cost.  Under the technology of
+the time, $\keystonestruct_{\mathrm{current}}$ was
+$\preceq$-minimal.
+
+\paragraph{Modern keystone availability.}
+Subsequent technological differentiation has exposed narrower
+keystones.  Modern isotope-separation technology distinguishes
+cascade configurations by separative work units (SWU) and stage
+count in ways that make weapons-grade enrichment identifiable
+independently of reactor-grade enrichment.  Weapons machining
+(specific tolerance classes for implosion lens fabrication) is
+likewise separable from general machining.  Modern candidate
+structures include
+\[
+\keystonestruct_{\mathrm{narrow}}
+   = \{d_2^{\mathrm{weapons\text{-}grade}},
+       d_3^{\mathrm{weapons\text{-}specific}}\}
+\]
+which restricts weapons-grade enrichment cascades and
+weapons-specific machining tolerances while permitting
+reactor-grade enrichment and general machining.  Under modern
+technology, $\keystonestruct_{\mathrm{narrow}} \prec
+\keystonestruct_{\mathrm{current}}$ if $\keystonestruct_{\mathrm{narrow}}
+\vdash \Pathway$.
+
+\paragraph{Refinement test.}
+A keystone-refinement test probes whether
+$\keystonestruct_{\mathrm{narrow}}$ suffices.  The scope $\scope$
+consists of a monitored civilian reactor development programme,
+exercising the reactor-pathway (reactor-grade enrichment, general
+machining) under $\keystonestruct_{\mathrm{narrow}}$; weapons-grade
+enrichment and weapons-specific machining remain restricted.  The
+detection channel monitors for indicators of weapons-pathway
+activation: enrichment to weapons-grade fissile content, diversion
+of reactor feedstock toward weapons-specific cascades, acquisition
+of weapons-specific machining tolerances.  Test duration is set
+by the time constant of the detection architecture on these
+indicators; damage tolerance $\damagebound$ bounds the realised
+contraction even under a diversion attempt bounded by the scope.
+
+\paragraph{Outcomes.}
+\begin{itemize}
+\item If $\keystonestruct_{\mathrm{narrow}} \vdash \Pathway$
+  (weapons pathway is not exercisable under
+  $\keystonestruct_{\mathrm{narrow}}$, modern technology
+  hypothesis): the test observes no weapons-pathway activation
+  over the test window, $\pR$ converges toward the consistent
+  hypothesis, and a refined restriction regime adopting
+  $\keystonestruct_{\mathrm{narrow}}$ becomes operationally
+  justified.  Civilian reactor development proceeds without
+  collateral restriction.
+\item If $\keystonestruct_{\mathrm{narrow}} \not\vdash \Pathway$
+  (the weapons pathway remains exercisable through some route
+  the narrower structure fails to block---for example, covert
+  diversion of reactor-grade enrichment toward weapons use via
+  routes modern detection would catch but not always): the test
+  observes weapons-pathway activation within $\scope$, the
+  safety cutoff fires, damage is bounded by $2 \damagebound$
+  (Theorem~\ref{thm:damage_bound}(b)), and
+  $\keystonestruct_{\mathrm{current}}$ remains in force.  The
+  refinement test itself is the evidence that broader
+  restriction remains needed under current technology.
+\end{itemize}
+
+\paragraph{Contrast with Mode A testing.}
+A Mode A test on the nuclear pathway would ask ``can
+$\keystonestruct_{\mathrm{current}}$ be lifted entirely?''  The
+pathway still operates; the Mode A test would detect weapons-pathway
+activation and correctly reject lifting the restriction.  But the
+Mode A finding does not address the operationally more interesting
+question: whether the \emph{scope} of restriction can be refined.
+Mode B testing is the mechanism for that refinement.  The two tests
+are complementary; the choice is not between them but between
+whether to perform one, the other, or (in practice) both under a
+programmatic review schedule.
+
+\paragraph{Applicability beyond nuclear.}
+The keystone-refinement pattern applies wherever a long-timeline
+restriction was adopted under technology that did not distinguish
+benign from risky keystones.  Environmental-contamination controls
+(persistent chemicals whose modern reformulations operate via
+different mechanisms), export controls on dual-use technology
+(where modern differentiation allows narrower controls), biomedical
+restrictions on gain-of-function research (where specific
+biocontainment tiers separate research protocols), and other
+regulatory domains exhibit the same structure.  In each, the
+framework's contribution is to formalise the refinement test as a
+bounded-damage empirical probe rather than a
+moratorium-vs.-wholesale-liberalisation binary.

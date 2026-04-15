@@ -32,6 +32,37 @@ risk-restriction pair $(R, \Xirestrict)$ consists of:
 \end{itemize}
 \end{definition}
 
+\begin{remark}[CR tests the physical mechanism, not just the restriction flag]
+\label{rem:physical_mechanism}
+A controlled relaxation test does not ask ``what happens if we
+remove the restriction?''  It asks the sharper question ``does the
+physical pathway that justified the restriction still activate when
+exercised?''  The risk-restriction pair $(R, \Xirestrict)$ was
+adopted as a bet on a specific causal mechanism---the exercise
+pathway $\Pathway$
+of~\citep[Definition~2]{lasser2026horizon}---operating from the
+capability tuple $(d_1, \ldots, d_k)$ to the predicted
+$\volL$-contraction.  Exercising the pathway inside $\scope$ and
+observing its detection response is equivalent to probing the
+mechanism.  The restriction may be stale not because the original
+risk analysis was wrong but because the underlying physical
+substrate has changed: new mitigation technology, evolved
+materials, different social context, or the intervening decades
+of technological progress that make the restriction's original
+triggering conditions no longer generic.  The CR machinery
+inherits this framing from the pathway definition;
+Remark~\ref{rem:scope_existence} names the alternative
+(structural resolution) for cases where the mechanism is
+mechanically infeasible in the current context.
+
+The test is conducted by actors whose integrity is appropriate to
+the domain; the formal construction is indifferent to the
+implementation (cryptographic commitment via
+\citep{lasser2026exo}, institutional oversight, legal accountability,
+or combinations thereof).  Section~\ref{sec:meta_policy} names the
+trust apparatus abstractly.
+\end{remark}
+
 \subsection{Protocol phases}
 
 \paragraph{Phase 1: Scope selection.}

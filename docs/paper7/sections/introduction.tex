@@ -23,24 +23,52 @@ boundary with zero self-correction rate ($\rS = 0$), but the phase
 boundary machinery does not by itself supply the missing
 self-correction mechanism.
 
-The paper is named for Mayor Kotoku Wamura's legacy: the oversized
-floodgate at Fudai~\citep[Discussion]{lasser2026poset} that was
-ridiculed for decades as wasteful overcaution until the 2011 Tohoku
-tsunami proved it exactly right.  The \emph{Wamura problem} is the
-formal version: when prevention works, the evidence for prevention
-disappears.
+The paper is named for Mayor Kotoku Wamura's tsunami-preparedness
+legacy at Fudai~\citep[Discussion]{lasser2026poset}: an oversized
+seawall built on the basis of centuries-old stone markers warning
+against construction below a certain elevation, ridiculed for
+decades as wasteful overcaution, and vindicated when the 2011 Tohoku
+tsunami reached precisely the elevation the markers had recorded.
+The Fudai case is motivating rather than directly soluble by the
+construction of this paper.  At Fudai, historical evidence existed:
+ancient tsunami stones recorded the relevant inundation heights.
+Modern decision-makers declined to consult that evidence, preferring
+the narrower observational window of recent decades.  Wamura's
+contribution was to restore the historical record to the decision
+process; no experimental mechanism was needed.  Controlled
+relaxation addresses the complementary case: when no such historical
+record exists, or when the record is itself contested, the framework
+must generate evidence experimentally.
 
-\subsection{The structural problem}
+\subsection{The structural problem: long-timeline risks}
 
-Three ingredients combine to produce the pathology.
+The ratchet arises from a timeline mismatch between the risk and
+the framework's observational window.  Let $T$ be the realisation
+timeline of a risk---the interval on which the risk would actually
+manifest under exercise---and $W$ be the decision-cycle
+observational window over which the framework can accumulate
+evidence.  When $T \ll W$, observation resolves the question
+promptly; the restriction dynamics are well-behaved.  When
+$T \gg W$, no observation can update the risk estimate within any
+practical decision cycle.  The restriction is adopted under
+uncertainty, survives because no counter-evidence can arrive in
+time to challenge it, and restrictions of this class accumulate
+monotonically because: (i) new long-timeline risks are continually
+discovered, each imposing a restriction; (ii) existing long-timeline
+restrictions cannot be revised through observation.  The ratio of
+restriction-imposing decisions to restriction-revising decisions
+approaches infinity on the long-timeline subset.
+
+Three mechanisms compose with the timeline mismatch to produce the
+pathology.
 
 \paragraph{Max-aggregation.}
 The risk framework of~\citep{lasser2026horizon} takes the maximum
-over agents' risk estimates, meaning a single high-risk claim from
-any agent constrains the capability tuple.  This is conservative by
+over agents' risk estimates, so a single high-risk claim from any
+agent constrains the capability tuple.  This is conservative by
 design---it prevents the framework from dismissing minority risk
 warnings---but it means a single overly cautious agent can lock a
-capability indefinitely.
+capability indefinitely when the underlying risk is long-timeline.
 
 \paragraph{Verification asymmetry.}
 The monotonicity
@@ -48,9 +76,11 @@ result~\citep[Proposition~1]{lasser2026exo} shows that as an
 agent's capabilities grow, the verification asymmetry between what
 it can demonstrate and what can be externally verified is
 non-decreasing.  Applied to risk claims: verifying a risk (observing
-catastrophe) is operationally straightforward; verifying safety
-(observing non-catastrophe under exercise) requires the exercise to
-happen, which the restriction prevents.
+catastrophe) is operationally straightforward on any timeline;
+verifying safety (observing non-catastrophe under exercise) requires
+the exercise to happen, which the restriction prevents, and even
+when permitted would not produce a conclusion within $W$ when
+$T \gg W$.
 
 \paragraph{Neutral-prior bootstrap.}
 When a new capability is discovered and no exercise history exists,
@@ -62,8 +92,9 @@ prevents the evidence accumulation that would revise the estimate.
 
 \medskip
 
-The three ingredients compose into a ratchet: risk claims can raise
-$\pR$ but the restricted regime provides no mechanism to lower it.
+The three mechanisms compose into a ratchet: risk claims can raise
+$\pR$ but the restricted regime provides no mechanism to lower it
+within the framework's operating horizon.
 We formalize this ratchet in
 Section~\ref{sec:verification_asymmetry}, introduce controlled
 relaxation protocols as the structural resolution in
@@ -145,6 +176,59 @@ feedback gap that exists \emph{above} the B-to-C precondition.
   channel (Lemma~\ref{lem:sixth_channel}).
 \end{enumerate}
 
+\subsection{Real-world interpretation}
+\label{sec:real_world}
+
+The formal construction of this paper is a programmatic mechanism
+for empirical review of long-timeline restrictions that may have
+outlived their justifying risk model.  The framework identifies
+restrictions that persist without recent confirming evidence,
+formulates the underlying risk pathway that the restriction was
+intended to block, and designs a bounded-damage empirical test that
+probes whether the physical mechanism underlying the restriction
+still operates---a test conducted by appropriately trusted actors
+within a bounded scope, with the trust apparatus
+(cryptographic~\citep{lasser2026exo}, governmental, institutional,
+legal, or otherwise) selected to match the domain.
+
+Application domains where long-timeline restrictions accumulate
+and benefit from programmatic review:
+
+\begin{itemize}
+\item \textbf{Environmental contamination controls}: chemical
+  scheduling where bioaccumulation or persistence timelines are
+  multi-decade (DDT, PFAS, ozone-depleting refrigerants); the
+  current restriction may target a mechanism that has changed
+  under reformulation or that modern mitigation has obsoleted.
+\item \textbf{Nuclear dual-use controls}: export and technology
+  controls where weapons-grade and reactor-grade pathways share
+  keystone capabilities in broad restriction regimes designed
+  under mid-20th-century technology.  Modern enrichment and
+  machining have differentiated to a degree that supports
+  narrower keystone choices; see
+  Section~\ref{sec:keystone_refinement}.
+\item \textbf{Pandemic preparedness and dual-use biology}:
+  research moratoria on gain-of-function work, where the risk
+  timeline is the interval between pandemic events (decades)
+  and the observational window is research-cycle short.
+\item \textbf{Infrastructure safety margins}: dam, bridge, and
+  seismic design codes originally calibrated against
+  century-scale events, where construction material and
+  mitigation-technology progress may permit refined margins.
+\item \textbf{AI capability restrictions}: the sequence's
+  primary application.  Restrictions adopted against
+  concerns about future outcomes when no empirical
+  counter-evidence can arrive within training and deployment
+  cycles.
+\end{itemize}
+
+This list is illustrative; the formal content does not commit to
+any particular domain.  The framework is indifferent to whether
+the trusted actors are human oversight bodies, cryptographically
+committed automated systems, or combinations thereof; the
+implementation of trust is a domain-specific design decision
+outside the scope of the formal construction.
+
 \subsection{What this paper does not do}
 \label{sec:not_do}
 
@@ -183,6 +267,17 @@ argument~\citep[Proposition~2]{lasser2026horizon}: when a
 structural resolution is available (for example, a proof that
 the pathway is mechanically infeasible), it is strictly
 preferable to any controlled relaxation test.
+
+\item
+\textbf{It does not address the Fudai case directly.}  At Fudai,
+historical evidence (ancient tsunami stones) existed but was
+dismissed in favour of the modern observational window.  The
+remedy there is to restore historical records to the decision
+process, not to generate new experimental evidence---controlled
+relaxation would have been actively dangerous at Fudai (a test
+of a reduced seawall works perfectly until the tsunami arrives).
+The paper's domain is the complementary case where no historical
+record is available.
 \end{itemize}
 
 \subsection{Dependencies on prior results}

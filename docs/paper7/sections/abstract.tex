@@ -1,26 +1,35 @@
 \begin{abstract}
-The max-aggregation operator in the Goal-Frontier Maximization risk
-framework produces a verification asymmetry: a risk claim that
-successfully prevents exercise generates no observation that could
-lower the risk estimate, because the restriction itself prevents the
-counterfactual test.  We call this the \emph{Wamura problem}, after
-the floodgate at Fudai whose oversized construction was ridiculed for
-decades as wasteful overcaution until the 2011 Tohoku tsunami proved
-it exactly right.  We formalize the problem as a structural gap in
-Bayesian evidence accumulation under restriction, prove that
-max-aggregation with neutral-prior initialization produces monotone
-overcaution absent external intervention, and introduce
-\emph{controlled relaxation protocols}: bounded, monitored exercise
-windows that generate genuine Bayesian evidence about risk claims
-while provably bounding maximum damage.  Two central results follow.
-First, a scope-construction theorem bounds the damage from a test
-by a user-set parameter $\damagebound$ even when cross-boundary
+Risks with realisation timelines far exceeding the practical
+observational window produce a structural pathology in the
+Goal-Frontier Maximization risk framework: a restriction justified by
+a long-timeline risk cannot be revised through observation because the
+evidence that would revise it cannot arrive within the decision cycle.
+Absent an experimental mechanism, restrictions of this class
+accumulate monotonically as new long-timeline risks are discovered.
+We call this the \emph{Wamura problem}, after the tsunami-preparedness
+case at Fudai; the historical case is motivating rather than directly
+soluble by our construction, because Fudai had ignored historical
+evidence available (centuries-old tsunami stones) rather than absent
+evidence.  The paper addresses the harder complementary case, in which
+no such historical record exists.  We formalize the structural
+asymmetry, prove that max-aggregation with neutral-prior initialization
+produces monotone overcaution absent external intervention, and
+introduce \emph{controlled relaxation protocols}: bounded, monitored
+exercise windows that generate genuine Bayesian evidence about risk
+claims while provably bounding maximum damage.  Two central results
+follow.  First, a scope-construction theorem bounds the damage from a
+test by a user-set parameter $\damagebound$ even when cross-boundary
 cooperative capabilities could propagate the test's effects.  Second,
 under a simple binary hypothesis framework with fixed likelihoods, a
 convergence theorem shows that repeated controlled relaxation drives
 risk estimates almost surely to truth at exponential rate, with the
-rate given by the Kullback--Leibler divergence between the
-observation distributions.  The protocol closes the most important
-open problem named in~\citep{lasser2026horizon} and resolves the
+rate given by the Kullback--Leibler divergence between the observation
+distributions.  We further extend the protocol to
+\emph{keystone-refinement tests}, which handle the common real-world
+case where a restriction is not obsolete but misconfigured---the
+underlying risk pathway still operates, but technological progress has
+made narrower keystones available that would block it without blocking
+adjacent benign pathways.  The protocol closes the most important open
+problem named in~\citep{lasser2026horizon} and resolves the
 degenerate-phase-boundary case of~\citep[Proposition~4]{lasser2026phase}.
 \end{abstract}

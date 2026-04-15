@@ -166,6 +166,18 @@ $\Sigma$
 $\damagebound_{\mathrm{total}}$
   & Aggregate damage budget across concurrent tests
   & Def.~\ref{def:test_schedule}(ii) \\
+\midrule
+\multicolumn{3}{l}{\emph{Keystone refinement}} \\
+$\keystonestruct$
+  & Keystone structure (capabilities whose restriction
+    realises $\Xirestrict$)
+  & Def.~\ref{def:keystone_structure} \\
+$\keystonestruct_1 \preceq \keystonestruct_2$
+  & Keystone partial order ($\subseteq$ on blocking structures)
+  & Def.~\ref{def:keystone_order} \\
+$\keystonestruct \vdash \Pathway$
+  & Structure $\keystonestruct$ blocks pathway $\Pathway$
+  & Def.~\ref{def:keystone_structure} \\
 \bottomrule
 \end{tabular}
 \caption{Principal notation.}
