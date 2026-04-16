@@ -69,7 +69,7 @@ Supplementary:
 ### Purpose
 
 Paper 1 defines the GFM actor as a system that maximizes vol_P -- the poset
-measure over the capability space (Paper 1, Section 4; Paper 2, Definition
+measure over the capability space (Paper 1, Definition 6; Paper 2, Definition
 7). Paper 2 axiomatizes vol_P as a poset measure satisfying M1-M6 (Paper 2,
 Proposition 1) and proves it is self-balancing (Paper 2, Theorem 1). Paper 3
 extends the analysis to multi-substrate collectives, proving that full
@@ -163,7 +163,7 @@ that makes the paper consonant with the rest of the sequence.
 
 | Paper | Result used | Role in this paper |
 |-------|-----------|-------------------|
-| P1 | Population empowerment (Section 4), self-balancing (Prop 1) | The objective measure whose proxy adequacy this paper diagnoses |
+| P1 | Population empowerment (Def 6), self-balancing (Prop 1) | The objective measure whose proxy adequacy this paper diagnoses |
 | P2 | Axioms M1-M6 (Prop 1), self-balancing on posets (Thm 1), leverage (Def 9), benchmark (Def 2) | The axiomatic foundation; benchmark as the unit of sacrifice measurement |
 | P3 | Anti-monopolar property (Prop 6), preemptive-restriction criterion (Prop 1), observational individuation (Def 9) | The restriction criterion this paper completes (value axis); static vol_R floor for active agents |
 | P4 | Risk-trust dynamics (Def 4), EWMA learning rate (alpha) | Temporal analog for the aggregate trade window timescale |
@@ -320,25 +320,37 @@ agent operates in the world.
 
 ### Central result
 
-**Definition 3 (Bundle-Disaggregation Weights).** For a sequence of
-revealed-sacrifice events {(i_n, X_n, Y_n, t_n)}_{n=1}^N whose unbenchmarked
-bundles Y_n jointly cover a subset U of unbenchmarked capability-space, define
-disaggregation weights w_n in [0, 1] as the solution to a hedonic-regression
-decomposition:
+**Definition 3 (Event-Local Bundle Decomposition).** For each
+revealed-sacrifice event (i_n, X_n, Y_n, t_n), define the *event-local*
+decomposition coefficients alpha_{n,c} >= 0 for each capability c in Y_n,
+satisfying:
 
-    Y_n = sum_{c in U} alpha_{n,c} * c    (bundle decomposition)
-    w_n = sum_{c in U} alpha_{n,c} / sum_{m: c in Y_m} alpha_{m,c}
-                                           (overlap correction)
+    sum_{c in Y_n} alpha_{n,c} = 1    (partition of unity within the bundle)
 
-The weights w_n adjust for overlapping bundles: if two trades both include
-the same unbenchmarked capability c, the contribution is split rather than
-double-counted. When bundles are disjoint (no overlap), w_n = 1 for all n.
+The coefficients alpha_{n,c} represent the share of bundle Y_n attributable
+to capability c, determined at the time of event n and *fixed thereafter*.
+Each event carries its own decomposition, independent of other events.
 
-**Remark (hedonic regression).** The disaggregation is standard hedonic
-regression from the microeconomics of product valuation (Rosen 1974). The
-framework does not need to solve the hedonic problem from scratch -- the
-methodology is well-established for priced goods. The time-sacrifice channel
-requires an analogous framework (see Open Question 1).
+The decomposition can be obtained from:
+- Prior hedonic regression on similar trades in the same market
+- Domain-specific knowledge of the bundle's composition
+- Equal-weight default (alpha_{n,c} = 1/|Y_n|) when no better information
+  is available
+
+**Remark (event-local vs. global regression).** Classical hedonic regression
+(Rosen 1974) fits a *global* model across all observed trades simultaneously.
+This produces the tightest decomposition but has the property that adding
+new observations refits all coefficients, breaking the monotonicity of the
+max-attribution bound (Proposition 1). The event-local formulation fixes
+coefficients at observation time, sacrificing fit quality for the
+monotonicity guarantee. In practice, the event-local coefficients can be
+computed from a rolling-window hedonic model that uses trades prior to
+event n, so they approximate the global fit without retroactive rewriting.
+
+**Remark (hedonic regression for the time channel).** The money-sacrifice
+channel has well-established hedonic methods from the microeconomics of
+product valuation. The time-sacrifice channel needs an analogous framework
+(see Open Question 1).
 
 **Theorem 2 (Aggregate B-to-C Lower Bound).**
 
@@ -360,27 +372,45 @@ Y_n, including retaining X_n).
 
 **Assumption S2 (Benchmark grounding).** The benchmarked sacrifice X_n has a
 well-defined vol_P contribution Delta_vol_P(X_n) computed via Paper 2's
-poset measure. The agent's valuation of X_n is grounded in this measure
-(the B-to-C precondition: vol_P is an operational target on the benchmarked
-subspace).
+poset measure. The agent's valuation of X_n is at least as large as this
+contribution: U_{i_n}(X_n) >= Delta_vol_P(X_n). This is the B-to-C
+precondition: vol_P is the operational target on the benchmarked subspace,
+so agents value benchmarked capabilities at least at their vol_P worth.
+(If agents undervalue benchmarked capabilities, the lower bound is
+conservative -- the sacrifice signal understates what the agent actually
+gave up.)
 
 **Assumption S3 (Bundle coherence).** The hedonic decomposition of each
 bundle Y_n into capabilities in U is well-defined: the regression has a
 unique solution (no multicollinearity degeneracy in the bundle structure).
 
-**Assumption S4 (Additive separability).** Each agent's valuation of an
-unbenchmarked bundle is additively separable across capabilities:
+**Assumption S4 (Additive separability of valuation and vol_R on bundles).**
+Two additivity conditions:
+
+(a) *Valuation additivity:* Each agent's valuation of an unbenchmarked
+bundle is additively separable across capabilities:
 U_i(Y) = sum_{c in Y} u_i(c), where u_i(c) >= 0 is the agent's
 per-capability valuation. This is the standard Rosen (1974) hedonic
 assumption: the bundle's value equals the sum of its components' values.
-Without S4, the bundle-level revealed-preference bound
-vol_R(Y_n) >= Delta_vol_P(X_n) does not distribute to individual capabilities,
-and the disaggregation into per-capability lower bounds (via weights w_n)
-is unjustified. S4 is a strong assumption -- it rules out complementarities
-between capabilities within a bundle (where the combination is worth more
-than the sum of parts). When complementarities are present, the per-capability
-disaggregation underestimates some capabilities and overestimates others,
-but the *aggregate* bound over the whole bundle remains valid.
+
+(b) *vol_R additivity on bundles:* The vol_R contribution of a bundle of
+capabilities that are poset-disjoint (no subsumption relations between
+them) is additive: vol_R(Y) = sum_{c in Y} vol_R(c). This follows from
+vol_P's axiom M4 (additivity under poset-disjointness, Paper 2,
+Proposition 1) applied to the exercised sub-poset, provided the
+capabilities in Y are pairwise poset-disjoint. When capabilities in Y
+have subsumption relations, cooperative terms make vol_R super-additive
+and the per-capability disaggregation *underestimates* -- the bound
+remains valid but is conservative.
+
+Without S4(a), the bundle-level revealed-preference bound
+vol_R(Y_n) >= Delta_vol_P(X_n) does not distribute to individual capabilities.
+Without S4(b), the distribution from utility space to vol_R space is
+unjustified. S4 is a strong assumption -- it rules out complementarities
+on both the valuation and the measure side. When complementarities are
+present, the per-capability disaggregation underestimates some capabilities
+and overestimates others, but the *aggregate* bound over the whole bundle
+remains valid (the bundle-level bound from S0-S2 holds without S4).
 
 Then:
 
@@ -685,8 +715,9 @@ at time T with lookback horizon H is the set of capabilities with no
 sacrifice evidence in the window [T - H, T]:
 
     R_S(T, H) = {c in P : no revealed-sacrifice event (i, X, Y, t)
-                 with t in [T - H, T] has c in Y or c functionally
-                 contributing to some Y_j in Y}
+                 with t in [T - H, T] has c in Y_j for any j,
+                 i.e., c does not appear as a component of any
+                 acquired bundle in the lookback window}
 
 R_S is parameterized by the lookback horizon H because the residual class
 is *dynamic*: a capability enters R_S when its last sacrifice event ages
@@ -902,10 +933,10 @@ where:
 
 **Proposition 7 (Computability of Gap Decomposition).** The gap decomposition
 is computable from:
-- The aggregate sacrifice data (events in the trade window)
+- The aggregate sacrifice data (events in the trade window [T - H, T])
 - The restriction set Xi = {d in P : d is currently restricted}
-- The residual class R_S (computable from the trade data: R_S = capabilities
-  absent from all observed trade events across all windows)
+- The residual class R_S(T, H) (Definition 8: capabilities in P absent from
+  all sacrifice events in the lookback window [T - H, T])
 
 Classification is O(|P|) given the sacrifice database and a capability
 census. No structural counterfactual computation is required (unlike the
@@ -1410,7 +1441,7 @@ includes both the OI floor and the sacrifice lower bound.
 
 | Prior paper | Result | Number | Used in |
 |------------|--------|--------|---------|
-| P1 | Population empowerment measure | Section 4 | Section 1 |
+| P1 | Population empowerment measure | Def 6 | Section 1 |
 | P1 | Self-balancing property | Prop 1 | Section 1, Cor 2 |
 | P2 | Benchmark | Def 2 | Def 1 (sacrifice grounding) |
 | P2 | Poset measure vol_P | Def 7 | Defs 1, 4; Thm 2 |
