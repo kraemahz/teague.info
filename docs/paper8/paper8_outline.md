@@ -1825,8 +1825,13 @@ collective's value-expression is concentrated rather than distributed.
 
 *Proof sketch:* Under uniform trade diversity (every category equally
 represented), HHI = 1/|categories| -> 0 as the category space grows. Under
-wireheading (k loop-driver categories dominate), HHI >= 1/k. The threshold
-HHI_alarm = 1/sqrt(|categories|) separates the two regimes.
+wireheading (k loop-driver categories dominate), HHI >= 1/k. The
+threshold HHI_alarm is a tunable alarm parameter; the value
+1/sqrt(|categories|) is a heuristic default that separates the
+uniform-diversity regime from the k-dominant regime. The full paper
+should derive a principled threshold from the framework's tolerance
+for concentration risk, or present HHI_alarm as a configurable
+parameter whose setting is a governance choice.
 
 **Remark (advantage over structural counterfactual).** The prior formulation
 detected wireheading via exercise leverage concentration (Definition 11 of
@@ -2420,7 +2425,7 @@ includes both the OI floor and the sacrifice lower bound.
 | Pi_N^0 | Class of threshold-satisfying pathways (d_k(pi) = s_k for all k) | Def 2B |
 | q_N^0(c) | Pointwise threshold-reference quality for downstream capability c | Def 2B |
 | d_k(pi_N) | Value of dimension d_k under pathway pi_N | Def 2B |
-| Delta_c(pi_N) | Downstream quality contribution of pathway pi_N to capability c | Def 2B |
+| quality_c(with N satisfied via pi_N) | Quality of downstream capability c under satisfaction pathway pi_N (ceteris paribus) | Def 2B |
 | benchmark_k | Polarity-correct benchmark for dimension k (capped below, discounted above) | Def 2D |
 | alpha_k | Above-sufficiency discount factor for dimension k | Def 2D |
 | (i, X, Y, t) | Revealed-sacrifice event | Def 1 |
