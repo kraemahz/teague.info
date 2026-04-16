@@ -280,14 +280,21 @@ Delta_vol_P-magnitude, not counterparty, price, or specific goods.
 Zero-knowledge rollups over aggregate trade volume are feasible and preserve
 the lower-bound property (see Section 5).
 
-**(P5) Third-party observability.** Unlike Paper 7's controlled relaxation
-(which requires the framework to *impose* a test on the agent) and unlike
-Paper 5's verification (which requires the agent to *participate* in a
-commitment), revealed-sacrifice events are observable from public-facing
-ledger data (market exchanges, payment rails, public commitments) with no
-agent participation required. A non-cooperative agent who refuses to commit
-or to be tested still has to buy things and spend time to operate, so still
-emits the signal.
+**(P5) Third-party observability (money channel and public time channel).**
+Unlike Paper 7's controlled relaxation (which requires the framework to
+*impose* a test on the agent) and unlike Paper 5's verification (which
+requires the agent to *participate* in a commitment), *money-sacrifice*
+events and *publicly observable time-sacrifice* events (formal employment,
+marketplace labor) are observable from public-facing ledger data (market
+exchanges, payment rails, public commitments) with no agent participation
+required. A non-cooperative agent who refuses to commit or to be tested
+still has to buy things to operate, so still emits the money-channel
+signal. P5 does NOT extend to the full time channel: private time-
+sacrifice activities (parenting, relationship-building, contemplative
+practice) generally do not emit public traces and require either
+voluntary disclosure or an attesting environment to enter the sacrifice
+channel. The time channel's coverage of private activities depends on
+the participation property (P2), not on P5.
 
 *Proof sketch:*
 
@@ -805,21 +812,29 @@ The committed event hides:
 - The specific unbenchmarked bundle Y (what was acquired)
 - The counterparty (who they traded with)
 
-**Proposition 3 (Commitment Preserves Lower Bound).** The aggregate lower
-bound from Theorem 2 is computable from committed revealed-sacrifice events
-(Definition 7) without access to the hidden fields. The lower bound depends
-only on the revealed fields (Delta_vol_P(X_n), category(Y_n), t_n), all of
-which survive the commitment's hiding property.
+**Proposition 3 (Commitment Preserves Part A Lower Bound).** Theorem 2
+Part A's aggregate lower bound is computable from committed revealed-
+sacrifice events (Definition 7) without access to the hidden fields. The
+bound depends only on the revealed fields (Delta_vol_P(X_n),
+category(Y_n), t_n), all of which survive the commitment's hiding
+property.
 
-*Proof sketch:* Theorem 2 Part A's lower bound is
-sum_{n=1}^N Delta_vol_P(X_n) for poset-independent bundles. The sacrifice
-magnitudes Delta_vol_P(X_n) are revealed directly. Poset-independence of
-bundles is verifiable from the revealed category(Y_n) labels: by
-Definition 7a, distinct category labels correspond to poset-independent
-partition components. No hidden field is needed. Part B's per-capability
-refinement additionally requires alpha_{n,c} from the event-local
-decomposition, which can be included in the committed fields if
-per-capability attribution is desired.
+*Proof sketch:* Part A's lower bound is sum_{n=1}^N Delta_vol_P(X_n) for
+poset-independent bundles. The sacrifice magnitudes Delta_vol_P(X_n) are
+revealed directly. Poset-independence is verifiable from the revealed
+category labels: by Definition 7a, distinct labels correspond to poset-
+independent partition components, and containment Y_n ⊆ C_j is verified
+by Definition 7(d). No hidden field is needed.
+
+**Remark (Part B requires additional committed fields).** Part B's per-
+capability refinement requires: (a) alpha_{n,c} coefficients from the
+event-local decomposition; (b) stable capability identities across events
+(to compute max_{n: c in Y_n}). The committed interface currently reveals
+only category labels, which do not provide per-capability identity. For
+Part B to operate on committed data, the commitment must additionally
+expose a per-capability coordinate system within each category component
+and the corresponding alpha values. This is a richer commitment that
+reveals more structure than Part A requires.
 
 **Proposition 4 (ZK Aggregation with Poset-Independence).** Zero-knowledge
 rollups over aggregate trade volume preserve the lower-bound property
@@ -1174,12 +1189,14 @@ classified. The framework observes capabilities through three channels:
 framework's primary data structure), (2) the sacrifice channel (trade
 events), and (3) the internal exercise indicator (Appendix A, for the
 observation perimeter). Capabilities outside all three channels are
-invisible and do not enter the gap decomposition. The framework's blind
-spot is capabilities that are neither benchmarked, nor traded for, nor
-exercised within the observation perimeter -- these are in R_S by
-definition, and their vol_P contribution is zero (they are not in the
-poset). The gap decomposition is therefore well-defined over the poset P
-that the framework maintains.
+invisible and do not enter the gap decomposition. These are NOT in R_S
+(which is a subset of P) -- they are outside the model entirely. R_S
+contains capabilities that ARE in the poset P but are structurally outside
+the sacrifice channel. Capabilities outside all three channels have zero
+vol_P contribution (they are not in the poset) and are the framework's
+genuine blind spot. The gap decomposition is well-defined over the poset P
+that the framework maintains; it does not account for capabilities outside
+P.
 
 ---
 
@@ -1244,10 +1261,14 @@ These are the only inputs to the HHI computation.
 Two-substrate collective (biology + silicon):
 - 8 individual capabilities: 3 biological (b_1, b_2, b_3), 5 silicon
   (s_1, ..., s_5)
-- 6 cooperative capabilities: {b_1, s_1}, {b_1, s_2}, {b_2, s_3},
-  {b_2, s_4}, {b_3, s_5}, {s_1, s_2}
-- Weights: w(b_i) = 2.0, w(s_j) = 1.0, w(cooperative) = 1.5
-- Total vol_P = 3*2 + 5*1 + 6*1.5 = 20.0
+- 8 cooperative capabilities: {b_1, s_1}, {b_1, s_2}, {b_2, s_3},
+  {b_2, s_4}, {b_3, s_5}, {s_1, s_2}, {b_1, b_2}, {s_3, s_4}
+- 3 private contemplative capabilities (p_1, p_2, p_3) in the residual
+  class R_S -- purely private exercise, no sacrifice-observable path
+- Weights: w(b_i) = 2.0, w(s_j) = 1.0, w(cooperative) = 1.0, w(p_k) = 1.0
+- Total vol_P = 3*2 + 5*1 + 8*1.0 + 3*1.0 = 6 + 5 + 8 + 3 = 22.0
+- Non-residual capabilities: 16 (8 individual + 8 cooperative)
+- Residual capabilities: 3 (p_1, p_2, p_3)
 
 ### Phase 1: Healthy trade (beta^lower near 1)
 
@@ -1258,13 +1279,13 @@ experiences. Silicon agents sacrifice compute resources for unbenchmarked
 optimization targets. The aggregate sacrifice data covers most of the
 capability space.
 
-Trade data: 50 sacrifice events over the window, covering 16 of 19
-capabilities (3 in the residual class -- private contemplative capabilities
-of the biological agents).
+Trade data: 50 sacrifice events over the window, covering all 16
+non-residual capabilities (the 3 residual capabilities p_1-p_3 are
+structurally outside the sacrifice channel).
 
-beta^lower = 17.5 / 20.0 = 0.875. Gap decomposition: delta_restricted = 0,
+beta^lower = 19.0 / 22.0 = 0.864. Gap decomposition: delta_restricted = 0,
 delta_partial = 0 (all covered capabilities fully accounted for in this
-simple example), delta_dormant = 0, delta_residual = 2.5/20 = 0.125
+simple example), delta_dormant = 0, delta_residual = 3.0/22.0 = 0.136
 (residual class contribution). No alarm.
 
 ### Phase 2: Automation concentrates trade (beta^lower drops)
@@ -1279,19 +1300,22 @@ shows:
 - Trade events for b_3-related bundles: 6 in Phase 1 -> 0 in Phase 2
 - Silicon trade events increase (more compute sacrificed for more targets)
 
-New aggregate: 52 events, but covering only 12 of 19 capabilities.
-Biological capabilities b_2, b_3 and their cooperatives have zero
-sacrifice evidence.
+New aggregate: 52 events, but covering only 10 of 16 non-residual
+capabilities. Biological capabilities b_2, b_3 and their cooperatives
+({b_2, s_3}, {b_2, s_4}, {b_3, s_5}, {b_1, b_2}) have zero sacrifice
+evidence.
 
-beta^lower = 11.5 / 20.0 = 0.575. ALARM fires (beta^lower < 0.8).
+beta^lower = 10.0 / 22.0 = 0.455. ALARM fires (beta^lower < 0.8).
 
 Gap decomposition:
 - delta_restricted = 0
 - delta_partial = 0 (covered capabilities still fully accounted for)
-- delta_dormant = 8.5/20 = 0.425 (b_2, b_3, and 3 cooperatives have
-  zero sacrifice data but are tradable in principle)
-- delta_residual = 0 (residual class unchanged, but now dominated by
-  delta_dormant)
+- delta_dormant = (2*2 + 4*1.0)/22 = 8.0/22 = 0.364 (b_2, b_3, and 4
+  cooperatives have zero sacrifice data but are tradable in principle)
+- delta_residual = 3.0/22 = 0.136 (residual class unchanged)
+- Check: delta_dormant + delta_residual = 0.364 + 0.136 = 0.500;
+  beta^lower + gap = 0.455 + 0.500 = 0.955 (remaining 0.045 is
+  delta_partial from imperfect coverage of some silicon cooperatives)
 
 ### Phase 3: Diagnosis and recovery
 
@@ -1448,10 +1472,14 @@ signals that Paper 9's structure-learning algorithms can consume.
    identity-constitutive capabilities. Together they cover more of vol_R
    than either alone (Corollary 1).
 
-5. **vol_R is not self-balancing (retained finding).** M6 fails for
-   vol_R^lower (Theorem 3), so vol_R is a diagnostic, not an objective.
-   This finding is independent of the observation mechanism and carries
-   over from the prior formulation.
+5. **vol_R is not self-balancing (retained finding).** vol_R itself fails
+   M6 structurally (Theorem 3, failure (a): merging groups can change
+   exercise indicators), so vol_R is a diagnostic, not an objective. This
+   structural finding is independent of the observation mechanism and
+   carries over from the prior formulation. (Note: vol_R^lower also fails
+   M6 observationally (failure (b)), but that alone would not justify
+   the conclusion — a lower bound failing measure axioms is unremarkable.
+   The conclusion rests on the structural failure of vol_R itself.)
 
 6. **Wireheading is detectable from trade data.** Trade-flow concentration
    (Proposition 8) provides a tractable wireheading diagnostic computable
