@@ -273,32 +273,48 @@ downstream-safe sufficient under satisfaction pathway pi_N iff:
     (with cost dimensions inverted per Definition 2A)
 
 (b) **Downstream non-degradation:** For every capability c in Down(p_N),
-    the N-mediated contribution to c's quality under pi_N is non-negative
-    relative to the *threshold-reference pathway* pi_N^0:
+    the quality of c under the actual satisfaction pathway pi_N is at
+    least as high as the threshold-reference quality q_N^0(c):
 
-        Delta_c(pi_N) = quality_c(with N satisfied via pi_N)
-                      - quality_c(with N satisfied via pi_N^0) >= 0
+        quality_c(with N satisfied via pi_N) >= q_N^0(c)
 
-where the comparator uses the **threshold-reference quality** for each
-downstream capability. Let Pi_N^0 = {pi : d_k(pi) = s_k for all k} be
-the class of pathways satisfying each dimension of N at exactly its
-sufficiency threshold. For each downstream capability c in Down(p_N),
-define the pointwise reference quality:
+    where q_N^0(c) is the pointwise threshold-reference quality defined
+    below.
+
+**Definition (Threshold-Reference Quality).** Let Pi_N^0 = {pi :
+d_k(pi) = s_k for all k} be the class of pathways satisfying each
+dimension of N at exactly its sufficiency threshold.
+
+*Preconditions:* (i) Pi_N^0 is nonempty — at least one pathway exists
+that satisfies every dimension at exactly the threshold level. This is a
+well-formedness condition on the need definition: if the thresholds are
+mutually achievable (no dimension's threshold is incompatible with
+another's), this is satisfied by construction. (ii) For each c in
+Down(p_N), the function pi -> quality_c(with N satisfied via pi,
+all other inputs held fixed) is bounded above on Pi_N^0, so the
+supremum exists in R. The ceteris paribus clause ("all other inputs
+held fixed") means that quality_c is evaluated holding all non-N
+inputs to c constant at their current values; only the N-satisfaction
+pathway varies.
+
+For each downstream capability c in Down(p_N), define:
 
     q_N^0(c) = sup_{pi in Pi_N^0} quality_c(with N satisfied via pi)
-
-Then condition (b) becomes: for every c in Down(p_N),
-
-    quality_c(with N satisfied via pi_N) >= q_N^0(c)
 
 The pointwise supremum avoids requiring a single pathway that
 simultaneously maximizes downstream quality for all c in Down(p_N),
 which may not exist when different threshold pathways have different
 downstream profiles. q_N^0(c) is a *definitional construct*, not an
-observed quantity -- it serves as the most favorable threshold-level
+observed quantity — it serves as the most favorable threshold-level
 baseline for each downstream capability separately, so that any
 pathway pi_N passing condition (b) is safe against the best achievable
 threshold-level downstream quality on every dimension independently.
+
+When the supremum is attained (Pi_N^0 is finite or quality_c is
+continuous on a compact pathway space), q_N^0(c) is an ordinary real
+value. When the supremum is not attained (open pathway spaces), the
+definition still produces a well-defined extended-real bound; the full
+paper should specify which topology on the pathway space is assumed.
 
 Condition (b) says: satisfying the need via this pathway doesn't make
 downstream capabilities worse than they'd be under the best-case
@@ -1060,12 +1076,12 @@ content (the magnitude Delta_vol_P(X) and the category of Y) is revealed.
 ### Formal construction
 
 **Definition 7 (Committed Revealed-Sacrifice Event).** A committed
-revealed-sacrifice event is a tuple (C, pi, t) where:
-- C = Commit((Delta_vol_P(X), category(Y)), r) is a commitment to the
-  sacrifice magnitude and bundle category, using randomness r (Paper 5,
-  Definition 6)
+revealed-sacrifice event is a tuple (Gamma, pi, t) where:
+- Gamma = Commit((Delta_vol_P(X), category(Y)), r) is a commitment to
+  the sacrifice magnitude and bundle category, using randomness r
+  (Paper 5, Definition 6)
 - pi is a zero-knowledge proof (Paper 5, Definition 7) that:
-  (a) the commitment C corresponds to a valid revealed-sacrifice event
+  (a) the commitment Gamma corresponds to a valid revealed-sacrifice event
       satisfying the *objectively verifiable* components: S3 (bundle
       coherence) and the objective component of S2 (Delta_vol_P(X) is
       well-defined and the trade occurred)
@@ -1471,7 +1487,7 @@ where the capability partition is:
 - **Dormant** (D_S): d not in Xi, d not in R_S (Definition 8), and d does
   not appear in any acquired bundle of any *theorem-admissible* event in
   [T - H, T]. These are tradable-in-principle capabilities with zero
-  want-pursuit sacrifice evidence from theorem-valid events in the
+  want-pursuit sacrifice evidence from theorem-admissible events in the
   lookback window. A capability that appears only in events failing
   S0, S1, or S2 is dormant with respect to the gap decomposition --
   its activity (if any) does not produce lower-bound evidence.
@@ -1536,25 +1552,49 @@ the priority ordering from Definition 10:
 (1) check d in Xi (restricted); (2) check d appears in a
 theorem-admissible event's bundle (covered -- requires S0, S1, S2 per
 Definition 10); (3) check d not in R_S (dormant -- tradable but no
-theorem-valid evidence); (4) otherwise residual (in R_S -- structurally
+theorem-admissible evidence); (4) otherwise residual (in R_S -- structurally
 unreachable). The delta terms follow from the vol_P and vol_R^lower
 values already computed. No structural counterfactual computation is
 required (unlike the prior formulation, which required O(|P|^2)
 counterfactual queries).
 
-**Remark (S2 observability).** In non-committed mode, the framework can
-check S2 (U_i(X_n) >= Delta_vol_P(X_n)) only indirectly -- the agent's
-subjective valuation U_i is not directly observable. The operational
-proxy is Delta_vol_P(X_n) itself (assuming agents value benchmarked
-capabilities at least at their vol_P worth, which is the B-to-C
-precondition). In committed mode, S2 is *assumed* for committed events
-because the ZK proof verifies only S2's objective component
-(Delta_vol_P(X_n) >= 0 and trade occurrence), not the subjective
-valuation inequality. The gap decomposition under committed data is
-therefore conditional on S2 holding in the population. This is
-analogous to S0's population-level relaxation (Open Question 6): the
-framework assumes the assumption holds on average and monitors for
-systematic violations via calibration diagnostics.
+**Remark (admissibility observability).** Theorem-admissibility requires
+S0, S1, and S2 to hold for an event. None of these three are directly
+verifiable from sacrifice data alone:
+
+- **S0** (calibration): the agent's private valuation U_i(Y_n) is not
+  observable. S0 is a population-level modeling assumption (see Open
+  Question 6 for the relaxed version).
+- **S1** (free choice): whether the agent had non-degrading alternatives
+  is inferrable from market structure and sufficiency status but not
+  certifiable from the event record alone. Below-sufficiency events are
+  *classified* as S1-failing by the event-local condition (Prop 2B), but
+  above-sufficiency events' S1 status depends on unobserved choice sets.
+- **S2** (benchmark grounding): the subjective inequality
+  U_i(X_n) >= Delta_vol_P(X_n) is not observable. The operational proxy
+  is the B-to-C precondition: agents who use vol_P as an operational
+  target value benchmarked capabilities at least at their vol_P worth.
+  This is a structural assumption about the agent population, not a
+  per-event verifiable condition.
+
+In **non-committed mode**, the framework observes (i, X, Y, t) and can
+apply S1's below-sufficiency filter directly (agent i's sufficiency
+status is observable against the threshold). S0 and S2 are assumed.
+
+In **committed mode**, even S1's below-sufficiency filter is unavailable
+(agent identity is hidden, so sufficiency status cannot be checked per
+event). The committed-mode gap decomposition is therefore conditional on
+*all three* assumptions holding in the population. The ZK proof
+(Definition 7) verifies only S2's objective component and S3; the
+subjective components of S0, S1, and S2 are assumed.
+
+The gap decomposition's "theorem-admissible" classification is thus
+an *assumption-conditional* classification, not an operationally
+verified one. In non-committed mode, the conditioning is on S0 and S2
+(S1 is partially checkable). In committed mode, the conditioning is
+on S0, S1, and S2. The classification's value lies in *structuring*
+what the framework can say under those assumptions, not in certifying
+that the assumptions hold.
 
 **Remark (capability census requirement).** The gap decomposition requires
 the framework to enumerate capabilities in P -- it must know what exists
@@ -2392,7 +2432,7 @@ includes both the OI floor and the sacrifice lower bound.
 | p | Price (money-sacrifice signal) | Def 5 |
 | r_i | Agent i's market wage rate | Def 6 |
 | h | Hours sacrificed | Def 6 |
-| (C, pi, t) | Committed revealed-sacrifice event | Def 7 |
+| (Gamma, pi, t) | Committed revealed-sacrifice event | Def 7 |
 | C = {C_1,...,C_m} | Public poset-independent partition of U | Def 7a |
 | category(Y) | Bundle's partition label in C | Def 7a |
 | R_S | Residual class under revealed sacrifice (structural, not time-parameterized) | Def 8 |
