@@ -358,34 +358,40 @@ accessibility has not changed). Downstream non-degradation (Definition 2B,
 condition (b)) is unaffected because the satisfaction pathway is unchanged.
 
 **Proposition 2B (S1-Sufficiency Connection).** Below-sufficiency sacrifices
-violate Assumption S1 (free choice, Section 3) by construction. An agent
-whose capability level on any need dimension is below the sufficiency
-threshold must invest to reach sufficiency in order to function. This
-investment is not voluntary -- the agent has no meaningful alternative to
-satisfying the need. The revealed-preference inequality requires that the
-sacrifice is voluntary (the agent chose Y over X when both were available,
-including the option of retaining X). For below-sufficiency need-
-satisfaction, the agent does not have the option of retaining X (their
-purchasing power or time) because doing so means failing to reach minimum
-viable functionality.
+fail Assumption S1 (free choice, Section 3). S1 requires that retaining
+X_n was a *non-degrading* alternative -- one that would not leave the
+agent below minimum viable functionality on any need dimension. For an
+agent whose capability level on dimension d_k is below the sufficiency
+threshold s_k, retaining X_n (not making the trade) leaves the agent
+below functionality on d_k. This is not a non-degrading alternative per
+S1's definition, so S1 fails for that event.
 
 **Consequence for the sacrifice channel:** Below-sufficiency events are
 filtered from the revealed-sacrifice aggregate by S1 before they reach
-Theorem 2 (Section 4). The sacrifice channel operates only over
-above-sufficiency (want-pursuit) events, where S1 is structurally
-satisfied. This keeps the channel clean: all events entering the aggregate
-have positive polarity (more sacrifice = more revealed value) and satisfy
-the free-choice precondition.
+Theorem 2 (Section 4). The sacrifice channel operates only over events
+where S1 holds -- events where all need dimensions of the acquired
+bundle are at or above sufficiency, so that retaining X_n was a genuinely
+non-degrading option. For above-sufficiency (want-pursuit) events, S1's
+non-degrading alternative condition is satisfied: the agent could have
+retained X_n without falling below functionality on any dimension.
+
+**Remark (S1 is not automatically satisfied above sufficiency).** S1
+can still fail for above-sufficiency events if the trade was coerced
+by other mechanisms (economic duress, political pressure, information
+asymmetry) even though the need-sufficiency condition is met. The
+sufficiency threshold resolves one structural failure mode of S1 (the
+involuntary-need-satisfaction case); other S1 failure modes (Open
+Question 3, coerced sacrifice) remain.
 
 *Proof sketch:* Let (i, X, Y, t) be a sacrifice event where Y includes a
 need bundle whose level on dimension d_k is below the sufficiency threshold
 s_k. Agent i must reach s_k on d_k to maintain functionality. The
 alternative of retaining X (not making the trade) leaves the agent below
-functionality on d_k. This is not a meaningful alternative in the
-revealed-preference sense: S1 requires that the agent had alternatives
-including retaining X, but "retaining X and failing to function" is not
-a preference-revealing alternative. Therefore S1 fails for this event,
-and the event does not enter the sacrifice aggregate.
+functionality on d_k. By S1's non-degrading alternative requirement,
+retaining X must not cause the agent to fall below minimum viable
+functionality. But retaining X in this case does exactly that. Therefore
+S1 fails for this event, and the event does not enter the sacrifice
+aggregate.
 
 ### How sufficiency thresholds are set
 
@@ -489,13 +495,15 @@ Question 3 for the coerced-sacrifice problem.
 **Remark (S1 filters below-sufficiency sacrifices).** The need-sufficiency
 architecture (Section 2, Proposition 2B) establishes that below-sufficiency
 sacrifices -- events where the agent trades to meet a need on which they are
-below the sufficiency threshold -- violate S1 by construction. The agent has
-no free choice about meeting needs; the alternative of retaining X and
-failing to function is not a preference-revealing alternative. These events
-do not enter the sacrifice aggregate. The sacrifice channel therefore
-operates only over above-sufficiency (want-pursuit) events, where S1 is
-structurally satisfied and sacrifice polarity is positive (more sacrifice =
-more revealed value). The framework accounts for below-sufficiency
+below the sufficiency threshold -- fail S1's non-degrading alternative
+condition. Retaining X_n would leave the agent below minimum viable
+functionality, so retaining X_n is not a non-degrading alternative per S1.
+These events do not enter the sacrifice aggregate. The sacrifice channel
+therefore operates only over events where S1 holds -- where retaining X_n
+was a genuinely non-degrading option. For above-sufficiency (want-pursuit)
+events, the non-degrading condition is satisfied with respect to need
+dimensions (though S1 can still fail via other mechanisms -- see Section 2,
+Proposition 2B, Remark). The framework accounts for below-sufficiency
 sacrifice evidence separately via the need-sufficiency diagnostic
 (Section 9).
 
@@ -635,8 +643,14 @@ fails and why the population-level version is weaker.)
 
 **Assumption S1 (Free choice).** Each sacrifice event (i_n, X_n, Y_n, t_n)
 is a voluntary trade: agent i_n chose Y_n over X_n when both were available.
-The agent had alternatives (other bundles they could have chosen instead of
-Y_n, including retaining X_n).
+The agent had *non-degrading* alternatives: retaining X_n was a viable
+option that would not have left the agent below minimum viable functionality
+on any need dimension. When retaining X_n would cause the agent to fail on
+a need dimension (i.e., the agent's capability level on some dimension d_k
+would fall below the sufficiency threshold s_k without the trade), the
+"alternative" of retaining X_n is not a non-degrading option, and S1 fails
+for that event. (See Section 2, Proposition 2B for the formal connection
+between sufficiency and S1.)
 
 **Assumption S2 (Benchmark grounding).** The benchmarked sacrifice X_n has a
 well-defined vol_P contribution Delta_vol_P(X_n) computed via Paper 2's
@@ -1472,7 +1486,7 @@ sacrifice. The need-sufficiency diagnostic is the parallel metric for
 below-sufficiency: how efficiently does the collective satisfy needs, and
 is the satisfaction downstream-safe?
 
-**Definition 13 (Need-Access Cost).** The need-access cost aggregate for
+**Definition 10A (Need-Access Cost).** The need-access cost aggregate for
 trade window [T - H, T] is:
 
     NAC(T) = sum_{n in F_S1} Delta_vol_P(X_n)
@@ -1488,7 +1502,31 @@ a separate diagnostic that tracks the cost side of the agent's capability
 budget: how much of their benchmarked capability goes to meeting needs
 versus pursuing wants.
 
-**Definition 14 (Need-Satisfaction Efficiency).** For each need N identified
+**Remark (mixed need/want events).** A single sacrifice event may acquire
+a bundle Y that includes both below-sufficiency need components and
+above-sufficiency want components (e.g., purchasing a meal that satisfies
+nutritional need AND provides above-sufficiency culinary experience). The
+S1 filter operates on the event as a whole: if *any* dimension of Y is
+below the sufficiency threshold, the event fails S1 and the *entire*
+Delta_vol_P(X_n) enters NAC rather than the sacrifice aggregate. This is
+conservative -- some want-pursuit signal is lost -- but avoids the need
+for a within-event attribution rule parallel to alpha_{n,c} (Definition 3).
+A more refined treatment would split such events into need and want
+components using the sufficiency threshold as the split point, applying
+Definition 2D's benchmark to each component separately. This refinement
+is analogous to the hedonic decomposition in Definition 3 and is deferred
+to the full paper. For the outline, the whole-event filter is the
+conservative default.
+
+**Remark (multi-need attribution).** When a single below-sufficiency event
+targets multiple needs (e.g., grocery shopping satisfying both nutrition
+and social access), the per-need access_cost in NSE (Definition 14) can
+use equal-weight attribution across the targeted needs, paralleling the
+equal-weight fallback in Definition 3 for bundle decomposition. A more
+refined attribution requires need-specific hedonic decomposition, which
+is deferred to the full paper.
+
+**Definition 10B (Need-Satisfaction Efficiency).** For each need N identified
 in the poset (Section 2, Definition 2A), the need-satisfaction efficiency
 is a triple:
 
@@ -1506,7 +1544,7 @@ where:
 The aggregate need-satisfaction efficiency NSE(T) reports the distribution
 of needs across the three sufficiency statuses and flags degrading pathways.
 
-**Proposition 10 (Combined Diagnostic).** The framework reports the triple
+**Proposition 7A (Combined Diagnostic).** The framework reports the triple
 (vol_R^lower, NAC, NSE) as a joint diagnostic:
 
 (a) **High vol_R^lower + low NAC:** Healthy. The collective exercises rich
@@ -1531,14 +1569,31 @@ of needs across the three sufficiency statuses and flags degrading pathways.
     from "expensive and degrading" (high access_cost, downstream_degrading).
 
 **Remark (parallel structure, not nesting).** The need-sufficiency diagnostic
-is parallel to the gap decomposition, not nested within it. The gap
-decomposition partitions the *above-sufficiency want-pursuit* space into
-restricted / covered / dormant / residual. The need-sufficiency diagnostic
-partitions the *below-sufficiency need-satisfaction* space into
-met / unmet / degrading. Together they cover the full capability landscape
-without complicating each other's machinery. The sacrifice channel mediates
-both: above-sufficiency events enter the gap decomposition via Theorem 2;
-below-sufficiency events enter NAC via the S1-failure filter.
+is parallel to the gap decomposition, not nested within it, but operates
+on different formal objects. The gap decomposition (Definition 10) is a
+*capability partition*: every capability in P is assigned to exactly one
+category. NAC (Definition 13) is an *event aggregate*: the total
+benchmarked capability surrendered in below-sufficiency events. NSE
+(Definition 14) is a *per-need state assessment*: a triple reporting
+sufficiency status, downstream safety, and access cost for each identified
+need. The parallelism holds at the *diagnostic-reporting* level: the
+framework reports the gap decomposition (how well the want-pursuit space
+is covered by sacrifice evidence) alongside (NAC, NSE) (how efficiently
+and safely the need space is satisfied). The two diagnostics partition the
+sacrifice event stream (above-sufficiency events enter the gap
+decomposition via Theorem 2; below-sufficiency events enter NAC via the
+S1 filter) but they do not partition the same formal objects.
+
+**Remark (intentional departure from memo 2's subtraction form).** The
+second reframing memo proposed vol_R >= Σ(want-sacrifice values) -
+Σ(need-access costs) as the aggregate bound. The outline intentionally
+departs from this formulation. NAC is kept as a parallel diagnostic rather
+than subtracted from Theorem 2's bound, for two reasons: (1) the
+subtraction has edge cases when need-costs exceed want-values (negative
+vol_R lower bound), and (2) keeping NAC separate preserves Theorem 2's
+structural cleanliness (positive-only aggregate, S0-S2 sufficient for
+Part A) while still making need-cost information available to the
+framework's diagnostic machinery.
 
 ---
 
@@ -1660,14 +1715,15 @@ beta^lower = 10.0 / 22.0 = 0.455. ALARM fires (beta^lower < 0.8).
 
 Gap decomposition:
 - delta_restricted = 0
-- delta_partial = 0 (covered capabilities still fully accounted for)
+- delta_partial = 1.0/22 = 0.045 (covered silicon cooperatives with
+  incomplete sacrifice evidence -- vol_P(C_S) = 11.0, vol_R^lower(C_S) =
+  10.0, uncovered = 1.0)
 - delta_dormant = (2*2 + 4*1.0)/22 = 8.0/22 = 0.364 (b_2, b_3, and 4
   cooperatives have zero want-pursuit sacrifice data but are tradable in
   principle -- these are dormant WANTS)
 - delta_residual = 3.0/22 = 0.136 (residual class unchanged)
-- Check: delta_dormant + delta_residual = 0.364 + 0.136 = 0.500;
-  beta^lower + gap = 0.455 + 0.500 = 0.955 (remaining 0.045 is
-  delta_partial from imperfect coverage of some silicon cooperatives)
+- Check: beta^lower + delta_partial + delta_dormant + delta_residual =
+  0.455 + 0.045 + 0.364 + 0.136 = 1.000
 
 Need-sufficiency diagnostic: NAC rises from 3.5 to 8.2 as automation
 displaces biological agents from cooperative outputs, forcing them to
@@ -1821,7 +1877,7 @@ this specific Goodhart mechanism: by establishing the polarity boundary
 and filtering below-sufficiency sacrifices via S1 *before* the sacrifice
 channel operates, the framework prevents need-cost inflation from
 corrupting the vol_R lower bound. The NAC diagnostic (Section 9,
-Definition 13) tracks the excluded need-costs separately, making the
+Definition 10A) tracks the excluded need-costs separately, making the
 Goodhart pressure visible rather than hidden.
 
 ### Relationship to subsequent papers
@@ -1876,7 +1932,7 @@ signals that Paper 9's structure-learning algorithms can consume.
    sufficiency threshold (Section 2) identifies the structural boundary
    where sacrifice polarity flips. Below-sufficiency sacrifices are
    involuntary and correctly filtered by S1. The need-access cost
-   diagnostic (Section 9, Definitions 13-14) tracks need-satisfaction
+   diagnostic (Section 9, Definitions 10A-10B) tracks need-satisfaction
    efficiency as a companion metric to the want-pursuit gap decomposition.
    The architecture provides the Goodhart mechanism for Paper 9 (Section
    12): a framework that fails to distinguish needs from wants produces a
@@ -2074,14 +2130,14 @@ Proposition 2A (Anti-Stuffing):
   Downstream non-degradation is unchanged by re-measurement.
 
 Proposition 2B (S1-Sufficiency Connection):
-- Show that below-sufficiency sacrifice events structurally violate S1.
-  The key step: retaining X (not making the trade) leaves the agent
-  below functionality on dimension d_k. This is not a meaningful
-  alternative in the revealed-preference sense: the agent's choice set
-  effectively does not include "retain X and function normally." S1
-  requires the agent had alternatives including retaining X; when
-  retaining X means failing to function, the alternative is not
-  preference-revealing.
+- Show that below-sufficiency sacrifice events fail S1's non-degrading
+  alternative condition. The key step: retaining X (not making the
+  trade) leaves the agent below functionality on dimension d_k. S1
+  requires that retaining X_n was a non-degrading alternative (would
+  not leave the agent below minimum viable functionality on any need
+  dimension). When retaining X means falling below sufficiency on d_k,
+  S1's condition fails directly. Note that S1 can still fail for
+  above-sufficiency events via other mechanisms (coercion, duress).
 
 ### B.1 Theorem 1 proof strategy (Privacy-Minimality)
 
@@ -2162,8 +2218,10 @@ includes both the OI floor and the sacrifice lower bound.
 |--------|-----------|--------------|
 | {d_1,...,d_m} | Dimensions of a need bundle | Def 2A |
 | {s_1,...,s_m} | Sufficiency thresholds per dimension | Def 2A |
+| p_N | Position of need N in the poset | Def 2A |
 | Down(p_N) | Downstream cone of need N in the poset | Def 2A |
 | pi_N | Need-satisfaction pathway | Def 2A |
+| d_k(pi_N) | Value of dimension d_k under pathway pi_N | Def 2B |
 | Delta_c(pi_N) | Downstream quality contribution of pathway pi_N to capability c | Def 2B |
 | benchmark_k | Polarity-correct benchmark for dimension k (capped below, discounted above) | Def 2D |
 | alpha_k | Above-sufficiency discount factor for dimension k | Def 2D |
@@ -2195,9 +2253,11 @@ includes both the OI floor and the sacrifice lower bound.
 | HHI_alarm | Wireheading detection threshold | Prop 8 |
 | e_t(d) | Exercise indicator (internal perimeter only) | Def 12 |
 | O | Observation perimeter | Def 12 |
-| NAC(T) | Need-access cost aggregate (below-sufficiency sacrifice total) | Def 13 |
-| F_S1 | Set of events failing S1 due to below-sufficiency | Def 13 |
-| NSE(N) | Need-satisfaction efficiency triple (status, safety, cost) | Def 14 |
+| NAC(T) | Need-access cost aggregate (below-sufficiency sacrifice total) | Def 10A |
+| F_S1 | Set of events failing S1 due to below-sufficiency | Def 10A |
+| NSE(N) | Need-satisfaction efficiency triple (status, safety, cost) | Def 10B |
+| NSE(T) | Aggregate need-satisfaction efficiency over trade window | Def 10B |
+| Xi | Restriction set {d in P : d is currently restricted} | Def 10 |
 | vol_R^combined | Combined diagnostic (exact + lower bound) | App A |
 | OI_floor(k) | Observational individuation floor for agent k | Prop 6 |
 | U_i | Agent i's utility function over capability bundles | Def 1, Remark |
@@ -2206,7 +2266,7 @@ includes both the OI floor and the sacrifice lower bound.
 | S2 | Benchmark grounding assumption | Thm 2 |
 | S3 | Bundle coherence assumption | Thm 2 |
 | S4 | Additive separability assumption | Thm 2 |
-| S5 | Decomposition validity (alpha are vol_R share lower bounds) | Thm 2B |
+| S5 | Decomposition validity (alpha are vol_R share lower bounds) | Thm 2, Part B |
 | epsilon | Population-level calibration bias bound | Open Q 6 |
 
 ### Cross-reference summary
