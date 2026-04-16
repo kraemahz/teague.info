@@ -44,6 +44,10 @@ const ArticlePreview: React.FC = () => {
             <p className="subtitle">Engineer, Philosopher, Dreamer</p>
 
             <h3 className="section-title">Papers</h3>
+            <a href="/papers/wamura/" className="paper-link">
+                <p className="paper-title">Controlled Relaxation Protocols for the Wamura Problem</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.6, GPT 5.4</p>
+            </a>
             <a href="/papers/phase/" className="paper-link">
                 <p className="paper-title">Cross-Substrate Channel Redundancy Governs Monopolar Convergence</p>
                 <p className="paper-meta">2026 · Lasser, Claude Opus 4.6, GPT 5.4</p>
