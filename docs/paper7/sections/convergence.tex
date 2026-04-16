@@ -311,6 +311,24 @@ convergence; only the rate degrades under under-estimation of
 $p_{\mathrm{ex}}$.  The misspecification regime in which the
 convergent hypothesis flips is delineated in
 Section~\ref{sec:discussion}, Limitations.
+
+The dangerous failure mode is in the opposite direction:
+upward misspecification of $p_{\mathrm{ex}}$.  If the modeller
+assumes $p_{\mathrm{ex}} = 0.4$ but the true value is $0.05$,
+most tests produce non-exercise null events, and a meta-policy
+that uses the modelled likelihoods will conclude the capability
+is cleared when the test scope never actually activated the
+pathway.  Upward misspecification is a detectable failure mode:
+the observed exercise frequency over a sequence of tests will
+fall systematically below the modelled $p_{\mathrm{ex}}$, and
+the meta-policy of Section~\ref{sec:meta_policy} must treat
+that gap as a test-design failure rather than a cleared claim.
+Operationally, the meta-policy should track an empirical
+$\hat{p}_{\mathrm{ex}}$ from observed exercise events and
+reject the test sequence when $\hat{p}_{\mathrm{ex}}$ falls
+below the modelled $p_{\mathrm{ex}}$ by a configured
+tolerance, returning the restriction to its prior state with
+the test outcomes discarded.
 \end{remark}
 
 \begin{corollary}[EWMA-Risk-Trust Convergence]

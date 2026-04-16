@@ -95,9 +95,10 @@ observation distributions. We extend the protocol to
 restriction is not obsolete but misconfigured: the underlying risk
 pathway still operates, but technological progress has made narrower
 keystones available that would block it without blocking adjacent benign
-pathways. The protocol closes the most important open problem named
-in <d-cite key="lasser2026horizon"></d-cite> and
-resolves the degenerate-phase-boundary case of <d-cite key="lasser2026phase"></d-cite>.</p>
+pathways. For the subset of risks admitting bounded-scope feasibility (a
+precondition we delineate in Section sec:discussion), the protocol
+closes the most important open problem named in <d-cite key="lasser2026horizon"></d-cite> and resolves the
+degenerate-phase-boundary case of <d-cite key="lasser2026phase"></d-cite>.</p>
 </d-abstract>
 
 <d-article>
@@ -1999,6 +2000,26 @@ The misspecification regime in which the convergent hypothesis flips is
 delineated in Section <a href="#sec:discussion"
 data-reference-type="ref" data-reference="sec:discussion">11</a>,
 Limitations.</em></p>
+<p><em>The dangerous failure mode is in the opposite direction: upward
+misspecification of <span class="math inline">p_{\mathrm{ex}}</span>. If
+the modeller assumes <span class="math inline">p_{\mathrm{ex}} =
+0.4</span> but the true value is <span class="math inline">0.05</span>,
+most tests produce non-exercise null events, and a meta-policy that uses
+the modelled likelihoods will conclude the capability is cleared when
+the test scope never actually activated the pathway. Upward
+misspecification is a detectable failure mode: the observed exercise
+frequency over a sequence of tests will fall systematically below the
+modelled <span class="math inline">p_{\mathrm{ex}}</span>, and the
+meta-policy of Section <a href="#sec:meta_policy"
+data-reference-type="ref" data-reference="sec:meta_policy">7</a> must
+treat that gap as a test-design failure rather than a cleared claim.
+Operationally, the meta-policy should track an empirical <span
+class="math inline">\hat{p}_{\mathrm{ex}}</span> from observed exercise
+events and reject the test sequence when <span
+class="math inline">\hat{p}_{\mathrm{ex}}</span> falls below the
+modelled <span class="math inline">p_{\mathrm{ex}}</span> by a
+configured tolerance, returning the restriction to its prior state with
+the test outcomes discarded.</em></p>
 </div>
 <div id="cor:ewma" class="corollary">
 <p><strong>Corollary 4</strong> (EWMA-Risk-Trust Convergence). <em>When
@@ -3035,6 +3056,29 @@ class="math inline">1</span>); quantitative misestimation only slows
 convergence. Detector calibration is therefore a prerequisite for the
 convergence guarantee to carry its safety interpretation, but the bound
 is robust to plausible-magnitude calibration error.</p>
+<p>The deeper problem is that calibration itself reintroduces a
+verification asymmetry one level up. For first-of-kind
+capabilities—which is precisely the regime where the Wamura problem is
+most acute—there is no historical contraction record on which to
+estimate <span class="math inline">\beta</span> and <span
+class="math inline">\alpha_{\mathrm{fp}}</span> for the specific pathway
+under test, and the restricted regime by construction generates none.
+Calling this a bootstrap problem is more honest than treating it as a
+side condition: the detector that probes a novel pathway must itself be
+calibrated, and the calibration cannot come from observing the very
+restricted regime CR is intended to break. Two partial remedies are
+available. (i) Cross-pathway calibration: the same detector
+architecture, applied to non-restricted but structurally similar
+pathways, yields <span class="math inline">\beta</span> and <span
+class="math inline">\alpha_{\mathrm{fp}}</span> estimates that transfer
+under the assumption that detection physics is pathway-class invariant
+rather than pathway-specific. (ii) Cross-substrate commitment: the
+integrity machinery of <d-cite key="lasser2026exo"></d-cite> permits committed predictions about
+what the detector should observe under benign and adversarial
+conditions, with the commitment itself constituting a calibration
+witness independent of the restricted-regime data the bootstrap lacks.
+Both are partial; neither closes the bootstrap completely. We name the
+gap rather than dissolve it.</p>
 <h4
 id="scope-existence-for-densely-cooperative-capabilities.">Scope-existence
 for densely cooperative capabilities.</h4>
@@ -3103,10 +3147,28 @@ class="math inline">\beta(\tau_{\mathrm{test}}) = (1 -
 \delta_{\mathrm{agg}})^{\min(k, \tau_{\mathrm{test}})}</span> where
 <span class="math inline">k</span> is the pathway duration, but if <span
 class="math inline">k = 1</span> then <span class="math inline">\beta =
-1 - \delta_{\mathrm{agg}}</span> may be non-negligible. Whether the
-protocol should require longer test windows for suspected transient
-pathways, or whether the detection architecture should raise its
-sampling rate during tests, is an engineering choice left open here.</p>
+1 - \delta_{\mathrm{agg}}</span> may be non-negligible. An operational
+composition rule fixes the design parameter: for a target window
+false-negative rate <span class="math inline">\epsilon_\beta</span> and
+a known (or upper-bounded) pathway duration <span
+class="math inline">k</span>, the per-step detection probability <span
+class="math inline">\delta_{\mathrm{agg}}</span> during the test must
+satisfy <span class="math inline">(1 - \delta_{\mathrm{agg}})^k \leq
+\epsilon_\beta</span>, i.e., <span
+class="math inline">\delta_{\mathrm{agg}}\geq 1 -
+\epsilon_\beta^{1/k}</span>. For <span class="math inline">k = 1</span>
+this collapses to <span class="math inline">\delta_{\mathrm{agg}}\geq 1
+- \epsilon_\beta</span> (the single-step detector must itself meet the
+target); for larger <span class="math inline">k</span> the requirement
+softens proportionally. Implementations that cannot raise <span
+class="math inline">\delta_{\mathrm{agg}}</span> at fixed <span
+class="math inline">\tau_{\mathrm{test}}</span> must either extend the
+test window (use the persistent-activation form with longer <span
+class="math inline">\tau_{\mathrm{test}}</span>) or raise the detector
+sampling rate within the window (effectively shrinking <span
+class="math inline">\tau_{\mathrm{mix}}</span>). The choice between
+these is implementation-defined; the composition rule sets the
+constraint each must satisfy.</p>
 <h4 id="adversarial-risk-claimants.">Adversarial risk claimants.</h4>
 <p>Assumption <a href="#ass:T3" data-reference-type="ref"
 data-reference="ass:T3">6</a>(a) rules out adaptation by the tested
@@ -3122,6 +3184,32 @@ decrease, eventually down-weighting its future claims in aggregation.
 Whether the meta-policy should explicitly model this adversarial case,
 or whether the trust-dynamics response is sufficient, is an open design
 question.</p>
+<p>The composition is operationally fragile during the <span
+class="math inline">\tau_{\mathrm{test}}</span>-window itself. The
+Wamura problem is a structural invitation for an adversary—an incumbent,
+a regulator, or a rent-seeker—to manufacture risk claims that lock
+competitor capabilities for the duration of test scheduling and
+execution, even if the asymptotic trust dynamics eventually correct. The
+total <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> lost to
+adversarial claims before trust-weight downweighting takes effect is
+bounded above by <span class="math inline">|\Delta
+{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\Xi)| \cdot N_{\mathrm{adv}} \cdot
+(T_{\mathrm{stale}} + \tau_{\mathrm{test}})</span>, where <span
+class="math inline">N_{\mathrm{adv}}</span> is the number of adversarial
+claims the trust dynamics absorb before downweighting and <span
+class="math inline">T_{\mathrm{stale}} + \tau_{\mathrm{test}}</span> is
+the window each claim ties up the targeted capability. In contested
+commercial or strategic settings where adversarial claim manufacture is
+plausible, this bound is the correct deployment guard: the protocol
+should not be deployed without either (i) an integrity layer
+(cryptographic commitment via <d-cite key="lasser2026exo"></d-cite>, institutional review, or
+jurisdictional accountability) that bounds <span
+class="math inline">N_{\mathrm{adv}}</span> at the claim generation
+step, or (ii) a meta-policy with an explicit adversarial-claim detector
+before trust dynamics take over. The current protocol carries no such
+guard internally; this is named here as a deployment caveat rather than
+dissolved.</p>
 <h2 id="relationship-to-prior-and-subsequent-papers">Relationship to
 prior and subsequent papers</h2>
 <h4 id="prior-papers.">Prior papers.</h4>
@@ -3475,11 +3563,24 @@ with persistent activation, the window decomposes into <span
 class="math inline">\tau / \tau_{\mathrm{mix}}</span> independent
 opportunities (exact if <span class="math inline">\tau_{\mathrm{mix}}=
 1</span>, upper-bound if <span
-class="math inline">\tau_{\mathrm{mix}}&gt; 1</span>). Each opportunity
-misses with probability <span class="math inline">1 -
-\delta_{\mathrm{agg}}</span>. Hence <span class="math inline">p_\tau
-\leq (1 - \delta_{\mathrm{agg}})^{\tau/\tau_{\mathrm{mix}}}</span>,
-decreasing in <span class="math inline">\tau</span>.</p>
+class="math inline">\tau_{\mathrm{mix}}&gt; 1</span>). The upper-bound
+direction in the <span class="math inline">\tau_{\mathrm{mix}}&gt;
+1</span> case requires that the temporal-mixing process satisfy a
+monotone-coupling property: detector misses at temporally adjacent steps
+are positively correlated, so partitioning into <span
+class="math inline">\tau/\tau_{\mathrm{mix}}</span> independent blocks
+under-estimates rather than over-estimates the joint miss probability.
+For cross-substrate channels this follows unconditionally from the
+channel-isolation result of <d-cite key="lasser2026exo"></d-cite>; for same-substrate channels under
+the temporal-independence form of Assumption <a href="#ass:D2"
+data-reference-type="ref" data-reference="ass:D2">3</a>(a), the property
+is equivalent to positive association of the per-step detection
+indicator, which holds whenever the detector is monotone in its input
+signal (the standard case). Each opportunity misses with probability
+<span class="math inline">1 - \delta_{\mathrm{agg}}</span>. Hence <span
+class="math inline">p_\tau \leq (1 -
+\delta_{\mathrm{agg}})^{\tau/\tau_{\mathrm{mix}}}</span>, decreasing in
+<span class="math inline">\tau</span>.</p>
 <h4 id="part-b.-1">Part (b).</h4>
 <p>Inverting the bound: if <span
 class="math inline">\beta(\tau_{\mathrm{test}}) \leq

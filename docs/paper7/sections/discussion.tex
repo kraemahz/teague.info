@@ -114,6 +114,30 @@ calibration is therefore a prerequisite for the convergence
 guarantee to carry its safety interpretation, but the bound is
 robust to plausible-magnitude calibration error.
 
+The deeper problem is that calibration itself reintroduces a
+verification asymmetry one level up.  For first-of-kind
+capabilities---which is precisely the regime where the Wamura
+problem is most acute---there is no historical contraction
+record on which to estimate $\beta$ and $\alphafp$ for the
+specific pathway under test, and the restricted regime by
+construction generates none.  Calling this a bootstrap problem
+is more honest than treating it as a side condition: the
+detector that probes a novel pathway must itself be calibrated,
+and the calibration cannot come from observing the very
+restricted regime CR is intended to break.  Two partial remedies
+are available.  (i)~Cross-pathway calibration: the same detector
+architecture, applied to non-restricted but structurally similar
+pathways, yields $\beta$ and $\alphafp$ estimates that transfer
+under the assumption that detection physics is pathway-class
+invariant rather than pathway-specific.  (ii)~Cross-substrate
+commitment: the integrity machinery of~\citep{lasser2026exo}
+permits committed predictions about what the detector should
+observe under benign and adversarial conditions, with the
+commitment itself constituting a calibration witness independent
+of the restricted-regime data the bootstrap lacks.  Both are
+partial; neither closes the bootstrap completely.  We name the
+gap rather than dissolve it.
+
 \paragraph{Scope-existence for densely cooperative capabilities.}
 Remark~\ref{rem:scope_existence} names scope existence as a
 scheduling precondition that must be enforced by the meta-policy
@@ -167,11 +191,22 @@ that the detector could miss at low sampling rate.  The current
 formulation handles transient pathways via
 $\beta(\testdur) = (1 - \deltaagg)^{\min(k, \testdur)}$ where
 $k$ is the pathway duration, but if $k = 1$ then
-$\beta = 1 - \deltaagg$ may be non-negligible.  Whether the
-protocol should require longer test windows for suspected
-transient pathways, or whether the detection architecture should
-raise its sampling rate during tests, is an engineering choice
-left open here.
+$\beta = 1 - \deltaagg$ may be non-negligible.  An operational
+composition rule fixes the design parameter: for a target
+window false-negative rate $\epsilon_\beta$ and a known (or
+upper-bounded) pathway duration $k$, the per-step detection
+probability $\deltaagg$ during the test must satisfy
+$(1 - \deltaagg)^k \leq \epsilon_\beta$, i.e.,
+$\deltaagg \geq 1 - \epsilon_\beta^{1/k}$.  For $k = 1$ this
+collapses to $\deltaagg \geq 1 - \epsilon_\beta$ (the
+single-step detector must itself meet the target); for larger
+$k$ the requirement softens proportionally.  Implementations
+that cannot raise $\deltaagg$ at fixed $\testdur$ must either
+extend the test window (use the persistent-activation form
+with longer $\testdur$) or raise the detector sampling rate
+within the window (effectively shrinking $\testmix$).  The
+choice between these is implementation-defined; the
+composition rule sets the constraint each must satisfy.
 
 \paragraph{Adversarial risk claimants.}
 Assumption~\ref{ass:T3}(a) rules out adaptation by the tested
@@ -190,6 +225,30 @@ claims in aggregation.  Whether the meta-policy should
 explicitly model this adversarial case, or whether the
 trust-dynamics response is sufficient, is an open design
 question.
+
+The composition is operationally fragile during the
+$\testdur$-window itself.  The Wamura problem is a structural
+invitation for an adversary---an incumbent, a regulator, or a
+rent-seeker---to manufacture risk claims that lock competitor
+capabilities for the duration of test scheduling and execution,
+even if the asymptotic trust dynamics eventually correct.  The
+total $\volL$ lost to adversarial claims before
+trust-weight downweighting takes effect is bounded above by
+$|\Delta \volL(\Xirestrict)| \cdot N_{\mathrm{adv}} \cdot
+(T_{\mathrm{stale}} + \testdur)$, where $N_{\mathrm{adv}}$ is
+the number of adversarial claims the trust dynamics absorb
+before downweighting and $T_{\mathrm{stale}} + \testdur$ is the
+window each claim ties up the targeted capability.  In
+contested commercial or strategic settings where adversarial
+claim manufacture is plausible, this bound is the correct
+deployment guard: the protocol should not be deployed without
+either (i) an integrity layer (cryptographic commitment via
+\citep{lasser2026exo}, institutional review, or jurisdictional
+accountability) that bounds $N_{\mathrm{adv}}$ at the claim
+generation step, or (ii) a meta-policy with an explicit
+adversarial-claim detector before trust dynamics take over.
+The current protocol carries no such guard internally; this is
+named here as a deployment caveat rather than dissolved.
 
 \subsection{Relationship to prior and subsequent papers}
 
