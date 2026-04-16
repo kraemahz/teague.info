@@ -69,7 +69,7 @@ Supplementary:
 ### Purpose
 
 Paper 1 defines the GFM actor as a system that maximizes vol_P -- the poset
-measure over the capability space (Paper 1, Definition 6; Paper 2, Definition
+measure over the capability space (Paper 1, Section 4; Paper 2, Definition
 7). Paper 2 axiomatizes vol_P as a poset measure satisfying M1-M6 (Paper 2,
 Proposition 1) and proves it is self-balancing (Paper 2, Theorem 1). Paper 3
 extends the analysis to multi-substrate collectives, proving that full
@@ -163,9 +163,10 @@ that makes the paper consonant with the rest of the sequence.
 
 | Paper | Result used | Role in this paper |
 |-------|-----------|-------------------|
-| P1 | Population empowerment (Def 6), self-balancing (Prop 1) | The objective measure whose proxy adequacy this paper diagnoses |
+| P1 | Population empowerment (Section 4), self-balancing (Prop 1) | The objective measure whose proxy adequacy this paper diagnoses |
 | P2 | Axioms M1-M6 (Prop 1), self-balancing on posets (Thm 1), leverage (Def 9), benchmark (Def 2) | The axiomatic foundation; benchmark as the unit of sacrifice measurement |
-| P3 | Anti-monopolar property (Prop 6), preemptive-restriction criterion (Prop 1), observational individuation (Def 9, Cor 2.1) | The restriction criterion this paper completes (value axis); static vol_R floor for active agents |
+| P3 | Anti-monopolar property (Prop 6), preemptive-restriction criterion (Prop 1), observational individuation (Def 9) | The restriction criterion this paper completes (value axis); static vol_R floor for active agents |
+| P4 | Risk-trust dynamics (Def 4), EWMA learning rate (alpha) | Temporal analog for the aggregate trade window timescale |
 | P5 | Commitment Protocol (Def 6), ZK Capability Proof (Def 7), Risk-Claim Protocol (Def 13) | The commitment layer the sacrifice channel composes with |
 | P6 | Phase boundary (Thm 1), channel redundancy (Thm 2) | The privacy discipline this paper extends |
 | P7 | Controlled Relaxation (Def 3), Test Scope (Def 4), Damage Bound (Thm 1), Convergence (Thm 2) | The complementary paper: risk dimension vs. value dimension |
@@ -196,14 +197,40 @@ The event emits the signal:
 
     vol_R^lower(Y) >= Delta_vol_P(X)
 
-**Justification (revealed-preference inequality).** By free choice:
-U_i(Y) >= U_i(X), where U_i is agent i's utility function over capability
-bundles. Under the framework's standing assumption that vol_P is an
-operational target on the benchmarked subspace (the B-to-C precondition from
-Paper 6's framing), the agent's valuation of X is grounded in
-Delta_vol_P(X). The inequality transfers: the agent values the unbenchmarked
-bundle Y at least as much as the benchmarked sacrifice X, so the vol_R
-contribution of Y is at least Delta_vol_P(X).
+under the calibration assumption (S0) stated below.
+
+**Justification (revealed-preference inequality).** The transfer from the
+microeconomic revealed-preference inequality U_i(Y) >= U_i(X) to the
+framework-level bound vol_R^lower(Y) >= Delta_vol_P(X) requires two bridge
+conditions:
+
+1. **Sacrifice-side grounding (Assumption S2 below):** The agent's valuation
+   of the benchmarked sacrifice X is calibrated to its vol_P contribution:
+   U_i(X) >= Delta_vol_P(X). This holds by construction when vol_P is the
+   operational target on the benchmarked subspace.
+
+2. **Acquisition-side calibration (Assumption S0 below):** The agent's
+   valuation of the unbenchmarked bundle Y is a lower bound on Y's vol_R
+   contribution: U_i(Y) <= vol_R(Y). This is the non-trivial bridge. It
+   asserts that agents do not systematically overvalue unbenchmarked bundles
+   relative to their exercise contribution -- equivalently, that an agent's
+   willingness-to-pay in benchmarked capability for an unbenchmarked bundle
+   does not exceed the bundle's actual realized-capability contribution.
+   When S0 fails (agents overpay due to cognitive bias, status signaling,
+   addiction, or strategic misvaluation), the sacrifice signal overstates
+   vol_R and the lower bound is invalid.
+
+Given both conditions: vol_R(Y) >= U_i(Y) >= U_i(X) >= Delta_vol_P(X),
+completing the chain.
+
+**Remark (S0 is the weakest calibration assumption).** S0 does NOT require
+that agent valuations perfectly track vol_R -- only that they do not
+*overstate* it. Agents may undervalue unbenchmarked bundles (sacrifice
+little for something very valuable), in which case the lower bound is
+conservative but still valid. S0 fails only in the overpayment direction.
+The population-level version is weaker still: even if some agents overpay,
+the aggregate bound is valid as long as the *average* sacrifice-weighted
+valuation does not overstate vol_R. See Open Question 6.
 
 **Remark (free choice is load-bearing).** The revealed-preference inequality
 requires that the sacrifice is voluntary -- the agent chose Y over X when both
@@ -319,6 +346,13 @@ For a sequence of revealed-sacrifice events {(i_n, X_n, Y_n, t_n)}_{n=1}^N
 with bundles jointly covering a subset U of unbenchmarked capability-space,
 under the following assumptions:
 
+**Assumption S0 (Calibration).** For each agent i_n, the agent's valuation of
+the unbenchmarked bundle Y_n does not exceed Y_n's vol_R contribution:
+U_{i_n}(Y_n) <= vol_R(Y_n). Equivalently: agents do not systematically
+overvalue unbenchmarked bundles relative to their realized-capability
+contribution. (See the justification in Definition 1's Remark for when S0
+fails and why the population-level version is weaker.)
+
 **Assumption S1 (Free choice).** Each sacrifice event (i_n, X_n, Y_n, t_n)
 is a voluntary trade: agent i_n chose Y_n over X_n when both were available.
 The agent had alternatives (other bundles they could have chosen instead of
@@ -334,6 +368,20 @@ subspace).
 bundle Y_n into capabilities in U is well-defined: the regression has a
 unique solution (no multicollinearity degeneracy in the bundle structure).
 
+**Assumption S4 (Additive separability).** Each agent's valuation of an
+unbenchmarked bundle is additively separable across capabilities:
+U_i(Y) = sum_{c in Y} u_i(c), where u_i(c) >= 0 is the agent's
+per-capability valuation. This is the standard Rosen (1974) hedonic
+assumption: the bundle's value equals the sum of its components' values.
+Without S4, the bundle-level revealed-preference bound
+vol_R(Y_n) >= Delta_vol_P(X_n) does not distribute to individual capabilities,
+and the disaggregation into per-capability lower bounds (via weights w_n)
+is unjustified. S4 is a strong assumption -- it rules out complementarities
+between capabilities within a bundle (where the combination is worth more
+than the sum of parts). When complementarities are present, the per-capability
+disaggregation underestimates some capabilities and overestimates others,
+but the *aggregate* bound over the whole bundle remains valid.
+
 Then:
 
     vol_R^U >= sum_{n=1}^N Delta_vol_P(X_n) * w_n
@@ -342,23 +390,36 @@ where vol_R^U is the realized capability volume restricted to the
 unbenchmarked subset U. If the Y_n jointly exhaust U, the sum closes the
 B-to-C gap on U from below by a characterized quantity.
 
+**Remark (bundle-level bound is unconditional on S4).** Even without S4,
+the per-event bound vol_R(Y_n) >= Delta_vol_P(X_n) holds for the *whole
+bundle* Y_n under S0-S2. The aggregate bound over disjoint bundles
+(w_n = 1) also holds without S4. S4 is needed only for the per-capability
+disaggregation step that handles overlapping bundles. If the paper's
+primary claim is the aggregate lower bound on vol_R restricted to U, and
+bundles are disjoint, S4 is unnecessary. The assumption becomes load-bearing
+only when bundles overlap and per-capability attribution is required.
+
 *Proof sketch:*
 
-Step 1: For each event n, the revealed-preference inequality gives
-vol_R^lower(Y_n) >= Delta_vol_P(X_n). This is a per-event lower bound.
+Step 1: For each event n, the calibration chain (S0 + S1 + S2) gives
+vol_R(Y_n) >= U_{i_n}(Y_n) >= U_{i_n}(X_n) >= Delta_vol_P(X_n). This
+is a per-event lower bound on the whole bundle Y_n.
 
-Step 2: The bundles Y_n cover U with possible overlaps. The
-disaggregation weights w_n partition the contribution of each capability
-c in U across the events that include it, so that
-sum_{n: c in Y_n} w_n * Delta_vol_P(X_n) is the total lower bound
-attributed to c.
+Step 2 (requires S4): By additive separability, vol_R(Y_n) =
+sum_{c in Y_n} vol_R(c). The per-event bound distributes:
+sum_{c in Y_n} vol_R(c) >= Delta_vol_P(X_n). The hedonic regression
+assigns coefficients alpha_{n,c} representing the share of each
+capability c in bundle Y_n, with sum_c alpha_{n,c} = 1. By the
+linearity of the decomposition: vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
+for each c in Y_n (the per-capability attribution of the event's bound).
 
-Step 3: Summing over all c in U:
-vol_R^U >= sum_{c in U} sum_{n: c in Y_n} w_n * Delta_vol_P(X_n)
-         = sum_{n=1}^N Delta_vol_P(X_n) * w_n
-
-The last equality follows from the overlap correction in the weight
-definition.
+Step 3: When capability c appears in multiple bundles Y_n, the overlap
+correction selects the maximum per-capability attribution across events:
+vol_R(c) >= max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n). Summing
+over all c in U gives the aggregate bound. The weight formulation
+sum_{n} w_n * Delta_vol_P(X_n) is a conservative simplification that
+uses weighted averaging rather than max-selection; the max-based
+formulation is tighter but requires per-capability tracking.
 
 Step 4: If the Y_n jointly exhaust U (every capability in U appears in at
 least one bundle), then the sum covers all of U and the lower bound applies
@@ -370,8 +431,15 @@ under revealed-sacrifice observation is:
     beta^lower(G, T) = vol_R^lower(G, T) / vol_P(G)
 
 where vol_R^lower is the aggregate lower bound from Theorem 2 and T indexes
-the trade window. beta^lower in [0, 1] by construction (the lower bound
-cannot exceed vol_P since no trade surrenders more than vol_P).
+the trade window. beta^lower in [0, 1] because vol_R^lower is a lower
+bound on vol_R, and vol_R <= vol_P by definition (the exercised sub-poset
+is a subset of the full poset, so vol_P(P^ex) <= vol_P(P) by axiom M3).
+Any valid lower bound on vol_R is therefore at most vol_P, giving
+beta^lower <= 1. (Note: the raw weighted sum in Theorem 2 could in
+principle exceed vol_P due to overlapping bundle attribution, but the
+max-based formulation in Proposition 1 is bounded by vol_R <= vol_P.
+If using the weighted-sum formulation, cap beta^lower at
+min(1, sum w_n * Delta_vol_P(X_n) / vol_P).)
 
 **Remark (lower bound, not exact ratio).** beta^lower <= beta_true (the true
 B-to-C ratio, if it were measurable). The gap between beta^lower and
@@ -381,20 +449,33 @@ what falls outside the channel.
 
 ### Monotonicity and accumulation
 
-**Proposition 1 (Monotone Accumulation).** The aggregate lower bound is
-non-decreasing in the number of observed events: for N' > N events,
+**Proposition 1 (Monotone Accumulation Under Max-Attribution).** Define
+the per-capability lower bound as the maximum attribution across all
+observed events:
+
+    vol_R^lower(c) = max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n)
+
+and the aggregate as vol_R^lower = sum_{c in U} vol_R^lower(c). Then the
+aggregate is non-decreasing in the number of observed events: for N' > N,
 
     vol_R^lower(N') >= vol_R^lower(N)
 
-provided the additional events satisfy Assumptions S1-S3.
+provided the additional events satisfy Assumptions S0-S4.
 
-*Proof sketch:* Each additional event contributes a non-negative term
-Delta_vol_P(X_{n'}) * w_{n'} >= 0 to the sum. The overlap correction may
-reduce existing weights (w_n decreases when a new event covers the same
-capabilities), but the net effect is non-negative because the new event's
-own contribution exceeds the reduction (the agent valued Y at least as
-much as X, and the overlap correction only redistributes attribution, it
-does not destroy it).
+*Proof sketch:* Each per-capability bound vol_R^lower(c) is a maximum over
+a growing set of candidates. Adding events can only weakly increase a max.
+The aggregate is a sum of non-decreasing terms, hence non-decreasing.
+
+**Remark (the weighted-sum formulation is NOT monotone).** The simpler
+formulation sum_{n} w_n * Delta_vol_P(X_n) with overlap-correction weights
+is NOT monotone in N. A low-sacrifice event overlapping a high-sacrifice
+event reduces the high-sacrifice event's weight, and the net can decrease.
+Example: event 1 gives Delta_vol_P(X_1) = 10, w_1 = 1; adding event 2 with
+Delta_vol_P(X_2) = 1 on the same capabilities gives weights w_1 = w_2 = 0.5,
+aggregate = 10*0.5 + 1*0.5 = 5.5 < 10. The max-based formulation avoids
+this: vol_R^lower(c) = max(alpha_{1,c} * 10, alpha_{2,c} * 1) = alpha_{1,c} * 10,
+which preserves the original bound. **The paper should use the max-based
+formulation as primary and note the weighted-sum as an approximation.**
 
 **Remark (convergence through accumulation).** The lower bound tightens
 over time as more sacrifice events are observed. The convergence rate
@@ -460,6 +541,15 @@ foregone.
 - **Bias:** More egalitarian than the money channel. Time is the scarcest
   capability every agent shares. A high-wage agent's time sacrifice has
   higher Delta_vol_P per hour, but every agent sacrifices time.
+- **Coverage gap:** Agents not in the labor market (retirees, children,
+  homemakers, the unemployed) have an undefined or zero market wage rate
+  r_i, making the time-sacrifice signal silent for these agents despite
+  genuine vol_R activity. The framework can use imputed wage rates
+  (estimated opportunity cost based on the agent's skills and local labor
+  market) or non-market time valuation (e.g., replacement cost of the
+  agent's unpaid labor). This is an empirical calibration issue, not a
+  structural gap -- the signal is well-defined whenever the opportunity
+  cost is well-defined.
 - **Coverage:** Captures vol_R-content that the money channel misses
   entirely. Time-sacrifice bundles include most identity-constitutive
   activity: parenting, craft mastery, contemplative practice, relationship
@@ -517,9 +607,23 @@ revealed-sacrifice event is a tuple (C, pi, t) where:
   Definition 6)
 - pi is a zero-knowledge proof (Paper 5, Definition 7) that:
   (a) the commitment C corresponds to a valid revealed-sacrifice event
-      satisfying Assumptions S1-S3
+      satisfying the *verifiable* assumptions S2-S4 (benchmark grounding,
+      bundle coherence, additive separability)
   (b) Delta_vol_P(X) >= 0 (the sacrifice is non-negative)
   (c) the trade actually occurred (linked to a verifiable ledger entry)
+
+**Remark (S0 and S1 are not ZK-verifiable).** Assumptions S0 (calibration)
+and S1 (free choice) are about the agent's internal state -- whether
+their valuation is calibrated to vol_R, and whether the trade was
+voluntary. These cannot be verified in zero knowledge without an oracle
+for the agent's subjective state. The ZK proof verifies the *objective*
+conditions (S2-S4); the *subjective* conditions (S0, S1) are structural
+assumptions the framework makes about the trade environment, not
+properties the commitment protocol can enforce. S1's partial mitigation:
+the framework can verify that the agent had observable alternatives (the
+market offered other options), which is a necessary but not sufficient
+condition for free choice. S0's partial mitigation: population-level
+aggregation smooths individual overvaluation errors (see Open Question 6).
 - t is the event timestamp (public)
 
 The committed event reveals:
@@ -577,15 +681,30 @@ non-communicable). The revealed-sacrifice framing produces a differently-
 shaped and operationally cleaner residual class.
 
 **Definition 8 (Residual Class Under Revealed Sacrifice).** The residual class
-R_S is the set of capabilities realized purely privately, with no trade or
-sacrifice event that exposes them to the aggregate observation channel:
+at time T with lookback horizon H is the set of capabilities with no
+sacrifice evidence in the window [T - H, T]:
 
-    R_S = {c in P : no revealed-sacrifice event (i, X, Y, t) in any trade
-           window has c in Y or c functionally contributing to some Y_j in Y}
+    R_S(T, H) = {c in P : no revealed-sacrifice event (i, X, Y, t)
+                 with t in [T - H, T] has c in Y or c functionally
+                 contributing to some Y_j in Y}
 
-Equivalently: R_S contains capabilities that the agent exercises but never
-trades for -- capabilities whose exercise creates no observable sacrifice
-event.
+R_S is parameterized by the lookback horizon H because the residual class
+is *dynamic*: a capability enters R_S when its last sacrifice event ages
+past the horizon, and leaves R_S when a new sacrifice event covers it. The
+horizon H should match the preference-shift timescale (Open Question 2) --
+long enough to capture infrequent trades, short enough that stale evidence
+does not persist.
+
+**Remark (cumulative limit).** In the limit H -> infinity, R_S(T, infinity)
+contains only capabilities that have *never* been traded for. This shrinks
+monotonically as trade data accumulates -- every new category of trade
+permanently removes capabilities from R_S(T, infinity). For a fixed finite
+H, R_S can grow or shrink as trade patterns shift, reflecting the living
+structure of what the collective values.
+
+Equivalently: R_S(T, H) contains capabilities that the agent exercises but
+has not recently traded for -- capabilities whose exercise creates no
+observable sacrifice event within the lookback window.
 
 **Remark (operational cleanness).** The re-characterization reduces the
 question "what doesn't the framework observe?" to a single answer: things the
@@ -694,20 +813,39 @@ bounds.
 with Delta_vol_P(X) > 0 produces vol_R^lower > 0.
 
 **(M6) Superadditivity under independence:** Does NOT unconditionally hold.
-The same structural failure as in the prior formulation: merging two groups
-of sacrifice events can change the disaggregation weights (overlapping
-bundles get reweighted), and the reweighted sum can be less than the sum
-of the individual bounds.
+Two distinct failures, operating at different levels:
 
-**Corollary 2 (vol_R is Not Self-Balancing).** Since M6 fails for
-vol_R^lower, and M6 is load-bearing for Paper 2's self-balancing theorem
-(Theorem 1), the self-balancing property does NOT transfer from vol_P to
-vol_R. This finding carries over from the prior formulation and is
+**(a) vol_R itself fails M6 (structural, from prior formulation).** This is
+the finding from the prior outline: vol_R = vol_P restricted to the exercised
+sub-poset, and merging two groups can change exercise indicators (one group
+provides alternative pathways for the other's outputs, making previously
+load-bearing capabilities dormant). This failure is about the *measure* vol_R,
 independent of the observation mechanism.
 
+**(b) vol_R^lower fails M6 (observational).** Merging two groups of sacrifice
+events can change per-capability attributions (overlapping bundles get
+reweighted under the max-attribution scheme or lose weight under the
+weighted-sum scheme). This failure is about the *lower bound*, which is a
+weaker claim -- a lower bound failing superadditivity does not imply the
+underlying quantity fails superadditivity. However, since (a) already
+establishes the structural failure for vol_R itself, (b) is a secondary
+consequence.
+
+**Corollary 2 (vol_R is Not Self-Balancing).** The self-balancing property
+does NOT transfer from vol_P to vol_R. This follows from failure (a) above:
+vol_R as a measure does not satisfy M6 unconditionally, and M6 is
+load-bearing for Paper 2's self-balancing theorem (Theorem 1). The finding
+is structural (about vol_R itself, not about the lower bound) and carries
+over from the prior formulation, independent of the observation mechanism.
+
+Note: the corollary does NOT follow from vol_R^lower failing M6 alone --
+a lower bound failing measure axioms is unremarkable. The corollary requires
+the structural argument from (a), which holds because merging groups can
+change exercise status.
+
 This is the structural reason to use vol_R as a diagnostic rather than an
-objective. An actor maximizing vol_R (or vol_R^lower) would lack the
-automatic diversity-preservation that makes vol_P safe.
+objective. An actor maximizing vol_R would lack the automatic
+diversity-preservation that makes vol_P safe.
 
 **Remark (when M6 does hold).** M6 holds when the merged groups have
 non-overlapping bundle categories -- each unbenchmarked capability appears
@@ -769,10 +907,26 @@ is computable from:
 - The residual class R_S (computable from the trade data: R_S = capabilities
   absent from all observed trade events across all windows)
 
-Classification is O(|P|) given the sacrifice database. No structural
-counterfactual computation is required (unlike the prior formulation, which
-required O(|P|^2) counterfactual queries). This is the tractability advantage
-of the sacrifice-based approach.
+Classification is O(|P|) given the sacrifice database and a capability
+census. No structural counterfactual computation is required (unlike the
+prior formulation, which required O(|P|^2) counterfactual queries). This is
+the tractability advantage of the sacrifice-based approach.
+
+**Remark (capability census requirement).** The gap decomposition requires
+the framework to enumerate capabilities in P -- it must know what exists
+in order to classify what is dormant vs. residual. Capabilities that exist
+but have never been observed in *any* context (not just trades) cannot be
+classified. The framework observes capabilities through three channels:
+(1) the benchmarked capability space (the vol_P poset, which is the
+framework's primary data structure), (2) the sacrifice channel (trade
+events), and (3) the internal exercise indicator (Appendix A, for the
+observation perimeter). Capabilities outside all three channels are
+invisible and do not enter the gap decomposition. The framework's blind
+spot is capabilities that are neither benchmarked, nor traded for, nor
+exercised within the observation perimeter -- these are in R_S by
+definition, and their vol_P contribution is zero (they are not in the
+poset). The gap decomposition is therefore well-defined over the poset P
+that the framework maintains.
 
 ---
 
@@ -1102,6 +1256,23 @@ is conditional on the commitment infrastructure existing. Paper 5 provides
 the theoretical framework; this question asks about the engineering
 feasibility.
 
+**Open Question 6: Population-level calibration (S0).** Assumption S0
+requires that individual agents do not overvalue unbenchmarked bundles
+relative to their vol_R contribution. At the individual level, this is
+strong -- agents overpay regularly (impulse purchases, status goods,
+addiction). The population-level version is weaker: even if some agents
+overpay, the *aggregate* sacrifice-weighted valuation may not overstate
+vol_R if overvaluation errors are unbiased across the population. Is
+there a formal argument that population-level aggregation of revealed
+sacrifice corrects for individual calibration errors? The law of large
+numbers applies if individual errors are i.i.d., but systematic biases
+(advertising-driven overvaluation of a category, cultural status effects)
+would persist. A robust version of Theorem 2 would replace S0 with a
+weaker population-level condition: E[U_i(Y)] <= vol_R(Y) + epsilon for
+some bounded bias term epsilon, and the aggregate lower bound would pick
+up an additive correction. What is the tightest epsilon achievable under
+realistic preference distributions?
+
 ---
 
 ## Appendix A: The Exercise Indicator (Supplementary)
@@ -1153,24 +1324,38 @@ The five properties (P1-P5) are proved independently:
 
 ### B.2 Theorem 2 proof strategy (Aggregate Lower Bound)
 
-1. Per-event bound from revealed-preference inequality.
-2. Overlap correction via hedonic-regression disaggregation.
-3. Summation over events with weight correction.
-4. Exhaustion condition for coverage of U.
+1. Per-event bound from calibration chain (S0 + S1 + S2): vol_R(Y_n) >=
+   U_{i_n}(Y_n) >= U_{i_n}(X_n) >= Delta_vol_P(X_n).
+2. Bundle disaggregation via additive separability (S4): per-event bound
+   distributes to per-capability bounds via hedonic coefficients.
+3. Per-capability max-attribution across overlapping events (Proposition 1):
+   vol_R(c) >= max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n).
+4. Summation over capabilities in U. Exhaustion condition for coverage.
 
-Key technical challenge: the hedonic regression (Definition 3) requires
-non-degeneracy (Assumption S3). In practice, bundle multicollinearity is
-common (many trades involve similar bundles). The proof handles degeneracy
-by projecting onto the identifiable subspace and reducing the effective
-dimensionality of U.
+Key technical challenges:
+- Hedonic regression (Definition 3) requires non-degeneracy (S3). Bundle
+  multicollinearity is common; the proof handles degeneracy by projecting
+  onto the identifiable subspace.
+- Additive separability (S4) rules out complementarities. The bundle-level
+  bound (step 1) holds without S4; the per-capability disaggregation (step 2)
+  requires it. See the Remark after Theorem 2 for the no-S4 fallback.
+- Calibration (S0) is the weakest assumption in the chain but the hardest to
+  verify empirically. The population-level relaxation (Open Question 6)
+  suggests a path to a robust version.
 
 ### B.3 Theorem 3 proof strategy (Axiom Inheritance)
 
-Axiom-by-axiom analysis, identical structure to the prior formulation:
-- M1-M5: direct from the properties of summation over non-negative terms.
-- M6 failure: constructive counterexample showing that merging groups with
-  overlapping bundle categories reduces the aggregate bound via weight
-  reallocation.
+Axiom-by-axiom analysis:
+- M1-M5: direct from the properties of summation/max over non-negative terms.
+- M6 failure (a), vol_R itself: constructive counterexample from the prior
+  formulation showing that merging groups changes exercise indicators
+  (alternative pathways make previously load-bearing capabilities dormant).
+  This is a structural argument about the measure vol_R, independent of the
+  observation mechanism.
+- M6 failure (b), vol_R^lower: constructive counterexample showing that
+  merging groups with overlapping bundle categories changes per-capability
+  attributions. This is an observational argument about the lower bound.
+  Corollary 2 follows from (a), not (b).
 
 ### B.4 Connection to Paper 3's observational individuation
 
@@ -1198,7 +1383,8 @@ includes both the OI floor and the sacrifice lower bound.
 | r_i | Agent i's market wage rate | Def 6 |
 | h | Hours sacrificed | Def 6 |
 | (C, pi, t) | Committed revealed-sacrifice event | Def 7 |
-| R_S | Residual class under revealed sacrifice | Def 8 |
+| R_S(T, H) | Residual class under revealed sacrifice (time-parameterized) | Def 8 |
+| H | Lookback horizon for residual class | Def 8 |
 | R_B | Prior residual class (benchmarkability-based) | Prop 5 |
 | ALARM(T) | B-to-C alarm condition | Def 9 |
 | beta_alarm | Alarm threshold | Def 9 |
@@ -1212,12 +1398,19 @@ includes both the OI floor and the sacrifice lower bound.
 | O | Observation perimeter | Def 12 |
 | vol_R^combined | Combined diagnostic (exact + lower bound) | App A |
 | OI_floor(k) | Observational individuation floor for agent k | Prop 6 |
+| U_i | Agent i's utility function over capability bundles | Def 1, Remark |
+| S0 | Calibration assumption (agent valuations <= vol_R) | Thm 2 |
+| S1 | Free choice assumption | Thm 2 |
+| S2 | Benchmark grounding assumption | Thm 2 |
+| S3 | Bundle coherence assumption | Thm 2 |
+| S4 | Additive separability assumption | Thm 2 |
+| epsilon | Population-level calibration bias bound | Open Q 6 |
 
 ### Cross-reference summary
 
 | Prior paper | Result | Number | Used in |
 |------------|--------|--------|---------|
-| P1 | Population empowerment measure | Def 6 | Section 1 |
+| P1 | Population empowerment measure | Section 4 | Section 1 |
 | P1 | Self-balancing property | Prop 1 | Section 1, Cor 2 |
 | P2 | Benchmark | Def 2 | Def 1 (sacrifice grounding) |
 | P2 | Poset measure vol_P | Def 7 | Defs 1, 4; Thm 2 |
@@ -1226,7 +1419,9 @@ includes both the OI floor and the sacrifice lower bound.
 | P2 | Leverage | Def 9 | Section 1 |
 | P3 | Anti-monopolar property | Prop 6 | Section 1 |
 | P3 | Preemptive-restriction criterion | Prop 1 | Section 11 |
-| P3 | Observational individuation | Def 9, Cor 2.1 | Prop 6 |
+| P3 | Observational individuation | Def 9 | Prop 6 |
+| P4 | Risk-trust dynamics | Def 4 | Def 2 |
+| P4 | EWMA learning rate | alpha | Def 2, Remark |
 | P5 | Commitment Protocol | Def 6 | Def 7, Prop 3 |
 | P5 | ZK Capability Proof | Def 7 | Def 7, Prop 4 |
 | P5 | Risk-Claim Protocol | Def 13 | Section 5, Remark |
