@@ -102,7 +102,16 @@ During the test window:
 \paragraph{Phase 3: Observation and Bayesian update.}
 We separate the latent event (pathway activation) from the
 observed event (detection alarm).  The model is a \emph{simple
-binary hypothesis test} with fixed likelihoods throughout:
+binary hypothesis test} with fixed likelihoods throughout, in the
+sequential-analysis tradition of~\citet{wald1947sequential}; the
+closest methodological precedent is Bayesian adaptive trial
+design~\citep{berry2006bayesian}, which similarly conducts
+repeated tests under a bounded patient-risk budget and updates
+the posterior on each outcome.  CR generalises this pattern from
+clinical trials to the broader class of long-timeline
+restrictions, replacing patient safety with the user-set damage
+tolerance $\damagebound$ and the Phase~1 cooperative-closure
+scope construction.
 
 \begin{itemize}
 \item $A_n \in \{0, 1\}$: indicator that the pathway activates

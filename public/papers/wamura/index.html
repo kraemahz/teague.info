@@ -117,12 +117,24 @@ over-calibrated-restriction feedback loop of <d-cite key="lasser2026phase"></d-
 occurrence writes historical markers—tsunami stones, disaster records,
 institutional memory, building-code revisions, pharmacovigilance
 regimes—that subsequent generations consult in lieu of the experiment
-they cannot run. This mechanism is unavailable for capabilities novel to
-any generation, which is precisely the regime the escalating dynamics
-generate. This paper constructs a formal alternative: a mechanism for
-generating the evidential content historical markers would have
-recorded, within a bounded damage budget chosen by the framework rather
-than the next generation.</p>
+they cannot run. Disaster-policy research has long studied this dynamic
+under the heading of focusing events <d-cite key="birkland1997after"></d-cite>: the policy attention required to
+revise restrictions accumulates only after the catastrophe that made the
+original restriction look prescient. In the AI-safety literature the
+same structural concern appears as <em>safe exploration</em>—an agent
+cannot learn the consequences of an action it never takes <d-cite key="amodei2016concrete"></d-cite>—and as the
+gradual-misalignment scenario of <d-cite key="christiano2019what"></d-cite>, in which incremental
+restrictions accumulate without counter-evidence and the resulting
+failure looks less like a catastrophic single event than like the slow
+erosion of a society’s effective optionality. The
+precautionary-principle literature in policy and law makes the same
+structural tradeoff explicit: precaution against unfamiliar harms is
+appropriate but accumulates costs the precaution itself renders
+invisible <d-cite key="sunstein2005laws"></d-cite>.
+This paper formalises the structural problem common to these literatures
+and constructs a mechanism for generating the evidential content
+historical markers would have recorded, within a bounded damage budget
+chosen by the framework rather than the next generation.</p>
 <p>The specific failure mode in the existing GFM framework is the
 max-aggregation pathology of <d-cite key="lasser2026horizon"></d-cite>, named there as the most
 important open problem of the sequence: the conservative max operator,
@@ -777,7 +789,15 @@ exact-contraction channel.</p></li>
 and Bayesian update.</h4>
 <p>We separate the latent event (pathway activation) from the observed
 event (detection alarm). The model is a <em>simple binary hypothesis
-test</em> with fixed likelihoods throughout:</p>
+test</em> with fixed likelihoods throughout, in the sequential-analysis
+tradition of <d-cite key="wald1947sequential"></d-cite>; the closest methodological
+precedent is Bayesian adaptive trial design <d-cite key="berry2006bayesian"></d-cite>, which similarly conducts
+repeated tests under a bounded patient-risk budget and updates the
+posterior on each outcome. CR generalises this pattern from clinical
+trials to the broader class of long-timeline restrictions, replacing
+patient safety with the user-set damage tolerance <span
+class="math inline">\epsilon</span> and the Phase 1 cooperative-closure
+scope construction.</p>
 <ul>
 <li><p><span class="math inline">A_n \in \{0, 1\}</span>: indicator that
 the pathway activates during test <span class="math inline">n</span>
@@ -1723,7 +1743,9 @@ is <span class="math inline">\pm \mathrm{KL}(\Pr(O \mid H_j) \,\|\,
 \Pr(O \mid H_{1-j}))</span>, strictly nonzero by Assumption <a
 href="#ass:T1" data-reference-type="ref" data-reference="ass:T1">4</a>
 and the positivity of KL on non-identical distributions. The strong law
-of large numbers <d-cite key="cover2006elements"></d-cite> gives <span
+of large numbers <d-cite key="cover2006elements"></d-cite> (or the martingale convergence
+theorem of <d-cite key="doob1953stochastic"></d-cite>, which gives the same conclusion
+under weaker independence assumptions) gives <span
 class="math inline">\Lambda_n / n \to \pm \mathrm{KL}</span> a.s., hence
 <span class="math inline">\Lambda_n \to \pm \infty</span> a.s., hence
 <span class="math inline">p_R(t_n) \to 1</span> (under <span
@@ -2660,10 +2682,14 @@ chemicals whose modern reformulations operate via different mechanisms),
 export controls on dual-use technology (where modern differentiation
 allows narrower controls), biomedical restrictions on gain-of-function
 research (where specific biocontainment tiers separate research
-protocols), and other regulatory domains exhibit the same structure. In
-each, the framework’s contribution is to formalise the refinement test
-as a bounded-damage empirical probe rather than a
-moratorium-vs.-wholesale-liberalisation binary.</p>
+protocols), and other regulatory domains exhibit the same structure—the
+policy literature on dual-use research review <d-cite key="tucker2012innovation"></d-cite> collects extensive case
+studies of exactly this dynamic across biological and chemical
+capabilities. In each, the framework’s contribution is to formalise the
+refinement test as a bounded-damage empirical probe rather than a
+moratorium-vs.-wholesale-liberalisation binary, and to provide formal
+damage-bound and convergence guarantees that the case-by-case review
+processes operate without.</p>
 <h1 id="sec:integration">Integration with Prior Results</h1>
 <p>This section records how controlled relaxation extends the existing
 GFM machinery: it preserves self-balancing, resolves inter-agent risk
@@ -3971,13 +3997,55 @@ data-reference="def:keystone_order">9</a></td>
   howpublished={\url{https://teague.info/papers/phase/}}
 }
 
-% Information theory (cited from Theorem 2 SLLN argument)
+% Alignment safety — the literature CR's safe-exploration formulation extends
+@article{amodei2016concrete,
+  title={Concrete Problems in {AI} Safety},
+  author={Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  journal={arXiv preprint arXiv:1606.06565},
+  year={2016}
+}
+
+@misc{christiano2019what,
+  title={What Failure Looks Like},
+  author={Christiano, Paul},
+  year={2019},
+  note={AI Alignment Forum},
+  howpublished={\url{https://www.alignmentforum.org/posts/HBxe6wdjxK239zajf}}
+}
+
+% Sequential hypothesis testing — the statistical tradition the binary update belongs to
+@book{wald1947sequential,
+  title={Sequential Analysis},
+  author={Wald, Abraham},
+  year={1947},
+  publisher={John Wiley \& Sons}
+}
+
+@article{berry2006bayesian,
+  title={Bayesian clinical trials},
+  author={Berry, Donald A.},
+  journal={Nature Reviews Drug Discovery},
+  volume={5},
+  number={1},
+  pages={27--36},
+  year={2006},
+  publisher={Nature Publishing Group}
+}
+
+% Information theory and martingale convergence
 @book{cover2006elements,
   title={Elements of Information Theory},
   author={Cover, Thomas M and Thomas, Joy A},
   edition={2nd},
   year={2006},
   publisher={Wiley-Interscience}
+}
+
+@book{doob1953stochastic,
+  title={Stochastic Processes},
+  author={Doob, J. L.},
+  year={1953},
+  publisher={John Wiley \& Sons}
 }
 
 % Large-deviations exponent for the binary hypothesis test
@@ -3989,6 +4057,30 @@ data-reference="def:keystone_order">9</a></td>
   number={4},
   pages={493--507},
   year={1952}
+}
+
+% Catastrophic risk and the precautionary tradeoff CR sits inside
+@book{sunstein2005laws,
+  title={Laws of Fear: Beyond the Precautionary Principle},
+  author={Sunstein, Cass R.},
+  year={2005},
+  publisher={Cambridge University Press}
+}
+
+% Disaster studies — focusing events and policy learning
+@book{birkland1997after,
+  title={After Disaster: Agenda Setting, Public Policy, and Focusing Events},
+  author={Birkland, Thomas A.},
+  year={1997},
+  publisher={Georgetown University Press}
+}
+
+% Dual-use research review — keystone-refinement's policy precedent
+@book{tucker2012innovation,
+  title={Innovation, Dual Use, and Security: Managing the Risks of Emerging Biological and Chemical Technologies},
+  editor={Tucker, Jonathan B.},
+  year={2012},
+  publisher={MIT Press}
 }
 </script>
 </d-bibliography>
