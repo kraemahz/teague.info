@@ -415,6 +415,25 @@ present, the per-capability disaggregation underestimates some capabilities
 and overestimates others, but the *aggregate* bound over the whole bundle
 remains valid (the bundle-level bound from S0-S2 holds without S4).
 
+**Assumption S5 (Decomposition validity).** The event-local decomposition
+coefficients alpha_{n,c} from Definition 3 are *lower bounds* on the true
+vol_R share of each capability within the bundle:
+
+    alpha_{n,c} <= vol_R(c) / vol_R(Y_n)    for all n, c in Y_n
+
+This is the load-bearing condition for per-capability disaggregation. It
+is NOT automatically satisfied by hedonic regression -- regression produces
+attribution weights, not share lower bounds. The equal-weight fallback
+(alpha = 1/|Y_n|) satisfies S5 only if no capability contributes less
+than 1/|Y_n| of the bundle's vol_R. S5 must be validated empirically or
+conservatively assumed; events where S5 cannot be justified should use
+Part A's bundle-level bound instead.
+
+**Remark (S5 is not ZK-verifiable).** Like S0 and S1, S5 is a subjective
+condition (it depends on the true vol_R shares, which are not directly
+observable). It belongs in the non-verifiable category alongside S0, S1,
+and S4(a).
+
 The theorem has two levels, with different assumption requirements:
 
 **Part A (Bundle-level lower bound, requires S0-S2 only):**
@@ -423,28 +442,46 @@ For each event n:
 
     vol_R(Y_n) >= Delta_vol_P(X_n)
 
-For N events with *pairwise disjoint* bundles (no capability appears in
-more than one Y_n):
+For N events with *pairwise poset-independent* bundles (no capability in
+Y_n is related by subsumption or cooperative composition to any capability
+in Y_m for n != m):
 
     vol_R^U >= sum_{n=1}^N Delta_vol_P(X_n)
 
 where vol_R^U is the realized capability volume restricted to the
-unbenchmarked subset U covered by the union of bundles. If the disjoint
-Y_n jointly exhaust U, the sum closes the B-to-C gap on U from below.
+unbenchmarked subset U covered by the union of bundles. If the
+poset-independent Y_n jointly exhaust U, the sum closes the B-to-C gap
+on U from below.
+
+**Why poset-independence, not mere set-disjointness.** The aggregation
+step (summing per-event bounds) requires the per-event vol_R
+contributions to be independent. Set-disjointness (Y_1 ∩ Y_2 = ∅)
+ensures no *capability* appears in two bundles, but does not rule out
+subsumption or cooperative links *across* bundles. If a cooperative
+capability c_coop depends on capabilities in both Y_1 and Y_2, its
+vol_R contribution is not attributable to either bundle alone, and the
+sum could miscount. Poset-independence rules this out: under poset-
+independence, the sub-posets induced by each Y_n are disconnected
+components, and vol_P (hence vol_R) decomposes additively by axiom M4
+(Paper 2, Proposition 1). Set-disjointness is necessary but not
+sufficient; poset-independence is both.
 
 Part A is the paper's *primary* result. It requires only S0-S2, does not
 require additive separability (S4), and produces a clean aggregate bound
-whenever trade bundles are disjoint. In practice, many trades target
-distinct capability categories (housing vs. healthcare vs. education),
-so disjointness is a reasonable approximation for a large fraction of
-trade data.
+whenever trade bundles are poset-independent. In practice, many trades
+target distinct capability categories (housing vs. healthcare vs.
+education) that are poset-independent by construction (no subsumption or
+cooperative links between, e.g., housing capabilities and education
+capabilities), so the condition is a reasonable approximation for a large
+fraction of trade data.
 
-**Part B (Per-capability refinement, requires S0-S4):**
+**Part B (Per-capability refinement, requires S0-S5):**
 
 When bundles overlap (the same capability c appears in multiple Y_n),
 Part A cannot be applied directly. Under the additional assumptions S3
-(bundle coherence) and S4 (additive separability of both valuation and
-vol_R on poset-disjoint bundles):
+(bundle coherence), S4 (additive separability of both valuation and
+vol_R on poset-disjoint bundles), and S5 (decomposition validity: alpha
+coefficients are vol_R share lower bounds):
 
 For each capability c in U, define:
 
@@ -458,18 +495,15 @@ Definition 3. Then:
 **Critical justification for the per-capability step.** The inference from
 vol_R(Y_n) >= Delta_vol_P(X_n) to vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
 requires: (i) S4(b) gives vol_R(Y_n) = sum_c vol_R(c) for poset-disjoint
-bundles; (ii) each vol_R(c) >= 0; (iii) alpha_{n,c} is defined as a
-*lower bound* on vol_R(c) / vol_R(Y_n), not merely a hedonic attribution
-weight. Condition (iii) is the load-bearing one: the event-local
-coefficients from Definition 3 are valid only if they underestimate the
-true vol_R shares. The equal-weight fallback (alpha = 1/|Y_n|) is valid
-only if no capability contributes less than 1/|Y_n| of the bundle's vol_R
--- an assumption that must be stated explicitly.
+bundles; (ii) each vol_R(c) >= 0; (iii) S5 gives alpha_{n,c} <=
+vol_R(c) / vol_R(Y_n), i.e., the event-local coefficients are vol_R share
+lower bounds. Condition (iii) is the load-bearing one and is now an explicit
+assumption (S5) rather than an implicit requirement on Definition 3.
 
-When alpha_{n,c} is not a valid lower bound on the vol_R share, the
-per-capability step is unsound. The paper should use Part A (disjoint
-bundles) as the primary result and treat Part B as a refinement available
-when the decomposition is grounded.
+When S5 does not hold (alpha coefficients overestimate some capabilities'
+vol_R shares), the per-capability step is unsound for those capabilities.
+The paper should use Part A (poset-independent bundles) as the primary
+result and treat Part B as a refinement available when S5 is grounded.
 
 *Proof sketch:*
 
@@ -478,14 +512,14 @@ Step 1: For each event n, the calibration chain (S0 + S1 + S2) gives
 vol_R(Y_n) >= U_{i_n}(Y_n) >= U_{i_n}(X_n) >= Delta_vol_P(X_n). This
 is a per-event lower bound on the whole bundle Y_n.
 
-Step 2: For disjoint bundles, the per-event bounds apply to non-overlapping
-portions of vol_R^U. Summing gives vol_R^U >= sum_n Delta_vol_P(X_n).
+Step 2: For poset-independent bundles, the sub-posets {Y_n} are disconnected
+components. By M4 (additivity on poset-disjoint components),
+vol_R(∪ Y_n) = sum_n vol_R(Y_n) >= sum_n Delta_vol_P(X_n).
 
-Part B (additionally requires S3 + S4):
-Step 3: S4(b) decomposes vol_R(Y_n) = sum_c vol_R(c). With vol_R(c) >= 0
-and sum_c alpha_{n,c} = 1 where alpha_{n,c} <= vol_R(c)/vol_R(Y_n), the
-per-capability bound follows: vol_R(c) >= alpha_{n,c} * vol_R(Y_n) >=
-alpha_{n,c} * Delta_vol_P(X_n).
+Part B (additionally requires S3 + S4 + S5):
+Step 3: S4(b) decomposes vol_R(Y_n) = sum_c vol_R(c). S5 gives
+alpha_{n,c} <= vol_R(c)/vol_R(Y_n). Therefore vol_R(c) >=
+alpha_{n,c} * vol_R(Y_n) >= alpha_{n,c} * Delta_vol_P(X_n).
 
 Step 4: The max-attribution across overlapping events gives
 vol_R(c) >= max_n alpha_{n,c} * Delta_vol_P(X_n). Summing over c in U
@@ -674,30 +708,50 @@ revealed-sacrifice event is a tuple (C, pi, t) where:
   (b) Delta_vol_P(X) >= 0 (the sacrifice is non-negative)
   (c) the trade actually occurred (linked to a verifiable ledger entry)
 
-**Remark (S0, S1, and S4(a) are not ZK-verifiable).** Assumptions S0
-(calibration), S1 (free choice), and S4(a) (valuation additivity) are
-about the agent's internal state -- whether their valuation is calibrated
-to vol_R, whether the trade was voluntary, and whether their valuation
-decomposes additively. These cannot be verified in zero knowledge without
-an oracle for the agent's subjective state. The ZK proof verifies the
-*objective* conditions (S2, S3, and S4(b) via poset structure); the
-*subjective* conditions (S0, S1, S4(a)) are structural assumptions the
-framework makes about the trade environment, not properties the commitment
-protocol can enforce.
+**Remark (S0, S1, S4(a), and S5 are not ZK-verifiable).** Assumptions S0
+(calibration), S1 (free choice), S4(a) (valuation additivity), and S5
+(decomposition validity) are about the agent's internal state or the true
+vol_R distribution -- whether their valuation is calibrated to vol_R,
+whether the trade was voluntary, whether their valuation decomposes
+additively, and whether alpha coefficients underestimate true vol_R
+shares. These cannot be verified in zero knowledge without an oracle for
+the agent's subjective state or the true vol_R. The ZK proof verifies
+the *objective* conditions (S2, S3, and S4(b) via poset structure); the
+*subjective* conditions (S0, S1, S4(a), S5) are structural assumptions
+the framework makes about the trade environment, not properties the
+commitment protocol can enforce.
 
 Partial mitigations:
 - S1: the framework can verify that the agent had observable alternatives.
 - S0: population-level aggregation smooths individual overvaluation errors
   (see Open Question 6).
-- S4(a): Theorem 2 Part A (disjoint bundles) does not require S4(a), so
-  the ZK-verified Part A bound is fully grounded. Part B's per-capability
-  refinement carries the unverifiable S4(a) assumption.
+- S4(a): Theorem 2 Part A (poset-independent bundles) does not require
+  S4(a), so the ZK-verified Part A bound is fully grounded. Part B's
+  per-capability refinement carries the unverifiable S4(a) assumption.
+- S5: conservative decomposition (equal-weight fallback alpha = 1/|Y_n|)
+  satisfies S5 when bundles are roughly balanced. The Part A bound avoids
+  S5 entirely.
 - t is the event timestamp (public)
+
+**Definition 7a (Category Partition).** The function category(Y) maps each
+unbenchmarked bundle to a label in a *public partition* C = {C_1, ..., C_m}
+of the unbenchmarked capability space U, where the partition is *poset-
+independent*: for any j != k, no capability in C_j is related by subsumption
+or cooperative composition to any capability in C_k. The partition is
+published as part of the framework's measurement infrastructure and is
+fixed for a given trade window. Two bundles have the same category iff they
+draw from the same partition component.
+
+This definition is load-bearing for the aggregation step: distinct
+category labels imply poset-independence of the underlying bundles (not
+merely set-disjointness), which is what Theorem 2 Part A requires.
+The ZK disjointness proof (Proposition 4) then inherits theorem-grade
+disjointness from label-distinctness.
 
 The committed event reveals:
 - Delta_vol_P(X): the magnitude of the sacrifice (needed for the lower bound)
-- category(Y): the bundle category in the unbenchmarked space (needed for
-  disaggregation)
+- category(Y): the bundle's partition label in C (needed for disjointness
+  verification and disaggregation)
 
 The committed event hides:
 - Agent identity i (who traded)
@@ -712,40 +766,48 @@ only on the revealed fields (Delta_vol_P(X_n), category(Y_n), t_n), all of
 which survive the commitment's hiding property.
 
 *Proof sketch:* Theorem 2 Part A's lower bound is
-sum_{n=1}^N Delta_vol_P(X_n) for disjoint bundles. The sacrifice magnitudes
-Delta_vol_P(X_n) are revealed directly. The disjointness of bundle
-categories is verifiable from the revealed category(Y_n). No hidden field
-is needed. Part B's per-capability refinement additionally requires
-alpha_{n,c} from the event-local decomposition, which can be included in
-the committed fields if per-capability attribution is desired.
+sum_{n=1}^N Delta_vol_P(X_n) for poset-independent bundles. The sacrifice
+magnitudes Delta_vol_P(X_n) are revealed directly. Poset-independence of
+bundles is verifiable from the revealed category(Y_n) labels: by
+Definition 7a, distinct category labels correspond to poset-independent
+partition components. No hidden field is needed. Part B's per-capability
+refinement additionally requires alpha_{n,c} from the event-local
+decomposition, which can be included in the committed fields if
+per-capability attribution is desired.
 
-**Proposition 4 (ZK Aggregation with Disjointness).** Zero-knowledge rollups
-over aggregate trade volume preserve the lower-bound property *including the
-disjointness requirement* of Theorem 2 Part A. Specifically: given a batch
-of N committed sacrifice events, a rollup proof can establish:
+**Proposition 4 (ZK Aggregation with Poset-Independence).** Zero-knowledge
+rollups over aggregate trade volume preserve the lower-bound property
+*including the poset-independence requirement* of Theorem 2 Part A.
+Specifically: given a batch of N committed sacrifice events, a rollup
+proof can establish:
 
     (i)  sum_{n=1}^N Delta_vol_P(X_n) >= B    (aggregate bound)
-    (ii) the bundle categories {category(Y_n)} are pairwise disjoint
-         (no capability appears in two distinct bundles)
+    (ii) the bundle category labels {category(Y_n)} are pairwise distinct
 
 for a public bound B, without revealing N, the individual Delta_vol_P(X_n),
-or the specific categories.
+or the specific category labels.
+
+By Definition 7a, distinct category labels correspond to poset-independent
+partition components, so (ii) establishes the poset-independence required
+by Theorem 2 Part A -- not merely set-disjointness.
 
 *Proof sketch:* The prover knows all N committed events. The rollup proof
 has two components: (a) a range proof on the aggregate sum establishing
 sum >= B; (b) a set-membership proof establishing that the category labels
-are pairwise distinct, using a Merkle commitment over the category set with
-a non-membership witness for each new category against the running
-accumulator. The verifier learns only B, the disjointness validity, and
-the proof's soundness. If the hidden bundles are NOT disjoint, the prover
-must fall back to Part B's max-attribution formulation (which does not
-require disjointness but requires additional assumptions S3-S4).
+are pairwise distinct, using a Merkle commitment over the category set
+with a non-membership witness for each new category against the running
+accumulator. The verifier learns only B, the label-distinctness validity,
+and the proof's soundness. Since the category partition C is public and
+poset-independent by construction (Definition 7a), label-distinctness
+implies theorem-grade poset-independence.
 
-**Remark (disjointness failure mode).** When the prover cannot produce a
-valid disjointness proof (because the underlying bundles overlap), this is
-not a soundness failure -- it is a signal that Part A does not apply to
-this batch. The rollup should report the weaker Part B bound or partition
-the batch into disjoint sub-batches, each with its own rollup proof.
+**Remark (when category labels collide).** When two events share a
+category label, the prover cannot produce a valid distinctness proof for
+that pair. This is not a soundness failure -- it is a signal that Part A
+does not apply to the full batch. The prover can either: (a) partition the
+batch into maximal sub-batches with distinct labels, each with its own
+rollup proof; or (b) fall back to Part B's max-attribution formulation
+(which handles overlapping bundles but requires S3-S5).
 
 **Remark (commitment infrastructure at scale).** A fully committed trade
 ledger at the scale of a modern economy is an infrastructure problem. The
@@ -769,9 +831,10 @@ is the set of capabilities *structurally outside the reach* of the sacrifice
 channel -- capabilities whose exercise, by their nature, produces no
 sacrifice event even with unlimited observation time:
 
-    R_S = {c in P : exercise of c requires no material input
-           (no purchasing), no opportunity cost (no foregone labor),
-           and no observable commitment event}
+    R_S = {c in P : no sacrifice-observable path exists in principle --
+           exercise of c produces no purchasing event, no foregone-
+           labor event, and no observable commitment event, regardless
+           of observation duration or trade coverage}
 
 R_S is a *structural* property of the capability, not a property of the
 observation window. A capability is in R_S because the sacrifice channel
@@ -855,14 +918,25 @@ individuation capability d_k is continuously exercised, contributing at
 least OI_floor(k) to vol_R. This floor transfers independently of the
 sacrifice channel -- active participation *is* the exercise event.
 
-For the revealed-sacrifice lower bound specifically: active agents who
-operate in the world (buying, working, trading) emit sacrifice signals as a
-byproduct of operation. The OI_floor transfers to vol_R^lower for agents
-who are both active and trading.
+**Remark (channel separation).** The OI floor is an independent
+observation channel, not part of the sacrifice-based vol_R^lower. The
+sacrifice channel produces vol_R^lower from trade events; the OI channel
+produces a direct vol_R floor from active participation. The two channels
+compose in Appendix A's combined diagnostic:
+
+    vol_R^combined = vol_R^exact(O) + vol_R^lower(P \ O)
+
+The OI floor contributes to vol_R^exact (the exercise-indicator channel
+within the observation perimeter O), not to vol_R^lower (the sacrifice
+channel outside O). Conflating the two channels would double-count: an
+active trading agent's OI floor is already in vol_R^exact and should not
+also appear in vol_R^lower.
 
 *Proof sketch:* Same argument as the prior outline's Proposition 6. Active
 agents generate distinct behavioral patterns (Paper 3, Definition 8) as a
 byproduct of participation. These patterns constitute exercise of d_k.
+The exercise is detected by the OI channel (direct observation within O),
+not by the sacrifice channel.
 
 **Remark (inactive agents).** If agent k is nominally present but inactive
 (skeleton-substrate scenario from Paper 6's worked example), k emits neither
@@ -898,10 +972,10 @@ hold for the relationship between vol_P and vol_R^lower: adding a
 benchmarked capability to the poset increases vol_P but does not affect
 vol_R^lower unless that capability is subsequently sacrificed.
 
-**(M4) Additivity under disjointness:** Satisfied for disjoint bundle
-categories. If two subsets of U have disjoint sacrifice events (no
-overlapping bundles), the aggregate bound is the sum of the individual
-bounds.
+**(M4) Additivity under disjointness:** Satisfied for *poset-independent*
+bundle categories (Definition 7a). If two subsets of U have sacrifice
+events in poset-independent partition components, the aggregate bound is
+the sum of the individual bounds (via M4 on the underlying vol_P measure).
 
 **(M5) Non-triviality:** Satisfied conditionally. A single sacrifice event
 with Delta_vol_P(X) > 0 produces vol_R^lower > 0.
@@ -941,11 +1015,16 @@ This is the structural reason to use vol_R as a diagnostic rather than an
 objective. An actor maximizing vol_R would lack the automatic
 diversity-preservation that makes vol_P safe.
 
-**Remark (when M6 does hold).** M6 holds when the merged groups have
-non-overlapping bundle categories -- each unbenchmarked capability appears
-in sacrifice events from only one group. Under this non-redundancy
-condition, vol_R^lower inherits all six axioms and the self-balancing
-property transfers conditionally.
+**Remark (when M6 does hold for vol_R^lower).** M6 holds for vol_R^lower
+when the merged groups have sacrifice events in *poset-independent*
+bundle categories (Definition 7a) -- each unbenchmarked capability appears
+in sacrifice events from only one group, and cross-group capabilities are
+poset-independent. Under this non-redundancy condition, vol_R^lower
+inherits M1-M6. Note: even when vol_R^lower inherits all six axioms,
+the self-balancing property transfers to vol_R^lower only as a *lower
+bound* on self-balancing -- vol_R^lower being self-balancing does not
+imply vol_R itself is self-balancing (the structural failure from (a)
+above is independent of the observation mechanism).
 
 ---
 
@@ -1032,9 +1111,11 @@ decomposition is computable from:
 - The capability census (enumeration of P)
 
 Classification is O(|P|) given the sacrifice database, the R_S
-classification, and the capability census. For each capability d:
+classification, and the capability census. For each capability d, apply
+the priority ordering from Definition 10:
 (1) check d in Xi (restricted); (2) check d in sacrifice data (covered);
-(3) check d in R_S (residual); (4) otherwise dormant. The delta terms
+(3) check d not in R_S (dormant -- tradable but no evidence);
+(4) otherwise residual (in R_S -- structurally unreachable). The delta terms
 follow from the vol_P and vol_R^lower values already computed. No
 structural counterfactual computation is required (unlike the prior
 formulation, which required O(|P|^2) counterfactual queries).
@@ -1453,21 +1534,35 @@ The five properties (P1-P5) are proved independently:
 
 ### B.2 Theorem 2 proof strategy (Aggregate Lower Bound)
 
+Part A (bundle-level, S0-S2, poset-independent bundles):
 1. Per-event bound from calibration chain (S0 + S1 + S2): vol_R(Y_n) >=
    U_{i_n}(Y_n) >= U_{i_n}(X_n) >= Delta_vol_P(X_n).
-2. Bundle disaggregation via additive separability (S4): per-event bound
-   distributes to per-capability bounds via hedonic coefficients.
-3. Per-capability max-attribution across overlapping events (Proposition 1):
+2. Poset-independence of bundles (Definition 7a partition) gives M4
+   additivity: vol_R(∪ Y_n) = sum_n vol_R(Y_n) >= sum_n Delta_vol_P(X_n).
+
+Part B (per-capability, additionally S3-S5, overlapping bundles):
+3. S4(b) decomposes vol_R(Y_n) = sum_c vol_R(c). S5 gives
+   alpha_{n,c} <= vol_R(c)/vol_R(Y_n), yielding per-capability bounds.
+4. Per-capability max-attribution across overlapping events (Proposition 1):
    vol_R(c) >= max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n).
-4. Summation over capabilities in U. Exhaustion condition for coverage.
+5. Summation over capabilities in U. Exhaustion condition for coverage.
 
 Key technical challenges:
+- Poset-independence (Part A): the category partition C (Definition 7a)
+  must be a genuine poset partition. Set-disjointness of bundle membership
+  is necessary but not sufficient; subsumption/cooperative links across
+  bundles must be absent. The partition is a public infrastructure choice.
+- Decomposition validity (S5, Part B): hedonic regression produces
+  attribution weights, not vol_R share lower bounds. S5 is the explicit
+  bridge; the equal-weight fallback is conservative but may not satisfy
+  S5 for unbalanced bundles.
 - Hedonic regression (Definition 3) requires non-degeneracy (S3). Bundle
   multicollinearity is common; the proof handles degeneracy by projecting
   onto the identifiable subspace.
 - Additive separability (S4) rules out complementarities. The bundle-level
-  bound (step 1) holds without S4; the per-capability disaggregation (step 2)
-  requires it. See the Remark after Theorem 2 for the no-S4 fallback.
+  bound (Part A) holds without S4; the per-capability disaggregation
+  (Part B) requires it. See the Remark after Theorem 2 for the no-S4
+  fallback.
 - Calibration (S0) is the weakest assumption in the chain but the hardest to
   verify empirically. The population-level relaxation (Open Question 6)
   suggests a path to a robust version.
@@ -1505,13 +1600,14 @@ includes both the OI floor and the sacrifice lower bound.
 | Delta_vol_P(X) | vol_P contribution of surrendered capability | Def 1 |
 | vol_R^lower(Y) | Lower bound on vol_R of acquired bundle | Def 1 |
 | [t_0, t_0 + T] | Aggregate trade window | Def 2 |
-| alpha_{n,c} | Event-local decomposition coefficients | Def 3 |
-| alpha_{n,c} | Hedonic regression coefficients | Def 3 |
+| alpha_{n,c} | Event-local decomposition coefficients (vol_R share lower bounds under S5) | Def 3 |
 | beta^lower(G, T) | B-to-C ratio under revealed sacrifice | Def 4 |
 | p | Price (money-sacrifice signal) | Def 5 |
 | r_i | Agent i's market wage rate | Def 6 |
 | h | Hours sacrificed | Def 6 |
 | (C, pi, t) | Committed revealed-sacrifice event | Def 7 |
+| C = {C_1,...,C_m} | Public poset-independent partition of U | Def 7a |
+| category(Y) | Bundle's partition label in C | Def 7a |
 | R_S | Residual class under revealed sacrifice (structural, not time-parameterized) | Def 8 |
 | H | Lookback horizon for sacrifice evidence window | Def 10 |
 | R_B | Prior residual class (benchmarkability-based) | Prop 5 |
@@ -1536,6 +1632,7 @@ includes both the OI floor and the sacrifice lower bound.
 | S2 | Benchmark grounding assumption | Thm 2 |
 | S3 | Bundle coherence assumption | Thm 2 |
 | S4 | Additive separability assumption | Thm 2 |
+| S5 | Decomposition validity (alpha are vol_R share lower bounds) | Thm 2B |
 | epsilon | Population-level calibration bias bound | Open Q 6 |
 
 ### Cross-reference summary
