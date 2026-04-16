@@ -10,23 +10,31 @@ exercised optionality (vol_R) requires observational access to what the
 collective actually does -- a total-surveillance scenario incompatible with
 the framework's operational commitments (Paper 5's cryptographic opacity,
 Paper 6's cross-substrate channel discipline, Paper 7's bounded-scope
-testing). This paper introduces *revealed-sacrifice observation*: a
-privacy-minimal surrogate that bounds vol_R from below using only voluntary
-trade events. Agents disclose vol_R-content through commitments that
-surrender a benchmarkable capability in exchange for an unbenchmarked bundle;
-the revealed-preference inequality converts each such event into a lower
-bound on the unbenchmarked portion of vol_R. Aggregate trade streams,
-optionally passed through commitment or zero-knowledge proofs (composing
-with Paper 5's protocol), recover a constructive lower bound on vol_R
-without additional observation rights beyond those the trade events already
-create. The central result is the Aggregate B-to-C Lower Bound theorem:
-the framework converts the B-to-C gap from "unknown divergence" (a
-structural hole) into "lower-bounded divergence" (a characterized partial
-order). The paper forms a complementary pair with Paper 7: Paper 7 tests
-whether a feared harm is real (risk dimension); Paper 8 bounds whether
-the forgone capability is worth recovering (value dimension). Together
-they cover both axes of the preemptive-restriction criterion from
-Paper 3, Proposition 1.
+testing). This paper first establishes a *need-sufficiency architecture*: a
+structural precondition on poset construction that distinguishes involuntary
+need-satisfaction (where sacrifice magnitude reveals cost-of-access) from
+voluntary want-pursuit (where sacrifice reveals preference strength). The
+sufficiency threshold is the polarity boundary; below-sufficiency sacrifices
+are structurally involuntary and filtered by the free-choice assumption.
+With this precondition in place, the paper introduces *revealed-sacrifice
+observation*: a privacy-minimal surrogate that bounds vol_R from below
+using only voluntary, above-sufficiency trade events. Agents disclose
+vol_R-content through commitments that surrender a benchmarkable capability
+in exchange for an unbenchmarked bundle; the revealed-preference inequality
+converts each such event into a lower bound on the unbenchmarked portion of
+vol_R. Aggregate trade streams, optionally passed through commitment or
+zero-knowledge proofs (composing with Paper 5's protocol), recover a
+constructive lower bound on vol_R without additional observation rights
+beyond those the trade events already create. The central result is the
+Aggregate B-to-C Lower Bound theorem: the framework converts the B-to-C gap
+from "unknown divergence" (a structural hole) into "lower-bounded divergence"
+(a characterized partial order). A parallel need-sufficiency diagnostic
+tracks how efficiently the collective satisfies needs and whether
+satisfaction pathways are downstream-safe. The paper forms a complementary
+pair with Paper 7: Paper 7 tests whether a feared harm is real (risk
+dimension); Paper 8 bounds whether the forgone capability is worth
+recovering (value dimension). Together they cover both axes of the
+preemptive-restriction criterion from Paper 3, Proposition 1.
 
 **Status:** Outline with formal definitions and theorem statements. Proof
 sketches indicate approach; full proofs are future work.
@@ -44,17 +52,18 @@ three papers refuse the panopticon move.
 ## Section Structure
 
 1. Introduction: The Privacy Problem with Direct Measurement
-2. Revealed-Sacrifice Observation Model
-3. Aggregate Lower Bound Theorem (central result)
-4. Two Sacrifice Channels: Money and Time
-5. Commitment-Layer Composition with Paper 5
-6. Residual Class Under Revealed-Sacrifice Observation
-7. Axiom Inheritance and the Non-Self-Balancing Finding
-8. Alarm Mechanism and Gap Decomposition
-9. Wireheading Detection via Trade-Flow Concentration
-10. Worked Example: The Dormant-Capability Scenario Re-Staged
-11. Integration: Duality with Paper 7 and the Shared Privacy Discipline
-12. Discussion and Open Questions
+2. Need-Sufficiency Architecture
+3. Revealed-Sacrifice Observation Model
+4. Aggregate Lower Bound Theorem (central result)
+5. Two Sacrifice Channels: Money and Time
+6. Commitment-Layer Composition with Paper 5
+7. Residual Class Under Revealed-Sacrifice Observation
+8. Axiom Inheritance and the Non-Self-Balancing Finding
+9. Alarm Mechanism and Gap Decomposition
+10. Wireheading Detection via Trade-Flow Concentration
+11. Worked Example: The Dormant-Capability Scenario Re-Staged
+12. Integration: Duality with Paper 7 and the Shared Privacy Discipline
+13. Discussion and Open Questions
 
 Supplementary:
 - Appendix A: The Exercise Indicator (retained from prior outline, scoped to
@@ -130,8 +139,24 @@ cannot measure what it promised not to observe.
 
 ### What this paper does instead
 
-This paper observes that agents *voluntarily disclose* vol_R-content through
-an existing, privacy-respecting channel: **sacrifice**. When an agent
+Before defining the observation channel, the paper establishes a structural
+precondition on poset construction: the **need-sufficiency architecture**
+(Section 2). Some sacrifices are involuntary -- agents pay them not because
+they value the outcome highly but because they have no cheaper option for
+meeting a requirement they cannot opt out of. Below-sufficiency sacrifices
+have reversed polarity: more sacrifice means a *worse* situation (more
+expensive needs), not a *more valued* outcome. The need-sufficiency
+architecture identifies the polarity boundary -- the sufficiency threshold
+on each capability dimension -- and establishes that below-sufficiency
+sacrifices violate the free-choice assumption (S1) by construction. This
+filters them from the revealed-sacrifice aggregate before the observation
+channel is defined, keeping the sacrifice channel clean (all events have
+positive polarity, S0-S2 valid) while adding a parallel need-satisfaction
+diagnostic.
+
+With the polarity precondition in place, the paper observes that agents
+*voluntarily disclose* vol_R-content through an existing, privacy-respecting
+channel: **sacrifice**. When an agent
 surrenders a benchmarkable capability (whose vol_P contribution is known) in
 exchange for an unbenchmarked bundle (whose vol_R contribution is unknown),
 the rational-choice inequality reveals that the unbenchmarked bundle is worth
@@ -173,7 +198,230 @@ that makes the paper consonant with the rest of the sequence.
 
 ---
 
-## 2. Revealed-Sacrifice Observation Model
+## 2. Need-Sufficiency Architecture
+
+### The polarity problem
+
+The revealed-sacrifice observation channel (Section 3) assumes all sacrifices
+have the same polarity: more sacrifice = more revealed value. This is wrong
+for a class of sacrifices that are structurally involuntary. An agent who
+pays $500 for insulin is not revealing that insulin is worth $500 to them
+beyond baseline -- they are revealing that baseline functionality costs $500
+to maintain. The sacrifice magnitude reveals *cost-of-access* (how expensive
+it is for this agent to reach minimum viable functionality), not
+*preference strength* (how much the agent values the outcome beyond
+baseline). Larger sacrifice = worse situation, not higher revealed value.
+
+The framework needs a structural requirement on poset construction --
+established before defining the measurement channel -- that distinguishes
+need-satisfaction from want-pursuit and identifies the boundary where
+sacrifice polarity flips.
+
+### Three observations motivating the architecture
+
+**1. Needs are not purely minimizing.** Initial intuition: needs should be
+minimized (minimize cost, distance, time-of-access). Exhaustive check on
+basic needs (food, water, shelter, healthcare, mobility) reveals: every need
+has BOTH maximizing dimensions (quality, quantity, reliability) and
+minimizing dimensions (cost, distance, time). Needs are not a single-polarity
+class. What IS true: the cost dimensions of needs are where the polarity
+problem lives, because cost-of-access is involuntary (the agent must pay it
+regardless of preference).
+
+**2. Scalar sufficiency hides structural defects.** A single "water access:
+sufficient" measurement hides that the water is contaminated. The agent has
+water (passes the scalar threshold) but the way the need is met is actively
+degrading future vol_P through downstream effects (health, cognition,
+reproduction). The framework reports green while the system corrodes from
+the root.
+
+**3. The correct structure is downstream-safe bundle sufficiency.** Three
+levels of sufficiency, each strictly stronger:
+
+- *Level 1: Scalar threshold (insufficient).* "Water: yes/no." Hides quality,
+  reliability, and cost defects.
+- *Level 2: Bundle threshold (necessary but not sufficient).* All dimensions
+  of the need must independently meet their thresholds simultaneously. Catches
+  lead contamination (quality dimension fails). Misses subtler failures where
+  the satisfaction pathway degrades downstream capabilities over time.
+- *Level 3: Downstream-safe bundle (the correct formulation).* Bundle
+  thresholds are all met AND the need-satisfaction pathway does not produce
+  net-negative effects on capabilities in the need's downstream cone in the
+  poset.
+
+### Formal definitions
+
+**Definition 2A (Multi-Dimensional Need Bundle).** A capability c identified
+as a need at position p_c in the poset has:
+
+- **Dimensions** {d_1, ..., d_m} with sufficiency thresholds {s_1, ..., s_m}
+- Each dimension has a **polarity**: maximizing (quality, quantity,
+  reliability) or minimizing (cost, distance, time)
+- **Downstream cone** Down(p_c) = {c' : c' depends on c in the poset}
+- **Satisfaction pathway** pi_c: the specific way the agent meets the need
+  (which source, at what quality, at what cost)
+
+For cost dimensions (minimizing polarity), the benchmark inverts the
+natural direction: actual_k = 1/cost_k, with sufficiency at
+s_k = 1/max_acceptable_cost, so that benchmark-maximization aligns with
+cost-minimization.
+
+**Definition 2B (Downstream-Safe Sufficiency).** Need N at position p_N is
+downstream-safe sufficient under satisfaction pathway pi_N iff:
+
+(a) **Bundle thresholds met:** d_k(pi_N) >= s_k for all dimensions k
+    (with cost dimensions inverted per Definition 2A)
+
+(b) **Downstream non-degradation:** For every capability c in Down(p_N),
+    the N-mediated contribution to c's quality under pi_N is non-negative:
+
+        Delta_c(pi_N) = quality_c(with N satisfied via pi_N)
+                      - quality_c(with N at bare threshold) >= 0
+
+Condition (b) says: satisfying the need via this pathway doesn't make
+downstream capabilities worse than they'd be under bare-threshold
+satisfaction. Lead-contaminated water violates (b) because health under
+lead water is worse than health under threshold-clean water, even if the
+lead concentration passes the quality threshold.
+
+**Remark (connection to Paper 3's exercise-pathway machinery).** The
+need-satisfaction pathway pi_N is structurally an exercise pathway (Paper 3,
+Definition 2). The downstream Delta_vol_P of the pathway is evaluable using
+Paper 3's concentration-risk apparatus. Contaminated water as a
+need-satisfaction pathway is a pathway with negative downstream Delta_vol_P
+on health-dependent capabilities. The framework should detect pathological
+need-satisfaction the same way it detects risk claims: via exercise-pathway
+contraction analysis. The distinction from risk claims is that
+need-satisfaction pathways are not "optional" -- the agent must satisfy the
+need -- so the framework's response is "find a better satisfaction pathway"
+rather than "restrict the capability."
+
+**Definition 2C (Sufficiency Threshold as Polarity Boundary).** The
+sufficiency bundle is the structural boundary where revealed-sacrifice
+polarity flips:
+
+- **Below sufficiency on any dimension:** The agent is investing to reach
+  minimum viable functionality. Sacrifice is involuntary (the agent must
+  reach sufficiency to operate). Sacrifice magnitude reveals
+  **cost-of-access** -- how expensive it is for this agent to reach baseline
+  on this dimension. Larger sacrifice = worse situation.
+
+- **Above sufficiency on all dimensions:** The agent has reached
+  functionality and is choosing to invest further. Sacrifice is voluntary
+  (the agent could stop at "good enough"). Sacrifice magnitude reveals
+  **preference strength** -- how much the agent values improvement beyond
+  baseline. Larger sacrifice = higher revealed value.
+
+The sufficiency threshold is where the free-choice assumption S1 (Section 3)
+transitions from structurally violated (below) to structurally satisfied
+(above). See Proposition 2B.
+
+**Definition 2D (Polarity-Correct Benchmark).** For each dimension d_k of
+a need capability:
+
+- **Below sufficiency:** benchmark_k = min(actual_k / s_k, 1). Climbs from 0
+  toward 1 as the agent approaches sufficiency. Caps at 1. Maximizing this =
+  closing the sufficiency gap = what the agent wants.
+
+- **Above sufficiency:** benchmark_k = 1 + alpha_k * max((actual_k - s_k) / s_k, 0)
+  where alpha_k < 1 discounts above-sufficiency gains relative to below-
+  sufficiency gains. This makes closing the sufficiency gap more valuable per
+  unit of improvement than enhancing beyond sufficiency -- the correct
+  incentive structure for needs.
+
+For cost dimensions (minimizing polarity): actual_k = 1/cost_k, with
+sufficiency at s_k = 1/max_acceptable_cost.
+
+### Propositions
+
+**Proposition 2A (Anti-Stuffing).** Under downstream-safe bundle sufficiency
+(Definition 2B), redundant capability measurements (stuffing -- e.g.,
+"distance from A to gas station," "distance from B to gas station," etc.,
+all measuring the same need from different vantage points) provide no
+downstream-quality improvement. Once the bundle is sufficient, additional
+measurements don't change the sufficiency status. The benchmark caps at 1
+on the below-sufficiency component, and the above-sufficiency component
+gives credit only for genuine quality improvement (cheaper fuel, faster
+access), not for re-measurement from different positions. The bundle
+structure + downstream-safety naturally resists stuffing without needing a
+separate anti-stuffing mechanism.
+
+*Proof sketch:* Under Definition 2B, sufficiency is a property of the
+*bundle* (all dimensions simultaneously), not of individual measurements.
+A stuffed measurement contributes to a dimension that is already at or
+above threshold. By the capping discipline (Definition 2D), its
+below-sufficiency benchmark is min(actual/threshold, 1) = 1 (already
+sufficient). Its above-sufficiency benchmark provides credit only if
+actual_k genuinely exceeds the threshold, which re-measurement from a
+different position does not achieve (the underlying quality/quantity/
+accessibility has not changed). Downstream non-degradation (Definition 2B,
+condition (b)) is unaffected because the satisfaction pathway is unchanged.
+
+**Proposition 2B (S1-Sufficiency Connection).** Below-sufficiency sacrifices
+violate Assumption S1 (free choice, Section 3) by construction. An agent
+whose capability level on any need dimension is below the sufficiency
+threshold must invest to reach sufficiency in order to function. This
+investment is not voluntary -- the agent has no meaningful alternative to
+satisfying the need. The revealed-preference inequality requires that the
+sacrifice is voluntary (the agent chose Y over X when both were available,
+including the option of retaining X). For below-sufficiency need-
+satisfaction, the agent does not have the option of retaining X (their
+purchasing power or time) because doing so means failing to reach minimum
+viable functionality.
+
+**Consequence for the sacrifice channel:** Below-sufficiency events are
+filtered from the revealed-sacrifice aggregate by S1 before they reach
+Theorem 2 (Section 4). The sacrifice channel operates only over
+above-sufficiency (want-pursuit) events, where S1 is structurally
+satisfied. This keeps the channel clean: all events entering the aggregate
+have positive polarity (more sacrifice = more revealed value) and satisfy
+the free-choice precondition.
+
+*Proof sketch:* Let (i, X, Y, t) be a sacrifice event where Y includes a
+need bundle whose level on dimension d_k is below the sufficiency threshold
+s_k. Agent i must reach s_k on d_k to maintain functionality. The
+alternative of retaining X (not making the trade) leaves the agent below
+functionality on d_k. This is not a meaningful alternative in the
+revealed-preference sense: S1 requires that the agent had alternatives
+including retaining X, but "retaining X and failing to function" is not
+a preference-revealing alternative. Therefore S1 fails for this event,
+and the event does not enter the sacrifice aggregate.
+
+### How sufficiency thresholds are set
+
+Four mechanisms, not mutually exclusive:
+
+**(a) Poset-structural:** Capabilities with high fan-out (many downstream
+dependents) have their sufficiency level set by the minimum required for
+downstream capabilities to function. Computable from poset topology.
+
+**(b) Empirical / cross-sectional:** Observe the population's actual
+capability levels and identify the threshold below which agents
+demonstrably cease functioning on downstream capabilities.
+
+**(c) Revealed-sacrifice-derived:** Sufficiency is the level at which
+sacrifice-polarity flips. Below sufficiency, sacrifice is involuntary and
+increasing; above sufficiency, sacrifice becomes voluntary and
+choice-driven. The transition point in the sacrifice data identifies the
+threshold empirically. This is the most framework-native option but has a
+bootstrap problem: identifying the threshold requires classifying events,
+but classifying events requires the threshold. Resolution: start with
+structural/normative thresholds (mechanisms (a) and (d)), refine using
+sacrifice data.
+
+**(d) Normative / external:** A human authority or governance process
+declares sufficiency levels. This is the Sen/Nussbaum approach. The
+framework's formal apparatus is agnostic to the source; it needs the
+thresholds as input.
+
+Primary mechanism: (c) with (a) as structural validation. The
+revealed-sacrifice data shows where the transition from involuntary to
+voluntary sacrifice occurs; the poset topology confirms the transition
+corresponds to a structurally meaningful threshold.
+
+---
+
+## 3. Revealed-Sacrifice Observation Model
 
 ### The core observation
 
@@ -238,6 +486,19 @@ were available. Under duress (economic coercion, political pressure,
 information asymmetry), the trade does not reveal preferences. See Open
 Question 3 for the coerced-sacrifice problem.
 
+**Remark (S1 filters below-sufficiency sacrifices).** The need-sufficiency
+architecture (Section 2, Proposition 2B) establishes that below-sufficiency
+sacrifices -- events where the agent trades to meet a need on which they are
+below the sufficiency threshold -- violate S1 by construction. The agent has
+no free choice about meeting needs; the alternative of retaining X and
+failing to function is not a preference-revealing alternative. These events
+do not enter the sacrifice aggregate. The sacrifice channel therefore
+operates only over above-sufficiency (want-pursuit) events, where S1 is
+structurally satisfied and sacrifice polarity is positive (more sacrifice =
+more revealed value). The framework accounts for below-sufficiency
+sacrifice evidence separately via the need-sufficiency diagnostic
+(Section 9).
+
 **Definition 2 (Aggregate Trade Window).** An aggregate trade window
 [t_0, t_0 + T] is an observation period over which revealed-sacrifice events
 are collected. The window parameters are:
@@ -278,7 +539,7 @@ observation bandwidth scales with the collective's total output rate.
 be committed as a proof-of-trade exposing only the vol_R-category and
 Delta_vol_P-magnitude, not counterparty, price, or specific goods.
 Zero-knowledge rollups over aggregate trade volume are feasible and preserve
-the lower-bound property (see Section 5).
+the lower-bound property (see Section 6).
 
 **(P5) Third-party observability (money channel and public time channel).**
 Unlike Paper 7's controlled relaxation (which requires the framework to
@@ -313,7 +574,7 @@ of cooperative outputs the collective produces per unit time.
 (Delta_vol_P(X), category(Y)) without revealing X or Y's specifics. The
 lower-bound inequality depends only on Delta_vol_P(X) and the fact that Y
 was chosen over X -- both of which survive the commitment's hiding property.
-See Section 5 for the formal construction.
+See Section 6 for the formal construction.
 
 (P5): Market transactions and time expenditures leave observable traces
 (payment events, public labor, attendance records) even without agent
@@ -323,7 +584,7 @@ agent operates in the world.
 
 ---
 
-## 3. Aggregate Lower Bound Theorem
+## 4. Aggregate Lower Bound Theorem
 
 ### Central result
 
@@ -579,7 +840,7 @@ aggregate.)
 **Remark (lower bound, not exact ratio).** beta^lower <= beta_true (the true
 B-to-C ratio, if it were measurable). The gap between beta^lower and
 beta_true reflects trade coverage: capabilities that are exercised but not
-traded for are not captured. The residual class (Section 6) characterizes
+traded for are not captured. The residual class (Section 7) characterizes
 what falls outside the channel.
 
 ### Monotonicity and accumulation
@@ -623,7 +884,7 @@ depending on test frequency (Theorem 2): more evidence, tighter bound.
 
 ---
 
-## 4. Two Sacrifice Channels: Money and Time
+## 5. Two Sacrifice Channels: Money and Time
 
 ### Why two channels matter
 
@@ -716,14 +977,14 @@ isolation.
 
 ### The residual intersection
 
-What neither channel catches is the *residual class* (Section 6): capabilities
+What neither channel catches is the *residual class* (Section 7): capabilities
 exercised purely privately, with no trade or time-sacrifice event that exposes
 them to the aggregate observation channel. The residual class is the
 intersection of the coverage gaps of both channels.
 
 ---
 
-## 5. Commitment-Layer Composition with Paper 5
+## 6. Commitment-Layer Composition with Paper 5
 
 ### Motivation
 
@@ -878,7 +1139,7 @@ provides the infrastructure. See Open Question 5.
 
 ---
 
-## 6. Residual Class Under Revealed-Sacrifice Observation
+## 7. Residual Class Under Revealed-Sacrifice Observation
 
 ### Re-characterization
 
@@ -1005,7 +1266,7 @@ bound). Both diagnostics detect the same pathology.
 
 ---
 
-## 7. Axiom Inheritance and the Non-Self-Balancing Finding
+## 8. Axiom Inheritance and the Non-Self-Balancing Finding
 
 ### What the lower bound inherits
 
@@ -1088,7 +1349,7 @@ above is independent of the observation mechanism).
 
 ---
 
-## 8. Alarm Mechanism and Gap Decomposition
+## 9. Alarm Mechanism and Gap Decomposition
 
 ### The alarm
 
@@ -1130,9 +1391,14 @@ where the capability partition is:
   have positive but possibly incomplete vol_R^lower.
 
 - **Dormant** (D_S): d not in Xi, d not in R_S (Definition 8), and d does
-  not appear in any acquired bundle in [T - H, T]. These are tradable-in-
-  principle capabilities with zero sacrifice evidence in the lookback
-  window.
+  not appear in any acquired bundle in [T - H, T]. These are
+  above-sufficiency, tradable-in-principle want-pursuit capabilities with
+  zero sacrifice evidence in the lookback window. Below-sufficiency
+  sacrifices do not enter the sacrifice aggregate (S1 filters them; see
+  Section 2, Proposition 2B), so dormancy is about capabilities whose
+  *want-pursuit* trade signal is absent, not capabilities whose
+  need-satisfaction is incomplete. Need-satisfaction adequacy is tracked
+  separately by the need-sufficiency diagnostic (see below).
 
 - **Residual** (R_S): d not in Xi, and d is structurally outside the
   sacrifice channel (Definition 8). These have zero sacrifice evidence
@@ -1198,9 +1464,85 @@ genuine blind spot. The gap decomposition is well-defined over the poset P
 that the framework maintains; it does not account for capabilities outside
 P.
 
+### Need-sufficiency diagnostic (companion metric)
+
+The gap decomposition above tracks want-pursuit: how much of the
+collective's above-sufficiency capability-space is evidenced by voluntary
+sacrifice. The need-sufficiency diagnostic is the parallel metric for
+below-sufficiency: how efficiently does the collective satisfy needs, and
+is the satisfaction downstream-safe?
+
+**Definition 13 (Need-Access Cost).** The need-access cost aggregate for
+trade window [T - H, T] is:
+
+    NAC(T) = sum_{n in F_S1} Delta_vol_P(X_n)
+
+where F_S1 = {n : event (i_n, X_n, Y_n, t_n) fails S1 due to
+below-sufficiency on at least one dimension of the acquired bundle Y_n}.
+NAC measures the total benchmarked capability surrendered for
+need-satisfaction -- purchasing power and time spent reaching baseline
+functionality rather than pursuing wants.
+
+NAC does NOT enter Theorem 2's aggregate lower bound or beta^lower. It is
+a separate diagnostic that tracks the cost side of the agent's capability
+budget: how much of their benchmarked capability goes to meeting needs
+versus pursuing wants.
+
+**Definition 14 (Need-Satisfaction Efficiency).** For each need N identified
+in the poset (Section 2, Definition 2A), the need-satisfaction efficiency
+is a triple:
+
+    NSE(N) = (sufficiency_status, downstream_safety, access_cost)
+
+where:
+- sufficiency_status in {below, met, exceeded}: whether the agent's
+  capability level on N meets the bundle thresholds (Definition 2B(a))
+- downstream_safety in {safe, degrading, unknown}: whether the satisfaction
+  pathway pi_N satisfies the downstream non-degradation condition
+  (Definition 2B(b))
+- access_cost = sum of Delta_vol_P(X_n) for below-sufficiency sacrifice
+  events targeting need N in the trade window
+
+The aggregate need-satisfaction efficiency NSE(T) reports the distribution
+of needs across the three sufficiency statuses and flags degrading pathways.
+
+**Proposition 10 (Combined Diagnostic).** The framework reports the triple
+(vol_R^lower, NAC, NSE) as a joint diagnostic:
+
+(a) **High vol_R^lower + low NAC:** Healthy. The collective exercises rich
+    capabilities above sufficiency and needs are cheap to meet.
+
+(b) **Low vol_R^lower + high NAC:** Proxy failure on needs. vol_P may be
+    high (the poset is rich), but agents are spending most of their
+    benchmarked capability budget on basic need-satisfaction rather than
+    want-pursuit. The sacrifice channel correctly excludes these events
+    (S1 fails), so the low vol_R^lower accurately reflects low
+    above-sufficiency exercise. The NAC diagnostic surfaces *why*
+    vol_R^lower is low.
+
+(c) **Low vol_R^lower + low NAC:** Dormancy or residual. Neither
+    want-pursuit nor need-satisfaction is visible in the sacrifice data.
+    The gap decomposition (Definition 10) distinguishes dormant from
+    residual.
+
+(d) **High vol_R^lower + high NAC:** Mixed regime. The collective exercises
+    rich above-sufficiency capabilities but needs are expensive. NSE
+    distinguishes "expensive but safe" (high access_cost, downstream_safe)
+    from "expensive and degrading" (high access_cost, downstream_degrading).
+
+**Remark (parallel structure, not nesting).** The need-sufficiency diagnostic
+is parallel to the gap decomposition, not nested within it. The gap
+decomposition partitions the *above-sufficiency want-pursuit* space into
+restricted / covered / dormant / residual. The need-sufficiency diagnostic
+partitions the *below-sufficiency need-satisfaction* space into
+met / unmet / degrading. Together they cover the full capability landscape
+without complicating each other's machinery. The sacrifice channel mediates
+both: above-sufficiency events enter the gap decomposition via Theorem 2;
+below-sufficiency events enter NAC via the S1-failure filter.
+
 ---
 
-## 9. Wireheading Detection via Trade-Flow Concentration
+## 10. Wireheading Detection via Trade-Flow Concentration
 
 ### Reframing
 
@@ -1254,7 +1596,7 @@ These are the only inputs to the HHI computation.
 
 ---
 
-## 10. Worked Example: The Dormant-Capability Scenario Re-Staged
+## 11. Worked Example: The Dormant-Capability Scenario Re-Staged
 
 ### Setup (same as prior outline)
 
@@ -1279,14 +1621,23 @@ experiences. Silicon agents sacrifice compute resources for unbenchmarked
 optimization targets. The aggregate sacrifice data covers most of the
 capability space.
 
-Trade data: 50 sacrifice events over the window, covering all 16
-non-residual capabilities (the 3 residual capabilities p_1-p_3 are
-structurally outside the sacrifice channel).
+Trade data: 50 above-sufficiency sacrifice events over the window, covering
+all 16 non-residual capabilities (the 3 residual capabilities p_1-p_3 are
+structurally outside the sacrifice channel). Additionally, 12
+below-sufficiency events are observed (biological agents purchasing
+healthcare, food, shelter) but these fail S1 and do not enter the sacrifice
+aggregate. They enter the need-access cost diagnostic instead.
 
 beta^lower = 19.0 / 22.0 = 0.864. Gap decomposition: delta_restricted = 0,
 delta_partial = 0 (all covered capabilities fully accounted for in this
 simple example), delta_dormant = 0, delta_residual = 3.0/22.0 = 0.136
 (residual class contribution). No alarm.
+
+Need-sufficiency diagnostic: NAC = 3.5 (modest need-access costs). NSE:
+all biological needs at sufficiency_status = met, downstream_safety = safe.
+Combined diagnostic: (vol_R^lower = 19.0, NAC = 3.5, NSE = healthy).
+The collective exercises rich above-sufficiency capabilities and needs are
+cheap to meet.
 
 ### Phase 2: Automation concentrates trade (beta^lower drops)
 
@@ -1300,10 +1651,10 @@ shows:
 - Trade events for b_3-related bundles: 6 in Phase 1 -> 0 in Phase 2
 - Silicon trade events increase (more compute sacrificed for more targets)
 
-New aggregate: 52 events, but covering only 10 of 16 non-residual
-capabilities. Biological capabilities b_2, b_3 and their cooperatives
-({b_2, s_3}, {b_2, s_4}, {b_3, s_5}, {b_1, b_2}) have zero sacrifice
-evidence.
+New above-sufficiency aggregate: 52 events, but covering only 10 of 16
+non-residual capabilities. Biological capabilities b_2, b_3 and their
+cooperatives ({b_2, s_3}, {b_2, s_4}, {b_3, s_5}, {b_1, b_2}) have zero
+want-pursuit sacrifice evidence.
 
 beta^lower = 10.0 / 22.0 = 0.455. ALARM fires (beta^lower < 0.8).
 
@@ -1311,11 +1662,26 @@ Gap decomposition:
 - delta_restricted = 0
 - delta_partial = 0 (covered capabilities still fully accounted for)
 - delta_dormant = (2*2 + 4*1.0)/22 = 8.0/22 = 0.364 (b_2, b_3, and 4
-  cooperatives have zero sacrifice data but are tradable in principle)
+  cooperatives have zero want-pursuit sacrifice data but are tradable in
+  principle -- these are dormant WANTS)
 - delta_residual = 3.0/22 = 0.136 (residual class unchanged)
 - Check: delta_dormant + delta_residual = 0.364 + 0.136 = 0.500;
   beta^lower + gap = 0.455 + 0.500 = 0.955 (remaining 0.045 is
   delta_partial from imperfect coverage of some silicon cooperatives)
+
+Need-sufficiency diagnostic: NAC rises from 3.5 to 8.2 as automation
+displaces biological agents from cooperative outputs, forcing them to
+spend more on basic need-satisfaction (healthcare costs rise without
+cooperative support structures). NSE: healthcare need for biological
+agents shifts from downstream_safety = safe to downstream_safety =
+degrading (cooperative pathways that previously contributed to healthcare
+quality are no longer active). Combined diagnostic: (vol_R^lower = 10.0,
+NAC = 8.2, NSE = degrading on healthcare). The need-sufficiency
+diagnostic catches a failure mode the gap decomposition misses: even
+though need-costs don't inflate vol_R^lower (correctly excluded by S1),
+the rising NAC + degrading NSE signals that automation is not merely
+making want-pursuit capabilities dormant -- it is also degrading the
+need-satisfaction pathways for biological agents.
 
 ### Phase 3: Diagnosis and recovery
 
@@ -1376,7 +1742,7 @@ and under-exercise (Paper 8).
 
 ---
 
-## 11. Integration: Duality with Paper 7 and the Shared Privacy Discipline
+## 12. Integration: Duality with Paper 7 and the Shared Privacy Discipline
 
 ### The Paper 7 / Paper 8 complementary pair
 
@@ -1412,7 +1778,7 @@ frequency, not through depth.**
 
 - Paper 8's revealed sacrifice: more precision on vol_R comes from observing
   more trades (Proposition 1, monotone accumulation), not from observing
-  each trader more intrusively. The commitment layer (Section 5) ensures
+  each trader more intrusively. The commitment layer (Section 6) ensures
   that even the trade-level observation is privacy-minimal.
 
 This shared discipline is the GFM sequence's answer to the panopticon
@@ -1437,6 +1803,27 @@ with low beta^lower has a weaker effective self-correction rate because
 its proxy is less faithful. This would unify Papers 6 and 8 into a single
 dynamical model.
 
+### Connection to Paper 9 (Goodhart mechanism)
+
+The need-sufficiency architecture (Section 2) gives Paper 9's Goodhart
+theorem a concrete mechanism. A framework that fails to distinguish needs
+from wants -- or fails to invert cost-dimension benchmarks -- produces a
+proxy vol_P that is systematically misaligned with vol_R on the need
+dimensions. The proxy rewards agents for having expensive-to-satisfy needs
+(high cost = high sacrifice = high "revealed value" under a naive
+reading) when the correct interpretation is the opposite. The Goodhart
+divergence f(C) has a concrete driver: more capable agents find more ways
+to re-frame need-costs as want-values, inflating vol_P without improving
+vol_R.
+
+The need-sufficiency architecture is the framework's prophylactic against
+this specific Goodhart mechanism: by establishing the polarity boundary
+and filtering below-sufficiency sacrifices via S1 *before* the sacrifice
+channel operates, the framework prevents need-cost inflation from
+corrupting the vol_R lower bound. The NAC diagnostic (Section 9,
+Definition 13) tracks the excluded need-costs separately, making the
+Goodhart pressure visible rather than hidden.
+
 ### Relationship to subsequent papers
 
 If Paper 9 covers adversarial structure learning, the revealed-sacrifice
@@ -1448,7 +1835,7 @@ signals that Paper 9's structure-learning algorithms can consume.
 
 ---
 
-## 12. Discussion and Open Questions
+## 13. Discussion and Open Questions
 
 ### What this paper establishes
 
@@ -1485,9 +1872,41 @@ signals that Paper 9's structure-learning algorithms can consume.
    (Proposition 8) provides a tractable wireheading diagnostic computable
    from public committed sacrifice events (Proposition 9).
 
-7. **Paper 7 and Paper 8 are complementary.** Together they cover the risk
+7. **Need-sufficiency architecture resolves the polarity problem.** The
+   sufficiency threshold (Section 2) identifies the structural boundary
+   where sacrifice polarity flips. Below-sufficiency sacrifices are
+   involuntary and correctly filtered by S1. The need-access cost
+   diagnostic (Section 9, Definitions 13-14) tracks need-satisfaction
+   efficiency as a companion metric to the want-pursuit gap decomposition.
+   The architecture provides the Goodhart mechanism for Paper 9 (Section
+   12): a framework that fails to distinguish needs from wants produces a
+   proxy systematically misaligned with vol_R on need dimensions.
+
+8. **Paper 7 and Paper 8 are complementary.** Together they cover the risk
    and value dimensions of the restriction criterion. Neither is sufficient
    alone.
+
+### Connection to Sen/Nussbaum lineage
+
+Sen's distinction between "basic capabilities" (functionings required for a
+minimally decent life) and "complex capabilities" (freedoms to choose among
+valuable life-options) maps to the below-sufficiency / above-sufficiency
+partition (Section 2). What the framework adds beyond Sen:
+
+1. **Downstream-safety condition** (Definition 2B) that makes "sufficient"
+   structurally rigorous rather than normatively asserted. Sufficiency is
+   not "this number exceeds a threshold" but "this pathway does not degrade
+   downstream capabilities."
+
+2. **Polarity-correct benchmark discipline** (Definition 2D) that makes
+   vol_P-maximization align with the agent's interest on BOTH sides of the
+   threshold, not just above it.
+
+3. **Revealed-sacrifice transition** (threshold-setting mechanism (c),
+   Section 2) as an empirical method for identifying the sufficiency
+   threshold without normative declaration. The framework can *discover*
+   where sufficiency lies from sacrifice data, rather than requiring an
+   external authority to assert it.
 
 ### Open questions
 
@@ -1530,7 +1949,7 @@ time channel may be nearly sufficient. If not, the residual class grows in
 market-failure contexts, and the lower bound weakens correspondingly.
 
 **Open Question 5: Commitment infrastructure at scale.** The paper's privacy
-guarantee (Section 5) depends on commitment-based disclosure. A fully
+guarantee (Section 6) depends on commitment-based disclosure. A fully
 committed trade ledger at the scale of a modern economy is an infrastructure
 problem: who operates the commitment scheme, who verifies the ZK proofs,
 what is the computational cost per transaction? The paper should be realistic
@@ -1555,6 +1974,55 @@ weaker population-level condition: E[U_i(Y)] <= vol_R(Y) + epsilon for
 some bounded bias term epsilon, and the aggregate lower bound would pick
 up an additive correction. What is the tightest epsilon achievable under
 realistic preference distributions?
+
+**Open Question 7: Threshold sensitivity.** How sensitive are the alignment
+properties to the exact placement of sufficiency thresholds? If the
+threshold is set too low (declaring "sufficient" when the agent isn't really
+functional), the polarity is wrong for the gap between threshold and true
+sufficiency -- need-costs in that gap are misclassified as want-pursuit
+events and enter the sacrifice aggregate with incorrect positive polarity.
+If set too high, the framework over-constrains the need and under-credits
+genuine above-sufficiency enhancement. Is there a formal robustness bound
+-- how much can the threshold err before the vol_R lower bound is
+invalidated?
+
+**Open Question 8: Dynamic thresholds.** Sufficiency levels may shift over
+time as technology and social context evolve. What was sufficient water
+access in 1900 (a well within walking distance) is insufficient today
+(piped, treated, on-demand). The framework needs a mechanism for updating
+thresholds, which connects to Paper 7's controlled-relaxation idea applied
+to sufficiency standards themselves: test whether the current threshold is
+still structurally meaningful by observing whether the sacrifice-polarity
+transition still occurs at the current level.
+
+**Open Question 9: Cross-cultural variation.** Different cultures may set
+sufficiency thresholds differently (what counts as "sufficient food" varies
+enormously). The framework should handle this as a normative input
+(mechanism (d) in Section 2) without asserting a universal threshold. Can
+the framework maintain culturally-indexed sufficiency thresholds while
+preserving a coherent aggregate vol_R diagnostic, or does cross-cultural
+variation fragment the diagnostic?
+
+**Open Question 10: Interaction with axiom M5 (non-triviality).** M5 gives
+every capability positive weight. Under the capped-benchmark discipline
+(Definition 2D), sufficiency-met needs contribute a fixed cap (not zero).
+But the weight of the cap -- how much vol_P credit does the framework
+assign for having needs met? -- is a design parameter that affects the
+relative importance of need-satisfaction vs. want-pursuit in the vol_P
+measure. This is a structural design choice the framework must take
+explicitly. How should the cap weight be set, and what are the alignment
+consequences of different choices?
+
+**Open Question 11: Need identification.** How does the framework identify
+which capabilities are needs vs. wants? The poset-structural approach
+(high fan-out = need) is a good heuristic but not infallible (healthcare
+has relatively low fan-out in the capability poset but is clearly a need).
+A hybrid of structural position + revealed-sacrifice polarity transition
+is probably required. Is there a principled procedure for need
+identification that avoids both false positives (classifying wants as
+needs, which would over-filter the sacrifice channel) and false negatives
+(classifying needs as wants, which would let need-cost inflation corrupt
+the vol_R bound)?
 
 ---
 
@@ -1595,6 +2063,25 @@ the sacrifice channel.
 ---
 
 ## Appendix B: Proof Sketches and Technical Notes
+
+### B.0 Section 2 proof strategies (Need-Sufficiency Architecture)
+
+Proposition 2A (Anti-Stuffing):
+- Show that under bundle sufficiency, redundant measurements contribute
+  to already-met dimensions. Below-sufficiency benchmark caps at 1 for
+  met dimensions. Above-sufficiency benchmark credits only genuine
+  quality improvement, which re-measurement does not provide.
+  Downstream non-degradation is unchanged by re-measurement.
+
+Proposition 2B (S1-Sufficiency Connection):
+- Show that below-sufficiency sacrifice events structurally violate S1.
+  The key step: retaining X (not making the trade) leaves the agent
+  below functionality on dimension d_k. This is not a meaningful
+  alternative in the revealed-preference sense: the agent's choice set
+  effectively does not include "retain X and function normally." S1
+  requires the agent had alternatives including retaining X; when
+  retaining X means failing to function, the alternative is not
+  preference-revealing.
 
 ### B.1 Theorem 1 proof strategy (Privacy-Minimality)
 
@@ -1673,6 +2160,13 @@ includes both the OI floor and the sacrifice lower bound.
 
 | Symbol | Definition | Introduced in |
 |--------|-----------|--------------|
+| {d_1,...,d_m} | Dimensions of a need bundle | Def 2A |
+| {s_1,...,s_m} | Sufficiency thresholds per dimension | Def 2A |
+| Down(p_N) | Downstream cone of need N in the poset | Def 2A |
+| pi_N | Need-satisfaction pathway | Def 2A |
+| Delta_c(pi_N) | Downstream quality contribution of pathway pi_N to capability c | Def 2B |
+| benchmark_k | Polarity-correct benchmark for dimension k (capped below, discounted above) | Def 2D |
+| alpha_k | Above-sufficiency discount factor for dimension k | Def 2D |
 | (i, X, Y, t) | Revealed-sacrifice event | Def 1 |
 | Delta_vol_P(X) | vol_P contribution of surrendered capability | Def 1 |
 | vol_R^lower(Y) | Lower bound on vol_R of acquired bundle | Def 1 |
@@ -1692,7 +2186,7 @@ includes both the OI floor and the sacrifice lower bound.
 | beta_alarm | Alarm threshold | Def 9 |
 | delta_restricted | Gap component: restricted capabilities (uncovered share) | Def 10 |
 | delta_partial | Gap component: partially covered capabilities (uncovered share) | Def 10 |
-| delta_dormant | Gap component: dormant tradable capabilities (full share) | Def 10 |
+| delta_dormant | Gap component: dormant want-pursuit capabilities (full share) | Def 10 |
 | delta_residual | Gap component: residual class (full share) | Def 10 |
 | C_S | Covered capabilities (have sacrifice evidence in window) | Def 10 |
 | D_S | Dormant capabilities (tradable, no sacrifice evidence in window) | Def 10 |
@@ -1701,11 +2195,14 @@ includes both the OI floor and the sacrifice lower bound.
 | HHI_alarm | Wireheading detection threshold | Prop 8 |
 | e_t(d) | Exercise indicator (internal perimeter only) | Def 12 |
 | O | Observation perimeter | Def 12 |
+| NAC(T) | Need-access cost aggregate (below-sufficiency sacrifice total) | Def 13 |
+| F_S1 | Set of events failing S1 due to below-sufficiency | Def 13 |
+| NSE(N) | Need-satisfaction efficiency triple (status, safety, cost) | Def 14 |
 | vol_R^combined | Combined diagnostic (exact + lower bound) | App A |
 | OI_floor(k) | Observational individuation floor for agent k | Prop 6 |
 | U_i | Agent i's utility function over capability bundles | Def 1, Remark |
 | S0 | Calibration assumption (agent valuations <= vol_R) | Thm 2 |
-| S1 | Free choice assumption | Thm 2 |
+| S1 | Free choice assumption (filters below-sufficiency events, Prop 2B) | Thm 2, Prop 2B |
 | S2 | Benchmark grounding assumption | Thm 2 |
 | S3 | Bundle coherence assumption | Thm 2 |
 | S4 | Additive separability assumption | Thm 2 |
@@ -1723,24 +2220,27 @@ includes both the OI floor and the sacrifice lower bound.
 | P2 | Axioms M1-M6 | Prop 1 | Thm 3 |
 | P2 | Self-balancing on posets | Thm 1 | Cor 2 |
 | P2 | Leverage | Def 9 | Section 1 |
+| P3 | Exercise pathway | Def 2 | Section 2 (need-satisfaction as exercise pathway) |
+| P3 | Concentration-risk apparatus | -- | Section 2 (downstream Delta_vol_P evaluation) |
 | P3 | Anti-monopolar property | Prop 6 | Section 1 |
-| P3 | Preemptive-restriction criterion | Prop 1 | Section 11 |
+| P3 | Preemptive-restriction criterion | Prop 1 | Section 12 |
 | P3 | Observational individuation | Def 9 | Prop 6 |
 | P4 | Risk-trust dynamics | Def 4 | Def 2 |
 | P4 | EWMA learning rate | alpha | Def 2, Remark |
 | P5 | Commitment Protocol | Def 6 | Def 7, Prop 3 |
 | P5 | ZK Capability Proof | Def 7 | Def 7, Prop 4 |
-| P5 | Risk-Claim Protocol | Def 13 | Section 5, Remark |
-| P6 | Phase boundary | Thm 1 | Section 11 |
-| P6 | Channel redundancy criterion | Thm 2 | Section 11 |
-| P7 | Controlled Relaxation | Def 3 | Section 11 |
-| P7 | Test Scope | Def 4 | Section 1, Section 11 |
-| P7 | Damage Bound | Thm 1 | Section 11 |
-| P7 | Convergence | Thm 2 | Section 11, Remark |
+| P5 | Risk-Claim Protocol | Def 13 | Section 6, Remark |
+| P6 | Phase boundary | Thm 1 | Section 12 |
+| P6 | Channel redundancy criterion | Thm 2 | Section 12 |
+| P7 | Controlled Relaxation | Def 3 | Section 12 |
+| P7 | Test Scope | Def 4 | Section 1, Section 12 |
+| P7 | Damage Bound | Thm 1 | Section 12 |
+| P7 | Convergence | Thm 2 | Section 12, Remark |
 
 ---
 
-*Generated 2026-04-15 by the GFM harness feature loop.*
-*Source: Reframing memo at docs/paper8/paper8_reframing_revealed_sacrifice.md.*
+*Generated 2026-04-15, updated 2026-04-16 by the GFM harness feature loop.*
+*Sources: Reframing memo 1 (docs/paper8/paper8_reframing_revealed_sacrifice.md),
+reframing memo 2 (docs/paper8/paper8_reframing_needs_sufficiency.md).*
 *Supersedes prior outline (paper8_outline_v1.md) for central thesis.*
 *Dependencies: Papers 1-7 in docs/paper through docs/paper7.*
