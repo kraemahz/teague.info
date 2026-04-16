@@ -314,6 +314,69 @@ maximising optionality implies). The normative question is outside the formal
 apparatus; what the apparatus provides is the structural scaffold on which
 normative choices can be loaded.
 
+### The functionings–capabilities distinction and the single-poset treatment
+
+Sen explicitly separates two levels: *functionings* (what a person actually
+does or is — the achievement vector) and *capabilities* (the set of
+functionings a person could achieve — the real-freedom set). Wellbeing is
+measured by the capability set, not just the functioning vector, because
+freedom matters intrinsically.
+
+GFM maps this distinction onto measurement rather than ontology:
+
+| Sen/Nussbaum | GFM | Where formalised |
+|---|---|---|
+| Capability set | Poset P with vol_P | Paper 2, M1–M6 |
+| Functioning vector | Exercised sub-poset P^ex with vol_R | Paper 8 |
+| Capability–functioning gap | B-to-C gap (vol_P vs vol_R) | Paper 8, Thm 2 |
+| Basic capabilities | Below-sufficiency needs | Paper 8, §2 |
+| Higher capabilities | Above-sufficiency wants | Paper 8, §2 |
+| Conversion factors | Cooperative caps + downstream cone | Papers 2, 3, 8 |
+| Central capabilities list | No analog — normative loading external | (by design) |
+
+The single-poset treatment places both functionings and capabilities in ONE
+structure and separates them through measurement (vol_P for the option set,
+vol_R for the exercised subset). This has structural consequences:
+
+**Gains from the unified treatment:**
+1. One measure theory, one set of axioms, one optimisation target. All
+   theorems (anti-monopolar, phase boundary, convergence) apply to the
+   unified structure.
+2. Dependencies between needs and wants are poset-topological facts
+   (downstream cone), not conceptual assertions ("conversion factors").
+3. Cooperative capabilities are first-class objects (M6 superadditivity) —
+   Sen has no formal analog for how capabilities interact.
+4. Dynamic treatment: the poset evolves through discovery, subsumption,
+   restriction. The capability approach has been criticised for lacking a
+   dynamic theory; GFM provides one (Paper 6 phase boundary, Paper 7
+   convergence, Paper 8 monotone accumulation).
+
+**Losses from the unified treatment:**
+1. The "freedom" dimension is implicit. Sen's capability IS the freedom to
+   achieve a functioning — the word "freedom" is load-bearing. In GFM, the
+   distinction between "chooses not to exercise" and "cannot exercise" lives
+   at the measurement level (revealed-sacrifice polarity: voluntary vs
+   involuntary) rather than structurally. The framework *recovers* the
+   freedom dimension through measurement but does not *constitute* it.
+2. No normative content. GFM does not answer "which capabilities should a
+   society guarantee?" — only "given a capability set, what does maximising
+   its volume imply?" The normative question is upstream.
+
+Paper 8's sufficiency architecture recovers Sen's basic/higher capability
+distinction within the single poset by defining the sufficiency threshold:
+below-sufficiency = Sen's basic capabilities (minimum functionings for a
+viable life); above-sufficiency = Sen's capabilities proper (freedoms the
+agent can exercise). The downstream-safety condition (Paper 8, Definition
+2B(b)) is GFM's formal addition beyond Sen: not just "the basic capability
+is met" but "the way it is met does not corrupt the downstream capability
+structure."
+
+The positioning claim: GFM provides the formal/measure-theoretic completion
+of the Sen programme. The semantic distinctions Sen cares about (freedom,
+basic vs higher) are recovered through measurement rather than ontology,
+and the unified treatment is what enables the theorem set the philosophical
+framework lacks.
+
 ### Becker (household production)
 
 Becker's insight that utility is produced via household combinations of
