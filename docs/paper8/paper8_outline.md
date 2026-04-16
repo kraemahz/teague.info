@@ -396,12 +396,15 @@ U_i(Y) = sum_{c in Y} u_i(c), where u_i(c) >= 0 is the agent's
 per-capability valuation. This is the standard Rosen (1974) hedonic
 assumption: the bundle's value equals the sum of its components' values.
 
-(b) *vol_R additivity on bundles:* The vol_R contribution of a bundle of
-capabilities that are poset-disjoint (no subsumption relations between
+(b) *vol_R additivity on poset-independent capabilities:* The vol_R
+contribution of a set of capabilities that are pairwise poset-independent
+(no subsumption relations AND no cooperative composition links between
 them) is additive: vol_R(Y) = sum_{c in Y} vol_R(c). This follows from
 vol_P's axiom M4 (additivity under poset-disjointness, Paper 2,
-Proposition 1) applied to the exercised sub-poset, provided the
-capabilities in Y are pairwise poset-disjoint.
+Proposition 1) applied to the exercised sub-poset. "Poset-independent"
+is stronger than "no subsumption": two capabilities with no subsumption
+edge but linked by a cooperative capability are NOT poset-independent,
+because the cooperative term couples their vol_R contributions.
 
 **Remark (S4(b) eliminates intra-bundle cooperative surplus).** Under
 S4(b), vol_R(Y) = sum_c vol_R(c), so the true vol_R shares
@@ -432,9 +435,9 @@ This is the load-bearing condition for per-capability disaggregation. It
 is NOT automatically satisfied by hedonic regression -- regression produces
 attribution weights, not share lower bounds. The equal-weight fallback
 (alpha = 1/|Y_n|) satisfies S5 only if no capability contributes less
-than 1/|Y_n| of the bundle's vol_R. S5 must be validated empirically or
-conservatively assumed; events where S5 cannot be justified should use
-Part A's bundle-level bound instead.
+than 1/|Y_n| of the bundle's vol_R. S5 must be validated empirically or conservatively assumed; events where
+S5 cannot be justified should fall back to Part A's bundle-level bound
+(if bundles are poset-independent) or be excluded from the aggregate.
 
 **Remark (S5 is not ZK-verifiable).** Like S0 and S1, S5 is a subjective
 condition (it depends on the true vol_R shares, which are not directly
@@ -499,18 +502,32 @@ Definition 3. Then:
 
     vol_R^U >= sum_{c in U} vol_R^lower(c)
 
-**Critical justification for the per-capability step.** The inference from
-vol_R(Y_n) >= Delta_vol_P(X_n) to vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
-requires: (i) S4(b) gives vol_R(Y_n) = sum_c vol_R(c) for poset-disjoint
-bundles; (ii) each vol_R(c) >= 0; (iii) S5 gives alpha_{n,c} <=
-vol_R(c) / vol_R(Y_n), i.e., the event-local coefficients are vol_R share
-lower bounds. Condition (iii) is the load-bearing one and is now an explicit
-assumption (S5) rather than an implicit requirement on Definition 3.
+provided the capabilities c in U are pairwise poset-independent (the
+global summation condition -- see justification below).
 
-When S5 does not hold (alpha coefficients overestimate some capabilities'
-vol_R shares), the per-capability step is unsound for those capabilities.
-The paper should use Part A (poset-independent bundles) as the primary
-result and treat Part B as a refinement available when S5 is grounded.
+**Critical justification for the per-capability step.** Two load-bearing
+steps, each requiring its own justification:
+
+*Step A (bundle-local decomposition):* The inference from
+vol_R(Y_n) >= Delta_vol_P(X_n) to vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
+requires: (i) S4(b) gives vol_R(Y_n) = sum_c vol_R(c) for poset-
+independent capabilities within Y_n; (ii) each vol_R(c) >= 0; (iii) S5
+gives alpha_{n,c} <= vol_R(c) / vol_R(Y_n).
+
+*Step B (global summation):* The inference from per-capability bounds
+vol_R(c) >= vol_R^lower(c) to vol_R^U >= sum_c vol_R^lower(c) requires
+the capabilities in U to be pairwise poset-independent, so that
+vol_R(U) = sum_c vol_R(c) by M4 applied globally over U. S4(b) is
+applied here not just per-bundle but across all capabilities in U.
+When capabilities in U have cooperative links, vol_R(U) may exceed
+sum_c vol_R(c) (cooperatives add extra value), making the sum a
+conservative lower bound -- but this relies on M4's extension to
+superadditivity for connected components, which the full paper must
+prove. For the outline, we state the poset-independence requirement.
+
+When S5 does not hold or capabilities in U are not poset-independent,
+Part B is not applicable. Fall back to Part A (if bundles are poset-
+independent) or exclude the problematic events from the aggregate.
 
 *Proof sketch:*
 
@@ -529,8 +546,11 @@ alpha_{n,c} <= vol_R(c)/vol_R(Y_n). Therefore vol_R(c) >=
 alpha_{n,c} * vol_R(Y_n) >= alpha_{n,c} * Delta_vol_P(X_n).
 
 Step 4: The max-attribution across overlapping events gives
-vol_R(c) >= max_n alpha_{n,c} * Delta_vol_P(X_n). Summing over c in U
-gives the aggregate bound.
+vol_R(c) >= max_n alpha_{n,c} * Delta_vol_P(X_n).
+
+Step 5: Global summation. Capabilities c in U are pairwise poset-
+independent, so vol_R(U) = sum_c vol_R(c) by M4 applied globally.
+Combining with Step 4: vol_R^U >= sum_c vol_R^lower(c).
 
 **Definition 4 (B-to-C Ratio Under Revealed Sacrifice).** The B-to-C ratio
 under revealed-sacrifice observation is:
@@ -568,16 +588,23 @@ aggregate is non-decreasing in the number of observed events: for N' > N,
 
     vol_R^lower(N') >= vol_R^lower(N)
 
-provided the additional events satisfy Assumptions S0-S4.
+provided the additional events satisfy the applicable assumptions (S0-S2
+for Part A; S0-S5 for Part B).
 
 *Proof sketch:* Each per-capability bound vol_R^lower(c) is a maximum over
 a growing set of candidates. Adding events can only weakly increase a max.
 The aggregate is a sum of non-decreasing terms, hence non-decreasing.
 
-**Remark (Part A is trivially monotone).** Under Part A (disjoint bundles),
-each new event covers a new portion of capability-space, so the sum grows
-monotonically. Under Part B (max-attribution for overlapping bundles),
-each per-capability bound is a max over a growing set and hence
+**Remark (monotonicity vs. soundness).** Proposition 1 states that the
+max-attribution expression is monotone as a *mathematical property* of the
+max/sum construction. Whether the expression is a *sound lower bound on
+vol_R* additionally requires the relevant assumptions (S0-S2 for Part A;
+S0-S5 for Part B). Monotonicity holds regardless; soundness is conditional.
+
+**Remark (Part A is trivially monotone).** Under Part A (poset-independent
+bundles), each new event covers a new portion of capability-space, so the
+sum grows monotonically. Under Part B (max-attribution for overlapping
+bundles), each per-capability bound is a max over a growing set and hence
 non-decreasing. Both formulations are monotone in N.
 
 **Remark (convergence through accumulation).** The lower bound tightens
@@ -714,6 +741,9 @@ revealed-sacrifice event is a tuple (C, pi, t) where:
       grounding) and S3 (bundle coherence)
   (b) Delta_vol_P(X) >= 0 (the sacrifice is non-negative)
   (c) the trade actually occurred (linked to a verifiable ledger entry)
+  (d) the bundle Y lies wholly within the claimed partition component:
+      Y ⊆ C_{category(Y)} (Definition 7a, condition (ii)). This is
+      verifiable because the partition C is public and the prover knows Y.
 
 **Remark (S0, S1, S4(a), and S5 are not ZK-verifiable).** Assumptions S0
 (calibration), S1 (free choice), S4(a) (valuation additivity), and S5
