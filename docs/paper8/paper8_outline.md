@@ -401,19 +401,26 @@ capabilities that are poset-disjoint (no subsumption relations between
 them) is additive: vol_R(Y) = sum_{c in Y} vol_R(c). This follows from
 vol_P's axiom M4 (additivity under poset-disjointness, Paper 2,
 Proposition 1) applied to the exercised sub-poset, provided the
-capabilities in Y are pairwise poset-disjoint. When capabilities in Y
-have subsumption relations, cooperative terms make vol_R super-additive
-and the per-capability disaggregation *underestimates* -- the bound
-remains valid but is conservative.
+capabilities in Y are pairwise poset-disjoint.
 
-Without S4(a), the bundle-level revealed-preference bound
-vol_R(Y_n) >= Delta_vol_P(X_n) does not distribute to individual capabilities.
-Without S4(b), the distribution from utility space to vol_R space is
-unjustified. S4 is a strong assumption -- it rules out complementarities
-on both the valuation and the measure side. When complementarities are
-present, the per-capability disaggregation underestimates some capabilities
-and overestimates others, but the *aggregate* bound over the whole bundle
-remains valid (the bundle-level bound from S0-S2 holds without S4).
+**Remark (S4(b) eliminates intra-bundle cooperative surplus).** Under
+S4(b), vol_R(Y) = sum_c vol_R(c), so the true vol_R shares
+vol_R(c)/vol_R(Y) sum to exactly 1. This is what makes S5 (below)
+compatible with Definition 3's requirement that sum_c alpha_{n,c} = 1:
+there exist alpha coefficients that are both lower bounds on the true
+shares AND sum to 1, because the true shares themselves sum to 1. When
+S4(b) fails (capabilities have cooperative surplus), vol_R(Y) > sum_c
+vol_R(c) and the true shares sum to less than 1, making S5 + sum-to-1
+incompatible. This is why Part B requires S4(b): without it, the per-
+capability disaggregation is not well-defined. Bundles with intra-bundle
+cooperative structure should use Part A's bundle-level bound instead.
+
+Without S4(a), the construction of alpha coefficients via hedonic
+regression (Definition 3) is unjustified: the regression assumes the
+utility function decomposes additively across capabilities. S4(a) is
+load-bearing for the *construction* of alpha; S5 (below) is the
+*correctness condition* on the constructed alpha. Without S4(b), the
+distribution from utility space to vol_R space is unjustified.
 
 **Assumption S5 (Decomposition validity).** The event-local decomposition
 coefficients alpha_{n,c} from Definition 3 are *lower bounds* on the true
@@ -735,18 +742,27 @@ Partial mitigations:
 
 **Definition 7a (Category Partition).** The function category(Y) maps each
 unbenchmarked bundle to a label in a *public partition* C = {C_1, ..., C_m}
-of the unbenchmarked capability space U, where the partition is *poset-
-independent*: for any j != k, no capability in C_j is related by subsumption
-or cooperative composition to any capability in C_k. The partition is
-published as part of the framework's measurement infrastructure and is
-fixed for a given trade window. Two bundles have the same category iff they
-draw from the same partition component.
+of the unbenchmarked capability space U, subject to two conditions:
+
+(i) *Poset-independence:* for any j != k, no capability in C_j is related
+    by subsumption or cooperative composition to any capability in C_k.
+
+(ii) *Bundle containment:* each bundle Y lies wholly within a single
+     partition component: category(Y) = j iff Y ⊆ C_j. A bundle that
+     spans multiple components is not assignable a single category label
+     and must be split or excluded from Part A aggregation.
+
+The partition is published as part of the framework's measurement
+infrastructure and is fixed for a given trade window.
 
 This definition is load-bearing for the aggregation step: distinct
 category labels imply poset-independence of the underlying bundles (not
 merely set-disjointness), which is what Theorem 2 Part A requires.
-The ZK disjointness proof (Proposition 4) then inherits theorem-grade
-disjointness from label-distinctness.
+Condition (ii) is what makes label-distinctness sufficient: if Y_1 ⊆ C_j
+and Y_2 ⊆ C_k with j != k, then every capability in Y_1 is poset-
+independent of every capability in Y_2 by condition (i). The ZK
+disjointness proof (Proposition 4) inherits theorem-grade poset-
+independence from label-distinctness via conditions (i) + (ii).
 
 The committed event reveals:
 - Delta_vol_P(X): the magnitude of the sacrifice (needed for the lower bound)
@@ -911,32 +927,31 @@ not "what could we test if we had access?" but "what do we actually see?"
 
 ### Bounding the residual class
 
-**Proposition 6 (Active-Agent Floor Transfers).** Paper 3's observational
-individuation (Corollary 2.1) provides a vol_R floor for active agents:
-if agent k is actively participating in the collective, its observational
-individuation capability d_k is continuously exercised, contributing at
-least OI_floor(k) to vol_R. This floor transfers independently of the
-sacrifice channel -- active participation *is* the exercise event.
+**Proposition 6 (Active-Agent Floor Transfers).** For an active agent k
+whose observational-individuation capability d_k lies within the
+observation perimeter O (Appendix A), Paper 3's observational
+individuation (Corollary 2.1) provides a vol_R floor: if agent k is
+actively participating in the collective, d_k is continuously exercised,
+contributing at least OI_floor(k) to vol_R^exact(O). This floor transfers
+independently of the sacrifice channel -- active participation *is* the
+exercise event, detected by the exercise-indicator channel within O.
 
-**Remark (channel separation).** The OI floor is an independent
-observation channel, not part of the sacrifice-based vol_R^lower. The
-sacrifice channel produces vol_R^lower from trade events; the OI channel
-produces a direct vol_R floor from active participation. The two channels
-compose in Appendix A's combined diagnostic:
+**Remark (channel separation).** The OI floor contributes exclusively to
+vol_R^exact(O) in Appendix A's combined diagnostic:
 
     vol_R^combined = vol_R^exact(O) + vol_R^lower(P \ O)
 
-The OI floor contributes to vol_R^exact (the exercise-indicator channel
-within the observation perimeter O), not to vol_R^lower (the sacrifice
-channel outside O). Conflating the two channels would double-count: an
-active trading agent's OI floor is already in vol_R^exact and should not
-also appear in vol_R^lower.
+It does NOT contribute to vol_R^lower (the sacrifice-based bound outside
+O). Conflating the two channels would double-count: an active trading
+agent's OI floor is already in vol_R^exact and should not also appear in
+vol_R^lower. For agents whose d_k is outside O, the OI floor is not
+directly observable; the sacrifice channel is the only available
+observation mechanism.
 
 *Proof sketch:* Same argument as the prior outline's Proposition 6. Active
 agents generate distinct behavioral patterns (Paper 3, Definition 8) as a
-byproduct of participation. These patterns constitute exercise of d_k.
-The exercise is detected by the OI channel (direct observation within O),
-not by the sacrifice channel.
+byproduct of participation. These patterns constitute exercise of d_k,
+detected by the exercise-indicator channel within O (Appendix A).
 
 **Remark (inactive agents).** If agent k is nominally present but inactive
 (skeleton-substrate scenario from Paper 6's worked example), k emits neither
@@ -1556,13 +1571,17 @@ Key technical challenges:
   attribution weights, not vol_R share lower bounds. S5 is the explicit
   bridge; the equal-weight fallback is conservative but may not satisfy
   S5 for unbalanced bundles.
-- Hedonic regression (Definition 3) requires non-degeneracy (S3). Bundle
-  multicollinearity is common; the proof handles degeneracy by projecting
-  onto the identifiable subspace.
-- Additive separability (S4) rules out complementarities. The bundle-level
-  bound (Part A) holds without S4; the per-capability disaggregation
-  (Part B) requires it. See the Remark after Theorem 2 for the no-S4
-  fallback.
+- Hedonic regression (Definition 3) requires non-degeneracy (S3): the
+  bundle decomposition must have a unique solution. Events where S3 fails
+  (multicollinear bundles) are excluded from Part B and fall back to
+  Part A's bundle-level bound.
+- Additive separability: S4(b) is directly load-bearing in the proof
+  (it gives vol_R(Y) = sum_c vol_R(c), enabling per-capability bounds).
+  S4(a) is load-bearing for the *construction* of alpha coefficients via
+  hedonic regression (the regression assumes U_i decomposes additively)
+  but does not appear directly in the proof chain. S4(a) is a modeling
+  assumption that justifies the input to S5; S5 is the correctness
+  condition on the output. Part A holds without either S4 component.
 - Calibration (S0) is the weakest assumption in the chain but the hardest to
   verify empirically. The population-level relaxation (Open Question 6)
   suggests a path to a robust version.
