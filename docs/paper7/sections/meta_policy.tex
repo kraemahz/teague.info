@@ -46,6 +46,20 @@ $(R, \Xirestrict)$ is initiated when all of the following hold.
   The threshold $\damagebound_{\mathrm{user}}$ is analogous to
   the self-trust pause threshold in the GFM harness
   constitution.
+\item[(v)] \textbf{Empirical exercise consistency.}  The
+  empirically observed exercise frequency $\hat{p}_{\mathrm{ex}}$
+  over the running test sequence (the fraction of test windows
+  in which detection-side activation indicators register, used
+  as a proxy for actual capability exercise) must remain within a
+  configured tolerance of the modelled $p_{\mathrm{ex}}$
+  (Assumption~\ref{ass:T5}).  Test sequences for which
+  $\hat{p}_{\mathrm{ex}}$ falls below modelled $p_{\mathrm{ex}}$
+  by more than the tolerance are treated as test-design
+  failures: the test outcomes are discarded, the restriction
+  returns to its prior state, and the meta-policy logs the
+  failure for review.  This guards against the upward
+  $p_{\mathrm{ex}}$-misspecification failure mode of
+  Remark~\ref{rem:pex_robustness}.
 \end{itemize}
 \end{definition}
 

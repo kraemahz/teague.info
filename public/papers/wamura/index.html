@@ -104,9 +104,9 @@ degenerate-phase-boundary case of <d-cite key="lasser2026phase"></d-cite>.</p>
 <d-article>
 <h1 id="sec:introduction">Introduction</h1>
 <p>Escalating capabilities within a society create escalating mechanisms
-for disaster the civilisation has never experienced, some existentially
-catastrophic if blindly accelerated toward. This capability-escalating
-regime is precisely the <span
+for disaster the civilisation has never experienced, some of which carry
+existential risk if pursued without restraint. This
+capability-escalating regime is precisely the <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximising
 dynamic that Goal-Frontier Maximization (GFM) seeks to produce; the
 question this paper addresses is how to balance the existential risks of
@@ -304,10 +304,10 @@ data-reference-type="ref" data-reference="sec:integration">10</a>). The
 protocol preserves the self-balancing property of <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 (Proposition <a href="#prop:preserve_balance" data-reference-type="ref"
-data-reference="prop:preserve_balance">6</a>), provides empirical
+data-reference="prop:preserve_balance">7</a>), provides empirical
 arbitration for inter-agent risk disagreement (Proposition <a
 href="#prop:empirical_arbitration" data-reference-type="ref"
-data-reference="prop:empirical_arbitration">7</a>), and extends the
+data-reference="prop:empirical_arbitration">8</a>), and extends the
 multi-channel detection architecture of <d-cite key="lasser2026scm"></d-cite> with a sixth, actively generated
 channel (Lemma <a href="#lem:sixth_channel" data-reference-type="ref"
 data-reference="lem:sixth_channel">2</a>).</p></li>
@@ -362,13 +362,13 @@ explicitly. Three of the four (chemical contamination, nuclear dual-use,
 pandemic preparedness) sit on top of pre-existing institutional
 infrastructure built for exactly this kind of bounded empirical test:
 the EPA, the IAEA, biosafety committees and BSL-tiered containment. The
-fourth, AI capability restriction, has no comparable infrastructure
-today. The protocol’s deployability in the AI case is therefore
-conditional on institutional development that this paper does not
-provide and does not estimate the cost of. We claim the formal
-apparatus, not the institutional readiness; the gap between the two is
-load-bearing for the AI application and should be acknowledged rather
-than elided.</p>
+fourth, AI capability restriction, has no equivalent infrastructure for
+the bounded empirical testing this protocol assumes. The protocol’s
+deployability in the AI case is therefore conditional on institutional
+development that this paper does not provide and does not estimate the
+cost of. We claim the formal apparatus, not the institutional readiness;
+the gap between the two is load-bearing for the AI application and
+should be acknowledged rather than elided.</p>
 <h2 id="sec:not_do">What this paper does not do</h2>
 <ul>
 <li><p><strong>It does not replace max-aggregation.</strong> Log-odds
@@ -424,87 +424,9 @@ actively dangerous at Fudai (a test of a reduced seawall works perfectly
 until the tsunami arrives). The paper’s domain is the complementary case
 where no historical record is available.</p></li>
 </ul>
-<h2 id="dependencies-on-prior-results">Dependencies on prior
-results</h2>
-<p>Table <a href="#tab:dependencies7" data-reference-type="ref"
-data-reference="tab:dependencies7">1</a> summarizes which results
-from <d-cite key="lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase"></d-cite>
-this paper relies on and how they enter the analysis.</p>
-<div id="tab:dependencies7">
-<table>
-<caption>Dependencies on prior results. Poset = <d-cite key="lasser2026poset"></d-cite>, Horizon = <d-cite key="lasser2026horizon"></d-cite>, Causal = <d-cite key="lasser2026scm"></d-cite>, Verification = <d-cite key="lasser2026exo"></d-cite>, Phase = <d-cite key="lasser2026phase"></d-cite>.</caption>
-<thead>
-<tr>
-<th style="text-align: left;"><strong>Source</strong></th>
-<th style="text-align: left;"><strong>Result used</strong></th>
-<th style="text-align: left;"><strong>Role here</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Poset</td>
-<td style="text-align: left;">Axiom verification (Prop. 1), benchmark
-refinement</td>
-<td style="text-align: left;"><span
-class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
-properties preserved under relaxation; complementary evidence
-source</td>
-</tr>
-<tr>
-<td style="text-align: left;">Horizon</td>
-<td style="text-align: left;">Exercise Pathway (Def. 2), Concentration
-Risk (Def. 3), Risk Claim (Def. 4), Preemptive Restriction
-(Prop. 1)</td>
-<td style="text-align: left;">The risk machinery the protocol operates
-within</td>
-</tr>
-<tr>
-<td style="text-align: left;">Horizon</td>
-<td style="text-align: left;">Structural discovery value (Prop. 2),
-anti-monopolar property (Prop. 6)</td>
-<td style="text-align: left;">Value framework for test-cost
-vs. restriction-cost comparison</td>
-</tr>
-<tr>
-<td style="text-align: left;">Causal</td>
-<td style="text-align: left;">Risk-Trust Dynamics (Def. 4), Log-Odds
-Risk Aggregation (Def. 5), <span class="math inline">L^2</span>
-Convergence (Prop. 2)</td>
-<td style="text-align: left;">Bayesian update machinery that processes
-test outcomes</td>
-</tr>
-<tr>
-<td style="text-align: left;">Causal</td>
-<td style="text-align: left;">Multi-channel architecture (Table 1),
-Causal Attribution (Def. 2)</td>
-<td style="text-align: left;">Formalizing what “observing the outcome”
-means during a test</td>
-</tr>
-<tr>
-<td style="text-align: left;">Verification</td>
-<td style="text-align: left;">Verification Asymmetry (Def. 2),
-Monotonicity (Prop. 1), Exercise Protocol (Def. 12), Risk Claim Protocol
-(Def. 13)</td>
-<td style="text-align: left;">The formal verification-asymmetry
-framework the protocol resolves</td>
-</tr>
-<tr>
-<td style="text-align: left;">Verification</td>
-<td style="text-align: left;">Channel Isolation (Prop. 5), Channel
-Independence (Prop. 6)</td>
-<td style="text-align: left;">Integrity conditions on test
-observations</td>
-</tr>
-<tr>
-<td style="text-align: left;">Phase</td>
-<td style="text-align: left;">Phase boundary (Thm. 1), Wamura problem as
-degeneracy (Prop. 4)</td>
-<td style="text-align: left;">Controlled relaxation makes <span
-class="math inline">r_{\mathrm{S}}&gt; 0</span> for Loop 3</td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>A table summarising the prior-paper results this paper relies on is
+collected in Appendix <a href="#app:dependencies"
+data-reference-type="ref" data-reference="app:dependencies">14</a>.</p>
 <h1 id="sec:verification_asymmetry">The Verification Asymmetry</h1>
 <p>This section isolates the mechanism that makes the max-aggregation
 pathology structurally irresolvable within the existing risk framework,
@@ -930,8 +852,8 @@ Wamura problem requires.</em></p>
 </div>
 <h2 id="sec:connection_phase_boundary">Connection to the phase
 boundary</h2>
-<p><d-cite key="lasser2026phase"></d-cite> show that
-feedback loop 3 (over-calibrated restriction <span
+<p><d-cite key="lasser2026phase"></d-cite>
+establishes that feedback loop 3 (over-calibrated restriction <span
 class="math inline">\to</span> discovery avoidance <span
 class="math inline">\to</span> structural ignorance) has a degenerate
 phase boundary when the self-correction rate <span
@@ -941,20 +863,21 @@ prevents evidence accumulation on the restricted dimension. Controlled
 relaxation injects discrete observation events at scheduled test times,
 producing a positive <em>time-averaged</em> exogenous correction rate
 <span class="math inline">r_{\mathrm{S}}^{\mathrm{avg}} &gt; 0</span> on
-the restricted dimension. The compositional detail is worth being
-explicit about: <span class="math inline">r_{\mathrm{S}}</span> as
-defined in <d-cite key="lasser2026phase"></d-cite>
-is <span class="math inline">\inf_t \alpha(t) \cdot
-c_{\mathrm{S}}</span>, an infimum over the trajectory. Between CR test
-events the per-step rate <span class="math inline">\alpha(t) \cdot
-c_{\mathrm{S}}</span> on the restricted dimension is zero, so the
-inf-form <span class="math inline">r_{\mathrm{S}}</span> may remain zero
-even with periodic testing. The phase-boundary condition that actually
-closes the proof, however, is the uniform-contraction condition on
+the restricted dimension.</p>
+<p>The compositional detail is worth being explicit about. <span
+class="math inline">r_{\mathrm{S}}</span> as defined in <d-cite key="lasser2026phase"></d-cite> is <span
+class="math inline">\inf_t \alpha(t) \cdot c_{\mathrm{S}}</span>, an
+infimum over the trajectory. Between CR test events the per-step rate
+<span class="math inline">\alpha(t) \cdot c_{\mathrm{S}}</span> on the
+restricted dimension is zero, so the inf-form <span
+class="math inline">r_{\mathrm{S}}</span> may remain zero even with
+periodic testing. The phase-boundary condition that actually closes the
+proof, however, is the uniform-contraction condition on
 <em>time-averaged</em> log-multiplicative factors <d-cite key="lasser2026phase"></d-cite>; the inf-form <span
 class="math inline">r_{\mathrm{S}}</span> is upstream notational
-convenience. CR delivers a positive time-average via the discrete
-log-odds drift of –, which has nonzero
+convenience.</p>
+<p>CR delivers a positive time-average via the discrete log-odds drift
+of –, which has nonzero
 expected magnitude per test under Assumption <a href="#ass:T1"
 data-reference-type="ref" data-reference="ass:T1">4</a>. The Wamura
 degeneracy that <d-cite key="lasser2026phase"></d-cite> characterises is the case where the
@@ -1461,10 +1384,67 @@ with equality in the limit of a single dominant channel. Convergence is
 preserved unconditionally; the constant factor degradation is the cost
 of the joint failure mode.</em></p>
 </div>
+<h2 id="sec:transient_composition">Composition rule for transient
+pathways</h2>
+<p>Assumption <a href="#ass:D0" data-reference-type="ref"
+data-reference="ass:D0">1</a> treats persistent activation as the
+default (<span class="math inline">k_{\mathrm{act}} \geq
+\tau_{\mathrm{test}}</span>). For transient pathways with activation
+duration <span class="math inline">k &lt; \tau_{\mathrm{test}}</span>,
+the window false-negative rate is <span
+class="math inline">\beta(\tau_{\mathrm{test}}) = (1 -
+\delta_{\mathrm{agg}})^{\min(k, \tau_{\mathrm{test}})}</span> under
+Assumption <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(a), or scaled by <span
+class="math inline">\tau_{\mathrm{mix}}</span> under Assumption <a
+href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(b). When <span class="math inline">k =
+1</span> (single-step activation) the formula gives <span
+class="math inline">\beta = 1 - \delta_{\mathrm{agg}}</span>, which may
+be non-negligible. An operational composition rule fixes the design
+parameter.</p>
+<div id="prop:transient_design" class="proposition">
+<p><strong>Proposition 4</strong> (Detection design rule for transient
+pathways). <em>For a target window false-negative rate <span
+class="math inline">\epsilon_\beta</span> and a known (or upper-bounded)
+pathway duration <span class="math inline">k</span>:</em></p>
+<ul>
+<li><p><em>Under Assumption <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(a) (memoryless detectors), the per-step
+detection probability <span
+class="math inline">\delta_{\mathrm{agg}}</span> during the test must
+satisfy <span class="math inline">(1 - \delta_{\mathrm{agg}})^k \leq
+\epsilon_\beta</span>, i.e., <span
+class="math inline">\delta_{\mathrm{agg}}\geq 1 -
+\epsilon_\beta^{1/k}</span>. For <span class="math inline">k = 1</span>
+this collapses to <span class="math inline">\delta_{\mathrm{agg}}\geq 1
+- \epsilon_\beta</span> (the single-step detector must itself meet the
+target); for larger <span class="math inline">k</span> the requirement
+softens proportionally.</em></p></li>
+<li><p><em>Under Assumption <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(b) (mixing with mixing time <span
+class="math inline">\tau_{\mathrm{mix}}</span>), the effective number of
+independent detection opportunities in <span
+class="math inline">k</span> steps is <span
+class="math inline">k/\tau_{\mathrm{mix}}</span>, and the rule
+strengthens to <span class="math inline">\delta_{\mathrm{agg}}\geq 1 -
+  \epsilon_\beta^{\tau_{\mathrm{mix}}/k}</span>; recover memoryless as
+<span class="math inline">\tau_{\mathrm{mix}}\to 1</span>.</em></p></li>
+</ul>
+<p><em>Implementations that cannot raise <span
+class="math inline">\delta_{\mathrm{agg}}</span> at fixed <span
+class="math inline">\tau_{\mathrm{test}}</span> must either extend the
+test window (use the persistent-activation form with longer <span
+class="math inline">\tau_{\mathrm{test}}</span>) or raise the detector
+sampling rate within the window (effectively shrinking <span
+class="math inline">\tau_{\mathrm{mix}}</span>). The choice between
+these is implementation-defined; the composition rule sets the
+constraint each must satisfy.</em></p>
+</div>
 <h2 id="evidence-strength-of-a-single-test">Evidence strength of a
 single test</h2>
 <div id="prop:evidence_strength" class="proposition">
-<p><strong>Proposition 4</strong> (Evidence Strength of Controlled
+<p><strong>Proposition 5</strong> (Evidence Strength of Controlled
 Relaxation). <em>After a controlled relaxation test <span
 class="math inline">T</span> with outcome <span class="math inline">O_n
 \in \{0, 1\}</span>, using the binary model of Section <a
@@ -1548,7 +1528,7 @@ class="math inline">\mathop{\mathrm{logit}}p_R(t^+) =
 <p><strong>Remark 10</strong> (Integration with log-odds aggregation).
 <em>The log-odds evidence from Proposition <a
 href="#prop:evidence_strength" data-reference-type="ref"
-data-reference="prop:evidence_strength">4</a> feeds directly into the
+data-reference="prop:evidence_strength">5</a> feeds directly into the
 log-odds risk aggregation of <d-cite key="lasser2026scm"></d-cite> as an additional evidence channel.
 The controlled-relaxation test produces evidence with the same structure
 as an individual agent’s risk assessment—a log-odds contribution
@@ -1677,10 +1657,10 @@ class="math inline">H_1</span> (<span class="math inline">\theta =
 \theta_1</span>). Under Assumptions <a href="#ass:T1"
 data-reference-type="ref" data-reference="ass:T1">4</a>–<a
 href="#ass:T5" data-reference-type="ref" data-reference="ass:T5">8</a>
-in the full-exercise regime of Assumption <a href="#ass:T5"
-data-reference-type="ref" data-reference="ass:T5">8</a> (<span
-class="math inline">p_{\mathrm{ex}} = 1</span>, enforced by scope
-construction in Phase 1):</em></p>
+with <span class="math inline">p_{\mathrm{ex}} = 1</span> (the
+full-exercise regime of Assumption <a href="#ass:T5"
+data-reference-type="ref" data-reference="ass:T5">8</a>, enforced by
+scope construction in Phase 1):</em></p>
 <ul>
 <li><p><em><strong>Almost-sure convergence.</strong> Under the true
 hypothesis <span class="math inline">H_j</span> (<span
@@ -1709,14 +1689,23 @@ class="math inline">\Pr(O = 1 \mid H_1) = \theta_1(1 - \beta)
     + (1 - \theta_1) \alpha_{\mathrm{fp}}</span>. The log-odds update on
 <span class="math inline">O_n = 1</span> is <span
 class="math inline">\log L_1&gt; 0</span>, which is large when <span
-class="math inline">(1 - \beta) \gg \alpha_{\mathrm{fp}}</span>. For
-<span class="math inline">\theta_1</span> close to <span
-class="math inline">1</span> and small <span
-class="math inline">\beta</span>, a single detection suffices to push
-<span class="math inline">p_R</span> above <span class="math inline">1 -
-\delta</span> for any fixed <span class="math inline">\delta &gt;
-0</span>. The expected number of tests to reach <span
-class="math inline">p_R&gt; 1 - \delta</span> is <span
+class="math inline">(1 - \beta) \gg \alpha_{\mathrm{fp}}</span>. After a
+single <span class="math inline">O = 1</span> observation, the posterior
+is exactly <span class="math inline">p_R(t_1) = p_R(0) L_1/ (p_R(0) L_1+
+(1 - p_R(0)))</span>, so a single detection suffices to push <span
+class="math inline">p_R</span> above <span class="math inline">1 -
+\delta</span> for any <span class="math inline">\delta &gt;
+\delta_{\min}</span>, where <span class="math inline">\delta_{\min} = (1
+- p_R(0)) / (p_R(0) L_1+ (1 - p_R(0)))</span>. For <span
+class="math inline">\theta_1</span> close to <span
+class="math inline">1</span>, small <span
+class="math inline">\beta</span>, and modest <span
+class="math inline">p_R(0)</span>, <span
+class="math inline">\delta_{\min}</span> is small (e.g., <span
+class="math inline">p_R(0) = 0.5</span>, <span class="math inline">L_1=
+100</span> gives <span class="math inline">\delta_{\min} \approx
+  0.02</span>); for tighter <span class="math inline">\delta</span>
+requirements, the expected number of tests grows as <span
 class="math inline">O\bigl(1 / [\theta_1(1 -
 \beta)]\bigr)</span>.</em></p></li>
 <li><p><em><strong>General convergence rate (KL form).</strong> The
@@ -2098,6 +2087,24 @@ user before high-damage tests. The threshold <span
 class="math inline">\epsilon_{\mathrm{user}}</span> is analogous to the
 self-trust pause threshold in the GFM harness
 constitution.</em></p></li>
+<li><p><em><strong>Empirical exercise consistency.</strong> The
+empirically observed exercise frequency <span
+class="math inline">\hat{p}_{\mathrm{ex}}</span> over the running test
+sequence (the fraction of test windows in which detection-side
+activation indicators register, used as a proxy for actual capability
+exercise) must remain within a configured tolerance of the modelled
+<span class="math inline">p_{\mathrm{ex}}</span> (Assumption <a
+href="#ass:T5" data-reference-type="ref" data-reference="ass:T5">8</a>).
+Test sequences for which <span
+class="math inline">\hat{p}_{\mathrm{ex}}</span> falls below modelled
+<span class="math inline">p_{\mathrm{ex}}</span> by more than the
+tolerance are treated as test-design failures: the test outcomes are
+discarded, the restriction returns to its prior state, and the
+meta-policy logs the failure for review. This guards against the upward
+<span class="math inline">p_{\mathrm{ex}}</span>-misspecification
+failure mode of Remark <a href="#rem:pex_robustness"
+data-reference-type="ref"
+data-reference="rem:pex_robustness">13</a>.</em></p></li>
 </ul>
 </div>
 <div id="rem:structural_preference" class="remark">
@@ -2117,7 +2124,7 @@ that resist formal resolution.</em></p>
 </div>
 <h2 id="test-parameter-optimization">Test parameter optimization</h2>
 <div id="prop:tau_opt" class="proposition">
-<p><strong>Proposition 5</strong> (Optimal Test Duration). <em>For fixed
+<p><strong>Proposition 6</strong> (Optimal Test Duration). <em>For fixed
 scope <span class="math inline">S</span> and damage tolerance <span
 class="math inline">\epsilon</span>, the test duration <span
 class="math inline">\tau_{\mathrm{test}}</span> that maximizes the
@@ -2224,7 +2231,7 @@ class="math inline">95\%</span> per-step probability).</p></li>
 <li><p>Test duration: <span class="math inline">\tau_{\mathrm{test}}=
 3</span> steps. The <span class="math inline">\tau_{\mathrm{opt}}</span>
 bound (Proposition <a href="#prop:tau_opt" data-reference-type="ref"
-data-reference="prop:tau_opt">5</a>) gives <span
+data-reference="prop:tau_opt">6</a>) gives <span
 class="math inline">\tau_{\mathrm{opt}}= \lceil -1/\log(1 - 0.95) \rceil
 = \lceil 0.334
   \rceil = 1</span>; we use <span
@@ -2313,13 +2320,16 @@ class="math display">N_{\mathrm{clear}}
     \frac{\log\bigl(0.01 \cdot 0.3 /(0.7 \cdot 0.99)\bigr)}
          {\log 1.263 \times 10^{-4}}
   \right\rceil
-  = \lceil 0.606 \rceil = 1 \text{ test}.</span> A single test suffices
-because the per-test likelihood ratio is so extreme (the detector would
-catch a real pathway with <span class="math inline">99.99\%</span>
-probability). The worked example confirms this: after one test, <span
-class="math inline">p_R</span> is already <span class="math inline">3
-\times 10^{-4}</span>. The second test is a confirmation that drives
-<span class="math inline">p_R</span> to negligible levels.</p>
+  = \lceil 0.606 \rceil = 1 \text{ test}.</span> A single test already
+suffices for clearing because the per-test likelihood ratio is so
+extreme (the detector would catch a real pathway with <span
+class="math inline">99.99\%</span> probability), and after one test
+<span class="math inline">p_R</span> is already <span
+class="math inline">3 \times 10^{-4}</span>. The second test is not
+required; running it as confirmation drops <span
+class="math inline">p_R</span> further to <span class="math inline">3.7
+\times 10^{-8}</span>, illustrating the rapid posterior compression
+rather than indicating that one test was insufficient.</p>
 <h2 id="with-controlled-relaxation-ground-truth-h_1">With controlled
 relaxation, ground truth <span class="math inline">H_1</span></h2>
 <p>Suppose instead the ground truth is <span
@@ -2409,7 +2419,7 @@ data-reference="thm:damage_bound">1</a>(b))</td>
 </table>
 </div>
 <p>Table <a href="#tab:worked_example" data-reference-type="ref"
-data-reference="tab:worked_example">2</a> collects the three cases. The
+data-reference="tab:worked_example">1</a> collects the three cases. The
 framework without controlled relaxation never resolves a false alarm;
 with controlled relaxation, a single test (backed by a <span
 class="math inline">95\%</span>-per-step multi-channel detector)
@@ -2725,7 +2735,7 @@ a sixth, actively generated channel.</p>
 <h2 id="preservation-of-self-balancing">Preservation of
 self-balancing</h2>
 <div id="prop:preserve_balance" class="proposition">
-<p><strong>Proposition 6</strong> (Controlled Relaxation Preserves
+<p><strong>Proposition 7</strong> (Controlled Relaxation Preserves
 Self-Balancing). <em>The self-balancing property of <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> (<d-cite key="lasser2026horizon"></d-cite>, self-balancing
 of the discounted value under capability dynamics) is preserved under
@@ -2784,7 +2794,7 @@ data-reference="app:proof_preserve_balance">12.8</a>. </p>
 <h2 id="empirical-arbitration-across-disagreeing-agents">Empirical
 arbitration across disagreeing agents</h2>
 <div id="prop:empirical_arbitration" class="proposition">
-<p><strong>Proposition 7</strong> (Risk-Claim Consensus via Empirical
+<p><strong>Proposition 8</strong> (Risk-Claim Consensus via Empirical
 Arbitration). <em>When multiple agents disagree on the risk of a
 capability tuple (<span class="math inline">a_j</span> assigns <span
 class="math inline">p_R^{(j)} \gg p_R^{(k)}</span> for agents <span
@@ -2883,7 +2893,12 @@ framework designs the observation (by constructing the scope and lifting
 the restriction), rather than waiting for the observation to arrive.
 This active-experiment property makes it the only channel that can
 generate evidence <em>against</em> a risk claim under the verification
-asymmetry.</em></p>
+asymmetry. The independence claim is at the level of test outcome
+conditional on test occurrence; the test occurrence is itself a function
+of the meta-policy reading from agent reports, so the channel is not
+independent of the agent-claim channels at the marginal level (see
+Remark <a href="#rem:outcome_vs_occurrence" data-reference-type="ref"
+data-reference="rem:outcome_vs_occurrence">19</a>).</em></p>
 </div>
 <div class="proof">
 <p><em>Proof sketch.</em> The sixth channel’s signal is <span
@@ -2979,9 +2994,9 @@ cascades through shared cooperative capabilities.</p>
 <h4 id="integrates-with-the-existing-machinery.">Integrates with the
 existing machinery.</h4>
 <p>Propositions <a href="#prop:preserve_balance"
-data-reference-type="ref" data-reference="prop:preserve_balance">6</a>,
+data-reference-type="ref" data-reference="prop:preserve_balance">7</a>,
 <a href="#prop:empirical_arbitration" data-reference-type="ref"
-data-reference="prop:empirical_arbitration">7</a> and Lemma <a
+data-reference="prop:empirical_arbitration">8</a> and Lemma <a
 href="#lem:sixth_channel" data-reference-type="ref"
 data-reference="lem:sixth_channel">2</a> show that the protocol
 preserves the self-balancing property of <span
@@ -3139,53 +3154,23 @@ shows that even small <span class="math inline">\epsilon</span> produces
 rapid convergence when detection sensitivity is high, so the answer may
 depend more on the detection architecture than on <span
 class="math inline">\epsilon</span> itself.</p>
-<h4 id="transient-versus-persistent-pathways.">Transient versus
-persistent pathways.</h4>
-<p>Section <a href="#sec:detection_sensitivity"
-data-reference-type="ref"
-data-reference="sec:detection_sensitivity">5</a> assumes persistent
-pathway activation (Assumption <a href="#ass:D0"
-data-reference-type="ref" data-reference="ass:D0">1</a>). Some risk
-pathways may be transient—they produce a brief contraction that the
-detector could miss at low sampling rate. The current formulation
-handles transient pathways via <span
-class="math inline">\beta(\tau_{\mathrm{test}}) = (1 -
-\delta_{\mathrm{agg}})^{\min(k, \tau_{\mathrm{test}})}</span> where
-<span class="math inline">k</span> is the pathway duration, but if <span
-class="math inline">k = 1</span> then <span class="math inline">\beta =
-1 - \delta_{\mathrm{agg}}</span> may be non-negligible. An operational
-composition rule fixes the design parameter. Under the memoryless
-detector regime of Assumption <a href="#ass:D2"
-data-reference-type="ref" data-reference="ass:D2">3</a>(a), for a target
-window false-negative rate <span
-class="math inline">\epsilon_\beta</span> and a known (or upper-bounded)
-pathway duration <span class="math inline">k</span>, the per-step
-detection probability <span
-class="math inline">\delta_{\mathrm{agg}}</span> during the test must
-satisfy <span class="math inline">(1 - \delta_{\mathrm{agg}})^k \leq
-\epsilon_\beta</span>, i.e., <span
-class="math inline">\delta_{\mathrm{agg}}\geq 1 -
-\epsilon_\beta^{1/k}</span>. For <span class="math inline">k = 1</span>
-this collapses to <span class="math inline">\delta_{\mathrm{agg}}\geq 1
-- \epsilon_\beta</span> (the single-step detector must itself meet the
-target); for larger <span class="math inline">k</span> the requirement
-softens proportionally. Under the mixing regime <a href="#ass:D2"
-data-reference-type="ref" data-reference="ass:D2">3</a>(b), the
-effective number of independent detection opportunities in <span
-class="math inline">k</span> steps is <span
-class="math inline">k/\tau_{\mathrm{mix}}</span>, and the rule
-strengthens to <span class="math inline">\delta_{\mathrm{agg}}\geq 1 -
-\epsilon_\beta^{\tau_{\mathrm{mix}}/k}</span>; recover memoryless as
-<span class="math inline">\tau_{\mathrm{mix}}\to 1</span>.
-Implementations that cannot raise <span
-class="math inline">\delta_{\mathrm{agg}}</span> at fixed <span
-class="math inline">\tau_{\mathrm{test}}</span> must either extend the
-test window (use the persistent-activation form with longer <span
-class="math inline">\tau_{\mathrm{test}}</span>) or raise the detector
-sampling rate within the window (effectively shrinking <span
-class="math inline">\tau_{\mathrm{mix}}</span>). The choice between
-these is implementation-defined; the composition rule sets the
-constraint each must satisfy.</p>
+<h4 id="transient-pathways-with-unknown-duration.">Transient pathways
+with unknown duration.</h4>
+<p>The composition rule of Proposition <a href="#prop:transient_design"
+data-reference-type="ref" data-reference="prop:transient_design">4</a>
+addresses the case where the pathway duration <span
+class="math inline">k</span> is known or bounded above. When <span
+class="math inline">k</span> is itself unknown—the detector must infer
+pathway duration from limited test data—the design constraint becomes
+circular: a detector tuned for assumed <span
+class="math inline">k</span> will under-perform if the true duration is
+shorter. Conservative practice uses the smallest plausible <span
+class="math inline">k</span> (typically <span class="math inline">k =
+1</span>) for the design rule, accepting the corresponding strong <span
+class="math inline">\delta_{\mathrm{agg}}</span> requirement. A
+principled joint inference of <span class="math inline">k</span> and
+<span class="math inline">\theta_1</span> from test data is an open
+question.</p>
 <h4 id="adversarial-risk-claimants.">Adversarial risk claimants.</h4>
 <p>Assumption <a href="#ass:T3" data-reference-type="ref"
 data-reference="ass:T3">6</a>(a) rules out adaptation by the tested
@@ -3231,8 +3216,9 @@ jurisdictional accountability) that bounds <span
 class="math inline">N_{\mathrm{adv}}</span> at the claim generation
 step, or (ii) a meta-policy with an explicit adversarial-claim detector
 before trust dynamics take over. The current protocol carries no such
-guard internally; this is named here as a deployment caveat rather than
-dissolved.</p>
+guard internally; deployment in contested settings requires the
+integrity layer be specified externally and is named here as a
+precondition for operational use.</p>
 <h2 id="relationship-to-prior-and-subsequent-papers">Relationship to
 prior and subsequent papers</h2>
 <h4 id="prior-papers.">Prior papers.</h4>
@@ -3269,7 +3255,7 @@ contribute to <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{R}}</span>. The
 convergence of the restriction landscape (Proposition <a
 href="#prop:preserve_balance" data-reference-type="ref"
-data-reference="prop:preserve_balance">6</a>(c)) implies that <span
+data-reference="prop:preserve_balance">7</a>(c)) implies that <span
 class="math inline">\mathop{\mathrm{vol}}_{\mathrm{R}} /
 {\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> approaches its true value as
 false restrictions clear, partially closing the B-to-C gap for the class
@@ -3334,7 +3320,7 @@ formulation); the missing <span class="math inline">(1 -
 \alpha_{\mathrm{fp}})</span> denominator in the naive no-contraction
 log-odds update (corrected in Proposition <a
 href="#prop:evidence_strength" data-reference-type="ref"
-data-reference="prop:evidence_strength">4</a>(b)); the need for
+data-reference="prop:evidence_strength">5</a>(b)); the need for
 cooperative closure to forward-reachable external pathways in
 Definition <a href="#def:test_scope" data-reference-type="ref"
 data-reference="def:test_scope">4</a>(ii) rather than only the pathways
@@ -3777,7 +3763,7 @@ L_0&lt; 0</span>, so the inequality direction flips when dividing;
 taking the ceiling gives .</p>
 <h2 id="app:proof_preserve_balance">Proof of Proposition <a
 href="#prop:preserve_balance" data-reference-type="ref"
-data-reference="prop:preserve_balance">6</a></h2>
+data-reference="prop:preserve_balance">7</a></h2>
 <h4 id="part-a.-2">Part (a).</h4>
 <p>Axiom M4 (weak monotonicity) of <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> <d-cite key="lasser2026poset"></d-cite> gives that adding
@@ -3810,7 +3796,7 @@ class="math inline">\{\text{restrict} : \text{genuinely risky}\}</span>
 a.s.</p>
 <h1 id="app:notation">Notation Summary</h1>
 <p>Table <a href="#tab:notation7" data-reference-type="ref"
-data-reference="tab:notation7">4</a> collects the principal symbols
+data-reference="tab:notation7">3</a> collects the principal symbols
 specific to this paper. Symbols inherited from earlier papers <d-cite key="lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase"></d-cite>—including
 <span class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 (capability volume), <span class="math inline">G_t</span> (global
@@ -3902,7 +3888,7 @@ target-<span class="math inline">\epsilon_\beta</span> minimum</td>
 <td style="text-align: left;">Def. <a href="#def:cr_test"
 data-reference-type="ref" data-reference="def:cr_test">3</a>, Prop. <a
 href="#prop:tau_opt" data-reference-type="ref"
-data-reference="prop:tau_opt">5</a>, <a href="#prop:detection_bounds"
+data-reference="prop:tau_opt">6</a>, <a href="#prop:detection_bounds"
 data-reference-type="ref"
 data-reference="prop:detection_bounds">3</a></td>
 </tr>
@@ -4072,6 +4058,86 @@ data-reference-type="ref"
 data-reference="def:keystone_structure">8</a>–<a
 href="#def:keystone_order" data-reference-type="ref"
 data-reference="def:keystone_order">9</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="app:dependencies">Cross-Paper Dependencies</h1>
+<p>Table <a href="#tab:dependencies7" data-reference-type="ref"
+data-reference="tab:dependencies7">4</a> summarizes which results
+from <d-cite key="lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase"></d-cite>
+this paper relies on and how they enter the analysis.</p>
+<div id="tab:dependencies7">
+<table>
+<caption>Dependencies on prior results. Poset = <d-cite key="lasser2026poset"></d-cite>, Horizon = <d-cite key="lasser2026horizon"></d-cite>, Causal = <d-cite key="lasser2026scm"></d-cite>, Verification = <d-cite key="lasser2026exo"></d-cite>, Phase = <d-cite key="lasser2026phase"></d-cite>.</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Source</strong></th>
+<th style="text-align: left;"><strong>Result used</strong></th>
+<th style="text-align: left;"><strong>Role here</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Poset</td>
+<td style="text-align: left;">Axiom verification (Prop. 1), benchmark
+refinement</td>
+<td style="text-align: left;"><span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+properties preserved under relaxation; complementary evidence
+source</td>
+</tr>
+<tr>
+<td style="text-align: left;">Horizon</td>
+<td style="text-align: left;">Exercise Pathway (Def. 2), Concentration
+Risk (Def. 3), Risk Claim (Def. 4), Preemptive Restriction
+(Prop. 1)</td>
+<td style="text-align: left;">The risk machinery the protocol operates
+within</td>
+</tr>
+<tr>
+<td style="text-align: left;">Horizon</td>
+<td style="text-align: left;">Structural discovery value (Prop. 2),
+anti-monopolar property (Prop. 6)</td>
+<td style="text-align: left;">Value framework for test-cost
+vs. restriction-cost comparison</td>
+</tr>
+<tr>
+<td style="text-align: left;">Causal</td>
+<td style="text-align: left;">Risk-Trust Dynamics (Def. 4), Log-Odds
+Risk Aggregation (Def. 5), <span class="math inline">L^2</span>
+Convergence (Prop. 2)</td>
+<td style="text-align: left;">Bayesian update machinery that processes
+test outcomes</td>
+</tr>
+<tr>
+<td style="text-align: left;">Causal</td>
+<td style="text-align: left;">Multi-channel architecture (Table 1),
+Causal Attribution (Def. 2)</td>
+<td style="text-align: left;">Formalizing what “observing the outcome”
+means during a test</td>
+</tr>
+<tr>
+<td style="text-align: left;">Verification</td>
+<td style="text-align: left;">Verification Asymmetry (Def. 2),
+Monotonicity (Prop. 1), Exercise Protocol (Def. 12), Risk Claim Protocol
+(Def. 13)</td>
+<td style="text-align: left;">The formal verification-asymmetry
+framework the protocol resolves</td>
+</tr>
+<tr>
+<td style="text-align: left;">Verification</td>
+<td style="text-align: left;">Channel Isolation (Prop. 5), Channel
+Independence (Prop. 6)</td>
+<td style="text-align: left;">Integrity conditions on test
+observations</td>
+</tr>
+<tr>
+<td style="text-align: left;">Phase</td>
+<td style="text-align: left;">Phase boundary (Thm. 1), Wamura problem as
+degeneracy (Prop. 4)</td>
+<td style="text-align: left;">Controlled relaxation makes <span
+class="math inline">r_{\mathrm{S}}&gt; 0</span> for Loop 3</td>
 </tr>
 </tbody>
 </table>

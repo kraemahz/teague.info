@@ -101,9 +101,10 @@ relaxation tests for a risk-restriction pair
 $(R, \Xirestrict)$ with fixed parameters
 $(\scope, \testdur, \damagebound)$, under the binary formulation
 $H_0$ ($\theta = 0$) versus $H_1$ ($\theta = \thetaone$).  Under
-Assumptions~\ref{ass:T1}--\ref{ass:T5} in the full-exercise
-regime of Assumption~\ref{ass:T5} ($p_{\mathrm{ex}} = 1$,
-enforced by scope construction in Phase~1):
+Assumptions~\ref{ass:T1}--\ref{ass:T5} with
+$p_{\mathrm{ex}} = 1$ (the full-exercise regime of
+Assumption~\ref{ass:T5}, enforced by scope construction in
+Phase~1):
 \begin{itemize}
 \item[(a)] \textbf{Almost-sure convergence.}  Under the true
   hypothesis $H_j$ ($j \in \{0, 1\}$), the posterior converges
@@ -126,11 +127,17 @@ enforced by scope construction in Phase~1):
   $\Pr(O = 1 \mid H_1) = \thetaone (1 - \beta)
     + (1 - \thetaone) \alphafp$.  The log-odds update on
   $O_n = 1$ is $\log \Lone > 0$, which is large when
-  $(1 - \beta) \gg \alphafp$.  For $\thetaone$ close to $1$ and
-  small $\beta$, a single detection suffices to push $\pR$
-  above $1 - \delta$ for any fixed $\delta > 0$.  The expected
-  number of tests to reach $\pR > 1 - \delta$ is
-  $O\bigl(1 / [\thetaone (1 - \beta)]\bigr)$.
+  $(1 - \beta) \gg \alphafp$.  After a single $O = 1$
+  observation, the posterior is exactly
+  $\pR(t_1) = \pR(0) \Lone / (\pR(0) \Lone + (1 - \pR(0)))$,
+  so a single detection suffices to push $\pR$ above $1 - \delta$
+  for any $\delta > \delta_{\min}$, where
+  $\delta_{\min} = (1 - \pR(0)) / (\pR(0) \Lone + (1 - \pR(0)))$.
+  For $\thetaone$ close to $1$, small $\beta$, and modest
+  $\pR(0)$, $\delta_{\min}$ is small (e.g.,
+  $\pR(0) = 0.5$, $\Lone = 100$ gives $\delta_{\min} \approx
+  0.02$); for tighter $\delta$ requirements, the expected number
+  of tests grows as $O\bigl(1 / [\thetaone (1 - \beta)]\bigr)$.
 \item[(d)] \textbf{General convergence rate (KL form).}  The
   log-posterior converges at a rate given by the KL divergence
   between the true observation distribution and the alternative:

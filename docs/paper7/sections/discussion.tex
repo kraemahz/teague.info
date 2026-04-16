@@ -183,35 +183,18 @@ even small $\damagebound$ produces rapid convergence when
 detection sensitivity is high, so the answer may depend more on
 the detection architecture than on $\damagebound$ itself.
 
-\paragraph{Transient versus persistent pathways.}
-Section~\ref{sec:detection_sensitivity} assumes persistent
-pathway activation (Assumption~\ref{ass:D0}).  Some risk
-pathways may be transient---they produce a brief contraction
-that the detector could miss at low sampling rate.  The current
-formulation handles transient pathways via
-$\beta(\testdur) = (1 - \deltaagg)^{\min(k, \testdur)}$ where
-$k$ is the pathway duration, but if $k = 1$ then
-$\beta = 1 - \deltaagg$ may be non-negligible.  An operational
-composition rule fixes the design parameter.  Under the
-memoryless detector regime of Assumption~\ref{ass:D2}(a), for a
-target window false-negative rate $\epsilon_\beta$ and a known
-(or upper-bounded) pathway duration $k$, the per-step detection
-probability $\deltaagg$ during the test must satisfy
-$(1 - \deltaagg)^k \leq \epsilon_\beta$, i.e.,
-$\deltaagg \geq 1 - \epsilon_\beta^{1/k}$.  For $k = 1$ this
-collapses to $\deltaagg \geq 1 - \epsilon_\beta$ (the
-single-step detector must itself meet the target); for larger
-$k$ the requirement softens proportionally.  Under the mixing
-regime~\ref{ass:D2}(b), the effective number of independent
-detection opportunities in $k$ steps is $k/\testmix$, and the
-rule strengthens to $\deltaagg \geq 1 - \epsilon_\beta^{\testmix/k}$;
-recover memoryless as $\testmix \to 1$.  Implementations
-that cannot raise $\deltaagg$ at fixed $\testdur$ must either
-extend the test window (use the persistent-activation form
-with longer $\testdur$) or raise the detector sampling rate
-within the window (effectively shrinking $\testmix$).  The
-choice between these is implementation-defined; the
-composition rule sets the constraint each must satisfy.
+\paragraph{Transient pathways with unknown duration.}
+The composition rule of
+Proposition~\ref{prop:transient_design} addresses the case where
+the pathway duration $k$ is known or bounded above.  When $k$ is
+itself unknown---the detector must infer pathway duration from
+limited test data---the design constraint becomes circular: a
+detector tuned for assumed $k$ will under-perform if the true
+duration is shorter.  Conservative practice uses the smallest
+plausible $k$ (typically $k = 1$) for the design rule, accepting
+the corresponding strong $\deltaagg$ requirement.  A principled
+joint inference of $k$ and $\thetaone$ from test data is an open
+question.
 
 \paragraph{Adversarial risk claimants.}
 Assumption~\ref{ass:T3}(a) rules out adaptation by the tested
@@ -256,8 +239,10 @@ either (i) an integrity layer (cryptographic commitment via
 accountability) that bounds $N_{\mathrm{adv}}$ at the claim
 generation step, or (ii) a meta-policy with an explicit
 adversarial-claim detector before trust dynamics take over.
-The current protocol carries no such guard internally; this is
-named here as a deployment caveat rather than dissolved.
+The current protocol carries no such guard internally;
+deployment in contested settings requires the integrity layer be
+specified externally and is named here as a precondition for
+operational use.
 
 \subsection{Relationship to prior and subsequent papers}
 

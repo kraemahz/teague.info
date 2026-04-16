@@ -179,6 +179,48 @@ constant factor degradation is the cost of the joint failure
 mode.
 \end{remark}
 
+\subsection{Composition rule for transient pathways}
+\label{sec:transient_composition}
+
+Assumption~\ref{ass:D0} treats persistent activation as the
+default ($k_{\mathrm{act}} \geq \testdur$).  For transient
+pathways with activation duration $k < \testdur$, the
+window false-negative rate is
+$\beta(\testdur) = (1 - \deltaagg)^{\min(k, \testdur)}$ under
+Assumption~\ref{ass:D2}(a), or scaled by $\testmix$ under
+Assumption~\ref{ass:D2}(b).  When $k = 1$ (single-step
+activation) the formula gives $\beta = 1 - \deltaagg$, which
+may be non-negligible.  An operational composition rule fixes
+the design parameter.
+
+\begin{proposition}[Detection design rule for transient pathways]
+\label{prop:transient_design}
+For a target window false-negative rate $\epsilon_\beta$ and a
+known (or upper-bounded) pathway duration $k$:
+\begin{itemize}
+\item Under Assumption~\ref{ass:D2}(a) (memoryless detectors),
+  the per-step detection probability $\deltaagg$ during the
+  test must satisfy
+  $(1 - \deltaagg)^k \leq \epsilon_\beta$, i.e.,
+  $\deltaagg \geq 1 - \epsilon_\beta^{1/k}$.  For $k = 1$ this
+  collapses to $\deltaagg \geq 1 - \epsilon_\beta$ (the
+  single-step detector must itself meet the target); for larger
+  $k$ the requirement softens proportionally.
+\item Under Assumption~\ref{ass:D2}(b) (mixing with mixing
+  time $\testmix$), the effective number of independent
+  detection opportunities in $k$ steps is $k/\testmix$, and the
+  rule strengthens to $\deltaagg \geq 1 -
+  \epsilon_\beta^{\testmix/k}$; recover memoryless as
+  $\testmix \to 1$.
+\end{itemize}
+Implementations that cannot raise $\deltaagg$ at fixed $\testdur$
+must either extend the test window (use the persistent-activation
+form with longer $\testdur$) or raise the detector sampling rate
+within the window (effectively shrinking $\testmix$).  The choice
+between these is implementation-defined; the composition rule
+sets the constraint each must satisfy.
+\end{proposition}
+
 \subsection{Evidence strength of a single test}
 
 \begin{proposition}[Evidence Strength of Controlled Relaxation]

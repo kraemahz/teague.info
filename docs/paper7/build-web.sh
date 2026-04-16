@@ -101,6 +101,7 @@ ref_map = {
     'app:proof_convergence': 'A.6',
     'app:proof_preserve_balance': 'A.8',
     'app:notation': 'B',
+    'app:dependencies': 'C',
 }
 
 def resolve_ref(m):

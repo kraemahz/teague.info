@@ -1,0 +1,54 @@
+\section{Cross-Paper Dependencies}
+\label{app:dependencies}
+
+Table~\ref{tab:dependencies7} summarizes which results
+from~\citep{lasser2026gfm, lasser2026poset, lasser2026horizon,
+lasser2026scm, lasser2026exo, lasser2026phase} this paper relies
+on and how they enter the analysis.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{2.0cm}p{5.6cm}p{6.0cm}@{}}
+\toprule
+\textbf{Source} & \textbf{Result used} & \textbf{Role here} \\
+\midrule
+Poset        & Axiom verification (Prop.~1), benchmark refinement
+             & $\volL$ properties preserved under relaxation;
+               complementary evidence source \\
+Horizon      & Exercise Pathway (Def.~2), Concentration Risk (Def.~3),
+               Risk Claim (Def.~4), Preemptive Restriction (Prop.~1)
+             & The risk machinery the protocol operates within \\
+Horizon      & Structural discovery value (Prop.~2), anti-monopolar
+               property (Prop.~6)
+             & Value framework for test-cost vs.\ restriction-cost
+               comparison \\
+Causal       & Risk-Trust Dynamics (Def.~4), Log-Odds Risk
+               Aggregation (Def.~5), $L^2$ Convergence (Prop.~2)
+             & Bayesian update machinery that processes test
+               outcomes \\
+Causal       & Multi-channel architecture (Table~1), Causal
+               Attribution (Def.~2)
+             & Formalizing what ``observing the outcome'' means
+               during a test \\
+Verification & Verification Asymmetry (Def.~2), Monotonicity
+               (Prop.~1), Exercise Protocol (Def.~12), Risk Claim
+               Protocol (Def.~13)
+             & The formal verification-asymmetry framework the
+               protocol resolves \\
+Verification & Channel Isolation (Prop.~5), Channel Independence
+               (Prop.~6)
+             & Integrity conditions on test observations \\
+Phase        & Phase boundary (Thm.~1), Wamura problem as
+               degeneracy (Prop.~4)
+             & Controlled relaxation makes $\rS > 0$ for Loop~3 \\
+\bottomrule
+\end{tabular}
+\caption{Dependencies on prior results.
+  Poset~=~\citet{lasser2026poset},
+  Horizon~=~\citet{lasser2026horizon},
+  Causal~=~\citet{lasser2026scm},
+  Verification~=~\citet{lasser2026exo},
+  Phase~=~\citet{lasser2026phase}.}
+\label{tab:dependencies7}
+\end{table}
