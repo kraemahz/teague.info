@@ -153,7 +153,14 @@ is in which restriction the test probes (the full
 $\Xirestrict_{\mathrm{current}}$ for Mode A, the reduced
 $\Xirestrict_{\mathrm{narrow}}$ for Mode B).  A Mode A failure does not preclude Mode B success against a
 narrower candidate: a restriction that cannot be fully lifted
-may still admit refinement.
+may still admit refinement.  The choice between Mode A and
+Mode B testing is itself a verification-asymmetry problem one
+level up: the existence of a viable
+$\keystonestruct_{\mathrm{narrow}}$ cannot be observed without
+running the refinement test.  Domain expertise or structural
+discovery~\citep[Proposition~2]{lasser2026horizon} supplies the
+prior that guides test-mode selection; the protocol provides
+the empirical resolution once the candidate is named.
 \end{remark}
 
 \begin{remark}[Meta-policy for refinement]

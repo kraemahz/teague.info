@@ -203,3 +203,25 @@ in practice.  The composition makes explicit that the CR
 channel's trust inherits from the trust mechanism rather than
 being independent of it.
 \end{remark}
+
+\begin{remark}[Continuous $\Delta\volL$ signal]
+\label{rem:continuous_signal}
+Table~\ref{tab:sixth_channel} lists the CR channel's signal as
+``Binary (contraction / no contraction) plus continuous
+($\volL$ delta).''  Everything downstream of Section~3---the
+likelihoods, the KL rates, Theorem~\ref{thm:convergence}---is
+stated on the binary channel $O_n \in \{0, 1\}$ alone.  The
+continuous $\Delta\volL$ signal observed during a test is
+informative beyond the binary indicator: a large contraction
+during a test window is stronger evidence for $H_1$ than a
+barely-threshold detection.  Integrating $\Delta\volL$ into the
+Bayesian update would require a continuous-observation likelihood
+model (rather than the binary $\Lzero$, $\Lone$), which the
+paper defers to future work.  The binary formulation is
+sufficient for the operational question ``should this restriction
+be maintained?'' and for the convergence claim of Theorem~2; the
+continuous signal would improve the evidence \emph{rate} but
+does not change the convergent \emph{hypothesis}.  We note the
+gap here so that the table's claim and the formal machinery's
+scope are consistent.
+\end{remark}

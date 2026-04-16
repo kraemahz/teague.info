@@ -2243,7 +2243,13 @@ multiplies the miss probability by <span class="math inline">1 -
 damage-exposure window, a conservative trade-off that the worked example
 illustrates but does not optimize.</p></li>
 <li><p>Window false-negative rate: <span class="math inline">\beta(3) =
-(1 - 0.95)^3 = 1.25 \times 10^{-4}</span>.</p></li>
+(1 - 0.95)^3 = 1.25 \times 10^{-4}</span>. (This assumes persistent
+activation: <span class="math inline">k_{\mathrm{act}} \geq
+  \tau_{\mathrm{test}}= 3</span>, so the detector has the full window.
+For transient pathways with <span class="math inline">k &lt;
+\tau_{\mathrm{test}}</span>, see the composition rule of Proposition <a
+href="#prop:transient_design" data-reference-type="ref"
+data-reference="prop:transient_design">4</a>.)</p></li>
 <li><p>False-positive rate: <span
 class="math inline">\alpha_{\mathrm{fp}}= 0.01</span>.</p></li>
 <li><p>Damage tolerance: <span class="math inline">\epsilon= 0.02 \cdot
@@ -2597,7 +2603,13 @@ class="math inline">\Xi_{\mathrm{current}}</span> for Mode A, the
 reduced <span class="math inline">\Xi_{\mathrm{narrow}}</span> for Mode
 B). A Mode A failure does not preclude Mode B success against a narrower
 candidate: a restriction that cannot be fully lifted may still admit
-refinement.</em></p>
+refinement. The choice between Mode A and Mode B testing is itself a
+verification-asymmetry problem one level up: the existence of a viable
+<span class="math inline">K_{\mathrm{narrow}}</span> cannot be observed
+without running the refinement test. Domain expertise or structural
+discovery <d-cite key="lasser2026horizon"></d-cite>
+supplies the prior that guides test-mode selection; the protocol
+provides the empirical resolution once the candidate is named.</em></p>
 </div>
 <div id="rem:refinement_policy" class="remark">
 <p><strong>Remark 18</strong> (Meta-policy for refinement). <em>The
@@ -2949,6 +2961,35 @@ rarely defensible in practice. The composition makes explicit that the
 CR channel’s trust inherits from the trust mechanism rather than being
 independent of it.</em></p>
 </div>
+<div id="rem:continuous_signal" class="remark">
+<p><strong>Remark 21</strong> (Continuous <span
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+signal). <em>Table <a href="#tab:sixth_channel"
+data-reference-type="ref" data-reference="tab:sixth_channel">2</a> lists
+the CR channel’s signal as “Binary (contraction / no contraction) plus
+continuous (<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> delta).”
+Everything downstream of Section 3—the likelihoods, the KL rates,
+Theorem <a href="#thm:convergence" data-reference-type="ref"
+data-reference="thm:convergence">2</a>—is stated on the binary channel
+<span class="math inline">O_n \in \{0, 1\}</span> alone. The continuous
+<span
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+signal observed during a test is informative beyond the binary
+indicator: a large contraction during a test window is stronger evidence
+for <span class="math inline">H_1</span> than a barely-threshold
+detection. Integrating <span
+class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+into the Bayesian update would require a continuous-observation
+likelihood model (rather than the binary <span
+class="math inline">L_0</span>, <span class="math inline">L_1</span>),
+which the paper defers to future work. The binary formulation is
+sufficient for the operational question “should this restriction be
+maintained?” and for the convergence claim of Theorem 2; the continuous
+signal would improve the evidence <em>rate</em> but does not change the
+convergent <em>hypothesis</em>. We note the gap here so that the table’s
+claim and the formal machinery’s scope are consistent.</em></p>
+</div>
 <h1 id="sec:discussion">Discussion</h1>
 <h2 id="what-this-paper-accomplishes">What this paper accomplishes</h2>
 <h4 id="breaks-the-wamura-problem.">Breaks the Wamura problem.</h4>
@@ -3073,9 +3114,53 @@ Misspecification flips the convergent hypothesis only when the modeled
 detector is qualitatively miscalibrated (modeled <span
 class="math inline">L_1</span> on the wrong side of <span
 class="math inline">1</span>); quantitative misestimation only slows
-convergence. Detector calibration is therefore a prerequisite for the
-convergence guarantee to carry its safety interpretation, but the bound
-is robust to plausible-magnitude calibration error.</p>
+convergence. Concretely, the safe region in <span
+class="math inline">(\beta^{\star}, \alpha_{\mathrm{fp}}^{\star})</span>
+space is characterised by:</p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>True hypothesis</strong></th>
+<th style="text-align: left;"><strong>Safe-region boundary</strong></th>
+<th style="text-align: left;"><strong>Worked-example value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">H_0</span>
+true</td>
+<td style="text-align: left;"><span
+class="math inline">\alpha_{\mathrm{fp}}^{\star} &lt;
+  \frac{|\log L_0|}{|\log L_0| + \log L_1}</span></td>
+<td style="text-align: left;"><span
+class="math inline">\alpha_{\mathrm{fp}}^{\star} &lt; 0.34</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">H_1</span>
+true</td>
+<td style="text-align: left;"><span class="math inline">\beta^{\star}
+&lt;
+  \frac{\log L_1}{|\log L_0| + \log L_1}</span></td>
+<td style="text-align: left;"><span class="math inline">\beta^{\star}
+&lt; 0.66</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>(Worked-example values use <span class="math inline">L_0=
+0.101</span>, <span class="math inline">L_1= 90</span> from <span
+class="math inline">\beta = 0.10</span>, <span
+class="math inline">\alpha_{\mathrm{fp}}= 0.01</span>, <span
+class="math inline">\theta_1= 1</span>.) The protocol tolerates a true
+<span class="math inline">\alpha_{\mathrm{fp}}^{\star}</span> up to
+<span class="math inline">{\sim}34\times</span> the modelled value and a
+true <span class="math inline">\beta^{\star}</span> up to <span
+class="math inline">{\sim}6.6\times</span> the modelled value before the
+convergent hypothesis flips. Detector calibration is therefore a
+prerequisite for the convergence guarantee to carry its safety
+interpretation, but the bound is robust to plausible-magnitude
+calibration error.</p>
 <p>The deeper problem is that calibration itself reintroduces a
 verification asymmetry one level up. For first-of-kind
 capabilities—which is precisely the regime where the Wamura problem is
@@ -3099,6 +3184,25 @@ conditions, with the commitment itself constituting a calibration
 witness independent of the restricted-regime data the bootstrap lacks.
 Both are partial; neither closes the bootstrap completely. We name the
 gap rather than dissolve it.</p>
+<p>The asymmetry between the two misspecification failure modes is worth
+contrasting explicitly. Upward <span
+class="math inline">p_{\mathrm{ex}}</span> misspecification is
+<em>detectable from within the protocol</em>: observed exercise
+frequency <span class="math inline">\hat{p}_{\mathrm{ex}}</span> falls
+visibly below the modelled value, and Criterion <a
+href="#def:test_initiation" data-reference-type="ref"
+data-reference="def:test_initiation">6</a>(v) catches it. Detector
+miscalibration of <span class="math inline">\alpha_{\mathrm{fp}}</span>
+or <span class="math inline">\beta</span>, by contrast, is
+<em>undetectable from within</em>: under a false <span
+class="math inline">H_1</span> claim with a miscalibrated detector, the
+protocol observes exactly the run of <span class="math inline">O_n =
+0</span> it expects, and nothing internal to the test sequence can
+distinguish “correctly clearing a false claim” from “converging to the
+wrong hypothesis.” <span class="math inline">p_{\mathrm{ex}}</span>
+misspecification slows convergence; detector miscalibration flips it;
+the former is operationally handleable by the meta-policy, the latter
+must be ruled out externally.</p>
 <h4
 id="scope-existence-for-densely-cooperative-capabilities.">Scope-existence
 for densely cooperative capabilities.</h4>
@@ -3217,7 +3321,15 @@ step, or (ii) a meta-policy with an explicit adversarial-claim detector
 before trust dynamics take over. The current protocol carries no such
 guard internally; deployment in contested settings requires the
 integrity layer be specified externally and is named here as a
-precondition for operational use.</p>
+precondition for operational use. The natural analogue of
+Criterion (v)’s online check for <span
+class="math inline">p_{\mathrm{ex}}</span> misspecification would be an
+online check for the adversarial-claim rate: track the observed rate of
+claims that are subsequently disconfirmed by CR tests, and raise an
+alarm when it exceeds the integrity layer’s assumed <span
+class="math inline">N_{\mathrm{adv}}</span> bound. This a posteriori
+guard is future work; we note the symmetry with Criterion (v) as a
+design pattern.</p>
 <h2 id="relationship-to-prior-and-subsequent-papers">Relationship to
 prior and subsequent papers</h2>
 <h4 id="prior-papers.">Prior papers.</h4>

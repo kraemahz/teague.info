@@ -109,7 +109,31 @@ correct, with rate degraded by the KL gap between modeled and
 true distributions.  Misspecification flips the convergent
 hypothesis only when the modeled detector is qualitatively
 miscalibrated (modeled $\Lone$ on the wrong side of $1$);
-quantitative misestimation only slows convergence.  Detector
+quantitative misestimation only slows convergence.  Concretely,
+the safe region in $(\beta^{\star}, \alphafp^{\star})$ space is
+characterised by:
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{True hypothesis} & \textbf{Safe-region boundary}
+  & \textbf{Worked-example value} \\
+\midrule
+$H_0$ true & $\alphafp^{\star} <
+  \frac{|\log \Lzero|}{|\log \Lzero| + \log \Lone}$
+  & $\alphafp^{\star} < 0.34$ \\[0.5em]
+$H_1$ true & $\beta^{\star} <
+  \frac{\log \Lone}{|\log \Lzero| + \log \Lone}$
+  & $\beta^{\star} < 0.66$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent (Worked-example values use $\Lzero = 0.101$,
+$\Lone = 90$ from $\beta = 0.10$, $\alphafp = 0.01$,
+$\thetaone = 1$.)  The protocol tolerates a true
+$\alphafp^{\star}$ up to ${\sim}34\times$ the modelled value and
+a true $\beta^{\star}$ up to ${\sim}6.6\times$ the modelled
+value before the convergent hypothesis flips.  Detector
 calibration is therefore a prerequisite for the convergence
 guarantee to carry its safety interpretation, but the bound is
 robust to plausible-magnitude calibration error.
@@ -137,6 +161,22 @@ commitment itself constituting a calibration witness independent
 of the restricted-regime data the bootstrap lacks.  Both are
 partial; neither closes the bootstrap completely.  We name the
 gap rather than dissolve it.
+
+The asymmetry between the two misspecification failure modes is
+worth contrasting explicitly.  Upward $p_{\mathrm{ex}}$
+misspecification is \emph{detectable from within the protocol}:
+observed exercise frequency $\hat{p}_{\mathrm{ex}}$ falls
+visibly below the modelled value, and
+Criterion~\ref{def:test_initiation}(v) catches it.  Detector
+miscalibration of $\alphafp$ or $\beta$, by contrast, is
+\emph{undetectable from within}: under a false $H_1$ claim with
+a miscalibrated detector, the protocol observes exactly the run
+of $O_n = 0$ it expects, and nothing internal to the test
+sequence can distinguish ``correctly clearing a false claim''
+from ``converging to the wrong hypothesis.''
+$p_{\mathrm{ex}}$ misspecification slows convergence; detector
+miscalibration flips it; the former is operationally handleable
+by the meta-policy, the latter must be ruled out externally.
 
 \paragraph{Scope-existence for densely cooperative capabilities.}
 Remark~\ref{rem:scope_existence} names scope existence as a
@@ -242,7 +282,14 @@ adversarial-claim detector before trust dynamics take over.
 The current protocol carries no such guard internally;
 deployment in contested settings requires the integrity layer be
 specified externally and is named here as a precondition for
-operational use.
+operational use.  The natural analogue of Criterion~(v)'s online
+check for $p_{\mathrm{ex}}$ misspecification would be an online
+check for the adversarial-claim rate: track the observed rate of
+claims that are subsequently disconfirmed by CR tests, and raise
+an alarm when it exceeds the integrity layer's assumed
+$N_{\mathrm{adv}}$ bound.  This a~posteriori guard is future
+work; we note the symmetry with Criterion~(v) as a design
+pattern.
 
 \subsection{Relationship to prior and subsequent papers}
 
