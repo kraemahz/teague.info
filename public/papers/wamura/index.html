@@ -115,15 +115,15 @@ increasingly bound by restrictive overcaution, accumulating restrictions
 it cannot revise through observation, approaching the
 over-calibrated-restriction feedback loop of <d-cite key="lasser2026phase"></d-cite>.</p>
 <p>The classical balancing mechanism is catastrophe-as-teacher: a first
-occurrence writes historical markers—tsunami stones, disaster records,
+occurrence writes historical markers (tsunami stones, disaster records,
 institutional memory, building-code revisions, pharmacovigilance
-regimes—that subsequent generations consult in lieu of the experiment
+regimes) that subsequent generations consult in lieu of the experiment
 they cannot run. Disaster-policy research has long studied this dynamic
 under the heading of focusing events <d-cite key="birkland1997after"></d-cite>: the policy attention required to
 revise restrictions accumulates only after the catastrophe that made the
 original restriction look prescient. In the AI-safety literature the
-same structural concern appears as <em>safe exploration</em>—an agent
-cannot learn the consequences of an action it never takes <d-cite key="amodei2016concrete"></d-cite>—and as the
+same structural concern appears as <em>safe exploration</em> (an agent
+cannot learn the consequences of an action it never takes <d-cite key="amodei2016concrete"></d-cite>) and as the
 gradual-misalignment scenario of <d-cite key="christiano2019what"></d-cite>, in which incremental
 restrictions accumulate without counter-evidence and the resulting
 failure looks less like a catastrophic single event than like the slow
@@ -141,15 +141,15 @@ max-aggregation pathology of <d-cite key="lasser2026horizon"></d-cite>, named t
 important open problem of the sequence: the conservative max operator,
 combined with the verification asymmetry inherent in risk prevention,
 produces overcaution that is structurally irresolvable within the
-existing machinery—a risk claim that successfully prevents catastrophe
+existing machinery: a risk claim that successfully prevents catastrophe
 generates no observation that could lower the risk estimate, because the
 very success of the restriction is what prevents the counterfactual
 test. This is a distinct problem from the compound feedback loops
 analysed in <d-cite key="lasser2026phase"></d-cite>:
 that work asks when partial subsumption self-corrects versus cascades,
-while the present paper asks a complementary question—when the framework
-identifies a risky capability and imposes a restriction, how does it
-learn whether the restriction remains necessary, or whether
+while the present paper asks a complementary question: when the
+framework identifies a risky capability and imposes a restriction, how
+does it learn whether the restriction remains necessary, or whether
 technological progress has mitigated the underlying risk? The two
 problems reinforce each other: <d-cite key="lasser2026phase"></d-cite> shows the restriction-verification
 gap is a degenerate phase boundary with zero self-correction rate (<span
@@ -168,8 +168,8 @@ foresight without the ancient guidance that informed him.</p>
 problem: long-timeline risks</h2>
 <p>The ratchet arises from a timeline mismatch between the risk and the
 framework’s observational window. Let <span class="math inline">T</span>
-be the realisation timeline of a risk—the interval on which the risk
-would actually manifest under exercise—and <span
+be the realisation timeline of a risk (the interval on which the risk
+would actually manifest under exercise) and <span
 class="math inline">W</span> be the decision-cycle observational window
 over which the framework can accumulate evidence. When <span
 class="math inline">T \ll W</span>, observation resolves the question
@@ -188,8 +188,8 @@ pathology.</p>
 <h4 id="max-aggregation.">Max-aggregation.</h4>
 <p>The risk framework of <d-cite key="lasser2026horizon"></d-cite> takes the maximum over agents’
 risk estimates, so a single high-risk claim from any agent constrains
-the capability tuple. This is conservative by design—it prevents the
-framework from dismissing minority risk warnings—but it means a single
+the capability tuple. This is conservative by design (it prevents the
+framework from dismissing minority risk warnings), but it means a single
 overly cautious agent can lock a capability indefinitely when the
 underlying risk is long-timeline.</p>
 <h4 id="verification-asymmetry.">Verification asymmetry.</h4>
@@ -319,7 +319,7 @@ their justifying risk model. The framework identifies restrictions that
 persist without recent confirming evidence, formulates the underlying
 risk pathway that the restriction was intended to block, and designs a
 bounded-damage empirical test that probes whether the physical mechanism
-underlying the restriction still operates—a test conducted by
+underlying the restriction still operates, a test conducted by
 appropriately trusted actors within a bounded scope, with the trust
 apparatus (cryptographic <d-cite key="lasser2026exo"></d-cite>, governmental, institutional, legal,
 or otherwise) selected to match the domain.</p>
@@ -395,10 +395,10 @@ data-reference="sec:framing_precondition">1.2</a> is inherited.</p></li>
 capabilities.</strong> A controlled relaxation test occurs strictly
 within a bounded scope <span class="math inline">S</span>, under
 continuous detector monitoring, with an instantaneous-damage cutoff at
-the user-set tolerance <span class="math inline">\epsilon</span>—a
+the user-set tolerance <span class="math inline">\epsilon</span> (a
 clinical-trial protocol, a contained laboratory, a sandboxed deployment,
 an instrumented test range, or other domain-appropriate constrained
-environment. The framework does not propose detonating bombs
+environment). The framework does not propose detonating bombs
 occasionally to confirm bombs still explode: risks with abundant current
 evidence are screened out by the meta-policy of Section <a
 href="#sec:meta_policy" data-reference-type="ref"
@@ -419,10 +419,10 @@ controlled relaxation test.</p></li>
 Fudai, historical evidence (ancient tsunami stones) existed but was
 dismissed in favour of the modern observational window. The remedy there
 is to restore historical records to the decision process, not to
-generate new experimental evidence—controlled relaxation would have been
-actively dangerous at Fudai (a test of a reduced seawall works perfectly
-until the tsunami arrives). The paper’s domain is the complementary case
-where no historical record is available.</p></li>
+generate new experimental evidence; controlled relaxation would have
+been actively dangerous at Fudai (a test of a reduced seawall works
+perfectly until the tsunami arrives). The paper’s domain is the
+complementary case where no historical record is available.</p></li>
 </ul>
 <p>A table summarising the prior-paper results this paper relies on is
 collected in Appendix <a href="#app:dependencies"
@@ -465,7 +465,7 @@ is one of:</em></p>
 <li><p><em><em>Restricted regime</em> (<span
 class="math inline">\Xi</span> active): the capability tuple is
 restricted; <span class="math inline">\mathrm{Pathway}</span> cannot
-activate. The only observations available are indirect—behavioural
+activate. The only observations available are indirect: behavioural
 signals from <span class="math inline">a_j</span>, correlational
 evidence from related capabilities, and time-passage without incident
 (uninformative because the restriction is what prevents the
@@ -639,8 +639,8 @@ the restriction flag). <em>A controlled relaxation test does not ask
 question “does the physical pathway that justified the restriction still
 activate when exercised?” The risk-restriction pair <span
 class="math inline">(R, \Xi)</span> was adopted as a bet on a specific
-causal mechanism—the exercise pathway <span
-class="math inline">\mathrm{Pathway}</span> of <d-cite key="lasser2026horizon"></d-cite>—operating from the capability
+causal mechanism (the exercise pathway <span
+class="math inline">\mathrm{Pathway}</span> of <d-cite key="lasser2026horizon"></d-cite>) operating from the capability
 tuple <span class="math inline">(d_1, \ldots, d_k)</span> to the
 predicted <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-contraction.
@@ -728,11 +728,11 @@ the pathway activates during test <span class="math inline">n</span>
 <li><p><span class="math inline">O_n \in \{0, 1\}</span>: indicator that
 contraction is detected during test <span class="math inline">n</span>
 (observed);</p></li>
-<li><p><span class="math inline">H_0</span>: the pathway is
-harmless—activation probability <span class="math inline">\theta =
-0</span> (pathway never activates even when exercised);</p></li>
-<li><p><span class="math inline">H_1</span>: the pathway is
-dangerous—activation probability <span class="math inline">\theta =
+<li><p><span class="math inline">H_0</span>: the pathway is harmless;
+activation probability <span class="math inline">\theta = 0</span>
+(pathway never activates even when exercised);</p></li>
+<li><p><span class="math inline">H_1</span>: the pathway is dangerous;
+activation probability <span class="math inline">\theta =
 \theta_1</span> for a fixed <span class="math inline">\theta_1\in (0,
 1]</span> (pathway activates with known probability <span
 class="math inline">\theta_1</span> when exercised).</p></li>
@@ -831,7 +831,7 @@ capability is exercised (Assumption <a href="#ass:T5"
 data-reference-type="ref" data-reference="ass:T5">8</a> in Section <a
 href="#sec:convergence" data-reference-type="ref"
 data-reference="sec:convergence">6</a>), activation can occur, and the
-detector can observe it—making both outcomes informative and breaking
+detector can observe it, making both outcomes informative and breaking
 the ratchet.</em></p>
 </div>
 <div id="rem:continuous_extension" class="remark">
@@ -924,10 +924,10 @@ modifies <span class="math inline">c</span> is included in <span
 class="math inline">\mathrm{max\_contraction}(S)</span>. Furthermore, if
 modification of <span class="math inline">c</span> can causally enable
 (unlock) an exercise pathway in <span class="math inline">P \setminus
-S</span>—that is, there exists a pathway <span
+S</span> (that is, there exists a pathway <span
 class="math inline">\mathrm{Pathway}_{\mathrm{ext}}</span> in <span
 class="math inline">P \setminus S</span> whose prerequisites include a
-state change in <span class="math inline">c</span>—then the expected
+state change in <span class="math inline">c</span>), then the expected
 contraction from <span
 class="math inline">\mathrm{Pathway}_{\mathrm{ext}}</span>, weighted by
 its activation probability, is also included in <span
@@ -959,9 +959,9 @@ of <d-cite key="lasser2026horizon"></d-cite>:
 enumerate the prerequisite set and all intermediate states.
 Condition (ii) requires computing the cooperative capabilities that span
 <span class="math inline">S</span> and <span class="math inline">P
-\setminus S</span>—the <em>cooperative surface</em> of <span
-class="math inline">S</span>—and then forward-reachability analysis: for
-each boundary cooperative, enumerate external pathways whose
+\setminus S</span> (the <em>cooperative surface</em> of <span
+class="math inline">S</span>) and then forward-reachability analysis:
+for each boundary cooperative, enumerate external pathways whose
 prerequisites include a state change in that cooperative. This is more
 expensive than simple pathway enumeration (exponential in the depth of
 the forward-reachability chain) but is necessary to prevent cascading
@@ -1145,7 +1145,7 @@ restrictions (<span class="math inline">L \leq 3</span>, say),
 bound on <span class="math inline">\mathrm{max\_contraction}</span>, or
 (c) structural decomposition of <span class="math inline">S</span> into
 independent sub-scopes. This is an engineering consideration, not a
-theoretical limitation—the bound exists and is computable; the question
+theoretical limitation; the bound exists and is computable; the question
 is computational cost.</em></p>
 </div>
 <div id="cor:over_approx_safety" class="corollary">
@@ -1531,7 +1531,7 @@ href="#prop:evidence_strength" data-reference-type="ref"
 data-reference="prop:evidence_strength">5</a> feeds directly into the
 log-odds risk aggregation of <d-cite key="lasser2026scm"></d-cite> as an additional evidence channel.
 The controlled-relaxation test produces evidence with the same structure
-as an individual agent’s risk assessment—a log-odds contribution
+as an individual agent’s risk assessment: a log-odds contribution
 weighted by trust. The trust weight on this evidence is <span
 class="math inline">1</span> (the observation is direct, not mediated by
 an agent’s report), making test outcomes the highest-trust evidence the
@@ -1624,7 +1624,7 @@ class="math inline">0.5</span>.</em></p>
 <div id="ass:T5" class="assumption">
 <p><strong>Assumption 8</strong> (Capability Exercise During Test).
 <em>During the test window, the capability tuple <span
-class="math inline">(d_1, \ldots, d_k)</span> is actually exercised—the
+class="math inline">(d_1, \ldots, d_k)</span> is actually exercised: the
 conditions for pathway activation are present, not merely that the
 restriction is lifted. Without Assumption <a href="#ass:T5"
 data-reference-type="ref" data-reference="ass:T5">8</a>, <span
@@ -1770,7 +1770,7 @@ noisy detector that supplies <span class="math inline">O_n</span>
 (Section <a href="#sec:relaxation_protocol" data-reference-type="ref"
 data-reference="sec:relaxation_protocol">3</a>), a cutoff event
 <em>is</em> an <span class="math inline">O_n = 1</span> observation with
-likelihood ratio <span class="math inline">L_1</span>—the cutoff fires
+likelihood ratio <span class="math inline">L_1</span>: the cutoff fires
 precisely because the detector alarmed, so the cutoff is evidence for
 <span class="math inline">H_1</span>, not a distinct event outside the
 observation model. The window-truncation from early cutoff does mean the
@@ -2118,7 +2118,7 @@ whichever is cheaper: if a structural argument can resolve the claim
 without exercise (for example, proving the pathway is mechanically
 infeasible), that is strictly better than any controlled relaxation
 test. Controlled relaxation is the fallback when no structural
-resolution is available—the empirical arbitration mechanism for claims
+resolution is available: the empirical arbitration mechanism for claims
 that resist formal resolution.</em></p>
 </div>
 <h2 id="test-parameter-optimization">Test parameter optimization</h2>
@@ -2142,7 +2142,7 @@ class="math display">\begin{equation}
 \tau_{\mathrm{opt}}\approx \left\lceil \frac{-1}{\log(1 -
 \delta_{\mathrm{agg}})} \right\rceil,
 \end{equation}</span> the time constant of the exponential detection
-process—the number of steps for the miss probability to decay by a
+process: the number of steps for the miss probability to decay by a
 factor of <span class="math inline">e</span>. For <span
 class="math inline">\delta_{\mathrm{agg}}\ll 1</span> this is
 approximately <span class="math inline">1/\delta_{\mathrm{agg}}</span>;
@@ -2370,7 +2370,7 @@ realised damage is bounded by <span class="math inline">2 \epsilon= 0.04
 href="#thm:damage_bound" data-reference-type="ref"
 data-reference="thm:damage_bound">1</a>(b) (cutoff-truncated test with
 irreversible component <span class="math inline">\leq \epsilon</span>),
-not by <span class="math inline">\epsilon</span> alone—the
+not by <span class="math inline">\epsilon</span> alone; the
 cooperative-closure scope construction guarantees both bounds.</p>
 <h2 id="summary">Summary</h2>
 <div id="tab:worked_example">
@@ -2438,10 +2438,10 @@ data-reference-type="ref"
 data-reference="sec:relaxation_protocol">3</a>–<a
 href="#sec:convergence" data-reference-type="ref"
 data-reference="sec:convergence">6</a> addresses one failure mode of a
-long-timeline restriction: the restriction is <em>obsolete</em>—the
+long-timeline restriction: the restriction is <em>obsolete</em>: the
 pathway no longer activates when exercised, so the restriction can be
 lifted entirely. In practice a second failure mode is more common: the
-restriction is <em>misconfigured</em>—the pathway still activates and
+restriction is <em>misconfigured</em>: the pathway still activates and
 lifting the restriction wholesale would remain dangerous, but
 technological progress has made narrower keystones available that would
 block the risk pathway without blocking adjacent benign pathways. This
@@ -2698,7 +2698,7 @@ justified. Civilian reactor development proceeds without collateral
 restriction.</p></li>
 <li><p>If <span class="math inline">K_{\mathrm{narrow}} \not\vdash
 \mathrm{Pathway}</span> (the weapons pathway remains exercisable through
-some route the narrower structure fails to block—for example, covert
+some route the narrower structure fails to block, for example covert
 diversion of reactor-grade enrichment toward weapons use via routes
 modern detection would catch but not always): the test observes
 weapons-pathway activation within <span class="math inline">S</span>,
@@ -2730,7 +2730,7 @@ chemicals whose modern reformulations operate via different mechanisms),
 export controls on dual-use technology (where modern differentiation
 allows narrower controls), biomedical restrictions on gain-of-function
 research (where specific biocontainment tiers separate research
-protocols), and other regulatory domains exhibit the same structure—the
+protocols), and other regulatory domains exhibit the same structure; the
 policy literature on dual-use research review <d-cite key="tucker2012innovation"></d-cite> collects extensive case
 studies of exactly this dynamic across biological and chemical
 capabilities. In each, the framework’s contribution is to formalise the
@@ -2778,7 +2778,7 @@ unchanged (the restriction was already in place).</em></p></li>
 <li><p><em>Over repeated tests (Theorem <a href="#thm:convergence"
 data-reference-type="ref" data-reference="thm:convergence">2</a>), the
 risk estimates converge to truth, and the restriction landscape
-converges to the optimal restriction set—the set of tuples that are
+converges to the optimal restriction set: the set of tuples that are
 genuinely risky. This is a stronger self-balancing guarantee than the
 static version: not only does <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
@@ -2969,9 +2969,9 @@ data-reference-type="ref" data-reference="tab:sixth_channel">2</a> lists
 the CR channel’s signal as “Binary (contraction / no contraction) plus
 continuous (<span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> delta).”
-Everything downstream of Section 3—the likelihoods, the KL rates,
+Everything downstream of Section 3 (the likelihoods, the KL rates,
 Theorem <a href="#thm:convergence" data-reference-type="ref"
-data-reference="thm:convergence">2</a>—is stated on the binary channel
+data-reference="thm:convergence">2</a>) is stated on the binary channel
 <span class="math inline">O_n \in \{0, 1\}</span> alone. The continuous
 <span
 class="math inline">\Delta{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
@@ -3009,12 +3009,12 @@ stones of Fudai, the building-code revisions that followed Galveston
 mechanism is available only if the first catastrophe has already been
 paid for and the markers still survive in a legible form. Neither
 condition holds for capabilities that did not exist in previous
-generations—which is precisely the regime the framework’s <span
+generations, which is precisely the regime the framework’s <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>-maximising
 agents generate. Controlled relaxation provides experimental evidence
-with the evidential content historical markers would have recorded—did
+with the evidential content historical markers would have recorded (did
 the pathway activate? how severe was the contraction? which keystones
-blocked it?—but acquires the evidence within the damage budget <span
+blocked it?) but acquires the evidence within the damage budget <span
 class="math inline">\epsilon</span> rather than the cost-of-life that
 produced historical markers. This is the practical import of Theorem <a
 href="#thm:damage_bound" data-reference-type="ref"
@@ -3074,12 +3074,12 @@ research direction, noted in <d-cite key="lasser2026gfm"></d-cite> and outside 
 paper.</p>
 <h4 id="honest-channel-assumption.">Honest-channel assumption.</h4>
 <p>We assume honest observation channels throughout. Adversarial
-manipulation of the detection signal—a compromised channel reporting
-fabricated contraction or concealing genuine contraction—falls outside
+manipulation of the detection signal (a compromised channel reporting
+fabricated contraction or concealing genuine contraction) falls outside
 the scope of the proof and is the domain of the commitment protocols
 of <d-cite key="lasser2026exo"></d-cite>. Controlled
-relaxation composes cleanly with those protocols—the ledger of <d-cite key="lasser2026exo"></d-cite> can record test
-outcomes as committed observations—but the composition itself is not
+relaxation composes cleanly with those protocols (the ledger of <d-cite key="lasser2026exo"></d-cite> can record test
+outcomes as committed observations), but the composition itself is not
 formalized here.</p>
 <h4 id="identifiability-under-misspecification.">Identifiability under
 misspecification.</h4>
@@ -3097,7 +3097,7 @@ hypothesis. A concrete sign-preservation bound delineates the safe
 region: the convergent hypothesis is correct iff the modeled likelihoods
 <span class="math inline">L_0</span> and <span
 class="math inline">L_1</span> have the correct sign relative to the
-true distribution—formally, <span
+true distribution; formally, <span
 class="math inline">E_{H_0^{\mathrm{true}}}[\log L] &lt; 0</span> and
 <span class="math inline">E_{H_1^{\mathrm{true}}}[\log L] &gt; 0</span>.
 In the binary model, this reduces to: if Assumption <a href="#ass:T1"
@@ -3162,10 +3162,10 @@ prerequisite for the convergence guarantee to carry its safety
 interpretation, but the bound is robust to plausible-magnitude
 calibration error.</p>
 <p>The deeper problem is that calibration itself reintroduces a
-verification asymmetry one level up. For first-of-kind
-capabilities—which is precisely the regime where the Wamura problem is
-most acute—there is no historical contraction record on which to
-estimate <span class="math inline">\beta</span> and <span
+verification asymmetry one level up. For first-of-kind capabilities,
+which is precisely the regime where the Wamura problem is most acute,
+there is no historical contraction record on which to estimate <span
+class="math inline">\beta</span> and <span
 class="math inline">\alpha_{\mathrm{fp}}</span> for the specific pathway
 under test, and the restricted regime by construction generates none.
 Calling this a bootstrap problem is more honest than treating it as a
@@ -3220,18 +3220,17 @@ class="math inline">\epsilon</span>, and any scope satisfying
 Definition <a href="#def:test_scope" data-reference-type="ref"
 data-reference="def:test_scope">4</a> may be similarly infeasible. We do
 not have a quantitative estimate for how often feasible scopes exist in
-AI capability domains. For some risk classes—capabilities with strongly
-localised cooperative structure (e.g., specific tool-use patterns
-confined to a domain)—feasible scopes plausibly exist; for others
+AI capability domains. For some risk classes (capabilities with strongly
+localised cooperative structure, e.g., specific tool-use patterns
+confined to a domain) feasible scopes plausibly exist; for others
 (capabilities with broad cooperative reach, e.g., general reasoning)
 they may not. When feasible scopes do not exist, the alternative
 mechanisms named in Remark <a href="#rem:scope_existence"
-data-reference-type="ref"
-data-reference="rem:scope_existence">6</a>—structural discovery <d-cite key="lasser2026horizon"></d-cite> or
-scope-refinement that trades coverage for feasibility—must be deployed
-instead. Controlled relaxation is not a universal remedy for the Wamura
-problem; it is a remedy for the subset of risks where bounded scopes
-exist.</p>
+data-reference-type="ref" data-reference="rem:scope_existence">6</a>
+(structural discovery <d-cite key="lasser2026horizon"></d-cite> or scope-refinement that trades
+coverage for feasibility) must be deployed instead. Controlled
+relaxation is not a universal remedy for the Wamura problem; it is a
+remedy for the subset of risks where bounded scopes exist.</p>
 <h2 id="open-questions">Open questions</h2>
 <h4 id="damage-tolerance-calibration.">Damage-tolerance
 calibration.</h4>
@@ -3263,8 +3262,8 @@ with unknown duration.</h4>
 data-reference-type="ref" data-reference="prop:transient_design">4</a>
 addresses the case where the pathway duration <span
 class="math inline">k</span> is known or bounded above. When <span
-class="math inline">k</span> is itself unknown—the detector must infer
-pathway duration from limited test data—the design constraint becomes
+class="math inline">k</span> is itself unknown (the detector must infer
+pathway duration from limited test data), the design constraint becomes
 circular: a detector tuned for assumed <span
 class="math inline">k</span> will under-perform if the true duration is
 shorter. Conservative practice uses the smallest plausible <span
@@ -3291,11 +3290,11 @@ or whether the trust-dynamics response is sufficient, is an open design
 question.</p>
 <p>The composition is operationally fragile during the <span
 class="math inline">\tau_{\mathrm{test}}</span>-window itself. The
-Wamura problem is a structural invitation for an adversary—an incumbent,
-a regulator, or a rent-seeker—to manufacture risk claims that lock
-competitor capabilities for the duration of test scheduling and
-execution, even if the asymptotic trust dynamics eventually correct. The
-peak instantaneous <span
+Wamura problem is a structural invitation for an adversary (an
+incumbent, a regulator, or a rent-seeker) to manufacture risk claims
+that lock competitor capabilities for the duration of test scheduling
+and execution, even if the asymptotic trust dynamics eventually correct.
+The peak instantaneous <span
 class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> locked
 by concurrently-active adversarial claims is bounded above by <span
 class="math inline">|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\Xi)|
@@ -3700,7 +3699,7 @@ under-estimates rather than over-estimates the joint miss probability.
 This positive-association property is standard for monotone functions of
 an underlying mixing process (Esary–Proschan–Walkup-style positive
 association of threshold detectors, holding whenever the detector
-indicator is monotone in its input signal—the standard case for
+indicator is monotone in its input signal, the standard case for
 threshold-based detection). Each opportunity misses with probability
 <span class="math inline">1 - \delta_{\mathrm{agg}}</span>. Hence <span
 class="math inline">p_\tau \leq (1 -
@@ -3908,8 +3907,9 @@ a.s.</p>
 <h1 id="app:notation">Notation Summary</h1>
 <p>Table <a href="#tab:notation7" data-reference-type="ref"
 data-reference="tab:notation7">3</a> collects the principal symbols
-specific to this paper. Symbols inherited from earlier papers <d-cite key="lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase"></d-cite>—including
-<span class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+specific to this paper. Symbols inherited from earlier papers <d-cite key="lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase"></d-cite>,
+including <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
 (capability volume), <span class="math inline">G_t</span> (global
 capability graph), <span class="math inline">P</span>, <span
 class="math inline">P_t</span> (capability poset), <span
@@ -3917,8 +3917,8 @@ class="math inline">\mathrm{Pathway}</span> (exercise pathway), <span
 class="math inline">\mathcal{R}</span>, <span
 class="math inline">\mathcal{R}_j</span> (concentration risk), <span
 class="math inline">a_j</span> (agent index), and <span
-class="math inline">T^{\mathrm{risk}}_j</span> (risk-trust
-factor)—retain their original meanings and are not redefined here.</p>
+class="math inline">T^{\mathrm{risk}}_j</span> (risk-trust factor),
+retain their original meanings and are not redefined here.</p>
 <div id="tab:notation7">
 <table>
 <caption>Principal notation specific to this paper.</caption>

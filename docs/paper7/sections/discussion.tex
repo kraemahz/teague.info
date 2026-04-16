@@ -18,12 +18,12 @@ followed Galveston 1900, the pharmacovigilance regimes that
 followed thalidomide.  That mechanism is available only if the
 first catastrophe has already been paid for and the markers still
 survive in a legible form.  Neither condition holds for
-capabilities that did not exist in previous generations---which
+capabilities that did not exist in previous generations, which
 is precisely the regime the framework's $\volL$-maximising agents
 generate.  Controlled relaxation provides experimental evidence
 with the evidential content historical markers would have
-recorded---did the pathway activate?  how severe was the
-contraction?  which keystones blocked it?---but acquires the
+recorded (did the pathway activate?  how severe was the
+contraction?  which keystones blocked it?) but acquires the
 evidence within the damage budget $\damagebound$ rather than the
 cost-of-life that produced historical markers.  This is the
 practical import of Theorem~\ref{thm:damage_bound}: the cost of
@@ -76,13 +76,13 @@ in~\citep{lasser2026gfm} and outside the scope of this paper.
 
 \paragraph{Honest-channel assumption.}
 We assume honest observation channels throughout.  Adversarial
-manipulation of the detection signal---a compromised channel
+manipulation of the detection signal (a compromised channel
 reporting fabricated contraction or concealing genuine
-contraction---falls outside the scope of the proof and is the
+contraction) falls outside the scope of the proof and is the
 domain of the commitment protocols of~\citep{lasser2026exo}.
 Controlled relaxation composes cleanly with those
-protocols---the ledger of~\citep[Section~5]{lasser2026exo} can
-record test outcomes as committed observations---but the
+protocols (the ledger of~\citep[Section~5]{lasser2026exo} can
+record test outcomes as committed observations), but the
 composition itself is not formalized here.
 
 \paragraph{Identifiability under misspecification.}
@@ -96,7 +96,7 @@ KL-divergence to the true distribution, not on the true
 hypothesis.  A concrete sign-preservation bound delineates the
 safe region: the convergent hypothesis is correct iff the
 modeled likelihoods $\Lzero$ and $\Lone$ have the correct sign
-relative to the true distribution---formally,
+relative to the true distribution; formally,
 $E_{H_0^{\mathrm{true}}}[\log L] < 0$ and
 $E_{H_1^{\mathrm{true}}}[\log L] > 0$.  In the binary model,
 this reduces to: if Assumption~\ref{ass:T1} holds for the
@@ -140,8 +140,8 @@ robust to plausible-magnitude calibration error.
 
 The deeper problem is that calibration itself reintroduces a
 verification asymmetry one level up.  For first-of-kind
-capabilities---which is precisely the regime where the Wamura
-problem is most acute---there is no historical contraction
+capabilities, which is precisely the regime where the Wamura
+problem is most acute, there is no historical contraction
 record on which to estimate $\beta$ and $\alphafp$ for the
 specific pathway under test, and the restricted regime by
 construction generates none.  Calling this a bootstrap problem
@@ -191,15 +191,15 @@ poset may dominate any acceptable $\damagebound$, and any scope
 satisfying Definition~\ref{def:test_scope} may be similarly
 infeasible.  We do not have a quantitative estimate for how
 often feasible scopes exist in AI capability domains.  For some
-risk classes---capabilities with strongly localised cooperative
-structure (e.g., specific tool-use patterns confined to a
-domain)---feasible scopes plausibly exist; for others
+risk classes (capabilities with strongly localised cooperative
+structure, e.g., specific tool-use patterns confined to a
+domain) feasible scopes plausibly exist; for others
 (capabilities with broad cooperative reach, e.g., general
 reasoning) they may not.  When feasible scopes do not exist, the
 alternative mechanisms named in
-Remark~\ref{rem:scope_existence}---structural discovery
+Remark~\ref{rem:scope_existence} (structural discovery
 \citep[Proposition~2]{lasser2026horizon} or scope-refinement
-that trades coverage for feasibility---must be deployed instead.
+that trades coverage for feasibility) must be deployed instead.
 Controlled relaxation is not a universal remedy for the Wamura
 problem; it is a remedy for the subset of risks where bounded
 scopes exist.
@@ -227,8 +227,8 @@ the detection architecture than on $\damagebound$ itself.
 The composition rule of
 Proposition~\ref{prop:transient_design} addresses the case where
 the pathway duration $k$ is known or bounded above.  When $k$ is
-itself unknown---the detector must infer pathway duration from
-limited test data---the design constraint becomes circular: a
+itself unknown (the detector must infer pathway duration from
+limited test data), the design constraint becomes circular: a
 detector tuned for assumed $k$ will under-perform if the true
 duration is shorter.  Conservative practice uses the smallest
 plausible $k$ (typically $k = 1$) for the design rule, accepting
@@ -256,8 +256,8 @@ question.
 
 The composition is operationally fragile during the
 $\testdur$-window itself.  The Wamura problem is a structural
-invitation for an adversary---an incumbent, a regulator, or a
-rent-seeker---to manufacture risk claims that lock competitor
+invitation for an adversary (an incumbent, a regulator, or a
+rent-seeker) to manufacture risk claims that lock competitor
 capabilities for the duration of test scheduling and execution,
 even if the asymptotic trust dynamics eventually correct.  The
 peak instantaneous $\volL$ locked by concurrently-active

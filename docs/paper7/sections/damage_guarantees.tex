@@ -27,9 +27,9 @@ $P$ satisfying:
   $\volL$-contraction along any pathway within $\scope$ that
   modifies $c$ is included in $\maxcon(\scope)$.  Furthermore, if
   modification of $c$ can causally enable (unlock) an exercise
-  pathway in $P \setminus \scope$---that is, there exists a
+  pathway in $P \setminus \scope$ (that is, there exists a
   pathway $\Pathway_{\mathrm{ext}}$ in $P \setminus \scope$ whose
-  prerequisites include a state change in $c$---then the expected
+  prerequisites include a state change in $c$), then the expected
   contraction from $\Pathway_{\mathrm{ext}}$, weighted by its
   activation probability, is also included in $\maxcon(\scope)$.
   This transitive-closure condition prevents a test within
@@ -54,8 +54,8 @@ Condition~(i) is computable from the exercise-pathway definition
 of~\citep[Definition~2]{lasser2026horizon}: enumerate the
 prerequisite set and all intermediate states.  Condition~(ii)
 requires computing the cooperative capabilities that span
-$\scope$ and $P \setminus \scope$---the \emph{cooperative
-surface} of $\scope$---and then forward-reachability analysis:
+$\scope$ and $P \setminus \scope$ (the \emph{cooperative
+surface} of $\scope$) and then forward-reachability analysis:
 for each boundary cooperative, enumerate external pathways whose
 prerequisites include a state change in that cooperative.  This
 is more expensive than simple pathway enumeration (exponential
@@ -214,7 +214,7 @@ formula
 of~\citep[Definition~3]{lasser2026horizon} as an upper bound on
 $\maxcon$, or (c)~structural decomposition of $\scope$ into
 independent sub-scopes.  This is an engineering consideration,
-not a theoretical limitation---the bound exists and is
+not a theoretical limitation; the bound exists and is
 computable; the question is computational cost.
 \end{remark}
 
