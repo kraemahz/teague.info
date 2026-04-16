@@ -279,18 +279,26 @@ downstream-safe sufficient under satisfaction pathway pi_N iff:
         Delta_c(pi_N) = quality_c(with N satisfied via pi_N)
                       - quality_c(with N satisfied via pi_N^0) >= 0
 
-where pi_N^0 is the **threshold-reference pathway**: the canonical
-pathway that satisfies each dimension of N at exactly its sufficiency
-threshold (d_k(pi_N^0) = s_k for all k) with no downstream effects
-beyond those implied by threshold-level satisfaction. pi_N^0 is a
-*definitional construct*, not an observed pathway -- it serves as the
-fixed comparator against which all actual satisfaction pathways are
-evaluated. When no single canonical pi_N^0 exists (e.g., because
-multiple pathways achieve exact threshold satisfaction with different
-downstream profiles), take the infimum: pi_N^0 is the member of the
-admissible threshold-pathway class that *maximizes* downstream quality,
-so that any pathway pi_N passing condition (b) is safe against the most
-favorable baseline.
+where the comparator uses the **threshold-reference quality** for each
+downstream capability. Let Pi_N^0 = {pi : d_k(pi) = s_k for all k} be
+the class of pathways satisfying each dimension of N at exactly its
+sufficiency threshold. For each downstream capability c in Down(p_N),
+define the pointwise reference quality:
+
+    q_N^0(c) = sup_{pi in Pi_N^0} quality_c(with N satisfied via pi)
+
+Then condition (b) becomes: for every c in Down(p_N),
+
+    quality_c(with N satisfied via pi_N) >= q_N^0(c)
+
+The pointwise supremum avoids requiring a single pathway that
+simultaneously maximizes downstream quality for all c in Down(p_N),
+which may not exist when different threshold pathways have different
+downstream profiles. q_N^0(c) is a *definitional construct*, not an
+observed quantity -- it serves as the most favorable threshold-level
+baseline for each downstream capability separately, so that any
+pathway pi_N passing condition (b) is safe against the best achievable
+threshold-level downstream quality on every dimension independently.
 
 Condition (b) says: satisfying the need via this pathway doesn't make
 downstream capabilities worse than they'd be under the best-case
@@ -489,7 +497,8 @@ The event emits the signal:
 
     vol_R^lower(Y) >= Delta_vol_P(X)
 
-under the calibration assumption (S0) stated below.
+under the assumptions S0 (calibration), S1 (free choice), and S2
+(benchmark grounding) stated below.
 
 **Justification (revealed-preference inequality).** The transfer from the
 microeconomic revealed-preference inequality U_i(Y) >= U_i(X) to the
@@ -1057,13 +1066,17 @@ revealed-sacrifice event is a tuple (C, pi, t) where:
   Definition 6)
 - pi is a zero-knowledge proof (Paper 5, Definition 7) that:
   (a) the commitment C corresponds to a valid revealed-sacrifice event
-      satisfying the *objectively verifiable* assumptions S2 (benchmark
-      grounding) and S3 (bundle coherence)
+      satisfying the *objectively verifiable* components: S3 (bundle
+      coherence) and the objective component of S2 (Delta_vol_P(X) is
+      well-defined and the trade occurred)
   (b) Delta_vol_P(X) >= 0 (the sacrifice is non-negative)
   (c) the trade actually occurred (linked to a verifiable ledger entry)
   (d) the bundle Y lies wholly within the claimed partition component:
       Y ⊆ C_{category(Y)} (Definition 7a, condition (ii)). This is
       verifiable because the partition C is public and the prover knows Y.
+  The subjective component of S2 (U_i(X_n) >= Delta_vol_P(X_n)) is not
+  ZK-verifiable and is assumed for committed events (see §9, Remark on
+  S2 observability).
 
 **Remark (S0, S1, S4(a), and S5 are not ZK-verifiable).** Assumptions S0
 (calibration), S1 (free choice), S4(a) (valuation additivity), and S5
@@ -1446,7 +1459,9 @@ where the capability partition is:
 - **Covered** (C_S): d not in Xi, and d appears in at least one acquired
   bundle Y_n for some *theorem-admissible* sacrifice event in [T - H, T].
   A theorem-admissible event is one satisfying S0, S1, and S2 (the
-  minimum assumptions for Theorem 2 Part A to produce a lower bound).
+  per-event assumptions required for Theorem 2's per-event inequality;
+  the aggregate Part A bound additionally requires pairwise
+  poset-independence across bundles).
   Events failing any of S0/S1/S2 do not contribute to "covered" status:
   S1 failures (below-sufficiency or coerced) are tracked via the
   need-sufficiency diagnostic (Definitions 10A-10B); S0/S2 failures are
@@ -1496,14 +1511,15 @@ etc.), which require Part B's per-capability identities and decomposition
 (S3-S5). Under Part A alone (bundle/category-level aggregates, S0-S2),
 the decomposition operates at the *category* level: each partition
 component C_j (Definition 7a) is classified as restricted, covered,
-dormant, or residual based on whether any S1-satisfying event in the
-trade window targets a bundle in C_j. The delta terms then use
-vol_P(C_j) and vol_R^lower(C_j) at category granularity. The
-committed interface (Section 6) reveals only category labels, so
-the category-level decomposition is the operationally available form
-when running on committed data. The per-capability decomposition is
-the refinement available when Part B assumptions hold and per-capability
-identities are exposed.
+dormant, or residual based on whether any *theorem-admissible* event
+(satisfying S0, S1, and S2) in the trade window targets a bundle in C_j.
+The delta terms then use vol_P(C_j) and vol_R^lower(C_j) at category
+granularity. Under committed data (Section 6), S2 is not directly
+verifiable (see Remark below on S2 observability); the committed-mode
+decomposition therefore *assumes* S2 holds for committed events and
+should be interpreted as conditional on that assumption. The
+per-capability decomposition is the refinement available when Part B
+assumptions hold and per-capability identities are exposed.
 
 **Proposition 7 (Computability of Gap Decomposition).** The four-term gap
 decomposition is computable from:
@@ -1517,12 +1533,28 @@ decomposition is computable from:
 Classification is O(|P|) given the sacrifice database, the R_S
 classification, and the capability census. For each capability d, apply
 the priority ordering from Definition 10:
-(1) check d in Xi (restricted); (2) check d in sacrifice data (covered);
-(3) check d not in R_S (dormant -- tradable but no evidence);
-(4) otherwise residual (in R_S -- structurally unreachable). The delta terms
-follow from the vol_P and vol_R^lower values already computed. No
-structural counterfactual computation is required (unlike the prior
-formulation, which required O(|P|^2) counterfactual queries).
+(1) check d in Xi (restricted); (2) check d appears in a
+theorem-admissible event's bundle (covered -- requires S0, S1, S2 per
+Definition 10); (3) check d not in R_S (dormant -- tradable but no
+theorem-valid evidence); (4) otherwise residual (in R_S -- structurally
+unreachable). The delta terms follow from the vol_P and vol_R^lower
+values already computed. No structural counterfactual computation is
+required (unlike the prior formulation, which required O(|P|^2)
+counterfactual queries).
+
+**Remark (S2 observability).** In non-committed mode, the framework can
+check S2 (U_i(X_n) >= Delta_vol_P(X_n)) only indirectly -- the agent's
+subjective valuation U_i is not directly observable. The operational
+proxy is Delta_vol_P(X_n) itself (assuming agents value benchmarked
+capabilities at least at their vol_P worth, which is the B-to-C
+precondition). In committed mode, S2 is *assumed* for committed events
+because the ZK proof verifies only S2's objective component
+(Delta_vol_P(X_n) >= 0 and trade occurrence), not the subjective
+valuation inequality. The gap decomposition under committed data is
+therefore conditional on S2 holding in the population. This is
+analogous to S0's population-level relaxation (Open Question 6): the
+framework assumes the assumption holds on average and monitors for
+systematic violations via calibration diagnostics.
 
 **Remark (capability census requirement).** The gap decomposition requires
 the framework to enumerate capabilities in P -- it must know what exists
@@ -1665,8 +1697,8 @@ committed sacrifice stream.
 
 (d) **High vol_R^lower + high NAC:** Mixed regime. The collective exercises
     rich above-sufficiency capabilities but needs are expensive. NSE
-    distinguishes "expensive but safe" (high access_cost, downstream_safe)
-    from "expensive and degrading" (high access_cost, downstream_degrading).
+    distinguishes "expensive but safe" (high access_cost, downstream_safety = safe)
+    from "expensive and degrading" (high access_cost, downstream_safety = degrading).
 
 **Remark (parallel structure, not nesting).** The need-sufficiency diagnostic
 is parallel to the gap decomposition, not nested within it, but operates
@@ -2345,7 +2377,8 @@ includes both the OI floor and the sacrifice lower bound.
 | p_N | Position of need N in the poset | Def 2A |
 | Down(p_N) | Downstream cone of need N in the poset | Def 2A |
 | pi_N | Need-satisfaction pathway | Def 2A |
-| pi_N^0 | Threshold-reference pathway (canonical comparator for downstream safety) | Def 2B |
+| Pi_N^0 | Class of threshold-satisfying pathways (d_k(pi) = s_k for all k) | Def 2B |
+| q_N^0(c) | Pointwise threshold-reference quality for downstream capability c | Def 2B |
 | d_k(pi_N) | Value of dimension d_k under pathway pi_N | Def 2B |
 | Delta_c(pi_N) | Downstream quality contribution of pathway pi_N to capability c | Def 2B |
 | benchmark_k | Polarity-correct benchmark for dimension k (capped below, discounted above) | Def 2D |
