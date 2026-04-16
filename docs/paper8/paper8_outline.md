@@ -251,14 +251,14 @@ levels of sufficiency, each strictly stronger:
 
 ### Formal definitions
 
-**Definition 2A (Multi-Dimensional Need Bundle).** A capability c identified
-as a need at position p_c in the poset has:
+**Definition 2A (Multi-Dimensional Need Bundle).** A capability N identified
+as a need at position p_N in the poset has:
 
 - **Dimensions** {d_1, ..., d_m} with sufficiency thresholds {s_1, ..., s_m}
 - Each dimension has a **polarity**: maximizing (quality, quantity,
   reliability) or minimizing (cost, distance, time)
-- **Downstream cone** Down(p_c) = {c' : c' depends on c in the poset}
-- **Satisfaction pathway** pi_c: the specific way the agent meets the need
+- **Downstream cone** Down(p_N) = {c : c depends on N in the poset}
+- **Satisfaction pathway** pi_N: the specific way the agent meets the need
   (which source, at what quality, at what cost)
 
 For cost dimensions (minimizing polarity), the benchmark inverts the
@@ -273,16 +273,31 @@ downstream-safe sufficient under satisfaction pathway pi_N iff:
     (with cost dimensions inverted per Definition 2A)
 
 (b) **Downstream non-degradation:** For every capability c in Down(p_N),
-    the N-mediated contribution to c's quality under pi_N is non-negative:
+    the N-mediated contribution to c's quality under pi_N is non-negative
+    relative to the *threshold-reference pathway* pi_N^0:
 
         Delta_c(pi_N) = quality_c(with N satisfied via pi_N)
-                      - quality_c(with N at bare threshold) >= 0
+                      - quality_c(with N satisfied via pi_N^0) >= 0
+
+where pi_N^0 is the **threshold-reference pathway**: the canonical
+pathway that satisfies each dimension of N at exactly its sufficiency
+threshold (d_k(pi_N^0) = s_k for all k) with no downstream effects
+beyond those implied by threshold-level satisfaction. pi_N^0 is a
+*definitional construct*, not an observed pathway -- it serves as the
+fixed comparator against which all actual satisfaction pathways are
+evaluated. When no single canonical pi_N^0 exists (e.g., because
+multiple pathways achieve exact threshold satisfaction with different
+downstream profiles), take the infimum: pi_N^0 is the member of the
+admissible threshold-pathway class that *maximizes* downstream quality,
+so that any pathway pi_N passing condition (b) is safe against the most
+favorable baseline.
 
 Condition (b) says: satisfying the need via this pathway doesn't make
-downstream capabilities worse than they'd be under bare-threshold
-satisfaction. Lead-contaminated water violates (b) because health under
-lead water is worse than health under threshold-clean water, even if the
-lead concentration passes the quality threshold.
+downstream capabilities worse than they'd be under the best-case
+threshold-level satisfaction. Lead-contaminated water violates (b)
+because health under lead water is worse than health under the best
+threshold-clean water, even if the lead concentration passes the quality
+threshold.
 
 **Remark (connection to Paper 3's exercise-pathway machinery).** The
 need-satisfaction pathway pi_N is structurally an exercise pathway (Paper 3,
@@ -822,9 +837,9 @@ gives alpha_{n,c} <= vol_R(c) / vol_R(Y_n).
 *Step B (global summation):* The inference from per-capability bounds
 vol_R(c) >= vol_R^lower(c) to vol_R^U >= sum_c vol_R^lower(c) requires
 the capabilities in U to be pairwise poset-independent, so that
-vol_R(U) = sum_c vol_R(c) by M4 applied globally over U. S4(b) is
+vol_R^U = sum_c vol_R(c) by M4 applied globally over U. S4(b) is
 applied here not just per-bundle but across all capabilities in U.
-When capabilities in U have cooperative links, vol_R(U) may exceed
+When capabilities in U have cooperative links, vol_R^U may exceed
 sum_c vol_R(c) (cooperatives add extra value), making the sum a
 conservative lower bound -- but this relies on M4's extension to
 superadditivity for connected components, which the full paper must
@@ -854,7 +869,7 @@ Step 4: The max-attribution across overlapping events gives
 vol_R(c) >= max_n alpha_{n,c} * Delta_vol_P(X_n).
 
 Step 5: Global summation. Capabilities c in U are pairwise poset-
-independent, so vol_R(U) = sum_c vol_R(c) by M4 applied globally.
+independent, so vol_R^U = sum_c vol_R(c) by M4 applied globally.
 Combining with Step 4: vol_R^U >= sum_c vol_R^lower(c).
 
 **Definition 4 (B-to-C Ratio Under Revealed Sacrifice).** The B-to-C ratio
@@ -1429,19 +1444,22 @@ where the capability partition is:
   Proposition 1. Classified first regardless of sacrifice evidence.
 
 - **Covered** (C_S): d not in Xi, and d appears in at least one acquired
-  bundle Y_n for some *S1-satisfying* sacrifice event in [T - H, T].
-  Events that fail S1 (below-sufficiency or coerced) do not contribute
-  to "covered" status -- they are tracked separately via the
-  need-sufficiency diagnostic (Definitions 10A-10B). These capabilities
-  have positive but possibly incomplete vol_R^lower.
+  bundle Y_n for some *theorem-admissible* sacrifice event in [T - H, T].
+  A theorem-admissible event is one satisfying S0, S1, and S2 (the
+  minimum assumptions for Theorem 2 Part A to produce a lower bound).
+  Events failing any of S0/S1/S2 do not contribute to "covered" status:
+  S1 failures (below-sufficiency or coerced) are tracked via the
+  need-sufficiency diagnostic (Definitions 10A-10B); S0/S2 failures are
+  excluded from the aggregate bound by Theorem 2's own filters. These
+  capabilities have positive but possibly incomplete vol_R^lower.
 
 - **Dormant** (D_S): d not in Xi, d not in R_S (Definition 8), and d does
-  not appear in any acquired bundle of any *S1-satisfying* event in
+  not appear in any acquired bundle of any *theorem-admissible* event in
   [T - H, T]. These are tradable-in-principle capabilities with zero
-  want-pursuit sacrifice evidence in the lookback window. A capability
-  that appears only in S1-filtered events (below-sufficiency or coerced)
-  is dormant with respect to the gap decomposition -- its need-related
-  activity is tracked by NAC/NSE, not by the gap decomposition.
+  want-pursuit sacrifice evidence from theorem-valid events in the
+  lookback window. A capability that appears only in events failing
+  S0, S1, or S2 is dormant with respect to the gap decomposition --
+  its activity (if any) does not produce lower-bound evidence.
   Need-satisfaction adequacy is tracked separately by the
   need-sufficiency diagnostic (see below).
 
@@ -1604,11 +1622,23 @@ where:
 
 The collective-level aggregate NSE(T) reports the distribution of
 (agent, need) pairs across the three sufficiency statuses and flags
-degrading pathways. When the agent index is not available (e.g., under
-committed sacrifice events where agent identity is hidden), NSE
-aggregates at the population level: the distribution of needs across
-sufficiency statuses is computed from the category-level sacrifice data
-without per-agent attribution.
+degrading pathways.
+
+**Remark (observability under commitment).** When sacrifice events are
+committed via Paper 5's protocol (agent identity hidden, only category
+and magnitude disclosed), per-agent NSE(i, N) is not recoverable.
+The committed-mode fallback is a *population-level proxy*:
+NSE_proxy(T) = (NAC(T) by need category, count of below-sufficiency
+events by category). This proxy reports the *cost* dimension of need-
+satisfaction but cannot distinguish sufficiency_status distributions
+or downstream_safety assessments, which require pathway-level
+information not available from committed category-level data alone.
+Full NSE(T) — with per-agent sufficiency status and downstream safety
+— requires either (a) agents voluntarily attesting their pathway via
+an additional disclosure channel, or (b) the framework operating in
+non-committed mode with per-agent observation access. The proxy is
+strictly weaker but is the maximal diagnostic recoverable from the
+committed sacrifice stream.
 
 **Proposition 7A (Combined Diagnostic).** The framework reports the triple
 (vol_R^lower, NAC, NSE) as a joint diagnostic:
@@ -1624,10 +1654,14 @@ without per-agent attribution.
     above-sufficiency exercise. The NAC diagnostic surfaces *why*
     vol_R^lower is low.
 
-(c) **Low vol_R^lower + low NAC:** Dormancy or residual. Neither
-    want-pursuit nor need-satisfaction is visible in the sacrifice data.
-    The gap decomposition (Definition 10) distinguishes dormant from
-    residual.
+(c) **Low vol_R^lower + low NAC:** Dormancy, residual, or
+    theorem-inadmissible activity. Neither want-pursuit sacrifice
+    evidence (from theorem-admissible events) nor need-satisfaction
+    cost is visible in the sacrifice data. The gap decomposition
+    (Definition 10) distinguishes dormant from residual. Note: this
+    case can also arise when sacrifice events exist but fail S0 or S2
+    (not just S1), since only theorem-admissible events contribute to
+    vol_R^lower and only S1-failing events contribute to NAC.
 
 (d) **High vol_R^lower + high NAC:** Mixed regime. The collective exercises
     rich above-sufficiency capabilities but needs are expensive. NSE
@@ -1646,13 +1680,33 @@ need. The parallelism holds at the *diagnostic-reporting* level: the
 framework reports the gap decomposition (how well the want-pursuit space
 is covered by sacrifice evidence) alongside (NAC, NSE) (how efficiently
 and safely the need space is satisfied). The two diagnostics cover complementary portions of the sacrifice event
-stream: S1-satisfying events enter the gap decomposition via Theorem 2;
-events failing S1 due to below-sufficiency enter NAC via the need-based
-S1 filter. Events failing S1 for non-need reasons (coercion, duress --
-see Open Question 3) are excluded from both diagnostics and constitute
-an undiagnosed residual in the event stream. The two diagnostics do not
-partition the same formal objects (capability partition vs. event
-aggregate vs. per-need triple).
+stream: S1-satisfying events (that also satisfy S0 and S2) enter the gap
+decomposition via Theorem 2; events failing S1 due to below-sufficiency
+enter NAC via the need-based S1 filter. Events failing S1 for non-need
+reasons (coercion, duress -- see Open Question 3) are excluded from
+both diagnostics and constitute an undiagnosed *event-stream residual*.
+(Terminological note: "residual" is used in two distinct senses in
+this paper — R_S is the *capability residual* (Definition 8: capabilities
+structurally outside the sacrifice channel), while the event-stream
+residual is a set of *events* excluded from both diagnostics. The two
+are related but not identical: capabilities in R_S have zero sacrifice
+evidence by construction; the event-stream residual contains events
+that *exist* but are inadmissible.) Events failing S0 or S2 (but
+satisfying S1) also enter the event-stream residual.
+
+**Precedence rule for overlapping S1 failure modes.** When a single
+event fails S1 for *both* below-sufficiency and coercion reasons
+(e.g., an agent is both below the sufficiency threshold and lacks
+meaningful alternatives due to market power), the event is classified
+as a *need-satisfaction* event (entering NAC) rather than a coercion
+event. Rationale: below-sufficiency is a structurally identifiable
+condition (the agent's capability level is observable against the
+threshold); coercion is an inference about the agent's choice set
+that is harder to verify. The need-based classification is the more
+conservative assignment because it routes the event to an active
+diagnostic (NAC) rather than an undiagnosed residual. The two
+diagnostics do not partition the same formal objects (capability
+partition vs. event aggregate vs. per-need triple).
 
 **Remark (intentional departure from memo 2's subtraction form).** The
 second reframing memo proposed vol_R >= Σ(want-sacrifice values) -
@@ -2291,6 +2345,7 @@ includes both the OI floor and the sacrifice lower bound.
 | p_N | Position of need N in the poset | Def 2A |
 | Down(p_N) | Downstream cone of need N in the poset | Def 2A |
 | pi_N | Need-satisfaction pathway | Def 2A |
+| pi_N^0 | Threshold-reference pathway (canonical comparator for downstream safety) | Def 2B |
 | d_k(pi_N) | Value of dimension d_k under pathway pi_N | Def 2B |
 | Delta_c(pi_N) | Downstream quality contribution of pathway pi_N to capability c | Def 2B |
 | benchmark_k | Polarity-correct benchmark for dimension k (capped below, discounted above) | Def 2D |
@@ -2325,8 +2380,9 @@ includes both the OI floor and the sacrifice lower bound.
 | O | Observation perimeter | Def 12 |
 | NAC(T) | Need-access cost aggregate (below-sufficiency sacrifice total) | Def 10A |
 | F_S1 | Set of events failing S1 due to below-sufficiency | Def 10A |
-| NSE(N) | Need-satisfaction efficiency triple (status, safety, cost) | Def 10B |
-| NSE(T) | Aggregate need-satisfaction efficiency over trade window | Def 10B |
+| NSE(i, N) | Per-agent need-satisfaction efficiency triple (status, safety, cost) | Def 10B |
+| NSE(T) | Aggregate need-satisfaction efficiency over trade window (full mode) | Def 10B |
+| NSE_proxy(T) | Population-level proxy (NAC by category + event counts; committed mode) | Def 10B |
 | Xi | Restriction set {d in P : d is currently restricted} | Def 10 |
 | vol_R^combined | Combined diagnostic (exact + lower bound) | App A |
 | OI_floor(k) | Observational individuation floor for agent k | Prop 6 |
@@ -2355,8 +2411,8 @@ includes both the OI floor and the sacrifice lower bound.
 | P3 | Anti-monopolar property | Prop 6 | Section 1 |
 | P3 | Preemptive-restriction criterion | Prop 1 | Section 12 |
 | P3 | Observational individuation | Def 9 | Prop 6 |
-| P4 | Risk-trust dynamics | Def 4 | Def 2 |
-| P4 | EWMA learning rate | alpha | Def 2, Remark |
+| P4 | Risk-trust dynamics | Def 4 | Def 2 (aggregate window, §3), OQ 8 |
+| P4 | EWMA learning rate | alpha | Def 2, Remark (§3) |
 | P5 | Commitment Protocol | Def 6 | Def 7, Prop 3 |
 | P5 | ZK Capability Proof | Def 7 | Def 7, Prop 4 |
 | P5 | Risk-Claim Protocol | Def 13 | Section 6, Remark |
