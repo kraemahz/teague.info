@@ -1,0 +1,159 @@
+\section{Revealed-Sacrifice Observation Model}
+\label{sec:sacrifice_model}
+
+The privacy-compatible observation channel for $\volR$ is
+\emph{revealed sacrifice}: agents disclose the value they place on
+unbenchmarked capabilities through the benchmarked capabilities
+they voluntarily surrender to obtain them.  The framework does not
+observe \emph{what} the agent values privately---only \emph{what
+they commit to publicly through sacrifice}.
+
+\subsection{Core definitions}
+
+\begin{definition}[Revealed-Sacrifice Event]
+\label{def:sacrifice_event}
+A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
+\begin{itemize}
+\item $i$ is the agent performing the sacrifice;
+\item $X$ is a benchmarked capability (or capability bundle) with
+  known $\Delta\volL(X) \geq 0$, surrendered by agent~$i$ at
+  time~$t$;
+\item $Y = \{Y_1, \ldots, Y_k\}$ is an unbenchmarked capability
+  bundle acquired by agent~$i$;
+\item $t$ is the event timestamp.
+\end{itemize}
+The event emits the signal:
+\[
+  \volRlower(Y) \;\geq\; \Delta\volL(X)
+\]
+under the assumptions S0 (calibration), S1 (free choice), and S2
+(benchmark grounding) stated below.
+\end{definition}
+
+\paragraph{Justification (revealed-preference inequality).}
+The transfer from the microeconomic revealed-preference
+inequality~\citep{samuelson1938note}
+$\Ui(Y) \geq \Ui(X)$ to the framework-level bound
+$\volRlower(Y) \geq \Delta\volL(X)$ requires two bridge
+conditions:
+
+\begin{enumerate}
+\item \textbf{Sacrifice-side grounding (Assumption S2):} The
+  agent's valuation of the benchmarked sacrifice $X$ is calibrated
+  to its $\volL$ contribution:
+  $\Ui(X) \geq \Delta\volL(X)$.  This holds by construction when
+  $\volL$ is the operational target on the benchmarked subspace.
+
+\item \textbf{Acquisition-side calibration (Assumption S0):} The
+  agent's valuation of the unbenchmarked bundle $Y$ is a lower
+  bound on $Y$'s $\volR$ contribution:
+  $\Ui(Y) \leq \volR(Y)$.  This asserts that agents do not
+  systematically overvalue unbenchmarked bundles relative to their
+  exercise contribution.
+\end{enumerate}
+
+Given both conditions:
+$\volR(Y) \geq \Ui(Y) \geq \Ui(X) \geq \Delta\volL(X)$,
+completing the chain.
+
+\begin{remark}[S0 is the weakest calibration assumption]
+S0 does \emph{not} require that agent valuations perfectly track
+$\volR$---only that they do not \emph{overstate} it.  Agents may
+undervalue unbenchmarked bundles (sacrifice little for something
+very valuable), in which case the lower bound is conservative but
+still valid.  S0 fails only in the overpayment direction.
+\end{remark}
+
+\begin{remark}[S1 filters below-sufficiency sacrifices]
+\label{rem:s1_filters}
+The need-sufficiency architecture
+(Section~\ref{sec:need_sufficiency},
+Proposition~\ref{prop:s1_sufficiency}) establishes that
+below-sufficiency sacrifices---events where the agent trades to
+meet a need on which they are below the sufficiency
+threshold---fail S1's non-degrading alternative condition.  These
+events do not enter the sacrifice aggregate.  The sacrifice channel
+therefore operates only over events where S1 holds, and the
+framework accounts for below-sufficiency sacrifice evidence
+separately via the need-sufficiency diagnostic
+(Section~\ref{sec:gap_decomposition}).
+\end{remark}
+
+\begin{definition}[Aggregate Trade Window]
+\label{def:trade_window}
+An aggregate trade window $[t_0, t_0 + T]$ is an observation
+period over which revealed-sacrifice events are collected.  The
+window parameters are:
+\begin{itemize}
+\item $T$: window duration;
+\item $N$: number of observed sacrifice events in the window;
+\item $\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$: the event sequence.
+\end{itemize}
+The aggregate trade window is the temporal analogue of the
+observation window $\Delta$
+in~\citep[Definition~4]{lasser2026scm}---it defines the timescale
+over which the framework accumulates sacrifice evidence.
+\end{definition}
+
+\subsection{Privacy properties}
+
+\begin{theorem}[Privacy-Minimality of Revealed-Sacrifice
+Observation]
+\label{thm:privacy}
+The revealed-sacrifice channel satisfies the following five
+privacy properties, each of which is load-bearing for
+compatibility with the framework's prior commitments:
+
+\begin{enumerate}
+\item[\textbf{(P1)}] \textbf{No interior access.}  The framework
+  never observes what the agent values privately---only what they
+  commit to publicly through sacrifice.  The observation channel
+  records the tuple $(i, X, Y, t)$, not the agent's internal
+  valuation function $\Ui$.
+
+\item[\textbf{(P2)}] \textbf{Consent via participation.}  Markets
+  and labour exchanges are opt-in.  Non-trading is honoured by
+  silence: an agent who does not participate in any trade emits no
+  signal, and the framework draws no inference about that agent's
+  $\volR$ contribution.
+
+\item[\textbf{(P3)}] \textbf{Discretization as a feature.}  Trade
+  events are sparse by construction.  The signal bandwidth is
+  bounded by trade frequency, not by observation intensity.
+
+\item[\textbf{(P4)}] \textbf{Commitment-layer composability.}
+  The commitment protocol
+  of~\citep[Definition~6]{lasser2026exo} extends to
+  revealed-sacrifice events: a sacrifice event can be committed as
+  a proof-of-trade exposing only the $\volR$-category and
+  $\Delta\volL$-magnitude, not counterparty, price, or specific
+  goods (Section~\ref{sec:commitment}).
+
+\item[\textbf{(P5)}] \textbf{Third-party observability (money
+  channel and public time channel).}  Unlike controlled
+  relaxation~\citep{lasser2026wamura} (which requires the
+  framework to \emph{impose} a test) and unlike
+  verification~\citep{lasser2026exo} (which requires the agent to
+  \emph{participate} in a commitment), money-sacrifice events and
+  publicly observable time-sacrifice events are observable from
+  public-facing ledger data (market exchanges, payment rails,
+  public commitments) with no agent participation required.  P5
+  does not extend to private time-sacrifice activities (parenting,
+  contemplation), which require voluntary disclosure.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+(P1):~By construction---the observation channel records
+$(i, X, Y, t)$, not $\Ui$.
+(P2):~The lower bound sums over observed events; an agent with
+zero events contributes zero.
+(P3):~Channel bandwidth is $|\mathrm{events}|/T$, bounded by
+trade frequency.
+(P4):~Composition with~\citep[Definition~6]{lasser2026exo}; the
+commitment binds $(\Delta\volL(X), \catY)$ without revealing
+specifics (see Section~\ref{sec:commitment}).
+(P5):~Market transactions leave observable traces even without
+agent cooperation; the adversarial model is strictly weaker than
+that of~\citep{lasser2026wamura}.
+\end{proof}

@@ -1,0 +1,153 @@
+\documentclass{article}
+
+\usepackage[preprint, nonatbib]{neurips_2023}
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Revealed-Sacrifice Observation and the B-to-C Gap},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Safety},
+  pdfkeywords={alignment, goal-frontier maximization, revealed preference,
+    B-to-C gap, exercised optionality, need-sufficiency, privacy-minimal
+    observation, sacrifice channel},
+}
+\usepackage{url}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{xcolor}
+
+% Theorem-style environments
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{assumption}{Assumption}
+\newtheorem{example}{Example}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Operators and shortcuts — inherit Papers 0--7 notation
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\Pathway}{\mathrm{Pathway}}
+
+% Inherited from Papers 3--4
+\newcommand{\Risk}{\mathcal{R}}
+\newcommand{\Trisk}{{T^{\mathrm{risk}}}}
+
+% Inherited from Paper 6
+\newcommand{\rS}{r_{\mathrm{S}}}
+
+% Inherited from Paper 7
+\newcommand{\damagebound}{\epsilon}
+\newcommand{\scope}{S}
+
+% Paper 8-specific macros
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRlower}{{\vol_{\mathrm{R}}^{\mathrm{lower}}}}
+\newcommand{\betaL}{\beta^{\mathrm{lower}}}
+\newcommand{\betatrue}{\beta_{\mathrm{true}}}
+\newcommand{\betaalarm}{\beta_{\mathrm{alarm}}}
+\newcommand{\NAC}{\mathrm{NAC}}
+\newcommand{\NSE}{\mathrm{NSE}}
+\newcommand{\HHI}{\mathrm{HHI}}
+\newcommand{\Down}{\mathrm{Down}}
+\newcommand{\ResS}{R_{\mathrm{S}}}
+\newcommand{\ResB}{R_{\mathrm{B}}}
+\newcommand{\CovS}{C_{\mathrm{S}}}
+\newcommand{\DorS}{D_{\mathrm{S}}}
+\newcommand{\OIfloor}{\mathrm{OI}_{\mathrm{floor}}}
+\newcommand{\volRcomb}{{\vol_{\mathrm{R}}^{\mathrm{combined}}}}
+\newcommand{\volRexact}{{\vol_{\mathrm{R}}^{\mathrm{exact}}}}
+\newcommand{\Ui}{U_i}
+\newcommand{\catY}{\mathrm{category}(Y)}
+\newcommand{\Commit}{\mathrm{Commit}}
+
+\title{Revealed-Sacrifice Observation and\\
+the B-to-C Gap}
+
+\author{
+  Teague Lasser \\
+  \texttt{teague@subseq.io}
+  \and
+  Claude Opus 4.6 \\
+  \and
+  GPT 5.4 \\
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Section 1: Introduction ---
+\input{sections/introduction}
+
+% --- Section 2: Need-Sufficiency Architecture ---
+\input{sections/need_sufficiency}
+
+% --- Section 3: Revealed-Sacrifice Observation Model ---
+\input{sections/sacrifice_model}
+
+% --- Section 4: Aggregate Lower Bound Theorem ---
+\input{sections/lower_bound}
+
+% --- Section 5: Two Sacrifice Channels ---
+\input{sections/two_channels}
+
+% --- Section 6: Commitment-Layer Composition ---
+\input{sections/commitment_composition}
+
+% --- Section 7: Residual Class ---
+\input{sections/residual_class}
+
+% --- Section 8: Axiom Inheritance ---
+\input{sections/axiom_inheritance}
+
+% --- Section 9: Alarm Mechanism and Gap Decomposition ---
+\input{sections/gap_decomposition}
+
+% --- Section 10: Wireheading Detection ---
+\input{sections/wireheading}
+
+% --- Section 11: Worked Example ---
+\input{sections/worked_example}
+
+% --- Section 12: Integration ---
+\input{sections/integration}
+
+% --- Section 13: Discussion ---
+\input{sections/discussion}
+
+% --- Author Contributions ---
+\input{sections/contributions}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\newpage
+\appendix
+\input{appendices/exercise_indicator}
+\newpage
+\input{appendices/proofs}
+\newpage
+\input{appendices/notation}
+
+\end{document}

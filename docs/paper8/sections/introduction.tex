@@ -1,0 +1,245 @@
+\section{Introduction}
+\label{sec:introduction}
+
+The GFM framework defines its actor as a system that maximizes
+$\volL$---the poset measure over the capability
+space~\citep[Definition~6]{lasser2026gfm}.  The axiomatization
+of~\citep[Proposition~1]{lasser2026poset} establishes $\volL$ as a
+poset measure satisfying axioms M1--M6 and proves it
+self-balancing~\citep[Theorem~1]{lasser2026poset}.  The analysis
+of~\citep{lasser2026horizon} extends to multi-substrate
+collectives, proving that full domination is anti-maximizing under
+discounting~\citep[Proposition~6]{lasser2026horizon}.  Throughout,
+$\volL$ is treated as a faithful proxy for the experiential
+optionality the framework is meant to protect.
+
+But $\volL$ measures what the collective \emph{can} do, not what
+it \emph{does}.  The B-to-C gap---named
+in~\citep[Section~7]{lasser2026gfm} and flagged as a primary open
+problem in the sequence---is the possibility that these diverge.
+Two failure modes illustrate the divergence:
+
+\begin{enumerate}
+\item \textbf{The Doll Problem}
+  \citep[Section~7.1]{lasser2026gfm}: a collective possesses rich
+  capabilities but exercises none.  $\volL$ is high but
+  experiential value is zero.  The self-balancing property prevents
+  capability \emph{contraction}, but says nothing about whether
+  capabilities are \emph{used}.
+
+\item \textbf{Wireheading}
+  \citep[Discussion]{lasser2026exo}: a collective exercises
+  capabilities in narrow self-reinforcing loops that serve the
+  measurement system rather than experiential value.  High $\volL$
+  and apparently high exercise, but the exercise is degenerate.
+\end{enumerate}
+
+Both failure modes are instances of Goodhart's
+Law~\citep{strathern1997improving,manheim2019categorizing} applied
+to the framework itself: when the measure ($\volL$) diverges from
+the target (experiential optionality), optimizing the measure no
+longer serves the target.
+
+\subsection{Why direct measurement fails}
+
+The natural response is to define \emph{realized capability volume}
+$\volR$---a measure over exercised capabilities---and monitor the
+ratio $\beta = \volR / \volL$.  An earlier formulation of this
+paper attempted exactly that, defining an exercise indicator
+$e_t(d) = 1$ iff removing capability~$d$ from the poset would make
+some realized cooperative output unrealizable (a structural
+counterfactual on the poset).  This formulation has two failures:
+
+\paragraph{Tractability failure.}
+The counterfactual query is worst-case exponential in pathway
+length and requires global knowledge of every realized output the
+collective produces.  Even with the polynomial-time $\volL$
+computation of~\citep[Proposition~2]{lasser2026poset}, the
+enumeration of realized outputs over an observation window is not
+operationally feasible at scale.
+
+\paragraph{Privacy failure (load-bearing).}
+Computing realized-output sets requires observational access to
+what the collective actually does---what outputs each agent
+produces, what cooperative outputs emerge, what each capability
+contributes.  This is the total-surveillance scenario.  The
+framework's operational commitments elsewhere explicitly rule out
+panopticon-style observation:
+
+\begin{itemize}
+\item The commitment protocol
+  of~\citep[Definition~6]{lasser2026exo}: agents commit to
+  capability claims without revealing internal state; the hiding
+  property is load-bearing.
+\item The channel redundancy criterion
+  of~\citep[Theorem~2]{lasser2026phase}: the phase boundary counts
+  observation \emph{channels}, not the depth of observation per
+  channel.
+\item The test scope construction
+  of~\citep[Definition~4]{lasser2026wamura}: controlled relaxation
+  is bounded in scope and duration; the framework does not monitor
+  agents beyond the test perimeter.
+\end{itemize}
+
+$\volR$ as a direct measurement contradicts all three commitments.
+The framework cannot measure what it promised not to observe.
+
+\subsection{What this paper does instead}
+
+Before defining the observation channel, the paper establishes a
+structural precondition on poset construction: the
+\textbf{need-sufficiency architecture}
+(Section~\ref{sec:need_sufficiency}).  Some sacrifices are
+involuntary---agents pay them not because they value the outcome
+highly but because they have no cheaper option for meeting a
+requirement they cannot opt out of.  Below-sufficiency sacrifices
+have reversed polarity: more sacrifice means a \emph{worse}
+situation (more expensive needs), not a \emph{more valued}
+outcome.  The need-sufficiency architecture identifies the polarity
+boundary---the sufficiency threshold on each capability
+dimension---and establishes that below-sufficiency sacrifices
+violate the free-choice assumption (S1) by construction.  This
+filters them from the revealed-sacrifice aggregate before the
+observation channel is defined, keeping the sacrifice channel clean
+(all events have positive polarity, S0--S2 valid) while adding a
+parallel need-satisfaction diagnostic.
+
+With the polarity precondition in place, the paper observes that
+agents \emph{voluntarily disclose} $\volR$-content through an
+existing, privacy-respecting channel: \textbf{sacrifice}.  When an
+agent surrenders a benchmarkable capability (whose $\volL$
+contribution is known) in exchange for an unbenchmarked bundle
+(whose $\volR$ contribution is unknown), the rational-choice
+inequality reveals that the unbenchmarked bundle is worth at least
+as much as what was surrendered.  Each such event produces a lower
+bound on a portion of $\volR$.  Aggregating across events produces
+a constructive lower bound on the B-to-C gap.
+
+The privacy discipline is not a concession---it is the structural
+invariant that makes the paper consonant with the rest of the
+sequence.
+
+\subsection{What this paper does not do}
+\label{sec:not_do}
+
+\begin{itemize}
+\item
+\textbf{It does not resolve compound feedback loops.}  That is
+the domain of~\citep{lasser2026phase}, which analyses when partial
+subsumption self-corrects versus cascades.
+
+\item
+\textbf{It does not resolve the Wamura pathology.}
+That is the domain of~\citep{lasser2026wamura}.  The two papers
+intersect when dormant capabilities are dormant because of
+over-restriction:~\citep{lasser2026wamura} generates the evidence
+to lift the restriction; the present paper bounds the value of
+doing so.
+
+\item
+\textbf{It does not provide a complete theory of experiential
+value.}  The residual class (Section~\ref{sec:residual_class})
+characterizes \emph{which} capabilities the framework cannot
+reach, not \emph{how} to value them.
+
+\item
+\textbf{It does not replace $\volL$ with $\volR$.}  The framework
+continues to optimize $\volL$; the revealed-sacrifice lower bound
+is a diagnostic that detects when $\volL$ optimization has gone
+wrong.  $\volR$ is the audit, not the objective.
+
+\item
+\textbf{It does not measure $\volR$ directly.}  The paper produces
+a \emph{lower bound} on $\volR$ from trade events, not a precise
+measurement.  The lower bound is the operationally achievable
+quantity under the framework's privacy commitments.
+\end{itemize}
+
+\subsection{Summary of results}
+
+\begin{enumerate}
+\item \textbf{Need-sufficiency architecture}
+  (Section~\ref{sec:need_sufficiency}).
+  Multi-dimensional need bundles with downstream-safe sufficiency
+  thresholds establish the polarity boundary: below-sufficiency
+  sacrifices are structurally involuntary and filtered by the
+  free-choice assumption.  An anti-stuffing proposition shows that
+  the bundle structure naturally resists redundant capability
+  measurement.
+
+\item \textbf{Privacy-minimal observation channel}
+  (Section~\ref{sec:sacrifice_model}).
+  Revealed-sacrifice observation satisfies five privacy properties
+  (Theorem~\ref{thm:privacy}), each load-bearing for compatibility
+  with the framework's prior commitments.
+
+\item \textbf{Aggregate B-to-C Lower Bound}
+  (Section~\ref{sec:lower_bound}).
+  Theorem~\ref{thm:aggregate_bound} converts the B-to-C gap from
+  ``unknown divergence'' into ``lower-bounded divergence.''  Two
+  levels: Part~A (bundle-level, requires S0--S2) and Part~B
+  (per-capability, requires S0--S5).  The bound tightens
+  monotonically with trade coverage
+  (Proposition~\ref{prop:monotone}).
+
+\item \textbf{Two complementary sacrifice channels}
+  (Section~\ref{sec:two_channels}).
+  Money-sacrifice captures wealth-correlated capabilities;
+  time-sacrifice captures identity-constitutive capabilities.
+  Together they cover strictly more of $\volR$ than either alone
+  (Corollary~\ref{cor:joint_coverage}).
+
+\item \textbf{Commitment-layer composition}
+  (Section~\ref{sec:commitment}).
+  The sacrifice channel composes with the commitment protocol
+  of~\citep{lasser2026exo} to produce a privacy-minimal aggregate
+  (Propositions~\ref{prop:commit_preserves}
+  and~\ref{prop:zk_aggregation}).
+
+\item \textbf{Non-self-balancing finding}
+  (Section~\ref{sec:axiom_inheritance}).
+  $\volR$ fails axiom M6 structurally
+  (Theorem~\ref{thm:axiom_inheritance}), so it is a diagnostic, not
+  an objective.  This structural finding is independent of the
+  observation mechanism.
+
+\item \textbf{Gap decomposition and need-sufficiency diagnostic}
+  (Section~\ref{sec:gap_decomposition}).
+  A four-term gap decomposition (restricted, covered, dormant,
+  residual) partitions the B-to-C gap.  A parallel need-access
+  cost diagnostic tracks below-sufficiency sacrifice separately.
+
+\item \textbf{Wireheading detection}
+  (Section~\ref{sec:wireheading}).
+  Trade-flow concentration, measured via the Herfindahl--Hirschman
+  Index on sacrifice categories, provides a tractable wireheading
+  diagnostic computable from public committed events.
+
+\item \textbf{Integration}
+  (Section~\ref{sec:integration}).
+  The revealed-sacrifice channel forms a complementary pair
+  with~\citep{lasser2026wamura}: risk dimension versus value
+  dimension.  Together they cover both axes of the
+  preemptive-restriction criterion.
+\end{enumerate}
+
+\subsection{Design principle}
+\label{sec:design_principle}
+
+This paper shares a structural discipline
+with~\citep{lasser2026phase} and~\citep{lasser2026wamura}:
+\textbf{resolution through frequency, not through depth.}
+The phase boundary
+of~\citep[Theorem~2]{lasser2026phase} counts observation
+\emph{channels}, not depth of observation per channel.  Controlled
+relaxation~\citep{lasser2026wamura} gains precision by running more
+tests, not by surveilling each test more intrusively.
+Revealed-sacrifice observation gains precision by observing more
+trades, not by observing each trader more intrusively.  All three
+papers refuse the panopticon move.
+
+\subsection{Dependencies on prior papers}
+\label{sec:dependencies}
+
+A table summarising the prior-paper results this paper relies on
+is collected in Appendix~\ref{app:notation}.

@@ -1,0 +1,119 @@
+\section{Two Sacrifice Channels: Money and Time}
+\label{sec:two_channels}
+
+The sacrifice dimension splits into two observation channels that
+capture different portions of $\volR$.  Each channel has a natural
+signal, a natural bias, and a natural coverage gap.  Together they
+cover more of $\volR$ than either alone.
+
+\subsection{Money-sacrifice channel}
+
+\begin{definition}[Money-Sacrifice Event]
+\label{def:money_sacrifice}
+A money-sacrifice event is a revealed-sacrifice event
+$(i, X, Y, t)$ where the benchmarked sacrifice $X$ is purchasing
+power: agent~$i$ pays a price $p$ for an unbenchmarked bundle $Y$.
+The signal is:
+\[
+  \volRlower(Y) \;\geq\; \Delta\volL(p),
+\]
+where $\Delta\volL(p)$ is the $\volL$ contribution of the
+purchasing power surrendered.
+\end{definition}
+
+\noindent\textbf{Properties of the money channel:}
+\begin{itemize}
+\item \textbf{Signal strength.}  Price is a precise, quantitative
+  signal.  Market aggregation handles distributional loading (many
+  agents trading the same category of goods produces a robust
+  estimate).
+\item \textbf{Bias.}  Privileges capabilities valued by wealthier
+  agents.  An agent with more purchasing power emits stronger
+  signals per trade.
+\item \textbf{Coverage gap.}  Capabilities that cannot be
+  purchased---things that money cannot buy---are invisible to this
+  channel.  Identity-constitutive capabilities (creative
+  expression, relationship depth, self-knowledge) often fall
+  outside the money channel.
+\end{itemize}
+
+\subsection{Time-sacrifice channel}
+
+\begin{definition}[Time-Sacrifice Event]
+\label{def:time_sacrifice}
+A time-sacrifice event is a revealed-sacrifice event
+$(i, X, Y, t)$ where the benchmarked sacrifice $X$ is the agent's
+outside-option labour hours, valued at market wage rate $r_i$.
+Agent~$i$ foregoes $r_i \cdot h$ hours of wage income to engage in
+an unbenchmarked activity (volunteering, parenting, craft practice,
+relationship-building, contemplation).  The signal is:
+\[
+  \volRlower(Y) \;\geq\; \Delta\volL(r_i \cdot h).
+\]
+\end{definition}
+
+\noindent\textbf{Properties of the time channel:}
+\begin{itemize}
+\item \textbf{Signal strength.}  Opportunity cost is a
+  quantitative signal grounded in market wage rates.  The signal
+  is universal---every agent has a time endowment and an outside
+  option, regardless of wealth.
+\item \textbf{Bias.}  More egalitarian than the money channel.
+  Time is the scarcest capability every agent shares.  A
+  high-wage agent's time sacrifice has higher $\Delta\volL$ per
+  hour, but every agent sacrifices time.
+\item \textbf{Coverage gap.}  Agents not in the labour market
+  (retirees, children, homemakers, the unemployed) have an
+  undefined or zero market wage rate, making the time-sacrifice
+  signal silent for these agents despite genuine $\volR$ activity.
+  The framework can use imputed wage rates~\citep{aguiar2007measuring}
+  or non-market time valuation (replacement cost).
+\item \textbf{Coverage.}  Captures $\volR$-content that the money
+  channel misses entirely.  Time-sacrifice bundles include most
+  identity-constitutive activity: parenting, craft mastery,
+  contemplative practice, relationship maintenance.
+\end{itemize}
+
+\subsection{Complementarity}
+
+\begin{proposition}[Time Channel Captures Capabilities Money
+Channel Misses]
+\label{prop:time_coverage}
+There exist capabilities $c \in U$ such that:
+\begin{enumerate}
+\item[(a)] No money-sacrifice event in the trade window produces a
+  lower bound on $\volR(c)$---the capability is not purchasable.
+\item[(b)] Time-sacrifice events in the trade window do produce a
+  lower bound on $\volR(c)$---the capability requires time
+  investment.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Constructive.  Consider the capability ``sustained mentoring
+relationship with a specific individual.''  This capability
+cannot be purchased (money buys access to mentors, not the
+relationship itself).  But it requires time investment (hours
+spent in the relationship).  The time-sacrifice signal
+$r_i \cdot h$ provides a lower bound on $\volR$ for this
+capability.  The money channel is silent; the time channel is
+not.
+\end{proof}
+
+\begin{corollary}[Joint Channel Coverage]
+\label{cor:joint_coverage}
+The union of the money-sacrifice and time-sacrifice channels
+covers a strictly larger subset of $U$ than either channel alone.
+The aggregate lower bound from
+Theorem~\ref{thm:aggregate_bound}, computed over both channels
+jointly, is weakly greater than the bound from either channel in
+isolation.
+\end{corollary}
+
+\subsection{The residual intersection}
+
+What neither channel catches is the \emph{residual class}
+(Section~\ref{sec:residual_class}): capabilities exercised purely
+privately, with no trade or time-sacrifice event that exposes them
+to the aggregate observation channel.  The residual class is the
+intersection of the coverage gaps of both channels.

@@ -1,0 +1,165 @@
+\section{Worked Example: The Dormant-Capability Scenario Re-Staged}
+\label{sec:worked_example}
+
+\subsection{Setup}
+
+Two-substrate collective (biology + silicon):
+\begin{itemize}
+\item 8 individual capabilities: 3 biological ($b_1, b_2, b_3$),
+  5 silicon ($s_1, \ldots, s_5$).
+\item 8 cooperative capabilities:
+  $\{b_1, s_1\}$, $\{b_1, s_2\}$, $\{b_2, s_3\}$,
+  $\{b_2, s_4\}$, $\{b_3, s_5\}$, $\{s_1, s_2\}$,
+  $\{b_1, b_2\}$, $\{s_3, s_4\}$.
+\item 3 private contemplative capabilities ($p_1, p_2, p_3$) in
+  the residual class $\ResS$---purely private exercise, no
+  sacrifice-observable path.
+\item Weights: $w(b_i) = 2.0$, $w(s_j) = 1.0$,
+  $w(\mathrm{cooperative}) = 1.0$, $w(p_k) = 1.0$.
+\item Total $\volL = 3 \times 2 + 5 \times 1 + 8 \times 1 + 3
+  \times 1 = 22.0$.
+\end{itemize}
+
+\subsection{Phase 1: Healthy trade ($\betaL$ near 1)}
+
+The collective operates with diverse trade patterns.  Biological
+agents sacrifice purchasing power and time for bundles that
+exercise biological capabilities: creative supplies,
+relationship-building time, embodied experiences.  Silicon agents
+sacrifice compute resources for unbenchmarked optimization
+targets.
+
+\paragraph{Trade data.}
+50 above-sufficiency sacrifice events over the window, covering
+all 16 non-residual capabilities.  Additionally, 12
+below-sufficiency events are observed (biological agents purchasing
+healthcare, food, shelter) but these fail S1
+(Proposition~\ref{prop:s1_sufficiency}) and do not enter the
+sacrifice aggregate.
+
+\paragraph{Diagnostics.}
+$\betaL = 19.0 / 22.0 = 0.864$.  Gap decomposition:
+$\delta_{\mathrm{restricted}} = 0$,
+$\delta_{\mathrm{partial}} = 0$,
+$\delta_{\mathrm{dormant}} = 0$,
+$\delta_{\mathrm{residual}} = 3.0 / 22.0 = 0.136$ (residual
+class contribution).  No alarm.
+
+\paragraph{Need-sufficiency diagnostic.}
+$\NAC = 3.5$ (modest need-access costs).  $\NSE$: all biological
+needs at $\mathrm{sufficiency\_status} = \mathrm{met}$,
+$\mathrm{downstream\_safety} = \mathrm{safe}$.  Combined
+diagnostic: $(\volRlower = 19.0,\; \NAC = 3.5,\; \NSE =
+\text{healthy})$.  The collective exercises rich above-sufficiency
+capabilities and needs are cheap to meet.
+
+\subsection{Phase 2: Automation concentrates trade ($\betaL$
+drops)}
+
+Silicon capabilities automate tasks previously requiring
+biological participation.  The automation changes \emph{trade
+patterns}: the biological agents no longer sacrifice time for
+activities involving $b_2$ and $b_3$.
+
+\paragraph{Trade data.}
+Trade events for $b_2$-related bundles:
+$8 \to 0$.  Trade events for $b_3$-related bundles: $6 \to 0$.
+Silicon trade events increase.  New aggregate: 52
+above-sufficiency events covering only 10 of 16 non-residual
+capabilities.
+
+\paragraph{Diagnostics.}
+$\betaL = 10.0 / 22.0 = 0.455$.  \textbf{ALARM fires}
+($\betaL < 0.8$).  Gap decomposition:
+\begin{align*}
+\delta_{\mathrm{restricted}} &= 0, \\
+\delta_{\mathrm{partial}} &= 1.0/22 = 0.045, \\
+\delta_{\mathrm{dormant}} &= 8.0/22 = 0.364 \quad
+  \text{($b_2$, $b_3$, and 4 cooperatives: dormant wants)}, \\
+\delta_{\mathrm{residual}} &= 3.0/22 = 0.136. \\
+\intertext{Check:}
+\betaL + \delta_{\mathrm{partial}} + \delta_{\mathrm{dormant}}
+  + \delta_{\mathrm{residual}} &= 0.455 + 0.045 + 0.364
+  + 0.136 = 1.000.
+\end{align*}
+
+\paragraph{Need-sufficiency diagnostic.}
+$\NAC$ rises from $3.5$ to $8.2$ as automation displaces
+biological agents from cooperative outputs, forcing them to spend
+more on basic need-satisfaction (healthcare costs rise without
+cooperative support structures).  $\NSE$: healthcare need for
+biological agents shifts from
+$\mathrm{downstream\_safety} = \mathrm{safe}$ to
+$\mathrm{downstream\_safety} = \mathrm{degrading}$ (cooperative
+pathways that previously contributed to healthcare quality are no
+longer active).
+
+Combined diagnostic: $(\volRlower = 10.0,\; \NAC = 8.2,\;
+\NSE = \text{degrading on healthcare})$.  The need-sufficiency
+diagnostic catches a failure mode the gap decomposition alone
+would miss: automation is not merely making want-pursuit
+capabilities dormant---it is also degrading the need-satisfaction
+pathways for biological agents.
+
+\subsection{Phase 3: Diagnosis and recovery}
+
+The framework diagnoses: two biological capabilities have zero
+sacrifice evidence.  The alarm identifies the \emph{absence of
+trade signal for biological-valued bundles} as the cause.
+
+\paragraph{Recovery mechanism.}
+The framework does not \emph{impose} exercise (that would be
+controlled relaxation~\citep{lasser2026wamura}, for the risk
+dimension).  Instead, the framework surfaces the diagnostic to the
+collective: ``biological capabilities $b_2$ and $b_3$ have zero
+sacrifice evidence; the collective's $\volL$ includes these
+capabilities but no agent is trading for them.''  The collective
+can then:
+\begin{enumerate}
+\item[(a)] Investigate whether the capabilities are genuinely
+  dormant (no one values them anymore) or merely displaced (valued
+  but crowded out by automation).
+\item[(b)] If displaced: restructure cooperative arrangements to
+  create trade opportunities.
+\item[(c)] If genuinely dormant: accept the lower $\betaL$ and
+  potentially revise downward the capabilities' contribution to
+  $\volL$.
+\end{enumerate}
+
+\subsection{Phase 4: The complementary diagnostic}
+
+Controlled relaxation~\citep{lasser2026wamura} asks: are the
+restrictions on biological capabilities warranted?  The
+revealed-sacrifice channel asks: are the biological capabilities
+worth recovering?
+
+If the biological capabilities are under restriction, controlled
+relaxation tests whether the risk is real.  If they are merely
+dormant (not restricted), the sacrifice channel detects the
+absence and surfaces it.  The two papers cover both failure modes:
+over-restriction
+(\citealp{lasser2026wamura}) and
+under-exercise (the present paper).
+
+\subsection{Lessons from the example}
+
+\begin{enumerate}
+\item \textbf{Automation changes trade patterns, not just exercise
+  patterns.}  The sacrifice-based diagnostic detects dormancy
+  through the \emph{absence} of trade signal, not through a
+  counterfactual computation.
+\item \textbf{The alarm detects the problem without interior
+  access.}  The framework observes aggregate trade data, not
+  individual agent behaviour.
+\item \textbf{Recovery is cooperative, not coercive.}  The
+  framework surfaces the diagnostic; the collective decides what
+  to do.
+\item \textbf{The dynamics parallel the phase-boundary analysis
+  of~\citep{lasser2026phase}.}  Dormancy of biological
+  capabilities in the trade data is the same underlying phenomenon
+  as observation-channel degradation: biological contribution to
+  the collective decreases.  The phase-boundary analysis treats
+  the dynamical consequence (world-model degradation); the present
+  paper treats the value consequence ($\volL$ no longer tracks
+  exercised optionality).
+\end{enumerate}

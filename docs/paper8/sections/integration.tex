@@ -1,0 +1,112 @@
+\section{Integration: Duality and the Shared Privacy Discipline}
+\label{sec:integration}
+
+\subsection{The complementary pair}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Controlled relaxation}~\citep{lasser2026wamura}
+& \textbf{Revealed sacrifice} (this paper) \\
+\midrule
+Question & Is the restriction warranted?
+& Is the capability valuable? \\
+Evidence & Framework-initiated exercise
+& Agent-initiated sacrifice \\
+Direction & Framework injects observation
+& Framework receives disclosure \\
+Scope & Bounded sub-poset $\scope$, bounded $\tau$
+& Bounded to the trade event \\
+Privacy cost & Scope-limited monitoring
+& None beyond what the trade creates \\
+Adversarial model & Agent must tolerate test
+& Agent must operate (buy, work) \\
+Dimension & Risk (restriction lattice)
+& Value (experiential $\volR$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Together they cover both axes of the preemptive-restriction
+criterion of~\citep[Proposition~1]{lasser2026horizon}: restriction
+cost (controlled relaxation tests the risk side) and experiential
+value (revealed sacrifice bounds the value side).  Controlled
+relaxation tells us whether a feared harm is real; revealed
+sacrifice tells us whether the forgone capability is worth
+recovering.  Without both, the restriction decision is
+underdetermined.
+
+\subsection{The shared privacy discipline}
+
+Three papers in the
+sequence~\citep{lasser2026phase,lasser2026wamura} and the present
+paper share a structural discipline: \textbf{resolution through
+frequency, not through depth.}
+
+\begin{itemize}
+\item The phase boundary
+  of~\citep[Theorem~2]{lasser2026phase}: $\rho_{\min}^{\mathrm{cross}}$
+  counts observation \emph{channels}, not depth of observation per
+  channel.  More independent channels improve the phase boundary
+  condition; deeper observation per channel does not.
+\item Controlled relaxation~\citep{lasser2026wamura}: more
+  precision on risk claims comes from running more tests
+  (\citealp[Theorem~2]{lasser2026wamura}, convergence depends on
+  test count), not from surveilling each test more intrusively.
+\item Revealed sacrifice (the present paper): more precision on
+  $\volR$ comes from observing more trades
+  (Proposition~\ref{prop:monotone}, monotone accumulation), not
+  from observing each trader more intrusively.  The commitment
+  layer (Section~\ref{sec:commitment}) ensures that even the
+  trade-level observation is privacy-minimal.
+\end{itemize}
+
+This shared discipline is the sequence's answer to the panopticon
+temptation: the framework gains measurement capability through
+\emph{more independent signals}, not through \emph{deeper access
+to any single signal}.  This is consonant with the cross-substrate
+redundancy principle
+of~\citep[Theorem~2]{lasser2026phase} and the cryptographic
+opacity commitment of~\citep[Definition~6]{lasser2026exo}.
+
+\subsection{Connection to the phase-boundary analysis}
+
+The phase-boundary analysis
+of~\citep{lasser2026phase} assumes $\volL$ accurately measures the
+quantity the framework optimizes.  The present paper asks whether
+that assumption holds.  When $\betaL$ is low, the phase-boundary
+parameters ($\rS$, $r_{\mathrm{W}}$
+from~\citep[Theorem~1]{lasser2026phase}) may be miscalibrated
+because the actor is optimizing a proxy ($\volL$) that diverges
+from the true target.
+
+A natural extension (not pursued here): extend the phase-boundary
+analysis to incorporate the $\volL/\volR$ divergence.  The
+effective self-correction rate $\rS^{\mathrm{eff}}$ would depend
+on $\betaL$: a collective with low $\betaL$ has a weaker effective
+self-correction rate because its proxy is less faithful.
+
+\subsection{Connection to the Goodhart mechanism}
+
+The need-sufficiency architecture
+(Section~\ref{sec:need_sufficiency}) gives a concrete mechanism for
+the kind of proxy failure studied in the Goodhart
+literature~\citep{strathern1997improving,manheim2019categorizing}.
+A framework that fails to distinguish needs from wants---or fails
+to invert cost-dimension benchmarks---produces a proxy $\volL$
+that is systematically misaligned with $\volR$ on need dimensions.
+The proxy rewards agents for having expensive-to-satisfy needs
+(high cost = high sacrifice = high ``revealed value'' under a
+naive reading) when the correct interpretation is the opposite.
+
+The need-sufficiency architecture is the framework's prophylactic
+against this specific Goodhart mechanism: by establishing the
+polarity boundary and filtering below-sufficiency sacrifices via
+S1 \emph{before} the sacrifice channel operates, the framework
+prevents need-cost inflation from corrupting the $\volR$ lower
+bound.  The $\NAC$ diagnostic
+(Section~\ref{sec:gap_decomposition},
+Definition~\ref{def:nac}) tracks the excluded need-costs
+separately, making the Goodhart pressure visible rather than
+hidden.

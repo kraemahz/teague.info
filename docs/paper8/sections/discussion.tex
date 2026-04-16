@@ -1,0 +1,202 @@
+\section{Discussion and Open Questions}
+\label{sec:discussion}
+
+\subsection{What this paper establishes}
+
+\paragraph{Direct $\volR$ measurement is privacy-incompatible.}
+The framework's commitments
+in~\citep{lasser2026exo,lasser2026phase,lasser2026wamura} rule out
+the panopticon-style observation that direct measurement would
+require.  This is a structural finding, not a practical limitation.
+
+\paragraph{Revealed sacrifice is a privacy-minimal surrogate.}
+The sacrifice channel satisfies five privacy properties
+(Theorem~\ref{thm:privacy}) and composes with the commitment layer
+of~\citep{lasser2026exo}
+(Propositions~\ref{prop:commit_preserves}
+and~\ref{prop:zk_aggregation}) to produce a privacy-minimal
+observation mechanism.
+
+\paragraph{The B-to-C gap is lower-bounded by characterized trade
+data.}
+The aggregate lower bound
+(Theorem~\ref{thm:aggregate_bound}) converts the B-to-C gap from
+``unknown divergence'' into ``lower-bounded divergence.''  The
+bound tightens monotonically with trade coverage
+(Proposition~\ref{prop:monotone}).
+
+\paragraph{Two sacrifice channels cover complementary territory.}
+The money channel captures wealth-correlated capabilities; the
+time channel captures identity-constitutive capabilities.
+Together they cover more of $\volR$ than either alone
+(Corollary~\ref{cor:joint_coverage}).
+
+\paragraph{$\volR$ is not self-balancing (retained finding).}
+$\volR$ itself fails M6 structurally
+(Theorem~\ref{thm:axiom_inheritance}, failure~(a)), so $\volR$ is
+a diagnostic, not an objective.  This structural finding is
+independent of the observation mechanism.
+
+\paragraph{Wireheading is detectable from trade data.}
+Trade-flow concentration
+(Proposition~\ref{prop:wireheading_hhi}) provides a tractable
+wireheading diagnostic computable from public committed sacrifice
+events
+(Proposition~\ref{prop:third_party_wireheading}).
+
+\paragraph{Need-sufficiency resolves the polarity problem.}
+The sufficiency threshold
+(Section~\ref{sec:need_sufficiency}) identifies the structural
+boundary where sacrifice polarity flips.  Below-sufficiency
+sacrifices are involuntary and correctly filtered by S1.  The
+need-access cost diagnostic
+(Section~\ref{sec:gap_decomposition},
+Definitions~\ref{def:nac}--\ref{def:nse}) tracks
+need-satisfaction efficiency as a companion metric.
+
+\paragraph{Complementarity with controlled relaxation.}
+Together, the present paper
+and~\citep{lasser2026wamura} cover the risk and value dimensions
+of the restriction criterion.  Neither is sufficient alone.
+
+\subsection{Connection to the capability approach}
+
+The distinction between basic capabilities (functionings required
+for a minimally decent life) and complex capabilities (freedoms to
+choose among valuable life-options) in~\citet{sen1999development}
+and~\citet{nussbaum2011creating} maps to the
+below-sufficiency/above-sufficiency partition
+(Section~\ref{sec:need_sufficiency}).  What the framework adds
+beyond that tradition:
+
+\begin{enumerate}
+\item \textbf{Downstream-safety condition}
+  (Definition~\ref{def:downstream_safe}) that makes ``sufficient''
+  structurally rigorous rather than normatively asserted.
+\item \textbf{Polarity-correct benchmark discipline}
+  (Definition~\ref{def:polarity_benchmark}) that makes
+  $\volL$-maximization align with the agent's interest on both
+  sides of the threshold.
+\item \textbf{Revealed-sacrifice transition} (threshold-setting
+  mechanism~(c), Section~\ref{sec:threshold_setting}) as an
+  empirical method for identifying the sufficiency threshold
+  without normative declaration.
+\end{enumerate}
+
+\subsection{Limitations}
+
+\paragraph{Assumption load.}
+The full per-capability refinement (Theorem~\ref{thm:aggregate_bound}
+Part~B) requires six assumptions (S0--S5).  S0 (calibration) and
+S1 (free choice) are the most empirically demanding, and neither
+is ZK-verifiable (Remark~\ref{rem:zk_limits}).  Part~A (S0--S2
+only) is the more defensible result; Part~B should be understood
+as the refinement available under stronger conditions.
+
+\paragraph{B-to-C gap inheritance.}
+The damage bound of~\citep[Theorem~1]{lasser2026wamura} bounds
+contraction of $\volL$, not of the experiential target directly.
+The present paper provides a lower bound on $\volR$ as a
+diagnostic, but the diagnostic is itself subject to the B-to-C gap
+on the benchmarked side: the sacrifice signal $\Delta\volL(X)$ is
+only as accurate as $\volL$'s measurement of the benchmarked
+capability.
+
+\paragraph{Residual class irreducibility.}
+Capabilities in $\ResS$ (Definition~\ref{def:residual_class}) have
+zero sacrifice evidence by construction and cannot gain it
+regardless of observation time.  The residual class is the
+irreducible component of the gap decomposition.
+
+\subsection{Open questions}
+
+\begin{enumerate}
+
+\item \label{oq:hedonic}
+\textbf{Hedonic disaggregation of bundles.}
+Theorem~\ref{thm:aggregate_bound} Part~B requires event-local
+decomposition coefficients $\alpha_{n,c}$.  Classical hedonic
+regression~\citep{rosen1974hedonic} handles the money channel.
+The time-sacrifice channel needs an analogous framework: how does
+one decompose a block of time spent on a complex activity
+(parenting, which involves teaching, emotional regulation,
+physical care, relationship-building) into per-capability
+contributions?
+
+\item \label{oq:nonstationarity}
+\textbf{Non-stationarity of revealed preferences.}
+Preferences shift over time.  The lower bound from past trades may
+overstate $\volR$ at present.  An EWMA decay paralleling the
+risk-trust dynamics of~\citep[Definition~4]{lasser2026scm} seems
+natural but requires empirical calibration.
+
+\item \label{oq:coercion}
+\textbf{Coerced sacrifice.}
+Assumption S1 (free choice) is load-bearing.  Under duress, the
+agent's trade does not reveal preferences.  Filtering coerced
+sacrifice events may require commitment-based attestation of
+choice sets~\citep{lasser2026exo}.
+
+\item \label{oq:market_failure}
+\textbf{Market-failure cases.}
+In contexts without functioning markets (pre-capitalist societies,
+closed economies, intra-family sharing), the money-sacrifice
+channel is quiet even though $\volR$ activity is real.  Does the
+time-sacrifice channel alone suffice, or does the framework need
+a non-market sacrifice variant?
+
+\item \label{oq:commitment_infra}
+\textbf{Commitment infrastructure at scale.}
+A fully committed trade ledger at the scale of a modern economy is
+an infrastructure problem.  The privacy guarantee
+(Section~\ref{sec:commitment}) is conditional on the commitment
+infrastructure existing, which is the remit
+of~\citep{lasser2026exo}.
+
+\item \label{oq:calibration}
+\textbf{Population-level calibration (S0).}
+Assumption S0 requires that individual agents do not overvalue
+unbenchmarked bundles.  A robust version of
+Theorem~\ref{thm:aggregate_bound} would replace S0 with a weaker
+population-level condition:
+$E[\Ui(Y)] \leq \volR(Y) + \epsilon$ for some bounded bias
+$\epsilon$.
+
+\item \label{oq:threshold_sensitivity}
+\textbf{Threshold sensitivity.}
+How sensitive are the alignment properties to the exact placement
+of sufficiency thresholds?  If the threshold is set too low,
+need-costs in the gap between threshold and true sufficiency are
+misclassified as want-pursuit events.  If set too high, the
+framework over-constrains the need.
+
+\item \label{oq:dynamic_thresholds}
+\textbf{Dynamic thresholds.}
+Sufficiency levels may shift over time as technology and social
+context evolve.  The framework needs a mechanism for updating
+thresholds, connecting to the idea of controlled relaxation
+applied to sufficiency standards themselves.
+
+\item \label{oq:cross_cultural}
+\textbf{Cross-cultural variation.}
+Different cultures may set sufficiency thresholds differently.
+Can the framework maintain culturally-indexed thresholds while
+preserving a coherent aggregate $\volR$ diagnostic, or does
+cross-cultural variation fragment the diagnostic?
+
+\item \label{oq:m5_interaction}
+\textbf{Interaction with axiom M5 (non-triviality).}
+Under the capped-benchmark discipline
+(Definition~\ref{def:polarity_benchmark}), sufficiency-met needs
+contribute a fixed cap.  The weight of the cap is a design
+parameter that affects the relative importance of
+need-satisfaction versus want-pursuit in $\volL$.
+
+\item \label{oq:need_identification}
+\textbf{Need identification.}
+How does the framework identify which capabilities are needs
+versus wants?  The poset-structural approach (high fan-out = need)
+is a good heuristic but not infallible.  A hybrid of structural
+position and revealed-sacrifice polarity transition is probably
+required.
+\end{enumerate}

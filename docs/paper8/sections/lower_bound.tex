@@ -1,0 +1,192 @@
+\section{Aggregate Lower Bound Theorem}
+\label{sec:lower_bound}
+
+\subsection{Event-local decomposition}
+
+\begin{definition}[Event-Local Bundle Decomposition]
+\label{def:bundle_decomp}
+For each revealed-sacrifice event $(i_n, X_n, Y_n, t_n)$, define
+the \emph{event-local} decomposition coefficients
+$\alpha_{n,c} \geq 0$ for each capability $c \in Y_n$,
+satisfying:
+\[
+  \sum_{c \in Y_n} \alpha_{n,c} = 1
+  \qquad\text{(partition of unity within the bundle)}.
+\]
+The coefficients represent the share of bundle $Y_n$ attributable
+to capability~$c$, determined at the time of event~$n$ and
+\emph{fixed thereafter}.  Each event carries its own
+decomposition, independent of other events.  The decomposition can
+be obtained from prior hedonic
+regression~\citep{rosen1974hedonic} on similar trades, domain
+knowledge, or the equal-weight default
+$\alpha_{n,c} = 1/|Y_n|$.
+\end{definition}
+
+\begin{remark}[Event-local versus global regression]
+Classical hedonic regression~\citep{rosen1974hedonic} fits a
+\emph{global} model across all observed trades simultaneously,
+producing the tightest decomposition but breaking the monotonicity
+of the max-attribution bound
+(Proposition~\ref{prop:monotone}) when new observations refit all
+coefficients.  The event-local formulation fixes coefficients at
+observation time, sacrificing fit quality for the monotonicity
+guarantee.
+\end{remark}
+
+\subsection{Central result}
+
+\begin{theorem}[Aggregate B-to-C Lower Bound]
+\label{thm:aggregate_bound}
+For a sequence of revealed-sacrifice events
+$\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with bundles jointly covering
+a subset $U$ of unbenchmarked capability-space, under the
+following assumptions:
+
+\begin{description}
+\item[S0 (Calibration).] For each agent~$i_n$, the agent's
+  valuation of the unbenchmarked bundle $Y_n$ does not exceed
+  $Y_n$'s $\volR$ contribution:
+  $\Ui[_{n}](Y_n) \leq \volR(Y_n)$.
+
+\item[S1 (Free choice).] Each sacrifice event is a voluntary
+  trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
+  available.  The agent had \emph{non-degrading} alternatives:
+  retaining $X_n$ was a viable option that would not have left
+  the agent below minimum viable functionality on any need
+  dimension.  When retaining $X_n$ would cause the agent to fall
+  below a sufficiency threshold, S1 fails for that event
+  (Proposition~\ref{prop:s1_sufficiency}).
+
+\item[S2 (Benchmark grounding).] The benchmarked sacrifice $X_n$
+  has a well-defined $\volL$ contribution $\Delta\volL(X_n)$
+  computed via~\citep[Proposition~1]{lasser2026poset}, and the
+  agent's valuation of $X_n$ is at least as large:
+  $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+
+\item[S3 (Bundle coherence).]  The hedonic decomposition of each
+  bundle $Y_n$ into capabilities in $U$ is well-defined (no
+  multicollinearity degeneracy).
+
+\item[S4 (Additive separability).] \mbox{}
+  \begin{enumerate}
+  \item[(a)] \emph{Valuation additivity:}
+    $\Ui(Y) = \sum_{c \in Y} u_i(c)$, $u_i(c) \geq 0$.
+  \item[(b)] \emph{$\volR$ additivity on poset-independent
+    capabilities:} The $\volR$ contribution of a set of
+    capabilities that are pairwise poset-independent (no
+    subsumption relations \emph{and} no cooperative composition
+    links) is additive.
+  \end{enumerate}
+
+\item[S5 (Decomposition validity).]  The event-local
+  decomposition coefficients are \emph{lower bounds} on the true
+  $\volR$ share:
+  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all $n$ and
+  $c \in Y_n$.
+\end{description}
+
+The theorem has two levels:
+
+\medskip\noindent
+\textbf{Part~A (Bundle-level lower bound, requires S0--S2 only).}
+For each event~$n$:
+\[
+  \volR(Y_n) \;\geq\; \Delta\volL(X_n).
+\]
+For $N$ events with \emph{pairwise poset-independent} bundles:
+\[
+  \volR^U \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
+\]
+where $\volR^U$ is the realized capability volume restricted to
+the unbenchmarked subset $U$ covered by the union of bundles.
+
+\medskip\noindent
+\textbf{Part~B (Per-capability refinement, requires S0--S5).}
+When bundles overlap, define for each capability $c \in U$:
+\[
+  \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
+  \alpha_{n,c} \cdot \Delta\volL(X_n).
+\]
+Then, provided the capabilities $c \in U$ are pairwise
+poset-independent:
+\[
+  \volR^U \;\geq\; \sum_{c \in U} \volRlower(c).
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\emph{Part~A.}
+Step~1: For each event~$n$, the calibration chain
+(S0 + S1 + S2) gives
+$\volR(Y_n) \geq \Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n) \geq
+\Delta\volL(X_n)$.
+Step~2: For poset-independent bundles, the sub-posets $\{Y_n\}$
+are disconnected components.  By axiom~M4 (additivity on
+poset-disjoint
+components,~\citep[Proposition~1]{lasser2026poset}),
+$\volR(\bigcup Y_n) = \sum_n \volR(Y_n) \geq \sum_n
+\Delta\volL(X_n)$.
+
+\emph{Part~B.}
+Step~3: S4(b) decomposes
+$\volR(Y_n) = \sum_c \volR(c)$.
+S5 gives
+$\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$,
+hence $\volR(c) \geq \alpha_{n,c} \cdot \volR(Y_n) \geq
+\alpha_{n,c} \cdot \Delta\volL(X_n)$.
+Step~4: Max-attribution across overlapping events.
+Step~5: Global summation over poset-independent capabilities
+via~M4.
+\end{proof}
+
+\begin{remark}[Why poset-independence, not set-disjointness]
+\label{rem:poset_indep}
+Set-disjointness ($Y_1 \cap Y_2 = \emptyset$) ensures no
+\emph{capability} appears in two bundles, but does not rule out
+subsumption or cooperative links across bundles.  If a cooperative
+capability $c_{\mathrm{coop}}$ depends on capabilities in both
+$Y_1$ and $Y_2$, its $\volR$ contribution is not attributable to
+either bundle alone.  Poset-independence rules this out: under
+poset-independence, the sub-posets are disconnected components
+and $\volL$ (hence $\volR$) decomposes additively by
+axiom~M4~\citep[Proposition~1]{lasser2026poset}.
+\end{remark}
+
+\subsection{B-to-C ratio and monotonicity}
+
+\begin{definition}[B-to-C Ratio Under Revealed Sacrifice]
+\label{def:btoc_ratio}
+The B-to-C ratio under revealed-sacrifice observation is:
+\[
+  \betaL(G, T) \;=\; \volRlower(G, T) \;/\; \volL(G),
+\]
+where $\volRlower$ is the aggregate lower bound from
+Theorem~\ref{thm:aggregate_bound} and $T$ indexes the trade
+window.  $\betaL \in [0, 1]$ because $\volR \leq \volL$ by
+definition (the exercised sub-poset is a subset of the full
+poset).
+\end{definition}
+
+\begin{proposition}[Monotone Accumulation Under Max-Attribution]
+\label{prop:monotone}
+Define the per-capability lower bound as the maximum attribution
+across all observed events:
+\[
+  \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
+  \alpha_{n,c} \cdot \Delta\volL(X_n),
+\]
+and the aggregate as $\volRlower = \sum_{c \in U} \volRlower(c)$.
+Then the aggregate is non-decreasing in the number of observed
+events: for $N' > N$,
+\[
+  \volRlower(N') \;\geq\; \volRlower(N),
+\]
+provided the additional events satisfy the applicable assumptions.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Each per-capability bound is a maximum over a growing set of
+candidates.  Adding events can only weakly increase a max.  The
+aggregate is a sum of non-decreasing terms, hence non-decreasing.
+\end{proof}

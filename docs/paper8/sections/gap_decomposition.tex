@@ -1,0 +1,208 @@
+\section{Alarm Mechanism and Gap Decomposition}
+\label{sec:gap_decomposition}
+
+\subsection{The alarm}
+
+\begin{definition}[B-to-C Alarm Under Revealed Sacrifice]
+\label{def:alarm}
+The B-to-C alarm fires when the lower-bound B-to-C ratio drops
+below a threshold:
+\[
+  \mathrm{ALARM}(T) \;=\; \betaL(G, T) \;<\; \betaalarm,
+\]
+where $\betaalarm \in (0, 1)$ is configurable.  The alarm detects
+proxy failure: when $\betaL$ is low, $\volL$ is high but the
+sacrifice channel shows little evidence of the corresponding
+$\volR$.
+\end{definition}
+
+\begin{remark}[Alarm conservatism]
+Because $\betaL \leq \betatrue$, the alarm may fail to fire when
+$\betatrue < \betaalarm$ but the sacrifice channel has
+insufficient coverage.  The alarm has no false positives (if
+$\betaL$ is low, $\volR$ is genuinely not well-evidenced) but
+may have false negatives ($\volR$ may be high but invisible to
+the sacrifice channel).  This is the cost of privacy-minimal
+observation.
+\end{remark}
+
+\subsection{Diagnostic decomposition}
+
+\begin{definition}[Gap Decomposition Under Revealed Sacrifice]
+\label{def:gap_decomp}
+The B-to-C gap ($1 - \betaL$) decomposes into four \emph{disjoint}
+sources.  Each capability in $P$ is assigned to exactly one
+category by priority ordering (restricted $>$ covered $>$ dormant
+$>$ residual), and each category's $\delta$ term is its uncovered
+$\volL$ share:
+\[
+  1 - \betaL \;=\; \delta_{\mathrm{restricted}}
+  + \delta_{\mathrm{partial}} + \delta_{\mathrm{dormant}}
+  + \delta_{\mathrm{residual}},
+\]
+where the capability partition is:
+\begin{itemize}
+\item \textbf{Restricted} ($\Xi$): $d$ is currently restricted
+  under the preemptive-restriction criterion
+  of~\citep[Proposition~1]{lasser2026horizon}.
+  Classified first regardless of sacrifice evidence.
+\item \textbf{Covered} ($\CovS$): $d \notin \Xi$, and $d$
+  appears in at least one acquired bundle $Y_n$ for some
+  theorem-admissible sacrifice event in $[T - H, T]$.  A
+  theorem-admissible event satisfies S0, S1, and S2.
+\item \textbf{Dormant} ($\DorS$): $d \notin \Xi$,
+  $d \notin \ResS$, and $d$ does not appear in any acquired
+  bundle of any theorem-admissible event in $[T - H, T]$.
+  These are tradable-in-principle capabilities with zero
+  want-pursuit sacrifice evidence---dormant \emph{wants}.
+\item \textbf{Residual} ($\ResS$): $d \notin \Xi$, and $d$ is
+  structurally outside the sacrifice channel
+  (Definition~\ref{def:residual_class}).
+\end{itemize}
+
+The $\delta$ terms are:
+\begin{align*}
+  \delta_{\mathrm{restricted}} &= [\volL(\Xi) -
+    \volRlower(\Xi)] \;/\; \volL(G), \\
+  \delta_{\mathrm{partial}} &= [\volL(\CovS) -
+    \volRlower(\CovS)] \;/\; \volL(G), \\
+  \delta_{\mathrm{dormant}} &= \volL(\DorS) \;/\; \volL(G), \\
+  \delta_{\mathrm{residual}} &= \volL(\ResS) \;/\; \volL(G).
+\end{align*}
+\end{definition}
+
+\begin{proposition}[Computability of Gap Decomposition]
+\label{prop:gap_computable}
+The four-term gap decomposition is computable from:
+the aggregate sacrifice data (events in $[T - H, T]$),
+the restriction set $\Xi$,
+the residual class $\ResS$
+(Definition~\ref{def:residual_class}), and
+the capability census (enumeration of $P$).
+Classification is $O(|P|)$ given the sacrifice database and the
+$\ResS$ classification.  No structural counterfactual computation
+is required (unlike the prior formulation, which required
+$O(|P|^2)$ counterfactual queries).
+\end{proposition}
+
+\begin{remark}[Part~A versus Part~B granularity]
+Under Part~A alone (category-level aggregates, S0--S2), the
+decomposition operates at the category level: each partition
+component $C_j$
+(Definition~\ref{def:category_partition}) is classified as
+restricted, covered, dormant, or residual.  Under committed data
+(Section~\ref{sec:commitment}), S2 is not directly verifiable;
+the committed-mode decomposition therefore \emph{assumes} S2
+holds for committed events.  The per-capability decomposition is
+the refinement available when Part~B assumptions hold.
+\end{remark}
+
+\subsection{Need-sufficiency diagnostic (companion metric)}
+\label{sec:need_diagnostic}
+
+The gap decomposition above tracks want-pursuit: how much of the
+collective's above-sufficiency capability-space is evidenced by
+voluntary sacrifice.  The need-sufficiency diagnostic is the
+parallel metric for below-sufficiency: how efficiently does the
+collective satisfy needs, and is the satisfaction downstream-safe?
+
+\begin{definition}[Need-Access Cost]
+\label{def:nac}
+The need-access cost aggregate for trade window $[T - H, T]$ is:
+\[
+  \NAC(T) \;=\; \sum_{n \in F_{S1}}
+  \Delta\volL(X_n),
+\]
+where $F_{S1}$ is the set of events failing S1 due to
+below-sufficiency (Proposition~\ref{prop:s1_sufficiency}).
+$\NAC$ measures the total benchmarked capability surrendered for
+need-satisfaction---purchasing power and time spent reaching
+baseline functionality rather than pursuing wants.
+
+$\NAC$ does \emph{not} enter
+Theorem~\ref{thm:aggregate_bound}'s aggregate lower bound or
+$\betaL$.  It is a separate diagnostic that tracks the cost side
+of the agent's capability budget.
+\end{definition}
+
+\begin{remark}[$\NAC$ is an upper bound on need-access cost]
+Because the whole-event filter sends the entire
+$\Delta\volL(X_n)$ of mixed need/want events into $\NAC$,
+$\NAC$ overestimates the true need-access cost by including any
+attached want-pursuit spend.  $\NAC$ should be read as an
+\emph{upper bound} on need-access cost, not a precise
+measurement.
+\end{remark}
+
+\begin{definition}[Need-Satisfaction Efficiency]
+\label{def:nse}
+For each need $N$ identified in the poset
+(Definition~\ref{def:need_bundle}) and each agent~$i$, the
+per-agent need-satisfaction efficiency is a triple:
+\[
+  \NSE(i, N) \;=\; (\mathrm{sufficiency\_status},\;
+  \mathrm{downstream\_safety},\; \mathrm{access\_cost}),
+\]
+where:
+\begin{itemize}
+\item $\mathrm{sufficiency\_status} \in
+  \{\text{below}, \text{met}, \text{exceeded}\}$;
+\item $\mathrm{downstream\_safety} \in
+  \{\text{safe}, \text{degrading}, \text{unknown}\}$;
+\item $\mathrm{access\_cost} = \sum \Delta\volL(X_n)$ for
+  below-sufficiency events by agent~$i$ targeting need~$N$.
+\end{itemize}
+The collective-level aggregate $\NSE(T)$ reports the distribution
+of (agent, need) pairs across sufficiency statuses and flags
+degrading pathways.
+\end{definition}
+
+\begin{remark}[Observability under commitment]
+When sacrifice events are committed
+(Section~\ref{sec:commitment}), per-agent $\NSE(i, N)$ is not
+recoverable.  The committed-mode fallback is a population-level
+proxy: $\NSE_{\mathrm{proxy}}(T)$ reports $\NAC(T)$ by need
+category and counts of below-sufficiency events.  Full $\NSE(T)$
+requires agents to voluntarily attest pathways or the framework to
+operate in non-committed mode.
+\end{remark}
+
+\begin{proposition}[Combined Diagnostic]
+\label{prop:combined_diagnostic}
+The framework reports the triple $(\volRlower, \NAC, \NSE)$ as a
+joint diagnostic:
+\begin{enumerate}
+\item[(a)] \textbf{High $\volRlower$ + low $\NAC$:} Healthy.
+  The collective exercises rich capabilities above sufficiency
+  and needs are cheap to meet.
+\item[(b)] \textbf{Low $\volRlower$ + high $\NAC$:} Proxy
+  failure on needs.  $\volL$ may be high, but agents are
+  spending most of their benchmarked capability budget on basic
+  need-satisfaction.  The sacrifice channel correctly excludes
+  these events (S1 fails), so the low $\volRlower$ accurately
+  reflects low above-sufficiency exercise.  $\NAC$ surfaces
+  \emph{why} $\volRlower$ is low.
+\item[(c)] \textbf{Low $\volRlower$ + low $\NAC$:} Dormancy,
+  residual, or theorem-inadmissible activity.  The gap
+  decomposition (Definition~\ref{def:gap_decomp}) distinguishes
+  dormant from residual.
+\item[(d)] \textbf{High $\volRlower$ + high $\NAC$:} Mixed
+  regime.  $\NSE$ distinguishes ``expensive but safe'' from
+  ``expensive and degrading.''
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Parallel structure, not nesting]
+The need-sufficiency diagnostic is parallel to the gap
+decomposition, not nested within it, but operates on different
+formal objects.  The gap decomposition is a \emph{capability
+partition}; $\NAC$ is an \emph{event aggregate}; $\NSE$ is a
+\emph{per-need state assessment}.  The two diagnostics cover
+complementary portions of the sacrifice event stream:
+S1-satisfying events (that also satisfy S0 and S2) enter the gap
+decomposition via Theorem~\ref{thm:aggregate_bound}; events
+failing S1 due to below-sufficiency enter $\NAC$.  Events failing
+S1 for non-need reasons (coercion, duress) are excluded from
+both diagnostics and constitute an undiagnosed event-stream
+residual.
+\end{remark}

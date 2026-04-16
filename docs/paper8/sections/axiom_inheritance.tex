@@ -1,0 +1,88 @@
+\section{Axiom Inheritance and the Non-Self-Balancing Finding}
+\label{sec:axiom_inheritance}
+
+Since $\volRlower$ is a lower bound on $\volR$, and $\volR =
+\volL$ restricted to the exercised sub-poset, the axiom
+inheritance analysis carries over from the earlier formulation
+with an additional layer: the lower bound itself is not a measure
+(it is a bound on a measure).
+
+\begin{theorem}[Axiom Inheritance for $\volRlower$]
+\label{thm:axiom_inheritance}
+Analyse each of the axioms M1--M6
+from~\citep[Proposition~1]{lasser2026poset} for $\volRlower$:
+
+\begin{description}
+\item[(M1) Non-negativity:] Satisfied.  $\volRlower$ is a sum of
+  non-negative terms ($\Delta\volL(X_n) \geq 0$ per event;
+  max-attribution preserves non-negativity).
+
+\item[(M2) Null empty set:] Satisfied.  With zero sacrifice
+  events, $\volRlower = 0$.
+
+\item[(M3) Monotonicity:] Satisfied within the observed subset.
+  Adding more sacrifice events covering a larger subset of $U$
+  weakly increases $\volRlower$
+  (Proposition~\ref{prop:monotone}).  However, M3 does \emph{not}
+  hold for the relationship between $\volL$ and $\volRlower$:
+  adding a benchmarked capability to the poset increases $\volL$
+  but does not affect $\volRlower$ unless that capability is
+  subsequently sacrificed.
+
+\item[(M4) Additivity under disjointness:] Satisfied for
+  poset-independent bundle categories
+  (Definition~\ref{def:category_partition}).
+
+\item[(M5) Non-triviality:] Satisfied conditionally.  A single
+  sacrifice event with $\Delta\volL(X) > 0$ produces
+  $\volRlower > 0$.
+
+\item[(M6) Superadditivity under independence:] Does \emph{not}
+  unconditionally hold.  Two distinct failures:
+  \begin{enumerate}
+  \item[(a)] \textbf{$\volR$ itself fails M6 (structural).}
+    $\volR = \volL$ restricted to the exercised sub-poset, and
+    merging two groups can change exercise indicators (one group
+    provides alternative pathways for the other's outputs, making
+    previously load-bearing capabilities dormant).  This failure
+    is about the \emph{measure} $\volR$, independent of the
+    observation mechanism.
+  \item[(b)] \textbf{$\volRlower$ fails M6 (observational).}
+    Merging two groups of sacrifice events can change
+    per-capability attributions.  This failure is about the
+    \emph{lower bound}, a weaker claim---a lower bound failing
+    superadditivity does not imply the underlying quantity fails
+    superadditivity.
+  \end{enumerate}
+\end{description}
+\end{theorem}
+
+\begin{corollary}[$\volR$ Is Not Self-Balancing]
+\label{cor:not_self_balancing}
+The self-balancing property does \emph{not} transfer from $\volL$
+to $\volR$.  This follows from failure~(a) above: $\volR$ as a
+measure does not satisfy M6 unconditionally, and M6 is
+load-bearing for the self-balancing theorem
+of~\citep[Theorem~1]{lasser2026poset}.
+
+The corollary does \emph{not} follow from $\volRlower$ failing M6
+alone---a lower bound failing measure axioms is unremarkable.
+The corollary requires the structural argument from~(a), which
+holds because merging groups can change exercise status.
+\end{corollary}
+
+This is the structural reason to use $\volR$ as a diagnostic
+rather than an objective.  An actor maximizing $\volR$ would lack
+the automatic diversity-preservation that makes $\volL$ safe.
+
+\begin{remark}[When M6 does hold for $\volRlower$]
+M6 holds for $\volRlower$ when the merged groups have sacrifice
+events in poset-independent bundle categories
+(Definition~\ref{def:category_partition})---each unbenchmarked
+capability appears in sacrifice events from only one group, and
+cross-group capabilities are poset-independent.  Under this
+non-redundancy condition, $\volRlower$ inherits M1--M6.  Even
+so, the self-balancing property transfers to $\volRlower$ only as
+a \emph{lower bound} on self-balancing---$\volRlower$ being
+self-balancing does not imply $\volR$ itself is self-balancing.
+\end{remark}

@@ -1,0 +1,320 @@
+\section{Need-Sufficiency Architecture}
+\label{sec:need_sufficiency}
+
+The revealed-sacrifice observation channel
+(Section~\ref{sec:sacrifice_model}) assumes all sacrifices have
+the same polarity: more sacrifice equals more revealed value.
+This is wrong for a class of sacrifices that are structurally
+involuntary.  An agent who pays \$500 for insulin is not revealing
+that insulin is worth \$500 beyond baseline---they are revealing
+that baseline functionality costs \$500 to maintain.  The sacrifice
+magnitude reveals \emph{cost-of-access} (how expensive it is for
+this agent to reach minimum viable functionality), not
+\emph{preference strength} (how much the agent values the outcome
+beyond baseline).  Larger sacrifice means a worse situation, not
+higher revealed value.
+
+The framework needs a structural requirement on poset
+construction---established before defining the measurement
+channel---that distinguishes need-satisfaction from want-pursuit
+and identifies the boundary where sacrifice polarity flips.
+
+\subsection{Three motivating observations}
+
+\paragraph{Needs are not purely minimizing.}
+Initial intuition suggests that needs should be minimized
+(minimize cost, distance, time-of-access).  An exhaustive check
+on basic needs (food, water, shelter, healthcare, mobility)
+reveals that every need has \emph{both} maximizing dimensions
+(quality, quantity, reliability) and minimizing dimensions (cost,
+distance, time).  Needs are not a single-polarity class.  What
+\emph{is} true: the cost dimensions of needs are where the
+polarity problem lives, because cost-of-access is involuntary.
+
+\paragraph{Scalar sufficiency hides structural defects.}
+A single ``water access: sufficient'' measurement hides that the
+water is contaminated.  The agent has water (passes the scalar
+threshold) but the way the need is met actively degrades future
+$\volL$ through downstream effects on health, cognition, and
+reproduction.  The framework reports green while the system
+corrodes from the root.
+
+\paragraph{The correct structure is downstream-safe bundle
+sufficiency.}
+Three levels of sufficiency, each strictly stronger:
+\begin{itemize}
+\item \emph{Level~1: Scalar threshold (insufficient).}
+  ``Water: yes/no.''  Hides quality, reliability, and cost
+  defects.
+\item \emph{Level~2: Bundle threshold (necessary but not
+  sufficient).}
+  All dimensions of the need must independently meet their
+  thresholds simultaneously.  Catches lead contamination (quality
+  dimension fails).  Misses subtler failures where the
+  satisfaction pathway degrades downstream capabilities over time.
+\item \emph{Level~3: Downstream-safe bundle (the correct
+  formulation).}
+  Bundle thresholds are all met \emph{and} the need-satisfaction
+  pathway does not produce net-negative effects on capabilities in
+  the need's downstream cone.
+\end{itemize}
+
+\subsection{Formal definitions}
+
+\begin{definition}[Multi-Dimensional Need Bundle]
+\label{def:need_bundle}
+A capability $N$ identified as a need at position $p_N$ in the
+poset has:
+\begin{itemize}
+\item \textbf{Dimensions} $\{d_1, \ldots, d_m\}$ with sufficiency
+  thresholds $\{s_1, \ldots, s_m\}$.
+\item Each dimension has a \textbf{polarity}: maximizing (quality,
+  quantity, reliability) or minimizing (cost, distance, time).
+\item \textbf{Downstream cone}
+  $\Down(p_N) = \{c : c \text{ depends on } N \text{ in the
+  poset}\}$.
+\item \textbf{Satisfaction pathway} $\pi_N$: the specific way the
+  agent meets the need (which source, at what quality, at what
+  cost).
+\end{itemize}
+For cost dimensions (minimizing polarity), the benchmark inverts
+the natural direction: $\mathrm{actual}_k = 1 / \mathrm{cost}_k$,
+with sufficiency at $s_k = 1 / \mathrm{max\_acceptable\_cost}$,
+so that benchmark maximization aligns with cost minimization.
+\end{definition}
+
+\begin{definition}[Downstream-Safe Sufficiency]
+\label{def:downstream_safe}
+Need $N$ at position $p_N$ is \emph{downstream-safe sufficient}
+under satisfaction pathway $\pi_N$ iff:
+\begin{enumerate}
+\item[(a)] \textbf{Bundle thresholds met:}
+  $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
+  dimensions inverted per Definition~\ref{def:need_bundle}).
+\item[(b)] \textbf{Downstream non-degradation:} For every
+  capability $c \in \Down(p_N)$, the quality of $c$ under the
+  actual satisfaction pathway $\pi_N$ is at least as high as the
+  threshold-reference quality $q_N^0(c)$:
+  \[
+    \mathrm{quality}_c(\text{with } N \text{ satisfied via }
+    \pi_N) \;\geq\; q_N^0(c),
+  \]
+  where $q_N^0(c)$ is the pointwise threshold-reference quality
+  defined below.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Threshold-Reference Quality]
+\label{def:threshold_ref}
+Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
+the class of pathways satisfying each dimension of~$N$ at exactly
+its sufficiency threshold.
+
+\emph{Preconditions:} (i)~$\Pi_N^0$ is nonempty---at least one
+pathway exists that satisfies every dimension at exactly the
+threshold level.  (ii)~For each $c \in \Down(p_N)$, the function
+$\pi \mapsto \mathrm{quality}_c(\text{with } N \text{ satisfied
+via } \pi, \text{ all other inputs held fixed})$ is bounded above
+on $\Pi_N^0$, so the supremum exists in $\mathbb{R}$.
+
+For each downstream capability $c \in \Down(p_N)$:
+\[
+  q_N^0(c) \;=\; \sup_{\pi \in \Pi_N^0}
+  \mathrm{quality}_c(\text{with } N \text{ satisfied via } \pi).
+\]
+The pointwise supremum avoids requiring a single pathway that
+simultaneously maximizes downstream quality for all
+$c \in \Down(p_N)$.  $q_N^0(c)$ is a \emph{definitional
+construct}, not an observed quantity---it serves as the most
+favourable threshold-level baseline for each downstream capability
+separately.
+\end{definition}
+
+\begin{remark}[Connection to exercise-pathway machinery]
+\label{rem:exercise_pathway}
+The need-satisfaction pathway $\pi_N$ is structurally an exercise
+pathway in the sense
+of~\citep[Definition~2]{lasser2026horizon}.  The downstream
+$\Delta\volL$ of the pathway is evaluable using the
+concentration-risk apparatus
+of~\citep{lasser2026horizon}.  Contaminated water as a
+need-satisfaction pathway is a pathway with negative downstream
+$\Delta\volL$ on health-dependent capabilities.  The framework
+should detect pathological need-satisfaction the same way it
+detects risk claims: via exercise-pathway contraction analysis.
+The distinction from risk claims is that need-satisfaction pathways
+are not ``optional''---the agent must satisfy the need---so the
+framework's response is ``find a better satisfaction pathway''
+rather than ``restrict the capability.''
+\end{remark}
+
+\begin{definition}[Sufficiency Threshold as Polarity Boundary]
+\label{def:polarity_boundary}
+The sufficiency bundle is the structural boundary where
+revealed-sacrifice polarity flips:
+\begin{itemize}
+\item \textbf{Below sufficiency on any dimension:} The agent is
+  investing to reach minimum viable functionality.  Sacrifice is
+  involuntary (the agent must reach sufficiency to operate).
+  Sacrifice magnitude reveals \textbf{cost-of-access}---how
+  expensive it is for this agent to reach baseline on this
+  dimension.  Larger sacrifice = worse situation.
+\item \textbf{Above sufficiency on all dimensions:} The agent has
+  reached functionality and is choosing to invest further.
+  Sacrifice is voluntary (the agent could stop at ``good
+  enough'').  Sacrifice magnitude reveals \textbf{preference
+  strength}---how much the agent values improvement beyond
+  baseline.  Larger sacrifice = higher revealed value.
+\end{itemize}
+The sufficiency threshold is where the need-insufficiency failure
+mode of Assumption~S1 (Section~\ref{sec:sacrifice_model}) is
+removed: below sufficiency, S1 fails because retaining the
+sacrificed capability is not a non-degrading alternative; above
+sufficiency, this specific failure mode does not apply (though S1
+can still fail via other mechanisms---see
+Proposition~\ref{prop:s1_sufficiency}, Remark).
+\end{definition}
+
+\begin{definition}[Polarity-Correct Benchmark]
+\label{def:polarity_benchmark}
+For each dimension $d_k$ of a need capability:
+\begin{itemize}
+\item \textbf{Below sufficiency:}
+  $\mathrm{benchmark}_k = \min(\mathrm{actual}_k / s_k,\, 1)$.
+  Climbs from $0$ toward $1$ as the agent approaches sufficiency.
+  Caps at $1$.  Maximizing this equals closing the sufficiency
+  gap.
+\item \textbf{Above sufficiency:}
+  $\mathrm{benchmark}_k = 1 + \alpha_k \cdot
+  \max\!\bigl((\mathrm{actual}_k - s_k)/s_k,\, 0\bigr)$,
+  where $\alpha_k < 1$ discounts above-sufficiency gains relative
+  to below-sufficiency gains.  This makes closing the sufficiency
+  gap more valuable per unit of improvement than enhancing beyond
+  sufficiency---the correct incentive structure for needs.
+\end{itemize}
+\end{definition}
+
+\subsection{Structural propositions}
+
+\begin{proposition}[Anti-Stuffing]
+\label{prop:anti_stuffing}
+Under downstream-safe bundle sufficiency
+(Definition~\ref{def:downstream_safe}), redundant capability
+measurements---e.g., ``distance from $A$ to gas station,''
+``distance from $B$ to gas station,'' measuring the same need
+from different vantage points---provide no downstream-quality
+improvement.  Once the bundle is sufficient, the
+below-sufficiency benchmark caps at $1$
+(Definition~\ref{def:polarity_benchmark}), and the
+above-sufficiency component credits only genuine quality
+improvement (cheaper fuel, faster access), not re-measurement
+from different positions.  The bundle structure plus
+downstream-safety naturally resists stuffing without a separate
+anti-stuffing mechanism.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Under Definition~\ref{def:downstream_safe}, sufficiency is a
+property of the \emph{bundle} (all dimensions simultaneously),
+not of individual measurements.  A stuffed measurement
+contributes to a dimension already at or above threshold.  By
+the capping discipline (Definition~\ref{def:polarity_benchmark}),
+its below-sufficiency benchmark is
+$\min(\mathrm{actual}/\mathrm{threshold}, 1) = 1$.  Its
+above-sufficiency benchmark provides credit only if
+$\mathrm{actual}_k$ genuinely exceeds the threshold, which
+re-measurement from a different position does not achieve.
+Downstream non-degradation
+(Definition~\ref{def:downstream_safe}(b)) is unaffected because
+the satisfaction pathway is unchanged.
+\end{proof}
+
+\begin{proposition}[S1--Sufficiency Connection]
+\label{prop:s1_sufficiency}
+Below-sufficiency sacrifices fail Assumption~S1 (free choice,
+Section~\ref{sec:sacrifice_model}).  S1 requires that retaining
+the sacrificed capability $X_n$ was a \emph{non-degrading}
+alternative---one that would not leave the agent below minimum
+viable functionality on any need dimension.  For an agent whose
+capability level on dimension $d_k$ is below the sufficiency
+threshold $s_k$, retaining $X_n$ (not making the trade) leaves
+the agent below functionality on $d_k$.  This is not a
+non-degrading alternative per S1's definition, so S1 fails for
+that event.
+\end{proposition}
+
+\noindent\textbf{Consequence for the sacrifice channel.}
+Below-sufficiency events are filtered from the revealed-sacrifice
+aggregate by S1 before they reach the aggregate lower bound
+(Theorem~\ref{thm:aggregate_bound}).  The sacrifice channel
+operates only over events where S1 holds.  For above-sufficiency
+(want-pursuit) events, the need-insufficiency failure mode of S1
+is removed.  S1 may still fail for above-sufficiency events via
+other mechanisms (coercion, duress---see
+Remark~\ref{rem:s1_above} below).
+
+\begin{remark}[S1 is not automatically satisfied above
+sufficiency]
+\label{rem:s1_above}
+S1 can still fail for above-sufficiency events if the trade was
+coerced by other mechanisms (economic duress, political pressure,
+information asymmetry) even though the need-sufficiency condition
+is met.  The sufficiency threshold resolves one structural failure
+mode of S1 (the involuntary-need-satisfaction case); other S1
+failure modes (Open Question~\ref{oq:coercion},
+Section~\ref{sec:discussion}) remain.
+\end{remark}
+
+\begin{proof}[Proof sketch of
+Proposition~\ref{prop:s1_sufficiency}]
+Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
+agent~$i$'s capability level on need dimension $d_k$ would fall
+below the sufficiency threshold $s_k$.  Agent~$i$ must reach $s_k$
+on $d_k$ to maintain functionality.  The alternative of retaining
+$X$ (not making the trade) leaves the agent below functionality on
+$d_k$.  By S1's non-degrading alternative requirement, retaining
+$X$ must not cause the agent to fall below minimum viable
+functionality.  But retaining $X$ in this case does exactly that.
+Therefore S1 fails for this event, and the event does not enter
+the sacrifice aggregate.
+\end{proof}
+
+\subsection{How sufficiency thresholds are set}
+\label{sec:threshold_setting}
+
+Four mechanisms, not mutually exclusive:
+
+\paragraph{(a) Poset-structural.}
+Capabilities with high fan-out (many downstream dependents) have
+their sufficiency level set by the minimum required for downstream
+capabilities to function.  Computable from poset topology.
+
+\paragraph{(b) Empirical / cross-sectional.}
+Observe the population's actual capability levels and identify the
+threshold below which agents demonstrably cease functioning on
+downstream capabilities.
+
+\paragraph{(c) Revealed-sacrifice-derived.}
+Sufficiency is the level at which sacrifice polarity flips.
+Below sufficiency, sacrifice is involuntary and increasing; above
+sufficiency, sacrifice becomes voluntary and choice-driven.  The
+transition point in the sacrifice data identifies the threshold
+empirically.  This is the most framework-native option but has a
+bootstrap problem: identifying the threshold requires classifying
+events, but classifying events requires the threshold.
+Resolution: start with structural/normative thresholds
+(mechanisms~(a) and~(d)), refine using sacrifice data.
+
+\paragraph{(d) Normative / external.}
+A human authority or governance process declares sufficiency
+levels.  This is the approach of~\citet{sen1999development}
+and~\citet{nussbaum2011creating}.  The framework's formal
+apparatus is agnostic to the source; it needs the thresholds as
+input.
+
+\medskip\noindent
+\textbf{Primary mechanism:} (c) with~(a) as structural
+validation.  The revealed-sacrifice data shows where the
+transition from involuntary to voluntary sacrifice occurs; the
+poset topology confirms the transition corresponds to a
+structurally meaningful threshold.

@@ -1,0 +1,44 @@
+\section{The Exercise Indicator (Supplementary)}
+\label{app:exercise_indicator}
+
+\subsection{Scope limitation}
+
+The exercise indicator from the prior formulation is retained as a
+\emph{supplementary} measurement tool, applicable only where
+interior access is legitimate---specifically, within the
+collective's own operational perimeter where no privacy issue
+arises (e.g., the framework measuring the exercise status of its
+own internal components, or a cooperative measurement within a
+consenting sub-collective).
+
+\begin{definition}[Exercise Indicator, Internal Perimeter]
+\label{def:exercise_indicator}
+Let $G$ be a capability collective operating within an
+agreed-upon observation perimeter $O \subseteq P$.  For each
+capability $d \in O$, define:
+\[
+  e_t(d) = \begin{cases}
+  1 & \text{if there exists a realized cooperative output in
+    $[t - \Delta, t]$} \\
+    & \text{such that removing $d$ from $O$ makes the output
+      unrealizable,} \\
+  0 & \text{otherwise.}
+  \end{cases}
+\]
+The indicator is scoped to the observation perimeter $O$.  The
+framework may use $e_t(d)$ for internal diagnostics within $O$,
+but may \emph{not} apply it to capabilities outside $O$ (where
+privacy constraints apply).
+\end{definition}
+
+\begin{remark}[The two channels are complementary]
+Within the perimeter $O$, the exercise indicator provides exact
+exercise status ($e_t(d) \in \{0, 1\}$).  Outside $O$, the
+sacrifice channel provides a lower bound.  The aggregate $\volR$
+diagnostic combines both:
+\[
+  \volRcomb = \volRexact(O) + \volRlower(P \setminus O),
+\]
+where $\volRexact(O)$ uses the exercise indicator and
+$\volRlower(P \setminus O)$ uses the sacrifice channel.
+\end{remark}

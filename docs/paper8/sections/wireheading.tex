@@ -1,0 +1,73 @@
+\section{Wireheading Detection via Trade-Flow Concentration}
+\label{sec:wireheading}
+
+Wireheading produces high $\betaL$ with degenerate exercise: the
+collective exercises capabilities, but only in narrow
+self-reinforcing loops.  Under the sacrifice-based observation
+model, the wireheading signature appears as \emph{trade-flow
+concentration}: the collective's sacrifice events cluster in a
+narrow category of unbenchmarked bundles, rather than distributing
+across the capability space.
+
+\begin{definition}[Trade-Flow Leverage]
+\label{def:trade_leverage}
+The trade-flow leverage of bundle category $c$ at time $T$ is:
+\[
+  \lambda_{\mathrm{trade}}(c, T) \;=\;
+  \volRlower(c, T) \;/\; \volRlower(G, T).
+\]
+Under healthy trade diversity, leverage is distributed across many
+categories.  Under wireheading, leverage concentrates on the loop
+drivers.
+\end{definition}
+
+\begin{proposition}[Wireheading Detection via Trade-Flow
+Concentration]
+\label{prop:wireheading_hhi}
+If the Herfindahl--Hirschman Index~\citep{rhoades1993herfindahl}
+of trade-flow leverage exceeds a threshold:
+\[
+  \HHI(\lambda_{\mathrm{trade}}) \;=\;
+  \sum_{c} \lambda_{\mathrm{trade}}(c)^2 \;>\; \HHI_{\mathrm{alarm}},
+\]
+then the sacrifice pattern is consistent with wireheading: a small
+number of bundle categories dominate the aggregate lower bound,
+indicating that the collective's value-expression is concentrated
+rather than distributed.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Under uniform trade diversity (every category equally represented),
+$\HHI = 1/|\mathrm{categories}| \to 0$ as the category space
+grows.  Under wireheading ($k$ loop-driver categories dominate),
+$\HHI \geq 1/k$.  The threshold $\HHI_{\mathrm{alarm}}$ is a
+tunable alarm parameter; the full paper should derive a principled
+threshold from the framework's tolerance for concentration risk or
+present $\HHI_{\mathrm{alarm}}$ as a configurable governance
+parameter.
+\end{proof}
+
+\begin{remark}[Advantage over structural counterfactual]
+The prior formulation detected wireheading via exercise-leverage
+concentration, which required computing the marginal $\volR$
+contribution of each capability---a counterfactual query.  The
+trade-flow formulation detects the same pathology via $\HHI$ on
+observed trade data, requiring no counterfactual computation.
+The diagnostic is strictly more tractable.
+\end{remark}
+
+\begin{proposition}[Third-Party Observability of Wireheading
+Signal]
+\label{prop:third_party_wireheading}
+The trade-flow $\HHI$ is computable from public trade data
+(committed sacrifice events,
+Definition~\ref{def:committed_event}) without access to any
+agent's private state.  A third-party auditor with access only to
+the committed sacrifice ledger can compute
+$\HHI(\lambda_{\mathrm{trade}})$ and raise the wireheading alarm.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Committed events reveal $\catY[_n]$ and $\Delta\volL(X_n)$.
+These are the only inputs to the $\HHI$ computation.
+\end{proof}
