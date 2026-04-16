@@ -136,7 +136,7 @@ Phase~1):
   For $\thetaone$ close to $1$, small $\beta$, and modest
   $\pR(0)$, $\delta_{\min}$ is small (e.g.,
   $\pR(0) = 0.5$, $\Lone = 100$ gives $\delta_{\min} \approx
-  0.02$); for tighter $\delta$ requirements, the expected number
+  0.01$); for tighter $\delta$ requirements, the expected number
   of tests grows as $O\bigl(1 / [\thetaone (1 - \beta)]\bigr)$.
 \item[(d)] \textbf{General convergence rate (KL form).}  The
   log-posterior converges at a rate given by the KL divergence
@@ -325,17 +325,14 @@ assumes $p_{\mathrm{ex}} = 0.4$ but the true value is $0.05$,
 most tests produce non-exercise null events, and a meta-policy
 that uses the modelled likelihoods will conclude the capability
 is cleared when the test scope never actually activated the
-pathway.  Upward misspecification is a detectable failure mode:
-the observed exercise frequency over a sequence of tests will
-fall systematically below the modelled $p_{\mathrm{ex}}$, and
-the meta-policy of Section~\ref{sec:meta_policy} must treat
-that gap as a test-design failure rather than a cleared claim.
-Operationally, the meta-policy should track an empirical
-$\hat{p}_{\mathrm{ex}}$ from observed exercise events and
-reject the test sequence when $\hat{p}_{\mathrm{ex}}$ falls
-below the modelled $p_{\mathrm{ex}}$ by a configured
-tolerance, returning the restriction to its prior state with
-the test outcomes discarded.
+pathway.  Upward misspecification is a detectable failure mode: the
+observed exercise frequency over a sequence of tests falls
+systematically below the modelled $p_{\mathrm{ex}}$.  The
+meta-policy of Section~\ref{sec:meta_policy} treats that gap as
+a test-design failure (Definition~\ref{def:test_initiation},
+criterion~(v)): the running $\hat{p}_{\mathrm{ex}}$ is tracked
+against the modelled $p_{\mathrm{ex}}$ and the test sequence is
+rejected when the gap exceeds a configured tolerance.
 \end{remark}
 
 \begin{corollary}[EWMA-Risk-Trust Convergence]

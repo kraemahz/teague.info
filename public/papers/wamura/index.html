@@ -1704,7 +1704,7 @@ class="math inline">p_R(0)</span>, <span
 class="math inline">\delta_{\min}</span> is small (e.g., <span
 class="math inline">p_R(0) = 0.5</span>, <span class="math inline">L_1=
 100</span> gives <span class="math inline">\delta_{\min} \approx
-  0.02</span>); for tighter <span class="math inline">\delta</span>
+  0.01</span>); for tighter <span class="math inline">\delta</span>
 requirements, the expected number of tests grows as <span
 class="math inline">O\bigl(1 / [\theta_1(1 -
 \beta)]\bigr)</span>.</em></p></li>
@@ -2003,18 +2003,17 @@ most tests produce non-exercise null events, and a meta-policy that uses
 the modelled likelihoods will conclude the capability is cleared when
 the test scope never actually activated the pathway. Upward
 misspecification is a detectable failure mode: the observed exercise
-frequency over a sequence of tests will fall systematically below the
-modelled <span class="math inline">p_{\mathrm{ex}}</span>, and the
+frequency over a sequence of tests falls systematically below the
+modelled <span class="math inline">p_{\mathrm{ex}}</span>. The
 meta-policy of Section <a href="#sec:meta_policy"
-data-reference-type="ref" data-reference="sec:meta_policy">7</a> must
-treat that gap as a test-design failure rather than a cleared claim.
-Operationally, the meta-policy should track an empirical <span
-class="math inline">\hat{p}_{\mathrm{ex}}</span> from observed exercise
-events and reject the test sequence when <span
-class="math inline">\hat{p}_{\mathrm{ex}}</span> falls below the
-modelled <span class="math inline">p_{\mathrm{ex}}</span> by a
-configured tolerance, returning the restriction to its prior state with
-the test outcomes discarded.</em></p>
+data-reference-type="ref" data-reference="sec:meta_policy">7</a> treats
+that gap as a test-design failure (Definition <a
+href="#def:test_initiation" data-reference-type="ref"
+data-reference="def:test_initiation">6</a>, criterion (v)): the running
+<span class="math inline">\hat{p}_{\mathrm{ex}}</span> is tracked
+against the modelled <span class="math inline">p_{\mathrm{ex}}</span>
+and the test sequence is rejected when the gap exceeds a configured
+tolerance.</em></p>
 </div>
 <div id="cor:ewma" class="corollary">
 <p><strong>Corollary 4</strong> (EWMA-Risk-Trust Convergence). <em>When
