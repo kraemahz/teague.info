@@ -312,9 +312,11 @@ polarity flips:
   **preference strength** -- how much the agent values improvement beyond
   baseline. Larger sacrifice = higher revealed value.
 
-The sufficiency threshold is where the free-choice assumption S1 (Section 3)
-transitions from structurally violated (below) to structurally satisfied
-(above). See Proposition 2B.
+The sufficiency threshold is where the need-insufficiency failure mode of
+S1 (Section 3) is removed: below sufficiency, S1 fails because retaining
+X_n is not a non-degrading alternative; above sufficiency, this specific
+failure mode does not apply (though S1 can still fail via other mechanisms
+-- see Proposition 2B, Remark).
 
 **Definition 2D (Polarity-Correct Benchmark).** For each dimension d_k of
 a need capability:
@@ -369,11 +371,12 @@ S1's definition, so S1 fails for that event.
 **Consequence for the sacrifice channel:** Below-sufficiency events are
 filtered from the revealed-sacrifice aggregate by S1 before they reach
 Theorem 2 (Section 4). The sacrifice channel operates only over events
-where S1 holds -- events where all need dimensions of the acquired
-bundle are at or above sufficiency, so that retaining X_n was a genuinely
-non-degrading option. For above-sufficiency (want-pursuit) events, S1's
-non-degrading alternative condition is satisfied: the agent could have
-retained X_n without falling below functionality on any dimension.
+where S1 holds. For above-sufficiency (want-pursuit) events, the
+need-insufficiency failure mode of S1 is removed: the agent could have
+retained X_n without falling below functionality on any need dimension.
+S1 may still fail for above-sufficiency events via other mechanisms
+(coercion, duress -- see Remark below), but the need-based structural
+failure is resolved.
 
 **Remark (S1 is not automatically satisfied above sufficiency).** S1
 can still fail for above-sufficiency events if the trade was coerced
@@ -383,15 +386,35 @@ sufficiency threshold resolves one structural failure mode of S1 (the
 involuntary-need-satisfaction case); other S1 failure modes (Open
 Question 3, coerced sacrifice) remain.
 
-*Proof sketch:* Let (i, X, Y, t) be a sacrifice event where Y includes a
-need bundle whose level on dimension d_k is below the sufficiency threshold
-s_k. Agent i must reach s_k on d_k to maintain functionality. The
-alternative of retaining X (not making the trade) leaves the agent below
-functionality on d_k. By S1's non-degrading alternative requirement,
-retaining X must not cause the agent to fall below minimum viable
-functionality. But retaining X in this case does exactly that. Therefore
-S1 fails for this event, and the event does not enter the sacrifice
-aggregate.
+**Event-local state assumption.** The S1 filter operationalizes "retaining
+X_n would leave the agent below functionality" as "the acquired bundle
+Y_n has a need dimension below the sufficiency threshold." These are
+equivalent under the assumption that the agent's need state on the
+relevant dimension depends on *this specific trade* -- i.e., without
+this trade, the agent's capability on d_k would be below s_k. This
+holds for first-acquisition events (the agent has no prior stock of
+the need good) and for non-substitutable needs (no alternative
+satisfaction pathway exists). It can over-filter *maintenance* or
+*top-up* events where the agent's stock-on-hand already exceeds s_k
+and the trade merely replenishes. The over-filtering is conservative:
+maintenance events excluded from the sacrifice aggregate do not
+inflate vol_R^lower (the bound remains valid); they do inflate NAC
+(see Proposition 7A remark on NAC as upper bound). The full paper
+should formalize the event-local state condition: S1 fails for event
+(i, X, Y, t) iff the agent's *counterfactual* capability level on
+some need dimension d_k, had the trade not occurred, would have
+fallen below s_k.
+
+*Proof sketch:* Let (i, X, Y, t) be a sacrifice event where, absent
+this trade, agent i's capability level on need dimension d_k would
+fall below the sufficiency threshold s_k (the event-local state
+condition). Agent i must reach s_k on d_k to maintain functionality.
+The alternative of retaining X (not making the trade) leaves the agent
+below functionality on d_k. By S1's non-degrading alternative
+requirement, retaining X must not cause the agent to fall below
+minimum viable functionality. But retaining X in this case does exactly
+that. Therefore S1 fails for this event, and the event does not enter
+the sacrifice aggregate.
 
 ### How sufficiency thresholds are set
 
@@ -1041,7 +1064,12 @@ the framework makes about the trade environment, not properties the
 commitment protocol can enforce.
 
 Partial mitigations:
-- S1: the framework can verify that the agent had observable alternatives.
+- S1: the framework can verify that the agent had observable alternatives
+  (the voluntariness component). However, the strengthened non-degrading
+  condition (retaining X_n would not leave the agent below functionality)
+  depends on the agent's counterfactual need state, which is not directly
+  observable or ZK-verifiable. The need-sufficiency filter is a structural
+  assumption, not a verifiable property.
 - S0: population-level aggregation smooths individual overvaluation errors
   (see Open Question 6).
 - S4(a): Theorem 2 Part A (poset-independent bundles) does not require
@@ -1502,6 +1530,19 @@ a separate diagnostic that tracks the cost side of the agent's capability
 budget: how much of their benchmarked capability goes to meeting needs
 versus pursuing wants.
 
+**Remark (NAC is an upper bound on need-access cost).** Because the
+whole-event filter sends the entire Delta_vol_P(X_n) of mixed need/want
+events into NAC (see Remark on mixed need/want events below), NAC
+overestimates the true need-access cost by including any attached
+want-pursuit spend. NAC should therefore be read as an *upper bound* on
+need-access cost, not as a precise measurement. The overestimation is
+conservative for the sacrifice channel (the excluded events' want-pursuit
+signal is lost, making vol_R^lower more conservative) but means the
+combined diagnostic (Proposition 7A) should interpret high NAC as "at
+most this much was spent on needs" rather than "exactly this much was
+spent on needs." A refined NAC that splits mixed events (deferred to
+the full paper) would be tighter.
+
 **Remark (mixed need/want events).** A single sacrifice event may acquire
 a bundle Y that includes both below-sufficiency need components and
 above-sufficiency want components (e.g., purchasing a meal that satisfies
@@ -1520,7 +1561,7 @@ conservative default.
 
 **Remark (multi-need attribution).** When a single below-sufficiency event
 targets multiple needs (e.g., grocery shopping satisfying both nutrition
-and social access), the per-need access_cost in NSE (Definition 14) can
+and social access), the per-need access_cost in NSE (Definition 10B) can
 use equal-weight attribution across the targeted needs, paralleling the
 equal-weight fallback in Definition 3 for bundle decomposition. A more
 refined attribution requires need-specific hedonic decomposition, which
@@ -1572,9 +1613,9 @@ of needs across the three sufficiency statuses and flags degrading pathways.
 is parallel to the gap decomposition, not nested within it, but operates
 on different formal objects. The gap decomposition (Definition 10) is a
 *capability partition*: every capability in P is assigned to exactly one
-category. NAC (Definition 13) is an *event aggregate*: the total
+category. NAC (Definition 10A) is an *event aggregate*: the total
 benchmarked capability surrendered in below-sufficiency events. NSE
-(Definition 14) is a *per-need state assessment*: a triple reporting
+(Definition 10B) is a *per-need state assessment*: a triple reporting
 sufficiency status, downstream safety, and access cost for each identified
 need. The parallelism holds at the *diagnostic-reporting* level: the
 framework reports the gap decomposition (how well the want-pursuit space
