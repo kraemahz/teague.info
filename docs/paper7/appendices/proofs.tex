@@ -198,20 +198,22 @@ Let $p_\tau = \Pr(\text{miss in single window of length } \tau
 \mid A_n = 1)$.  Under Assumptions~\ref{ass:D0}--\ref{ass:D2}
 with persistent activation, the window decomposes into
 $\tau / \testmix$ independent opportunities (exact if
-$\testmix = 1$, upper-bound if $\testmix > 1$).  The
-upper-bound direction in the $\testmix > 1$ case requires that
-the temporal-mixing process satisfy a monotone-coupling
-property: detector misses at temporally adjacent steps are
-positively correlated, so partitioning into $\tau/\testmix$
-independent blocks under-estimates rather than over-estimates
-the joint miss probability.  For cross-substrate channels this
-follows unconditionally from the channel-isolation result
-of~\citep[Proposition~5]{lasser2026exo}; for same-substrate
-channels under the temporal-independence form of
-Assumption~\ref{ass:D2}(a), the property is equivalent to
-positive association of the per-step detection indicator,
-which holds whenever the detector is monotone in its input
-signal (the standard case).  Each opportunity misses with
+$\testmix = 1$, upper-bound if $\testmix > 1$).  Under
+Assumption~\ref{ass:D2}(a) (memoryless detectors, $\testmix = 1$)
+the per-step indicators are independent and the formula is
+exact, not an upper bound.  The upper-bound direction in the
+$\testmix > 1$ case
+(Assumption~\ref{ass:D2}(b), mixing) requires that the
+temporal-mixing process satisfy a monotone-coupling property:
+detector misses at temporally adjacent steps are positively
+correlated, so partitioning into $\tau/\testmix$ independent
+blocks under-estimates rather than over-estimates the joint
+miss probability.  This positive-association property is
+standard for monotone functions of an underlying mixing process
+(Esary--Proschan--Walkup-style positive association of
+threshold detectors, holding whenever the detector indicator is
+monotone in its input signal---the standard case for
+threshold-based detection).  Each opportunity misses with
 probability $1 - \deltaagg$.  Hence
 $p_\tau \leq (1 - \deltaagg)^{\tau/\testmix}$, decreasing in
 $\tau$.

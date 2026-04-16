@@ -192,15 +192,20 @@ formulation handles transient pathways via
 $\beta(\testdur) = (1 - \deltaagg)^{\min(k, \testdur)}$ where
 $k$ is the pathway duration, but if $k = 1$ then
 $\beta = 1 - \deltaagg$ may be non-negligible.  An operational
-composition rule fixes the design parameter: for a target
-window false-negative rate $\epsilon_\beta$ and a known (or
-upper-bounded) pathway duration $k$, the per-step detection
+composition rule fixes the design parameter.  Under the
+memoryless detector regime of Assumption~\ref{ass:D2}(a), for a
+target window false-negative rate $\epsilon_\beta$ and a known
+(or upper-bounded) pathway duration $k$, the per-step detection
 probability $\deltaagg$ during the test must satisfy
 $(1 - \deltaagg)^k \leq \epsilon_\beta$, i.e.,
 $\deltaagg \geq 1 - \epsilon_\beta^{1/k}$.  For $k = 1$ this
 collapses to $\deltaagg \geq 1 - \epsilon_\beta$ (the
 single-step detector must itself meet the target); for larger
-$k$ the requirement softens proportionally.  Implementations
+$k$ the requirement softens proportionally.  Under the mixing
+regime~\ref{ass:D2}(b), the effective number of independent
+detection opportunities in $k$ steps is $k/\testmix$, and the
+rule strengthens to $\deltaagg \geq 1 - \epsilon_\beta^{\testmix/k}$;
+recover memoryless as $\testmix \to 1$.  Implementations
 that cannot raise $\deltaagg$ at fixed $\testdur$ must either
 extend the test window (use the persistent-activation form
 with longer $\testdur$) or raise the detector sampling rate
@@ -232,13 +237,17 @@ invitation for an adversary---an incumbent, a regulator, or a
 rent-seeker---to manufacture risk claims that lock competitor
 capabilities for the duration of test scheduling and execution,
 even if the asymptotic trust dynamics eventually correct.  The
-total $\volL$ lost to adversarial claims before
-trust-weight downweighting takes effect is bounded above by
+peak instantaneous $\volL$ locked by concurrently-active
+adversarial claims is bounded above by
+$|\Delta \volL(\Xirestrict)| \cdot N_{\mathrm{adv}}$, and the
+total \emph{capability-loss exposure} ($\volL$ integrated over
+time) attributable to the adversarial claims before trust-weight
+downweighting takes effect is bounded above by
 $|\Delta \volL(\Xirestrict)| \cdot N_{\mathrm{adv}} \cdot
 (T_{\mathrm{stale}} + \testdur)$, where $N_{\mathrm{adv}}$ is
 the number of adversarial claims the trust dynamics absorb
 before downweighting and $T_{\mathrm{stale}} + \testdur$ is the
-window each claim ties up the targeted capability.  In
+per-claim duration each ties up the targeted capability.  In
 contested commercial or strategic settings where adversarial
 claim manufacture is plausible, this bound is the correct
 deployment guard: the protocol should not be deployed without

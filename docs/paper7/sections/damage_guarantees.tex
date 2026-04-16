@@ -241,8 +241,13 @@ Direct.  By assumption $\maxcon(\scope) \leq
 \maxcon^\star(\scope) \leq \damagebound$, so
 Theorem~\ref{thm:damage_bound}(a)'s inequality $\volL(G_{t'})
 \geq \volL(G_t) - \maxcon(\scope) \geq \volL(G_t) -
-\damagebound$ holds.  Parts~(b) and~(c) follow analogously
-since the cooperative-surface terms in
-Definition~\ref{def:test_scope}(ii) are upper-bounded by
-$\maxcon^\star(\scope)$.
+\damagebound$ holds.  Part~(b) inherits because
+the irreversibility bound
+$\deltairrev^{\max} \leq \damagebound$ of
+Definition~\ref{def:test_scope}(iii) is a pathway-level
+condition unaffected by the maxcon over-approximation.
+Part~(c) inherits because cooperative-surface contractions are
+included inside $\maxcon$ by construction
+(Definition~\ref{def:test_scope}(ii)) and
+$\maxcon \leq \maxcon^\star \leq \damagebound$.
 \end{proof}

@@ -1257,11 +1257,17 @@ class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_{t&#39;})
 \geq {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t) -
 \mathrm{max\_contraction}(S) \geq
 {\mathop{\mathrm{vol}}_{\mathrm{P}}}(G_t) -
-\epsilon</span> holds. Parts (b) and (c) follow analogously since the
-cooperative-surface terms in Definition <a href="#def:test_scope"
-data-reference-type="ref" data-reference="def:test_scope">4</a>(ii) are
-upper-bounded by <span
-class="math inline">\mathrm{max\_contraction}^\star(S)</span>. </p>
+\epsilon</span> holds. Part (b) inherits because the irreversibility
+bound <span class="math inline">\delta_{\mathrm{irrev}}^{\max} \leq
+\epsilon</span> of Definition <a href="#def:test_scope"
+data-reference-type="ref" data-reference="def:test_scope">4</a>(iii) is
+a pathway-level condition unaffected by the maxcon over-approximation.
+Part (c) inherits because cooperative-surface contractions are included
+inside <span class="math inline">\mathrm{max\_contraction}</span> by
+construction (Definition <a href="#def:test_scope"
+data-reference-type="ref" data-reference="def:test_scope">4</a>(ii)) and
+<span class="math inline">\mathrm{max\_contraction}\leq
+\mathrm{max\_contraction}^\star \leq \epsilon</span>. </p>
 </div>
 <h1 id="sec:detection_sensitivity">Detection Sensitivity and the
 Bayesian Update</h1>
@@ -1909,7 +1915,7 @@ class="math inline">N_{\mathrm{clear}}</span></em></th>
 <td style="text-align: center;"><em>0.90</em></td>
 <td style="text-align: center;"><em>0.01</em></td>
 <td style="text-align: center;"><em>0.101</em></td>
-<td style="text-align: center;"><em>4</em></td>
+<td style="text-align: center;"><em>3</em></td>
 </tr>
 <tr>
 <td style="text-align: center;"><em>0.01</em></td>
@@ -3148,10 +3154,13 @@ class="math inline">\beta(\tau_{\mathrm{test}}) = (1 -
 <span class="math inline">k</span> is the pathway duration, but if <span
 class="math inline">k = 1</span> then <span class="math inline">\beta =
 1 - \delta_{\mathrm{agg}}</span> may be non-negligible. An operational
-composition rule fixes the design parameter: for a target window
-false-negative rate <span class="math inline">\epsilon_\beta</span> and
-a known (or upper-bounded) pathway duration <span
-class="math inline">k</span>, the per-step detection probability <span
+composition rule fixes the design parameter. Under the memoryless
+detector regime of Assumption <a href="#ass:D2"
+data-reference-type="ref" data-reference="ass:D2">3</a>(a), for a target
+window false-negative rate <span
+class="math inline">\epsilon_\beta</span> and a known (or upper-bounded)
+pathway duration <span class="math inline">k</span>, the per-step
+detection probability <span
 class="math inline">\delta_{\mathrm{agg}}</span> during the test must
 satisfy <span class="math inline">(1 - \delta_{\mathrm{agg}})^k \leq
 \epsilon_\beta</span>, i.e., <span
@@ -3160,7 +3169,15 @@ class="math inline">\delta_{\mathrm{agg}}\geq 1 -
 this collapses to <span class="math inline">\delta_{\mathrm{agg}}\geq 1
 - \epsilon_\beta</span> (the single-step detector must itself meet the
 target); for larger <span class="math inline">k</span> the requirement
-softens proportionally. Implementations that cannot raise <span
+softens proportionally. Under the mixing regime <a href="#ass:D2"
+data-reference-type="ref" data-reference="ass:D2">3</a>(b), the
+effective number of independent detection opportunities in <span
+class="math inline">k</span> steps is <span
+class="math inline">k/\tau_{\mathrm{mix}}</span>, and the rule
+strengthens to <span class="math inline">\delta_{\mathrm{agg}}\geq 1 -
+\epsilon_\beta^{\tau_{\mathrm{mix}}/k}</span>; recover memoryless as
+<span class="math inline">\tau_{\mathrm{mix}}\to 1</span>.
+Implementations that cannot raise <span
 class="math inline">\delta_{\mathrm{agg}}</span> at fixed <span
 class="math inline">\tau_{\mathrm{test}}</span> must either extend the
 test window (use the persistent-activation form with longer <span
@@ -3190,20 +3207,26 @@ Wamura problem is a structural invitation for an adversary—an incumbent,
 a regulator, or a rent-seeker—to manufacture risk claims that lock
 competitor capabilities for the duration of test scheduling and
 execution, even if the asymptotic trust dynamics eventually correct. The
-total <span
-class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> lost to
-adversarial claims before trust-weight downweighting takes effect is
-bounded above by <span class="math inline">|\Delta
-{\mathop{\mathrm{vol}}_{\mathrm{P}}}(\Xi)| \cdot N_{\mathrm{adv}} \cdot
+peak instantaneous <span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span> locked
+by concurrently-active adversarial claims is bounded above by <span
+class="math inline">|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\Xi)|
+\cdot N_{\mathrm{adv}}</span>, and the total <em>capability-loss
+exposure</em> (<span
+class="math inline">{\mathop{\mathrm{vol}}_{\mathrm{P}}}</span>
+integrated over time) attributable to the adversarial claims before
+trust-weight downweighting takes effect is bounded above by <span
+class="math inline">|\Delta {\mathop{\mathrm{vol}}_{\mathrm{P}}}(\Xi)|
+\cdot N_{\mathrm{adv}} \cdot
 (T_{\mathrm{stale}} + \tau_{\mathrm{test}})</span>, where <span
 class="math inline">N_{\mathrm{adv}}</span> is the number of adversarial
 claims the trust dynamics absorb before downweighting and <span
 class="math inline">T_{\mathrm{stale}} + \tau_{\mathrm{test}}</span> is
-the window each claim ties up the targeted capability. In contested
-commercial or strategic settings where adversarial claim manufacture is
-plausible, this bound is the correct deployment guard: the protocol
-should not be deployed without either (i) an integrity layer
-(cryptographic commitment via <d-cite key="lasser2026exo"></d-cite>, institutional review, or
+the per-claim duration each ties up the targeted capability. In
+contested commercial or strategic settings where adversarial claim
+manufacture is plausible, this bound is the correct deployment guard:
+the protocol should not be deployed without either (i) an integrity
+layer (cryptographic commitment via <d-cite key="lasser2026exo"></d-cite>, institutional review, or
 jurisdictional accountability) that bounds <span
 class="math inline">N_{\mathrm{adv}}</span> at the claim generation
 step, or (ii) a meta-policy with an explicit adversarial-claim detector
@@ -3563,20 +3586,25 @@ with persistent activation, the window decomposes into <span
 class="math inline">\tau / \tau_{\mathrm{mix}}</span> independent
 opportunities (exact if <span class="math inline">\tau_{\mathrm{mix}}=
 1</span>, upper-bound if <span
-class="math inline">\tau_{\mathrm{mix}}&gt; 1</span>). The upper-bound
-direction in the <span class="math inline">\tau_{\mathrm{mix}}&gt;
-1</span> case requires that the temporal-mixing process satisfy a
-monotone-coupling property: detector misses at temporally adjacent steps
-are positively correlated, so partitioning into <span
+class="math inline">\tau_{\mathrm{mix}}&gt; 1</span>). Under
+Assumption <a href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(a) (memoryless detectors, <span
+class="math inline">\tau_{\mathrm{mix}}= 1</span>) the per-step
+indicators are independent and the formula is exact, not an upper bound.
+The upper-bound direction in the <span
+class="math inline">\tau_{\mathrm{mix}}&gt; 1</span> case (Assumption <a
+href="#ass:D2" data-reference-type="ref"
+data-reference="ass:D2">3</a>(b), mixing) requires that the
+temporal-mixing process satisfy a monotone-coupling property: detector
+misses at temporally adjacent steps are positively correlated, so
+partitioning into <span
 class="math inline">\tau/\tau_{\mathrm{mix}}</span> independent blocks
 under-estimates rather than over-estimates the joint miss probability.
-For cross-substrate channels this follows unconditionally from the
-channel-isolation result of <d-cite key="lasser2026exo"></d-cite>; for same-substrate channels under
-the temporal-independence form of Assumption <a href="#ass:D2"
-data-reference-type="ref" data-reference="ass:D2">3</a>(a), the property
-is equivalent to positive association of the per-step detection
-indicator, which holds whenever the detector is monotone in its input
-signal (the standard case). Each opportunity misses with probability
+This positive-association property is standard for monotone functions of
+an underlying mixing process (Esary–Proschan–Walkup-style positive
+association of threshold detectors, holding whenever the detector
+indicator is monotone in its input signal—the standard case for
+threshold-based detection). Each opportunity misses with probability
 <span class="math inline">1 - \delta_{\mathrm{agg}}</span>. Hence <span
 class="math inline">p_\tau \leq (1 -
 \delta_{\mathrm{agg}})^{\tau/\tau_{\mathrm{mix}}}</span>, decreasing in
