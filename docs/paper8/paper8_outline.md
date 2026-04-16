@@ -719,19 +719,33 @@ is needed. Part B's per-capability refinement additionally requires
 alpha_{n,c} from the event-local decomposition, which can be included in
 the committed fields if per-capability attribution is desired.
 
-**Proposition 4 (ZK Aggregation).** Zero-knowledge rollups over aggregate
-trade volume preserve the lower-bound property. Specifically: given a batch
-of N committed sacrifice events, a rollup proof can establish
+**Proposition 4 (ZK Aggregation with Disjointness).** Zero-knowledge rollups
+over aggregate trade volume preserve the lower-bound property *including the
+disjointness requirement* of Theorem 2 Part A. Specifically: given a batch
+of N committed sacrifice events, a rollup proof can establish:
 
-    sum_{n=1}^N Delta_vol_P(X_n) >= B    (Part A, disjoint bundles)
+    (i)  sum_{n=1}^N Delta_vol_P(X_n) >= B    (aggregate bound)
+    (ii) the bundle categories {category(Y_n)} are pairwise disjoint
+         (no capability appears in two distinct bundles)
 
 for a public bound B, without revealing N, the individual Delta_vol_P(X_n),
-or the individual categories.
+or the specific categories.
 
-*Proof sketch:* Standard ZK rollup construction. The prover knows all N
-committed events and computes the sum. The rollup proof attests that the sum
-exceeds B using a range proof on the aggregate. The verifier learns only B
-and the validity of the proof.
+*Proof sketch:* The prover knows all N committed events. The rollup proof
+has two components: (a) a range proof on the aggregate sum establishing
+sum >= B; (b) a set-membership proof establishing that the category labels
+are pairwise distinct, using a Merkle commitment over the category set with
+a non-membership witness for each new category against the running
+accumulator. The verifier learns only B, the disjointness validity, and
+the proof's soundness. If the hidden bundles are NOT disjoint, the prover
+must fall back to Part B's max-attribution formulation (which does not
+require disjointness but requires additional assumptions S3-S4).
+
+**Remark (disjointness failure mode).** When the prover cannot produce a
+valid disjointness proof (because the underlying bundles overlap), this is
+not a soundness failure -- it is a signal that Part A does not apply to
+this batch. The rollup should report the weaker Part B bound or partition
+the batch into disjoint sub-batches, each with its own rollup proof.
 
 **Remark (commitment infrastructure at scale).** A fully committed trade
 ledger at the scale of a modern economy is an infrastructure problem. The
@@ -751,31 +765,38 @@ non-communicable). The revealed-sacrifice framing produces a differently-
 shaped and operationally cleaner residual class.
 
 **Definition 8 (Residual Class Under Revealed Sacrifice).** The residual class
-at time T with lookback horizon H is the set of capabilities with no
-sacrifice evidence in the window [T - H, T]:
+is the set of capabilities *structurally outside the reach* of the sacrifice
+channel -- capabilities whose exercise, by their nature, produces no
+sacrifice event even with unlimited observation time:
 
-    R_S(T, H) = {c in P : no revealed-sacrifice event (i, X, Y, t)
-                 with t in [T - H, T] has c in Y_j for any j,
-                 i.e., c does not appear as a component of any
-                 acquired bundle in the lookback window}
+    R_S = {c in P : exercise of c requires no material input
+           (no purchasing), no opportunity cost (no foregone labor),
+           and no observable commitment event}
 
-R_S is parameterized by the lookback horizon H because the residual class
-is *dynamic*: a capability enters R_S when its last sacrifice event ages
-past the horizon, and leaves R_S when a new sacrifice event covers it. The
-horizon H should match the preference-shift timescale (Open Question 2) --
-long enough to capture infrequent trades, short enough that stale evidence
-does not persist.
+R_S is a *structural* property of the capability, not a property of the
+observation window. A capability is in R_S because the sacrifice channel
+*cannot* reach it (purely private exercise with no material footprint),
+not because the channel has not yet observed it. Examples: private
+contemplative experience, purely internal cognitive operations with no
+external inputs or time diversion.
 
-**Remark (cumulative limit).** In the limit H -> infinity, R_S(T, infinity)
-contains only capabilities that have *never* been traded for. This shrinks
-monotonically as trade data accumulates -- every new category of trade
-permanently removes capabilities from R_S(T, infinity). For a fixed finite
-H, R_S can grow or shrink as trade patterns shift, reflecting the living
-structure of what the collective values.
+**Remark (structural vs. evidential absence).** R_S is distinct from the
+set of capabilities with no sacrifice evidence in a given window. A
+capability outside R_S (tradable in principle) may have no sacrifice
+evidence in a particular window [T - H, T] simply because no trade
+happened to cover it -- this is the *dormant* category in the gap
+decomposition (Definition 10), not the residual class. The distinction
+is load-bearing: dormant capabilities can be resolved by waiting for
+more trade data or increasing trade coverage; residual capabilities
+cannot.
 
-Equivalently: R_S(T, H) contains capabilities that the agent exercises but
-has not recently traded for -- capabilities whose exercise creates no
-observable sacrifice event within the lookback window.
+**Remark (conservatism of R_S classification).** Classifying a capability
+as residual (in R_S) is a structural claim that should be conservative:
+if there is any plausible mechanism by which exercise of c could produce
+a sacrifice event (even indirectly -- e.g., an artistic practice that
+requires purchasing supplies), c should be classified as outside R_S.
+The residual class should be small by construction, containing only
+capabilities whose exercise is genuinely immaterial.
 
 **Remark (operational cleanness).** The re-characterization reduces the
 question "what doesn't the framework observe?" to a single answer: things the
@@ -792,7 +813,8 @@ capabilities -- it needs only benchmarkability of the *sacrificed* capabilities
 
 **Proposition 5 (Residual Class Intersection).** Let R_B be the prior
 formulation's residual class (capabilities failing benchmarkability) and R_S
-be the revealed-sacrifice residual class (Definition 8). Then:
+be the revealed-sacrifice residual class (Definition 8, structurally outside
+the sacrifice channel). Then:
 
 (a) R_B and R_S overlap but neither contains the other.
 
@@ -950,47 +972,72 @@ of privacy-minimal observation.
 ### Diagnostic decomposition
 
 **Definition 10 (Gap Decomposition Under Revealed Sacrifice).** The B-to-C
-gap (1 - beta^lower) decomposes into three *disjoint* sources, classified
-by priority (restricted > dormant > residual):
+gap (1 - beta^lower) decomposes into four *disjoint* sources. Each
+capability in P is assigned to exactly one category by priority ordering
+(restricted > covered > dormant > residual), and each category's delta
+term is its *uncovered vol_P share* -- the portion of the category's vol_P
+contribution not accounted for by vol_R^lower:
 
-    1 - beta^lower = delta_restricted + delta_dormant + delta_residual
+    1 - beta^lower = delta_restricted + delta_partial + delta_dormant
+                     + delta_residual
 
-where:
+where the capability partition is:
 
-- **delta_restricted:** vol_P contribution of capabilities in the restriction
-  set Xi = {d in P : d is currently restricted under Paper 3, Proposition 1},
-  regardless of whether they have sacrifice evidence. Restricted capabilities
-  are classified first because their status is determined by the framework's
-  restriction policy, not by trade data. Paper 7's controlled relaxation
-  addresses these.
+- **Restricted** (Xi): d is currently restricted under Paper 3,
+  Proposition 1. Classified first regardless of sacrifice evidence.
 
-- **delta_dormant:** vol_P contribution of capabilities that are (i) NOT
-  restricted (d not in Xi), (ii) NOT in the residual class R_S(T, H), but
-  (iii) have no sacrifice evidence in the current trade window [T - H, T].
-  These are tradable-in-principle capabilities that happen to have zero
-  sacrifice events in the lookback window. The framework can increase trade
-  coverage or wait for more events.
+- **Covered** (C_S): d not in Xi, and d appears in at least one acquired
+  bundle Y_n for some sacrifice event in [T - H, T]. These capabilities
+  have positive but possibly incomplete vol_R^lower.
 
-- **delta_residual:** vol_P contribution of capabilities that are (i) NOT
-  restricted, (ii) NOT covered by any sacrifice event in the lookback window,
-  AND (iii) structurally outside the reach of the sacrifice channel --
-  capabilities the framework cannot expect to see traded for even with
-  unlimited observation time. This is the irreducible component.
+- **Dormant** (D_S): d not in Xi, d not in R_S (Definition 8), and d does
+  not appear in any acquired bundle in [T - H, T]. These are tradable-in-
+  principle capabilities with zero sacrifice evidence in the lookback
+  window.
 
-The classification is disjoint by construction: each non-exercised capability
-is classified into exactly one category by the priority ordering.
+- **Residual** (R_S): d not in Xi, and d is structurally outside the
+  sacrifice channel (Definition 8). These have zero sacrifice evidence
+  by construction, not merely by happenstance.
 
-**Proposition 7 (Computability of Gap Decomposition).** The gap decomposition
-is computable from:
-- The aggregate sacrifice data (events in the trade window [T - H, T])
+The delta terms are the *gap contributions* from each category:
+
+- **delta_restricted** = [vol_P(Xi) - vol_R^lower(Xi)] / vol_P(G).
+  Restricted capabilities may have some vol_R^lower from pre-restriction
+  trades. Paper 7's controlled relaxation addresses these.
+
+- **delta_partial** = [vol_P(C_S) - vol_R^lower(C_S)] / vol_P(G).
+  The uncovered portion of covered capabilities -- sacrifice evidence
+  exists but does not fully account for vol_P. This term shrinks toward
+  zero as trade coverage deepens.
+
+- **delta_dormant** = vol_P(D_S) / vol_P(G). Dormant capabilities have
+  vol_R^lower = 0 by definition (no sacrifice events). The framework can
+  reduce this term by increasing trade coverage or waiting for more events.
+
+- **delta_residual** = vol_P(R_S) / vol_P(G). Residual capabilities have
+  vol_R^lower = 0 and cannot gain sacrifice evidence regardless of
+  observation time. This is the irreducible component.
+
+The four categories partition P: every capability belongs to exactly one.
+The delta terms sum to 1 - beta^lower because they exhaust the uncovered
+vol_P share across the entire poset.
+
+**Proposition 7 (Computability of Gap Decomposition).** The four-term gap
+decomposition is computable from:
+- The aggregate sacrifice data (events in the trade window [T - H, T]),
+  including per-event vol_R^lower contributions
 - The restriction set Xi = {d in P : d is currently restricted}
-- The residual class R_S(T, H) (Definition 8: capabilities in P absent from
-  all sacrifice events in the lookback window [T - H, T])
+- The residual class R_S (Definition 8: capabilities structurally outside
+  the sacrifice channel -- a structural classification, not window-dependent)
+- The capability census (enumeration of P)
 
-Classification is O(|P|) given the sacrifice database and a capability
-census. No structural counterfactual computation is required (unlike the
-prior formulation, which required O(|P|^2) counterfactual queries). This is
-the tractability advantage of the sacrifice-based approach.
+Classification is O(|P|) given the sacrifice database, the R_S
+classification, and the capability census. For each capability d:
+(1) check d in Xi (restricted); (2) check d in sacrifice data (covered);
+(3) check d in R_S (residual); (4) otherwise dormant. The delta terms
+follow from the vol_P and vol_R^lower values already computed. No
+structural counterfactual computation is required (unlike the prior
+formulation, which required O(|P|^2) counterfactual queries).
 
 **Remark (capability census requirement).** The gap decomposition requires
 the framework to enumerate capabilities in P -- it must know what exists
@@ -1089,9 +1136,10 @@ Trade data: 50 sacrifice events over the window, covering 16 of 19
 capabilities (3 in the residual class -- private contemplative capabilities
 of the biological agents).
 
-beta^lower = 17.5 / 20.0 = 0.875. Gap decomposition: delta_dormant = 0,
-delta_restricted = 0, delta_residual = 2.5/20 = 0.125 (residual class
-contribution). No alarm.
+beta^lower = 17.5 / 20.0 = 0.875. Gap decomposition: delta_restricted = 0,
+delta_partial = 0 (all covered capabilities fully accounted for in this
+simple example), delta_dormant = 0, delta_residual = 2.5/20 = 0.125
+(residual class contribution). No alarm.
 
 ### Phase 2: Automation concentrates trade (beta^lower drops)
 
@@ -1112,9 +1160,10 @@ sacrifice evidence.
 beta^lower = 11.5 / 20.0 = 0.575. ALARM fires (beta^lower < 0.8).
 
 Gap decomposition:
+- delta_restricted = 0
+- delta_partial = 0 (covered capabilities still fully accounted for)
 - delta_dormant = 8.5/20 = 0.425 (b_2, b_3, and 3 cooperatives have
   zero sacrifice data but are tradable in principle)
-- delta_restricted = 0
 - delta_residual = 0 (residual class unchanged, but now dominated by
   delta_dormant)
 
@@ -1463,14 +1512,17 @@ includes both the OI floor and the sacrifice lower bound.
 | r_i | Agent i's market wage rate | Def 6 |
 | h | Hours sacrificed | Def 6 |
 | (C, pi, t) | Committed revealed-sacrifice event | Def 7 |
-| R_S(T, H) | Residual class under revealed sacrifice (time-parameterized) | Def 8 |
-| H | Lookback horizon for residual class | Def 8 |
+| R_S | Residual class under revealed sacrifice (structural, not time-parameterized) | Def 8 |
+| H | Lookback horizon for sacrifice evidence window | Def 10 |
 | R_B | Prior residual class (benchmarkability-based) | Prop 5 |
 | ALARM(T) | B-to-C alarm condition | Def 9 |
 | beta_alarm | Alarm threshold | Def 9 |
-| delta_dormant | Gap component: dormant tradable capabilities | Def 10 |
-| delta_restricted | Gap component: restricted capabilities | Def 10 |
-| delta_residual | Gap component: residual class | Def 10 |
+| delta_restricted | Gap component: restricted capabilities (uncovered share) | Def 10 |
+| delta_partial | Gap component: partially covered capabilities (uncovered share) | Def 10 |
+| delta_dormant | Gap component: dormant tradable capabilities (full share) | Def 10 |
+| delta_residual | Gap component: residual class (full share) | Def 10 |
+| C_S | Covered capabilities (have sacrifice evidence in window) | Def 10 |
+| D_S | Dormant capabilities (tradable, no sacrifice evidence in window) | Def 10 |
 | lambda_trade(c, T) | Trade-flow leverage of category c | Def 11 |
 | HHI(lambda_trade) | Herfindahl-Hirschman Index of trade-flow leverage | Prop 8 |
 | HHI_alarm | Wireheading detection threshold | Prop 8 |
