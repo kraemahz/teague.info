@@ -376,9 +376,12 @@ poset measure. The agent's valuation of X_n is at least as large as this
 contribution: U_{i_n}(X_n) >= Delta_vol_P(X_n). This is the B-to-C
 precondition: vol_P is the operational target on the benchmarked subspace,
 so agents value benchmarked capabilities at least at their vol_P worth.
-(If agents undervalue benchmarked capabilities, the lower bound is
-conservative -- the sacrifice signal understates what the agent actually
-gave up.)
+(If an agent undervalues benchmarked capabilities -- U_i(X) < Delta_vol_P(X)
+-- then S2 fails for that event and the calibration chain does not apply.
+The event is excluded from the aggregate bound. S2 is a per-event filter:
+events where the agent undervalues the sacrifice do not contribute to
+vol_R^lower. This is conservative: the framework ignores events rather
+than overestimating.)
 
 **Assumption S3 (Bundle coherence).** The hedonic decomposition of each
 bundle Y_n into capabilities in U is well-defined: the regression has a
@@ -412,48 +415,81 @@ present, the per-capability disaggregation underestimates some capabilities
 and overestimates others, but the *aggregate* bound over the whole bundle
 remains valid (the bundle-level bound from S0-S2 holds without S4).
 
-Then:
+The theorem has two levels, with different assumption requirements:
 
-    vol_R^U >= sum_{n=1}^N Delta_vol_P(X_n) * w_n
+**Part A (Bundle-level lower bound, requires S0-S2 only):**
+
+For each event n:
+
+    vol_R(Y_n) >= Delta_vol_P(X_n)
+
+For N events with *pairwise disjoint* bundles (no capability appears in
+more than one Y_n):
+
+    vol_R^U >= sum_{n=1}^N Delta_vol_P(X_n)
 
 where vol_R^U is the realized capability volume restricted to the
-unbenchmarked subset U. If the Y_n jointly exhaust U, the sum closes the
-B-to-C gap on U from below by a characterized quantity.
+unbenchmarked subset U covered by the union of bundles. If the disjoint
+Y_n jointly exhaust U, the sum closes the B-to-C gap on U from below.
 
-**Remark (bundle-level bound is unconditional on S4).** Even without S4,
-the per-event bound vol_R(Y_n) >= Delta_vol_P(X_n) holds for the *whole
-bundle* Y_n under S0-S2. The aggregate bound over disjoint bundles
-(w_n = 1) also holds without S4. S4 is needed only for the per-capability
-disaggregation step that handles overlapping bundles. If the paper's
-primary claim is the aggregate lower bound on vol_R restricted to U, and
-bundles are disjoint, S4 is unnecessary. The assumption becomes load-bearing
-only when bundles overlap and per-capability attribution is required.
+Part A is the paper's *primary* result. It requires only S0-S2, does not
+require additive separability (S4), and produces a clean aggregate bound
+whenever trade bundles are disjoint. In practice, many trades target
+distinct capability categories (housing vs. healthcare vs. education),
+so disjointness is a reasonable approximation for a large fraction of
+trade data.
+
+**Part B (Per-capability refinement, requires S0-S4):**
+
+When bundles overlap (the same capability c appears in multiple Y_n),
+Part A cannot be applied directly. Under the additional assumptions S3
+(bundle coherence) and S4 (additive separability of both valuation and
+vol_R on poset-disjoint bundles):
+
+For each capability c in U, define:
+
+    vol_R^lower(c) = max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n)
+
+where alpha_{n,c} is the event-local decomposition coefficient from
+Definition 3. Then:
+
+    vol_R^U >= sum_{c in U} vol_R^lower(c)
+
+**Critical justification for the per-capability step.** The inference from
+vol_R(Y_n) >= Delta_vol_P(X_n) to vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
+requires: (i) S4(b) gives vol_R(Y_n) = sum_c vol_R(c) for poset-disjoint
+bundles; (ii) each vol_R(c) >= 0; (iii) alpha_{n,c} is defined as a
+*lower bound* on vol_R(c) / vol_R(Y_n), not merely a hedonic attribution
+weight. Condition (iii) is the load-bearing one: the event-local
+coefficients from Definition 3 are valid only if they underestimate the
+true vol_R shares. The equal-weight fallback (alpha = 1/|Y_n|) is valid
+only if no capability contributes less than 1/|Y_n| of the bundle's vol_R
+-- an assumption that must be stated explicitly.
+
+When alpha_{n,c} is not a valid lower bound on the vol_R share, the
+per-capability step is unsound. The paper should use Part A (disjoint
+bundles) as the primary result and treat Part B as a refinement available
+when the decomposition is grounded.
 
 *Proof sketch:*
 
+Part A:
 Step 1: For each event n, the calibration chain (S0 + S1 + S2) gives
 vol_R(Y_n) >= U_{i_n}(Y_n) >= U_{i_n}(X_n) >= Delta_vol_P(X_n). This
 is a per-event lower bound on the whole bundle Y_n.
 
-Step 2 (requires S4): By additive separability, vol_R(Y_n) =
-sum_{c in Y_n} vol_R(c). The per-event bound distributes:
-sum_{c in Y_n} vol_R(c) >= Delta_vol_P(X_n). The hedonic regression
-assigns coefficients alpha_{n,c} representing the share of each
-capability c in bundle Y_n, with sum_c alpha_{n,c} = 1. By the
-linearity of the decomposition: vol_R(c) >= alpha_{n,c} * Delta_vol_P(X_n)
-for each c in Y_n (the per-capability attribution of the event's bound).
+Step 2: For disjoint bundles, the per-event bounds apply to non-overlapping
+portions of vol_R^U. Summing gives vol_R^U >= sum_n Delta_vol_P(X_n).
 
-Step 3: When capability c appears in multiple bundles Y_n, the overlap
-correction selects the maximum per-capability attribution across events:
-vol_R(c) >= max_{n: c in Y_n} alpha_{n,c} * Delta_vol_P(X_n). Summing
-over all c in U gives the aggregate bound. The weight formulation
-sum_{n} w_n * Delta_vol_P(X_n) is a conservative simplification that
-uses weighted averaging rather than max-selection; the max-based
-formulation is tighter but requires per-capability tracking.
+Part B (additionally requires S3 + S4):
+Step 3: S4(b) decomposes vol_R(Y_n) = sum_c vol_R(c). With vol_R(c) >= 0
+and sum_c alpha_{n,c} = 1 where alpha_{n,c} <= vol_R(c)/vol_R(Y_n), the
+per-capability bound follows: vol_R(c) >= alpha_{n,c} * vol_R(Y_n) >=
+alpha_{n,c} * Delta_vol_P(X_n).
 
-Step 4: If the Y_n jointly exhaust U (every capability in U appears in at
-least one bundle), then the sum covers all of U and the lower bound applies
-to the full unbenchmarked subspace.
+Step 4: The max-attribution across overlapping events gives
+vol_R(c) >= max_n alpha_{n,c} * Delta_vol_P(X_n). Summing over c in U
+gives the aggregate bound.
 
 **Definition 4 (B-to-C Ratio Under Revealed Sacrifice).** The B-to-C ratio
 under revealed-sacrifice observation is:
@@ -469,7 +505,8 @@ beta^lower <= 1. (Note: the raw weighted sum in Theorem 2 could in
 principle exceed vol_P due to overlapping bundle attribution, but the
 max-based formulation in Proposition 1 is bounded by vol_R <= vol_P.
 If using the weighted-sum formulation, cap beta^lower at
-min(1, sum w_n * Delta_vol_P(X_n) / vol_P).)
+min(1, vol_R^lower / vol_P) where vol_R^lower is the Part A or Part B
+aggregate.)
 
 **Remark (lower bound, not exact ratio).** beta^lower <= beta_true (the true
 B-to-C ratio, if it were measurable). The gap between beta^lower and
@@ -496,16 +533,11 @@ provided the additional events satisfy Assumptions S0-S4.
 a growing set of candidates. Adding events can only weakly increase a max.
 The aggregate is a sum of non-decreasing terms, hence non-decreasing.
 
-**Remark (the weighted-sum formulation is NOT monotone).** The simpler
-formulation sum_{n} w_n * Delta_vol_P(X_n) with overlap-correction weights
-is NOT monotone in N. A low-sacrifice event overlapping a high-sacrifice
-event reduces the high-sacrifice event's weight, and the net can decrease.
-Example: event 1 gives Delta_vol_P(X_1) = 10, w_1 = 1; adding event 2 with
-Delta_vol_P(X_2) = 1 on the same capabilities gives weights w_1 = w_2 = 0.5,
-aggregate = 10*0.5 + 1*0.5 = 5.5 < 10. The max-based formulation avoids
-this: vol_R^lower(c) = max(alpha_{1,c} * 10, alpha_{2,c} * 1) = alpha_{1,c} * 10,
-which preserves the original bound. **The paper should use the max-based
-formulation as primary and note the weighted-sum as an approximation.**
+**Remark (Part A is trivially monotone).** Under Part A (disjoint bundles),
+each new event covers a new portion of capability-space, so the sum grows
+monotonically. Under Part B (max-attribution for overlapping bundles),
+each per-capability bound is a max over a growing set and hence
+non-decreasing. Both formulations are monotone in N.
 
 **Remark (convergence through accumulation).** The lower bound tightens
 over time as more sacrifice events are observed. The convergence rate
@@ -637,23 +669,29 @@ revealed-sacrifice event is a tuple (C, pi, t) where:
   Definition 6)
 - pi is a zero-knowledge proof (Paper 5, Definition 7) that:
   (a) the commitment C corresponds to a valid revealed-sacrifice event
-      satisfying the *verifiable* assumptions S2-S4 (benchmark grounding,
-      bundle coherence, additive separability)
+      satisfying the *objectively verifiable* assumptions S2 (benchmark
+      grounding) and S3 (bundle coherence)
   (b) Delta_vol_P(X) >= 0 (the sacrifice is non-negative)
   (c) the trade actually occurred (linked to a verifiable ledger entry)
 
-**Remark (S0 and S1 are not ZK-verifiable).** Assumptions S0 (calibration)
-and S1 (free choice) are about the agent's internal state -- whether
-their valuation is calibrated to vol_R, and whether the trade was
-voluntary. These cannot be verified in zero knowledge without an oracle
-for the agent's subjective state. The ZK proof verifies the *objective*
-conditions (S2-S4); the *subjective* conditions (S0, S1) are structural
-assumptions the framework makes about the trade environment, not
-properties the commitment protocol can enforce. S1's partial mitigation:
-the framework can verify that the agent had observable alternatives (the
-market offered other options), which is a necessary but not sufficient
-condition for free choice. S0's partial mitigation: population-level
-aggregation smooths individual overvaluation errors (see Open Question 6).
+**Remark (S0, S1, and S4(a) are not ZK-verifiable).** Assumptions S0
+(calibration), S1 (free choice), and S4(a) (valuation additivity) are
+about the agent's internal state -- whether their valuation is calibrated
+to vol_R, whether the trade was voluntary, and whether their valuation
+decomposes additively. These cannot be verified in zero knowledge without
+an oracle for the agent's subjective state. The ZK proof verifies the
+*objective* conditions (S2, S3, and S4(b) via poset structure); the
+*subjective* conditions (S0, S1, S4(a)) are structural assumptions the
+framework makes about the trade environment, not properties the commitment
+protocol can enforce.
+
+Partial mitigations:
+- S1: the framework can verify that the agent had observable alternatives.
+- S0: population-level aggregation smooths individual overvaluation errors
+  (see Open Question 6).
+- S4(a): Theorem 2 Part A (disjoint bundles) does not require S4(a), so
+  the ZK-verified Part A bound is fully grounded. Part B's per-capability
+  refinement carries the unverifiable S4(a) assumption.
 - t is the event timestamp (public)
 
 The committed event reveals:
@@ -673,17 +711,19 @@ bound from Theorem 2 is computable from committed revealed-sacrifice events
 only on the revealed fields (Delta_vol_P(X_n), category(Y_n), t_n), all of
 which survive the commitment's hiding property.
 
-*Proof sketch:* Theorem 2's lower bound is
-sum_{n=1}^N Delta_vol_P(X_n) * w_n. The disaggregation weights w_n depend
-on the bundle structure (which categories overlap), computable from
-category(Y_n). The sacrifice magnitudes Delta_vol_P(X_n) are revealed
-directly. No hidden field is needed.
+*Proof sketch:* Theorem 2 Part A's lower bound is
+sum_{n=1}^N Delta_vol_P(X_n) for disjoint bundles. The sacrifice magnitudes
+Delta_vol_P(X_n) are revealed directly. The disjointness of bundle
+categories is verifiable from the revealed category(Y_n). No hidden field
+is needed. Part B's per-capability refinement additionally requires
+alpha_{n,c} from the event-local decomposition, which can be included in
+the committed fields if per-capability attribution is desired.
 
 **Proposition 4 (ZK Aggregation).** Zero-knowledge rollups over aggregate
 trade volume preserve the lower-bound property. Specifically: given a batch
 of N committed sacrifice events, a rollup proof can establish
 
-    sum_{n=1}^N Delta_vol_P(X_n) * w_n >= B
+    sum_{n=1}^N Delta_vol_P(X_n) >= B    (Part A, disjoint bundles)
 
 for a public bound B, without revealing N, the individual Delta_vol_P(X_n),
 or the individual categories.
@@ -823,7 +863,8 @@ measure (it's a bound on a measure).
 Analyze each of Paper 2's axioms M1-M6 (Proposition 1) for vol_R^lower:
 
 **(M1) Non-negativity:** Satisfied. vol_R^lower is a sum of non-negative
-terms (Delta_vol_P(X_n) * w_n >= 0).
+terms (Delta_vol_P(X_n) >= 0 per event; max-attribution preserves
+non-negativity).
 
 **(M2) Null empty set:** Satisfied. With zero sacrifice events,
 vol_R^lower = 0.
@@ -909,27 +950,35 @@ of privacy-minimal observation.
 ### Diagnostic decomposition
 
 **Definition 10 (Gap Decomposition Under Revealed Sacrifice).** The B-to-C
-gap (1 - beta^lower) decomposes into three sources:
+gap (1 - beta^lower) decomposes into three *disjoint* sources, classified
+by priority (restricted > dormant > residual):
 
-    1 - beta^lower = delta_dormant + delta_restricted + delta_residual
+    1 - beta^lower = delta_restricted + delta_dormant + delta_residual
 
 where:
 
-- **delta_dormant:** Capabilities with benchmarkable sacrifice channels that
-  are dormant in the trade data -- no sacrifice events targeting these
-  capabilities have been observed, but the capabilities are tradable in
-  principle. These are capabilities the collective possesses and could trade
-  for but has not. The framework can increase trade-window coverage or
-  decrease the alarm threshold to address these.
+- **delta_restricted:** vol_P contribution of capabilities in the restriction
+  set Xi = {d in P : d is currently restricted under Paper 3, Proposition 1},
+  regardless of whether they have sacrifice evidence. Restricted capabilities
+  are classified first because their status is determined by the framework's
+  restriction policy, not by trade data. Paper 7's controlled relaxation
+  addresses these.
 
-- **delta_restricted:** Capabilities under active restriction (Paper 3,
-  Proposition 1) that are therefore not being traded for. Paper 7's
-  controlled relaxation addresses these: lifting a restriction enables the
-  capability to re-enter the sacrifice channel.
+- **delta_dormant:** vol_P contribution of capabilities that are (i) NOT
+  restricted (d not in Xi), (ii) NOT in the residual class R_S(T, H), but
+  (iii) have no sacrifice evidence in the current trade window [T - H, T].
+  These are tradable-in-principle capabilities that happen to have zero
+  sacrifice events in the lookback window. The framework can increase trade
+  coverage or wait for more events.
 
-- **delta_residual:** Capabilities in R_S (Definition 8) -- realized purely
-  privately with no sacrifice signal. This component is irreducible within
-  the revealed-sacrifice observation model.
+- **delta_residual:** vol_P contribution of capabilities that are (i) NOT
+  restricted, (ii) NOT covered by any sacrifice event in the lookback window,
+  AND (iii) structurally outside the reach of the sacrifice channel --
+  capabilities the framework cannot expect to see traded for even with
+  unlimited observation time. This is the irreducible component.
+
+The classification is disjoint by construction: each non-exercised capability
+is classified into exactly one category by the priority ordering.
 
 **Proposition 7 (Computability of Gap Decomposition).** The gap decomposition
 is computable from:
@@ -1239,9 +1288,9 @@ signals that Paper 9's structure-learning algorithms can consume.
 
 ### Open questions
 
-**Open Question 1: Hedonic disaggregation of bundles.** The aggregate lower
-bound (Theorem 2) requires disaggregation weights w_n to decompose trade
-bundles into per-capability contributions. Classical hedonic regression
+**Open Question 1: Hedonic disaggregation of bundles.** Theorem 2 Part B
+requires event-local decomposition coefficients alpha_{n,c} to attribute
+per-event bounds to individual capabilities. Classical hedonic regression
 handles this for priced goods (money channel). The time-sacrifice channel
 needs an analogous framework: how do you decompose a block of time spent on
 a complex activity (parenting, which involves teaching, emotional
@@ -1407,7 +1456,7 @@ includes both the OI floor and the sacrifice lower bound.
 | Delta_vol_P(X) | vol_P contribution of surrendered capability | Def 1 |
 | vol_R^lower(Y) | Lower bound on vol_R of acquired bundle | Def 1 |
 | [t_0, t_0 + T] | Aggregate trade window | Def 2 |
-| w_n | Bundle-disaggregation weights | Def 3 |
+| alpha_{n,c} | Event-local decomposition coefficients | Def 3 |
 | alpha_{n,c} | Hedonic regression coefficients | Def 3 |
 | beta^lower(G, T) | B-to-C ratio under revealed sacrifice | Def 4 |
 | p | Price (money-sacrifice signal) | Def 5 |
