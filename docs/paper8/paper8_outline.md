@@ -1429,18 +1429,21 @@ where the capability partition is:
   Proposition 1. Classified first regardless of sacrifice evidence.
 
 - **Covered** (C_S): d not in Xi, and d appears in at least one acquired
-  bundle Y_n for some sacrifice event in [T - H, T]. These capabilities
+  bundle Y_n for some *S1-satisfying* sacrifice event in [T - H, T].
+  Events that fail S1 (below-sufficiency or coerced) do not contribute
+  to "covered" status -- they are tracked separately via the
+  need-sufficiency diagnostic (Definitions 10A-10B). These capabilities
   have positive but possibly incomplete vol_R^lower.
 
 - **Dormant** (D_S): d not in Xi, d not in R_S (Definition 8), and d does
-  not appear in any acquired bundle in [T - H, T]. These are
-  above-sufficiency, tradable-in-principle want-pursuit capabilities with
-  zero sacrifice evidence in the lookback window. Below-sufficiency
-  sacrifices do not enter the sacrifice aggregate (S1 filters them; see
-  Section 2, Proposition 2B), so dormancy is about capabilities whose
-  *want-pursuit* trade signal is absent, not capabilities whose
-  need-satisfaction is incomplete. Need-satisfaction adequacy is tracked
-  separately by the need-sufficiency diagnostic (see below).
+  not appear in any acquired bundle of any *S1-satisfying* event in
+  [T - H, T]. These are tradable-in-principle capabilities with zero
+  want-pursuit sacrifice evidence in the lookback window. A capability
+  that appears only in S1-filtered events (below-sufficiency or coerced)
+  is dormant with respect to the gap decomposition -- its need-related
+  activity is tracked by NAC/NSE, not by the gap decomposition.
+  Need-satisfaction adequacy is tracked separately by the
+  need-sufficiency diagnostic (see below).
 
 - **Residual** (R_S): d not in Xi, and d is structurally outside the
   sacrifice channel (Definition 8). These have zero sacrifice evidence
@@ -1468,6 +1471,21 @@ The delta terms are the *gap contributions* from each category:
 The four categories partition P: every capability belongs to exactly one.
 The delta terms sum to 1 - beta^lower because they exhaust the uncovered
 vol_P share across the entire poset.
+
+**Remark (Part A vs. Part B granularity).** The gap decomposition as
+stated uses per-capability quantities (vol_R^lower(C_S), vol_P(D_S),
+etc.), which require Part B's per-capability identities and decomposition
+(S3-S5). Under Part A alone (bundle/category-level aggregates, S0-S2),
+the decomposition operates at the *category* level: each partition
+component C_j (Definition 7a) is classified as restricted, covered,
+dormant, or residual based on whether any S1-satisfying event in the
+trade window targets a bundle in C_j. The delta terms then use
+vol_P(C_j) and vol_R^lower(C_j) at category granularity. The
+committed interface (Section 6) reveals only category labels, so
+the category-level decomposition is the operationally available form
+when running on committed data. The per-capability decomposition is
+the refinement available when Part B assumptions hold and per-capability
+identities are exposed.
 
 **Proposition 7 (Computability of Gap Decomposition).** The four-term gap
 decomposition is computable from:
@@ -1520,7 +1538,9 @@ trade window [T - H, T] is:
     NAC(T) = sum_{n in F_S1} Delta_vol_P(X_n)
 
 where F_S1 = {n : event (i_n, X_n, Y_n, t_n) fails S1 due to
-below-sufficiency on at least one dimension of the acquired bundle Y_n}.
+below-sufficiency -- specifically, retaining X_n would have left the
+agent below the sufficiency threshold on at least one need dimension
+(the counterfactual event-local condition from Proposition 2B)}.
 NAC measures the total benchmarked capability surrendered for
 need-satisfaction -- purchasing power and time spent reaching baseline
 functionality rather than pursuing wants.
@@ -1568,22 +1588,27 @@ refined attribution requires need-specific hedonic decomposition, which
 is deferred to the full paper.
 
 **Definition 10B (Need-Satisfaction Efficiency).** For each need N identified
-in the poset (Section 2, Definition 2A), the need-satisfaction efficiency
-is a triple:
+in the poset (Section 2, Definition 2A) and each agent i in the collective,
+the per-agent need-satisfaction efficiency is a triple:
 
-    NSE(N) = (sufficiency_status, downstream_safety, access_cost)
+    NSE(i, N) = (sufficiency_status, downstream_safety, access_cost)
 
 where:
-- sufficiency_status in {below, met, exceeded}: whether the agent's
+- sufficiency_status in {below, met, exceeded}: whether agent i's
   capability level on N meets the bundle thresholds (Definition 2B(a))
-- downstream_safety in {safe, degrading, unknown}: whether the satisfaction
-  pathway pi_N satisfies the downstream non-degradation condition
-  (Definition 2B(b))
+- downstream_safety in {safe, degrading, unknown}: whether agent i's
+  satisfaction pathway pi_N satisfies the downstream non-degradation
+  condition (Definition 2B(b))
 - access_cost = sum of Delta_vol_P(X_n) for below-sufficiency sacrifice
-  events targeting need N in the trade window
+  events by agent i targeting need N in the trade window
 
-The aggregate need-satisfaction efficiency NSE(T) reports the distribution
-of needs across the three sufficiency statuses and flags degrading pathways.
+The collective-level aggregate NSE(T) reports the distribution of
+(agent, need) pairs across the three sufficiency statuses and flags
+degrading pathways. When the agent index is not available (e.g., under
+committed sacrifice events where agent identity is hidden), NSE
+aggregates at the population level: the distribution of needs across
+sufficiency statuses is computed from the category-level sacrifice data
+without per-agent attribution.
 
 **Proposition 7A (Combined Diagnostic).** The framework reports the triple
 (vol_R^lower, NAC, NSE) as a joint diagnostic:
@@ -1620,10 +1645,14 @@ sufficiency status, downstream safety, and access cost for each identified
 need. The parallelism holds at the *diagnostic-reporting* level: the
 framework reports the gap decomposition (how well the want-pursuit space
 is covered by sacrifice evidence) alongside (NAC, NSE) (how efficiently
-and safely the need space is satisfied). The two diagnostics partition the
-sacrifice event stream (above-sufficiency events enter the gap
-decomposition via Theorem 2; below-sufficiency events enter NAC via the
-S1 filter) but they do not partition the same formal objects.
+and safely the need space is satisfied). The two diagnostics cover complementary portions of the sacrifice event
+stream: S1-satisfying events enter the gap decomposition via Theorem 2;
+events failing S1 due to below-sufficiency enter NAC via the need-based
+S1 filter. Events failing S1 for non-need reasons (coercion, duress --
+see Open Question 3) are excluded from both diagnostics and constitute
+an undiagnosed residual in the event stream. The two diagnostics do not
+partition the same formal objects (capability partition vs. event
+aggregate vs. per-need triple).
 
 **Remark (intentional departure from memo 2's subtraction form).** The
 second reframing memo proposed vol_R >= Σ(want-sacrifice values) -
