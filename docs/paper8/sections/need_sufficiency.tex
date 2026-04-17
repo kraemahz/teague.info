@@ -377,6 +377,90 @@ preserves the ReLU shape above threshold while leaving a small
 floor $\alpha$ below.
 \end{remark}
 
+\subsection{The capability-stuffing problem}
+\label{sec:capability_stuffing}
+
+An agent optimizing $\volL$ under the non-triviality axiom M5
+(every valid capability with $s_{\max} \geq 1$ contributes
+positive weight~\citep[Proposition~1]{lasser2026poset}) has a
+natural incentive to add capabilities that pass structural
+validation but do not increase experiential optionality.  We call
+this the \emph{capability-stuffing} failure mode.
+
+The canonical form is redundant measurement of a single
+underlying need from multiple vantage points.  ``Distance from
+home to gas station'' is a real, benchmarkable capability: it
+satisfies the axioms M1--M6, has a well-defined metric
+($s_{\max} \geq 1$), and represents genuine structural knowledge
+about the world.  Adding ``distance from work to gas station,''
+``distance from grocery store to gas station,'' and so on produces
+a sequence of further real, benchmarkable capabilities, each
+passing the same axiomatic checks.  Collectively they inflate
+$\volL$ without broadening what the agent can actually do: every
+addition measures the same underlying optionality
+(fuel access) from a different geometric position.
+
+Capability-stuffing is distinct from other failure modes in the
+sequence.  It is not \emph{wireheading}~(\cite{lasser2026exo},
+Discussion), which is narrow self-reinforcing exercise of
+existing capabilities; stuffing adds new capabilities without
+exercising them degenerately.  It is not the \emph{Doll
+Problem}~(\cite{lasser2026gfm}, Section~7.1), which is
+possessed-but-unexercised capabilities; the stuffed capabilities
+may be technically exercised (routing through the gas station
+``exercises'' the distance-measurement).  It is not the
+\emph{B-to-C gap} in the aggregate sense that Paper~8 otherwise
+treats; stuffing widens the gap through a specific mechanism
+(individual-weight inflation) that the aggregate lower bound of
+Theorem~\ref{thm:aggregate_bound} does not, by itself, address.
+Stuffing is a framework-native perverse instantiation: the
+optimizer discovers it by following the $\volL$-maximization
+gradient under M5, not by departing from the framework's rules.
+
+\paragraph{Tension with structural discovery.}
+Capability-stuffing is closely related to a \emph{legitimate}
+mechanism: the structural discovery value
+of~\citep[Definition~5]{lasser2026horizon}, which holds that
+discovering new poset structure is value-positive.  An agent
+adding a new distance-measurement capability to its repertoire is
+making a structural discovery in Paper~3's sense.  The formal
+distinction between legitimate discovery and capability-stuffing
+turns on whether the new capability creates new cooperative
+structure:
+
+\begin{itemize}
+\item \textbf{Legitimate structural discovery} enriches the
+  poset by creating cooperative capabilities (axiom M6
+  superadditivity): the new capability interacts with existing
+  capabilities to produce outputs previously unachievable.  The
+  marginal contribution to $\volL$ includes cooperative terms
+  beyond the individual weight.
+\item \textbf{Capability-stuffing} adds individual capabilities
+  whose marginal cooperative contribution is zero (or
+  effectively so): the new capability's weight accrues through
+  M5 alone, not through M6.  No new cooperative outputs become
+  achievable.
+\end{itemize}
+
+Without a structural mechanism that distinguishes the two, the
+framework rewards both equally, and a $\volL$-maximizer with
+capability-discovery latitude will exploit the undifferentiated
+reward to stuff.
+
+\paragraph{Resolution via the need-sufficiency architecture.}
+The downstream-safe bundle sufficiency condition
+(Definition~\ref{def:downstream_safe}) resolves this tension at
+the right structural level.  Measurements that improve the
+bundle's downstream-safety are genuine: they close sufficiency
+gaps on need dimensions previously unmet, and their contribution
+is registered through the capped below-sufficiency benchmark
+(Definition~\ref{def:polarity_benchmark}).  Measurements that
+re-measure an already-sufficient bundle from a different vantage
+point are stuffed: they improve no dimension's sufficiency
+status, create no new cooperative capability, and contribute no
+quality improvement to the downstream cone.  Proposition~3 below
+makes this formal.
+
 \subsection{Structural propositions}
 
 \begin{proposition}[Anti-Stuffing]
