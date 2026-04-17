@@ -61,9 +61,12 @@ transactions.
 \emph{Part~B (per-capability, additionally S3--S5):}
 \begin{enumerate}
 \setcounter{enumi}{2}
-\item S4(b) decomposes $\volR(Y_n) = \sum_c \volR(c)$.  S5 gives
-  $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$, yielding
-  per-capability bounds.
+\item S5 gives directly $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$
+  (a share inequality, not a decomposition identity), yielding
+  $\volR(c) \geq \alpha_{n,c} \cdot \Delta\volL(X_n)$ without
+  requiring within-bundle poset-independence.
+  S3 (bundle coherence) ensures $\volR(Y_n) > 0$ so the division
+  is well-defined.
 \item Per-capability max-attribution across overlapping events
   (Proposition~\ref{prop:monotone}).
 \item Summation over capabilities in $U$.

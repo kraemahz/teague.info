@@ -14,27 +14,58 @@ across the capability space.
 The trade-flow leverage of bundle category $c$ at time $T$ is:
 \[
   \lambda_{\mathrm{trade}}(c, T) \;=\;
-  \volRlower(c, T) \;/\; \volRlower(G, T).
+  \begin{cases}
+    \volRlower(c, T) \;/\; \volRlower(G, T)
+      & \text{if } \volRlower(G, T) > 0, \\
+    \text{undefined (diagnostic suppressed)}
+      & \text{if } \volRlower(G, T) = 0.
+  \end{cases}
 \]
 Under healthy trade diversity, leverage is distributed across many
 categories.  Under wireheading, leverage concentrates on the loop
-drivers.
+drivers.  When total observed trade flow is zero (the agent has
+produced no theorem-admissible sacrifice events in the window),
+$\lambda_{\mathrm{trade}}$ is not a meaningful quantity and the
+diagnostic is suppressed; the relevant signal in that regime is
+the gap decomposition (\S\ref{sec:gap_decomposition}), which
+classifies capabilities as dormant or residual rather than as
+concentration-anomalies.
 \end{definition}
 
-\begin{proposition}[Wireheading Detection via Trade-Flow
-Concentration]
+\begin{proposition}[Wireheading-Consistent Concentration
+Signal]
 \label{prop:wireheading_hhi}
-If the Herfindahl--Hirschman Index~\citep{rhoades1993herfindahl}
-of trade-flow leverage exceeds a threshold:
+When $\volRlower(G, T) > 0$, the Herfindahl--Hirschman
+Index~\citep{rhoades1993herfindahl}
 \[
   \HHI(\lambda_{\mathrm{trade}}) \;=\;
-  \sum_{c} \lambda_{\mathrm{trade}}(c)^2 \;>\; \HHI_{\mathrm{alarm}},
+  \sum_{c} \lambda_{\mathrm{trade}}(c)^2
 \]
-then the sacrifice pattern is consistent with wireheading: a small
-number of bundle categories dominate the aggregate lower bound,
-indicating that the collective's value-expression is concentrated
-rather than distributed.
+is monotone in the concentration of observed trade flow.
+Comparing $\HHI$ against a governance-set threshold
+$\HHI_{\mathrm{alarm}}$ therefore provides a
+concentration-consistent-with-wireheading alarm: if
+$\HHI > \HHI_{\mathrm{alarm}}$, a small number of bundle
+categories dominate the aggregate, which is the behavioural
+signature of narrow self-reinforcing exercise.
 \end{proposition}
+
+\begin{remark}[$\HHI_{\mathrm{alarm}}$ is a governance parameter,
+not a theorem-derived separator]
+\label{rem:hhi_alarm_governance}
+The alarm threshold $\HHI_{\mathrm{alarm}}$ is not derived from
+the framework's axioms; it is a governance parameter calibrated
+to the framework's tolerance for concentration risk, analogous
+to $\HHI$ thresholds in antitrust practice and to the sufficiency
+thresholds of Definition~\ref{def:need_bundle}.  Its appropriate
+value depends on the support size (number of categories with
+non-zero leverage), the domain's expected baseline concentration,
+and the framework's false-positive/false-negative tolerance.
+The structural guarantee is that $\HHI$ is monotone in
+concentration; the separation between wireheading-consistent and
+wireheading-inconsistent patterns is operational, not
+theorem-derived.
+\end{remark}
 
 \begin{proof}
 Let $m = |\{c : \volRlower(c) > 0\}|$ be the number of bundle

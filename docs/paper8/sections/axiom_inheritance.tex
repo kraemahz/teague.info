@@ -7,38 +7,48 @@ inheritance analysis applies directly, with an additional layer:
 the lower bound itself is not a measure (it is a bound on a
 measure).
 
-\begin{theorem}[Axiom Inheritance for $\volRlower$]
+\begin{theorem}[Axiom-Analogue Analysis for $\volRlower$]
 \label{thm:axiom_inheritance}
-Analyse each of the axioms M1--M6
-from~\citep[Proposition~1]{lasser2026poset} for $\volRlower$:
+$\volRlower$ is a lower-bound statistic, not a poset measure in
+the sense of~\citep[Proposition~1]{lasser2026poset}; the clauses
+below describe \emph{operational analogues} of M1--M6 for
+$\volRlower$, not literal axiom inheritance.  M4 and the
+structural M6-failure result are substantive; M1, M2, M3, and
+M5 are weaker conditional statements noted for completeness.
 
 \begin{description}
-\item[(M1) Non-negativity:] Satisfied.  $\volRlower$ is a sum of
-  non-negative terms ($\Delta\volL(X_n) \geq 0$ per event;
+\item[(M1) Non-negativity (analogue).] Satisfied.  $\volRlower$ is
+  a sum of non-negative terms ($\Delta\volL(X_n) \geq 0$ per event;
   max-attribution preserves non-negativity).
 
-\item[(M2) Null empty set:] Satisfied.  With zero sacrifice
-  events, $\volRlower = 0$.
+\item[(M2) Null empty set (analogue).] Satisfied.  With zero
+  sacrifice events, $\volRlower = 0$.
 
-\item[(M3) Monotonicity:] Satisfied within the observed subset.
-  Adding more sacrifice events covering a larger subset of $U$
-  weakly increases $\volRlower$
-  (Proposition~\ref{prop:monotone}).  However, M3 does \emph{not}
-  hold for the relationship between $\volL$ and $\volRlower$:
-  adding a benchmarked capability to the poset increases $\volL$
-  but does not affect $\volRlower$ unless that capability is
-  subsequently sacrificed.
+\item[(M3) Monotonicity (conditional analogue).] Satisfied in the
+  observational direction: adding sacrifice events covering a
+  larger subset of $U$ weakly increases $\volRlower$
+  (Proposition~\ref{prop:monotone}).  M3 does \emph{not} hold
+  for the relationship between $\volL$ and $\volRlower$: adding
+  a benchmarked capability to the poset increases $\volL$ but
+  does not affect $\volRlower$ unless that capability is
+  subsequently sacrificed.  This is a lower-bound statistic
+  property, not a poset-measure axiom.
 
-\item[(M4) Additivity under disjointness:] Satisfied for
-  poset-independent bundle categories
-  (Definition~\ref{def:category_partition}).
+\item[(M4) Additivity under disjointness (substantive).]
+  Satisfied for poset-independent bundle categories
+  (Definition~\ref{def:category_partition}).  This is the
+  load-bearing inheritance that makes the aggregate bound
+  compose across events (Theorem~\ref{thm:aggregate_bound},
+  Part~A, M4 application).
 
-\item[(M5) Non-triviality:] Satisfied conditionally.  A single
+\item[(M5) Non-triviality (conditional analogue).] A single
   sacrifice event with $\Delta\volL(X) > 0$ produces
-  $\volRlower > 0$.
+  $\volRlower > 0$ on the capabilities the event covers.  This
+  is an observation-dependent analogue, not the structural
+  non-triviality of every valid capability.
 
-\item[(M6) Superadditivity under independence:] Does \emph{not}
-  unconditionally hold.  Two distinct failures:
+\item[(M6) Superadditivity under independence (substantive).]
+  Does \emph{not} unconditionally hold.  Two distinct failures:
   \begin{enumerate}
   \item[(a)] \textbf{$\volR$ itself fails M6 (structural).}
     $\volR = \volL$ restricted to the exercised sub-poset, and

@@ -73,17 +73,36 @@ The $\delta$ terms are:
 
 \begin{proposition}[Computability of Gap Decomposition]
 \label{prop:gap_computable}
-The four-term gap decomposition is computable from:
-the aggregate sacrifice data (events in $[T - H, T]$),
-the restriction set $\Xi$,
-the residual class $\ResS$
-(Definition~\ref{def:residual_class}), and
-the capability census (enumeration of $P$).
-Classification is $O(|P|)$ given the sacrifice database and the
-$\ResS$ classification.  No structural counterfactual computation
-is required (a direct-measurement approach would require
-$O(|P|^2)$ counterfactual queries).
+Given
+(i)~the aggregate sacrifice data (events in $[T - H, T]$),
+(ii)~the restriction set $\Xi$,
+(iii)~the residual class $\ResS$
+(Definition~\ref{def:residual_class}),
+(iv)~the capability census (enumeration of $P$), and
+(v)~an event-admissibility labelling designating which observed
+events satisfy the theorem-admissibility requirements (S0, S1, S2
+for Part~A; S0--S5 for Part~B),
+the four-term gap decomposition is computable in time $O(|P|)$.
+No structural counterfactual computation is required (a
+direct-measurement approach would require $O(|P|^2)$
+counterfactual queries).
 \end{proposition}
+
+\begin{remark}[Admissibility-labelling is an external input]
+\label{rem:admissibility_external}
+S0 (calibration) and the interior component of S1 are not
+mechanically verifiable from the observable event fields alone.
+Input~(v) of Proposition~\ref{prop:gap_computable} represents an
+external admissibility layer: events must be labelled admissible
+(by trust-weighted attestation, auditor sampling, or explicit
+agent commitment) before the decomposition can classify
+capabilities into ``covered.''  Under committed-mode operation
+(Section~\ref{sec:commitment}), the labelling is carried by the
+commitment protocol's proof attachment; in unrestricted mode, the
+framework must rely on governance processes to supply it.  The
+$O(|P|)$ complexity is the \emph{classification} cost given the
+labelling, not the cost of producing the labelling itself.
+\end{remark}
 
 \begin{remark}[Part~A versus Part~B granularity]
 Under Part~A alone (category-level aggregates, S0--S2), the
