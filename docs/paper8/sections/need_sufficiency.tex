@@ -443,6 +443,60 @@ preserves the ReLU shape above threshold while leaving a small
 floor $\alpha$ below.
 \end{remark}
 
+\subsection{Sacrifice-polarity (S1) connection}
+
+\begin{proposition}[S1--Sufficiency Connection]
+\label{prop:s1_sufficiency}
+Below-sufficiency sacrifices fail Assumption~S1 (free choice,
+Section~\ref{sec:sacrifice_model}).  S1 requires that retaining
+the sacrificed capability $X_n$ was a \emph{non-degrading}
+alternative---one that would not leave the agent below minimum
+viable functionality on any need dimension.  For an agent whose
+capability level on dimension $d_k$ is below the sufficiency
+threshold $s_k$, retaining $X_n$ (not making the trade) leaves
+the agent below functionality on $d_k$.  This is not a
+non-degrading alternative per S1's definition, so S1 fails for
+that event.
+\end{proposition}
+
+\noindent\textbf{Consequence for the sacrifice channel.}
+Below-sufficiency events are filtered from the revealed-sacrifice
+aggregate by S1 before they reach the aggregate lower bound
+(Theorem~\ref{thm:aggregate_bound}).  The sacrifice channel
+operates only over events where S1 holds.  For above-sufficiency
+(want-pursuit) events, the need-insufficiency failure mode of S1
+is removed.  S1 may still fail for above-sufficiency events via
+other mechanisms (coercion, duress---see
+Remark~\ref{rem:s1_above} below).
+
+\begin{remark}[S1 is not automatically satisfied above
+sufficiency]
+\label{rem:s1_above}
+S1 can still fail for above-sufficiency events if the trade was
+coerced by other mechanisms (economic duress, political pressure,
+information asymmetry) even though the need-sufficiency condition
+is met.  The sufficiency threshold resolves one structural failure
+mode of S1 (the involuntary-need-satisfaction case); other S1
+failure modes (Open Question~\ref{oq:coercion},
+Section~\ref{sec:discussion}) remain.
+\end{remark}
+
+\begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
+Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
+agent~$i$'s capability level on need dimension $d_k$ would fall
+below the sufficiency threshold $s_k$.  Agent~$i$ must reach
+$s_k$ on $d_k$ to maintain minimum viable functionality.  The
+alternative of retaining $X$ (not making the trade) leaves the
+agent below $s_k$ on $d_k$.  S1 requires the retention
+alternative to be non-degrading: it must not drop the agent below
+minimum viable functionality on any need dimension.  Retention
+here does precisely that, so the non-degrading alternative
+requirement fails and S1 does not hold for this event.  Events
+with failed S1 are excluded from the aggregate by the
+applicable-assumptions clause of
+Theorem~\ref{thm:aggregate_bound}.
+\end{proof}
+
 \subsection{The capability-stuffing problem}
 \label{sec:capability_stuffing}
 
@@ -571,7 +625,7 @@ Each of these defeats any attempt to block stuffing using
 post-declaration poset properties or exercise patterns alone.
 The honest statement of the need-sufficiency architecture's
 contribution is sacrifice-polarity resolution (via
-Proposition~\ref{prop:s1_sufficiency} below, which is
+Proposition~\ref{prop:s1_sufficiency} above, which is
 load-bearing for the sacrifice channel) together with the
 narrow below-sufficiency cap of
 Proposition~\ref{prop:below_suff_saturation}.  Full structural
@@ -642,60 +696,6 @@ dedicated follow-up paper.  This paper states the direction and
 leaves the formal work there.  The open-question entry in
 \S\ref{sec:discussion} describes the follow-up scope in more
 detail.
-
-\subsection{Sacrifice-polarity (S1) connection}
-
-\begin{proposition}[S1--Sufficiency Connection]
-\label{prop:s1_sufficiency}
-Below-sufficiency sacrifices fail Assumption~S1 (free choice,
-Section~\ref{sec:sacrifice_model}).  S1 requires that retaining
-the sacrificed capability $X_n$ was a \emph{non-degrading}
-alternative---one that would not leave the agent below minimum
-viable functionality on any need dimension.  For an agent whose
-capability level on dimension $d_k$ is below the sufficiency
-threshold $s_k$, retaining $X_n$ (not making the trade) leaves
-the agent below functionality on $d_k$.  This is not a
-non-degrading alternative per S1's definition, so S1 fails for
-that event.
-\end{proposition}
-
-\noindent\textbf{Consequence for the sacrifice channel.}
-Below-sufficiency events are filtered from the revealed-sacrifice
-aggregate by S1 before they reach the aggregate lower bound
-(Theorem~\ref{thm:aggregate_bound}).  The sacrifice channel
-operates only over events where S1 holds.  For above-sufficiency
-(want-pursuit) events, the need-insufficiency failure mode of S1
-is removed.  S1 may still fail for above-sufficiency events via
-other mechanisms (coercion, duress---see
-Remark~\ref{rem:s1_above} below).
-
-\begin{remark}[S1 is not automatically satisfied above
-sufficiency]
-\label{rem:s1_above}
-S1 can still fail for above-sufficiency events if the trade was
-coerced by other mechanisms (economic duress, political pressure,
-information asymmetry) even though the need-sufficiency condition
-is met.  The sufficiency threshold resolves one structural failure
-mode of S1 (the involuntary-need-satisfaction case); other S1
-failure modes (Open Question~\ref{oq:coercion},
-Section~\ref{sec:discussion}) remain.
-\end{remark}
-
-\begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
-Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
-agent~$i$'s capability level on need dimension $d_k$ would fall
-below the sufficiency threshold $s_k$.  Agent~$i$ must reach
-$s_k$ on $d_k$ to maintain minimum viable functionality.  The
-alternative of retaining $X$ (not making the trade) leaves the
-agent below $s_k$ on $d_k$.  S1 requires the retention
-alternative to be non-degrading: it must not drop the agent below
-minimum viable functionality on any need dimension.  Retention
-here does precisely that, so the non-degrading alternative
-requirement fails and S1 does not hold for this event.  Events
-with failed S1 are excluded from the aggregate by the
-applicable-assumptions clause of
-Theorem~\ref{thm:aggregate_bound}.
-\end{proof}
 
 \subsection{How sufficiency thresholds are set}
 \label{sec:threshold_setting}
