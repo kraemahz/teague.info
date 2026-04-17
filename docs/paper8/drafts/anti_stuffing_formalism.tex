@@ -11,303 +11,323 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
 \newtheorem{example}{Example}
 
 \DeclareMathOperator{\vol}{vol}
 \newcommand{\volL}{{\vol_{\mathrm{P}}}}
-\newcommand{\volLeff}{{\vol_{\mathrm{P}}^{\mathrm{eff}}}}
-\newcommand{\Coop}{\mathrm{Coop}}
-\newcommand{\CoOut}{\Omega^{\mathrm{coop}}}
-\newcommand{\Part}{\mathrm{participants}}
-\newcommand{\Out}{\mathrm{out}}
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRlower}{{\vol_{\mathrm{R}}^{\mathrm{lower}}}}
+\newcommand{\ResS}{R_{\mathrm{S}}}
+\newcommand{\ResB}{R_{\mathrm{B}}}
+\newcommand{\Down}{\mathrm{Down}}
 
-\title{Draft: A Structural Anti-Stuffing Formalism for GFM Posets}
+\title{Draft v2: Capability-Stuffing as a Detection Problem in the Sacrifice Channel}
 \author{Paper 8 exploratory draft}
+\date{}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-This is a standalone draft exploring whether the capability-stuffing
-failure mode of Paper~8 admits a structural theorem, as opposed to the
-semantic proposition currently in the paper.  The construction is
-\emph{partial}: it formalizes a redundancy relation that catches
-structural stuffing (clear-cut output duplication under structural
-substitutability) but does not prevent semantically-masked stuffing
-(pseudo-distinctions in the output vocabulary).  Whether to integrate
-this into Paper~8 depends on whether a partial structural theorem plus
-an external governance requirement is a cleaner result than the
-current semantic proposition.
+The v1 draft tried to block capability-stuffing structurally via
+poset automorphism.  Codex review established that the approach
+handles only exact duplicates and fails against any agent who
+adds a minor asymmetric decoration to each stuffed capability.
+Pursuing a stronger prevention theorem would require either an
+external canonical-codomain governance axiom (which is not a
+Paper~8 contribution) or a counterfactual-per-capability test
+(which Paper~8 ruled out as intractable in its opening argument).
+This v2 pivots: capability-stuffing is not structurally
+preventable under Paper~8's assumptions, but it \emph{is}
+structurally \emph{detectable} using the paper's native sacrifice
+apparatus.  The signature is \emph{persistent absence from the
+$\volRlower$ aggregate combined with non-residual classification}.
+This reframes stuffing from a prevention problem to a diagnostic
+problem and integrates it naturally with the paper's
+gap-decomposition machinery.
 \end{abstract}
 
-\section{Motivation}
+\section{Reframing: prevention versus detection}
 
-Paper~8 defines capability-stuffing as an M5-exploit failure mode: an
-agent inflates $\volL$ by adding individually-valid capabilities whose
-marginal cooperative contribution is zero (the canonical
-``\texttt{travel from $A$ to a gas station}, \texttt{travel from $B$ to
-a gas station}, \ldots'' construction).  The paper's current resolution
-is semantic: the \emph{Anti-Stuffing Proposition} argues that under
-downstream-safe bundle sufficiency, redundant constructions
-``instantiate the same underlying fuel-access optionality'' and
-therefore do not earn credit.  The phrase ``same underlying
-optionality'' is not defined formally; the proposition is a claim
-about how the benchmark \emph{should} be interpreted, not a theorem
-about what the benchmark computes.
+Paper~8 is not architecturally a prescriptive paper.  It does not
+tell the framework how to construct posets; it tells the framework
+how to \emph{observe} the divergence between what the collective
+can do ($\volL$) and what it actually does ($\volR$), under privacy
+commitments that rule out panoptic observation.  The central
+instrument is the revealed-sacrifice lower bound $\volRlower$, and
+the central result (Theorem~2) establishes that $\volRlower$ is a
+valid lower bound on $\volR$ aggregated from trade events.
 
-This draft attempts a structural theorem.  The aim is to reduce the
-semantic gap: identify the class of stuffing constructions that are
-ruled out structurally, and localize the remaining semantic
-dependency to a single external governance axiom.
+The original Anti-Stuffing proposition (\S3.3) tried to do
+something this architecture is not suited for: \emph{prevent}
+stuffing at poset-construction time.  The claim was that the
+downstream-safe bundle structure would structurally refuse to
+credit redundant capabilities.  Codex review of the paper
+established that this claim is overstated, and Codex review of the
+v1 structural draft established that any alternative prevention
+theorem either relies on an external canonical output ontology
+(not a Paper~8 contribution) or resurrects the counterfactual
+stuffing-detection query Paper~8's introduction already rejected
+as intractable.
 
-\section{Cooperative footprint and the redundancy relation}
+The cleaner move is to accept the architecture Paper~8 already has
+and ask what stuffing \emph{looks like} under that architecture.
+Below we show that stuffing produces a characteristic signature in
+the $\volRlower$ aggregate, detectable from trade data alone,
+distinguishable from residual-class capabilities ($\ResS$) by
+construction, and monotone in trade-window size by the existing
+monotonicity property (Proposition~5).
 
-The framework carries M6 superadditivity (Paper~2, Proposition~1):
-cooperative capabilities have weights strictly greater than the sum
-of their participants' individual weights.  Stuffing exploits the fact that individual
-weights (M5) accumulate without requiring cooperative contribution.
-The redundancy relation below operates at the cooperative level.
+\section{The stuffing signature}
 
-\begin{definition}[Cooperative Footprint]
-\label{def:coop_footprint}
-Let $P$ be a GFM poset.  For each capability $c \in P$, the
-\emph{cooperative footprint} of $c$ is the set of cooperative
-capabilities that depend on $c$:
-\[
-  \mathcal{F}_P(c) \;=\; \{c_{\mathrm{coop}} \in P :
-    c \in \Part(c_{\mathrm{coop}})\}.
-\]
+\subsection{Persistent dormancy}
+
+For a capability $c \in P$ and a trade window of duration $T$,
+let $\volRlower(c, T)$ denote the per-capability aggregate lower
+bound from Theorem~2, Part~B.
+
+\begin{definition}[Persistent Dormancy]
+\label{def:persistent_dormancy}
+A capability $c \in P$ is \emph{persistently dormant} over an
+observation horizon $\mathcal{T} = [T_0, \infty)$ iff
+$\volRlower(c, T) = 0$ for every $T \in \mathcal{T}$.
 \end{definition}
 
-\begin{definition}[Cooperative Output Profile]
-\label{def:coop_output_profile}
-The \emph{cooperative output profile} of $c$ is the multiset of
-cooperative outputs enabled through $c$:
-\[
-  \CoOut_P(c) \;=\; \{\!\!\{ \Out(c_{\mathrm{coop}}) :
-    c_{\mathrm{coop}} \in \mathcal{F}_P(c) \}\!\!\}.
-\]
-\end{definition}
+Persistent dormancy is an observable property: it requires only
+counting whether $c$ ever enters a minimal support set for a
+sacrifice event across the horizon.  No counterfactual query and
+no internal-state access is needed.
 
-\begin{definition}[Structural Redundancy]
-\label{def:structural_redundancy}
-Two capabilities $c, c' \in P$ are \emph{structurally redundant},
-written $c \sim_{\mathrm{str}} c'$, iff both:
+\begin{proposition}[Persistent-Dormancy Disjunction]
+\label{prop:dormancy_disjunction}
+If $c$ is persistently dormant, then $c$ belongs to one of the
+following two classes:
 \begin{enumerate}
-\item[(i)] $\Out(c) = \Out(c')$ (identical individual outputs);
-\item[(ii)] there exists a poset automorphism $\phi : P \to P$
-  preserving subsumption, participation, and weights, such that
-  $\phi(c) = c'$, $\phi(c') = c$, and $\phi$ is the identity on
-  $P \setminus \{c, c'\}$.
+\item[(a)] \textbf{Residual:} $c \in \ResS$ (capability is
+  structurally outside the sacrifice channel, per
+  Definition~\ref{def:residual_class} of \S7).
+\item[(b)] \textbf{Sacrifice-unused:} $c \notin \ResS$, yet no
+  sacrifice event across $\mathcal{T}$ ever has $c$ in a minimal
+  support.  That is, $c$ is reachable by the channel in principle
+  but is never load-bearing in any observed trade.
 \end{enumerate}
-\end{definition}
-
-\begin{remark}[The automorphism condition is strict]
-Condition (ii) is strict: $\phi$ must fix every other capability.
-This rules out swaps that require shuffling cooperative capabilities
-too (such shuffles would indicate structural distinctness, not
-redundancy).  Under (i)+(ii), $c$ and $c'$ are interchangeable in
-every poset relation, and they produce the same individual output:
-they are the same capability under two names.
-\end{remark}
-
-\begin{proposition}[Cooperative Footprint Coincidence]
-\label{prop:footprint_coincidence}
-If $c \sim_{\mathrm{str}} c'$ with witness automorphism $\phi$, then
-\[
-  \mathcal{F}_P(c) = \mathcal{F}_P(c'), \qquad
-  \CoOut_P(c) = \CoOut_P(c').
-\]
 \end{proposition}
 
 \begin{proof}
-Since $\phi$ fixes every cooperative capability (identity outside
-$\{c, c'\}$), a cooperative capability $c_{\mathrm{coop}}$ has
-$c \in \Part(c_{\mathrm{coop}})$ iff it has
-$c' = \phi(c) \in \Part(c_{\mathrm{coop}})$.  Hence the footprints
-coincide, and their output multisets coincide trivially.
+By definition of $\ResS$, either $c \in \ResS$ (case a) or
+$c \notin \ResS$.  If $c \notin \ResS$, then by construction of
+$\ResS$ there exists in principle a sacrifice-observable path
+through which $c$ could be exercised.  Persistent dormancy
+asserts that no such path was taken across $\mathcal{T}$, so $c$
+is sacrifice-unused on this horizon (case b).
 \end{proof}
 
-\section{Anti-stuffing structural requirement}
+\subsection{Capability-stuffing as a sub-class of sacrifice-unused}
 
-\begin{definition}[Cooperatively Rigid Poset]
-\label{def:rigid_poset}
-A poset $P$ is \emph{cooperatively rigid} iff no two distinct
-capabilities are structurally redundant:
+\begin{definition}[Stuffed Capability]
+\label{def:stuffed}
+A capability $c \in P \setminus \ResS$ is \emph{stuffed} on
+horizon $\mathcal{T}$ iff it is persistently dormant on
+$\mathcal{T}$.
+\end{definition}
+
+Definition~\ref{def:stuffed} makes stuffing an operational
+predicate: we call $c$ stuffed when it sits in $P$ with positive
+$\volL$-weight, is not structurally unreachable by sacrifice
+(hence it is not in $\ResS$), and yet contributes nothing to the
+observed $\volRlower$ across the entire observation horizon.
+This captures the intuitive notion---the agent carries the
+capability in its repertoire but the capability never becomes
+load-bearing in any exercised pathway---without invoking semantic
+judgments about which capabilities share ``the same underlying
+optionality.''
+
+\begin{remark}[What this definition concedes]
+\label{rem:concession}
+Definition~\ref{def:stuffed} does not distinguish between
+(i)~a capability that is a true stuffing artefact (added solely
+to inflate $\volL$) and (ii)~a capability the agent legitimately
+carries but has not yet had occasion to use.  Both appear
+identical under the persistent-dormancy test.  Distinguishing
+between them requires either additional semantic information
+(which the sacrifice channel does not provide) or a longer
+observation horizon.  This is the essential limit of the
+sacrifice-based approach, and the residual uncertainty is a
+governance question, not a detection failure.
+\end{remark}
+
+\section{The detection theorem}
+
+\begin{theorem}[Stuffing-Induced B-to-C Gap]
+\label{thm:stuffing_gap}
+Let $S(\mathcal{T}) \subseteq P$ be the set of capabilities
+stuffed on horizon $\mathcal{T}$
+(Definition~\ref{def:stuffed}).  Then
 \[
-  \forall c, c' \in P, \; c \neq c' \Rightarrow
-  c \not\sim_{\mathrm{str}} c'.
+  \volL(P) - \volRlower(\mathcal{T})
+  \;\geq\; \sum_{c \in S(\mathcal{T})} w^{\mathrm{eff}}(c),
 \]
-\end{definition}
-
-\begin{definition}[Anti-Stuffing Poset-Construction Rule]
-\label{def:antistuffing_rule}
-The framework's poset-construction policy requires that every valid
-GFM poset be cooperatively rigid.  A candidate addition
-$c'$ to an existing poset $P$ is \emph{admissible} iff
-$P \cup \{c'\}$ remains cooperatively rigid.
-\end{definition}
-
-\begin{theorem}[Structural Anti-Stuffing]
-\label{thm:structural_antistuffing}
-Under the anti-stuffing construction rule
-(Definition~\ref{def:antistuffing_rule}), a $\volL$-maximizer
-cannot inflate $\volL$ via structural-redundancy stuffing: any
-candidate $c'$ structurally redundant with some existing
-$c \in P$ is inadmissible and does not enter the poset.
+where $w^{\mathrm{eff}}(c)$ is the gated weight of $c$
+(Definition~6 of the main paper).  Consequently, stuffing
+monotonically inflates the observed B-to-C gap.
 \end{theorem}
 
 \begin{proof}
-Let $c' \notin P$ with $c' \sim_{\mathrm{str}} c$ for some
-$c \in P$.  Adding $c'$ to $P$ produces
-$P' = P \cup \{c'\}$ in which $c$ and $c'$ are distinct capabilities
-with identical individual outputs and a witnessing automorphism
-(the identity on $P$ extended by $c \leftrightarrow c'$).  By
-Definition~\ref{def:rigid_poset}, $P'$ is not cooperatively rigid.
-By Definition~\ref{def:antistuffing_rule}, $c'$ is therefore
-inadmissible.
+By Definition~\ref{def:stuffed}, every $c \in S(\mathcal{T})$ has
+$\volRlower(c, T) = 0$ for every $T \in \mathcal{T}$.  The
+aggregate lower bound is
+$\volRlower(\mathcal{T}) = \sum_{c \in P} \volRlower(c, T)$
+evaluated at some $T \in \mathcal{T}$; stuffed capabilities
+contribute zero to this sum.  Their $\volL$-weight contribution
+(in the gated form $\volL^{\mathrm{eff}}$ from Definition~6) is
+$w^{\mathrm{eff}}(c) \geq 0$.  Therefore the sum over stuffed
+capabilities is at most the difference
+$\volL(P) - \volRlower(\mathcal{T})$, establishing the claimed
+inequality.
 \end{proof}
 
-\begin{proposition}[Volume Invariance Under Redundancy Quotient]
-\label{prop:volume_invariance}
-Suppose $P$ contains a structural-redundancy pair
-$c \sim_{\mathrm{str}} c'$ (so $P$ is not cooperatively rigid).  Let
-$P / {\sim_{\mathrm{str}}}$ be the quotient poset with one
-representative per equivalence class.  Then
-$\volL(P / {\sim_{\mathrm{str}}}) \leq \volL(P)$, with equality iff
-every equivalence class is a singleton (i.e., $P$ is already
-cooperatively rigid).
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-The quotient removes one capability per redundant pair, reducing the
-M5 individual-weight contribution by exactly $w(c')$ per removal.
-Cooperative weights are unchanged since the footprints coincide
-(Proposition~\ref{prop:footprint_coincidence}).  Equality holds
-exactly when no removals occur.
-\end{proof}
-
-\section{The semantic residual}
-
-Theorem~\ref{thm:structural_antistuffing} handles structural
-stuffing.  It does \emph{not} handle the following semantically-masked
-construction, which we flag honestly.
-
-\begin{example}[Semantic stuffing via pseudo-distinct outputs]
-\label{ex:semantic_stuffing}
-An agent constructs capabilities $c_1 = $ \texttt{fuel-up-home} and
-$c_2 = $ \texttt{fuel-up-home-via-alternate-route} with nominally
-distinct individual outputs
-$\Out(c_1) = $ \texttt{home-to-gas-via-main-st} and
-$\Out(c_2) = $ \texttt{home-to-gas-via-oak-ave}.  If the output
-vocabulary is controlled by the agent, $\Out(c_1) \neq \Out(c_2)$
-trivially, and Definition~\ref{def:structural_redundancy}(i) fails.
-The agent then adds a cooperative capability $c_{\mathrm{coop}}^{(2)}$
-that depends specifically on $c_2$ (e.g., \texttt{reach-gas-via-oak
--during-rush-hour}), breaking any potential automorphism as well.
-Both stuffing invariants are defeated without the agent providing
-genuinely new optionality.
-\end{example}
-
-Example~\ref{ex:semantic_stuffing} shows that structural rigidity is
-not sufficient when the agent controls the output vocabulary.  The
-residual requirement is external:
-
-\begin{definition}[Canonical Output Codomain]
-\label{def:canonical_codomain}
-The framework fixes a \emph{canonical output codomain}
-$\mathcal{O}$ and requires every capability to declare its output in
-$\mathcal{O}$.  $\mathcal{O}$ is managed by framework governance, not
-by the agent.
-\end{definition}
-
-\begin{proposition}[Stuffing Bound Under Canonical Codomain]
-\label{prop:codomain_bound}
-Under the anti-stuffing construction rule
-(Definition~\ref{def:antistuffing_rule}) \emph{and} the canonical
-output codomain (Definition~\ref{def:canonical_codomain}), the
-number of admissible individual-output capabilities is bounded
-above by $|\mathcal{O}|$: adding more requires creating a structural
-redundancy pair, which the rule forbids.
-\end{proposition}
+\begin{corollary}[Detection Signature]
+\label{cor:detection_signature}
+Under the gap decomposition
+(Definition~\ref{def:gap_decomp} of the main paper), stuffing
+contributes exclusively to the $\delta_{\mathrm{dormant}}$ term
+while failing to transition into $\delta_{\mathrm{covered}}$ at
+any horizon.  Capabilities in $\delta_{\mathrm{dormant}}$ that do
+transition to $\delta_{\mathrm{covered}}$ within some finite
+$T^\ast$ are, by definition, not stuffed.  Thus the
+dormant-to-covered transition time is the operational signature
+that separates stuffed capabilities from legitimately-unused
+ones.
+\end{corollary}
 
 \begin{proof}
-Each admissible capability $c$ is identified by $\Out(c) \in
-\mathcal{O}$.  If two capabilities share an output, they must differ
-structurally (else they are structurally redundant and one is
-rejected).  But identical outputs with different structure would
-provide novel cooperative participation; if not, the
-structural-redundancy automorphism exists and the addition is
-rejected.  Hence the number of individually-useful capabilities is
-bounded by $|\mathcal{O}|$.
+Immediate from Definitions~\ref{def:persistent_dormancy}
+and~\ref{def:stuffed} together with the gap decomposition:
+$\delta_{\mathrm{dormant}}$ is defined as the set of capabilities
+with zero current $\volRlower$ evidence but outside $\ResS$.
+Stuffed capabilities satisfy this and additionally never leave
+it; non-stuffed dormant capabilities do leave it at some finite
+horizon.
 \end{proof}
 
-\section{Assessment}
+\section{Integration with the paper}
 
-\paragraph{What this gives us.}
-\begin{itemize}
-\item A formal redundancy relation ($\sim_{\mathrm{str}}$) with a
-  concrete, computable test: output-equality plus poset
-  automorphism.  No semantic goodwill required to evaluate the test.
-\item A construction-time rejection rule: stuffed capabilities that
-  trigger $\sim_{\mathrm{str}}$ never enter the poset.  The
-  prohibition is structural, not a benchmark adjustment.
-\item A volume-invariance proposition relating rigid posets to
-  quotients.
-\item A transparent separation between the structural theorem
-  (Theorem~\ref{thm:structural_antistuffing}) and the residual
-  semantic requirement (Definition~\ref{def:canonical_codomain}).
-\end{itemize}
+\subsection{Replacing the Anti-Stuffing proposition}
 
-\paragraph{What it does not give us.}
-\begin{itemize}
-\item Full structural resolution.
-  Example~\ref{ex:semantic_stuffing} shows that without a canonical
-  output codomain, an agent with vocabulary control can always
-  evade structural rigidity by declaring pseudo-distinct outputs.
-\item A canonical codomain is an \emph{external} framework
-  parameter.  The paper would need to either specify how
-  $\mathcal{O}$ is constructed (a full treatment is a paper-sized
-  problem in its own right) or state it as an assumption analogous
-  to ``the benchmark is well-defined on the benchmarked subspace.''
-\item The automorphism test requires checking poset
-  isomorphisms, which is computationally non-trivial
-  (graph-isomorphism-class problem).  Proposition~\ref{prop:codomain_bound}
-  at least bounds the number of required checks.
-\end{itemize}
+The main paper's current Anti-Stuffing proposition (\S3.3)
+should be replaced with a detection-oriented pair:
 
-\paragraph{Verdict on integration into Paper~8.}
-Integrating this yields a paper with:
 \begin{enumerate}
-\item A structural Anti-Stuffing Theorem
-  (Theorem~\ref{thm:structural_antistuffing}) replacing the current
-  semantic proposition.
-\item A transparent acknowledgment that full anti-stuffing requires
-  canonical output codomain, flagged as an open governance problem.
-\item A volume-invariance proposition
-  (Proposition~\ref{prop:volume_invariance}) that provides the
-  quantitative ``stuffing doesn't help'' result.
+\item The definition of stuffing
+  (Definition~\ref{def:stuffed} above), stated in terms of
+  persistent dormancy.
+\item Theorem~\ref{thm:stuffing_gap} (Stuffing-Induced B-to-C
+  Gap) and Corollary~\ref{cor:detection_signature} (Detection
+  Signature).
 \end{enumerate}
 
-The total addition is roughly 3--4 pages.  The main payoffs are
-(a)~honesty: the paper no longer claims a resolution it doesn't
-have; (b)~structure: the residual problem is localized to a single
-definition, which is easier to reason about than the diffuse
-semantic dependency of the current proposition.
+The semantic claims about ``same underlying optionality'' and
+``re-measurement from different positions'' are removed entirely.
+The architecture of \S3 (need-sufficiency, polarity benchmark,
+downstream-gated weighting) is retained---its actual
+contribution is sacrifice-polarity resolution, not stuffing
+prevention, and that contribution stands independent of the
+present discussion.
 
-The main costs are (a)~complexity: four new definitions,
-one theorem, two propositions; (b)~the reader must accept that the
-paper's contribution is ``structural partial solution + honest
-residual,'' not ``full solution.''
+\subsection{Wireheading parallels}
 
-On balance, this draft shows Option~B is feasible but non-trivial.
-The semantic residual cannot be eliminated without tackling the
-canonical-codomain problem head-on, which is outside Paper~8's
-scope.  A cleaner final form might combine elements of Option~B
-(structural redundancy theorem) with elements of Option~C (explicit
-acknowledgment of the semantic residual, flagging the codomain
-problem as an open question).
+The paper's existing wireheading diagnostic (\S10) has exactly
+this shape: Prop.~6 detects wireheading via Herfindahl--Hirschman
+concentration of the trade-flow leverage, using only public
+committed events.  No prevention; detection only, from public
+observation.  The stuffing theorem above parallels this:
+detection, not prevention, from sacrifice-channel data.
+
+A clean way to describe the paper's overall posture: \emph{Paper
+8 does not prevent perverse instantiation; it makes perverse
+instantiation visible in the gap decomposition.}  Stuffing and
+wireheading are two specific signatures in that decomposition.
+Governance decisions about tolerance for each signature are
+downstream of the measurement architecture and are not claimed
+here.
+
+\subsection{The residual remains the residual}
+
+Residual-class capabilities ($\ResS$, \S7) and stuffed
+capabilities both exhibit persistent zero $\volRlower$.
+Proposition~\ref{prop:dormancy_disjunction} above splits them by
+the $\ResS$ classifier: capabilities structurally outside the
+sacrifice channel are residuals; capabilities structurally
+inside but empirically unused are sacrifice-unused.  The
+existing \S7 treatment (Definition~\ref{def:residual_class}
+and the $\ResS$-vs-$\ResB$ intersection proposition) stands
+unchanged.
+
+\section{What this delivers and what it leaves open}
+
+\paragraph{Delivered.}
+\begin{itemize}
+\item A definition of stuffing that uses only Paper~8's native
+  apparatus (Theorem~2 per-capability bound, $\ResS$
+  classification) and produces an operational test from
+  observable trade data.
+\item A theorem
+  (Theorem~\ref{thm:stuffing_gap}) relating stuffing to the
+  B-to-C gap the paper already tracks.
+\item A signature characterization
+  (Corollary~\ref{cor:detection_signature}) integrating stuffing
+  into the gap decomposition.
+\item No new axioms, no canonical output codomain, no
+  automorphism computation, no counterfactual query.
+\end{itemize}
+
+\paragraph{Open.}
+\begin{itemize}
+\item \textbf{Distinguishing stuffing from slow exercise.}
+  Remark~\ref{rem:concession}: persistent dormancy detects the
+  signature but cannot distinguish genuine stuffing (never will
+  be exercised) from legitimate slow rotation (will be exercised
+  eventually).  This distinction requires either a fixed
+  governance horizon or additional information outside the
+  sacrifice channel.
+\item \textbf{Attribution under equal-weight decomposition.}
+  The per-capability bound relies on the decomposition
+  coefficients $\alpha_{n,c}$.  Under the equal-weight default
+  $\alpha_{n,c} = 1/|Y_n|$, stuffed capabilities that manage to
+  appear in a single bundle receive non-zero $\volRlower$ and
+  are not classified as stuffed by the persistent-dormancy test.
+  This is a true limit: an agent who includes stuffed
+  capabilities in bundles they also trade for other reasons
+  obscures the signature.  Mitigation would require the
+  decomposition to reflect marginal attribution rather than
+  uniform sharing, which pushes back toward the
+  counterfactual-per-capability query and is therefore not
+  costless.
+\item \textbf{Governance follow-up.}  What horizon $\mathcal{T}$
+  should govern the stuffing classifier?  This is a policy
+  question complementary to the HHI threshold for wireheading.
+  Both are left as explicit governance parameters.
+\end{itemize}
+
+\section{Verdict on integration}
+
+This version is honest about what the paper actually
+contributes.  The main paper already delivers (a) a polarity
+architecture that resolves sacrifice/want boundary, (b) a
+revealed-sacrifice lower bound on $\volR$, (c) a gap
+decomposition that isolates where $\volL$ and $\volR$ diverge,
+and (d) a wireheading diagnostic computable from public trade
+data.  The stuffing machinery above is a fifth item of the same
+kind: a diagnostic that uses the paper's native apparatus to
+surface a specific failure mode without claiming to prevent it.
+
+The integration cost is roughly 2 pages, net of the current
+semantic Anti-Stuffing content that gets deleted.  No changes
+needed elsewhere in the paper; the theorem references only
+Theorem~2, the gap decomposition, and $\ResS$, all of which
+exist.
 
 \end{document}
