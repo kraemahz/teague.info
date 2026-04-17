@@ -210,6 +210,173 @@ For each dimension $d_k$ of a need capability:
 \end{itemize}
 \end{definition}
 
+Definition~\ref{def:polarity_benchmark} operates at the
+single-capability level: it determines the benchmark score for
+each dimension of a given capability.  It does not, by itself,
+model the structural fact that need-satisfaction is a precondition
+for the exercise of downstream capabilities: an agent without
+water does not merely lose one bit of water-access capability,
+they lose access to the entire class of cooperative capabilities
+that require a hydrated body.  To capture this, the framework
+imposes a multiplicative gate on $\volL$-aggregation through the
+downstream cone.
+
+\begin{definition}[Downstream-Gated Capability Weighting]
+\label{def:downstream_gate}
+For each capability $c \in P$, let $\mathcal{N}(c) = \{N : c \in
+\mathrm{Down}(p_N)\}$ be the set of needs whose downstream cones
+contain $c$.  For each such $N$, let $s_N(c) \in [0, 1]$ be the
+sufficiency level of $N$ in the context where $c$ is exercised,
+with $s_N(c) = 1$ when $N$ is downstream-safe sufficient
+(Definition~\ref{def:downstream_safe}) and $s_N(c) = 0$ when $N$
+is fully unmet.
+
+The \emph{effective weight} of $c$ is:
+\[
+  w^{\mathrm{eff}}(c) \;=\; w(c) \cdot
+  \prod_{N \in \mathcal{N}(c)} G\bigl(s_N(c)\bigr),
+\]
+where $G : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
+$G(1) = 1$, $G(0) = 0$, $G$ monotone non-decreasing.
+
+The effective capability volume is:
+\[
+  \volL^{\mathrm{eff}}(G) \;=\; \sum_{c \in P} w^{\mathrm{eff}}(c).
+\]
+The framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
+$\volL$ once needs have been identified.
+\end{definition}
+
+\begin{remark}[Candidate gate functions]
+\label{rem:gate_candidates}
+The choice of $G$ is a design parameter that trades off
+smoothness, computational simplicity, and the strength of
+need-dominance.  Four candidates:
+\begin{itemize}
+\item \textbf{Linear:} $G(s) = s$.  Simplest; gentle
+  need-dominance; $s_N(c) = 0.5$ halves the downstream
+  contribution.
+\item \textbf{Leaky-ReLU:} $G(s) = \alpha$ for $s \leq s_0$,
+  then linear ramp from $\alpha$ at $s_0$ to $1$ at $s = 1$.
+  Parameters: threshold $s_0 \in [0, 1)$, leak $\alpha \in [0, 1)$.
+  Below threshold, downstream capabilities retain a constant
+  floor $\alpha$; above, rapid ramp to full contribution.
+\item \textbf{ReLU:} Leaky-ReLU with $\alpha = 0$.  Below
+  threshold, downstream capabilities are fully suppressed; above,
+  linear ramp.  Hardest gate; strongest need-dominance.
+\item \textbf{Power law:} $G(s) = s^\gamma$ for $\gamma \geq 1$.
+  Smooth everywhere; gradient vanishes at $s = 0$ for $\gamma > 1$,
+  giving progressively stronger penalty as the sufficiency gap
+  widens.  Single tunable parameter.
+\end{itemize}
+The appropriate gate shape depends on the domain.  Biological
+needs with cliff-like failure modes (dehydration, oxygen
+deprivation) warrant ReLU or high-$\gamma$ power law.  Needs with
+graceful degradation (social connection, mild nutritional
+deficit) warrant leaky-ReLU or low-$\gamma$ power law.  The paper
+leaves $G$ as a domain-specific design parameter and states
+subsequent results for any valid $G$.
+\end{remark}
+
+\begin{proposition}[Near-Total Collapse Under Unmet Need]
+\label{prop:near_total_collapse}
+Let $G$ be any valid gate function
+(Definition~\ref{def:downstream_gate}).  For an agent whose
+cooperative capabilities all lie in $\mathrm{Down}(p_N)$ for
+some need $N$, if the agent is at sufficiency level $s_N < 1$:
+\[
+  \volL^{\mathrm{eff}}(G) \;\leq\; G(s_N) \cdot \volL^{\mathrm{raw}}.
+\]
+As $s_N \to 0$, $G(s_N) \to 0$ and the agent's effective
+$\volL$ collapses toward zero regardless of capability breadth.
+The multiplicative structure makes need-satisfaction a
+precondition for $\volL$ to register the agent's capabilities at
+all; an agent cannot maximize $\volL^{\mathrm{eff}}$ without first
+closing sufficiency gaps on needs whose downstream cones cover
+their cooperative capabilities.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Every cooperative capability $c$ has $N \in \mathcal{N}(c)$ by
+assumption, so its effective weight is bounded above by $w(c)
+\cdot G(s_N)$.  Summing:
+\[
+  \volL^{\mathrm{eff}} = \sum_c w^{\mathrm{eff}}(c)
+  \leq \sum_c w(c) \cdot G(s_N) = G(s_N) \cdot \volL^{\mathrm{raw}}.
+\]
+$G$ monotone non-decreasing with $G(0) = 0$ gives
+$\lim_{s_N \to 0} G(s_N) = 0$.\qed
+\end{proof}
+
+\begin{proposition}[Need-Dominance in the Gradient]
+\label{prop:need_dominance}
+For any valid gate function $G$ with $G$ differentiable at
+$s_N$ and $G'(s_N) > 0$:
+\[
+  \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
+  \;=\; G'(s_N) \cdot \!\!\sum_{c \in \mathrm{Down}(p_N)}\!\!
+  w(c) \cdot \!\!\!\!\prod_{N' \in \mathcal{N}(c),\, N' \neq N}\!\!\!\!
+  G\bigl(s_{N'}(c)\bigr).
+\]
+Adding weight $\delta w$ to a single capability $c'$ increases
+$\volL^{\mathrm{eff}}$ by at most $\delta w$.  Therefore, for any
+need $N$ with non-trivial downstream cone
+$|\mathrm{Down}(p_N)| > 1$ (and all other needs at sufficiency),
+the marginal benefit of closing the sufficiency gap on $N$
+dominates the marginal benefit of adding weight to any single
+capability.  The framework's own optimization pressure prioritizes
+need-satisfaction over want-accumulation.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Direct differentiation.  Only capabilities in
+$\mathrm{Down}(p_N)$ depend on $s_N$; the product rule isolates
+$G'(s_N)$ times the weighted sum of other-gate products.  The
+single-capability comparison follows from $w^{\mathrm{eff}}(c')
+\leq w(c')$ for all $c'$.\qed
+\end{proof}
+
+\begin{remark}[Worked comparison across candidate gates]
+\label{rem:gate_comparison}
+Consider an agent with $10$ cooperative capabilities in
+$\mathrm{Down}(p_N)$ (weight $1$ each) and $3$ capabilities
+outside the cone (weight $1$ each), so
+$\volL^{\mathrm{raw}} = 13$.  At sufficiency level $s$,
+$\volL^{\mathrm{eff}}(s) = 3 + 10 \cdot G(s)$.  The following
+table compares effective volume as a fraction of
+$\volL^{\mathrm{raw}}$ for the four candidate gates (Leaky-ReLU
+with $\alpha = 0.1$, $s_0 = 0.8$; ReLU with $s_0 = 0.8$; power
+law with $\gamma = 2$):
+
+\begin{center}
+\small
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$s$ & Linear & Leaky-ReLU & ReLU & Power ($\gamma{=}2$)
+   & Power ($\gamma{=}3$) \\
+\midrule
+$0.00$ & $0.231$ & $0.308$ & $0.231$ & $0.231$ & $0.231$ \\
+$0.25$ & $0.423$ & $0.308$ & $0.231$ & $0.279$ & $0.243$ \\
+$0.50$ & $0.615$ & $0.308$ & $0.231$ & $0.423$ & $0.327$ \\
+$0.75$ & $0.808$ & $0.308$ & $0.231$ & $0.663$ & $0.556$ \\
+$0.80$ & $0.846$ & $0.308$ & $0.231$ & $0.723$ & $0.625$ \\
+$0.90$ & $0.923$ & $0.654$ & $0.615$ & $0.854$ & $0.792$ \\
+$1.00$ & $1.000$ & $1.000$ & $1.000$ & $1.000$ & $1.000$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Linear gives the gentlest gate (at $s = 0.5$, downstream
+contributions are only halved, so $62\%$ of raw $\volL$ is still
+registered).  ReLU gives the hardest gate (below threshold
+$s_0 = 0.8$, downstream contributions are fully suppressed;
+$\volL^{\mathrm{eff}}$ stays at the non-downstream floor of
+$3/13 \approx 23\%$).  Power-law gates sit between, with
+higher $\gamma$ approaching ReLU's sharpness.  Leaky-ReLU
+preserves the ReLU shape above threshold while leaving a small
+floor $\alpha$ below.
+\end{remark}
+
 \subsection{Structural propositions}
 
 \begin{proposition}[Anti-Stuffing]
