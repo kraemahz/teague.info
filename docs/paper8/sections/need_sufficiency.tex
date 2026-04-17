@@ -6,7 +6,7 @@ The revealed-sacrifice observation channel
 the same polarity: more sacrifice equals more revealed value.
 This is wrong for a class of sacrifices that are structurally
 involuntary.  An agent who pays \$500 for insulin is not revealing
-that insulin is worth \$500 beyond baseline---they are revealing
+that insulin is worth \$500 beyond baseline, they are revealing
 that baseline functionality costs \$500 to maintain.  The sacrifice
 magnitude reveals \emph{cost-of-access} (how expensive it is for
 this agent to reach minimum viable functionality), not
@@ -15,48 +15,40 @@ beyond baseline).  Larger sacrifice means a worse situation, not
 higher revealed value.
 
 The framework needs a structural requirement on poset
-construction---established before defining the measurement
-channel---that distinguishes need-satisfaction from want-pursuit
+construction that distinguishes need-satisfaction from want-pursuit
 and identifies the boundary where sacrifice polarity flips.
 
 \subsection{Three motivating observations}
 
-\paragraph{Needs are not purely minimizing.}
-Initial intuition suggests that needs should be minimized
-(minimize cost, distance, time-of-access).  An exhaustive check
-on basic needs (food, water, shelter, healthcare, mobility)
-reveals that every need has \emph{both} maximizing dimensions
-(quality, quantity, reliability) and minimizing dimensions (cost,
-distance, time).  Needs are not a single-polarity class.  What
-\emph{is} true: the cost dimensions of needs are where the
-polarity problem lives, because cost-of-access is involuntary.
+\paragraph{Needs are neither purely maximizing nor minimizing.}
+Every need has \emph{both} maximizing dimensions (quality, quantity,
+reliability) and minimizing dimensions (cost, distance, time). Needs are not a
+single-polarity class. What \emph{is} true: the minimizing dimensions of needs
+are where the polarity problem lives, because cost-of-access is involuntary.
 
 \paragraph{Scalar sufficiency hides structural defects.}
-A single ``water access: sufficient'' measurement hides that the
-water is contaminated.  The agent has water (passes the scalar
-threshold) but the way the need is met actively degrades future
-$\volL$ through downstream effects on health, cognition, and
-reproduction.  The framework reports green while the system
-corrodes from the root.
+A single ``water access: sufficient'' measurement might hide that the water is
+contaminated.  The agent has water (passes the scalar threshold) but the way
+the need is met actively degrades future $\volL$ through downstream effects on
+health, cognition, and reproduction.  The framework reports green while the
+system corrodes from the root.
 
-\paragraph{The correct structure is downstream-safe bundle
-sufficiency.}
+\paragraph{Downstream-safe bundles.}
 Three levels of sufficiency, each strictly stronger:
 \begin{itemize}
 \item \emph{Level~1: Scalar threshold (insufficient).}
-  ``Water: yes/no.''  Hides quality, reliability, and cost
-  defects.
+  ``Water: yes/no.''  Hides quality, reliability, and cost defects.
 \item \emph{Level~2: Bundle threshold (necessary but not
   sufficient).}
-  All dimensions of the need must independently meet their
-  thresholds simultaneously.  Catches lead contamination (quality
-  dimension fails).  Misses subtler failures where the
-  satisfaction pathway degrades downstream capabilities over time.
-\item \emph{Level~3: Downstream-safe bundle (the correct
-  formulation).}
-  Bundle thresholds are all met \emph{and} the need-satisfaction
-  pathway does not produce net-negative effects on capabilities in
-  the need's downstream cone.
+  All dimensions of the need must independently meet their thresholds
+        simultaneously. This catches contamination (quality dimension fails),
+        but misses subtler failures where the satisfaction pathway degrades
+        downstream capabilities over time. For example, when the contamination
+        thresholds are incorrectly tuned.
+\item \emph{Level~3: Downstream-safe bundle.}
+  Bundle thresholds are all met \emph{and} the need-satisfaction pathway does
+        not produce net-negative effects on capabilities in the need's
+        downstream capability cone.
 \end{itemize}
 
 \subsection{Formal definitions}
@@ -130,22 +122,46 @@ favourable threshold-level baseline for each downstream capability
 separately.
 \end{definition}
 
-\begin{remark}[Connection to exercise-pathway machinery]
+\begin{remark}[Structural connection to exercise-pathway machinery]
 \label{rem:exercise_pathway}
-The need-satisfaction pathway $\pi_N$ is structurally an exercise
-pathway in the sense
-of~\citep[Definition~2]{lasser2026horizon}.  The downstream
-$\Delta\volL$ of the pathway is evaluable using the
-concentration-risk apparatus
-of~\citep{lasser2026horizon}.  Contaminated water as a
-need-satisfaction pathway is a pathway with negative downstream
-$\Delta\volL$ on health-dependent capabilities.  The framework
-should detect pathological need-satisfaction the same way it
-detects risk claims: via exercise-pathway contraction analysis.
-The distinction from risk claims is that need-satisfaction pathways
-are not ``optional''---the agent must satisfy the need---so the
-framework's response is ``find a better satisfaction pathway''
-rather than ``restrict the capability.''
+The need-satisfaction pathway $\pi_N$ is \emph{structurally} an
+exercise pathway in the sense
+of~\citep[Definition~2]{lasser2026horizon}: a sequence of
+capability invocations producing an outcome (here, the
+satisfaction of need~$N$).  This identification lets the framework
+treat $\pi_N$ as a first-class object rather than an abstract
+``way of satisfying the need.''
+
+The downstream-safety condition
+(Definition~\ref{def:downstream_safe}(b)) is, however, a distinct
+mathematical object from the concentration-risk measure
+of~\citep[Definition~3]{lasser2026horizon}.  Concentration risk
+is a scalar worst-case contraction estimate over an entire
+pathway; downstream-safety is a per-capability quality
+comparison $\mathrm{quality}_c(\pi_N) \geq q_N^0(c)$ indexed by
+$c \in \Down(p_N)$.  Neither reduces to the other.
+Evaluating $\mathrm{quality}_c(\pi_N)$ in practice requires
+either (i) direct observation of $c$'s performance conditional on
+the pathway, or (ii) structural inference from the poset's
+cooperative structure.  A full formalisation of the evaluation
+procedure is outside this paper's scope; within the paper,
+Definition~\ref{def:downstream_safe}(b) is a structural condition
+the framework \emph{enforces} (a pathway failing the condition is
+rejected as a satisfaction pathway for $N$), not a quantity the
+framework \emph{computes} directly.
+
+A policy consequence, not a theorem: because need-satisfaction
+pathways are not optional (the agent must satisfy the need), the
+framework's response to a pathway failing
+Definition~\ref{def:downstream_safe}(b) differs from its response
+to a risk claim under~\citep{lasser2026wamura}.  A failing risk
+pathway is \emph{restricted} (the capability is blocked).  A
+failing satisfaction pathway must be \emph{replaced} (the need
+must still be met, but through a pathway satisfying
+Definition~\ref{def:downstream_safe}).  This governance
+distinction is upstream of the paper's formal machinery; it names
+the correct operational response when the condition fails, not a
+new computation the framework performs.
 \end{remark}
 
 \begin{definition}[Sufficiency Threshold as Polarity Boundary]
