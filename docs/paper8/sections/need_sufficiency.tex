@@ -229,7 +229,9 @@ contain $c$.  For each such $N$, let $s_N(c) \in [0, 1]$ be the
 sufficiency level of $N$ in the context where $c$ is exercised,
 with $s_N(c) = 1$ when $N$ is downstream-safe sufficient
 (Definition~\ref{def:downstream_safe}) and $s_N(c) = 0$ when $N$
-is fully unmet.
+is fully unmet.  In the common case where sufficiency is uniform
+across the downstream cone, we abbreviate $s_N(c) \equiv s_N$ and
+treat $s_N$ as a scalar.
 
 The \emph{effective weight} of $c$ is:
 \[
@@ -281,37 +283,72 @@ subsequent results for any valid $G$.
 \begin{proposition}[Near-Total Collapse Under Unmet Need]
 \label{prop:near_total_collapse}
 Let $G$ be any valid gate function
-(Definition~\ref{def:downstream_gate}).  For an agent whose
-cooperative capabilities all lie in $\mathrm{Down}(p_N)$ for
-some need $N$, if the agent is at sufficiency level $s_N < 1$:
+(Definition~\ref{def:downstream_gate}), and suppose
+$s_N(c) \equiv s_N$ for all $c \in \Down(p_N)$ (homogeneous
+sufficiency).  Partition the poset as
+$P = \Down(p_N) \sqcup \overline{\Down(p_N)}$, with weight sums
+$W_{\mathrm{down}} = \sum_{c \in \Down(p_N)} w(c)$ and
+$W_{\mathrm{out}} = \sum_{c \in \overline{\Down(p_N)}} w(c)$, so
+$\volL^{\mathrm{raw}} = W_{\mathrm{down}} + W_{\mathrm{out}}$.
+If the agent is at sufficiency level $s_N < 1$:
 \[
-  \volL^{\mathrm{eff}}(G) \;\leq\; G(s_N) \cdot \volL^{\mathrm{raw}}.
+  \volL^{\mathrm{eff}}(G)
+  \;\leq\; G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
-As $s_N \to 0$, $G(s_N) \to 0$ and the agent's effective
-$\volL$ collapses toward zero regardless of capability breadth.
+As $s_N \to 0$, $G(s_N) \to 0$ and the downstream contribution
+vanishes: $\volL^{\mathrm{eff}} \to W_{\mathrm{out}}$.  When
+$W_{\mathrm{down}} \gg W_{\mathrm{out}}$ (most of the agent's
+capability-weight lies in the downstream cone), the effective
+volume collapses to a small fraction of its unrestricted value.
 The multiplicative structure makes need-satisfaction a
-precondition for $\volL$ to register the agent's capabilities at
-all; an agent cannot maximize $\volL^{\mathrm{eff}}$ without first
-closing sufficiency gaps on needs whose downstream cones cover
-their cooperative capabilities.
+precondition for $\volL$ to register the downstream portion of
+the agent's capabilities; an agent cannot maximize
+$\volL^{\mathrm{eff}}$ without first closing sufficiency gaps on
+needs whose downstream cones cover their capability-weight.
 \end{proposition}
 
 \begin{proof}[Proof sketch]
-Every cooperative capability $c$ has $N \in \mathcal{N}(c)$ by
-assumption, so its effective weight is bounded above by $w(c)
-\cdot G(s_N)$.  Summing:
+Split the sum over $P$ by membership in $\Down(p_N)$.  For
+$c \in \Down(p_N)$, the effective weight is
+$w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N) \cdot \prod_{N' \in
+\mathcal{N}(c),\, N' \neq N} G(s_{N'}(c)) \leq w(c) \cdot G(s_N)$
+since each additional gate factor is $\leq 1$.  For
+$c \in \overline{\Down(p_N)}$, $N \notin \mathcal{N}(c)$, so
+$w^{\mathrm{eff}}(c) = w(c) \cdot \prod_{N' \in \mathcal{N}(c)}
+G(s_{N'}(c)) \leq w(c)$.  Summing the two cases:
 \[
-  \volL^{\mathrm{eff}} = \sum_c w^{\mathrm{eff}}(c)
-  \leq \sum_c w(c) \cdot G(s_N) = G(s_N) \cdot \volL^{\mathrm{raw}}.
+  \volL^{\mathrm{eff}}
+  \leq G(s_N) \cdot \!\!\sum_{c \in \Down(p_N)}\!\! w(c)
+       \;+\; \!\!\sum_{c \in \overline{\Down(p_N)}}\!\! w(c)
+  = G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
 $G$ monotone non-decreasing with $G(0) = 0$ gives
-$\lim_{s_N \to 0} G(s_N) = 0$.\qed
+$\lim_{s_N \to 0} G(s_N) = 0$, so the downstream term vanishes.
+\qed
 \end{proof}
+
+\begin{remark}[The non-downstream floor is real]
+\label{rem:nondownstream_floor}
+The bound has an irreducible $W_{\mathrm{out}}$ term: effective
+volume does not collapse \emph{to zero} under unmet need, but
+to the weight of capabilities that do not depend on $N$.  The
+worked table in Remark~\ref{rem:gate_comparison} exhibits this
+explicitly: the three non-downstream capabilities contribute
+$3/13 \approx 0.231$ at $s_N = 0$ across all gate choices,
+representing $W_{\mathrm{out}} / \volL^{\mathrm{raw}}$ for that
+configuration.  The proposition's force comes from the typical
+case where needs have broad downstream cones
+($W_{\mathrm{down}} \gg W_{\mathrm{out}}$); in that regime the
+collapse approaches total in the limit $s_N \to 0$.
+\end{remark}
 
 \begin{proposition}[Need-Dominance in the Gradient]
 \label{prop:need_dominance}
-For any valid gate function $G$ with $G$ differentiable at
-$s_N$ and $G'(s_N) > 0$:
+Assume homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c \in
+\Down(p_N)$, so that $s_N$ is a scalar.  For any valid gate
+function $G$ differentiable at $s_N$ with $G'(s_N) > 0$, the
+partial derivative of $\volL^{\mathrm{eff}}$ with respect to that
+scalar $s_N$ (holding all other needs' sufficiency fixed) is:
 \[
   \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
   \;=\; G'(s_N) \cdot \!\!\sum_{c \in \mathrm{Down}(p_N)}\!\!
@@ -341,7 +378,8 @@ single-capability comparison follows from $w^{\mathrm{eff}}(c')
 Consider an agent with $10$ cooperative capabilities in
 $\mathrm{Down}(p_N)$ (weight $1$ each) and $3$ capabilities
 outside the cone (weight $1$ each), so
-$\volL^{\mathrm{raw}} = 13$.  At sufficiency level $s$,
+$\volL^{\mathrm{raw}} = 13$.  At homogeneous sufficiency level
+$s_N(c) \equiv s$ for all $c \in \Down(p_N)$,
 $\volL^{\mathrm{eff}}(s) = 3 + 10 \cdot G(s)$.  The following
 table compares effective volume as a fraction of
 $\volL^{\mathrm{raw}}$ for the four candidate gates (Leaky-ReLU
@@ -410,7 +448,7 @@ Problem}~(\cite{lasser2026gfm}, Section~7.1), which is
 possessed-but-unexercised capabilities; the stuffed capabilities
 may be technically exercised (routing through the gas station
 ``exercises'' the distance-measurement).  It is not the
-\emph{B-to-C gap} in the aggregate sense that Paper~8 otherwise
+\emph{B-to-C gap} in the aggregate sense this paper otherwise
 treats; stuffing widens the gap through a specific mechanism
 (individual-weight inflation) that the aggregate lower bound of
 Theorem~\ref{thm:aggregate_bound} does not, by itself, address.
@@ -421,10 +459,10 @@ gradient under M5, not by departing from the framework's rules.
 \paragraph{Tension with structural discovery.}
 Capability-stuffing is closely related to a \emph{legitimate}
 mechanism: the structural discovery value
-of~\citep[Definition~5]{lasser2026horizon}, which holds that
+of~\citep[Proposition~2]{lasser2026horizon}, which holds that
 discovering new poset structure is value-positive.  An agent
 adding a new distance-measurement capability to its repertoire is
-making a structural discovery in Paper~3's sense.  The formal
+making a structural discovery in that sense.  The formal
 distinction between legitimate discovery and capability-stuffing
 turns on whether the new capability creates new cooperative
 structure:
@@ -468,7 +506,7 @@ makes this formal.
 \label{prop:anti_stuffing}
 Under downstream-safe bundle sufficiency
 (Definition~\ref{def:downstream_safe}), redundant capability
-capability constructions---e.g., ``travel from $A$ to a gas
+constructions---e.g., ``travel from $A$ to a gas
 station,'' ``travel from $B$ to a gas station,'' instantiating the
 same underlying fuel-access optionality from different
 origins---provide no downstream-quality
