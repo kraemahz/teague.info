@@ -104,20 +104,21 @@ establishing Part~A.
 
 \emph{Part~B.}
 Fix an event $n$ and its bundle $Y_n$.  By S3 (bundle coherence),
-the hedonic decomposition of $Y_n$ is non-degenerate; by S4(b)
-applied within the bundle, $\volR$ is additive over the
-poset-independent capabilities it contains:
+$\volR(Y_n) > 0$ so division is well-defined.  S5 asserts that
+the event-local coefficients are lower bounds on the true share
+of the aggregate $\volR(Y_n)$:
 \[
-  \volR(Y_n) \;=\; \sum_{c \in Y_n} \volR(c).
+  \alpha_{n,c} \;\leq\; \volR(c) / \volR(Y_n),
+  \qquad c \in Y_n.
 \]
-By S5, the event-local coefficients are lower bounds on the true
-share: $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$.  Rearranging and
-applying the Part~A per-event bound:
+Rearranging and applying the Part~A per-event bound:
 \[
   \volR(c) \;\geq\; \alpha_{n,c} \cdot \volR(Y_n)
   \;\geq\; \alpha_{n,c} \cdot \Delta\volL(X_n),
 \]
-for every $c \in Y_n$.  If $c$ appears in multiple observed
+for every $c \in Y_n$.  No within-bundle independence hypothesis
+is needed: S5 is a direct share inequality, not a decomposition
+identity.  If $c$ appears in multiple observed
 bundles, each quantity $\alpha_{n,c} \cdot \Delta\volL(X_n)$ is a
 valid lower bound on $\volR(c)$; taking the maximum preserves
 validity:
