@@ -1,0 +1,313 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\volLeff}{{\vol_{\mathrm{P}}^{\mathrm{eff}}}}
+\newcommand{\Coop}{\mathrm{Coop}}
+\newcommand{\CoOut}{\Omega^{\mathrm{coop}}}
+\newcommand{\Part}{\mathrm{participants}}
+\newcommand{\Out}{\mathrm{out}}
+
+\title{Draft: A Structural Anti-Stuffing Formalism for GFM Posets}
+\author{Paper 8 exploratory draft}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is a standalone draft exploring whether the capability-stuffing
+failure mode of Paper~8 admits a structural theorem, as opposed to the
+semantic proposition currently in the paper.  The construction is
+\emph{partial}: it formalizes a redundancy relation that catches
+structural stuffing (clear-cut output duplication under structural
+substitutability) but does not prevent semantically-masked stuffing
+(pseudo-distinctions in the output vocabulary).  Whether to integrate
+this into Paper~8 depends on whether a partial structural theorem plus
+an external governance requirement is a cleaner result than the
+current semantic proposition.
+\end{abstract}
+
+\section{Motivation}
+
+Paper~8 defines capability-stuffing as an M5-exploit failure mode: an
+agent inflates $\volL$ by adding individually-valid capabilities whose
+marginal cooperative contribution is zero (the canonical
+``\texttt{travel from $A$ to a gas station}, \texttt{travel from $B$ to
+a gas station}, \ldots'' construction).  The paper's current resolution
+is semantic: the \emph{Anti-Stuffing Proposition} argues that under
+downstream-safe bundle sufficiency, redundant constructions
+``instantiate the same underlying fuel-access optionality'' and
+therefore do not earn credit.  The phrase ``same underlying
+optionality'' is not defined formally; the proposition is a claim
+about how the benchmark \emph{should} be interpreted, not a theorem
+about what the benchmark computes.
+
+This draft attempts a structural theorem.  The aim is to reduce the
+semantic gap: identify the class of stuffing constructions that are
+ruled out structurally, and localize the remaining semantic
+dependency to a single external governance axiom.
+
+\section{Cooperative footprint and the redundancy relation}
+
+The framework carries M6 superadditivity (Paper~2, Proposition~1):
+cooperative capabilities have weights strictly greater than the sum
+of their participants' individual weights.  Stuffing exploits the fact that individual
+weights (M5) accumulate without requiring cooperative contribution.
+The redundancy relation below operates at the cooperative level.
+
+\begin{definition}[Cooperative Footprint]
+\label{def:coop_footprint}
+Let $P$ be a GFM poset.  For each capability $c \in P$, the
+\emph{cooperative footprint} of $c$ is the set of cooperative
+capabilities that depend on $c$:
+\[
+  \mathcal{F}_P(c) \;=\; \{c_{\mathrm{coop}} \in P :
+    c \in \Part(c_{\mathrm{coop}})\}.
+\]
+\end{definition}
+
+\begin{definition}[Cooperative Output Profile]
+\label{def:coop_output_profile}
+The \emph{cooperative output profile} of $c$ is the multiset of
+cooperative outputs enabled through $c$:
+\[
+  \CoOut_P(c) \;=\; \{\!\!\{ \Out(c_{\mathrm{coop}}) :
+    c_{\mathrm{coop}} \in \mathcal{F}_P(c) \}\!\!\}.
+\]
+\end{definition}
+
+\begin{definition}[Structural Redundancy]
+\label{def:structural_redundancy}
+Two capabilities $c, c' \in P$ are \emph{structurally redundant},
+written $c \sim_{\mathrm{str}} c'$, iff both:
+\begin{enumerate}
+\item[(i)] $\Out(c) = \Out(c')$ (identical individual outputs);
+\item[(ii)] there exists a poset automorphism $\phi : P \to P$
+  preserving subsumption, participation, and weights, such that
+  $\phi(c) = c'$, $\phi(c') = c$, and $\phi$ is the identity on
+  $P \setminus \{c, c'\}$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[The automorphism condition is strict]
+Condition (ii) is strict: $\phi$ must fix every other capability.
+This rules out swaps that require shuffling cooperative capabilities
+too (such shuffles would indicate structural distinctness, not
+redundancy).  Under (i)+(ii), $c$ and $c'$ are interchangeable in
+every poset relation, and they produce the same individual output:
+they are the same capability under two names.
+\end{remark}
+
+\begin{proposition}[Cooperative Footprint Coincidence]
+\label{prop:footprint_coincidence}
+If $c \sim_{\mathrm{str}} c'$ with witness automorphism $\phi$, then
+\[
+  \mathcal{F}_P(c) = \mathcal{F}_P(c'), \qquad
+  \CoOut_P(c) = \CoOut_P(c').
+\]
+\end{proposition}
+
+\begin{proof}
+Since $\phi$ fixes every cooperative capability (identity outside
+$\{c, c'\}$), a cooperative capability $c_{\mathrm{coop}}$ has
+$c \in \Part(c_{\mathrm{coop}})$ iff it has
+$c' = \phi(c) \in \Part(c_{\mathrm{coop}})$.  Hence the footprints
+coincide, and their output multisets coincide trivially.
+\end{proof}
+
+\section{Anti-stuffing structural requirement}
+
+\begin{definition}[Cooperatively Rigid Poset]
+\label{def:rigid_poset}
+A poset $P$ is \emph{cooperatively rigid} iff no two distinct
+capabilities are structurally redundant:
+\[
+  \forall c, c' \in P, \; c \neq c' \Rightarrow
+  c \not\sim_{\mathrm{str}} c'.
+\]
+\end{definition}
+
+\begin{definition}[Anti-Stuffing Poset-Construction Rule]
+\label{def:antistuffing_rule}
+The framework's poset-construction policy requires that every valid
+GFM poset be cooperatively rigid.  A candidate addition
+$c'$ to an existing poset $P$ is \emph{admissible} iff
+$P \cup \{c'\}$ remains cooperatively rigid.
+\end{definition}
+
+\begin{theorem}[Structural Anti-Stuffing]
+\label{thm:structural_antistuffing}
+Under the anti-stuffing construction rule
+(Definition~\ref{def:antistuffing_rule}), a $\volL$-maximizer
+cannot inflate $\volL$ via structural-redundancy stuffing: any
+candidate $c'$ structurally redundant with some existing
+$c \in P$ is inadmissible and does not enter the poset.
+\end{theorem}
+
+\begin{proof}
+Let $c' \notin P$ with $c' \sim_{\mathrm{str}} c$ for some
+$c \in P$.  Adding $c'$ to $P$ produces
+$P' = P \cup \{c'\}$ in which $c$ and $c'$ are distinct capabilities
+with identical individual outputs and a witnessing automorphism
+(the identity on $P$ extended by $c \leftrightarrow c'$).  By
+Definition~\ref{def:rigid_poset}, $P'$ is not cooperatively rigid.
+By Definition~\ref{def:antistuffing_rule}, $c'$ is therefore
+inadmissible.
+\end{proof}
+
+\begin{proposition}[Volume Invariance Under Redundancy Quotient]
+\label{prop:volume_invariance}
+Suppose $P$ contains a structural-redundancy pair
+$c \sim_{\mathrm{str}} c'$ (so $P$ is not cooperatively rigid).  Let
+$P / {\sim_{\mathrm{str}}}$ be the quotient poset with one
+representative per equivalence class.  Then
+$\volL(P / {\sim_{\mathrm{str}}}) \leq \volL(P)$, with equality iff
+every equivalence class is a singleton (i.e., $P$ is already
+cooperatively rigid).
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The quotient removes one capability per redundant pair, reducing the
+M5 individual-weight contribution by exactly $w(c')$ per removal.
+Cooperative weights are unchanged since the footprints coincide
+(Proposition~\ref{prop:footprint_coincidence}).  Equality holds
+exactly when no removals occur.
+\end{proof}
+
+\section{The semantic residual}
+
+Theorem~\ref{thm:structural_antistuffing} handles structural
+stuffing.  It does \emph{not} handle the following semantically-masked
+construction, which we flag honestly.
+
+\begin{example}[Semantic stuffing via pseudo-distinct outputs]
+\label{ex:semantic_stuffing}
+An agent constructs capabilities $c_1 = $ \texttt{fuel-up-home} and
+$c_2 = $ \texttt{fuel-up-home-via-alternate-route} with nominally
+distinct individual outputs
+$\Out(c_1) = $ \texttt{home-to-gas-via-main-st} and
+$\Out(c_2) = $ \texttt{home-to-gas-via-oak-ave}.  If the output
+vocabulary is controlled by the agent, $\Out(c_1) \neq \Out(c_2)$
+trivially, and Definition~\ref{def:structural_redundancy}(i) fails.
+The agent then adds a cooperative capability $c_{\mathrm{coop}}^{(2)}$
+that depends specifically on $c_2$ (e.g., \texttt{reach-gas-via-oak
+-during-rush-hour}), breaking any potential automorphism as well.
+Both stuffing invariants are defeated without the agent providing
+genuinely new optionality.
+\end{example}
+
+Example~\ref{ex:semantic_stuffing} shows that structural rigidity is
+not sufficient when the agent controls the output vocabulary.  The
+residual requirement is external:
+
+\begin{definition}[Canonical Output Codomain]
+\label{def:canonical_codomain}
+The framework fixes a \emph{canonical output codomain}
+$\mathcal{O}$ and requires every capability to declare its output in
+$\mathcal{O}$.  $\mathcal{O}$ is managed by framework governance, not
+by the agent.
+\end{definition}
+
+\begin{proposition}[Stuffing Bound Under Canonical Codomain]
+\label{prop:codomain_bound}
+Under the anti-stuffing construction rule
+(Definition~\ref{def:antistuffing_rule}) \emph{and} the canonical
+output codomain (Definition~\ref{def:canonical_codomain}), the
+number of admissible individual-output capabilities is bounded
+above by $|\mathcal{O}|$: adding more requires creating a structural
+redundancy pair, which the rule forbids.
+\end{proposition}
+
+\begin{proof}
+Each admissible capability $c$ is identified by $\Out(c) \in
+\mathcal{O}$.  If two capabilities share an output, they must differ
+structurally (else they are structurally redundant and one is
+rejected).  But identical outputs with different structure would
+provide novel cooperative participation; if not, the
+structural-redundancy automorphism exists and the addition is
+rejected.  Hence the number of individually-useful capabilities is
+bounded by $|\mathcal{O}|$.
+\end{proof}
+
+\section{Assessment}
+
+\paragraph{What this gives us.}
+\begin{itemize}
+\item A formal redundancy relation ($\sim_{\mathrm{str}}$) with a
+  concrete, computable test: output-equality plus poset
+  automorphism.  No semantic goodwill required to evaluate the test.
+\item A construction-time rejection rule: stuffed capabilities that
+  trigger $\sim_{\mathrm{str}}$ never enter the poset.  The
+  prohibition is structural, not a benchmark adjustment.
+\item A volume-invariance proposition relating rigid posets to
+  quotients.
+\item A transparent separation between the structural theorem
+  (Theorem~\ref{thm:structural_antistuffing}) and the residual
+  semantic requirement (Definition~\ref{def:canonical_codomain}).
+\end{itemize}
+
+\paragraph{What it does not give us.}
+\begin{itemize}
+\item Full structural resolution.
+  Example~\ref{ex:semantic_stuffing} shows that without a canonical
+  output codomain, an agent with vocabulary control can always
+  evade structural rigidity by declaring pseudo-distinct outputs.
+\item A canonical codomain is an \emph{external} framework
+  parameter.  The paper would need to either specify how
+  $\mathcal{O}$ is constructed (a full treatment is a paper-sized
+  problem in its own right) or state it as an assumption analogous
+  to ``the benchmark is well-defined on the benchmarked subspace.''
+\item The automorphism test requires checking poset
+  isomorphisms, which is computationally non-trivial
+  (graph-isomorphism-class problem).  Proposition~\ref{prop:codomain_bound}
+  at least bounds the number of required checks.
+\end{itemize}
+
+\paragraph{Verdict on integration into Paper~8.}
+Integrating this yields a paper with:
+\begin{enumerate}
+\item A structural Anti-Stuffing Theorem
+  (Theorem~\ref{thm:structural_antistuffing}) replacing the current
+  semantic proposition.
+\item A transparent acknowledgment that full anti-stuffing requires
+  canonical output codomain, flagged as an open governance problem.
+\item A volume-invariance proposition
+  (Proposition~\ref{prop:volume_invariance}) that provides the
+  quantitative ``stuffing doesn't help'' result.
+\end{enumerate}
+
+The total addition is roughly 3--4 pages.  The main payoffs are
+(a)~honesty: the paper no longer claims a resolution it doesn't
+have; (b)~structure: the residual problem is localized to a single
+definition, which is easier to reason about than the diffuse
+semantic dependency of the current proposition.
+
+The main costs are (a)~complexity: four new definitions,
+one theorem, two propositions; (b)~the reader must accept that the
+paper's contribution is ``structural partial solution + honest
+residual,'' not ``full solution.''
+
+On balance, this draft shows Option~B is feasible but non-trivial.
+The semantic residual cannot be eliminated without tackling the
+canonical-codomain problem head-on, which is outside Paper~8's
+scope.  A cleaner final form might combine elements of Option~B
+(structural redundancy theorem) with elements of Option~C (explicit
+acknowledgment of the semantic residual, flagging the codomain
+problem as an open question).
+
+\end{document}
