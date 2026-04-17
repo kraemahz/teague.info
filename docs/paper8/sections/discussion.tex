@@ -189,31 +189,63 @@ affecting the relative importance of need-satisfaction versus
 want-pursuit in $\volL$.
 
 \item \label{oq:capability_stuffing}
-\textbf{Capability-stuffing and provenance.}
+\textbf{Capability-stuffing as structural avoidance.}
 Capability-stuffing (Section~\ref{sec:capability_stuffing})
-remains an open M5 pathology under this paper's machinery: an
-agent can inflate $\volL$ by declaring capabilities that pass
-structural validation but do not broaden experiential
-optionality, and no signature over post-declaration poset
-structure or exercise pattern separates stuffed from legitimate
-capabilities in a way the agent cannot adversarially manipulate.
-The intended resolution direction is \emph{capability
-provenance}: weight each capability by a cost-derived function
-of its acquisition-and-exercise history, so that stuffed
-capabilities---declared but neither formally acquired nor
-genuinely exercised---receive zero provenance-weighted credit.
-Under an admissible cost-utilization pair (cost growing at least
-as fast as utilization beyond some scale, with a positive
-marginal floor), declaring stuffed capabilities is
-equilibrium-dominated by declaring legitimate ones.  A proper
-theorem requires formal acquisition-event semantics extending
-the sacrifice-event taxonomy of \S\ref{sec:sacrifice_model},
-four provenance axioms (non-reuse, non-circular sacrifice,
-liability-netted cost, capability-specific linkage binding via
-the commitment protocol of~\citep[Definition~6]{lasser2026exo}),
-a provenance extension to M6 cooperative weights, and a
-multi-agent treatment addressing collusion and external subsidy.
-Each of these is substantial work beyond the present scope; a
-dedicated follow-up paper on cryptoeconomic capability closure
-is the natural venue.
+remains an open M5 pathology under this paper's machinery.  No
+signature over post-declaration poset structure or exercise
+pattern separates stuffed from legitimate capabilities in a way
+the agent cannot adversarially manipulate.  Under the v4.1
+framing the canonical example reveals itself as an instance of
+\emph{structural avoidance} flagged as an open gap
+in~\citep[Discussion]{lasser2026poset}: the agent declines to
+discover that ``travel from home to gas station'' and ``travel
+from work to gas station'' admit merger into a canonical
+multi-origin fuel-access capability.  Related avoidance
+pathologies include provenance-free declaration, the Doll
+Problem (declining exercise), and wireheading (declining broad
+engagement); these share the structural-avoidance shape but
+differ in formal detail.
+
+The intended resolution is a \emph{proof-burden taxonomy} with
+claim-and-challenge back-pressure.  Three burden types: proof-of-
+non-mergeability (stuffing-specific), proof-of-provenance
+(blocking pure-label declarations), and proof-of-use (blocking
+persistently-dormant declarations outside the residual class).
+Proof-burdens operate as canonicalization preprocessing on $P$
+before M5 is applied; M5's formula is preserved, but the
+preprocessing introduces substantive new axiomatic content.
+Claims are temporal and contestable: a prior proof-of-non-
+mergeability can be voided by subsequent discovery of a merger
+mechanism, with the discoverer receiving structural-discovery
+credit per~\citep[Proposition~2]{lasser2026horizon} and the
+avoider losing the M5 credit the voided proof supported.  This
+makes structural avoidance economically risky rather than
+economically stable.
+
+The sequence provides substrate but not implementation.  Paper~5
+provides commitment infrastructure; Paper~8 provides partial
+use-evidence via the sacrifice aggregate (incomplete, because the
+persistent-dormancy attack and private time-sacrifice
+invisibility remain); Paper~6 provides a controlled-relaxation
+pattern for adjudication.  A dedicated follow-up paper must
+deliver: the formal canonicalization operator, the three
+proof-burden types with admissible evidence classes, the
+claim-and-challenge protocol with challenge-market robustness
+(admission filtering against spam, identity weighting against
+Sybil flooding, independence requirements against cartel
+suppression, bounds on governance capture of the adjudication
+layer), the discovery-reward calibration integrating with
+Paper~3's structural-discovery result, and the structural-
+avoidance dominance theorem under explicit quantitative
+conditions (minimum challenger arrival rate, minimum
+reward-to-cost ratio, maximum adjudication lag, challenger
+independence).  Honest residuals include information-asymmetry
+persistence, private time-sacrifice invisibility inherited from
+Paper~8 P5, collusive-subsidy and external-funding edge cases,
+canonicalization order/non-uniqueness, and the deceptive-alignment
+residual that proof-burdens cannot currently address without
+interpretability.  This is substantial invention, grounded in
+existing sequence substrate but not reducible to it; the natural
+venue is a dedicated follow-up paper on the structural-avoidance
+architecture.
 \end{enumerate}

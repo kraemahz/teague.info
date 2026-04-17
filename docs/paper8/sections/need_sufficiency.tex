@@ -578,53 +578,70 @@ Proposition~\ref{prop:below_suff_saturation}.  Full structural
 resolution of M5 stuffing requires machinery this paper does not
 develop.
 
-\paragraph{The intended direction: capability provenance.}
-The failure pattern across attempts (redundancy via automorphism,
-detection via dormancy, resolution via bundle structure) is that
-every signature over post-declaration data is adversarially
-manipulable.  The move that changes the game is examining
-capabilities \emph{at declaration}: legitimate capability
-acquisition has real cost (training, equipment, time,
-apprenticeship, dedicated exercise), and the agent cannot
-manufacture provenance without expending real resources unless
-the cost structure admits self-dealing, collusion, leverage, or
-reuse loopholes.
+\paragraph{Capability-stuffing as structural avoidance.}
+The failure pattern across attempts is that every signature over
+post-declaration data is adversarially manipulable.  The move
+that changes the framing is recognizing stuffing as a specific
+instance of \emph{structural avoidance}, the pathology flagged
+as an open gap in~\citep[Discussion]{lasser2026poset}: when the
+framework rewards capability declarations additively, an agent
+optimizing $\volL$ has an incentive to \emph{decline to discover}
+that capabilities merge, factor, or are otherwise reducible.
+Stuffing is the concrete manifestation: the agent keeps
+``travel from home to gas station'' and ``travel from work to
+gas station'' distinct in $P$ rather than merging them into the
+canonical form ``access to fuel from multiple origins'' that a
+proper structural discovery would produce.  Each unmerged
+capability inflates the M5 count; the merged capability has the
+same optionality content.
 
-A \emph{capability provenance} construction---combining
-acquisition histories (committed sacrifice events that
-established a capability) and exercise histories (time-sacrifice
-events through which the capability is maintained)---produces a
-cost-weighted individual weight $w_{\mathrm{Prov}}(c) =
-\min(w(c), f(\text{cumulative provenance of } c))$ that
-collapses to zero for capabilities with neither formal
-acquisition nor genuine exercise.  Under an admissible
-cost-utilization pair---cost that grows at least as fast as
-utilization beyond some scale, with a positive marginal floor---
-declaring stuffed capabilities is equilibrium-dominated by
-declaring legitimate ones.
+The positive dual is already in the sequence:
+\citep[Proposition~2]{lasser2026horizon} establishes that
+structural discovery is value-positive under conditions on the
+discovered structure's information value.  Making the symmetric
+claim---that refusal to discover is value-negative---requires
+mechanism, not entailment.  The direction is a \emph{proof-burden
+taxonomy} with \emph{claim-and-challenge back-pressure}.
 
-Making this claim a theorem requires four axioms the current
-sequence does not formally establish: provenance non-reuse
-(a sacrifice event cannot justify unbounded capability claims),
-non-circular sacrifice (self-dealing and collusive-subsidy
-constructions do not count as net provenance), liability-netted
-cost (debt-financed sacrifice is netted against the induced
-liability), and capability-specific linkage semantics
-(cryptographically binding a provenance event to the specific
-capability it establishes, extending the commitment protocol
-of~\citep[Definition~6]{lasser2026exo}).  It also requires a
-provenance extension to cooperative weights (M6), so that
-lightly-justified individual nodes do not unlock disproportionate
-cooperative credit, and a residual treatment of multi-agent
-collusion and external-subsidy cases.
+\paragraph{The proof-burden direction.}
+For each avoidance route, a corresponding burden the agent must
+discharge to retain $\volL$ credit.  Three types:
+proof-of-non-mergeability (for the stuffing-specific case),
+proof-of-provenance (blocking declarations without underlying
+structural work), and proof-of-use (blocking declarations that
+remain persistently dormant outside the residual class $\ResS$
+of \S\ref{sec:residual_class}).  Proof-burdens operate as
+preprocessing on the poset before M5 is applied; the M5 formula
+is preserved, but the measure is evaluated on the canonicalized
+poset rather than the presented one.  Canonicalization itself is
+new axiomatic content at the preprocessing layer.
 
-These are not stated as results of this paper.  The stuffing
-resolution is thus described here as a \emph{direction}: a named
-resolution path that uses machinery already partially present in
-the sequence (sacrifice events, commitment protocols, privacy
-properties, time-sacrifice valuation), extended by formal
-acquisition-event semantics and the four axioms above.  A
-dedicated treatment is left to follow-up work.
+Claims are temporal and contestable.  An agent's
+proof-of-non-mergeability stands until a counter-argument
+demonstrates a merger mechanism; the discoverer of that
+mechanism receives structural-discovery credit
+(\citep[Proposition~2]{lasser2026horizon}); the avoider loses
+the M5 credit whose proof has been voided.  This makes avoidance
+economically risky rather than economically stable.  Analogous
+architectures exist in scientific consensus, patent challenge,
+and proof-of-stake slashing; adapting any of them requires
+substantive protocol and calibration work.
+
+\paragraph{Scope of the follow-up.}
+The sequence provides substrate for parts of this construction:
+Paper~5's commitment protocol for timestamped claims, Paper~8's
+sacrifice channel for partial use-evidence, Paper~6's controlled
+relaxation as an adjudication pattern.  Substrate is not
+implementation: formalizing the canonicalization operator, the
+three proof-burden types with admissible evidence classes, the
+claim-and-challenge protocol with challenge-market robustness
+(admission filtering against spam, identity weighting against
+Sybil flooding, independence requirements against cartel
+suppression), and the equilibrium-dominance theorem requires a
+dedicated follow-up paper.  This paper states the direction and
+leaves the formal work there.  The open-question entry in
+\S\ref{sec:discussion} describes the follow-up scope in more
+detail.
 
 \subsection{Sacrifice-polarity (S1) connection}
 

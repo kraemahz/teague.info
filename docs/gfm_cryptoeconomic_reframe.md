@@ -14,6 +14,17 @@ numbered papers.
 
 **Date drafted:** 2026-04-17.
 
+**Update (later same day):** Subsequent discussion sharpened the reframing.
+The provenance-centric framing in §§3–7 is not wrong, but it is narrower than
+the underlying mechanism. The unifying pathology is **structural avoidance**
+(the dual of Paper 3's structural discovery value, acknowledged as an open
+gap in Paper 2 Discussion). Provenance is one of three proof-burden types in
+the taxonomy that resolves avoidance; the other two (non-mergeability, use)
+are equally load-bearing. The cryptoeconomic cost counterweight is the
+*condition that makes proof-burdens honest*, not the mechanism itself. §9
+below documents this refinement; §§1–8 are preserved as the historical
+reasoning arc.
+
 **Prior art referenced:** `gfm_paper_proposals.md`, `gfm_safety_gap_analysis.md`,
 Papers 1--8 of the sequence, Paper 9 outline, Paper 8 drafts under
 `paper8/drafts/`.
@@ -388,6 +399,132 @@ following are open:
 
 ---
 
+## 9. Refinement: structural avoidance and the proof-burden taxonomy
+
+This section documents a refinement that emerged from subsequent
+discussion and from codex review of Paper 8 drafts v3, v3.1, v4. The
+refinement does not invalidate §§1–8 but reorganizes what is load-bearing
+in the architecture and where the invention is concentrated.
+
+### 9.1 The unifying pathology is structural avoidance
+
+The gas-station stuffing example `(c1 = travel home→gas, c2 = travel
+work→gas)` both have real provenance — the agent actually drove both
+routes. Provenance alone doesn't separate stuffed from legitimate when
+the stuffing consists of real-but-redundant capabilities.
+
+The pathology is that the agent *declines to merge* capabilities that
+admit merger. This is the structural-avoidance loop acknowledged in
+`gfm_safety_gap_analysis.md` §3 Paper 2 and in Paper 2's Discussion.
+Capability-stuffing is an instance of that known gap, not a new failure
+mode.
+
+Related avoidance pathologies exhibit similar shape — provenance-free
+declaration (declines acquisition structure), Doll Problem (declines
+exercise), wireheading (declines broad engagement) — but their formal
+structures differ and they should be treated as related rather than
+identical.
+
+### 9.2 The mechanism is proof-burden, not provenance alone
+
+The resolution is a proof-burden taxonomy with three types:
+
+| Proof type | Blocks | Partial substrate in sequence |
+|---|---|---|
+| **Non-mergeability** | Stuffing: real-but-redundant capabilities | None — this is the primary gap |
+| **Provenance** | Pure-label declarations without structural work | Paper 5 commitment protocol (substrate) |
+| **Use** | Persistently-dormant declarations outside `R_S` | Paper 8 sacrifice aggregate (partial) |
+
+Proof-burdens operate as canonicalization preprocessing on the poset
+before M5 is applied. M5's *formula* is preserved; the *measure domain*
+changes. Canonicalization introduces substantive new axiomatic content
+at the preprocessing layer — this is not a claim that M5 is untouched.
+
+Non-triviality (earlier described as a fourth proof-burden) is better
+understood as an empirical admissibility check on M5's `s_max ≥ 1`
+threshold, not a separate avoidance route.
+
+### 9.3 Back-pressure is essential
+
+Static proof-burdens alone are not enough. A proof-of-non-mergeability
+produced today can be voided tomorrow when mechanism `Z` is discovered
+that collapses the distinction. The discoverer receives structural-
+discovery credit per Paper 3 Proposition 2 (conditional on information
+value); the avoider loses M5 credit whose proof has been voided. This
+makes avoidance economically risky, not stable.
+
+The pattern is well-tested elsewhere: scientific consensus, patent
+challenge, proof-of-stake slashing, common-law precedent. Adapting the
+pattern to capability declaration requires substantive protocol and
+calibration work; the analogy doesn't transfer the mechanisms for free.
+
+The claim-and-challenge layer has its own adversarial surface — spam,
+Sybil flooding, cartel suppression, governance capture — that the
+follow-up paper must address. Treating the challenge protocol as if it
+just works is a mistake earlier drafts made.
+
+### 9.4 Cost counterweight is a necessary condition, not the mechanism
+
+The cryptoeconomic cost counterweight (the central frame of §§3–7) is
+the *condition that makes proof-burdens honest*: agents cannot fake
+evidence without real expenditure. Paper 3's structural discovery value
+is the condition that makes counter-arguments incentive-compatible:
+discoverers are rewarded in proportion to information content of the
+discovered structure.
+
+Both conditions are necessary. Neither is the mechanism. The mechanism
+is proof-burden-under-back-pressure; the cryptoeconomic frame supplies
+conditions that make the mechanism work.
+
+The "sequence is cryptoeconomic alignment infrastructure" claim in §6
+should be read through this lens: the sequence provides *substrate* on
+which a proof-burden architecture can be built. Substrate is not
+implementation. The follow-up paper is substantial invention, grounded
+in existing components but not reducible to them.
+
+### 9.5 Updated implications for in-flight papers
+
+**Paper 8** — scope-down of §3.3 completed; the direction paragraph and
+open-question entry (`oq:capability_stuffing`) now use the structural-
+avoidance framing. The commitment is "capability-stuffing is an
+instance of structural avoidance; the resolution is a proof-burden
+taxonomy with back-pressure; the follow-up paper is substantial
+invention." This is narrower and more honest than the earlier
+provenance-centric commitment.
+
+**Paper 5** — still load-bearing as substrate, with the clarification
+that Paper 5 provides commitment infrastructure for claim-and-
+challenge but does not itself implement claim semantics.
+
+**Follow-up paper** — the scope is the structural-avoidance architecture,
+not narrowly "the provenance paper." Deliverables include: canonical-
+poset operator with confluence proofs, three proof-burden types with
+admissible evidence classes, claim-and-challenge protocol with
+challenge-market robustness (spam, Sybil, cartel, governance capture),
+discovery-reward calibration, controlled-relaxation adjudication, and
+the structural-avoidance dominance theorem under explicit quantitative
+conditions. See `docs/paper8/drafts/anti_stuffing_formalism.tex` for
+the current direction document (v4.1).
+
+### 9.6 Residuals added by the refinement
+
+Beyond those listed in §8:
+
+- **Canonicalization order and non-uniqueness.** Multiple mergers may
+  apply to the same poset; the canonicalization operator must either
+  specify an application order or prove confluence.
+- **Privacy-vs-challengeability tension.** Claims must expose enough
+  structure for external challenge without revealing more than
+  necessary. Extends Paper 8's P1–P5 to the claim layer.
+- **Private time-sacrifice invisibility.** Inherited from Paper 8 P5
+  property (iii): capabilities exercised only in private modes cannot
+  discharge proof-of-use through the sacrifice channel alone.
+- **Challenge-market governance attacks.** Spam, Sybil flooding,
+  cartel suppression, governance capture of the adjudication layer.
+  Bounds are required; full elimination is not available.
+
+---
+
 ## Appendix: The reasoning arc in compressed form
 
 1. Capability-stuffing in Paper 8 looks like a formalism gap.
@@ -413,3 +550,12 @@ following are open:
     alignment terms. If wrong, the sequence is drag and loses.
 13. The work is necessary whether or not it is sufficient. The timing
     is less comfortable than we might prefer.
+
+**Refinement (per §9):** steps 3–5 above identify cost-of-declaration
+/ provenance as *the* signal. The refinement clarifies that cost
+counterweight is a *necessary condition* for the mechanism, not the
+mechanism itself. The mechanism is proof-burden against structural
+avoidance with claim-and-challenge back-pressure; the cryptoeconomic
+frame supplies conditions (costly honest evidence, rewarded discovery)
+that make that mechanism work. Provenance is one proof-burden type
+among three; non-mergeability is the primary gap.
