@@ -40,53 +40,9 @@ guarantee.
 \label{thm:aggregate_bound}
 For a sequence of revealed-sacrifice events
 $\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with bundles jointly covering
-a subset $U$ of unbenchmarked capability-space, under the
-following assumptions:
-
-\begin{description}
-\item[S0 (Calibration).] For each agent~$i_n$, the agent's
-  valuation of the unbenchmarked bundle $Y_n$ does not exceed
-  $Y_n$'s $\volR$ contribution:
-  $\Ui[_{n}](Y_n) \leq \volR(Y_n)$.
-
-\item[S1 (Free choice).] Each sacrifice event is a voluntary
-  trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
-  available.  The agent had \emph{non-degrading} alternatives:
-  retaining $X_n$ was a viable option that would not have left
-  the agent below minimum viable functionality on any need
-  dimension.  When retaining $X_n$ would cause the agent to fall
-  below a sufficiency threshold, S1 fails for that event
-  (Proposition~\ref{prop:s1_sufficiency}).
-
-\item[S2 (Benchmark grounding).] The benchmarked sacrifice $X_n$
-  has a well-defined $\volL$ contribution $\Delta\volL(X_n)$
-  computed via~\citep[Proposition~1]{lasser2026poset}, and the
-  agent's valuation of $X_n$ is at least as large:
-  $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
-
-\item[S3 (Bundle coherence).]  The hedonic decomposition of each
-  bundle $Y_n$ into capabilities in $U$ is well-defined (no
-  multicollinearity degeneracy).
-
-\item[S4 (Additive separability).] \mbox{}
-  \begin{enumerate}
-  \item[(a)] \emph{Valuation additivity:}
-    $\Ui(Y) = \sum_{c \in Y} u_i(c)$, $u_i(c) \geq 0$.
-  \item[(b)] \emph{$\volR$ additivity on poset-independent
-    capabilities:} The $\volR$ contribution of a set of
-    capabilities that are pairwise poset-independent (no
-    subsumption relations \emph{and} no cooperative composition
-    links) is additive.
-  \end{enumerate}
-
-\item[S5 (Decomposition validity).]  The event-local
-  decomposition coefficients are \emph{lower bounds} on the true
-  $\volR$ share:
-  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all $n$ and
-  $c \in Y_n$.
-\end{description}
-
-The theorem has two levels:
+a subset $U$ of unbenchmarked capability-space, under
+Assumptions~S0--S5 of
+Section~\ref{sec:assumptions}, the theorem has two levels:
 
 \medskip\noindent
 \textbf{Part~A (Bundle-level lower bound, requires S0--S2 only).}
