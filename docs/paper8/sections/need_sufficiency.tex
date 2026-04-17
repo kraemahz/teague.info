@@ -514,55 +514,119 @@ framework rewards both equally, and a $\volL$-maximizer with
 capability-discovery latitude will exploit the undifferentiated
 reward to stuff.
 
-\paragraph{Resolution via the need-sufficiency architecture.}
+\paragraph{What the need-sufficiency architecture does resolve.}
 The downstream-safe bundle sufficiency condition
-(Definition~\ref{def:downstream_safe}) resolves this tension at
-the right structural level.  Measurements that improve the
-bundle's downstream-safety are genuine: they close sufficiency
-gaps on need dimensions previously unmet, and their contribution
-is registered through the capped below-sufficiency benchmark
-(Definition~\ref{def:polarity_benchmark}).  Measurements that
-re-measure an already-sufficient bundle from a different vantage
-point are stuffed: they improve no dimension's sufficiency
-status, create no new cooperative capability, and contribute no
-quality improvement to the downstream cone.  Proposition~3 below
-makes this formal.
+(Definition~\ref{def:downstream_safe}) and the polarity-correct
+benchmark (Definition~\ref{def:polarity_benchmark}) together
+handle one specific class of redundant construction: capabilities
+whose claimed contribution lies \emph{below} the sufficiency
+threshold on an already-satisfied need dimension.  For those, the
+below-sufficiency benchmark saturates at $1$, so additional
+instances do not inflate the benchmark.  This is a real structural
+property of the architecture and it is worth stating narrowly:
 
-\subsection{Structural propositions}
-
-\begin{proposition}[Anti-Stuffing]
-\label{prop:anti_stuffing}
-Under downstream-safe bundle sufficiency
-(Definition~\ref{def:downstream_safe}), redundant capability
-constructions---e.g., ``travel from $A$ to a gas
-station,'' ``travel from $B$ to a gas station,'' instantiating the
-same underlying fuel-access optionality from different
-origins---provide no downstream-quality
-improvement.  Once the bundle is sufficient, the
-below-sufficiency benchmark caps at $1$
-(Definition~\ref{def:polarity_benchmark}), and the
-above-sufficiency component credits only genuine quality
-improvement (cheaper fuel, faster access), not re-measurement
-from different positions.  The bundle structure plus
-downstream-safety naturally resists stuffing without a separate
-anti-stuffing mechanism.
+\begin{proposition}[Below-Sufficiency Saturation]
+\label{prop:below_suff_saturation}
+For any need dimension $d_k$ already at or above its sufficiency
+threshold $s_k$, additional capabilities reporting
+$\mathrm{actual}_k \geq s_k$ on $d_k$ contribute at most $1$ each
+under the below-sufficiency component of the benchmark
+(Definition~\ref{def:polarity_benchmark}).  Consequently,
+below-sufficiency re-instantiation cannot increase the
+below-sufficiency benchmark of a dimension beyond its cap.
 \end{proposition}
 
 \begin{proof}
-Under Definition~\ref{def:downstream_safe}, sufficiency is a
-property of the \emph{bundle} (all dimensions simultaneously),
-not of individual capability constructions.  A stuffed capability
-instantiates a dimension already at or above threshold for the
-need it targets.  By the capping discipline
-(Definition~\ref{def:polarity_benchmark}), its below-sufficiency
-benchmark is $\min(\mathrm{actual}/\mathrm{threshold}, 1) = 1$.
-Its above-sufficiency benchmark provides credit only if
-$\mathrm{actual}_k$ genuinely exceeds the threshold, which
-re-instantiation from a different origin does not achieve.
-Downstream non-degradation
-(Definition~\ref{def:downstream_safe}(b)) is unaffected because
-the satisfaction pathway is unchanged.
+Below-sufficiency benchmark for dimension $d_k$ is
+$\min(\mathrm{actual}_k / s_k, 1)$, which is bounded above by $1$
+regardless of the number of capabilities reporting
+$\mathrm{actual}_k \geq s_k$.
 \end{proof}
+
+\paragraph{What the need-sufficiency architecture does not
+resolve.}
+Proposition~\ref{prop:below_suff_saturation} is the full extent
+of the architecture's structural anti-stuffing contribution.  It
+does \emph{not} cover the following:
+\begin{enumerate}
+\item[(i)] Above-sufficiency re-instantiation.  An attacker can
+  construct capabilities with distinct
+  $\mathrm{actual}_k$ values exceeding $s_k$ (e.g.,
+  home-to-gas at 15~minutes and work-to-gas at 5~minutes).
+  Each earns positive above-sufficiency credit
+  $\alpha_k(\mathrm{actual}_k - s_k)/s_k$ under
+  Definition~\ref{def:polarity_benchmark}, even though the
+  underlying optionality (fuel access) is unchanged.
+\item[(ii)] Capabilities whose claimed dimension is not inside
+  any existing need's downstream cone, for which the gate
+  function (Definition~\ref{def:downstream_gate}) does not
+  apply and M5 weight accrues fully to $\volL$.
+\item[(iii)] Arbitrary asymmetric decoration --- distinct
+  cooperative descendants, minor weight perturbations, unique
+  subsumption edges --- that preserves M5 credit for the stuffed
+  capability regardless of whether the capability provides
+  genuinely new optionality.
+\end{enumerate}
+Each of these defeats any attempt to block stuffing using
+post-declaration poset properties or exercise patterns alone.
+The honest statement of the need-sufficiency architecture's
+contribution is sacrifice-polarity resolution (via
+Proposition~\ref{prop:s1_sufficiency} below, which is
+load-bearing for the sacrifice channel) together with the
+narrow below-sufficiency cap of
+Proposition~\ref{prop:below_suff_saturation}.  Full structural
+resolution of M5 stuffing requires machinery this paper does not
+develop.
+
+\paragraph{The intended direction: capability provenance.}
+The failure pattern across attempts (redundancy via automorphism,
+detection via dormancy, resolution via bundle structure) is that
+every signature over post-declaration data is adversarially
+manipulable.  The move that changes the game is examining
+capabilities \emph{at declaration}: legitimate capability
+acquisition has real cost (training, equipment, time,
+apprenticeship, dedicated exercise), and the agent cannot
+manufacture provenance without expending real resources unless
+the cost structure admits self-dealing, collusion, leverage, or
+reuse loopholes.
+
+A \emph{capability provenance} construction---combining
+acquisition histories (committed sacrifice events that
+established a capability) and exercise histories (time-sacrifice
+events through which the capability is maintained)---produces a
+cost-weighted individual weight $w_{\mathrm{Prov}}(c) =
+\min(w(c), f(\text{cumulative provenance of } c))$ that
+collapses to zero for capabilities with neither formal
+acquisition nor genuine exercise.  Under an admissible
+cost-utilization pair---cost that grows at least as fast as
+utilization beyond some scale, with a positive marginal floor---
+declaring stuffed capabilities is equilibrium-dominated by
+declaring legitimate ones.
+
+Making this claim a theorem requires four axioms the current
+sequence does not formally establish: provenance non-reuse
+(a sacrifice event cannot justify unbounded capability claims),
+non-circular sacrifice (self-dealing and collusive-subsidy
+constructions do not count as net provenance), liability-netted
+cost (debt-financed sacrifice is netted against the induced
+liability), and capability-specific linkage semantics
+(cryptographically binding a provenance event to the specific
+capability it establishes, extending the commitment protocol
+of~\citep[Definition~6]{lasser2026exo}).  It also requires a
+provenance extension to cooperative weights (M6), so that
+lightly-justified individual nodes do not unlock disproportionate
+cooperative credit, and a residual treatment of multi-agent
+collusion and external-subsidy cases.
+
+These are not stated as results of this paper.  The stuffing
+resolution is thus described here as a \emph{direction}: a named
+resolution path that uses machinery already partially present in
+the sequence (sacrifice events, commitment protocols, privacy
+properties, time-sacrifice valuation), extended by formal
+acquisition-event semantics and the four axioms above.  A
+dedicated treatment is left to follow-up work.
+
+\subsection{Sacrifice-polarity (S1) connection}
 
 \begin{proposition}[S1--Sufficiency Connection]
 \label{prop:s1_sufficiency}

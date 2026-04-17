@@ -187,4 +187,33 @@ required.  Relatedly, under the capped-benchmark discipline
 contribute a fixed cap whose weight is a design parameter
 affecting the relative importance of need-satisfaction versus
 want-pursuit in $\volL$.
+
+\item \label{oq:capability_stuffing}
+\textbf{Capability-stuffing and provenance.}
+Capability-stuffing (Section~\ref{sec:capability_stuffing})
+remains an open M5 pathology under this paper's machinery: an
+agent can inflate $\volL$ by declaring capabilities that pass
+structural validation but do not broaden experiential
+optionality, and no signature over post-declaration poset
+structure or exercise pattern separates stuffed from legitimate
+capabilities in a way the agent cannot adversarially manipulate.
+The intended resolution direction is \emph{capability
+provenance}: weight each capability by a cost-derived function
+of its acquisition-and-exercise history, so that stuffed
+capabilities---declared but neither formally acquired nor
+genuinely exercised---receive zero provenance-weighted credit.
+Under an admissible cost-utilization pair (cost growing at least
+as fast as utilization beyond some scale, with a positive
+marginal floor), declaring stuffed capabilities is
+equilibrium-dominated by declaring legitimate ones.  A proper
+theorem requires formal acquisition-event semantics extending
+the sacrifice-event taxonomy of \S\ref{sec:sacrifice_model},
+four provenance axioms (non-reuse, non-circular sacrifice,
+liability-netted cost, capability-specific linkage binding via
+the commitment protocol of~\citep[Definition~6]{lasser2026exo}),
+a provenance extension to M6 cooperative weights, and a
+multi-agent treatment addressing collusion and external subsidy.
+Each of these is substantial work beyond the present scope; a
+dedicated follow-up paper on cryptoeconomic capability closure
+is the natural venue.
 \end{enumerate}
