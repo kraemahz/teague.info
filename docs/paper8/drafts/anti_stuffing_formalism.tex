@@ -42,7 +42,7 @@
 \newcommand{\canon}{\mathrm{canon}}
 \newcommand{\ResS}{R_{\mathrm{S}}}
 
-\title{Draft v4: Capability-Stuffing as Structural Avoidance,\\
+\title{Draft v4.1: Capability-Stuffing as Structural Avoidance,\\
   and the Proof-Burden Taxonomy}
 \author{Paper 8 exploratory draft}
 \date{}
@@ -61,46 +61,53 @@ Adversarial manipulation was always available at the controlled
 layer.
 
 v4 identifies the underlying pathology as \emph{structural
-avoidance} --- the dual of the structural discovery value
-established by~\citep[Proposition~2]{lasser2026horizon} and
-acknowledged as an open gap in~\citep{lasser2026poset}
+avoidance}, acknowledged as an open gap in~\citep{lasser2026poset}
 (Discussion) and in the sequence's safety gap analysis.
 Capability-stuffing is not a new failure mode; it is a specific
 instance of structural avoidance, where the agent declines to
-merge capabilities that admit merger.  Other instances include
-the Doll Problem (declining to exercise declared capabilities),
-wireheading (declining broad engagement), and provenance-free
-declaration (declining the structural work of actual capability
-acquisition).
+merge capabilities that admit merger.  Related avoidance
+pathologies in the sequence include provenance-free declaration
+(claims without underlying effort), the Doll Problem (declining
+exercise), and wireheading (declining broad engagement), though
+these differ enough in formal structure that they should be
+treated as related rather than identical to capability-stuffing.
 
-The resolution is a \emph{proof-burden taxonomy}: for each
-avoidance route, a corresponding proof-burden the agent must
+The proposed resolution is a \emph{proof-burden taxonomy}: for
+each avoidance route, a corresponding burden the agent must
 discharge to retain $\volL$ credit.  Proof-burdens operate as
-preprocessing on the poset before M5 is applied, preserving the
-axiomatization unchanged.  Several of the sequence's papers
-already implement partial proof-burdens
-(Paper~5 commitment protocol for provenance, Paper~8 sacrifice
-aggregate for use, Paper~8 wireheading HHI for non-degenerate
-engagement).  The follow-up paper completes the taxonomy by
-formalizing proof-of-non-mergeability and unifying the four
-proof-burden types under a single axiom.
+preprocessing on the poset before M5 is applied.  M5's formula
+is preserved, but the measure is evaluated on the canonicalized
+poset rather than the presented one; canonicalization itself
+introduces new axiomatic content at the preprocessing layer and
+should be understood as such.
 
-The taxonomy's \emph{static} layer specifies which proofs are
-admissible for each avoidance route.  The \emph{dynamic} layer ---
-claim-and-challenge back-pressure --- addresses the fact that
+The sequence already provides \emph{substrate} for proof-burdens
+but does not yet implement them: Paper~5 provides the timestamped
+cryptographic substrate; Paper~8 provides partial use-evidence
+via the sacrifice aggregate (not a full proof-of-use, because the
+v2 dormancy attack and private-exercise invisibility remain);
+Paper~8 \S10's wireheading HHI is a diagnostic alarm signal
+(``consistent with wireheading''), not a proof-burden.  The
+follow-up paper's work is to formalize the taxonomy --- including
+the canonical-poset operator, claim-and-challenge protocol,
+reward calibration, adjudication, and dominance theorem --- and
+this is substantial invention, not merely integration of
+existing components.
+
+The taxonomy's \emph{static} layer specifies which evidence is
+admissible for each avoidance route.  The \emph{dynamic} layer
+--- claim-and-challenge back-pressure --- addresses the fact that
 proofs are not permanent: a prior proof-of-non-mergeability can
 be invalidated by subsequent discovery of a merging mechanism
-$Z$.  The discoverer of $Z$ receives structural-discovery credit
-under~\citep[Proposition~2]{lasser2026horizon}; the avoider loses
-the M5 credit whose proof has been voided.  This makes structural
-avoidance economically risky rather than economically stable, in
-equilibrium.
+$Z$.  The discoverer receives structural-discovery credit
+(\citep[Proposition~2]{lasser2026horizon}, conditional on
+information value); the avoider loses the M5 credit whose proof
+has been voided.  Challenge-market robustness is itself a design
+problem the follow-up must address.
 
-This document remains a direction, not a theorem.  The
-equilibrium claim, the formal proof-burden axioms, and the
-dispute-resolution mechanics are substantial technical work
-deferred to a dedicated follow-up.  Paper~8 should scope down
-its current Anti-Stuffing claim accordingly and flag the direction.
+This document remains a direction, not a theorem.  Paper~8 should
+scope down its current Anti-Stuffing claim accordingly and flag
+the direction.
 \end{abstract}
 
 \section{Why the post-declaration paths fail}
@@ -151,8 +158,8 @@ additively, an agent optimizing $\volL$ has an incentive to
 otherwise reducible.  Avoidance inflates leverage; the loop is
 self-reinforcing because more capabilities compound into
 additional apparent optionality.  The safety gap
-analysis~(\texttt{docs/gfm\_safety\_gap\_analysis.md}, \S3 Paper~2)
-records this as open.
+analysis~(\texttt{docs/gfm\_safety\_gap\_analysis.md}, \S3
+Paper~2) records this as open.
 
 Capability-stuffing is an instance of this pathology.
 ``Travel from home to gas station'' and ``travel from work to gas
@@ -163,35 +170,50 @@ discovery would produce: ``access to fuel from multiple origins.''
 The merged capability has the same optionality content; the
 unmerged pair inflates M5 count without inflating optionality.
 
-Avoidance is the dual of discovery.~\citep[Proposition~2]{lasser2026horizon}
-establishes that discovering new poset structure is value-positive.
-The symmetric claim is that \emph{declining to discover} available
-structure is value-negative --- or should be.  Under naive M5, it
-is value-positive, because every declared capability adds weight
-regardless of whether it represents new optionality or merely a
-different label on existing optionality.
+\paragraph{Avoidance as the dual of discovery---a heuristic, not
+a derivation.}
+\citep[Proposition~2]{lasser2026horizon} establishes that
+structural discovery is value-positive \emph{under conditions on
+the information value of the discovered structure}.  The
+symmetric claim that \emph{declining to discover} available
+structure is value-negative is a motivating heuristic, not a
+formal entailment.  Paper~3's result does not by itself imply
+the dual in full generality; making it a theorem requires an
+explicit discovery-reward/avoidance-penalty calibration that the
+follow-up paper must specify.  The direction taken here is
+that the positive-value side of structural discovery should have
+a corresponding negative-value side on refusal-to-discover, but
+this is a design proposal to be formalized, not a consequence of
+existing results.
 
-\begin{remark}[Other instances of structural avoidance]
-\label{rem:other_avoidance}
-Once named, the pattern appears elsewhere in the sequence's
-failure taxonomy:
+\begin{remark}[Related avoidance pathologies]
+\label{rem:related_avoidance}
+Once structural avoidance is named, several of the sequence's
+failure modes exhibit related patterns, though their formal
+structures differ and they should not be treated as identical.
 \begin{itemize}
-\item The \emph{Doll Problem}~(\citep{lasser2026gfm}, \S7.1):
-  avoiding the exercise of declared capabilities.  Structural in
-  the sense of exercise-pathway structure
-  (\citep{lasser2026horizon}, Definition~2).
-\item \emph{Wireheading} (\citep{lasser2026exo},
-  Discussion): avoiding broad engagement with external structure
-  in favour of narrow self-reinforcing loops.
-\item \emph{Provenance-free declaration}: avoiding the
-  structural work of actual capability acquisition by declaring
-  capabilities as labels without corresponding effort.
-\item \emph{Capability-stuffing}: avoiding the discovery that
-  redundant capabilities admit merger.
+\item \emph{Capability-stuffing}: declining to discover that
+  redundant capabilities admit merger.  The cleanest instance of
+  structural avoidance in the literal sense.
+\item \emph{Provenance-free declaration}: claims without any
+  underlying structural work.  Closely analogous to avoidance:
+  the agent declines to do the acquisition structure that
+  would justify the claim.
+\item \emph{Doll Problem}~(\citep{lasser2026gfm}, \S7.1):
+  declining to exercise declared capabilities.  This involves
+  exercise-pathway structure~(\citep[Definition~2]{lasser2026horizon})
+  rather than poset structure directly; it is a related pathology
+  but a distinct one.
+\item \emph{Wireheading}~(\citep{lasser2026exo}, Discussion):
+  declining broad engagement.  Paper~8 \S10's HHI diagnostic
+  detects this as a concentration pattern ``consistent with
+  wireheading,'' not as a formal avoidance theorem.  The
+  analogy is strong but the formalism is different.
 \end{itemize}
-The resolution pattern is the same in each case: make avoidance
-value-negative by imposing a proof-burden that the avoidance
-route cannot discharge.
+Unifying these fully requires formal work that belongs in the
+follow-up paper.  For capability-stuffing, the direct instance,
+the resolution pattern is concretely articulable; the other
+cases benefit from the pattern but are not closed by it.
 \end{remark}
 
 \section{The static mechanism: proof-burden taxonomy}
@@ -208,59 +230,90 @@ For a presented poset $P$, its canonical form $\canon(P)$ is the
 result of applying all admissible canonicalizations under the
 proof-burden taxonomy: merging capability pairs that cannot
 discharge proof-of-non-mergeability, removing capabilities that
-cannot discharge proof-of-provenance, discounting capabilities
-that cannot discharge proof-of-use, and bounding above by
-non-triviality thresholds.  The $\volL$ measure the framework
-evaluates is $\volL(\canon(P))$, not $\volL(P)$.
+cannot discharge proof-of-provenance, and discounting
+capabilities that cannot discharge proof-of-use.  The $\volL$
+measure the framework evaluates is $\volL(\canon(P))$, not
+$\volL(P)$.
 \end{definition}
 
-\begin{remark}[M5 is unchanged]
+\begin{remark}[M5's formula is preserved; the measure domain is
+not]
 \label{rem:m5_preserved}
-The proof-burden taxonomy is a preprocessing step on $P$, not an
-extension to M5.  M5 continues to hold: every capability in
-$\canon(P)$ with $s_{\max} \geq 1$ contributes positive weight.
-What changes is which $P$ the measure is evaluated on; the
-axiomatization of the measure itself remains as stated
-in~\citep[Proposition~1]{lasser2026poset}.
+M5's axiomatic formula (every capability with $s_{\max} \geq 1$
+contributes positive weight) continues to hold when evaluated on
+$\canon(P)$: the measure's functional form is unchanged.  What
+does change is which poset the measure is evaluated on.
+Canonicalization merges, removes, or discounts capabilities that
+would otherwise be in $P$; this is substantive new content,
+axiomatic at the preprocessing layer.  In other words, M5 as a
+formula is preserved; M5 as applied to agent-presented posets is
+replaced by M5 applied to canonicalized posets, and the
+preprocessing rules are themselves axioms requiring formal
+specification.  The follow-up paper cannot honestly claim this
+leaves the axiomatization untouched.
 \end{remark}
 
-The four proof-burden types:
+\begin{remark}[Non-triviality as empirical M5 admissibility, not
+a distinct burden]
+\label{rem:nontriv_not_burden}
+An earlier version of this draft enumerated non-triviality
+($s_{\max} \geq 1$ verified empirically in practice, not merely
+by claim) as a fourth proof-burden.  On reflection this is not a
+distinct avoidance route but an empirical admissibility check on
+M5 itself: does the capability meet M5's stated threshold in
+observed exercise?  The follow-up paper should specify this as
+an empirical extension of M5's existing threshold, not as a
+separate proof-burden.  The taxonomy therefore has three
+proof-burden types: non-mergeability, provenance, and use.
+\end{remark}
+
+The three proof-burden types:
 
 \subsection{Proof of non-mergeability}
 
 Triggered when two capabilities $c_1, c_2 \in P$ exhibit
-structural redundancy (by a detection test we must specify: most
-plausibly, empirical substitutability in exercise patterns, high
-mutual information in structural signatures, or direct subsumption
-equivalence).  The agent must demonstrate that $c_1$ and $c_2$
-are genuinely distinct under a merger $Z$-mechanism: pointing to
+structural redundancy.  A detection test is required; candidate
+tests include empirical substitutability in exercise patterns,
+high mutual information in structural signatures, or direct
+subsumption equivalence (with tradeoffs the follow-up must
+evaluate).  The agent must demonstrate that $c_1$ and $c_2$ are
+genuinely distinct under a merger $Z$-mechanism: pointing to
 contexts where they cannot substitute, or to cooperative
 participations one has that the other does not.  Absent such
 proof, $\canon$ merges them.
 
-The v3.1 provenance construction, the four axioms
-(non-reuse, non-circular sacrifice, liability-netted cost,
+The v3.1 provenance construction, the four axioms (non-reuse,
+non-circular sacrifice, liability-netted cost,
 capability-specific linkage), and the admissible cost-utilization
 pair become \emph{internal details} of how proof-of-non-
 mergeability is constructed, rather than a global machinery.
-They remain useful for the cases where the distinction evidence
-must itself be cryptographically committed; they do not extend to
-other proof-burden types.
+They remain useful where the distinction evidence must itself be
+cryptographically committed; they do not extend to other
+proof-burden types.
+
+This is the \emph{primary gap} in the current sequence.  Neither
+Paper~5 nor Paper~8 provides non-mergeability machinery;
+formalizing it is the follow-up paper's core technical work.
 
 \subsection{Proof of provenance}
 
 Triggered for any capability $c$ in $P$.  The agent must commit
-to sacrifice events (Paper~5 Definition~6) that produced $c$ or
-that genuinely exercise it.  Capabilities with no committed
-provenance at all are either canonicalized to zero weight or
-excluded from the canonical poset.  This blocks pure-label
-declaration (``I can fly'').
+to sacrifice events that produced $c$ or that genuinely exercise
+it.  Capabilities with no committed provenance at all are either
+canonicalized to zero weight or excluded from the canonical
+poset.  This blocks pure-label declaration (``I can fly'').
 
-This proof-burden is largely already implemented by Paper~5's
-commitment protocol.  What the follow-up paper adds is the
-\emph{binding} between commitments and capability claims ---
-which committed events count as provenance for which capability,
-under what non-reuse and liability-netting constraints.
+\paragraph{Substrate, not implementation.}
+Paper~5 (Definition~6) provides the timestamped, binding, hiding
+commitment substrate on which proof-of-provenance would be
+built.  It does \emph{not} by itself implement provenance
+semantics.  The follow-up paper adds: (a)~the binding between
+commitments and capability claims (which committed events count
+as provenance for which capability), (b)~non-reuse and
+liability-netting constraints, and (c)~capability-specific
+linkage semantics.  Saying Paper~5 ``implements
+proof-of-provenance'' would overstate what the paper delivers;
+Paper~5 \emph{enables} proof-of-provenance.
 
 \subsection{Proof of use}
 
@@ -271,35 +324,32 @@ capabilities that remain persistently dormant and are not in
 $\ResS$ (the structurally-unobservable residual class,
 \citep{lasser2026scm}) are discounted or removed.
 
-Paper~8's sacrifice aggregate (Theorem~2) implements this
-partially: capabilities that never appear in any observed
-sacrifice bundle contribute zero to $\volRlower$.  The full
-proof-of-use would extend this to exogenous verification
-mechanisms (Paper~6), so that non-sacrifice exercise events also
-count.
-
-\subsection{Proof of non-triviality}
-
-Triggered when a capability's claimed optionality contribution is
-small or marginal.  The agent must demonstrate that $c$ has
-$s_{\max} \geq 1$ (M5's non-triviality bound) in practice, not
-merely by claim.  Capabilities whose empirically-observed
-performance is uniformly below threshold do not satisfy M5 and
-are removed.
-
-This is partially implicit in M5 but not formally tested.  The
-follow-up would define the empirical verification procedure and
-relate it to the benchmarked-subspace machinery of
-\citep{lasser2026poset}.
+\paragraph{Partial coverage in Paper 8.}
+The sacrifice aggregate of Paper~8 (Theorem~2) provides
+\emph{partial} evidence: capabilities that never appear in any
+observed sacrifice bundle contribute zero to $\volRlower$.  This
+is not a full proof-of-use, because (i)~the v2 dormancy attack
+shows that occasional bundle inclusion lifts a capability out of
+persistent zero, so the threshold is a floor not a ceiling;
+(ii)~private time-sacrifice exercise (Paper~8, P5, Property~(iii))
+is invisible without voluntary disclosure; (iii)~exogenous
+verification machinery (Paper~6) would be needed to count
+non-sacrifice exercise events that demonstrate use.  The follow-up
+paper must integrate these to achieve a proof-burden strength
+claim.
 
 \begin{remark}[Summary of coverage]
 \label{rem:coverage}
-The sequence already covers proof-of-provenance (via Paper~5)
-and partial proof-of-use (via Paper~8's sacrifice aggregate).
-Proof-of-non-mergeability is the primary gap
-this document's intended follow-up paper closes.  Proof-of-non-
-triviality is a smaller gap that the follow-up paper can treat
-as a formal extension of M5's existing threshold.
+The sequence provides \emph{substrate} for the three proof-burden
+types but does not yet implement any of them fully.  Paper~5
+provides the commitment substrate.  Paper~8 provides partial
+use-evidence via the sacrifice aggregate.  Proof-of-non-
+mergeability has neither implementation nor substrate and is the
+primary gap.  Describing this as ``the sequence already covers
+three of four proof-burdens'' overstates the situation; the
+honest description is ``the sequence provides reusable substrate
+for parts of the taxonomy; implementing the full taxonomy is
+substantial invention, not mere integration.''
 \end{remark}
 
 \section{The dynamic mechanism: back-pressure}
@@ -317,19 +367,19 @@ void.
 A proof-burden claim is a tuple
 $(c, \mathrm{type}, \mathrm{proof}, t_0, \mathrm{state})$ where
 $c$ is the subject capability or capability pair, $\mathrm{type}
-\in \{\text{non-mergeability, provenance, use, non-triviality}\}$,
-$\mathrm{proof}$ is the evidence, $t_0$ is the time of claim, and
-$\mathrm{state} \in \{\text{active, voided, superseded}\}$.
-Claims are committed via Paper~5's protocol and carry
-cryptographically-verified timestamps.
+\in \{\text{non-mergeability, provenance, use}\}$, $\mathrm{proof}$
+is the evidence, $t_0$ is the time of claim, and $\mathrm{state}
+\in \{\text{active, voided, superseded}\}$.  Claims are committed
+via Paper~5's protocol and carry cryptographically-verified
+timestamps.
 \end{definition}
 
 \begin{definition}[Counter-Argument]
 \label{def:counter_argument}
-A counter-argument against an active claim $(c, \text{non-mergeability},
-\mathrm{proof}, t_0, \text{active})$ is a committed demonstration
-of a mechanism $Z$ under which the capabilities merge: evidence
-of exercise substitutability, a subsumption relation missed at
+A counter-argument against an active claim is a committed
+demonstration of a mechanism under which the claim fails.  For
+non-mergeability claims, this means exhibiting $Z$: evidence of
+exercise substitutability, a subsumption relation missed at
 $t_0$, a cooperative-participation equivalence, or any other
 structural identification.  The counter-argument itself is a
 structural-discovery claim subject to the same proof-burden
@@ -354,13 +404,15 @@ this under equilibrium analysis.
 
 \paragraph{Discovery reward.}
 The successful counter-arguer has discovered new structure
-(mechanism $Z$).
-By~\citep[Proposition~2]{lasser2026horizon}, discovery is
-value-positive; the discoverer's own $\volL$ should increase by
-the information content of $Z$.  This is the reward that makes
-challenge-production incentive-compatible: agents profit by
-finding merger mechanisms, so adversarial discovery has positive
-expected return under sustained search.
+(mechanism $Z$).  Under~\citep[Proposition~2]{lasser2026horizon},
+discovery is value-positive conditional on information value; the
+discoverer's $\volL$ credit scales with the content of $Z$.  This
+is the reward that makes challenge-production
+incentive-compatible: agents profit by finding merger mechanisms,
+so adversarial discovery has positive expected return under
+sustained search \emph{when the reward dominates the cost of
+producing evidence}.  Calibrating the reward magnitude is its
+own technical problem.
 
 \begin{remark}[Back-pressure is analogous to known architectures]
 \label{rem:back_pressure_analogues}
@@ -370,7 +422,10 @@ patent law (granted patents are challengeable via prior art and
 obviousness), proof-of-stake validation (block signatures are
 slashable on detected double-signing), common-law precedent
 (decisions stand until appeal or legislative reversal).  The
-follow-up paper adapts the pattern rather than inventing it.
+follow-up paper adapts the pattern rather than inventing it,
+but adapting requires substantive work on the specific cost and
+reward structures; the analogy does not transfer the mechanisms
+for free.
 \end{remark}
 
 \paragraph{Dispute resolution.}
@@ -386,57 +441,116 @@ follow-up paper's adjudication layer most likely uses a
 combination, with controlled relaxation as the load-bearing
 component for formal disputes.
 
-\section{Sequence integration}
+\subsection{Challenge-market robustness}
 
-Under this framing, the GFM sequence has been building
-proof-burden infrastructure since Paper~2, but without a unifying
-name.  Cataloguing:
+The claim-and-challenge layer has its own adversarial surface
+which earlier drafts did not address.  Analogous to attacks on
+proof-of-stake consensus or on patent-challenge systems, the
+following routes are plausible:
+
+\paragraph{Counter-argument spam.}
+An attacker files bulk frivolous counter-arguments against many
+active claims, consuming adjudication capacity and imposing
+defence costs on legitimate claim-holders.  The follow-up paper
+needs admission filtering (per-challenge commitment cost,
+minimum-evidence threshold, or escrow-style slashing for
+demonstrably frivolous challenges) to prevent this.
+
+\paragraph{Sybil flooding.}
+An attacker uses many identities to produce either bulk claims
+or bulk counter-arguments, overwhelming an identity-weighted
+resolution process.  Mitigation requires identity weighting that
+is adversarially robust --- stake-based weighting, committed
+reputation, or coupling to scarce resources the attacker cannot
+trivially replicate.
+
+\paragraph{Cartel suppression.}
+A coalition of claim-holders coordinates to under-produce
+counter-arguments on each other's claims, leaving avoidance
+undisturbed in the absence of outside adversaries.  Mitigation
+requires either rewarding external discoverers sufficiently to
+overcome cartel advantages, or structural independence
+requirements on who can adjudicate which classes of claims.
+
+\paragraph{Governance capture.}
+The adjudication layer (per~\citep{lasser2026wamura}'s controlled
+relaxation or equivalents) can itself be captured by actors with
+an interest in preserving specific avoidance claims.  This is a
+residual failure mode the framework cannot fully eliminate; the
+follow-up paper should at most bound it, not claim to resolve it.
+
+These are real attack vectors, not stylistic concerns; any
+follow-up paper claiming an equilibrium under back-pressure must
+specify its resistance to each.
+
+\section{Sequence integration: reusable substrate, not prior
+implementation}
+
+Under the v4 framing, several of the GFM sequence's papers
+provide \emph{substrate} on which the proof-burden taxonomy could
+be built.  They do not, in their existing form, implement the
+taxonomy.  Cataloguing honestly:
 
 \begin{itemize}
 \item \textbf{Paper~2 (\citep{lasser2026poset}):}
   M5 additive over (what was implicitly but not formally) the
-  canonical poset.  The canonical-poset preprocessing step v4
-  proposes makes this explicit.  Paper~2's Discussion
-  acknowledges the structural-avoidance loop as the open gap;
-  this direction names the resolution.
+  canonical poset.  The canonical-poset preprocessing step
+  proposed here makes this explicit, and Paper~2's Discussion
+  acknowledges the structural-avoidance loop as the open gap.
+  This is a substantive conceptual fit, not just substrate.
 \item \textbf{Paper~3 (\citep{lasser2026horizon}):}
-  Structural discovery is value-positive (Proposition~2).  This
-  is the reward structure that makes counter-argument production
-  incentive-compatible --- the back-pressure layer's engine.
+  Structural discovery is value-positive (Proposition~2)
+  conditional on information value.  This provides the positive-
+  reward motivation for counter-argument production, on which
+  the back-pressure layer's incentive-compatibility argument
+  depends.  Also a substantive conceptual fit; again, not
+  substrate in the implementational sense.
 \item \textbf{Paper~5 (\citep{lasser2026exo}):}
-  Commitment protocol (Definition~6).  Provides the timestamped,
-  cryptographically-verifiable substrate for all claim-and-
-  challenge interactions.  Proof-of-provenance is substantially
-  implemented here.
+  Commitment protocol (Definition~6).  Provides the
+  cryptographically-verifiable substrate for all
+  claim-and-challenge interactions.  What this paper gives is
+  infrastructure --- binding, hiding, timestamped commitments;
+  what it does not give is the \emph{semantics} of how specific
+  claims bind to specific capabilities, nor the non-reuse or
+  liability-netting constraints that proof-of-provenance needs.
+  Reinterpretation as ``proof-burden infrastructure'' is
+  defensible, not original-purpose.
 \item \textbf{Paper~6 (\citep{lasser2026wamura}):}
   Controlled relaxation.  Provides the adjudication mechanism
-  for disputes that cannot be settled by further discovery.  The
-  follow-up paper's dispute-resolution layer is largely an
-  application of Paper~6 to claim-counter-claim conflicts.
+  pattern; applying it to claim-counter-claim conflicts is a
+  natural extension, but still an extension requiring formal
+  specification of when and how adjudication triggers.
 \item \textbf{Paper~8 (this paper):}
-  Sacrifice channel and $\volRlower$ aggregate.  Provides the
-  evidence substrate for proof-of-use and for structural
-  substitutability tests used in proof-of-non-mergeability.
-  Wireheading HHI (\S10) is a proof-of-non-degenerate-engagement,
-  another specific proof-burden.
+  Sacrifice channel and $\volRlower$ aggregate provide
+  \emph{partial} use-evidence.  The wireheading HHI diagnostic
+  provides an alarm signal for concentration patterns consistent
+  with wireheading; it is not a proof-burden.  Saying Paper~8
+  ``implements proof-of-use'' or ``implements proof-of-non-
+  degenerate-engagement'' overstates what this paper delivers;
+  Paper~8 provides evidence machinery that the follow-up would
+  compose with other mechanisms to construct those proof-burdens.
 \end{itemize}
 
-The follow-up paper's scope is the integration: naming the
-unifying proof-burden taxonomy, formalizing proof-of-non-
-mergeability, establishing the claim-and-challenge dynamics, and
-proving the equilibrium claim under the combined apparatus.
+The honest framing: the sequence provides a conceptually tight
+fit with the avoidance/discovery duality (Papers~2, 3) and
+cryptographic and evidentiary substrate for implementation
+(Papers~5, 6, 8).  The follow-up paper does the work of naming
+the taxonomy, specifying the proof-burden semantics, integrating
+substrate into mechanism, and proving the equilibrium claim.
+This is substantial invention, grounded in existing components
+but not reducible to them.
 
 \section{The equilibrium claim}
 
 \begin{conjecture}[Structural-Avoidance Dominance]
 \label{conj:avoidance_dominance}
-Under the full proof-burden taxonomy (static) with back-pressure
-(dynamic) and admissible cost and discovery-reward structures,
-structural avoidance is dominated in equilibrium: no rational
-$\volL$-maximizing agent under a finite resource budget and
-positive discovery-rate pursues an avoidance strategy as a best
-response.  The poset tends toward canonical form under sustained
-adversarial-discovery pressure.
+Under the full proof-burden taxonomy (static), back-pressure
+(dynamic), admissible cost and discovery-reward structures, and
+sustained adversarial-discovery pressure meeting specified
+minimum conditions, structural avoidance is dominated in
+equilibrium: no rational $\volL$-maximizing agent under a finite
+resource budget pursues an avoidance strategy as a best response.
+The poset tends toward canonical form asymptotically.
 \end{conjecture}
 
 \begin{remark}[Nature of the claim]
@@ -448,15 +562,21 @@ argument bounds expected persistence under discovery-rate
 assumptions, not absolute persistence.
 \end{remark}
 
-\begin{remark}[Prerequisite: active discovery]
-The equilibrium requires adversarial discoverers --- agents or
-auditors incentivized to find merger mechanisms and issue
-counter-arguments.  Without active discovery, avoidance is
-stable.  This is analogous to Bitcoin's requirement of active
-miners or peer-review's requirement of active critics.  The
-follow-up paper's equilibrium analysis must include conditions
-on discovery activity (density, diversity, independence) under
-which the convergence claim holds.
+\begin{remark}[Specifying ``sustained discovery pressure'']
+\label{rem:discovery_pressure}
+As stated, the conjecture's prerequisite is a placeholder.  The
+follow-up paper must specify at least: (a)~a minimum challenger
+arrival rate $\lambda_{\min}$ below which back-pressure fails;
+(b)~a minimum reward-to-cost ratio $\rho_{\min}$ for counter-
+argument production such that discovery is
+incentive-compatible; (c)~a maximum adjudication lag
+$\tau_{\max}$ beyond which avoidance becomes profitable despite
+the presence of challengers; (d)~independence and diversity
+conditions on the challenger population such that cartel
+suppression and Sybil flooding are bounded.  Until these are
+specified, the dominance claim is aspirational.  It is not
+vacuous --- the shape of the claim is well-posed --- but it
+cannot be proved without the quantitative specifications.
 \end{remark}
 
 \section{Honest residuals}
@@ -474,24 +594,60 @@ unmerged form.
 
 \paragraph{Active discovery is a precondition, not a guarantee.}
 The equilibrium holds under sustained adversarial discovery;
-markets and institutions that do not generate discovery incentives
-fail to produce the back-pressure.  This is a governance
-requirement the follow-up paper cannot fulfil on its own.
+markets and institutions that do not generate discovery
+incentives fail to produce the back-pressure.  This is a
+governance requirement the follow-up paper cannot fulfil on its
+own.
 
 \paragraph{Deceptive alignment remains hard.}
 The agent's inner optimizer structure is not observable externally
 without interpretability.  Proof-of-coherence between inner and
 outer alignment is the avoidance route that proof-burdens cannot
-currently address.  The sequence's coverage of avoidance is
-proper but not complete; this residual is unresolved.
+currently address.
 
 \paragraph{Retroactive invalidation creates measurement
 volatility.}
-The natural instinct is to invalidate avoidance retroactively ---
-undo the M5 credit that rested on a now-voided claim.  But this
-creates instability in the measure's temporal behaviour.  The
-prospective-only alternative is stable but rewards fast avoiders.
-The hybrid rule requires careful design to avoid either pathology.
+The natural instinct is to invalidate avoidance retroactively;
+this creates instability in the measure's temporal behaviour.
+The prospective-only alternative is stable but rewards fast
+avoiders.  The hybrid rule requires careful design.
+
+\paragraph{Canonicalization order and non-uniqueness.}
+If multiple mergers could apply to the same poset and the order
+of application matters, $\canon(P)$ is not a function but a
+family.  The follow-up paper must specify either a canonical
+application order or prove confluence (Church-Rosser property)
+of the merge rules.  Without this, the measure is under-specified
+on posets with multiple candidate canonicalizations.
+
+\paragraph{Privacy-vs-challengeability tension.}
+A claim must be public enough that an external party can
+challenge it, but the underlying capability and provenance may be
+private.  Designing claim formats that expose enough structure
+to be challengeable without revealing more than necessary is a
+real constraint; it extends Paper~8's privacy-property
+constructions (P1--P5) to the claim-and-challenge layer.
+
+\paragraph{Private time-sacrifice blind spot (inherited from
+Paper~8).}
+Paper~8's P5 Property~(iii) explicitly states that private
+time-sacrifice (parenting, contemplation) is invisible without
+voluntary disclosure.  Proof-of-use inherits this limitation
+unchanged: capabilities exercised only in private time-sacrifice
+modes cannot discharge proof-of-use through the sacrifice
+channel alone.  Exogenous verification mechanisms may partially
+fill this gap but do not fully close it.
+
+\paragraph{Collusive-subsidy and external-funding edge cases.}
+Paper~8's discussion of sacrifice channel limits acknowledges
+that circular or externally-subsidized sacrifice can appear
+identical to legitimate sacrifice on the ledger.  Proof-of-
+provenance inherits this: fake provenance via self-dealing,
+collusion, or leverage is not fully defused by the commitment
+protocol alone.  The v3.1 axioms (non-reuse, non-circular,
+liability-netted, capability-specific linkage) address these but
+require beneficial-ownership and settlement-finality
+infrastructure beyond what Paper~5 specifies.
 
 \paragraph{The dispute-resolution layer inherits Paper~6's
 limitations.}
@@ -500,6 +656,13 @@ cases that are genuinely open (scientific disagreement, novel
 ontologies) have no formal resolution and rely on community
 convergence.  The follow-up paper's adjudication layer inherits
 this honest concession.
+
+\paragraph{Challenge-market governance attacks.}
+Spam, Sybil flooding, cartel suppression, and governance capture
+of the adjudication layer are real attack vectors on the
+back-pressure mechanism itself (\S4.1).  The follow-up paper
+must specify bounds on each; complete elimination is not
+available.
 
 \paragraph{Active counter-argument costs.}
 Producing a counter-argument is itself costly (attention,
@@ -511,62 +674,80 @@ challenge market.
 
 \section{What the follow-up paper would deliver}
 
-A dedicated treatment of the structural-avoidance framing would
-establish:
+The follow-up paper's work is substantial invention, grounded in
+existing components but not reducible to them.  Deliverables
+include:
 
 \begin{enumerate}
-\item \textbf{Formal canonical-poset definition.}
-  The $\canon$ operator as a preprocessing step on $P$; proof
-  that M5 on $\canon(P)$ is well-defined and preserves the
-  axiomatization of~\citep[Proposition~1]{lasser2026poset}.
+\item \textbf{Formal canonical-poset operator.}
+  Definition of $\canon$ as a preprocessing step on $P$, with
+  confluence (or canonical-order) proofs and explicit statement
+  of the new axiomatic content introduced at the preprocessing
+  layer.  Note: this is not merely a statement that ``M5 is
+  preserved''; it is a new axiomatic layer whose relationship to
+  M5 requires formal treatment.
 
 \item \textbf{Proof-burden taxonomy.}
-  Formal definitions of the four proof-burden types with
-  admissible evidence classes, commitment-protocol extensions
-  required, and connection to existing sequence machinery.
-  Proof-of-non-mergeability receives the most detailed treatment
-  as the primary gap.
+  Formal definitions of the three proof-burden types
+  (non-mergeability, provenance, use) with admissible evidence
+  classes, commitment-protocol extensions required, and
+  connection to existing sequence machinery.  Proof-of-non-
+  mergeability receives the most detailed treatment as the
+  primary gap.  Non-triviality is treated as an empirical
+  extension of M5's admissibility, not as a fourth burden.
 
 \item \textbf{Claim-and-challenge protocol.}
   Formal specification of temporal claims, counter-arguments,
-  retroactive/prospective invalidation rules, and discovery-
-  reward magnitudes.  This is where v3.1's axiomatic content
-  (non-reuse, non-circular sacrifice, liability-netted cost,
-  capability-specific linkage) re-enters as specific protocol
-  constraints on the proof-of-non-mergeability implementation.
+  retroactive/prospective invalidation rules, and
+  discovery-reward magnitudes.  This is where v3.1's axiomatic
+  content (non-reuse, non-circular sacrifice, liability-netted
+  cost, capability-specific linkage) re-enters as specific
+  protocol constraints on the proof-of-non-mergeability
+  implementation.
+
+\item \textbf{Challenge-market robustness.}
+  Admission filtering against spam, identity weighting against
+  Sybil flooding, independence requirements against cartel
+  suppression, and bounds against governance capture
+  (\S4.1).  Without these the back-pressure layer is not
+  adversarially robust.
 
 \item \textbf{Discovery-reward calibration.}
-  Integration with~\citep[Proposition~2]{lasser2026horizon}:
-  how much $\volL$ credit accrues to a successful counter-arguer,
+  Integration with~\citep[Proposition~2]{lasser2026horizon}: how
+  much $\volL$ credit accrues to a successful counter-arguer,
   as a function of the information content of the discovered
-  mechanism $Z$.  Calibration such that discovery is
-  incentive-compatible at the individual level and sustains the
-  challenge market at the collective level.
+  mechanism $Z$, such that the reward dominates the cost of
+  production.  Calibration for individual incentive-compatibility
+  and for collective challenge-market sustainability.
 
 \item \textbf{Dispute adjudication.}
-  Application of~\citep{lasser2026wamura}'s controlled
-  relaxation to claim-counter-claim disputes.  Specification of
-  when disputes escalate from structural-discovery resolution to
-  formal adjudication.
+  Application of~\citep{lasser2026wamura}'s controlled relaxation
+  to claim-counter-claim disputes.  Specification of when
+  disputes escalate from structural-discovery resolution to
+  formal adjudication, and bounds on the governance-capture
+  residual.
 
 \item \textbf{Structural-avoidance dominance theorem.}
   Proof of Conjecture~\ref{conj:avoidance_dominance} under
-  explicit assumptions: admissible cost-utilization pair
-  (inherited from v3.1 for the proof-of-non-mergeability case),
-  sustained discovery activity, bounded agent budgets,
+  explicit quantitative assumptions: admissible cost-utilization
+  pair (inherited from v3.1 for the proof-of-non-mergeability
+  case), sustained discovery activity above
+  $\lambda_{\min}$, bounded agent budgets,
   commitment-protocol integrity.
 
 \item \textbf{Privacy-compatible claims and challenges.}
   Extension of Paper~8's privacy properties (P1--P5) to the
-  claim-and-challenge layer: how challenges are made without
-  exposing more information than necessary, analogous to the
-  aggregate-only and link-hiding constructions of
-  \S\ref{sec:commitment} of the main paper.
+  claim-and-challenge layer: how challenges expose only the
+  necessary structural content, analogous to the aggregate-only
+  and link-hiding constructions of Paper~8 \S6.
 
 \item \textbf{Honest concessions.}
-  Formal statement of residuals: information-asymmetry persistence,
-  active-discovery requirement, deceptive-alignment residual,
-  retroactive-invalidation design choice.
+  Formal statement of residuals: information-asymmetry
+  persistence, active-discovery requirement, deceptive-alignment
+  residual, retroactive-invalidation design choice,
+  canonicalization non-uniqueness, private time-sacrifice
+  invisibility, collusive-subsidy limits, challenge-market
+  governance attacks.
 \end{enumerate}
 
 \section{What Paper~8 commits to in the meantime}
@@ -581,26 +762,28 @@ The Paper~8 revision should:
   resolve M5 structural avoidance.
 
 \item \textbf{Identify capability-stuffing as structural avoidance.}
-  In \S3.3, frame stuffing as a specific instance of the
+  In \S3.3, frame stuffing as an instance of the
   structural-avoidance pathology identified in
   \citep{lasser2026poset} Discussion, rather than as a novel
-  failure mode.  Cite the sequence's existing acknowledgment.
+  failure mode.
 
 \item \textbf{Flag the proof-burden direction.}
   Summarize in \S3.3 and in the open-questions section of \S13
-  that the intended resolution is a proof-burden taxonomy with
-  back-pressure dynamics, and that the follow-up paper
-  completing this taxonomy will formalize proof-of-non-
-  mergeability specifically, with the other three proof-burdens
-  (provenance, use, non-triviality) integrating existing
-  sequence machinery (Papers 5, 6, 8).
+  that the intended resolution is a proof-burden taxonomy
+  (three types: non-mergeability, provenance, use) with
+  back-pressure dynamics, and that the follow-up paper is
+  substantial invention --- naming the taxonomy, formalizing
+  proof-of-non-mergeability, specifying the claim-and-challenge
+  protocol, proving the equilibrium claim.  The sequence
+  provides substrate (Papers~5, 6, 8) for parts of this work
+  but does not implement it.
 
 \item \textbf{Preserve partial detection machinery.}
   The wireheading HHI diagnostic (\S10) and the gap
   decomposition (\S9) provide partial, non-structural detection
-  signatures that remain useful.  Under the v4 framing, the HHI
-  is recognized as a proof-of-non-degenerate-engagement, a
-  specific proof-burden type already in place.
+  signatures that remain useful.  Under the v4 framing these
+  are diagnostic alarm signals consistent with specific
+  avoidance pathologies, not implementations of proof-burdens.
 \end{enumerate}
 
 \section{Positioning: not kicking the can}
@@ -610,34 +793,41 @@ foundation crack: M5 would be arbitrarily exploitable and the
 framework's target measure $\volL$ would be in principle
 unboundedly inflatable.
 
-Under v4, the picture is substantially different.  Stuffing is
-an instance of structural avoidance, a pathology
-\citep{lasser2026poset} already acknowledged and
-\citep[Proposition~2]{lasser2026horizon} already provides the
-positive dual for.  The resolution is a proof-burden taxonomy
-whose three of four entries are already partially implemented
-in the sequence (Papers 5, 6, 8).  The back-pressure mechanism
-follows well-tested templates (science, law, proof-of-stake
-validation).  The follow-up paper's work is integration and
-formalization, not invention.
+Under v4.1, the picture is more honest.  Stuffing is an instance
+of structural avoidance, a pathology \citep{lasser2026poset}
+already acknowledged and for which
+\citep[Proposition~2]{lasser2026horizon} provides the positive
+motivation (structural discovery is value-positive).  The
+resolution is a proof-burden taxonomy with claim-and-challenge
+back-pressure.  The sequence provides substrate ---
+cryptographic commitments, sacrifice evidence, adjudication
+patterns --- that the follow-up paper composes into the
+mechanism.  The back-pressure architecture follows well-tested
+templates (scientific consensus, patent challenge, proof-of-
+stake validation), adapted rather than imported.
 
-This is substantially stronger than ``stuffing is resolved by
-bundle structure'' (which is false) and substantially stronger
-than ``stuffing is an open question'' (which leaves the
-foundation crack undescribed).  It commits to the statement that
-\emph{stuffing is a known pathology class with a structured
-resolution path, most of whose infrastructure the sequence
-already has}.
+The follow-up paper's work is substantive invention, not merely
+integration.  But that work is grounded in components the
+sequence has already built.  The crack is \emph{describable} ---
+we can name what's missing, identify which substrate exists, and
+specify what remains --- without claiming the mechanism is
+already in place.  This is stronger than ``stuffing is resolved
+by bundle structure'' (which is false) and stronger than
+``stuffing is an open question'' (which leaves the crack
+undescribed).  It commits to the narrower statement: \emph{
+stuffing is a known pathology class with a described resolution
+path, requiring substantial dedicated formal work to complete}.
 
 The architectural memo at
 \texttt{docs/gfm\_cryptoeconomic\_reframe.md} argues that the
 sequence is naturally read as cryptoeconomic alignment
-infrastructure.  Under v4, that reading sharpens: the
-cryptoeconomic cost counterweight is the condition that makes
-proof-burdens honest (agents cannot fake evidence without real
-cost); Paper~3's structural discovery is the condition that
-makes counter-arguments incentive-compatible (discoverers are
-rewarded).  The sequence builds the mechanism; the follow-up
-paper names and completes it.
+infrastructure.  Under v4.1, that reading sharpens but does not
+broaden: the cryptoeconomic cost counterweight is the condition
+that makes proof-burdens honest (agents cannot fake evidence
+without real cost); Paper~3's structural discovery value is the
+condition that makes counter-arguments incentive-compatible
+(discoverers are rewarded).  These are necessary conditions for
+the specific follow-up paper, not claims that the sequence as a
+whole already delivers cryptoeconomic alignment.
 
 \end{document}
