@@ -36,15 +36,39 @@ indicating that the collective's value-expression is concentrated
 rather than distributed.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-Under uniform trade diversity (every category equally represented),
-$\HHI = 1/|\mathrm{categories}| \to 0$ as the category space
-grows.  Under wireheading ($k$ loop-driver categories dominate),
-$\HHI \geq 1/k$.  The threshold $\HHI_{\mathrm{alarm}}$ is a
-tunable alarm parameter; the full paper should derive a principled
-threshold from the framework's tolerance for concentration risk or
-present $\HHI_{\mathrm{alarm}}$ as a configurable governance
-parameter.
+\begin{proof}
+Let $m = |\{c : \volRlower(c) > 0\}|$ be the number of bundle
+categories with non-zero observed leverage.  The leverage vector
+$(\lambda_{\mathrm{trade}}(c))_c$ is a probability distribution
+over those categories: $\lambda_{\mathrm{trade}}(c) \geq 0$ and
+$\sum_c \lambda_{\mathrm{trade}}(c) = 1$ by the normalization in
+Definition~\ref{def:trade_leverage}.
+
+\emph{Lower bound on $\HHI$ from concentration.}
+For any probability distribution $\lambda$, Cauchy--Schwarz gives
+$\sum_c \lambda_c^2 \geq 1/m$, with equality iff $\lambda$ is
+uniform over its $m$-element support.  More strongly, if the top
+$k$ categories capture at least a fraction $\rho$ of total
+leverage, then
+$\HHI \geq \rho^2/k$ by concentrating the mass evenly on those
+$k$ bins.
+
+\emph{Upper bound on $\HHI$ under diversity.}
+If no single category exceeds leverage $\lambda_{\max}$, then
+$\HHI \leq \lambda_{\max} \cdot \sum_c \lambda_c = \lambda_{\max}$,
+giving a tight upper bound under bounded individual leverage.
+
+\emph{Alarm criterion.}
+A wireheading signature---$k$ loop-driver categories concentrating
+most of the framework's trade flow---forces
+$\HHI \geq \rho^2/k$ for some $(\rho, k)$ with $\rho$ close to
+one and $k$ small.  Any $\HHI_{\mathrm{alarm}}$ chosen to exceed
+the uniform value $1/m$ but remain below the worst-case
+concentration bound therefore separates diverse trade from
+loop-dominated trade.  The choice of $\HHI_{\mathrm{alarm}}$ is a
+governance parameter fixed by the framework's tolerance for
+concentration risk; the structural guarantee is that the $\HHI$
+statistic is monotone in concentration.\qed
 \end{proof}
 
 \begin{remark}[Advantage over structural counterfactual]
@@ -67,7 +91,19 @@ the committed sacrifice ledger can compute
 $\HHI(\lambda_{\mathrm{trade}})$ and raise the wireheading alarm.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-Committed events reveal $\catY[_n]$ and $\Delta\volL(X_n)$.
-These are the only inputs to the $\HHI$ computation.
+\begin{proof}
+By Definition~\ref{def:committed_event}, every committed
+sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
+in cleartext.  The trade-flow leverage
+(Definition~\ref{def:trade_leverage}) is
+$\lambda_{\mathrm{trade}}(c, T) = \volRlower(c, T) / \volRlower(G, T)$,
+and its numerator and denominator are both expressible as sums of
+$\Delta\volL(X_n)$ (optionally weighted by
+$\alpha_{n,c}$ for Part~B; these are either public or committed
+alongside the event for the Part~B variant).  Forming
+$\HHI(\lambda_{\mathrm{trade}}) = \sum_c
+\lambda_{\mathrm{trade}}(c)^2$ therefore requires no fields
+hidden by the commitment protocol.  The alarm test
+$\HHI > \HHI_{\mathrm{alarm}}$ is consequently computable by any
+party with read access to the public committed-event ledger.\qed
 \end{proof}

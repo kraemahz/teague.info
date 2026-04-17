@@ -95,16 +95,29 @@ $(\Delta\volL(X_n), \catY[_n], t_n)$, all of which survive the
 commitment's hiding property.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-Part~A's lower bound is $\sum_{n=1}^{N} \Delta\volL(X_n)$ for
-poset-independent bundles.  The sacrifice magnitudes
-$\Delta\volL(X_n)$ are revealed directly.  Poset-independence is
-verifiable from the revealed category labels: by
-Definition~\ref{def:category_partition}, distinct labels
-correspond to poset-independent partition components, and
-containment is verified by
-Definition~\ref{def:committed_event}(d).  No hidden field is
-needed.
+\begin{proof}
+Part~A of Theorem~\ref{thm:aggregate_bound} asserts
+$\volR^U \geq \sum_{n=1}^N \Delta\volL(X_n)$ whenever the
+observed bundles are pairwise poset-independent.  Two quantities
+are required to evaluate the right-hand side and verify the
+independence hypothesis.
+
+\emph{(i) Sacrifice magnitudes.}
+By Definition~\ref{def:committed_event}, each committed event
+reveals $\Delta\volL(X_n)$ directly, so the aggregate
+$\sum_n \Delta\volL(X_n)$ is computable without opening the
+commitment.
+
+\emph{(ii) Pairwise poset-independence.}
+By Definition~\ref{def:category_partition}(i), any two distinct
+partition components $C_j$ and $C_k$ are poset-independent: no
+subsumption or cooperative-composition link connects any
+$c \in C_j$ to any $c' \in C_k$.  Definition~\ref{def:committed_event}(d)
+proves that $Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly
+within a single component.  If the revealed category labels
+$\catY[_n]$ are pairwise distinct across the batch, the bundles
+inherit poset-independence from the partition.  Both checks use
+only revealed fields.\qed
 \end{proof}
 
 \begin{remark}[Part~B requires additional committed fields]
@@ -139,10 +152,38 @@ labels correspond to poset-independent partition components, so
 Theorem~\ref{thm:aggregate_bound} Part~A.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-The prover knows all $N$ committed events.  The rollup proof has
-two components: (a)~a range proof on the aggregate sum
-establishing $\sum \geq B$; (b)~a set-membership proof
-establishing that the category labels are pairwise distinct,
-using a Merkle commitment over the category set.
+\begin{proof}
+The prover holds the full set of $N$ committed events
+$\{(\Gamma_n, \pi_n, t_n)\}$ together with the openings
+$(\Delta\volL(X_n), \catY[_n], r_n)$ witnessed by the
+proof-of-trade~$\pi_n$.  The rollup proof $\Pi$ establishes (i)
+and (ii) simultaneously as follows.
+
+\emph{Component (i)---range proof on the aggregate sum.}
+Using a standard Pedersen commitment range
+proof~\citep[Definition~7]{lasser2026exo}, the prover
+demonstrates
+$\sum_{n=1}^N \Delta\volL(X_n) \geq B$ without revealing the
+individual terms or $N$.  The summation commitment is the product
+$\prod_n \Gamma_n$, which binds to the aggregate by the
+homomorphic property of $\Commit$.
+
+\emph{Component (ii)---pairwise-distinct category labels.}
+The prover commits to the category set
+$\mathcal{C} = \{C_1, \ldots, C_m\}$ as a public Merkle root.
+For each event, the ZK proof shows (a) that $\catY[_n]$ opens to
+a leaf of $\mathcal{C}$ and (b) that the multiset
+$\{\catY[_n]\}_{n=1}^N$ contains no duplicate leaves, via a
+set-membership argument over a sorted commitment vector.  The
+duplicate-freeness argument is a standard ZK disjointness proof:
+commit to sorted $(\catY[_1], \ldots, \catY[_N])$, prove
+strict-monotone ordering element-by-element, and prove the
+permutation relation to the unsorted commitments using a
+shuffle argument~\citep[Definition~7]{lasser2026exo}.
+
+\emph{Invoking Theorem~\ref{thm:aggregate_bound}.}
+By Definition~\ref{def:category_partition}(i), pairwise-distinct
+labels imply pairwise poset-independent bundles.  Combined with
+(i), the verifier concludes $\volR^U \geq B$ without learning
+any individual $\Delta\volL(X_n)$, the labels, or~$N$.\qed
 \end{proof}

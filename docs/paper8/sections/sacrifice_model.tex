@@ -183,17 +183,73 @@ compatibility with the framework's prior commitments:
 \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Proof sketch]
-(P1):~By construction---the observation channel records
-$(i, X, Y, t)$, not $\Ui$.
-(P2):~The lower bound sums over observed events; an agent with
-zero events contributes zero.
-(P3):~Channel bandwidth is $|\mathrm{events}|/T$, bounded by
-trade frequency.
-(P4):~Composition with~\citep[Definition~6]{lasser2026exo}; the
-commitment binds $(\Delta\volL(X), \catY)$ without revealing
-specifics (see Section~\ref{sec:commitment}).
-(P5):~Market transactions leave observable traces even without
-agent cooperation; the adversarial model is strictly weaker than
-that of~\citep{lasser2026wamura}.
+\begin{proof}
+Each property is established from the structure of the observation
+channel (Definition~\ref{def:sacrifice_event}) and the aggregate
+bound (Theorem~\ref{thm:aggregate_bound}).
+
+\emph{(P1) No interior access.}
+The channel's output is, by Definition~\ref{def:sacrifice_event},
+the tuple $(i, X, Y, t)$.  The agent's internal valuation $\Ui$
+appears only as a bridge quantity in the calibration chain
+(S0 + S1 + S2); it is never recorded, transmitted, or stored by
+the framework.  The aggregate bound
+(Theorem~\ref{thm:aggregate_bound}) depends only on
+$\{(\Delta\volL(X_n), Y_n)\}$, so the framework's behaviour is
+identical under any two agent-valuation functions producing the
+same trade sequence.  No interior access is required or obtained.
+
+\emph{(P2) Consent via participation.}
+The aggregate lower bound
+$\volRlower = \sum_c \volRlower(c)$ sums per-capability
+max-attribution quantities over observed events
+(Theorem~\ref{thm:aggregate_bound}, Part~B).  An agent $i$ with
+zero observed sacrifice events contributes zero to every
+$\volRlower(c)$, hence zero to the aggregate.  The framework
+therefore draws no $\volR$ inference about a non-participating
+agent, and participation is voluntary in the ordinary sense:
+trade only emits a signal when the agent chose to trade.
+
+\emph{(P3) Discretization as a feature.}
+The channel emits at most one signal per sacrifice event and
+produces no continuous stream otherwise.  Over a window of
+duration $T$ the total channel output is exactly the number of
+observed events, so the information-theoretic bandwidth is
+$|\mathrm{events}|/T$.  Unlike continuous observation (which
+scales with sampling rate), this quantity is bounded above by the
+agents' trade frequency, which is a behavioural rather than
+observational parameter.  Increasing observation intensity does
+not produce more signal.
+
+\emph{(P4) Commitment-layer composability.}
+Each sacrifice event admits a commitment
+$\Gamma = \Commit\bigl((\Delta\volL(X), \catY), r\bigr)$
+using the protocol of~\citep[Definition~6]{lasser2026exo},
+accompanied by a zero-knowledge
+proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds a
+valid trade satisfying the objectively verifiable assumptions
+(S2~objective, S3, S4(b) via poset structure).
+Proposition~\ref{prop:commit_preserves} establishes that the
+Part~A aggregate bound is computable from committed events alone.
+The committed form reveals only the sacrifice magnitude and
+bundle category; agent identity, specific $X$ and $Y$, and
+counterparty remain hidden by the hiding property of
+$\Commit$~\citep{goldwasser1985knowledge}.
+
+\emph{(P5) Third-party observability.}
+Market transactions produce publicly observable ledger entries
+(settled prices, timestamps, category labels) without requiring
+any agent-side cooperation beyond the trade itself.  A third-party
+auditor with read access to the public ledger can therefore
+compute the money-channel aggregate bound autonomously; the same
+holds for time-sacrifice events that leave a public record
+(committed volunteer hours, published craft outputs with time
+stamps).  This contrasts with controlled
+relaxation~\citep{lasser2026wamura}, which requires the framework
+to impose a test, and with commitment-protocol
+verification~\citep{lasser2026exo}, which requires the agent to
+generate a proof.  Private time-sacrifice (parenting,
+contemplation) is the stated exception: these leave no public
+trace and remain invisible until the agent voluntarily discloses
+them.\qed
 \end{proof}

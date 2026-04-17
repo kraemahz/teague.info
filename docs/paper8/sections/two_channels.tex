@@ -89,15 +89,37 @@ There exist capabilities $c \in U$ such that:
 \end{enumerate}
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-Constructive.  Consider the capability ``sustained mentoring
-relationship with a specific individual.''  This capability
-cannot be purchased (money buys access to mentors, not the
-relationship itself).  But it requires time investment (hours
-spent in the relationship).  The time-sacrifice signal
-$r_i \cdot h$ provides a lower bound on $\volR$ for this
-capability.  The money channel is silent; the time channel is
-not.
+\begin{proof}
+We exhibit a witness.  Consider the capability
+$c^\ast =$ ``sustained mentoring relationship with a specific
+individual.''
+
+\emph{(a) Money channel silent on $c^\ast$.}
+A money-sacrifice event emits a $\volRlower$ signal on the bundle
+acquired by the payment.  Purchasing power buys \emph{access}
+goods---introductions, calendar slots with mentors, coaching
+sessions---each of which is a distinct bundle whose
+$\volR$-content lies in access categories, not in the relational
+capability itself.  The relational capability is constituted by
+the ongoing interaction, which no payment can secure; no
+money-sacrifice event places $c^\ast$ inside the purchased
+bundle, so no money-sacrifice event produces a lower bound on
+$\volR(c^\ast)$.
+
+\emph{(b) Time channel non-silent on $c^\ast$.}
+Sustaining the relationship requires recurring hours.  When
+agent~$i$ allocates $h$ hours foregoing wage income $r_i \cdot h$
+to the interaction, the time-sacrifice event
+(Definition~\ref{def:time_sacrifice}) yields
+$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ for the bundle
+$Y$ acquired during those hours.  By any reasonable decomposition
+(Definition~\ref{def:bundle_decomp}) with $c^\ast \in Y$ and
+$\alpha \in (0, 1]$, the per-capability bound
+$\volRlower(c^\ast) \geq \alpha \cdot \Delta\volL(r_i \cdot h)$
+is strictly positive.
+
+The capability is therefore in the money channel's coverage gap
+but inside the time channel's coverage.\qed
 \end{proof}
 
 \begin{corollary}[Joint Channel Coverage]

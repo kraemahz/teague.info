@@ -307,7 +307,7 @@ $\volL^{\mathrm{eff}}$ without first closing sufficiency gaps on
 needs whose downstream cones cover their capability-weight.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 Split the sum over $P$ by membership in $\Down(p_N)$.  For
 $c \in \Down(p_N)$, the effective weight is
 $w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N) \cdot \prod_{N' \in
@@ -365,12 +365,44 @@ capability.  The framework's own optimization pressure prioritizes
 need-satisfaction over want-accumulation.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
-Direct differentiation.  Only capabilities in
-$\mathrm{Down}(p_N)$ depend on $s_N$; the product rule isolates
-$G'(s_N)$ times the weighted sum of other-gate products.  The
-single-capability comparison follows from $w^{\mathrm{eff}}(c')
-\leq w(c')$ for all $c'$.\qed
+\begin{proof}
+Under the homogeneous-sufficiency hypothesis, $s_N$ is the single
+scalar controlling all gate factors $G(s_N(c))$ for
+$c \in \Down(p_N)$.  Capabilities outside the cone satisfy
+$N \notin \mathcal{N}(c)$, so their effective weights do not
+depend on $s_N$ and vanish under $\partial/\partial s_N$.  For
+$c \in \Down(p_N)$, Definition~\ref{def:downstream_gate} gives
+\[
+  w^{\mathrm{eff}}(c)
+  = w(c) \cdot G(s_N) \cdot
+  \!\!\!\!\prod_{N' \in \mathcal{N}(c),\, N' \neq N}\!\!\!\!
+  G\bigl(s_{N'}(c)\bigr).
+\]
+Differentiating with respect to $s_N$ and summing over
+$c \in \Down(p_N)$:
+\[
+  \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
+  = G'(s_N) \cdot \!\!\sum_{c \in \Down(p_N)}\!\! w(c) \cdot
+  \!\!\!\!\prod_{N' \in \mathcal{N}(c),\, N' \neq N}\!\!\!\!
+  G\bigl(s_{N'}(c)\bigr).
+\]
+Each gate factor $G(s_{N'}(c)) \in [0, 1]$, so the sum is bounded
+above by $\sum_{c \in \Down(p_N)} w(c) = W_{\mathrm{down}}$.
+
+The marginal benefit of adding weight $\delta w$ to a single
+capability $c'$ is
+$\Delta \volL^{\mathrm{eff}} = \delta w \cdot \prod_{N' \in
+\mathcal{N}(c')} G(s_{N'}(c')) \leq \delta w$.  Under the
+hypothesis that all other needs are at sufficiency
+($s_{N'} = 1$ for $N' \neq N$), every gate product collapses to
+$G(s_N)$ for $c \in \Down(p_N)$ and to $1$ otherwise.  The
+gradient becomes
+$\partial \volL^{\mathrm{eff}}/\partial s_N = G'(s_N) \cdot
+W_{\mathrm{down}}$; for any downstream cone with
+$W_{\mathrm{down}} > 1$ and $G'(s_N) > 0$, this exceeds the
+single-capability marginal benefit of $\delta w$ for any finite
+$\delta w \leq W_{\mathrm{down}}$.  Hence closing the sufficiency
+gap on $N$ dominates any single-capability weight addition.\qed
 \end{proof}
 
 \begin{remark}[Worked comparison across candidate gates]
@@ -520,7 +552,7 @@ downstream-safety naturally resists stuffing without a separate
 anti-stuffing mechanism.
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 Under Definition~\ref{def:downstream_safe}, sufficiency is a
 property of the \emph{bundle} (all dimensions simultaneously),
 not of individual capability constructions.  A stuffed capability
@@ -533,7 +565,7 @@ $\mathrm{actual}_k$ genuinely exceeds the threshold, which
 re-instantiation from a different origin does not achieve.
 Downstream non-degradation
 (Definition~\ref{def:downstream_safe}(b)) is unaffected because
-the satisfaction pathway is unchanged.
+the satisfaction pathway is unchanged.\qed
 \end{proof}
 
 \begin{proposition}[S1--Sufficiency Connection]
@@ -572,18 +604,20 @@ failure modes (Open Question~\ref{oq:coercion},
 Section~\ref{sec:discussion}) remain.
 \end{remark}
 
-\begin{proof}[Proof sketch of
-Proposition~\ref{prop:s1_sufficiency}]
+\begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
 Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
 agent~$i$'s capability level on need dimension $d_k$ would fall
-below the sufficiency threshold $s_k$.  Agent~$i$ must reach $s_k$
-on $d_k$ to maintain functionality.  The alternative of retaining
-$X$ (not making the trade) leaves the agent below functionality on
-$d_k$.  By S1's non-degrading alternative requirement, retaining
-$X$ must not cause the agent to fall below minimum viable
-functionality.  But retaining $X$ in this case does exactly that.
-Therefore S1 fails for this event, and the event does not enter
-the sacrifice aggregate.
+below the sufficiency threshold $s_k$.  Agent~$i$ must reach
+$s_k$ on $d_k$ to maintain minimum viable functionality.  The
+alternative of retaining $X$ (not making the trade) leaves the
+agent below $s_k$ on $d_k$.  S1 requires the retention
+alternative to be non-degrading: it must not drop the agent below
+minimum viable functionality on any need dimension.  Retention
+here does precisely that, so the non-degrading alternative
+requirement fails and S1 does not hold for this event.  Events
+with failed S1 are excluded from the aggregate by the
+applicable-assumptions clause of
+Theorem~\ref{thm:aggregate_bound}.\qed
 \end{proof}
 
 \subsection{How sufficiency thresholds are set}
