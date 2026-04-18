@@ -1,6 +1,57 @@
 \section{Aggregate Lower Bound Theorem}
 \label{sec:lower_bound}
 
+\subsection{Realized capability volume ($\volR$)}
+
+Before stating the aggregate theorem, we make the object being
+bounded precise.  $\volR$ is the poset measure evaluated on the
+\emph{exercised sub-poset}: the restriction of the capability
+space to capabilities that are currently being exercised.
+
+\begin{definition}[Exercised Sub-Poset and Realized Capability
+Volume]
+\label{def:volR}
+Let $P$ be the full capability poset with measure
+$\volL$~\citep[Proposition~1]{lasser2026poset}.  For an
+observation perimeter $O \subseteq P$ and time $t$, let
+$e_t : O \to \{0, 1\}$ be the exercise indicator of
+Appendix~\ref{app:exercise_indicator}: $e_t(d) = 1$ iff
+removing capability $d$ at time $t$ would make some realized
+cooperative output unrealizable.  The \emph{exercised sub-poset}
+is
+\[
+  P^{\mathrm{ex}}_t \;=\; \{d \in O : e_t(d) = 1\}
+  \;\cup\; \{d \in P \setminus O : d \text{ is currently
+  exercised}\},
+\]
+where the second term reflects exercise outside the observation
+perimeter as determined by the sacrifice channel (a lower bound;
+capabilities in the residual class $\ResS$ of
+Section~\ref{sec:residual_class} are not detectable through
+sacrifice).  The \emph{realized capability volume} is:
+\[
+  \volR(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_t\bigr)
+  \qquad \text{for any } S \subseteq P.
+\]
+In particular, $\volR$ inherits the measure structure of $\volL$
+restricted to $P^{\mathrm{ex}}_t$, and the axiom-analogue
+analysis of Section~\ref{sec:axiom_inheritance} applies.
+\end{definition}
+
+\begin{remark}[Why $\volR$ is a diagnostic, not a directly
+observable quantity]
+\label{rem:volR_diagnostic}
+$\volR$ is well-defined structurally but not directly observable
+under the framework's privacy commitments: computing
+$P^{\mathrm{ex}}_t$ exactly requires the counterfactual exercise
+query discussed in the Introduction, which the paper has already
+rejected as intractable and privacy-incompatible.  The
+revealed-sacrifice observation channel produces a lower bound
+$\volRlower$ on $\volR$ without computing $P^{\mathrm{ex}}_t$
+directly.  $\volR$ is the object the theorem bounds; $\volRlower$
+is the bound.
+\end{remark}
+
 \subsection{Event-local decomposition}
 
 \begin{definition}[Event-Local Bundle Decomposition]

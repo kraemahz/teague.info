@@ -26,28 +26,37 @@ A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
   (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
   bundle is novel relative to the agent's retained holdings
   $H_i \setminus X$, where $H_i$ is the agent's pre-trade
-  holdings); and
-  (iii)~\emph{cooperative closure}: no new cooperative capability
-  is activated by combining $Y$ with $H_i \setminus X$ that was
-  not already activatable within $Y$ alone or within
-  $H_i \setminus X$ alone.  Formally, every cooperative capability
-  $c_{\mathrm{coop}}$ in the poset whose participants are all in
-  $(H_i \setminus X) \cup Y$ has its participants either all in
-  $Y$ or all in $H_i \setminus X$;
+  holdings);
+  (iii)~\emph{post-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $Y$
+  and $H_i \setminus X$ (so post-trade, no new cross-bundle
+  cooperative capability is activated by the combination);
+  and
+  (iv)~\emph{pre-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $X$
+  and $H_i \setminus X$ (so pre-trade, no cooperative
+  capability straddles the surrendered and retained
+  capability sets---only cooperatives contained entirely in
+  $X$ or entirely in $H_i \setminus X$ exist);
 \item $t$ is the event timestamp.
 \end{itemize}
 Conditions (i) and (ii) characterize \emph{genuine} trades: the
 agent exchanges distinct capabilities and acquires something
-novel.  Condition (iii) ensures the exchange-to-bundle
-cancellation in the revealed-preference derivation is exact: if
-new cross-bundle cooperative capabilities activated, the agent
-would reveal willingness-to-pay for $Y$-plus-cooperatives, not
-for $Y$ alone.  Trades violating (i) or (ii) are degenerate;
-trades violating (iii) carry revealed-preference information
-about the marginal contribution of $Y$ in context, which may
-exceed $\volR(Y)$ as an isolated bundle---the bound still holds
-conservatively for the contextual quantity but the theorem's
-isolated-$\volR(Y)$ interpretation requires (iii).
+novel.  Conditions (iii) and (iv) together ensure that the
+exchange-to-bundle cancellation in the revealed-preference
+derivation is exact: (iii) rules out post-trade cross-bundle
+cooperatives that would inflate $\Ui((H \setminus X) \cup Y)$
+beyond $\Ui(H \setminus X) + \Ui(Y)$; (iv) rules out pre-trade
+cross-bundle cooperatives that would inflate $\Ui(H)$ beyond
+$\Ui(H \setminus X) + \Ui(X)$.  Both closures are needed
+symmetrically for the cancellation of
+Lemma~\ref{lem:cancellation} to hold.  Trades violating
+(i)~or~(ii) are degenerate; trades violating (iii)~or~(iv) carry
+revealed-preference information about the marginal contribution
+of $Y$ in context rather than $\volR(Y)$ in isolation---the bound
+remains conservatively valid for the contextual quantity but
+the theorem's isolated-$\volR(Y)$ interpretation requires all
+four conditions.
 The event emits the signal:
 \[
   \volRlower(Y) \;\geq\; \Delta\volL(X)
@@ -62,12 +71,14 @@ below.  S4(a) is needed for the exchange-to-bundle cancellation
 \label{lem:cancellation}
 Let $H$ be a finite capability holding set with $X \subseteq H$,
 and let $Y$ be a finite capability set satisfying the
-genuine-exchange conditions of
+genuine-exchange conditions (i)--(iv) of
 Definition~\ref{def:sacrifice_event} relative to $H$:
 (i)~$X \cap Y = \emptyset$;
 (ii)~$Y \cap (H \setminus X) = \emptyset$;
 (iii)~no cooperative capability in the poset has participants
-spanning both $Y$ and $H \setminus X$.
+spanning both $Y$ and $H \setminus X$;
+(iv)~no cooperative capability in the poset has participants
+spanning both $X$ and $H \setminus X$.
 Under S4(a) (global valuation additivity:
 $\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
 $S \subseteq P$, with cooperative capabilities included as
@@ -83,28 +94,41 @@ $\Ui((H \setminus X) \cup Y) \geq \Ui(H)
 
 \begin{proof}
 By S4(a), $\Ui(A) = \sum_{c \in A} u_i(c)$ for any finite
-capability set $A$.  The post-trade holding set decomposes as a
-disjoint union by (ii): $(H \setminus X) \cup Y = (H \setminus
-X) \sqcup Y$.  Additivity gives
+capability set $A$.  To apply this cleanly we must track
+cooperative capabilities carefully: under S4(a), a cooperative
+capability $c_{\mathrm{coop}}$ contributes $u_i(c_{\mathrm{coop}})$
+to $\Ui(A)$ whenever $c_{\mathrm{coop}} \in A$, which holds iff
+all of $c_{\mathrm{coop}}$'s participants are in $A$.
+
+\emph{Pre-trade state $H$.}  $H = (H \setminus X) \sqcup X$.
+By (iv), no cooperative capability has participants spanning
+$X$ and $H \setminus X$, so every cooperative capability in $H$
+has participants entirely in $X$ or entirely in $H \setminus X$.
+Hence
+\[
+  \Ui(H) = \Ui(H \setminus X) + \Ui(X),
+\]
+where each term includes cooperatives formable within that set
+alone.
+
+\emph{Post-trade state $(H \setminus X) \cup Y$.}  By (ii) this
+is a disjoint union: $(H \setminus X) \sqcup Y$.  By (iii),
+no cooperative capability has participants spanning $Y$ and
+$H \setminus X$, so every cooperative in the post-trade state
+has participants entirely in $Y$ or entirely in $H \setminus X$.
+Hence
 \[
   \Ui\bigl((H \setminus X) \cup Y\bigr)
-  = \sum_{c \in H \setminus X} u_i(c) + \sum_{c \in Y} u_i(c).
+  = \Ui(H \setminus X) + \Ui(Y).
 \]
-The pre-trade holding set decomposes as $H = (H \setminus X)
-\sqcup X$ (since $X \subseteq H$), so
-$\Ui(H) = \sum_{c \in H \setminus X} u_i(c) + \sum_{c \in X}
-u_i(c)$.
-Subtracting, the $H \setminus X$ terms cancel, leaving
+
+\emph{Cancellation.}
+Subtracting, the $\Ui(H \setminus X)$ terms cancel, leaving
 $\Ui((H \setminus X) \cup Y) - \Ui(H) = \Ui(Y) - \Ui(X)$.
-Condition (iii) ensures that the cooperative capabilities
-implicitly included in each term (via S4(a)) are those
-formable within $Y$ alone or within $H \setminus X$ alone;
-no cross-set cooperative capability appears in
-$(H \setminus X) \cup Y$ without already appearing in one of
-the pre-existing summands.  Condition (i) makes $\Ui(Y)$ and
-$\Ui(X)$ refer to distinct capability sets; violating (i) would
-cause $X \cap Y$ terms to cancel trivially on both sides,
-yielding no information.
+
+Condition (i) makes $\Ui(Y)$ and $\Ui(X)$ refer to distinct
+capability sets; violating (i) would cause $X \cap Y$ terms to
+cancel trivially on both sides, yielding no information.
 \end{proof}
 
 \paragraph{Justification (revealed-preference inequality).}
