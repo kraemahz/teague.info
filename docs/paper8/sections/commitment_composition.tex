@@ -217,7 +217,13 @@ batch size $N \leq N_{\max}$.
 By Definition~\ref{def:category_partition}, distinct category
 labels correspond to poset-independent partition components, so
 (ii) establishes the poset-independence required by
-Theorem~\ref{thm:aggregate_bound} Part~A.
+Theorem~\ref{thm:aggregate_bound} Part~A.  Both (i) and (ii) are
+\emph{formula inputs} that the ZK rollup certifies; the
+theorem's admissibility hypotheses---the genuine-exchange
+conditions of Definition~\ref{def:sacrifice_event} and
+assumptions S0, S1, S2, S4(a)---remain outside the ZK layer
+(Remark~\ref{rem:zk_limits}) and must be supplied through
+external attestation (Remark~\ref{rem:external_attestation}).
 \end{proposition}
 
 \begin{proof}
@@ -256,12 +262,29 @@ among non-null elements, and prove the permutation relation to
 the unsorted commitments via a shuffle
 argument~\citep[Definition~7]{lasser2026exo}.
 
-\emph{Invoking Theorem~\ref{thm:aggregate_bound}.}
+\emph{Formula-input certification.}
 By Definition~\ref{def:category_partition}(i), pairwise-distinct
 non-null labels imply pairwise poset-independent bundles.
-Combined with (i), the verifier concludes $\volR^U \geq B$ while
-learning only the public parameters $(B, N_{\max}, \mathcal{C})$
-and the length-$N_{\max}$ commitment vector.
+Combined with (i), the rollup certifies the two ZK-verifiable
+inputs to the Part~A formula
+(Proposition~\ref{prop:commit_preserves}): the aggregate
+sacrifice magnitude meets the threshold~$B$, and the bundles are
+pairwise poset-independent.  The verifier learns only the public
+parameters $(B, N_{\max}, \mathcal{C})$ and the
+length-$N_{\max}$ commitment vector.
+
+\emph{Admissibility is not ZK-certified.}  The inference
+$\volR^U \geq B$ requires, in addition, that
+Theorem~\ref{thm:aggregate_bound} Part~A's non-ZK-verifiable
+hypotheses hold across the batch: the genuine-exchange
+conditions (i)--(iv) of Definition~\ref{def:sacrifice_event},
+S0, S1, S2, and S4(a).  These are not part of the rollup proof
+(Remark~\ref{rem:zk_limits}).  Under external attestation of
+those hypotheses (Remark~\ref{rem:external_attestation}), the
+hidden-batch rollup certifies $\volR^U \geq B$; without such
+attestation, the rollup certifies only that the Part~A formula's
+inputs meet the stated thresholds while hiding individual
+$\Delta\volL(X_n)$, specific category labels, and the true $N$.
 \end{proof}
 
 \begin{remark}[Hiding variant is strictly richer than

@@ -349,23 +349,30 @@ Assume homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c \in
 \Down(p_N)$ and that all other needs are at sufficiency
 ($s_{N'}(c) = 1$ for $N' \neq N$), so that $s_N$ is a scalar.
 For any valid gate function $G$ differentiable at $s_N$ with
-$G'(s_N) > 0$, the partial derivative of
-$\volL^{\mathrm{eff}}$ with respect to $s_N$ is
+$G'(s_N) > 0$, the two relevant partial derivatives of
+$\volL^{\mathrm{eff}}$ are
 \[
   \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
   \;=\; G'(s_N) \cdot W_{\mathrm{down}}(N),
+  \qquad
+  \frac{\partial \volL^{\mathrm{eff}}}{\partial w(c')}
+  \;=\;
+  \begin{cases}
+    1 & c' \notin \Down(p_N), \\
+    G(s_N) \leq 1 & c' \in \Down(p_N),
+  \end{cases}
 \]
 where $W_{\mathrm{down}}(N) = \sum_{c \in \Down(p_N)} w(c)$.
-
-Adding one unit of weight to any single capability $c'$ outside
-$\Down(p_N)$ increases $\volL^{\mathrm{eff}}$ by exactly $1$;
-adding it to a capability inside $\Down(p_N)$ increases
-$\volL^{\mathrm{eff}}$ by $G(s_N) \leq 1$.  Consequently:
+Both derivatives are rates on the same unit-step scale
+(one unit of $s_N$ vs.\ one unit of $w(c')$, treating $s_N$ and
+$w$ as commensurable intervention variables; see
+Remark~\ref{rem:dominance_scale}).
 
 \medskip\noindent
-\textbf{Dominance condition.}  The marginal benefit of closing
-the sufficiency gap on $N$ exceeds the marginal benefit of unit
-weight addition to any single capability whenever
+\textbf{Marginal-dominance condition.}  Under the common
+intervention scale, the marginal return to closing the
+sufficiency gap on $N$ exceeds the marginal return to unit-weight
+addition on any single capability whenever
 \[
   G'(s_N) \cdot W_{\mathrm{down}}(N) \;>\; 1.
 \]
@@ -391,14 +398,39 @@ $\volL^{\mathrm{eff}} = G(s_N) \cdot W_{\mathrm{down}}(N) +
 W_{\mathrm{out}}(N)$.
 Only the first term depends on $s_N$, so differentiation yields
 $\partial \volL^{\mathrm{eff}}/\partial s_N =
-G'(s_N) \cdot W_{\mathrm{down}}(N)$.
-
-Unit weight addition to $c' \notin \Down(p_N)$ contributes
-$\Delta \volL^{\mathrm{eff}} = 1 \cdot \prod_{N' \in
-\mathcal{N}(c')} G(1) = 1$; to $c' \in \Down(p_N)$ it
-contributes $G(s_N) \leq 1$.  The dominance condition
-$G'(s_N) \cdot W_{\mathrm{down}}(N) > 1$ therefore suffices.
+G'(s_N) \cdot W_{\mathrm{down}}(N)$.  Differentiating in
+$w(c')$: the capability $c'$'s gated weight is $G(s_N) \cdot
+w(c')$ if $c' \in \Down(p_N)$ and $w(c')$ otherwise, giving the
+stated partial derivatives.  Comparing the two partials on the
+common unit-step scale yields the dominance condition.
 \end{proof}
+
+\begin{remark}[Finite-step form and intervention-cost scale]
+\label{rem:dominance_scale}
+The marginal-dominance condition is a per-unit-cost comparison
+under the convention that one unit of $\Delta s_N$ and one unit
+of $\Delta w$ have the same intervention cost.  Its finite-step
+form is the Taylor expansion: a sufficiency increment
+$\Delta s_N = \delta$ produces gain
+$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) =
+G'(s_N) W_{\mathrm{down}}(N) \cdot \delta + O(\delta^2)$, while
+a weight increment $\Delta w(c') = \delta$ on a single
+capability produces gain $\delta \cdot \max(1, G(s_N)) \leq
+\delta$.  For small enough $\delta$, the marginal condition
+$G'(s_N) W_{\mathrm{down}}(N) > 1$ implies the sufficiency
+increment strictly dominates; a finite $\delta$ for which
+$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) > \delta$
+is the exact condition.  The condition
+$G'(s_N) W_{\mathrm{down}}(N) > 1$ is \emph{not} a claim that a
+finite $\Delta s_N$ of arbitrary size beats a finite unit of
+weight: e.g., with $G(s) = s$ and $W_{\mathrm{down}} = 10$, a
+$\Delta s_N = 0.01$ gain of $0.1$ does not exceed a
+unit-weight gain of $1$ in absolute terms---only in
+per-unit-of-intervention terms (the sufficiency increment
+returned ten times the per-unit gain).  Interpreting the
+condition as anything other than a marginal-rate comparison
+would conflate the two intervention scales.
+\end{remark}
 
 \begin{remark}[Worked comparison across candidate gates]
 \label{rem:gate_comparison}
