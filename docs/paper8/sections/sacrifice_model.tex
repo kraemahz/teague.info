@@ -31,30 +31,63 @@ under the assumptions S0 (calibration), S1 (free choice), and S2
 \end{definition}
 
 \paragraph{Justification (revealed-preference inequality).}
-The transfer from the microeconomic revealed-preference
-inequality~\citep{samuelson1938note}
-$\Ui(Y) \geq \Ui(X)$ to the framework-level bound
-$\volRlower(Y) \geq \Delta\volL(X)$ requires two bridge
-conditions:
+The transfer from the observed trade to the framework-level
+bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
+steps, each grounded in existing framework structure rather than
+a new posit.
 
 \begin{enumerate}
-\item \textbf{Sacrifice-side grounding (Assumption S2):} The
-  agent's valuation of the benchmarked sacrifice $X$ is calibrated
-  to its $\volL$ contribution:
-  $\Ui(X) \geq \Delta\volL(X)$.  This holds by construction when
-  $\volL$ is the operational target on the benchmarked subspace.
+\item \textbf{Exchange preference (revealed-preference
+  observation).}
+  When agent~$i$ trades $X$ for $Y$, revealed-preference
+  theory~\citep{samuelson1938note} establishes that the
+  post-trade state is weakly preferred to the pre-trade state:
+  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
+  where $H$ is the agent's pre-trade holdings.
 
-\item \textbf{Acquisition-side calibration (Assumption S0):} The
-  agent's valuation of the unbenchmarked bundle $Y$ is a lower
-  bound on $Y$'s $\volR$ contribution:
-  $\Ui(Y) \leq \volR(Y)$.  This asserts that agents do not
-  systematically overvalue unbenchmarked bundles relative to their
-  exercise contribution.
+\item \textbf{Reduction to bundle-level comparison (via M4 + S0
+  calibration).}
+  The poset measure $\volL$ is additive over poset-disjoint
+  components by axiom M4~\citep[Proposition~1]{lasser2026poset},
+  with complementarities handled by M6 as explicit cooperative
+  nodes.  S0 and S2 calibrate $\Ui$ to $\volR$ and $\volL$ on
+  the acquisition and sacrifice sides respectively; under this
+  calibration, $\Ui$ inherits the poset measure's additivity
+  structure over the same partition.  Consequently the exchange
+  comparison reduces to a bundle comparison:
+  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
+  \iff \Ui(Y) \geq \Ui(X)$.
+  (The additivity here is not a new assumption: it is the
+  structural consequence of the calibration inequalities together
+  with M4.  Complementarities that would break pure additivity
+  in general consumer theory are absorbed into the poset as
+  cooperative nodes via M6, which are themselves capabilities
+  with their own weight.)
+
+\item \textbf{Calibration chain.}
+  Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
+  bound uses:
+  \begin{itemize}
+  \item Sacrifice-side grounding (S2):
+    $\Ui(X) \geq \Delta\volL(X)$, which holds by construction
+    when $\volL$ is the operational target on the benchmarked
+    subspace.
+  \item Acquisition-side calibration (S0):
+    $\Ui(Y) \leq \volR(Y)$, asserting that agents do not
+    systematically overvalue unbenchmarked bundles relative to
+    their exercise contribution.
+  \end{itemize}
+  Chaining: $\volR(Y) \geq \Ui(Y) \geq \Ui(X) \geq
+  \Delta\volL(X)$.
 \end{enumerate}
 
-Given both conditions:
-$\volR(Y) \geq \Ui(Y) \geq \Ui(X) \geq \Delta\volL(X)$,
-completing the chain.
+\noindent
+Step~2's reduction to bundle-level comparison is where this
+derivation differs from the textbook revealed-preference
+inference, which typically assumes preference additivity as a
+starting axiom.  Here, additivity is derived: from M4 applied
+to the poset measure, through the calibration inequalities of
+S0 and S2, to $\Ui$'s behaviour on capability partitions.
 
 \subsection{Assumptions}
 \label{sec:assumptions}
@@ -104,6 +137,25 @@ assumptions.  We collect them here for single-point reference.
   $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all $n$ and
   $c \in Y_n$.
 \end{description}
+
+\begin{remark}[S5 is a conditional-refinement assumption]
+\label{rem:s5_heavy}
+S5 is the strongest of the six assumptions: it asserts a direct
+share inequality on the quantity Part~B of
+Theorem~\ref{thm:aggregate_bound} bounds.  Part~A makes no
+per-capability attribution claim and does not require S5.
+Part~B's per-capability refinement should be understood as a
+\emph{conditional result}: under the additional structural
+assumption that decomposition coefficients are conservative
+share lower bounds, the aggregate can be refined to per-capability
+bounds.  Operationally, S5 holds when decomposition coefficients
+are set via conservative heuristics (e.g., equal-weight default
+$\alpha_{n,c} = 1/|Y_n|$ when $Y_n$ is a small homogeneous
+bundle, known-bias corrections from prior
+hedonic~\citep{rosen1974hedonic} regressions) rather than via
+fitted models that could overstate individual capability
+contributions.
+\end{remark}
 
 Part~A of Theorem~\ref{thm:aggregate_bound} requires only
 S0--S2.  Part~B requires S0--S5.  The need-sufficiency

@@ -103,10 +103,15 @@ $\volR(U) = \sum_n \volR(Y_n)$.  Summing the per-event bounds:
 establishing Part~A.
 
 \emph{Part~B.}
-Fix an event $n$ and its bundle $Y_n$.  By S3 (bundle coherence),
-$\volR(Y_n) > 0$ so division is well-defined.  S5 asserts that
-the event-local coefficients are lower bounds on the true share
-of the aggregate $\volR(Y_n)$:
+Part~B is stated for events with $\Delta\volL(X_n) > 0$; events
+with zero sacrifice carry no information and contribute trivially
+zero to the per-capability aggregate.  Fix such an event $n$ and
+its bundle $Y_n$.  By Part~A, $\volR(Y_n) \geq \Delta\volL(X_n)
+> 0$, so $\volR(Y_n) > 0$ and division is well-defined.  S3
+(bundle coherence) additionally ensures the hedonic decomposition
+of $Y_n$ is non-degenerate, so $\alpha_{n,c}$ is well-specified.
+S5 asserts that the event-local coefficients are lower bounds on
+the true share of the aggregate $\volR(Y_n)$:
 \[
   \alpha_{n,c} \;\leq\; \volR(c) / \volR(Y_n),
   \qquad c \in Y_n.

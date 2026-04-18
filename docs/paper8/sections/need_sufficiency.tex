@@ -77,50 +77,48 @@ so that benchmark maximization aligns with cost minimization.
 
 \begin{definition}[Downstream-Safe Sufficiency]
 \label{def:downstream_safe}
-Need $N$ at position $p_N$ is \emph{downstream-safe sufficient}
-under satisfaction pathway $\pi_N$ iff:
+Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
+the class of pathways satisfying each dimension of~$N$ at exactly
+its sufficiency threshold (assumed non-empty, i.e., at least one
+threshold-level pathway exists).  Need $N$ at position $p_N$ is
+\emph{downstream-safe sufficient} under satisfaction pathway
+$\pi_N$ iff:
 \begin{enumerate}
 \item[(a)] \textbf{Bundle thresholds met:}
   $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
   dimensions inverted per Definition~\ref{def:need_bundle}).
-\item[(b)] \textbf{Downstream non-degradation:} For every
-  capability $c \in \Down(p_N)$, the quality of $c$ under the
-  actual satisfaction pathway $\pi_N$ is at least as high as the
-  threshold-reference quality $q_N^0(c)$:
+\item[(b)] \textbf{Downstream non-degradation:} There exists a
+  threshold-level reference pathway $\pi^* \in \Pi_N^0$ such that
+  $\pi_N$ dominates $\pi^*$ on every downstream capability
+  simultaneously:
   \[
-    \mathrm{quality}_c(\text{with } N \text{ satisfied via }
-    \pi_N) \;\geq\; q_N^0(c),
+    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
+    \pi_N\bigr)
+    \;\geq\;
+    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
+    \pi^*\bigr)
+    \qquad \text{for all } c \in \Down(p_N).
   \]
-  where $q_N^0(c)$ is the pointwise threshold-reference quality
-  defined below.
 \end{enumerate}
+The existential $\pi^*$ captures the intent ``the actual pathway
+is at least as good as \emph{some} canonical threshold-level
+pathway on every downstream capability.''  Using a single
+reference $\pi^*$ rather than a coordinatewise supremum over
+$\Pi_N^0$ ensures the reference is a realizable pathway, not a
+pointwise envelope that no single pathway achieves.
 \end{definition}
 
-\begin{definition}[Threshold-Reference Quality]
-\label{def:threshold_ref}
-Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
-the class of pathways satisfying each dimension of~$N$ at exactly
-its sufficiency threshold.
-
-\emph{Preconditions:} (i)~$\Pi_N^0$ is nonempty---at least one
-pathway exists that satisfies every dimension at exactly the
-threshold level.  (ii)~For each $c \in \Down(p_N)$, the function
-$\pi \mapsto \mathrm{quality}_c(\text{with } N \text{ satisfied
-via } \pi, \text{ all other inputs held fixed})$ is bounded above
-on $\Pi_N^0$, so the supremum exists in $\mathbb{R}$.
-
-For each downstream capability $c \in \Down(p_N)$:
-\[
-  q_N^0(c) \;=\; \sup_{\pi \in \Pi_N^0}
-  \mathrm{quality}_c(\text{with } N \text{ satisfied via } \pi).
-\]
-The pointwise supremum avoids requiring a single pathway that
-simultaneously maximizes downstream quality for all
-$c \in \Down(p_N)$.  $q_N^0(c)$ is a \emph{definitional
-construct}, not an observed quantity---it serves as the most
-favourable threshold-level baseline for each downstream capability
-separately.
-\end{definition}
+\begin{remark}[Governance-chosen reference pathway]
+\label{rem:reference_pathway}
+Institutions typically adopt a specific reference pathway as
+the canonical baseline (``standard of care'' in medicine, ``best
+available technology'' in environmental policy); the existential
+$\pi^*$ in Definition~\ref{def:downstream_safe} corresponds to
+this practice.  The framework does not require a unique canonical
+$\pi^*$---different disciplines may canonicalize differently---but
+it does require that \emph{some} threshold-level pathway be
+exhibited as the reference against which $\pi_N$ is compared.
+\end{remark}
 
 \begin{remark}[Structural connection to exercise-pathway machinery]
 \label{rem:exercise_pathway}
@@ -138,8 +136,9 @@ mathematical object from the concentration-risk measure
 of~\citep[Definition~3]{lasser2026horizon}.  Concentration risk
 is a scalar worst-case contraction estimate over an entire
 pathway; downstream-safety is a per-capability quality
-comparison $\mathrm{quality}_c(\pi_N) \geq q_N^0(c)$ indexed by
-$c \in \Down(p_N)$.  Neither reduces to the other.
+comparison $\mathrm{quality}_c(\pi_N) \geq \mathrm{quality}_c(\pi^*)$
+against a chosen reference pathway $\pi^* \in \Pi_N^0$, indexed
+by $c \in \Down(p_N)$.  Neither reduces to the other.
 Evaluating $\mathrm{quality}_c(\pi_N)$ in practice requires
 either (i) direct observation of $c$'s performance conditional on
 the pathway, or (ii) structural inference from the poset's

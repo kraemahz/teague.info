@@ -1,10 +1,13 @@
 \section{Two Sacrifice Channels: Money and Time}
 \label{sec:two_channels}
 
-The sacrifice dimension splits into two observation channels that
-capture different portions of $\volR$.  Each channel has a natural
-signal, a natural bias, and a natural coverage gap.  Together they
-cover more of $\volR$ than either alone.
+The sacrifice dimension splits into two observation channels.
+Money-sacrifice and time-sacrifice are not disjoint coverage
+spaces; they are \emph{different modalities of the same
+underlying sacrifice substrate}, connected by cooperative-market
+exchange.  The value of observing both is triangulation and
+robustness, with genuine strict inequality arising only at
+specific non-fungibility residuals.
 
 \subsection{Money-sacrifice channel}
 
@@ -30,11 +33,11 @@ purchasing power surrendered.
 \item \textbf{Bias.}  Privileges capabilities valued by wealthier
   agents.  An agent with more purchasing power emits stronger
   signals per trade.
-\item \textbf{Coverage gap.}  Capabilities that cannot be
-  purchased---things that money cannot buy---are invisible to this
-  channel.  Identity-constitutive capabilities (creative
-  expression, relationship depth, self-knowledge) often fall
-  outside the money channel.
+\item \textbf{Third-party observability.}  Money-sacrifice events
+  leave public ledger traces (prices, timestamps, category
+  labels); auditors can compute the money-channel aggregate
+  without agent cooperation (Property~P5 of
+  Theorem~\ref{thm:privacy}).
 \end{itemize}
 
 \subsection{Time-sacrifice channel}
@@ -55,87 +58,175 @@ relationship-building, contemplation).  The signal is:
 \noindent\textbf{Properties of the time channel:}
 \begin{itemize}
 \item \textbf{Signal strength.}  Opportunity cost is a
-  quantitative signal grounded in market wage rates.  The signal
-  is universal---every agent has a time endowment and an outside
-  option, regardless of wealth.
+  quantitative signal grounded in market wage rates.  Every agent
+  has a time endowment and an outside option, regardless of
+  wealth.
 \item \textbf{Bias.}  More egalitarian than the money channel.
   Time is the scarcest capability every agent shares.  A
   high-wage agent's time sacrifice has higher $\Delta\volL$ per
   hour, but every agent sacrifices time.
-\item \textbf{Coverage gap.}  Agents not in the labour market
-  (retirees, children, homemakers, the unemployed) have an
-  undefined or zero market wage rate, making the time-sacrifice
-  signal silent for these agents despite genuine $\volR$ activity.
-  The framework can use imputed wage rates~\citep{aguiar2007measuring}
-  or non-market time valuation (replacement cost).
-\item \textbf{Coverage.}  Captures $\volR$-content that the money
-  channel misses entirely.  Time-sacrifice bundles include most
-  identity-constitutive activity: parenting, craft mastery,
-  contemplative practice, relationship maintenance.
+\item \textbf{Non-market agents.}  Agents not in the labour
+  market (retirees, children, homemakers, the unemployed) have
+  an undefined or zero market wage rate.  The framework can use
+  imputed wage rates~\citep{aguiar2007measuring} or non-market
+  time valuation (replacement cost) to extend coverage to these
+  populations.
+\item \textbf{Public versus private sacrifice.}  Publicly
+  observable time-sacrifice (committed volunteer hours,
+  time-stamped artefact production) is third-party observable.
+  Private time-sacrifice (parenting, contemplation) is visible
+  only via voluntary disclosure---the residual flagged in
+  Property~P5 of Theorem~\ref{thm:privacy}.
 \end{itemize}
 
-\subsection{Complementarity}
+\subsection{Substitutability via cooperative markets}
+\label{sec:channel_substitutability}
 
-\begin{proposition}[Time Channel Captures Capabilities Money
-Channel Misses]
-\label{prop:time_coverage}
-There exist capabilities $c \in U$ such that:
-\begin{enumerate}
-\item[(a)] No money-sacrifice event in the trade window produces a
-  lower bound on $\volR(c)$---the capability is not purchasable.
-\item[(b)] Time-sacrifice events in the trade window do produce a
-  lower bound on $\volR(c)$---the capability requires time
-  investment.
-\end{enumerate}
+Money and time are not disjoint sacrifice types.  Cooperative
+markets exchange between them:
+\begin{itemize}
+\item \textbf{Time $\to$ money.}  Employment converts labour hours
+  to wage income at rate $r_i$.  This is the definitional
+  exchange rate already embedded in
+  Definition~\ref{def:time_sacrifice}.
+\item \textbf{Money $\to$ time.}  Agents can hire others to
+  invest labour hours (services, delegation) or purchase
+  time-saving technology and infrastructure (automation,
+  efficiency-enhancing tools).  The exchange goes through the
+  same cooperative market that sustains employment.
+\end{itemize}
+
+Because the two channels are linked by this exchange, an agent's
+total sacrifice budget can be measured in a common monetary unit
+via the wage rate, and the agent can shift sacrifice between
+modalities.  A high-earning agent can substitute money for time
+by hiring help; a time-rich agent can substitute time for money
+by investing hours directly.  Neither channel \emph{dominates}
+the other---each is the natural view of the same underlying
+sacrifice from one side of the exchange.
+
+The practical consequence: \textbf{the two channels triangulate
+the same capability space, they do not partition disjoint
+capability spaces}.  Observing both yields:
+
+\begin{itemize}
+\item \textbf{Triangulation.}  When money-sacrifice and
+  time-sacrifice both indicate high $\volRlower$ on a bundle,
+  the signals corroborate.  Divergence between the channels is
+  itself diagnostic: a capability with strong time-sacrifice
+  evidence but no money-sacrifice evidence in a given window
+  may indicate the capability is exercised by time-rich agents
+  outside the monetary economy, or that market mechanisms have
+  not formed around it.
+\item \textbf{Robustness.}  Different agent populations emit
+  different modal signals.  Children, retirees, and non-market
+  agents emit time signals with imputed wage rates; wage-
+  constrained high earners emit money signals.  Observing both
+  modalities extends the bound across populations that either
+  alone would miss.
+\end{itemize}
+
+\subsection{Non-fungibility residuals}
+
+The substitutability in \S\ref{sec:channel_substitutability} is
+not total.  Two specific residuals create genuine asymmetries
+where one channel captures something the other cannot substitute
+for.
+
+\begin{proposition}[Agent-Specific-Time Residual]
+\label{prop:agent_specific_time}
+Capabilities whose exercise requires the \emph{agent's own time}
+(not any time, delegated or purchased) are captured by the time
+channel but not fully substitutable through the money channel.
 \end{proposition}
 
 \begin{proof}
-We exhibit a witness.  Consider the capability
-$c^\ast =$ ``sustained mentoring relationship with a specific
-individual.''
-
-\emph{(a) Money channel silent on $c^\ast$.}
-A money-sacrifice event emits a $\volRlower$ signal on the bundle
-acquired by the payment.  Purchasing power buys \emph{access}
-goods---introductions, calendar slots with mentors, coaching
-sessions---each of which is a distinct bundle whose
-$\volR$-content lies in access categories, not in the relational
-capability itself.  The relational capability is constituted by
-the ongoing interaction, which no payment can secure; no
-money-sacrifice event places $c^\ast$ inside the purchased
-bundle, so no money-sacrifice event produces a lower bound on
-$\volR(c^\ast)$.
-
-\emph{(b) Time channel non-silent on $c^\ast$.}
-Sustaining the relationship requires recurring hours.  When
+We exhibit a witness.  Consider $c^\ast = $ ``sustained
+mentoring relationship with a specific individual.''  The
+relational capability is constituted by the interaction between
+this agent and the mentee; it is not transferable to a proxy.
+Money can purchase access goods (introductions, a mentor's
+scheduled time, coaching infrastructure), but these are distinct
+bundles whose $\volR$-content lies in access categories rather
+than in the relational capability itself.  In contrast, when
 agent~$i$ allocates $h$ hours foregoing wage income $r_i \cdot h$
-to the interaction, the time-sacrifice event
-(Definition~\ref{def:time_sacrifice}) yields
-$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ for the bundle
-$Y$ acquired during those hours.  By any reasonable decomposition
-(Definition~\ref{def:bundle_decomp}) with $c^\ast \in Y$ and
-$\alpha \in (0, 1]$, the per-capability bound
-$\volRlower(c^\ast) \geq \alpha \cdot \Delta\volL(r_i \cdot h)$
-is strictly positive.
-
-The capability is therefore in the money channel's coverage gap
-but inside the time channel's coverage.
+to the relationship, the time-sacrifice event
+(Definition~\ref{def:time_sacrifice}) produces
+$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ where
+$c^\ast \in Y$.  Agent-specific time is thus captured by the
+time channel and not reachable via the cooperative-market
+substitution of money for time.
 \end{proof}
 
-\begin{corollary}[Joint Channel Coverage]
+\begin{proposition}[Capital-Concentrated Residual]
+\label{prop:capital_concentrated}
+Capabilities whose exercise requires concentrated capital access
+(instruments, facilities, materials whose unit cost exceeds any
+individual agent's feasible time-sacrifice budget) are captured
+by the money channel but not fully substitutable through the
+time channel.
+\end{proposition}
+
+\begin{proof}
+We exhibit a witness.  Consider $c^\ast = $ ``conduct a
+particle-physics experiment using a synchrotron.''  The exercise
+of $c^\ast$ requires access to specialized infrastructure whose
+acquisition or lease cost is concentrated in a single transaction
+(institutional budget, grant award, facility time purchased).
+An agent accumulating time-sacrifice at wage rate $r_i$ can only
+reach this capability by first converting time to money via
+employment and then purchasing access---which is the money
+channel, not the time channel.  Direct time-sacrifice (hours
+spent without capital access) yields no experimental event and
+no $\volR$ signal on $c^\ast$.  The money channel captures
+$c^\ast$ via the single access-purchase event; the time channel
+is silent because the time-sacrifice exchange rate is too small
+relative to the capital threshold.
+\end{proof}
+
+\begin{corollary}[Joint Channel Triangulation]
 \label{cor:joint_coverage}
 The union of the money-sacrifice and time-sacrifice channels
-covers a strictly larger subset of $U$ than either channel alone.
-The aggregate lower bound from
+captures \emph{weakly more} of $U$ than either channel alone.
+Strict inequality holds precisely at the non-fungibility
+residuals: agent-specific-time capabilities
+(Proposition~\ref{prop:agent_specific_time}) lie in the coverage
+gap of the money channel alone; capital-concentrated capabilities
+(Proposition~\ref{prop:capital_concentrated}) lie in the coverage
+gap of the time channel alone.  The aggregate lower bound from
 Theorem~\ref{thm:aggregate_bound}, computed over both channels
 jointly, is weakly greater than the bound from either channel in
-isolation.
+isolation, with strict improvement exactly on the capabilities
+in the residuals.
 \end{corollary}
+
+\begin{proof}[Proof sketch]
+Weak containment: any event observed through either channel
+alone is also observed through the union; the aggregate is
+monotone in observed events (Proposition~\ref{prop:monotone}).
+Strict inequality at residuals:
+Proposition~\ref{prop:agent_specific_time} witnesses a capability
+captured by time but not by money;
+Proposition~\ref{prop:capital_concentrated} witnesses a
+capability captured by money but not by time.  The capabilities
+outside both residuals are substitutable between channels via
+the cooperative-market exchange of \S\ref{sec:channel_substitutability};
+for those, either channel alone converges to the joint bound as
+observation accumulates.
+\end{proof}
 
 \subsection{The residual intersection}
 
 What neither channel catches is the \emph{residual class}
 (Section~\ref{sec:residual_class}): capabilities exercised purely
-privately, with no trade or time-sacrifice event that exposes them
-to the aggregate observation channel.  The residual class is the
-intersection of the coverage gaps of both channels.
+privately, with no trade event, no publicly-observable time
+expenditure, and no sacrifice footprint of any kind.  The
+residual class is the intersection of the coverage gaps of both
+channels after accounting for the cooperative-market
+substitutability of \S\ref{sec:channel_substitutability} and the
+non-fungibility residuals of
+Propositions~\ref{prop:agent_specific_time}
+and~\ref{prop:capital_concentrated}.  This is a strictly smaller
+set than the union of the two channels' individual coverage gaps:
+capabilities in one channel's gap but reachable via the other
+(or via the substitution markets) are not residual.

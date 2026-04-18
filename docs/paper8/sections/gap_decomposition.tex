@@ -82,7 +82,11 @@ Given
 (v)~an event-admissibility labelling designating which observed
 events satisfy the theorem-admissibility requirements (S0, S1, S2
 for Part~A; S0--S5 for Part~B),
-the four-term gap decomposition is computable in time $O(|P|)$.
+the four-term gap decomposition is computable in time
+$O(|P| + E)$, where $E$ is the total number of observed
+(capability, event) membership records in the trade window.
+The $O(|P|)$ term is per-capability classification; the $O(E)$
+term is one-pass aggregation over bundle-incidence records.
 No structural counterfactual computation is required (a
 direct-measurement approach would require $O(|P|^2)$
 counterfactual queries).
