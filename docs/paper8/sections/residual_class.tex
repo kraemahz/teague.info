@@ -157,41 +157,99 @@ question is not ``what could we test if we had access?'' but
 
 \subsection{Bounding the residual class}
 
-\begin{proposition}[Active-Agent Floor Transfers]
+Paper~3's observational-individuation
+result~\citep[Corollary~2.1]{lasser2026horizon} establishes a
+\emph{structural} floor on $\volL$: for any distinguishable
+agent~$k$, the poset contains an identity capability $d_k$ with
+$\OIfloor(k) \geq 1$, so removing~$a_k$ contracts $\volL$ by at
+least $\OIfloor(k)$.  Paper~8's $\volRexact(O)$ diagnostic
+(Definition~\ref{def:exercise_indicator}), by contrast, sums
+$\volL$-weights of capabilities $d$ with $e_t(d) = 1$, where
+$e_t(d)$ requires a realized cooperative output in
+$[t-\Delta, t]$ that would be unrealizable if $d$ were removed
+from $O$.  Transferring the OI floor into $\volRexact(O)$
+therefore requires a bridge between the structural $\volL$ fact
+and the temporal exercise indicator.  We state that bridge
+explicitly as a hypothesis rather than derive it from
+Corollary~2.1.
+
+\begin{definition}[OI--Exercise Bridge Condition]
+\label{def:oi_exercise_bridge}
+An agent~$k$ with OI capability $d_k \in O$ satisfies the
+\emph{OI--exercise bridge} at time~$t$ if some realized
+cooperative output in $[t-\Delta, t]$ that agent~$k$
+participated in is identity-individuating in the sense that
+removing $d_k$ from $O$ would make that output unrealizable as
+an output attributable to~$k$.  Equivalently,
+$e_t(d_k) = 1$ under
+Definition~\ref{def:exercise_indicator}.  Active presence within
+$O$ that is merely dormant (e.g., $k$ is nominally in the
+perimeter but contributed nothing to realized cooperative
+outputs during $[t-\Delta, t]$) does not satisfy the bridge.
+\end{definition}
+
+\begin{proposition}[Active-Agent Floor Transfer, conditional on
+the bridge]
 \label{prop:oi_floor}
-For an active agent~$k$ whose observational-individuation
-capability $d_k$ lies within the observation perimeter $O$
-(Appendix~\ref{app:exercise_indicator}), the observational
-individuation of~\citep[Corollary~2.1]{lasser2026horizon}
-provides a $\volR$ floor: if agent~$k$ is actively participating,
-$d_k$ is continuously exercised, contributing at least
-$\OIfloor(k)$ to $\volRexact(O)$.  This floor transfers
-independently of the sacrifice channel---active participation
-\emph{is} the exercise event.
+Fix a window $W = [t_0, t_0 + T]$.  For an agent~$k$ with OI
+capability $d_k \in O$ satisfying the OI--exercise bridge
+(Definition~\ref{def:oi_exercise_bridge}) at some $t \in W$,
+$d_k$ is exercised within $W$ and therefore contributes
+$\OIfloor(k) \geq 1$ to $\volRexact^{[W]}(O)$ (with the weight
+bound from the binary default
+of~\citep[Corollary~2.1]{lasser2026horizon}).  Summing over
+agents $k \in K$ whose OI capabilities are pairwise
+poset-independent (Definition~\ref{def:category_partition}(i))
+and who each satisfy the bridge at some $t \in W$:
+\[
+  \volRexact^{[W]}(O) \;\geq\; \sum_{k \in K} \OIfloor(k)
+  \;=:\; \sum_{k \in K} \OIfloor(k).
+\]
+The floor transfers only under the bridge hypothesis; it is
+\emph{not} a consequence of Corollary~2.1 alone, which
+establishes a $\volL$ elimination floor rather than an exercise
+witness.
 \end{proposition}
 
 \begin{proof}
-\citep[Corollary~2.1]{lasser2026horizon} establishes that any
-actively-participating agent~$k$ generates observational
-individuation (OI) evidence at rate $\OIfloor(k) > 0$ whenever
-$k$'s identity capability $d_k$ is exercised.  Active
-participation, by the definition in~\citep{lasser2026horizon}, is
-itself the exercise event for $d_k$: the agent cannot participate
-(in a trade, a committed event, a verified action) without
-identifiably being themselves, which exercises $d_k$ by
-construction.
-
-If $d_k \in O$ (Definition~\ref{def:exercise_indicator}), then
-$d_k$ contributes to $\volRexact(O)$ directly through the OI
-evidence stream; the contribution is $\OIfloor(k)$ per
-\citep[Corollary~2.1]{lasser2026horizon}.  This is orthogonal to
-the sacrifice channel: the OI evidence does not require a
-sacrifice event to be recorded; it follows from the agent's
-continuous presence within the observation perimeter.
-
-Hence $\volRexact(O) \geq \sum_{k \text{ active}} \OIfloor(k)$,
-which is the claimed floor transfer.
+By the bridge (Definition~\ref{def:oi_exercise_bridge}) at some
+$t \in W$, $e_t(d_k) = 1$, so $d_k \in P^{\mathrm{ex}}_t$ for
+that $t$.  Under Paper~8's window-integrated form
+(Definition~\ref{def:volR}), $d_k \in P^{\mathrm{ex}}_W =
+\bigcup_{s \in W} P^{\mathrm{ex}}_s$, hence $d_k$ contributes
+$\OIfloor(k)$ to $\volRexact^{[W]}(O) = \volL(O \cap
+P^{\mathrm{ex}}_W)$.  By
+Paper~3~\citep[Corollary~2.1]{lasser2026horizon},
+$\OIfloor(k) \geq 1$ (the binary default, strengthened by any
+subsumption weight in $\volL$).  Pairwise poset-independence of
+the $\{d_k\}_{k \in K}$ lets $\volL$ decompose additively by
+axiom~M4 (Section~\ref{sec:axiom_inheritance}), giving the sum
+form.  Without the bridge hypothesis,
+Corollary~2.1~\citep{lasser2026horizon} establishes only the
+structural $\volL$-on-elimination fact, which does \emph{not}
+supply the exercise witness required by
+Definition~\ref{def:exercise_indicator}.
 \end{proof}
+
+\begin{remark}[When the bridge holds and when it fails]
+\label{rem:oi_bridge_scope}
+The bridge holds when active participation is
+\emph{identity-coupled}: the agent's actions produce realized
+cooperative outputs whose attribution depends on the agent
+remaining in the perimeter.  Typical operational examples are
+participation in a committed trade event, execution of a
+verified action with agent-attributable signing, or
+contribution to a cooperative capability whose output is signed
+by the agent's identifier.  The bridge fails for \emph{dormant
+presence}: an agent is nominally within $O$ but contributed
+nothing attributable to them in $[t-\Delta, t]$.  In such
+windows the structural $\volL$ floor of Corollary~2.1 still
+holds (removing the agent would still contract $\volL$), but
+$\volRexact(O)$ receives no contribution from $d_k$ until the
+agent resumes identity-coupled activity.  This is consistent
+with the paper's stance that $\volR$ measures what the
+collective \emph{does}, not merely what it possesses.
+\end{remark}
 
 \begin{remark}[Channel separation]
 The OI floor contributes exclusively to $\volRexact(O)$ in the
