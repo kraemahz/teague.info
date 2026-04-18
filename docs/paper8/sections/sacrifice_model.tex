@@ -160,11 +160,16 @@ steps.
     when $\volL$ is the operational target on the benchmarked
     subspace.
   \item Acquisition-side calibration (S0):
-    $\Ui(Y) \leq \volR(Y)$, asserting that agents do not
+    $\Ui(Y) \leq \volR^{[W]}(Y)$, asserting that agents do not
     systematically overvalue unbenchmarked bundles relative to
-    their exercise contribution.
+    their \emph{window-integrated} exercise contribution.  The
+    window-integrated form is what the observation channel
+    actually bounds: an acquisition at $t_n$ carries no
+    instantaneous exercise witness, but the bound is still
+    valid on the cumulative window quantity $\volR^{[W]}$
+    whenever the agent uses $Y$ during $W$.
   \end{itemize}
-  Chaining: $\volR(Y) \geq \Ui(Y) \geq \Ui(X) \geq
+  Chaining: $\volR^{[W]}(Y) \geq \Ui(Y) \geq \Ui(X) \geq
   \Delta\volL(X)$.
 \end{enumerate}
 
@@ -203,16 +208,25 @@ The revealed-sacrifice channel and its aggregate bound
 assumptions.  We collect them here for single-point reference.
 
 \begin{description}
-\item[S0 (Valuation-bounded-by-Exercise).] For each agent~$i_n$,
-  the agent's valuation of the unbenchmarked bundle $Y_n$ does
-  not exceed $Y_n$'s realized $\volR$ contribution:
-  $\Ui[_{n}](Y_n) \leq \volR(Y_n)$.
+\item[S0 (Valuation-bounded-by-Exercise).] For each agent~$i_n$
+  with event at $t_n \in W$, the agent's valuation of the
+  unbenchmarked bundle $Y_n$ does not exceed $Y_n$'s
+  \emph{window-integrated} realized $\volR$ contribution:
+  $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
   This is the \emph{substantive bridge} between valuation (what
-  the agent pays for) and realized exercise (what the framework
-  cares about).  It is not a calibration-in-the-narrow-sense
-  (unbiased estimation) but a one-sided conservatism claim:
-  agents do not systematically pay more than what the capability
-  will actually deliver in exercise.
+  the agent pays for at $t_n$) and realized exercise (what the
+  framework cares about, aggregated over the observation window
+  $W$).  It is not a calibration-in-the-narrow-sense (unbiased
+  estimation) but a one-sided conservatism claim: agents do not
+  systematically pay more than what the capability will actually
+  deliver in exercise \emph{within $W$}.  The window-integrated
+  form is essential: the sacrifice channel observes acquisition
+  at $t_n$, not exercise at any particular time, so S0's
+  consequent is about the cumulative exercise witness across the
+  window rather than the instantaneous value at $t_n$.  Agents
+  who buy capabilities they never use within $W$ violate S0 for
+  those events; this matches the intuition that the lower bound
+  is about \emph{realized} rather than \emph{stored} capability.
 
 \item[S1 (Free choice).] Each sacrifice event is a voluntary
   trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were

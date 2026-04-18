@@ -65,10 +65,15 @@ Section~\ref{sec:axiom_inheritance} applies to each.
 Unless otherwise noted, $\volR$ without a time subscript refers
 to the window-integrated form $\volR^{[W]}$ for the ambient
 trade window $W$.  This is the quantity the sacrifice channel
-(Theorem~\ref{thm:aggregate_bound}) actually bounds: each
-observed event at $t_n \in W$ witnesses exercise of $Y_n$ at
-that time, so its contribution is aggregated into $\volR^{[W]}$,
-not into $\volR_t$ at any single later evaluation time.
+(Theorem~\ref{thm:aggregate_bound}) actually bounds: a sacrifice
+event at $t_n$ records an acquisition, not an instantaneous
+exercise witness, so the theorem's lower bound is stated
+against $\volR^{[W]}$---which captures any exercise of $Y_n$
+anywhere in $W$---rather than against the instantaneous
+$\volR_{t}$ at a particular evaluation time.  Assumption~S0
+(Section~\ref{sec:assumptions}) is correspondingly stated
+directly in window-integrated form:
+$\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
 \end{definition}
 
 \begin{remark}[$\volR$ is latent; $\volRlower$ is the bound]
@@ -187,23 +192,23 @@ gives $\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
 Lemma~\ref{lem:cancellation} under S4(a) and the genuine-
 exchange conditions of Definition~\ref{def:sacrifice_event},
 this reduces to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0
-(valuation-bounded-by-exercise), $\Ui[_{n}](Y_n) \leq
-\volR_{t_n}(Y_n)$, evaluated at the exercise time $t_n$; since
-$t_n \in W$, $P^{\mathrm{ex}}_{t_n} \subseteq P^{\mathrm{ex}}_W$
-and hence $\volR_{t_n}(Y_n) \leq \volR^{[W]}(Y_n)$ by monotonicity
-of $\volL$.  By S2 (benchmark grounding), $\Ui[_{n}](X_n) \geq
-\Delta\volL(X_n)$.  Chaining:
+(valuation-bounded-by-exercise, stated in window-integrated
+form), $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.  By S2
+(benchmark grounding), $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+Chaining:
 \[
-  \volR^{[W]}(Y_n) \;\geq\; \volR_{t_n}(Y_n)
-  \;\geq\; \Ui[_{n}](Y_n) \;\geq\; \Ui[_{n}](X_n)
+  \volR^{[W]}(Y_n) \;\geq\; \Ui[_{n}](Y_n)
+  \;\geq\; \Ui[_{n}](X_n)
   \;\geq\; \Delta\volL(X_n),
 \]
 which is the per-event bound.  The window-integrated form is
-essential: $Y_n$ was witnessed as exercised at $t_n$, which may
-differ from any downstream evaluation time; $\volR^{[W]}$
-aggregates such witnesses across $W$, whereas $\volR_t$ at a
-later $t$ could have dropped below $\Delta\volL(X_n)$ if
-$Y_n$ is no longer exercised.
+essential: the sacrifice channel observes acquisition of $Y_n$
+at $t_n$, not exercise at any particular instant.  S0's
+consequent is therefore stated as a bound on
+$\volR^{[W]}(Y_n)$---the cumulative exercise witness for $Y_n$
+across $W$---not on the instantaneous $\volR_t(Y_n)$ at any
+single evaluation time $t$, which could be zero even when
+$Y_n$ was exercised earlier or later in $W$.
 
 Suppose the $N$ bundles $\{Y_n\}$ are pairwise poset-independent:
 no subsumption relation and no cooperative-composition link

@@ -117,64 +117,73 @@ Remark~\ref{rem:hhi_alarm_governance}.
 \end{remark}
 
 \begin{proposition}[Third-Party Observability of the
-Concentration Signal]
+Concentration Signal (Part~A)]
 \label{prop:third_party_wireheading}
-The trade-flow $\HHI$ is computable from public trade data
-(committed sacrifice events,
-Definition~\ref{def:committed_event}) without access to any
-agent's private state.  A third-party auditor with access only to
-the committed sacrifice ledger can compute
-$\HHI(\lambda_{\mathrm{trade}})$ and raise the concentration
-alarm (which is wireheading-consistent in the sense of
-Proposition~\ref{prop:wireheading_hhi}, not a wireheading
-determination on its own).
+The Part~A \emph{category-flow} concentration statistic
+$\widetilde\HHI$ is computable from public trade data (committed
+sacrifice events, Definition~\ref{def:committed_event}) without
+access to any agent's private state.  Specifically, define
+\[
+  \tilde\lambda_{\mathrm{trade}}(j, T) \;=\;
+  \frac{\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)}
+       {\sum_n \Delta\volL(X_n)},
+  \qquad
+  \widetilde\HHI \;=\; \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2,
+\]
+for the trade window $T$.  A third-party auditor with access
+only to the committed sacrifice ledger can compute
+$\widetilde\HHI$ and raise the Part~A category-flow alarm
+(wireheading-consistent in the sense of
+Proposition~\ref{prop:wireheading_hhi}, with
+$\tilde\lambda_{\mathrm{trade}}$ substituted for
+$\lambda_{\mathrm{trade}}$; not a wireheading determination on
+its own).
 \end{proposition}
 
 \begin{proof}
 By Definition~\ref{def:committed_event}, every committed
 sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
-in cleartext.  The trade-flow leverage
-(Definition~\ref{def:trade_leverage}) is
-$\lambda_{\mathrm{trade}}(j, T) = \volRlower(C_j, T) /
-\volRlower(G, T)$.
-
-Under Part~B semantics
-(Definition~\ref{def:volRlower_subset}), $\volRlower(C_j, T) =
-\sum_{c \in C_j \cap U} \volRlower(c, T) = \sum_{c \in C_j \cap U}
-\max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$.
-Each term in this sum is computable from committed fields: the
-bundle membership $c \in Y_n$ is determined by the partition
-label $\catY[_n]$ together with a public per-category-component
-mapping from $C_{\catY[_n]}$ to individual capabilities
-(Remark~\ref{rem:commit_part_b} in
-Section~\ref{sec:commitment}), the sacrifice magnitudes
-$\Delta\volL(X_n)$ are committed in cleartext, and the
-attribution coefficients $\alpha_{n,c}$ are either public
-(equal-weight default) or committed alongside the event under
-the Part~B commitment variant.  The same holds for the
-denominator $\volRlower(G, T) = \sum_{c \in U} \volRlower(c, T)$.
-Forming $\HHI(\lambda_{\mathrm{trade}}) = \sum_j
-\lambda_{\mathrm{trade}}(j)^2$ therefore requires no fields
-hidden by the commitment protocol.  The alarm test
-$\HHI > \HHI_{\mathrm{alarm}}$ is consequently computable by any
-party with read access to the public committed-event ledger,
-under Part~B assumptions.
+in cleartext.  For the category-flow statistic, both the
+numerator $\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)$ (which
+sums only committed fields conditional on the committed category
+label) and the denominator $\sum_n \Delta\volL(X_n)$ are direct
+functions of the revealed-cleartext fields.  No hidden
+field---agent identity, bundle-interior subset, $\alpha_{n,c}$
+coefficients---enters the computation.  Hence
+$\widetilde\HHI = \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2$ is
+publicly computable.  The alarm test
+$\widetilde\HHI > \HHI_{\mathrm{alarm}}$ is consequently
+computable by any party with read access to the committed-event
+ledger.  Monotonicity of $\widetilde\HHI$ in trade-flow
+concentration across categories follows from the same
+Cauchy--Schwarz / Herfindahl argument as
+Proposition~\ref{prop:wireheading_hhi}, applied to the
+category-flow distribution.
 \end{proof}
 
-\begin{remark}[Part A variant]
-\label{rem:wireheading_part_a}
-Under Part~A alone (S0--S2, S4(a)), the per-category quantity
-$\volRlower(C_j, T)$ is not defined in
-Section~\ref{sec:lower_bound} but can be replaced by the
-Part~A per-bundle aggregate restricted to category~$j$:
-$\tilde\lambda_{\mathrm{trade}}(j, T) =
-\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n) / \sum_n \Delta\volL(X_n)$.
-The resulting concentration statistic
-$\widetilde\HHI = \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2$ is
-computable from public committed-event data without invoking
-Part~B, is monotone in trade-flow concentration across
-categories, and supports the same governance-threshold alarm.
-The Part~B version above operates at per-capability resolution
-within categories; the Part~A version operates at category-level
-resolution only.
+\begin{remark}[Part~B observability requires richer commitments]
+\label{rem:wireheading_part_b_obs}
+The per-capability Part~B concentration statistic
+$\HHI(\lambda_{\mathrm{trade}})$ built on
+$\volRlower(C_j, T) = \sum_{c \in C_j \cap U} \volRlower(c, T)$
+is \emph{not} third-party computable from the committed-event
+interface of Definition~\ref{def:committed_event}.  The
+committed form reveals only the partition label $\catY[_n]$ and
+attests $Y_n \subseteq C_{\catY[_n]}$; it does not reveal which
+subset of $C_{\catY[_n]}$ was actually acquired, nor the
+per-capability attribution coefficients $\alpha_{n,c}$.
+Computing $\volRlower(c, T) =
+\max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$
+therefore requires additional committed fields: per-event
+subset-membership openings (or a ZK attestation equivalent), and
+the $\alpha_{n,c}$ coefficients (public by an equal-weight
+default, or committed alongside the event under a richer
+Part~B variant as flagged in Remark~\ref{rem:commit_part_b}).
+Under that richer commitment, the Part~B statistic becomes
+third-party observable; under the default Part~A commitment, it
+is not.  Within a consented operational perimeter~$O$
+(Appendix~\ref{app:exercise_indicator}), no richer commitment is
+needed because direct per-capability evaluation is permitted;
+the Part~B statistic is then available to the perimeter
+operator, not to arbitrary third parties.
 \end{remark}
