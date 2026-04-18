@@ -3,27 +3,50 @@
 
 \subsection{The alarm}
 
-\begin{definition}[B-to-C Alarm Under Revealed Sacrifice]
+\begin{definition}[B-to-C Evidence Alarm]
 \label{def:alarm}
-The B-to-C alarm fires when the lower-bound B-to-C ratio drops
-below a threshold:
+The B-to-C evidence alarm fires when the lower-bound B-to-C
+ratio drops below a threshold:
 \[
   \mathrm{ALARM}(T) \;=\; \betaL(G, T) \;<\; \betaalarm,
 \]
-where $\betaalarm \in (0, 1)$ is configurable.  The alarm detects
-proxy failure: when $\betaL$ is low, $\volL$ is high but the
-sacrifice channel shows little evidence of the corresponding
-$\volR$.
+where $\betaalarm \in (0, 1)$ is configurable.  The alarm is an
+\emph{evidence alarm}, not a proxy-failure alarm directly: when
+$\betaL$ is low, the sacrifice channel shows little evidence of
+$\volR$-content proportional to $\volL$, but this does not by
+itself imply that true exercise is low.  The interpretation of a
+firing alarm requires additional analysis (via the gap
+decomposition below) to determine whether low evidence reflects
+genuine low exercise, restricted capabilities, dormant wants,
+or residual-class capabilities beyond the channel's reach.
 \end{definition}
 
-\begin{remark}[Alarm conservatism]
-Because $\betaL \leq \betatrue$, the alarm may fail to fire when
-$\betatrue < \betaalarm$ but the sacrifice channel has
-insufficient coverage.  The alarm has no false positives (if
-$\betaL$ is low, $\volR$ is genuinely not well-evidenced) but
-may have false negatives ($\volR$ may be high but invisible to
-the sacrifice channel).  This is the cost of privacy-minimal
-observation.
+\begin{remark}[Evidence alarm versus proxy-failure diagnosis]
+\label{rem:alarm_interpretation}
+Because $\betaL \leq \betatrue$, the alarm distinguishes two
+regimes:
+\begin{itemize}
+\item \textbf{Alarm fires and $\delta_{\mathrm{covered}}$ is
+  small relative to $\delta_{\mathrm{dormant}} +
+  \delta_{\mathrm{restricted}} + \delta_{\mathrm{residual}}$:}
+  the low $\betaL$ reflects insufficient observed trade on
+  non-residual, non-restricted capabilities.  This is the
+  canonical proxy-failure signature: $\volL$-weighted capabilities
+  exist that are observable in principle but not being traded.
+\item \textbf{Alarm fires and $\delta_{\mathrm{residual}}$ or
+  $\delta_{\mathrm{restricted}}$ dominates:} the low $\betaL$
+  reflects structural invisibility or policy restriction, not
+  proxy failure.  The framework should not escalate in these
+  cases; the alarm is firing on what the sacrifice channel cannot
+  reach, not on degraded exercise.
+\end{itemize}
+The alarm has no false positives in the narrow sense---low
+$\betaL$ is real and the sacrifice channel genuinely sees little
+evidence---but it has false positives in the proxy-failure
+sense, which is why the gap decomposition below is necessary to
+distinguish the regimes.  False negatives ($\volR$ high but
+invisible to the sacrifice channel) are also possible and are
+the structural cost of privacy-minimal observation.
 \end{remark}
 
 \subsection{Diagnostic decomposition}

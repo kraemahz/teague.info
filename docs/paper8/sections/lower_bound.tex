@@ -40,13 +40,13 @@ guarantee.
 \label{thm:aggregate_bound}
 For a sequence of revealed-sacrifice events
 $\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with bundles jointly covering
-a subset $U$ of unbenchmarked capability-space, under
-Assumptions~S0--S5 of
-Section~\ref{sec:assumptions}, the theorem has two levels:
+a subset $U$ of unbenchmarked capability-space, the theorem
+gives a bundle-level bound and a conditional per-capability
+refinement.
 
 \medskip\noindent
-\textbf{Part~A (Bundle-level lower bound, requires S0--S2 and
-S4(a)).}
+\textbf{Part~A (Main result --- bundle-level lower bound;
+requires S0--S2 and S4(a)).}
 For each event~$n$:
 \[
   \volR(Y_n) \;\geq\; \Delta\volL(X_n).
@@ -57,10 +57,14 @@ For $N$ events with \emph{pairwise poset-independent} bundles:
 \]
 where $\volR^U$ is the realized capability volume restricted to
 the unbenchmarked subset $U$ covered by the union of bundles.
+Part~A is the paper's substantive result: the $\volL$-to-$\volR$
+lower bound per unit of observed sacrifice magnitude.
 
 \medskip\noindent
-\textbf{Part~B (Per-capability refinement, requires S0--S5).}
-When bundles overlap, define for each capability $c \in U$:
+\textbf{Part~B (Conditional refinement --- per-capability
+attribution; requires S0--S5).}
+When bundles overlap and per-capability attribution is desired,
+define for each capability $c \in U$:
 \[
   \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
   \alpha_{n,c} \cdot \Delta\volL(X_n).
@@ -70,6 +74,11 @@ poset-independent:
 \[
   \volR^U \;\geq\; \sum_{c \in U} \volRlower(c).
 \]
+Part~B is \emph{conditional on S5}---a direct share inequality
+on the quantity being bounded (see
+Remark~\ref{rem:s5_heavy})---and should be read as a refinement
+when admissible, not as a result comparable in strength to
+Part~A.
 \end{theorem}
 
 \begin{proof}
@@ -77,9 +86,14 @@ poset-independent:
 Fix an event $n$.  By S1, agent~$i_n$ chose $Y_n$ over $X_n$
 while both were available.  Revealed preference gives
 $\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
-\Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By S4(a)
-(global valuation additivity), this reduces by cancellation to
-$\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0 (calibration),
+\Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By S4(a) (global
+valuation additivity) together with the genuine-exchange
+conditions of Definition~\ref{def:sacrifice_event}
+($X_n \cap Y_n = \emptyset$ and
+$Y_n \cap (H_n \setminus X_n) = \emptyset$), the cancellation
+$\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) - \Ui[_n](H_n)
+= \Ui[_n](Y_n) - \Ui[_n](X_n)$ holds, reducing the comparison
+to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0 (calibration),
 $\Ui[_{n}](Y_n) \leq \volR(Y_n)$; by S2 (benchmark grounding),
 $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.  Chaining:
 \[

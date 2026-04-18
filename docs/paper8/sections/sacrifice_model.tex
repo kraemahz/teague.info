@@ -19,9 +19,21 @@ A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
   known $\Delta\volL(X) \geq 0$, surrendered by agent~$i$ at
   time~$t$;
 \item $Y = \{Y_1, \ldots, Y_k\}$ is an unbenchmarked capability
-  bundle acquired by agent~$i$;
+  bundle acquired by agent~$i$, satisfying the \emph{genuine-
+  exchange conditions}:
+  (i)~$X \cap Y = \emptyset$ (the agent does not surrender and
+  reacquire the same capability); and
+  (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
+  bundle is novel relative to the agent's retained holdings
+  $H_i \setminus X$, where $H_i$ is the agent's pre-trade
+  holdings);
 \item $t$ is the event timestamp.
 \end{itemize}
+Conditions (i) and (ii) characterize \emph{genuine} trades: the
+agent exchanges distinct capabilities and acquires something
+novel.  Trades violating either condition are degenerate (the
+agent loses nothing net, or gains nothing new) and carry no
+revealed-preference information.
 The event emits the signal:
 \[
   \volRlower(Y) \;\geq\; \Delta\volL(X)
@@ -45,19 +57,30 @@ steps.
   where $H$ is the agent's pre-trade holdings.
 
 \item \textbf{Reduction to bundle-level comparison via valuation
-  additivity (S4(a)).}
-  Under S4(a)---the assumption that $\Ui$ is additive across
-  any capability set (stated below)---the exchange comparison
+  additivity (S4(a)) and the genuine-exchange conditions.}
+  Under S4(a)---the assumption that $\Ui$ is additive across any
+  finite capability set (stated below)---and the genuine-exchange
+  conditions in Definition~\ref{def:sacrifice_event}
+  ($X \cap Y = \emptyset$ and
+  $Y \cap (H \setminus X) = \emptyset$), the exchange comparison
   reduces by cancellation to a bundle comparison:
-  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
-  \iff \Ui(Y) \geq \Ui(X)$.
+  \[
+    \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
+    = \Ui(Y) - \Ui(X),
+  \]
+  so $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
+  \iff \Ui(Y) \geq \Ui(X)$.  The cancellation requires both
+  conditions: without (i) the $X \cap Y$ overlap remains on both
+  sides and cancels trivially (no information); without (ii) the
+  $Y \cap (H \setminus X)$ overlap does not add utility because
+  the agent already held those capabilities.
   S4(a) is the standard working assumption for revealed-
   preference inference in applied microeconomics
-  (\citet{samuelson1938note,mascolell1995microeconomic}), and
-  the paper uses a special case implicitly already: the
-  time-sacrifice channel (Definition~\ref{def:time_sacrifice})
-  values time at wage rate $r_i$, which is quasilinearity in
-  wage-scaled time---a form of valuation additivity.
+  (\citet{samuelson1938note,mascolell1995microeconomic}); the
+  paper also uses a special case implicitly via the time-sacrifice
+  channel (Definition~\ref{def:time_sacrifice}), which values time
+  at wage rate $r_i$---quasilinearity in wage-scaled time, a form
+  of valuation additivity.
 
 \item \textbf{Calibration chain.}
   Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
