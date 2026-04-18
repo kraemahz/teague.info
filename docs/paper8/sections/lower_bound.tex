@@ -12,41 +12,77 @@ space to capabilities that are currently being exercised.
 Volume]
 \label{def:volR}
 Let $P$ be the full capability poset with measure
-$\volL$~\citep[Proposition~1]{lasser2026poset}.  For each time
-$t$, the \emph{exercised sub-poset} $P^{\mathrm{ex}}_t
-\subseteq P$ is the set of capabilities currently being
+$\volL$~\citep[Proposition~1]{lasser2026poset}.
+
+\medskip\noindent
+\textbf{Instantaneous form.}
+For each time $t$, the \emph{exercised sub-poset}
+$P^{\mathrm{ex}}_t \subseteq P$ is the set of capabilities being
 exercised at time $t$---a \emph{latent structural fact} about
 the system, independent of any observation mechanism:
 \[
-  P^{\mathrm{ex}}_t \;=\; \{d \in P : d \text{ is currently
-  exercised at time } t\},
+  P^{\mathrm{ex}}_t \;=\; \{d \in P : d \text{ is exercised at
+  time } t\},
 \]
-where ``currently exercised'' is formalized via the counterfactual
+where ``exercised at $t$'' is formalized via the counterfactual
 exercise condition of Appendix~\ref{app:exercise_indicator}
-(Definition~\ref{def:exercise_indicator}): $d$ is exercised iff
-removing $d$ at time $t$ would make some realized cooperative
-output unrealizable.  The \emph{realized capability volume} is
-the poset measure restricted to this sub-poset:
+(Definition~\ref{def:exercise_indicator}): $d$ is exercised at
+$t$ iff removing $d$ at that time would make some realized
+cooperative output unrealizable.  The \emph{instantaneous
+realized capability volume} is the poset measure restricted to
+this sub-poset:
 \[
-  \volR(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_t\bigr)
+  \volR_t(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_t\bigr)
   \qquad \text{for any } S \subseteq P.
 \]
-$\volR$ inherits the measure structure of $\volL$ restricted to
-$P^{\mathrm{ex}}_t$, and the axiom-analogue analysis of
-Section~\ref{sec:axiom_inheritance} applies.
+
+\medskip\noindent
+\textbf{Window-integrated form.}
+For a trade window $W = [t_0, t_0 + T]$
+(Definition~\ref{def:trade_window}), the \emph{window-integrated
+exercised sub-poset} is the union of the instantaneous
+exercised sub-posets across the window,
+\[
+  P^{\mathrm{ex}}_W \;=\; \bigcup_{t \in W}
+  P^{\mathrm{ex}}_t,
+\]
+and the corresponding \emph{window-integrated realized
+capability volume} is
+\[
+  \volR^{[W]}(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_W\bigr)
+  \qquad \text{for any } S \subseteq P.
+\]
+$\volR^{[W]}$ counts a capability as contributing to realized
+volume if it was exercised at \emph{any} time during $W$; the
+instantaneous form $\volR_t$ counts only capabilities exercised
+exactly at $t$.  Both inherit the measure structure of $\volL$
+restricted to the corresponding sub-poset, and the
+axiom-analogue analysis of
+Section~\ref{sec:axiom_inheritance} applies to each.
+
+\medskip\noindent
+\textbf{Convention.}
+Unless otherwise noted, $\volR$ without a time subscript refers
+to the window-integrated form $\volR^{[W]}$ for the ambient
+trade window $W$.  This is the quantity the sacrifice channel
+(Theorem~\ref{thm:aggregate_bound}) actually bounds: each
+observed event at $t_n \in W$ witnesses exercise of $Y_n$ at
+that time, so its contribution is aggregated into $\volR^{[W]}$,
+not into $\volR_t$ at any single later evaluation time.
 \end{definition}
 
 \begin{remark}[$\volR$ is latent; $\volRlower$ is the bound]
 \label{rem:volR_diagnostic}
-$\volR$ is defined structurally as a ground-truth quantity
-about the system; computing it \emph{directly} requires
-evaluating the counterfactual exercise condition for every
-capability, which the Introduction rejects as intractable and
-privacy-incompatible at scale.  The revealed-sacrifice
-observation channel does not observe $P^{\mathrm{ex}}_t$
-directly; it produces a lower bound $\volRlower$ on
-$\volR$ restricted to an observed sub-space $U \subseteq P$.
-Inside the observation perimeter $O$ of
+$\volR$ (in either form) is defined structurally as a
+ground-truth quantity about the system; computing it
+\emph{directly} requires evaluating the counterfactual exercise
+condition for every capability at every relevant time, which the
+Introduction rejects as intractable and privacy-incompatible at
+scale.  The revealed-sacrifice observation channel does not
+observe $P^{\mathrm{ex}}_t$ or $P^{\mathrm{ex}}_W$ directly; it
+produces a lower bound $\volRlower$ on the window-integrated
+$\volR^{[W]}$ restricted to an observed sub-space
+$U \subseteq P$.  Inside the observation perimeter $O$ of
 Appendix~\ref{app:exercise_indicator}, direct evaluation of
 $e_t(d)$ is permitted (no privacy barrier within consented
 operational scope) and contributes to a combined diagnostic
@@ -93,27 +129,33 @@ guarantee.
 
 \begin{theorem}[Aggregate B-to-C Lower Bound]
 \label{thm:aggregate_bound}
-For a sequence of revealed-sacrifice events
-$\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with bundles jointly covering
-a subset $U$ of unbenchmarked capability-space, the theorem
-gives a bundle-level bound and a conditional per-capability
-refinement.
+Fix a trade window $W = [t_0, t_0 + T]$
+(Definition~\ref{def:trade_window}) and a sequence of
+revealed-sacrifice events
+$\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with $t_n \in W$, whose
+bundles jointly cover a subset $U$ of unbenchmarked
+capability-space.  All $\volR$ quantities below refer to the
+\emph{window-integrated} form $\volR^{[W]}$
+(Definition~\ref{def:volR}): the theorem bounds the realized
+volume accumulated during $W$, not the instantaneous
+$\volR_t$ at any single evaluation time.
 
 \medskip\noindent
 \textbf{Part~A (Main result --- bundle-level lower bound;
 requires S0--S2 and S4(a)).}
 For each event~$n$:
 \[
-  \volR(Y_n) \;\geq\; \Delta\volL(X_n).
+  \volR^{[W]}(Y_n) \;\geq\; \Delta\volL(X_n).
 \]
 For $N$ events with \emph{pairwise poset-independent} bundles:
 \[
-  \volR^U \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
+  \volR^{U,[W]} \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
 \]
-where $\volR^U$ is the realized capability volume restricted to
-the unbenchmarked subset $U$ covered by the union of bundles.
-Part~A is the paper's substantive result: the $\volL$-to-$\volR$
-lower bound per unit of observed sacrifice magnitude.
+where $\volR^{U,[W]}$ is the window-integrated realized
+capability volume restricted to the unbenchmarked subset $U$
+covered by the union of bundles.  Part~A is the paper's
+substantive result: the $\volL$-to-$\volR$ lower bound per unit
+of observed sacrifice magnitude.
 
 \medskip\noindent
 \textbf{Part~B (Conditional refinement --- per-capability
@@ -127,7 +169,7 @@ define for each capability $c \in U$:
 Then, provided the capabilities $c \in U$ are pairwise
 poset-independent:
 \[
-  \volR^U \;\geq\; \sum_{c \in U} \volRlower(c).
+  \volR^{U,[W]} \;\geq\; \sum_{c \in U} \volRlower(c).
 \]
 Part~B is \emph{conditional on S5}---a direct share inequality
 on the quantity being bounded (see
@@ -138,20 +180,30 @@ Part~A.
 
 \begin{proof}
 \emph{Part~A.}
-Fix an event $n$.  By S1, agent~$i_n$ chose $Y_n$ over $X_n$
-while both were available.  Revealed preference gives
-$\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
+Fix an event $n$ with $t_n \in W$.  By S1, agent~$i_n$ chose
+$Y_n$ over $X_n$ while both were available.  Revealed preference
+gives $\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
 \Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By
 Lemma~\ref{lem:cancellation} under S4(a) and the genuine-
 exchange conditions of Definition~\ref{def:sacrifice_event},
-this reduces to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0 (calibration),
-$\Ui[_{n}](Y_n) \leq \volR(Y_n)$; by S2 (benchmark grounding),
-$\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.  Chaining:
+this reduces to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0
+(valuation-bounded-by-exercise), $\Ui[_{n}](Y_n) \leq
+\volR_{t_n}(Y_n)$, evaluated at the exercise time $t_n$; since
+$t_n \in W$, $P^{\mathrm{ex}}_{t_n} \subseteq P^{\mathrm{ex}}_W$
+and hence $\volR_{t_n}(Y_n) \leq \volR^{[W]}(Y_n)$ by monotonicity
+of $\volL$.  By S2 (benchmark grounding), $\Ui[_{n}](X_n) \geq
+\Delta\volL(X_n)$.  Chaining:
 \[
-  \volR(Y_n) \;\geq\; \Ui[_{n}](Y_n) \;\geq\; \Ui[_{n}](X_n)
+  \volR^{[W]}(Y_n) \;\geq\; \volR_{t_n}(Y_n)
+  \;\geq\; \Ui[_{n}](Y_n) \;\geq\; \Ui[_{n}](X_n)
   \;\geq\; \Delta\volL(X_n),
 \]
-which is the per-event bound.
+which is the per-event bound.  The window-integrated form is
+essential: $Y_n$ was witnessed as exercised at $t_n$, which may
+differ from any downstream evaluation time; $\volR^{[W]}$
+aggregates such witnesses across $W$, whereas $\volR_t$ at a
+later $t$ could have dropped below $\Delta\volL(X_n)$ if
+$Y_n$ is no longer exercised.
 
 Suppose the $N$ bundles $\{Y_n\}$ are pairwise poset-independent:
 no subsumption relation and no cooperative-composition link
@@ -160,12 +212,13 @@ for $n \neq n'$.  Then the sub-posets carried by the bundles are
 disconnected components of the sub-poset on
 $U = \bigcup_n Y_n$.  Axiom~M4
 of~\citep[Proposition~1]{lasser2026poset} makes the poset
-measure additive over poset-disjoint components; $\volR$
+measure additive over poset-disjoint components; $\volR^{[W]}$
 inherits M4 (Section~\ref{sec:axiom_inheritance},
 Theorem~\ref{thm:axiom_inheritance}), so
-$\volR(U) = \sum_n \volR(Y_n)$.  Summing the per-event bounds:
+$\volR^{[W]}(U) = \sum_n \volR^{[W]}(Y_n)$.  Summing the
+per-event bounds:
 \[
-  \volR^U \;=\; \sum_{n=1}^N \volR(Y_n)
+  \volR^{U,[W]} \;=\; \sum_{n=1}^N \volR^{[W]}(Y_n)
   \;\geq\; \sum_{n=1}^N \Delta\volL(X_n),
 \]
 establishing Part~A.

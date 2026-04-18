@@ -83,42 +83,96 @@ labels imply poset-independence of the underlying bundles
 Theorem~\ref{thm:aggregate_bound} Part~A requires.
 \end{definition}
 
-\subsection{Preservation of the lower bound}
+\subsection{Computability of the Part~A formula from committed
+events}
 
-\begin{proposition}[Commitment Preserves Part~A Lower Bound]
+\begin{proposition}[Part~A Formula is Computable from
+Committed Events]
 \label{prop:commit_preserves}
-Theorem~\ref{thm:aggregate_bound} Part~A's aggregate lower bound
-is computable from committed revealed-sacrifice events
-(Definition~\ref{def:committed_event}) without access to the
-hidden fields.  The bound depends only on the revealed fields
-$(\Delta\volL(X_n), \catY[_n], t_n)$, all of which survive the
-commitment's hiding property.
+The \emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A
+(the right-hand sum $\sum_n \Delta\volL(X_n)$ and the
+poset-independence check between bundles) can be evaluated from
+committed revealed-sacrifice events
+(Definition~\ref{def:committed_event}) without opening the
+hidden fields: the magnitudes $\Delta\volL(X_n)$ and category
+labels $\catY[_n]$ are revealed, and distinct labels imply
+poset-independent bundles via
+Definition~\ref{def:category_partition}(i).
+
+This is a \emph{computability} result, not an
+\emph{admissibility} result.  Applying
+Theorem~\ref{thm:aggregate_bound} Part~A to a batch of committed
+events additionally requires that the theorem's hypotheses
+hold---the genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event} and assumptions S0, S1, S2,
+and S4(a).  The ZK proof $\pi$ of
+Definition~\ref{def:committed_event} certifies only the
+objectively verifiable subset (S2's magnitude component, S3 for
+Part~B uses, and the bundle-containment check
+$Y_n \subseteq C_{\catY[_n]}$).  The remaining
+hypotheses---S0 (valuation-bounded-by-exercise), S1 (free
+choice), S4(a) (valuation additivity), and the
+cooperative-closure conditions (iii)--(iv)---are about
+agent-internal state or poset-structural facts the commitment
+protocol cannot itself attest
+(Remark~\ref{rem:zk_limits}).  Their validity must be
+established externally: by institutional filters on the trade
+environment, by sampled audit, or by assumption at the batch
+level.
 \end{proposition}
 
 \begin{proof}
-Part~A of Theorem~\ref{thm:aggregate_bound} asserts
-$\volR^U \geq \sum_{n=1}^N \Delta\volL(X_n)$ whenever the
-observed bundles are pairwise poset-independent.  Two quantities
-are required to evaluate the right-hand side and verify the
-independence hypothesis.
+We establish formula computability; admissibility is discussed
+in the statement and is not claimed here.
 
 \emph{(i) Sacrifice magnitudes.}
 By Definition~\ref{def:committed_event}, each committed event
 reveals $\Delta\volL(X_n)$ directly, so the aggregate
-$\sum_n \Delta\volL(X_n)$ is computable without opening the
-commitment.
+$\sum_n \Delta\volL(X_n)$ is evaluable without opening the
+commitment.  (In the hiding variant of
+Proposition~\ref{prop:zk_aggregation}, only $B$ and a ZK
+attestation $\sum_n \Delta\volL(X_n) \geq B$ are published;
+both forms expose the aggregate at the intended privacy level.)
 
-\emph{(ii) Pairwise poset-independence.}
+\emph{(ii) Pairwise poset-independence of bundles.}
 By Definition~\ref{def:category_partition}(i), any two distinct
 partition components $C_j$ and $C_k$ are poset-independent: no
 subsumption or cooperative-composition link connects any
-$c \in C_j$ to any $c' \in C_k$.  Definition~\ref{def:committed_event}(d)
-proves that $Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly
-within a single component.  If the revealed category labels
-$\catY[_n]$ are pairwise distinct across the batch, the bundles
-inherit poset-independence from the partition.  Both checks use
-only revealed fields.
+$c \in C_j$ to any $c' \in C_k$.
+Definition~\ref{def:committed_event}(d)'s ZK proof attests that
+$Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly within a
+single component.  If the revealed category labels $\catY[_n]$
+are pairwise distinct across the batch, the bundles inherit
+poset-independence from the partition.  Both checks use only
+revealed or ZK-attested fields.
+
+\emph{(iii) What is not certified.}
+Neither the above computation nor the ZK proof $\pi$ establishes
+the genuine-exchange conditions (iii)--(iv)
+(cooperative-closure across $X$/$H \setminus X$ and
+$Y$/$H \setminus X$), S0 (agent's valuation bounded by realized
+exercise), S1 (voluntariness and non-degradation), or S4(a)
+(valuation additivity over bundles).  These depend on facts
+about the agent's internal state, the pre-trade holding set,
+and the poset structure that are not exposed by the commitment.
+The Part~A bound is admissible only when those are established
+by an external mechanism (Remark~\ref{rem:external_attestation}).
 \end{proof}
+
+\begin{remark}[External attestation model]
+\label{rem:external_attestation}
+In practice, the non-ZK-verifiable hypotheses are handled at the
+institutional layer: (a)~the trade environment is filtered so
+only trades satisfying S1's non-degradation (via
+need-sufficiency thresholds, Section~\ref{sec:need_sufficiency})
+are admitted as sacrifice events; (b)~the category partition
+$\mathcal{C}$ is curated so cooperative-closure conditions
+(iii)--(iv) hold structurally; (c)~S0 and S4(a) are assumed at
+the batch level with periodic sampled-audit reconciliation.  The
+commitment layer is orthogonal: it enforces privacy and
+certifies the objective facts, but does not and cannot certify
+the behavioural and structural assumptions.
+\end{remark}
 
 \begin{remark}[Part~B requires additional committed fields]
 \label{rem:commit_part_b}

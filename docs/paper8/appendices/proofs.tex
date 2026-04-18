@@ -62,15 +62,19 @@ poset-independent bundles, genuine-exchange conditions):}
   Definition~\ref{def:sacrifice_event} conditions (i)--(iv),
   via Lemma~\ref{lem:cancellation}):
   $\Ui[_n](Y_n) \geq \Ui[_n](X_n)$.
-\item Calibration chain (S0 + S2):
-  $\volR(Y_n) \geq \Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n) \geq
-  \Delta\volL(X_n)$.
+\item Calibration chain (S0 + S2) with window-integration step:
+  $\volR^{[W]}(Y_n) \geq \volR_{t_n}(Y_n) \geq \Ui[_{n}](Y_n)
+  \geq \Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.  The
+  window-integrated form is essential: $Y_n$ is witnessed as
+  exercised at $t_n \in W$, so its contribution enters
+  $\volR^{[W]}$ but need not persist in $\volR_t$ at a later
+  evaluation time (Definition~\ref{def:volR}).
 \item Poset-independence of bundles
   (Definition~\ref{def:category_partition}) gives M4 additivity
   (inheritance proved in Theorem~\ref{thm:axiom_inheritance}
   via sub-poset restriction):
-  $\volR(\bigcup Y_n) = \sum_n \volR(Y_n) \geq \sum_n
-  \Delta\volL(X_n)$.
+  $\volR^{[W]}(\bigcup Y_n) = \sum_n \volR^{[W]}(Y_n) \geq
+  \sum_n \Delta\volL(X_n)$.
 \end{enumerate}
 
 \emph{Part~B (per-capability refinement, additionally S3--S5;
