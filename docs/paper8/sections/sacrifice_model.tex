@@ -55,9 +55,57 @@ The event emits the signal:
 under assumptions S0 (calibration), S1 (free choice), S2
 (benchmark grounding), and S4(a) (valuation additivity) stated
 below.  S4(a) is needed for the exchange-to-bundle cancellation
-that reduces the revealed-preference inequality from a state
-comparison to a bundle comparison.
+(Lemma~\ref{lem:cancellation}).
 \end{definition}
+
+\begin{lemma}[Exchange-to-Bundle Cancellation]
+\label{lem:cancellation}
+Let $H$ be a finite capability holding set with $X \subseteq H$,
+and let $Y$ be a finite capability set satisfying the
+genuine-exchange conditions of
+Definition~\ref{def:sacrifice_event} relative to $H$:
+(i)~$X \cap Y = \emptyset$;
+(ii)~$Y \cap (H \setminus X) = \emptyset$;
+(iii)~no cooperative capability in the poset has participants
+spanning both $Y$ and $H \setminus X$.
+Under S4(a) (global valuation additivity:
+$\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
+$S \subseteq P$, with cooperative capabilities included as
+explicit nodes in $S$ when their participants are all in $S$):
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
+  \;=\; \Ui(Y) - \Ui(X).
+\]
+Equivalently,
+$\Ui((H \setminus X) \cup Y) \geq \Ui(H)
+\iff \Ui(Y) \geq \Ui(X)$.
+\end{lemma}
+
+\begin{proof}
+By S4(a), $\Ui(A) = \sum_{c \in A} u_i(c)$ for any finite
+capability set $A$.  The post-trade holding set decomposes as a
+disjoint union by (ii): $(H \setminus X) \cup Y = (H \setminus
+X) \sqcup Y$.  Additivity gives
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr)
+  = \sum_{c \in H \setminus X} u_i(c) + \sum_{c \in Y} u_i(c).
+\]
+The pre-trade holding set decomposes as $H = (H \setminus X)
+\sqcup X$ (since $X \subseteq H$), so
+$\Ui(H) = \sum_{c \in H \setminus X} u_i(c) + \sum_{c \in X}
+u_i(c)$.
+Subtracting, the $H \setminus X$ terms cancel, leaving
+$\Ui((H \setminus X) \cup Y) - \Ui(H) = \Ui(Y) - \Ui(X)$.
+Condition (iii) ensures that the cooperative capabilities
+implicitly included in each term (via S4(a)) are those
+formable within $Y$ alone or within $H \setminus X$ alone;
+no cross-set cooperative capability appears in
+$(H \setminus X) \cup Y$ without already appearing in one of
+the pre-existing summands.  Condition (i) makes $\Ui(Y)$ and
+$\Ui(X)$ refer to distinct capability sets; violating (i) would
+cause $X \cap Y$ terms to cancel trivially on both sides,
+yielding no information.
+\end{proof}
 
 \paragraph{Justification (revealed-preference inequality).}
 The transfer from the observed trade to the framework-level
@@ -73,49 +121,11 @@ steps.
   $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
   where $H$ is the agent's pre-trade holdings.
 
-\item \textbf{Reduction to bundle-level comparison via valuation
-  additivity (S4(a)) and the genuine-exchange conditions.}
-  Under S4(a)---the assumption that $\Ui$ is additive across any
-  finite capability set (stated below)---and the genuine-exchange
-  conditions in Definition~\ref{def:sacrifice_event}
-  (disjointness (i)--(ii) plus cooperative closure (iii)), the
-  exchange comparison reduces by cancellation to a bundle
-  comparison:
-  \[
-    \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
-    = \Ui(Y) - \Ui(X),
-  \]
-  so $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
-  \iff \Ui(Y) \geq \Ui(X)$.  All three conditions contribute:
-  \begin{itemize}
-  \item (i) rules out the $X \cap Y$ overlap that would cancel
-    trivially and yield no information.
-  \item (ii) rules out the $Y \cap (H \setminus X)$ overlap
-    that would produce no new utility because the agent already
-    held those capabilities.
-  \item (iii) rules out cooperative-cross-term activations:
-    without it, $\Ui((H \setminus X) \cup Y)$ would include
-    utility from new cooperative capabilities formed by combining
-    $Y$-elements with $H \setminus X$-elements, breaking the
-    cancellation (the agent's willingness-to-pay would reflect
-    the marginal contribution of $Y$ in context rather than
-    $\Ui(Y)$ in isolation).
-  \end{itemize}
-  S4(a) is a global additive-separability assumption on $\Ui$.
-  It is stronger than the rationality-only premises of
-  Samuelson's original revealed-preference
-  theorem~\citep{samuelson1938note}, which establishes
-  preferences over states rather than additivity over bundles.
-  In applied microeconomics~\citep{mascolell1995microeconomic},
-  bundle-level inference of the kind the sacrifice channel
-  performs typically invokes either additive separability or
-  quasilinearity in a numeraire.  The paper uses a special case
-  implicitly via the time-sacrifice channel
-  (Definition~\ref{def:time_sacrifice}), which values time at
-  wage rate $r_i$---quasilinearity in wage-scaled time, a form
-  of valuation additivity.  S4(a) is the explicit assumption
-  that makes the exchange-to-bundle cancellation go through; it
-  is not a consequence of S0--S3.
+\item \textbf{Reduction to bundle-level comparison.}
+  By Lemma~\ref{lem:cancellation} under S4(a) and the
+  genuine-exchange conditions of
+  Definition~\ref{def:sacrifice_event}, the exchange comparison
+  reduces to $\Ui(Y) \geq \Ui(X)$.
 
 \item \textbf{Calibration chain.}
   Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
@@ -134,15 +144,32 @@ steps.
   \Delta\volL(X)$.
 \end{enumerate}
 
-\noindent
+\begin{remark}[S4(a) is a genuine assumption, not a consequence]
+\label{rem:s4a_status}
+S4(a) is a global additive-separability assumption on $\Ui$.
+It is stronger than the rationality-only premises of Samuelson's
+original revealed-preference
+theorem~\citep{samuelson1938note}, which establishes preferences
+over states rather than additivity over bundles.  In applied
+microeconomics~\citep{mascolell1995microeconomic}, bundle-level
+inference of the kind the sacrifice channel performs typically
+invokes either additive separability or quasilinearity in a
+numeraire.  The paper uses a special case implicitly via the
+time-sacrifice channel (Definition~\ref{def:time_sacrifice}),
+which values time at wage rate $r_i$---quasilinearity in
+wage-scaled time, a form of valuation additivity.  S4(a) is the
+explicit assumption that makes Lemma~\ref{lem:cancellation} go
+through; it is not a consequence of S0--S3.
+
 Complementarities that would break pure additivity in general
-consumer theory are absorbed into the poset as cooperative nodes
-via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
-capabilities are themselves capabilities with their own
-weights, so bundle-specific cooperative contributions appear as
-separate summands in $\Ui$.  S4(a)'s additivity is compatible
-with this structure because cooperative terms are explicit
-capabilities, not hidden non-linearities.
+consumer theory are absorbed into the poset as cooperative
+nodes via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
+capabilities are themselves capabilities with their own weights,
+so bundle-specific cooperative contributions appear as separate
+summands in $\Ui$.  S4(a)'s additivity is compatible with this
+structure because cooperative terms are explicit capabilities,
+not hidden non-linearities.
+\end{remark}
 
 \subsection{Assumptions}
 \label{sec:assumptions}
@@ -337,13 +364,25 @@ $\Gamma = \Commit\bigl((\Delta\volL(X), \catY), r\bigr)$
 using the protocol of~\citep[Definition~6]{lasser2026exo},
 accompanied by a zero-knowledge
 proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds a
-valid trade satisfying the objectively verifiable assumptions
-(S2~objective, S3, S4(b) via poset structure).
+valid revealed-sacrifice event: the event-local objectively
+verifiable facts---non-negativity of $\Delta\volL(X_n)$, bundle
+containment $Y_n \subseteq C_{\catY[_n]}$
+(Definition~\ref{def:committed_event}(d)), bundle coherence S3,
+and a verifiable link to an underlying trade record.  This is
+the event-level certification; S4(b) is not an event-level
+property but a batch-level structural fact about the category
+partition, established via pairwise-distinct category labels in
+Proposition~\ref{prop:zk_aggregation} and inherited from the
+poset-independence of distinct partition components
+(Definition~\ref{def:category_partition}(i)).  S0, S1, S4(a),
+and S5 are \emph{not} ZK-verifiable
+(Remark~\ref{rem:zk_limits}).
 Proposition~\ref{prop:commit_preserves} establishes that the
-Part~A aggregate bound is computable from committed events alone.
-The committed form reveals only the sacrifice magnitude and
-bundle category; agent identity, specific $X$ and $Y$, and
-counterparty remain hidden by the hiding property of
+Part~A aggregate bound is computable from committed events
+together with the category-partition structure.  The committed
+form reveals only the sacrifice magnitude and bundle category;
+agent identity, specific $X$ and $Y$, and counterparty remain
+hidden by the hiding property of
 $\Commit$~\citep{goldwasser1985knowledge}.
 \end{proof}
 
