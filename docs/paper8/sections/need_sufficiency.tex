@@ -79,17 +79,21 @@ so that benchmark maximization aligns with cost minimization.
 \label{def:downstream_safe}
 Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
 the class of pathways satisfying each dimension of~$N$ at exactly
-its sufficiency threshold (assumed non-empty, i.e., at least one
-threshold-level pathway exists).  Need $N$ at position $p_N$ is
+its sufficiency threshold (assumed non-empty).  Let
+$\Pi_N^{\mathrm{ref}} \subseteq \Pi_N^0$ be a non-empty
+\emph{admissible reference set}, designated externally by
+governance (Remark~\ref{rem:reference_pathway}): the
+threshold-level pathways against which downstream non-degradation
+is evaluated.  Need $N$ at position $p_N$ is
 \emph{downstream-safe sufficient} under satisfaction pathway
 $\pi_N$ iff:
 \begin{enumerate}
 \item[(a)] \textbf{Bundle thresholds met:}
   $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
   dimensions inverted per Definition~\ref{def:need_bundle}).
-\item[(b)] \textbf{Downstream non-degradation:} There exists a
-  threshold-level reference pathway $\pi^* \in \Pi_N^0$ such that
-  $\pi_N$ dominates $\pi^*$ on every downstream capability
+\item[(b)] \textbf{Downstream non-degradation against all
+  admissible references:} $\pi_N$ dominates \emph{every}
+  $\pi^* \in \Pi_N^{\mathrm{ref}}$ on every downstream capability
   simultaneously:
   \[
     \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
@@ -97,27 +101,38 @@ $\pi_N$ iff:
     \;\geq\;
     \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
     \pi^*\bigr)
-    \qquad \text{for all } c \in \Down(p_N).
+    \qquad \text{for all } c \in \Down(p_N)
+    \text{ and all } \pi^* \in \Pi_N^{\mathrm{ref}}.
   \]
 \end{enumerate}
-The existential $\pi^*$ captures the intent ``the actual pathway
-is at least as good as \emph{some} canonical threshold-level
-pathway on every downstream capability.''  Using a single
-reference $\pi^*$ rather than a coordinatewise supremum over
-$\Pi_N^0$ ensures the reference is a realizable pathway, not a
-pointwise envelope that no single pathway achieves.
+The universal quantifier over $\Pi_N^{\mathrm{ref}}$ is
+load-bearing: a merely existential condition (``dominate
+\emph{some} threshold-level pathway'') would admit materially
+degrading pathways that happen to beat a pathologically weak
+reference.  Under the common singleton case
+$\Pi_N^{\mathrm{ref}} = \{\pi_N^{\mathrm{ref}}\}$, the condition
+reduces to dominance against one canonical baseline.  Each
+element of $\Pi_N^{\mathrm{ref}}$ must be a realizable pathway,
+not a coordinatewise supremum over $\Pi_N^0$ that no single
+pathway achieves.
 \end{definition}
 
-\begin{remark}[Governance-chosen reference pathway]
+\begin{remark}[Governance designates the admissible reference
+set]
 \label{rem:reference_pathway}
-Institutions typically adopt a specific reference pathway as
-the canonical baseline (``standard of care'' in medicine, ``best
-available technology'' in environmental policy); the existential
-$\pi^*$ in Definition~\ref{def:downstream_safe} corresponds to
-this practice.  The framework does not require a unique canonical
-$\pi^*$---different disciplines may canonicalize differently---but
-it does require that \emph{some} threshold-level pathway be
-exhibited as the reference against which $\pi_N$ is compared.
+The admissible reference set $\Pi_N^{\mathrm{ref}}$ is a public
+governance input, not a framework-computed object.  Institutions
+typically adopt a specific reference pathway as the canonical
+baseline (``standard of care'' in medicine, ``best available
+technology'' in environmental policy); in those settings
+$\Pi_N^{\mathrm{ref}}$ is a singleton.  Multi-reference settings
+arise when different disciplines canonicalize differently and
+$\pi_N$ must satisfy all of them simultaneously; the
+downstream-safety condition then requires robust dominance over
+every admissible baseline.  Governance may update
+$\Pi_N^{\mathrm{ref}}$ over time as standards evolve; the
+framework reads the current $\Pi_N^{\mathrm{ref}}$ at evaluation
+time and does not attempt to re-derive it from first principles.
 \end{remark}
 
 \begin{remark}[Structural connection to exercise-pathway machinery]
@@ -137,8 +152,8 @@ of~\citep[Definition~3]{lasser2026horizon}.  Concentration risk
 is a scalar worst-case contraction estimate over an entire
 pathway; downstream-safety is a per-capability quality
 comparison $\mathrm{quality}_c(\pi_N) \geq \mathrm{quality}_c(\pi^*)$
-against a chosen reference pathway $\pi^* \in \Pi_N^0$, indexed
-by $c \in \Down(p_N)$.  Neither reduces to the other.
+against every reference pathway $\pi^* \in \Pi_N^{\mathrm{ref}}$,
+indexed by $c \in \Down(p_N)$.  Neither reduces to the other.
 Evaluating $\mathrm{quality}_c(\pi_N)$ in practice requires
 either (i) direct observation of $c$'s performance conditional on
 the pathway, or (ii) structural inference from the poset's
