@@ -238,10 +238,16 @@ The \emph{effective weight} of $c$ is:
   \prod_{N \in \mathcal{N}(c)} G\bigl(s_N(c)\bigr),
 \]
 where $G : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
-$G(1) = 1$, $G(0) = 0$, $G$ monotone non-decreasing, and $G$
-right-continuous at $s = 0$ (so $\lim_{s \to 0^+} G(s) = 0$).
-The four candidate gates of Remark~\ref{rem:gate_candidates} all
-satisfy right-continuity; step-function gates are excluded.
+$G(1) = 1$, $G(0) = \alpha_0 \in [0, 1)$ (the gate's
+\emph{floor}), $G$ monotone non-decreasing, and $G$
+right-continuous at $s = 0$ (so $\lim_{s \to 0^+} G(s) =
+\alpha_0$).  A gate with $\alpha_0 = 0$ is called a
+\emph{zero-floor gate}; a gate with $\alpha_0 > 0$ is called a
+\emph{positive-floor gate}.  The four candidate gates of
+Remark~\ref{rem:gate_candidates} all satisfy right-continuity;
+step-function gates are excluded.  Linear, ReLU, and power-law
+gates are zero-floor; leaky-ReLU with parameter $\alpha > 0$ is
+positive-floor with $\alpha_0 = \alpha$.
 
 The effective capability volume is:
 \[
@@ -285,9 +291,9 @@ subsequent results for any valid $G$.
 \begin{proposition}[Near-Total Collapse Under Unmet Need]
 \label{prop:near_total_collapse}
 Let $G$ be any valid gate function
-(Definition~\ref{def:downstream_gate}), and suppose
-$s_N(c) \equiv s_N$ for all $c \in \Down(p_N)$ (homogeneous
-sufficiency).  Partition the poset as
+(Definition~\ref{def:downstream_gate}) with floor $\alpha_0 =
+G(0) \in [0, 1)$, and suppose $s_N(c) \equiv s_N$ for all $c \in
+\Down(p_N)$ (homogeneous sufficiency).  Partition the poset as
 $P = \Down(p_N) \sqcup \overline{\Down(p_N)}$, with weight sums
 $W_{\mathrm{down}} = \sum_{c \in \Down(p_N)} w(c)$ and
 $W_{\mathrm{out}} = \sum_{c \in \overline{\Down(p_N)}} w(c)$, so
@@ -297,16 +303,33 @@ If the agent is at sufficiency level $s_N < 1$:
   \volL^{\mathrm{eff}}(G)
   \;\leq\; G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
-As $s_N \to 0$, $G(s_N) \to 0$ and the downstream contribution
-vanishes: $\volL^{\mathrm{eff}} \to W_{\mathrm{out}}$.  When
-$W_{\mathrm{down}} \gg W_{\mathrm{out}}$ (most of the agent's
-capability-weight lies in the downstream cone), the effective
-volume collapses to a small fraction of its unrestricted value.
+
+\medskip\noindent
+\textbf{Collapse limits.}
+As $s_N \to 0$, $G(s_N) \to \alpha_0$ by right-continuity:
+\begin{itemize}
+\item \emph{Zero-floor gate} ($\alpha_0 = 0$): the downstream
+  contribution vanishes, $\volL^{\mathrm{eff}} \to
+  W_{\mathrm{out}}$.  When $W_{\mathrm{down}} \gg
+  W_{\mathrm{out}}$, the effective volume collapses to a small
+  fraction of its unrestricted value.
+\item \emph{Positive-floor gate} ($\alpha_0 > 0$): the
+  downstream contribution collapses to its floor,
+  $\volL^{\mathrm{eff}} \to \alpha_0 W_{\mathrm{down}} +
+  W_{\mathrm{out}}$.  The effective volume retains a positive
+  fraction $\alpha_0$ of downstream weight even under fully
+  unmet need.
+\end{itemize}
+
+\medskip\noindent
 The multiplicative structure makes need-satisfaction a
-precondition for $\volL$ to register the downstream portion of
-the agent's capabilities; an agent cannot maximize
-$\volL^{\mathrm{eff}}$ without first closing sufficiency gaps on
-needs whose downstream cones cover their capability-weight.
+precondition for $\volL$ to register the \emph{full} downstream
+portion of the agent's capabilities; an agent cannot maximize
+$\volL^{\mathrm{eff}}$ without closing sufficiency gaps on needs
+whose downstream cones cover their capability-weight.  Whether
+unmet need collapses the downstream contribution \emph{entirely}
+or only to the floor $\alpha_0 W_{\mathrm{down}}$ is a design
+choice governed by the gate's floor parameter.
 \end{proposition}
 
 \begin{proof}
@@ -324,23 +347,32 @@ G(s_{N'}(c)) \leq w(c)$.  Summing the two cases:
        \;+\; \!\!\sum_{c \in \overline{\Down(p_N)}}\!\! w(c)
   = G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
-$G$ monotone non-decreasing with $G(0) = 0$ gives
-$\lim_{s_N \to 0} G(s_N) = 0$, so the downstream term vanishes.
+Right-continuity of $G$ at $0$ gives $\lim_{s_N \to 0^+} G(s_N)
+= G(0) = \alpha_0$, so the downstream term tends to $\alpha_0
+W_{\mathrm{down}}$: zero for zero-floor gates, the floor value
+for positive-floor gates.
 \end{proof}
 
-\begin{remark}[The non-downstream floor is real]
+\begin{remark}[The non-downstream floor and the gate floor]
 \label{rem:nondownstream_floor}
-The bound has an irreducible $W_{\mathrm{out}}$ term: effective
-volume does not collapse \emph{to zero} under unmet need, but
-to the weight of capabilities that do not depend on $N$.  The
-worked table in Remark~\ref{rem:gate_comparison} exhibits this
-explicitly: the three non-downstream capabilities contribute
-$3/13 \approx 0.231$ at $s_N = 0$ across all gate choices,
-representing $W_{\mathrm{out}} / \volL^{\mathrm{raw}}$ for that
-configuration.  The proposition's force comes from the typical
-case where needs have broad downstream cones
-($W_{\mathrm{down}} \gg W_{\mathrm{out}}$); in that regime the
-collapse approaches total in the limit $s_N \to 0$.
+Two floors appear at $s_N = 0$: the always-present
+\emph{non-downstream} floor $W_{\mathrm{out}}$ (capabilities
+not depending on $N$, which no gate can suppress), and the
+gate-dependent \emph{downstream floor} $\alpha_0
+W_{\mathrm{down}}$ (which is zero for zero-floor gates and
+$\alpha \cdot W_{\mathrm{down}}$ for leaky-ReLU with leak
+$\alpha > 0$).  The worked table in
+Remark~\ref{rem:gate_comparison} exhibits both: at $s_N = 0$,
+linear, ReLU, and power-law gates give $0.231 =
+W_{\mathrm{out}}/\volL^{\mathrm{raw}} = 3/13$ (only the
+non-downstream floor), while leaky-ReLU with $\alpha = 0.1$
+gives $0.308 = (3 + 10 \cdot 0.1)/13 = (W_{\mathrm{out}} +
+\alpha_0 W_{\mathrm{down}})/\volL^{\mathrm{raw}}$ (both floors).
+The proposition's ``total collapse'' force applies to zero-floor
+gates with $W_{\mathrm{down}} \gg W_{\mathrm{out}}$; for
+positive-floor gates, the collapse is bounded below by the
+gate's floor regardless of $W_{\mathrm{down}}/W_{\mathrm{out}}$
+ratio.
 \end{remark}
 
 \begin{proposition}[Need-Dominance in the Gradient]
