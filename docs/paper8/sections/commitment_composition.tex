@@ -87,17 +87,20 @@ Theorem~\ref{thm:aggregate_bound} Part~A requires.
 events}
 
 \begin{proposition}[Part~A Formula is Computable from
-Committed Events]
+Committed Events on Distinct-Category Batches]
 \label{prop:commit_preserves}
-The \emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A
-(the right-hand sum $\sum_n \Delta\volL(X_n)$ and the
-poset-independence check between bundles) can be evaluated from
-committed revealed-sacrifice events
-(Definition~\ref{def:committed_event}) without opening the
-hidden fields: the magnitudes $\Delta\volL(X_n)$ and category
+For a batch of committed revealed-sacrifice events
+(Definition~\ref{def:committed_event}) whose revealed category
+labels $\{\catY[_n]\}$ are \emph{pairwise distinct}, the
+\emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A---the
+right-hand sum $\sum_n \Delta\volL(X_n)$ together with the
+poset-independence check between bundles---is evaluable without
+opening the hidden fields: the magnitudes $\Delta\volL(X_n)$ and
 labels $\catY[_n]$ are revealed, and distinct labels imply
 poset-independent bundles via
-Definition~\ref{def:category_partition}(i).
+Definition~\ref{def:category_partition}(i).  Batches with
+colliding labels fall outside this certificate and must be
+handled separately (Remark~\ref{rem:label_collision}).
 
 This is a \emph{computability} result, not an
 \emph{admissibility} result.  Applying
@@ -134,17 +137,29 @@ Proposition~\ref{prop:zk_aggregation}, only $B$ and a ZK
 attestation $\sum_n \Delta\volL(X_n) \geq B$ are published;
 both forms expose the aggregate at the intended privacy level.)
 
-\emph{(ii) Pairwise poset-independence of bundles.}
+\emph{(ii) Pairwise poset-independence of bundles (distinct
+labels).}
 By Definition~\ref{def:category_partition}(i), any two distinct
 partition components $C_j$ and $C_k$ are poset-independent: no
 subsumption or cooperative-composition link connects any
 $c \in C_j$ to any $c' \in C_k$.
 Definition~\ref{def:committed_event}(d)'s ZK proof attests that
 $Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly within a
-single component.  If the revealed category labels $\catY[_n]$
-are pairwise distinct across the batch, the bundles inherit
+single component.  Under the pairwise-distinct-label
+hypothesis, the bundles lie in distinct components and inherit
 poset-independence from the partition.  Both checks use only
 revealed or ZK-attested fields.
+
+When two events share the same category label
+$\catY[_{n}] = \catY[_{n'}]$, both bundles lie inside the same
+partition component $C_j$; poset-independence between
+$Y_n, Y_{n'} \subseteq C_j$ is a finer fact about sub-structure
+within~$C_j$ that Definition~\ref{def:committed_event} does not
+attest.  The distinct-label certificate is therefore a
+\emph{sufficient} certificate for Part~A's
+poset-independence hypothesis, not a \emph{necessary} one; see
+Remark~\ref{rem:label_collision} for how to handle batches with
+colliding labels.
 
 \emph{(iii) What is not certified.}
 Neither the above computation nor the ZK proof $\pi$ establishes
@@ -172,6 +187,46 @@ the batch level with periodic sampled-audit reconciliation.  The
 commitment layer is orthogonal: it enforces privacy and
 certifies the objective facts, but does not and cannot certify
 the behavioural and structural assumptions.
+\end{remark}
+
+\begin{remark}[Handling category-label collisions]
+\label{rem:label_collision}
+When two committed events share a category label,
+Proposition~\ref{prop:commit_preserves}'s distinct-label
+certificate does not apply to that pair: both bundles lie in
+the same partition component $C_j$, and poset-independence
+between same-component subsets is finer structure than the
+commitment interface exposes.  Three operational responses are
+available without weakening the theorem:
+\begin{enumerate}
+\item[(a)] \emph{Sub-batch partitioning.} Partition the batch
+  into maximal sub-batches whose labels are pairwise distinct
+  and compute Part~A separately per sub-batch.  The resulting
+  lower bounds are valid for each sub-batch's covered subset;
+  the full-batch aggregate is the sum across sub-batches only
+  when the sub-batches are themselves poset-independent, which
+  is guaranteed when sub-batches are built from distinct
+  partition components.  A single-component batch with multiple
+  events yields at most the per-event Part~A bound,
+  $\volR(Y_n) \geq \Delta\volL(X_n)$ for each $n$; aggregation
+  requires the additional independence.
+\item[(b)] \emph{Finer partition.}  Refine the public partition
+  $\mathcal{C}$ to sub-components such that typical batch
+  collisions become distinct-label pairs.  This is a governance
+  choice trading category-granularity against commitment
+  complexity.
+\item[(c)] \emph{Richer commitments.}  Extend
+  Definition~\ref{def:committed_event} to attest explicit
+  subset-disjointness or cooperative-closure of $Y_n, Y_{n'}$
+  within their shared component $C_j$.  This is the path
+  Part~B's per-capability certificate (Remark~\ref{rem:commit_part_b})
+  also walks.
+\end{enumerate}
+The paper's stated results use option~(a) implicitly:
+Proposition~\ref{prop:zk_aggregation}'s ZK-aggregation rollup
+explicitly proves pairwise-distinct labels as part of its
+(ii), matching the distinct-batch certificate of
+Proposition~\ref{prop:commit_preserves}.
 \end{remark}
 
 \begin{remark}[Part~B requires additional committed fields]

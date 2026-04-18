@@ -450,11 +450,15 @@ poset-independence of distinct partition components
 and S5 are \emph{not} ZK-verifiable
 (Remark~\ref{rem:zk_limits}).
 Proposition~\ref{prop:commit_preserves} establishes that the
-Part~A aggregate bound is computable from committed events
-together with the category-partition structure.  The committed
-form reveals only the sacrifice magnitude and bundle category;
-agent identity, specific $X$ and $Y$, and counterparty remain
-hidden by the hiding property of
+Part~A aggregate bound is computable from committed events with
+\emph{pairwise-distinct} category labels, together with the
+category-partition structure; batches with colliding labels
+require the operational responses of
+Remark~\ref{rem:label_collision} (sub-batch partitioning, finer
+public partition, or richer commitments).  The committed form
+reveals only the sacrifice magnitude and bundle category; agent
+identity, specific $X$ and $Y$, and counterparty remain hidden
+by the hiding property of
 $\Commit$~\citep{goldwasser1985knowledge}.
 \end{proof}
 
