@@ -101,10 +101,13 @@ observation-channel outputs the framework actually computes.
 
 \begin{definition}[Event-Local Bundle Decomposition]
 \label{def:bundle_decomp}
-For each revealed-sacrifice event $(i_n, X_n, Y_n, t_n)$, define
-the \emph{event-local} decomposition coefficients
-$\alpha_{n,c} \geq 0$ for each capability $c \in Y_n$,
-satisfying:
+For each revealed-sacrifice event $(i_n, X_n, Y_n, t_n)$ whose
+bundle $Y_n$ is \emph{within-bundle poset-independent} (no
+subsumption relations and no cooperative-composition links among
+the capabilities in $Y_n$; see
+Definition~\ref{def:category_partition}(i) applied internally to
+$Y_n$), define the \emph{event-local} decomposition coefficients
+$\alpha_{n,c} \geq 0$ for each capability $c \in Y_n$, satisfying:
 \[
   \sum_{c \in Y_n} \alpha_{n,c} = 1
   \qquad\text{(partition of unity within the bundle)}.
@@ -117,7 +120,37 @@ be obtained from prior hedonic
 regression~\citep{rosen1974hedonic} on similar trades, domain
 knowledge, or the equal-weight default
 $\alpha_{n,c} = 1/|Y_n|$.
+
+Within-bundle poset-independence is the hypothesis that makes
+the partition of unity compatible with S5's share inequality.
+Under within-bundle independence, no cooperative node activates
+from within $Y_n$, so
+$\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$ by axiom~M4, and S5's
+$\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$ sums to at most one
+across $c \in Y_n$ with equality achievable.  Bundles with
+internal cooperative activation fall back to Part~A only (see
+Remark~\ref{rem:within_bundle_indep}).
 \end{definition}
+
+\begin{remark}[Why within-bundle independence is a Part~B
+hypothesis]
+\label{rem:within_bundle_indep}
+If $Y_n$ contains capabilities $a, b$ whose cooperative
+composition $z$ has all participants in $Y_n$, then S4(a)
+(Section~\ref{sec:assumptions}) treats $z$ as an explicit
+bundle summand, so
+$\volR(Y_n) = \volR(a) + \volR(b) + \volR(z) > \sum_{c \in Y_n}
+\volR(c)$.  S5's share inequality $\alpha_{n,c} \leq
+\volR(c)/\volR(Y_n)$ is then forced below $\volR(c)/(\volR(a) +
+\volR(b) + \volR(z))$ for each atomic $c \in Y_n$, and
+$\sum_{c \in Y_n} \alpha_{n,c} \leq [\volR(a) +
+\volR(b)]/\volR(Y_n) < 1$, contradicting the partition of
+unity.  Part~B's per-capability attribution therefore requires
+within-bundle poset-independence.  Part~A places no such
+constraint: its bundle-level bound $\volR(Y_n) \geq
+\Delta\volL(X_n)$ is valid regardless of internal cooperative
+structure.
+\end{remark}
 
 \begin{remark}[Event-local versus global regression]
 Classical hedonic regression~\citep{rosen1974hedonic} fits a
@@ -164,9 +197,13 @@ of observed sacrifice magnitude.
 
 \medskip\noindent
 \textbf{Part~B (Conditional refinement --- per-capability
-attribution; requires S0--S5).}
-When bundles overlap and per-capability attribution is desired,
-define for each capability $c \in U$:
+attribution; requires S0--S5 and within-bundle
+poset-independence).}
+Restrict attention to events $n$ whose bundles $Y_n$ are
+within-bundle poset-independent
+(Definition~\ref{def:bundle_decomp}).  When bundles overlap and
+per-capability attribution is desired, define for each capability
+$c \in U$:
 \[
   \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
   \alpha_{n,c} \cdot \Delta\volL(X_n).
@@ -229,27 +266,37 @@ per-event bounds:
 establishing Part~A.
 
 \emph{Part~B.}
-Part~B is stated for events with $\Delta\volL(X_n) > 0$; events
-with zero sacrifice carry no information and contribute trivially
-zero to the per-capability aggregate.  Fix such an event $n$ and
-its bundle $Y_n$.  By Part~A, $\volR(Y_n) \geq \Delta\volL(X_n)
-> 0$, so $\volR(Y_n) > 0$ and division is well-defined.  S3
-(bundle coherence) additionally ensures the hedonic decomposition
-of $Y_n$ is non-degenerate, so $\alpha_{n,c}$ is well-specified.
-S5 asserts that the event-local coefficients are lower bounds on
-the true share of the aggregate $\volR(Y_n)$:
+Part~B is stated for events with $\Delta\volL(X_n) > 0$ and
+bundles $Y_n$ that are within-bundle poset-independent
+(Definition~\ref{def:bundle_decomp}); events with zero sacrifice
+carry no information, and bundles with internal cooperative
+activation fall back to Part~A
+(Remark~\ref{rem:within_bundle_indep}).  Fix an admissible event
+$n$ and its bundle $Y_n$.  By Part~A, $\volR(Y_n) \geq
+\Delta\volL(X_n) > 0$, so $\volR(Y_n) > 0$ and division is
+well-defined.  S3 (bundle coherence) additionally ensures the
+hedonic decomposition of $Y_n$ is non-degenerate, so
+$\alpha_{n,c}$ is well-specified.
+
+Within-bundle poset-independence plus~M4
+(Section~\ref{sec:axiom_inheritance},
+Theorem~\ref{thm:axiom_inheritance}) gives
+$\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$: no cooperative node
+activates from within $Y_n$, so the bundle's $\volR$ decomposes
+atomically.  S5 then asserts that the event-local coefficients
+are lower bounds on the true atomic shares:
 \[
   \alpha_{n,c} \;\leq\; \volR(c) / \volR(Y_n),
-  \qquad c \in Y_n.
+  \qquad c \in Y_n,
 \]
-Rearranging and applying the Part~A per-event bound:
+which is feasible with $\sum_{c \in Y_n} \alpha_{n,c} = 1$
+precisely under within-bundle independence.  Rearranging and
+applying the Part~A per-event bound:
 \[
   \volR(c) \;\geq\; \alpha_{n,c} \cdot \volR(Y_n)
   \;\geq\; \alpha_{n,c} \cdot \Delta\volL(X_n),
 \]
-for every $c \in Y_n$.  No within-bundle independence hypothesis
-is needed: S5 is a direct share inequality, not a decomposition
-identity.  If $c$ appears in multiple observed
+for every $c \in Y_n$.  If $c$ appears in multiple admissible
 bundles, each quantity $\alpha_{n,c} \cdot \Delta\volL(X_n)$ is a
 valid lower bound on $\volR(c)$; taking the maximum preserves
 validity:

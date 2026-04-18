@@ -281,11 +281,19 @@ per-capability attribution claim and does not require S5.
 Part~B's per-capability refinement should be understood as a
 \emph{conditional result}: under the additional structural
 assumption that decomposition coefficients are conservative
-share lower bounds, the aggregate can be refined to per-capability
-bounds.  Operationally, S5 holds when decomposition coefficients
-are set via conservative heuristics (e.g., equal-weight default
-$\alpha_{n,c} = 1/|Y_n|$ when $Y_n$ is a small homogeneous
-bundle, known-bias corrections from prior
+share lower bounds, \emph{and} the hypothesis of within-bundle
+poset-independence (Definition~\ref{def:bundle_decomp},
+Remark~\ref{rem:within_bundle_indep}), the aggregate can be
+refined to per-capability bounds.  Within-bundle
+poset-independence is what makes S5's share inequality
+compatible with the partition-of-unity constraint on the
+$\alpha$ coefficients: bundles with internal cooperative
+activation produce $\volR(Y_n) > \sum_{c \in Y_n} \volR(c)$,
+forcing $\sum_{c \in Y_n} \alpha_{n,c} < 1$ under S5 and
+violating Definition~\ref{def:bundle_decomp}.  Operationally, S5 holds when
+decomposition coefficients are set via conservative heuristics
+(e.g., equal-weight default $\alpha_{n,c} = 1/|Y_n|$ when $Y_n$
+is a small homogeneous bundle, known-bias corrections from prior
 hedonic~\citep{rosen1974hedonic} regressions) rather than via
 fitted models that could overstate individual capability
 contributions.
@@ -296,10 +304,12 @@ S0--S2 and S4(a): S4(a) is the valuation-additivity assumption
 used in the exchange-to-bundle reduction of the revealed-
 preference inequality (Step~2 of the justification above).
 Part~B additionally requires S3 (bundle coherence), S4(b)
-($\volR$ additivity on poset-independent capabilities), and S5
-(decomposition validity).  The need-sufficiency architecture of
-the next section characterizes when S1 fails structurally and
-provides the filter that keeps the sacrifice channel clean.
+($\volR$ additivity on poset-independent capabilities), S5
+(decomposition validity), and within-bundle poset-independence
+of each admissible $Y_n$ (Definition~\ref{def:bundle_decomp}).
+The need-sufficiency architecture of the next section
+characterizes when S1 fails structurally and provides the filter
+that keeps the sacrifice channel clean.
 
 \begin{remark}[S0 is the substantive bridge, not a calibration
 detail]

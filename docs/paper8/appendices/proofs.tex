@@ -79,18 +79,26 @@ poset-independent bundles, genuine-exchange conditions):}
   \sum_n \Delta\volL(X_n)$.
 \end{enumerate}
 
-\emph{Part~B (per-capability refinement, additionally S3--S5;
-conditional on S5, see Remark~\ref{rem:s5_heavy}):}
+\emph{Part~B (per-capability refinement, additionally S3--S5 and
+within-bundle poset-independence; conditional on S5, see
+Remark~\ref{rem:s5_heavy}):}
 \begin{enumerate}
 \setcounter{enumi}{3}
-\item Part~B is stated for events with $\Delta\volL(X_n) > 0$;
-  positivity $\volR(Y_n) > 0$ then follows from Part~A.
-\item S5 gives directly $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$
-  (a share inequality, not a decomposition identity), yielding
-  $\volR(c) \geq \alpha_{n,c} \cdot \Delta\volL(X_n)$ without
-  requiring within-bundle poset-independence.  S3 (bundle
-  coherence) ensures the hedonic decomposition is non-degenerate
-  so $\alpha_{n,c}$ is well-specified.
+\item Part~B is stated for events with $\Delta\volL(X_n) > 0$
+  and bundles $Y_n$ satisfying within-bundle poset-independence
+  (Definition~\ref{def:bundle_decomp},
+  Remark~\ref{rem:within_bundle_indep}); bundles with internal
+  cooperative activation fall back to Part~A only.  Positivity
+  $\volR(Y_n) > 0$ then follows from Part~A.
+\item Within-bundle poset-independence plus~M4 gives
+  $\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$, making the
+  partition-of-unity constraint
+  $\sum_{c \in Y_n} \alpha_{n,c} = 1$ compatible with S5's share
+  inequality $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$ (equality
+  achievable).  Combined: $\volR(c) \geq \alpha_{n,c} \cdot
+  \Delta\volL(X_n)$.  S3 (bundle coherence) ensures the hedonic
+  decomposition is non-degenerate so $\alpha_{n,c}$ is
+  well-specified.
 \item Per-capability max-attribution across overlapping events
   (Proposition~\ref{prop:monotone}).
 \item Summation over capabilities in $U$ (pairwise
