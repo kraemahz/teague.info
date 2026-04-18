@@ -170,6 +170,29 @@ independently of the sacrifice channel---active participation
 \emph{is} the exercise event.
 \end{proposition}
 
+\begin{proof}
+\citep[Corollary~2.1]{lasser2026horizon} establishes that any
+actively-participating agent~$k$ generates observational
+individuation (OI) evidence at rate $\OIfloor(k) > 0$ whenever
+$k$'s identity capability $d_k$ is exercised.  Active
+participation, by the definition in~\citep{lasser2026horizon}, is
+itself the exercise event for $d_k$: the agent cannot participate
+(in a trade, a committed event, a verified action) without
+identifiably being themselves, which exercises $d_k$ by
+construction.
+
+If $d_k \in O$ (Definition~\ref{def:exercise_indicator}), then
+$d_k$ contributes to $\volRexact(O)$ directly through the OI
+evidence stream; the contribution is $\OIfloor(k)$ per
+\citep[Corollary~2.1]{lasser2026horizon}.  This is orthogonal to
+the sacrifice channel: the OI evidence does not require a
+sacrifice event to be recorded; it follows from the agent's
+continuous presence within the observation perimeter.
+
+Hence $\volRexact(O) \geq \sum_{k \text{ active}} \OIfloor(k)$,
+which is the claimed floor transfer.
+\end{proof}
+
 \begin{remark}[Channel separation]
 The OI floor contributes exclusively to $\volRexact(O)$ in the
 combined diagnostic

@@ -33,8 +33,7 @@ under the assumptions S0 (calibration), S1 (free choice), and S2
 \paragraph{Justification (revealed-preference inequality).}
 The transfer from the observed trade to the framework-level
 bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
-steps, each grounded in existing framework structure rather than
-a new posit.
+steps.
 
 \begin{enumerate}
 \item \textbf{Exchange preference (revealed-preference
@@ -45,24 +44,20 @@ a new posit.
   $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
   where $H$ is the agent's pre-trade holdings.
 
-\item \textbf{Reduction to bundle-level comparison (via M4 + S0
-  calibration).}
-  The poset measure $\volL$ is additive over poset-disjoint
-  components by axiom M4~\citep[Proposition~1]{lasser2026poset},
-  with complementarities handled by M6 as explicit cooperative
-  nodes.  S0 and S2 calibrate $\Ui$ to $\volR$ and $\volL$ on
-  the acquisition and sacrifice sides respectively; under this
-  calibration, $\Ui$ inherits the poset measure's additivity
-  structure over the same partition.  Consequently the exchange
-  comparison reduces to a bundle comparison:
+\item \textbf{Reduction to bundle-level comparison via valuation
+  additivity (S4(a)).}
+  Under S4(a)---the assumption that $\Ui$ is additive across
+  any capability set (stated below)---the exchange comparison
+  reduces by cancellation to a bundle comparison:
   $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
   \iff \Ui(Y) \geq \Ui(X)$.
-  (The additivity here is not a new assumption: it is the
-  structural consequence of the calibration inequalities together
-  with M4.  Complementarities that would break pure additivity
-  in general consumer theory are absorbed into the poset as
-  cooperative nodes via M6, which are themselves capabilities
-  with their own weight.)
+  S4(a) is the standard working assumption for revealed-
+  preference inference in applied microeconomics
+  (\citet{samuelson1938note,mascolell1995microeconomic}), and
+  the paper uses a special case implicitly already: the
+  time-sacrifice channel (Definition~\ref{def:time_sacrifice})
+  values time at wage rate $r_i$, which is quasilinearity in
+  wage-scaled time---a form of valuation additivity.
 
 \item \textbf{Calibration chain.}
   Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
@@ -82,12 +77,14 @@ a new posit.
 \end{enumerate}
 
 \noindent
-Step~2's reduction to bundle-level comparison is where this
-derivation differs from the textbook revealed-preference
-inference, which typically assumes preference additivity as a
-starting axiom.  Here, additivity is derived: from M4 applied
-to the poset measure, through the calibration inequalities of
-S0 and S2, to $\Ui$'s behaviour on capability partitions.
+Complementarities that would break pure additivity in general
+consumer theory are absorbed into the poset as cooperative nodes
+via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
+capabilities are themselves capabilities with their own
+weights, so bundle-specific cooperative contributions appear as
+separate summands in $\Ui$.  S4(a)'s additivity is compatible
+with this structure because cooperative terms are explicit
+capabilities, not hidden non-linearities.
 
 \subsection{Assumptions}
 \label{sec:assumptions}
@@ -123,8 +120,16 @@ assumptions.  We collect them here for single-point reference.
 
 \item[S4 (Additive separability).] \mbox{}
   \begin{enumerate}
-  \item[(a)] \emph{Valuation additivity:}
-    $\Ui(Y) = \sum_{c \in Y} u_i(c)$, $u_i(c) \geq 0$.
+  \item[(a)] \emph{Valuation additivity (global):}
+    $\Ui$ is additive over any finite capability set:
+    $\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
+    $S \subseteq P$, with $u_i(c) \geq 0$.  In particular this
+    applies to sacrifice bundles ($\Ui(X) = \sum_{c \in X}
+    u_i(c)$), acquired bundles ($\Ui(Y)$), and agent
+    holdings ($\Ui(H)$).  Complementarities are handled at the
+    poset level by treating cooperative capabilities as their
+    own nodes (M6), which appear as additional capabilities in
+    $S$ whose $u_i$ accounts for the cooperative term.
   \item[(b)] \emph{$\volR$ additivity on poset-independent
     capabilities:} The $\volR$ contribution of a set of
     capabilities that are pairwise poset-independent (no
@@ -157,11 +162,15 @@ fitted models that could overstate individual capability
 contributions.
 \end{remark}
 
-Part~A of Theorem~\ref{thm:aggregate_bound} requires only
-S0--S2.  Part~B requires S0--S5.  The need-sufficiency
-architecture of the next section characterizes when S1 fails
-structurally and provides the filter that keeps the sacrifice
-channel clean.
+Part~A of Theorem~\ref{thm:aggregate_bound} requires
+S0--S2 and S4(a): S4(a) is the valuation-additivity assumption
+used in the exchange-to-bundle reduction of the revealed-
+preference inequality (Step~2 of the justification above).
+Part~B additionally requires S3 (bundle coherence), S4(b)
+($\volR$ additivity on poset-independent capabilities), and S5
+(decomposition validity).  The need-sufficiency architecture of
+the next section characterizes when S1 fails structurally and
+provides the filter that keeps the sacrifice channel clean.
 
 \begin{remark}[S0 is the weakest calibration assumption]
 S0 does \emph{not} require that agent valuations perfectly track
@@ -194,7 +203,13 @@ Observation]
 \label{thm:privacy}
 The revealed-sacrifice channel satisfies the following five
 privacy properties, each of which is load-bearing for
-compatibility with the framework's prior commitments:
+compatibility with the framework's prior commitments.  The
+properties are of mixed character: P1, P3, and P4 are formal
+consequences of the channel's construction and the commitment
+protocol; P2 and P5 are institutional claims that additionally
+require market opt-in conventions and public-ledger
+infrastructure.  Remark~\ref{rem:privacy_mixed_status} below
+identifies which properties depend on which layer.
 
 \begin{enumerate}
 \item[\textbf{(P1)}] \textbf{No interior access.}  The framework
@@ -305,3 +320,38 @@ contemplation) is the stated exception: these leave no public
 trace and remain invisible until the agent voluntarily discloses
 them.
 \end{proof}
+
+\begin{remark}[Formal vs institutional status of the five
+properties]
+\label{rem:privacy_mixed_status}
+Theorem~\ref{thm:privacy}'s five properties are not of uniform
+formal character:
+\begin{itemize}
+\item \textbf{P1 (no interior access)} is formal: it follows
+  from the construction of the observation tuple
+  (Definition~\ref{def:sacrifice_event}).
+\item \textbf{P2 (consent via participation)} is formal in the
+  technical sense that non-participating agents contribute zero
+  to the aggregate, but its operational interpretation as
+  ``consent'' depends on the institutional fact that
+  participation in markets and labour exchanges is legally and
+  socially opt-in.  In settings where participation is coerced,
+  P2 holds technically but not ethically.
+\item \textbf{P3 (discretization)} is formal: it follows from
+  the channel's bandwidth being bounded by trade frequency.
+\item \textbf{P4 (commitment-layer composability)} is formal:
+  it follows from composing
+  Definition~\ref{def:sacrifice_event} with the commitment
+  protocol of~\citep[Definition~6]{lasser2026exo}.
+\item \textbf{P5 (third-party observability)} is institutional:
+  it requires public-ledger infrastructure (market exchanges,
+  payment rails, public commitments) that is external to the
+  paper's machinery.  Where such infrastructure does not exist,
+  P5 fails operationally even though the channel's construction
+  is unchanged.
+\end{itemize}
+For a paper-as-submission reading, the formal properties (P1,
+P3, P4) are the theorem's mathematical content; P2 and P5 are
+institutional preconditions that the framework relies on but does
+not itself construct.
+\end{remark}

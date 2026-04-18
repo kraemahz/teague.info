@@ -45,7 +45,8 @@ Assumptions~S0--S5 of
 Section~\ref{sec:assumptions}, the theorem has two levels:
 
 \medskip\noindent
-\textbf{Part~A (Bundle-level lower bound, requires S0--S2 only).}
+\textbf{Part~A (Bundle-level lower bound, requires S0--S2 and
+S4(a)).}
 For each event~$n$:
 \[
   \volR(Y_n) \;\geq\; \Delta\volL(X_n).
@@ -74,8 +75,10 @@ poset-independent:
 \begin{proof}
 \emph{Part~A.}
 Fix an event $n$.  By S1, agent~$i_n$ chose $Y_n$ over $X_n$
-while both were available, so the revealed-preference
-inequality~\citep{samuelson1938note} gives
+while both were available.  Revealed preference gives
+$\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
+\Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By S4(a)
+(global valuation additivity), this reduces by cancellation to
 $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0 (calibration),
 $\Ui[_{n}](Y_n) \leq \volR(Y_n)$; by S2 (benchmark grounding),
 $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.  Chaining:

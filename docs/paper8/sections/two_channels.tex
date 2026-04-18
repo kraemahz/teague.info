@@ -188,31 +188,44 @@ relative to the capital threshold.
 \label{cor:joint_coverage}
 The union of the money-sacrifice and time-sacrifice channels
 captures \emph{weakly more} of $U$ than either channel alone.
-Strict inequality holds precisely at the non-fungibility
+Strict inequality is established by the non-fungibility
 residuals: agent-specific-time capabilities
 (Proposition~\ref{prop:agent_specific_time}) lie in the coverage
-gap of the money channel alone; capital-concentrated capabilities
-(Proposition~\ref{prop:capital_concentrated}) lie in the coverage
-gap of the time channel alone.  The aggregate lower bound from
-Theorem~\ref{thm:aggregate_bound}, computed over both channels
-jointly, is weakly greater than the bound from either channel in
-isolation, with strict improvement exactly on the capabilities
-in the residuals.
+gap of the money channel alone, and capital-concentrated
+capabilities (Proposition~\ref{prop:capital_concentrated}) lie in
+the coverage gap of the time channel alone, giving explicit
+witnesses to strict improvement in each direction.  For
+capabilities outside the non-fungibility residuals, whether the
+joint aggregate improves strictly over a single channel depends
+on the data coverage of the trade window---substitutability via
+cooperative-market exchange (\S\ref{sec:channel_substitutability})
+means a single channel could in principle match the joint
+aggregate if the agent population uses that channel
+exclusively, but realistic populations use both modalities
+heterogeneously and the joint aggregate strictly improves in
+most trade windows.
 \end{corollary}
 
 \begin{proof}[Proof sketch]
 Weak containment: any event observed through either channel
 alone is also observed through the union; the aggregate is
 monotone in observed events (Proposition~\ref{prop:monotone}).
-Strict inequality at residuals:
+Strict improvement on the residuals:
 Proposition~\ref{prop:agent_specific_time} witnesses a capability
 captured by time but not by money;
 Proposition~\ref{prop:capital_concentrated} witnesses a
-capability captured by money but not by time.  The capabilities
-outside both residuals are substitutable between channels via
-the cooperative-market exchange of \S\ref{sec:channel_substitutability};
-for those, either channel alone converges to the joint bound as
-observation accumulates.
+capability captured by money but not by time.  Both residuals
+guarantee strict improvement of the joint aggregate over either
+channel alone when the trade window includes at least one event
+from the relevant residual category.  Outside the residuals,
+strictness becomes a data-coverage statement: the joint
+aggregate strictly exceeds either single channel if and only if
+the trade window includes events in categories the other
+channel does not cover.  Substitutability in principle does not
+guarantee equality in practice; heterogeneous agent populations
+generically produce strict improvement, but a theoretical
+population using one channel exclusively could produce
+single-channel coverage equal to the joint aggregate.
 \end{proof}
 
 \subsection{The residual intersection}

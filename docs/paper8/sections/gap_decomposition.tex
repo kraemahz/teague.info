@@ -92,6 +92,34 @@ direct-measurement approach would require $O(|P|^2)$
 counterfactual queries).
 \end{proposition}
 
+\begin{proof}
+Maintain a hash table from capabilities to their current class
+labels, initialized in $O(|P|)$ time.  Sweep the capability set
+$P$ once: for each $c \in P$, check $c \in \Xi$ (restricted
+table lookup, $O(1)$); if not, check $c \in \ResS$
+($\ResS$ classification lookup, $O(1)$); if in neither, mark as
+dormant.  This gives an initial classification in $O(|P|)$.
+
+One-pass aggregation over the sacrifice data: iterate through
+each (capability, event) incidence record.  For each record
+$(c, n)$ with event $n$ admissibility-labelled satisfying S0/S1/S2
+(input (v)), update $c$'s class from dormant to covered (if not
+already restricted or residual).  This is $O(E)$ total work, one
+constant-time update per record.  At the end of this pass, each
+capability has its final class.
+
+Computing the $\delta$ terms: each class's aggregate $\volL$ and
+$\volRlower$ can be maintained incrementally during the sweep,
+giving the four quotients in $O(1)$ additional time.  The
+counterfactual comparison---removing capability $c$ and recomputing
+global reachability---is not performed; only membership checks
+and aggregation occur.  A direct-measurement approach requiring
+$O(|P|^2)$ counterfactuals (one per capability per reachability
+check) is avoided because covered/dormant classification here
+uses bundle-appearance evidence, not marginal-contribution
+evidence.
+\end{proof}
+
 \begin{remark}[Admissibility-labelling is an external input]
 \label{rem:admissibility_external}
 S0 (calibration) and the interior component of S1 are not

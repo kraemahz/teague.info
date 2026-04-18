@@ -11,11 +11,13 @@ across the capability space.
 
 \begin{definition}[Trade-Flow Leverage]
 \label{def:trade_leverage}
-The trade-flow leverage of bundle category $c$ at time $T$ is:
+For bundle category $C_j \in \mathcal{C}$
+(Definition~\ref{def:category_partition}), the trade-flow
+leverage of $C_j$ at time $T$ is:
 \[
-  \lambda_{\mathrm{trade}}(c, T) \;=\;
+  \lambda_{\mathrm{trade}}(j, T) \;=\;
   \begin{cases}
-    \volRlower(c, T) \;/\; \volRlower(G, T)
+    \volRlower(C_j, T) \;/\; \volRlower(G, T)
       & \text{if } \volRlower(G, T) > 0, \\
     \text{undefined (diagnostic suppressed)}
       & \text{if } \volRlower(G, T) = 0.
@@ -39,7 +41,7 @@ When $\volRlower(G, T) > 0$, the Herfindahl--Hirschman
 Index~\citep{rhoades1993herfindahl}
 \[
   \HHI(\lambda_{\mathrm{trade}}) \;=\;
-  \sum_{c} \lambda_{\mathrm{trade}}(c)^2
+  \sum_{j} \lambda_{\mathrm{trade}}(j)^2
 \]
 is monotone in the concentration of observed trade flow.
 Comparing $\HHI$ against a governance-set threshold
@@ -68,16 +70,16 @@ theorem-derived.
 \end{remark}
 
 \begin{proof}
-Let $m = |\{c : \volRlower(c) > 0\}|$ be the number of bundle
+Let $m = |\{j : \volRlower(C_j) > 0\}|$ be the number of bundle
 categories with non-zero observed leverage.  The leverage vector
-$(\lambda_{\mathrm{trade}}(c))_c$ is a probability distribution
-over those categories: $\lambda_{\mathrm{trade}}(c) \geq 0$ and
-$\sum_c \lambda_{\mathrm{trade}}(c) = 1$ by the normalization in
+$(\lambda_{\mathrm{trade}}(j))_j$ is a probability distribution
+over those categories: $\lambda_{\mathrm{trade}}(j) \geq 0$ and
+$\sum_j \lambda_{\mathrm{trade}}(j) = 1$ by the normalization in
 Definition~\ref{def:trade_leverage}.
 
 \emph{Lower bound on $\HHI$ from concentration.}
 For any probability distribution $\lambda$, Cauchy--Schwarz gives
-$\sum_c \lambda_c^2 \geq 1/m$, with equality iff $\lambda$ is
+$\sum_j \lambda_j^2 \geq 1/m$, with equality iff $\lambda$ is
 uniform over its $m$-element support.  More strongly, if the top
 $k$ categories capture at least a fraction $\rho$ of total
 leverage, then
@@ -86,7 +88,7 @@ $k$ bins.
 
 \emph{Upper bound on $\HHI$ under diversity.}
 If no single category exceeds leverage $\lambda_{\max}$, then
-$\HHI \leq \lambda_{\max} \cdot \sum_c \lambda_c = \lambda_{\max}$,
+$\HHI \leq \lambda_{\max} \cdot \sum_j \lambda_j = \lambda_{\max}$,
 giving a tight upper bound under bounded individual leverage.
 
 \emph{Alarm criterion.}
@@ -127,13 +129,13 @@ By Definition~\ref{def:committed_event}, every committed
 sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
 in cleartext.  The trade-flow leverage
 (Definition~\ref{def:trade_leverage}) is
-$\lambda_{\mathrm{trade}}(c, T) = \volRlower(c, T) / \volRlower(G, T)$,
-and its numerator and denominator are both expressible as sums of
-$\Delta\volL(X_n)$ (optionally weighted by
+$\lambda_{\mathrm{trade}}(j, T) = \volRlower(C_j, T) /
+\volRlower(G, T)$, and its numerator and denominator are both
+expressible as sums of $\Delta\volL(X_n)$ (optionally weighted by
 $\alpha_{n,c}$ for Part~B; these are either public or committed
 alongside the event for the Part~B variant).  Forming
-$\HHI(\lambda_{\mathrm{trade}}) = \sum_c
-\lambda_{\mathrm{trade}}(c)^2$ therefore requires no fields
+$\HHI(\lambda_{\mathrm{trade}}) = \sum_j
+\lambda_{\mathrm{trade}}(j)^2$ therefore requires no fields
 hidden by the commitment protocol.  The alarm test
 $\HHI > \HHI_{\mathrm{alarm}}$ is consequently computable by any
 party with read access to the public committed-event ledger.

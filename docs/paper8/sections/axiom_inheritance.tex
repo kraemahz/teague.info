@@ -35,11 +35,19 @@ M5 are weaker conditional statements noted for completeness.
   property, not a poset-measure axiom.
 
 \item[(M4) Additivity under disjointness (substantive).]
-  Satisfied for poset-independent bundle categories
-  (Definition~\ref{def:category_partition}).  This is the
-  load-bearing inheritance that makes the aggregate bound
-  compose across events (Theorem~\ref{thm:aggregate_bound},
-  Part~A, M4 application).
+  Satisfied.  By construction, $\volR$ is $\volL$ restricted
+  to the exercised sub-poset $P^{\mathrm{ex}} \subseteq P$.  M4
+  for $\volL$ on $P$ states that $\volL$ is additive over
+  components of $P$ that are pairwise poset-disjoint (no
+  subsumption or cooperative-composition links).  Let $A, B
+  \subseteq P^{\mathrm{ex}}$ be poset-disjoint in $P^{\mathrm{ex}}$.
+  Since $P^{\mathrm{ex}}$ inherits the relation structure of
+  $P$, $A$ and $B$ are also poset-disjoint in $P$.  M4 on $P$
+  gives $\volL(A \cup B) = \volL(A) + \volL(B)$; restricting
+  both sides to $P^{\mathrm{ex}}$ gives $\volR(A \cup B) =
+  \volR(A) + \volR(B)$, establishing M4 for $\volR$.
+  This inheritance is load-bearing for the aggregate bound
+  (Theorem~\ref{thm:aggregate_bound}, Part~A).
 
 \item[(M5) Non-triviality (conditional analogue).] A single
   sacrifice event with $\Delta\volL(X) > 0$ produces
