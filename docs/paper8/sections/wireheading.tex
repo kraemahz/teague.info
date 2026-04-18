@@ -1,4 +1,5 @@
-\section{Wireheading Detection via Trade-Flow Concentration}
+\section{Wireheading-Consistent Signature via Trade-Flow
+Concentration}
 \label{sec:wireheading}
 
 Wireheading produces high $\betaL$ with degenerate exercise: the
@@ -105,23 +106,28 @@ statistic is monotone in concentration.
 \end{proof}
 
 \begin{remark}[Advantage over structural counterfactual]
-A direct-measurement approach would detect wireheading via
-exercise-leverage concentration, requiring the marginal $\volR$
-contribution of each capability (a counterfactual query).  The
-trade-flow formulation detects the same pathology via $\HHI$ on
-observed trade data, requiring no counterfactual computation.
-The diagnostic is strictly more tractable.
+A direct-measurement approach would try to identify wireheading
+via exercise-leverage concentration, requiring the marginal
+$\volR$ contribution of each capability (a counterfactual query).
+The trade-flow formulation surfaces the concentration signal via
+$\HHI$ on observed trade data, requiring no counterfactual
+computation.  The diagnostic is strictly more tractable; it
+remains a signal rather than a definitive detection, per
+Remark~\ref{rem:hhi_alarm_governance}.
 \end{remark}
 
-\begin{proposition}[Third-Party Observability of Wireheading
-Signal]
+\begin{proposition}[Third-Party Observability of the
+Concentration Signal]
 \label{prop:third_party_wireheading}
 The trade-flow $\HHI$ is computable from public trade data
 (committed sacrifice events,
 Definition~\ref{def:committed_event}) without access to any
 agent's private state.  A third-party auditor with access only to
 the committed sacrifice ledger can compute
-$\HHI(\lambda_{\mathrm{trade}})$ and raise the wireheading alarm.
+$\HHI(\lambda_{\mathrm{trade}})$ and raise the concentration
+alarm (which is wireheading-consistent in the sense of
+Proposition~\ref{prop:wireheading_hhi}, not a wireheading
+determination on its own).
 \end{proposition}
 
 \begin{proof}

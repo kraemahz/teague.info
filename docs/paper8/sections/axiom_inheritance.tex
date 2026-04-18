@@ -56,7 +56,10 @@ M5 are weaker conditional statements noted for completeness.
   non-triviality of every valid capability.
 
 \item[(M6) Superadditivity under independence (substantive).]
-  Does \emph{not} unconditionally hold.  Two distinct failures:
+  Does \emph{not} unconditionally hold.  Two distinct failures,
+  each witnessed by a constructive counterexample
+  (Examples~\ref{ex:m6_fail_volR} and~\ref{ex:m6_fail_volRlower}
+  below):
   \begin{enumerate}
   \item[(a)] \textbf{$\volR$ itself fails M6 (structural).}
     $\volR = \volL$ restricted to the exercised sub-poset, and
@@ -66,14 +69,95 @@ M5 are weaker conditional statements noted for completeness.
     is about the \emph{measure} $\volR$, independent of the
     observation mechanism.
   \item[(b)] \textbf{$\volRlower$ fails M6 (observational).}
-    Merging two groups of sacrifice events can change
-    per-capability attributions.  This failure is about the
-    \emph{lower bound}, a weaker claim---a lower bound failing
-    superadditivity does not imply the underlying quantity fails
-    superadditivity.
+    Merging two groups of sacrifice events changes per-capability
+    attributions under max-attribution: the joint maximum over
+    all events is less than the sum of within-group maxima.  This
+    failure is about the \emph{lower bound}, a weaker claim---a
+    lower bound failing superadditivity does not imply the
+    underlying quantity fails superadditivity.
   \end{enumerate}
 \end{description}
 \end{theorem}
+
+\begin{example}[$\volR$ M6-failure via alternative pathways]
+\label{ex:m6_fail_volR}
+Consider a single-agent setting with two poset-independent
+capability groups:
+\begin{itemize}
+\item $A = \{c_A\}$ where $c_A = $ ``drive to gas station
+  $\alpha$'', with weight $w(c_A) = 1$.
+\item $B = \{c_B\}$ where $c_B = $ ``drive to gas station
+  $\beta$'' (different location), with weight $w(c_B) = 1$.
+\end{itemize}
+$A$ and $B$ share no subsumption or cooperative-composition
+relation: they target different fuel-access capabilities with no
+shared participants.  Apply the exercise indicator
+$e_t(d)$ of Appendix~\ref{app:exercise_indicator}: $d$ is
+load-bearing at time $t$ iff removing $d$ would make some
+realized cooperative output unrealizable.
+
+In group $A$ alone, the agent uses $c_A$ for fuel access;
+removing $c_A$ blocks fuel access, so $c_A$ is load-bearing.
+$\volR(A) = w(c_A) = 1$.
+
+In group $B$ alone, $c_B$ is similarly load-bearing.
+$\volR(B) = 1$.
+
+In the merged group $A \cup B$, the agent uses the closer of the
+two (say $c_A$).  Removing $c_B$ does not block fuel access:
+$c_A$ remains available.  Therefore $c_B$ is no longer
+load-bearing.  $\volR(A \cup B) = w(c_A) = 1$.
+
+M6 (superadditivity under poset-independence) predicts
+$\volR(A \cup B) \geq \volR(A) + \volR(B) = 2$, but
+$\volR(A \cup B) = 1 < 2$.  M6 fails for $\volR$ in the
+subadditive direction---merging poset-independent groups can
+reduce the count of load-bearing capabilities because alternative
+pathways become available.
+\end{example}
+
+\begin{example}[$\volRlower$ M6-failure via max-attribution]
+\label{ex:m6_fail_volRlower}
+Consider two sacrifice events with the same bundle
+$Y = \{a, b\}$ but different decomposition coefficients
+(permitted under S5, since event-local decomposition is fixed at
+observation time):
+\begin{itemize}
+\item Event $E_1$: $\Delta\volL(X_1) = 1$, $\alpha_{1,a} = 0.5$,
+  $\alpha_{1,b} = 0.5$.
+\item Event $E_2$: $\Delta\volL(X_2) = 1$, $\alpha_{2,a} = 0.3$,
+  $\alpha_{2,b} = 0.7$.
+\end{itemize}
+Let group $A = \{E_1\}$ and group $B = \{E_2\}$.  Under
+Theorem~\ref{thm:aggregate_bound} Part~B:
+\begin{align*}
+  \volRlower(a \mid A) &= 0.5, &
+  \volRlower(b \mid A) &= 0.5, \\
+  \volRlower(a \mid B) &= 0.3, &
+  \volRlower(b \mid B) &= 0.7.
+\end{align*}
+Summing per-capability:
+$\volRlower(A) = 1.0$, $\volRlower(B) = 1.0$.
+
+In the merged group $A \cup B$, max-attribution over both events:
+$\volRlower(a \mid A \cup B) = \max(0.5, 0.3) = 0.5$ and
+$\volRlower(b \mid A \cup B) = \max(0.5, 0.7) = 0.7$.
+Total: $\volRlower(A \cup B) = 1.2$.
+
+M6 (superadditivity) predicts $\volRlower(A \cup B) \geq
+\volRlower(A) + \volRlower(B) = 2.0$, but $\volRlower(A \cup B)
+= 1.2 < 2.0$.  M6 fails for $\volRlower$ in the subadditive
+direction---max-attribution over merged events takes the larger
+single contribution per capability rather than summing
+across groups, so the joint aggregate is bounded above by the
+sum of within-group aggregates.
+
+This is a property of the \emph{lower-bound construction}, not of
+the underlying $\volR$: the true $\volR$ aggregate of the merged
+events need not be subadditive, but our observational lower
+bound is.  The non-self-balancing corollary below therefore
+relies on failure~(a), not failure~(b).
+\end{example}
 
 \begin{corollary}[$\volR$ Is Not Self-Balancing]
 \label{cor:not_self_balancing}

@@ -127,9 +127,12 @@ quantity under the framework's privacy commitments.
   (Section~\ref{sec:sacrifice_model}).
   Revealed-sacrifice observation defines the sacrifice event and
   the six assumptions (S0--S5) under which the aggregate bound
-  holds, and satisfies five privacy properties
-  (Theorem~\ref{thm:privacy}), each load-bearing for compatibility
-  with the framework's prior commitments.
+  holds.  Three formal privacy properties are established
+  (Theorem~\ref{thm:privacy}: no interior access, discretization,
+  commitment-layer composability) and two institutional
+  preconditions (Proposition~\ref{prop:privacy_institutional}:
+  consent via participation, third-party observability) are
+  documented as deployment-level dependencies.
 
 \item \textbf{Need-sufficiency architecture}
   (Section~\ref{sec:need_sufficiency}).
@@ -148,12 +151,13 @@ quantity under the framework's privacy commitments.
 
 \item \textbf{Aggregate B-to-C Lower Bound}
   (Section~\ref{sec:lower_bound}).
-  Theorem~\ref{thm:aggregate_bound} converts the B-to-C gap from
-  ``unknown divergence'' into ``lower-bounded divergence.''  Two
-  levels: Part~A (bundle-level, requires S0--S2 and S4(a)) and
-  Part~B (per-capability, requires S0--S5).  The bound tightens
-  monotonically with trade coverage
-  (Proposition~\ref{prop:monotone}).
+  Theorem~\ref{thm:aggregate_bound} lower-bounds the B-to-C gap
+  on the subset of capability-space covered by voluntary,
+  above-sufficiency, assumption-admissible trade events.  Two
+  levels: Part~A (bundle-level, requires S0--S2 and S4(a)) is
+  the main result; Part~B (per-capability, requires S0--S5) is
+  a conditional refinement.  The bound tightens monotonically
+  with trade coverage (Proposition~\ref{prop:monotone}).
 
 \item \textbf{Two sacrifice channels, substitutable with
   residuals}
@@ -187,11 +191,14 @@ quantity under the framework's privacy commitments.
   residual) partitions the B-to-C gap.  A parallel need-access
   cost diagnostic tracks below-sufficiency sacrifice separately.
 
-\item \textbf{Wireheading detection}
+\item \textbf{Wireheading-consistent concentration signal}
   (Section~\ref{sec:wireheading}).
   Trade-flow concentration, measured via the Herfindahl--Hirschman
-  Index on sacrifice categories, provides a tractable wireheading
-  diagnostic computable from public committed events.
+  Index on sacrifice categories, provides a tractable
+  wireheading-consistent diagnostic computable from public
+  committed events.  The signal is a concentration alarm, not a
+  wireheading determination: the threshold $\HHI_{\mathrm{alarm}}$
+  is a governance parameter.
 
 \item \textbf{Integration}
   (Section~\ref{sec:integration}).
