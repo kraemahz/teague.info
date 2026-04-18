@@ -136,13 +136,45 @@ sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
 in cleartext.  The trade-flow leverage
 (Definition~\ref{def:trade_leverage}) is
 $\lambda_{\mathrm{trade}}(j, T) = \volRlower(C_j, T) /
-\volRlower(G, T)$, and its numerator and denominator are both
-expressible as sums of $\Delta\volL(X_n)$ (optionally weighted by
-$\alpha_{n,c}$ for Part~B; these are either public or committed
-alongside the event for the Part~B variant).  Forming
-$\HHI(\lambda_{\mathrm{trade}}) = \sum_j
+\volRlower(G, T)$.
+
+Under Part~B semantics
+(Definition~\ref{def:volRlower_subset}), $\volRlower(C_j, T) =
+\sum_{c \in C_j \cap U} \volRlower(c, T) = \sum_{c \in C_j \cap U}
+\max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$.
+Each term in this sum is computable from committed fields: the
+bundle membership $c \in Y_n$ is determined by the partition
+label $\catY[_n]$ together with a public per-category-component
+mapping from $C_{\catY[_n]}$ to individual capabilities
+(Remark~\ref{rem:commit_part_b} in
+Section~\ref{sec:commitment}), the sacrifice magnitudes
+$\Delta\volL(X_n)$ are committed in cleartext, and the
+attribution coefficients $\alpha_{n,c}$ are either public
+(equal-weight default) or committed alongside the event under
+the Part~B commitment variant.  The same holds for the
+denominator $\volRlower(G, T) = \sum_{c \in U} \volRlower(c, T)$.
+Forming $\HHI(\lambda_{\mathrm{trade}}) = \sum_j
 \lambda_{\mathrm{trade}}(j)^2$ therefore requires no fields
 hidden by the commitment protocol.  The alarm test
 $\HHI > \HHI_{\mathrm{alarm}}$ is consequently computable by any
-party with read access to the public committed-event ledger.
+party with read access to the public committed-event ledger,
+under Part~B assumptions.
 \end{proof}
+
+\begin{remark}[Part A variant]
+\label{rem:wireheading_part_a}
+Under Part~A alone (S0--S2, S4(a)), the per-category quantity
+$\volRlower(C_j, T)$ is not defined in
+Section~\ref{sec:lower_bound} but can be replaced by the
+Part~A per-bundle aggregate restricted to category~$j$:
+$\tilde\lambda_{\mathrm{trade}}(j, T) =
+\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n) / \sum_n \Delta\volL(X_n)$.
+The resulting concentration statistic
+$\widetilde\HHI = \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2$ is
+computable from public committed-event data without invoking
+Part~B, is monotone in trade-flow concentration across
+categories, and supports the same governance-threshold alarm.
+The Part~B version above operates at per-capability resolution
+within categories; the Part~A version operates at category-level
+resolution only.
+\end{remark}

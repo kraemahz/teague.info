@@ -53,29 +53,41 @@ infrastructure external to the paper's formal scope.
 
 \paragraph{Theorem~\ref{thm:aggregate_bound} strategy.}
 
-\emph{Part~A (bundle-level, S0--S2, poset-independent bundles):}
+\emph{Part~A (bundle-level, S0--S2 and S4(a),
+poset-independent bundles, genuine-exchange conditions):}
 \begin{enumerate}
-\item Per-event bound from calibration chain (S0 + S1 + S2):
+\item Revealed-preference observation: $\Ui[_n]((H_n \setminus
+  X_n) \cup Y_n) \geq \Ui[_n](H_n)$.
+\item Cancellation to bundle comparison (S4(a) +
+  Definition~\ref{def:sacrifice_event} conditions (i)--(iii)):
+  $\Ui[_n](Y_n) \geq \Ui[_n](X_n)$.
+\item Calibration chain (S0 + S2):
   $\volR(Y_n) \geq \Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n) \geq
   \Delta\volL(X_n)$.
 \item Poset-independence of bundles
-  (Definition~\ref{def:category_partition}) gives M4 additivity:
+  (Definition~\ref{def:category_partition}) gives M4 additivity
+  (inheritance proved in Theorem~\ref{thm:axiom_inheritance}
+  via sub-poset restriction):
   $\volR(\bigcup Y_n) = \sum_n \volR(Y_n) \geq \sum_n
   \Delta\volL(X_n)$.
 \end{enumerate}
 
-\emph{Part~B (per-capability, additionally S3--S5):}
+\emph{Part~B (per-capability refinement, additionally S3--S5;
+conditional on S5, see Remark~\ref{rem:s5_heavy}):}
 \begin{enumerate}
-\setcounter{enumi}{2}
+\setcounter{enumi}{3}
+\item Part~B is stated for events with $\Delta\volL(X_n) > 0$;
+  positivity $\volR(Y_n) > 0$ then follows from Part~A.
 \item S5 gives directly $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$
   (a share inequality, not a decomposition identity), yielding
   $\volR(c) \geq \alpha_{n,c} \cdot \Delta\volL(X_n)$ without
-  requiring within-bundle poset-independence.
-  S3 (bundle coherence) ensures $\volR(Y_n) > 0$ so the division
-  is well-defined.
+  requiring within-bundle poset-independence.  S3 (bundle
+  coherence) ensures the hedonic decomposition is non-degenerate
+  so $\alpha_{n,c}$ is well-specified.
 \item Per-capability max-attribution across overlapping events
   (Proposition~\ref{prop:monotone}).
-\item Summation over capabilities in $U$.
+\item Summation over capabilities in $U$ (pairwise
+  poset-independent) via a second M4 application.
 \end{enumerate}
 
 Key technical challenges:

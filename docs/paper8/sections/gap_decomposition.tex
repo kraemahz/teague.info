@@ -53,11 +53,15 @@ the structural cost of privacy-minimal observation.
 
 \begin{definition}[Gap Decomposition Under Revealed Sacrifice]
 \label{def:gap_decomp}
-The B-to-C gap ($1 - \betaL$) decomposes into four \emph{disjoint}
-sources.  Each capability in $P$ is assigned to exactly one
-category by priority ordering (restricted $>$ covered $>$ dormant
-$>$ residual), and each category's $\delta$ term is its uncovered
-$\volL$ share:
+Under Theorem~\ref{thm:aggregate_bound} Part~B's hypotheses
+(S0--S5), the per-capability aggregate $\volRlower(c)$ is
+well-defined, and subset aggregates $\volRlower(A)$ are given
+by Definition~\ref{def:volRlower_subset}.  Under those
+hypotheses, the B-to-C gap ($1 - \betaL$) decomposes into four
+\emph{disjoint} sources.  Each capability in $P$ is assigned to
+exactly one category by priority ordering (restricted $>$
+covered $>$ dormant $>$ residual), and each category's $\delta$
+term is its uncovered $\volL$ share:
 \[
   1 - \betaL \;=\; \delta_{\mathrm{restricted}}
   + \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}}
