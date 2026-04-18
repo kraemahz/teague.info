@@ -203,10 +203,16 @@ The revealed-sacrifice channel and its aggregate bound
 assumptions.  We collect them here for single-point reference.
 
 \begin{description}
-\item[S0 (Calibration).] For each agent~$i_n$, the agent's
-  valuation of the unbenchmarked bundle $Y_n$ does not exceed
-  $Y_n$'s $\volR$ contribution:
+\item[S0 (Valuation-bounded-by-Exercise).] For each agent~$i_n$,
+  the agent's valuation of the unbenchmarked bundle $Y_n$ does
+  not exceed $Y_n$'s realized $\volR$ contribution:
   $\Ui[_{n}](Y_n) \leq \volR(Y_n)$.
+  This is the \emph{substantive bridge} between valuation (what
+  the agent pays for) and realized exercise (what the framework
+  cares about).  It is not a calibration-in-the-narrow-sense
+  (unbiased estimation) but a one-sided conservatism claim:
+  agents do not systematically pay more than what the capability
+  will actually deliver in exercise.
 
 \item[S1 (Free choice).] Each sacrifice event is a voluntary
   trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
@@ -281,12 +287,30 @@ Part~B additionally requires S3 (bundle coherence), S4(b)
 the next section characterizes when S1 fails structurally and
 provides the filter that keeps the sacrifice channel clean.
 
-\begin{remark}[S0 is the weakest calibration assumption]
+\begin{remark}[S0 is the substantive bridge, not a calibration
+detail]
+\label{rem:s0_substantive}
+S0 does the conceptual work of the theorem.  Revealed-preference
+reasoning on its own establishes only that traded bundles are
+valued at least as highly as surrendered bundles; it does not
+establish that what the agent values corresponds to what the
+capability \emph{delivers in exercise}.  S0 asserts precisely
+that correspondence (in the one-sided direction needed for a
+lower bound): subjective valuation is upper-bounded by realized
+exercise contribution.  This is a non-trivial behavioural claim.
+Agents who systematically overpay for status, novelty, or
+anticipated-but-unrealized utility violate S0 in realistic
+markets; the theorem's empirical validity depends on the
+prevalence of such violations.
+
 S0 does \emph{not} require that agent valuations perfectly track
 $\volR$---only that they do not \emph{overstate} it.  Agents may
 undervalue unbenchmarked bundles (sacrifice little for something
-very valuable), in which case the lower bound is conservative but
-still valid.  S0 fails only in the overpayment direction.
+very valuable), in which case the lower bound is conservative
+but still valid.  S0 fails only in the overpayment direction.
+Weakening S0 to expected/distributional conservatism
+(Open Question~\ref{oq:calibration}) is a priority direction for
+follow-up work.
 \end{remark}
 
 \begin{definition}[Aggregate Trade Window]
