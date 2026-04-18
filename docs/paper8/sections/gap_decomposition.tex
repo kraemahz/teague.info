@@ -67,36 +67,57 @@ term is its uncovered $\volL$ share:
   + \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}}
   + \delta_{\mathrm{residual}},
 \]
-where the capability partition is:
+where the capability partition is defined by priority-filtered
+derived sets:
 \begin{itemize}
-\item \textbf{Restricted} ($\Xi$): $d$ is currently restricted
-  under the preemptive-restriction criterion
-  of~\citep[Proposition~1]{lasser2026horizon}.
-  Classified first regardless of sacrifice evidence.
-\item \textbf{Covered} ($\CovS$): $d \notin \Xi$, and $d$
-  appears in at least one acquired bundle $Y_n$ for some
-  theorem-admissible sacrifice event in $[T - H, T]$.  A
-  theorem-admissible event for Part~A satisfies S0, S1, S2, and
-  S4(a); for Part~B it additionally satisfies S3 and S5.
-\item \textbf{Dormant} ($\DorS$): $d \notin \Xi$,
-  $d \notin \ResS$, and $d$ does not appear in any acquired
-  bundle of any theorem-admissible event in $[T - H, T]$.
-  These are tradable-in-principle capabilities with zero
-  want-pursuit sacrifice evidence---dormant \emph{wants}.
-\item \textbf{Residual} ($\ResS$): $d \notin \Xi$, and $d$ is
-  structurally outside the sacrifice channel
-  (Definition~\ref{def:residual_class}).
+\item \textbf{Restricted cell:} $R := \Xi$, where $\Xi$ is the
+  set of capabilities currently restricted under the
+  preemptive-restriction criterion
+  of~\citep[Proposition~1]{lasser2026horizon}.  Classified first
+  regardless of sacrifice evidence.
+\item \textbf{Covered cell:} $C := \CovS \setminus \Xi$, where
+  $\CovS$ is the set of capabilities appearing in at least one
+  acquired bundle $Y_n$ of a theorem-admissible sacrifice event
+  in $[T - H, T]$.  A theorem-admissible event for Part~A
+  satisfies S0, S1, S2, and S4(a); for Part~B it additionally
+  satisfies S3, S5, and within-bundle poset-independence
+  (Definition~\ref{def:bundle_decomp}).
+\item \textbf{Dormant cell:} $D := \DorS$, where
+  $\DorS = \{d \in P : d \notin \Xi,\; d \notin \ResS,\;
+  d \notin \CovS\}$ is already priority-filtered by
+  construction.  These are tradable-in-principle capabilities
+  with zero want-pursuit sacrifice evidence---dormant
+  \emph{wants}.
+\item \textbf{Residual cell:} $S := \ResS \setminus \Xi$, where
+  $\ResS$ is the structural residual class
+  (Definition~\ref{def:residual_class}).  Residual capabilities
+  outside $\Xi$; capabilities in $\Xi \cap \ResS$ are already
+  assigned to $R$ by priority.
 \end{itemize}
+The four cells $\{R, C, D, S\}$ are pairwise disjoint and their
+union is~$P$: $R$ and $S$ are disjoint by construction; $C$ and
+$D$ are priority-filtered to exclude $\Xi$; $C \cap \ResS =
+\emptyset$ because residual capabilities admit no
+sacrifice-observable path in principle
+(Definition~\ref{def:residual_class}) and therefore cannot
+appear in any admissible bundle; remaining pairs are disjoint by
+the bullet-stated exclusions.
 
 The $\delta$ terms are:
 \begin{align*}
-  \delta_{\mathrm{restricted}} &= [\volL(\Xi) -
-    \volRlower(\Xi)] \;/\; \volL(G), \\
-  \delta_{\mathrm{covered}} &= [\volL(\CovS) -
-    \volRlower(\CovS)] \;/\; \volL(G), \\
-  \delta_{\mathrm{dormant}} &= \volL(\DorS) \;/\; \volL(G), \\
-  \delta_{\mathrm{residual}} &= \volL(\ResS) \;/\; \volL(G).
+  \delta_{\mathrm{restricted}} &= [\volL(R) -
+    \volRlower(R)] \;/\; \volL(G), \\
+  \delta_{\mathrm{covered}} &= [\volL(C) -
+    \volRlower(C)] \;/\; \volL(G), \\
+  \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(G), \\
+  \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(G).
 \end{align*}
+The identity $1 - \betaL = \sum \delta$ follows from
+$\volL(G) = \volL(R) + \volL(C) + \volL(D) + \volL(S)$
+(disjointness plus union is $P$), combined with
+$\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$
+(dormant and residual cells contribute zero $\volRlower$ by
+definition).
 \end{definition}
 
 \begin{proposition}[Computability of Gap Decomposition]
