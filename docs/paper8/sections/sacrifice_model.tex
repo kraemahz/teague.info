@@ -22,24 +22,41 @@ A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
   bundle acquired by agent~$i$, satisfying the \emph{genuine-
   exchange conditions}:
   (i)~$X \cap Y = \emptyset$ (the agent does not surrender and
-  reacquire the same capability); and
+  reacquire the same capability);
   (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
   bundle is novel relative to the agent's retained holdings
   $H_i \setminus X$, where $H_i$ is the agent's pre-trade
-  holdings);
+  holdings); and
+  (iii)~\emph{cooperative closure}: no new cooperative capability
+  is activated by combining $Y$ with $H_i \setminus X$ that was
+  not already activatable within $Y$ alone or within
+  $H_i \setminus X$ alone.  Formally, every cooperative capability
+  $c_{\mathrm{coop}}$ in the poset whose participants are all in
+  $(H_i \setminus X) \cup Y$ has its participants either all in
+  $Y$ or all in $H_i \setminus X$;
 \item $t$ is the event timestamp.
 \end{itemize}
 Conditions (i) and (ii) characterize \emph{genuine} trades: the
 agent exchanges distinct capabilities and acquires something
-novel.  Trades violating either condition are degenerate (the
-agent loses nothing net, or gains nothing new) and carry no
-revealed-preference information.
+novel.  Condition (iii) ensures the exchange-to-bundle
+cancellation in the revealed-preference derivation is exact: if
+new cross-bundle cooperative capabilities activated, the agent
+would reveal willingness-to-pay for $Y$-plus-cooperatives, not
+for $Y$ alone.  Trades violating (i) or (ii) are degenerate;
+trades violating (iii) carry revealed-preference information
+about the marginal contribution of $Y$ in context, which may
+exceed $\volR(Y)$ as an isolated bundle---the bound still holds
+conservatively for the contextual quantity but the theorem's
+isolated-$\volR(Y)$ interpretation requires (iii).
 The event emits the signal:
 \[
   \volRlower(Y) \;\geq\; \Delta\volL(X)
 \]
-under the assumptions S0 (calibration), S1 (free choice), and S2
-(benchmark grounding) stated below.
+under assumptions S0 (calibration), S1 (free choice), S2
+(benchmark grounding), and S4(a) (valuation additivity) stated
+below.  S4(a) is needed for the exchange-to-bundle cancellation
+that reduces the revealed-preference inequality from a state
+comparison to a bundle comparison.
 \end{definition}
 
 \paragraph{Justification (revealed-preference inequality).}
@@ -61,19 +78,29 @@ steps.
   Under S4(a)---the assumption that $\Ui$ is additive across any
   finite capability set (stated below)---and the genuine-exchange
   conditions in Definition~\ref{def:sacrifice_event}
-  ($X \cap Y = \emptyset$ and
-  $Y \cap (H \setminus X) = \emptyset$), the exchange comparison
-  reduces by cancellation to a bundle comparison:
+  (disjointness (i)--(ii) plus cooperative closure (iii)), the
+  exchange comparison reduces by cancellation to a bundle
+  comparison:
   \[
     \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
     = \Ui(Y) - \Ui(X),
   \]
   so $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)
-  \iff \Ui(Y) \geq \Ui(X)$.  The cancellation requires both
-  conditions: without (i) the $X \cap Y$ overlap remains on both
-  sides and cancels trivially (no information); without (ii) the
-  $Y \cap (H \setminus X)$ overlap does not add utility because
-  the agent already held those capabilities.
+  \iff \Ui(Y) \geq \Ui(X)$.  All three conditions contribute:
+  \begin{itemize}
+  \item (i) rules out the $X \cap Y$ overlap that would cancel
+    trivially and yield no information.
+  \item (ii) rules out the $Y \cap (H \setminus X)$ overlap
+    that would produce no new utility because the agent already
+    held those capabilities.
+  \item (iii) rules out cooperative-cross-term activations:
+    without it, $\Ui((H \setminus X) \cup Y)$ would include
+    utility from new cooperative capabilities formed by combining
+    $Y$-elements with $H \setminus X$-elements, breaking the
+    cancellation (the agent's willingness-to-pay would reflect
+    the marginal contribution of $Y$ in context rather than
+    $\Ui(Y)$ in isolation).
+  \end{itemize}
   S4(a) is the standard working assumption for revealed-
   preference inference in applied microeconomics
   (\citet{samuelson1938note,mascolell1995microeconomic}); the
@@ -250,8 +277,12 @@ of~\citep[Definition~6]{lasser2026exo}:
   valuation function $\Ui$.
 
 \item[\textbf{(P3)}] \textbf{Discretization as a feature.}  Trade
-  events are sparse by construction.  The signal bandwidth is
-  bounded by trade frequency, not by observation intensity.
+  events are sparse by construction.  The channel's emission rate
+  is bounded by trade frequency, not by observation intensity:
+  each sacrifice event produces one output tuple, and no
+  continuous stream is emitted between events.  (This is an
+  emission-rate bound, not a Shannon-information-rate bound; the
+  information content per event is finite but non-trivial.)
 
 \item[\textbf{(P4)}] \textbf{Commitment-layer composability.}
   The commitment protocol
@@ -280,15 +311,17 @@ identical under any two agent-valuation functions producing the
 same trade sequence.  No interior access is required or obtained.
 
 \emph{(P3) Discretization as a feature.}
-The channel emits at most one signal per sacrifice event and
-produces no continuous stream otherwise.  Over a window of
-duration $T$ the total channel output is exactly the number of
-observed events, so the information-theoretic bandwidth is
-$|\mathrm{events}|/T$.  Unlike continuous observation (which
-scales with sampling rate), this quantity is bounded above by the
-agents' trade frequency, which is a behavioural rather than
-observational parameter.  Increasing observation intensity does
-not produce more signal.
+The channel emits at most one output tuple per sacrifice event
+and produces no continuous stream otherwise.  Over a window of
+duration $T$ the total number of channel emissions is exactly
+the number of observed events, so the channel's \emph{emission
+rate} is $|\mathrm{events}|/T$.  Unlike continuous observation
+(which scales with sampling rate), the emission rate is bounded
+above by the agents' trade frequency---a behavioural rather than
+observational parameter---so increasing observation intensity
+does not increase the emission rate.  (Each emission carries
+finite information about the tuple $(i, X, Y, t)$; this is an
+emission-rate claim, not a Shannon-information-rate claim.)
 
 \emph{(P4) Commitment-layer composability.}
 Each sacrifice event admits a commitment
