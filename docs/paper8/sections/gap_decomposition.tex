@@ -103,6 +103,21 @@ sacrifice-observable path in principle
 appear in any admissible bundle; remaining pairs are disjoint by
 the bullet-stated exclusions.
 
+\medskip\noindent
+\textbf{Cooperative-closure hypothesis.}  We additionally require
+the partition $\{R, C, D, S\}$ to be \emph{cooperative-closed}:
+for every cooperative capability $z \in P$, all participants of
+$z$ lie in the same cell.  Set-disjointness alone does not
+suffice for $\volL$-additivity across cells because $\volL$
+counts cooperative contributions only when all participants are
+in the same subset (Remark~\ref{rem:poset_indep}); a cooperative
+whose participants straddle two cells contributes to $\volL(P)$
+but to neither $\volL$-cell individually.  Cooperative-closure
+ensures no such straddling and licenses additive decomposition
+by axiom~M4 (Section~\ref{sec:axiom_inheritance}).  See
+Remark~\ref{rem:cell_cooperative_closure} for how to achieve
+cooperative-closure in practice.
+
 The $\delta$ terms are:
 \begin{align*}
   \delta_{\mathrm{restricted}} &= [\volL(R) -
@@ -112,13 +127,50 @@ The $\delta$ terms are:
   \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(G), \\
   \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(G).
 \end{align*}
-The identity $1 - \betaL = \sum \delta$ follows from
-$\volL(G) = \volL(R) + \volL(C) + \volL(D) + \volL(S)$
-(disjointness plus union is $P$), combined with
-$\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$
-(dormant and residual cells contribute zero $\volRlower$ by
-definition).
+Under cooperative-closure, the identity $1 - \betaL = \sum \delta$
+follows from $\volL(G) = \volL(R) + \volL(C) + \volL(D) +
+\volL(S)$ (cooperative-closure + set-disjoint union is $P$, via
+M4), combined with $\volRlower(P) = \volRlower(R) +
+\volRlower(C) + 0 + 0$ (dormant and residual cells contribute
+zero $\volRlower$ by definition).
 \end{definition}
+
+\begin{remark}[Achieving cooperative-closure of the cells]
+\label{rem:cell_cooperative_closure}
+Three operational strategies admit the cooperative-closure
+hypothesis without changing the framework's substantive content:
+\begin{enumerate}
+\item[(a)] \emph{Priority-extension to cooperatives.}  For each
+  cooperative $z \in P$ not already classified by priority rule,
+  place $z$ in the cell of its highest-priority participant
+  (restricted $>$ covered $>$ dormant $>$ residual).  When
+  $z$'s participants all share a cell, $z$ joins them; when
+  they straddle, $z$ follows the dominant priority.  The cells
+  become cooperative-closed by construction, and the underlying
+  individual-capability classification is unchanged.
+\item[(b)] \emph{Cooperative-closed sub-partition.}  Refine the
+  partition so each cell is partitioned into its cooperative
+  closures: the set of connected components under the
+  cooperative-composition relation.  The gap decomposition then
+  operates at the sub-cell level and aggregates via two M4
+  applications (within-cell and across-cell).
+\item[(c)] \emph{Boundary residual.}  Add a fifth bucket for
+  boundary cooperatives---cooperatives whose participants span
+  cells---and attribute its $\volL$-mass to a residual term.
+  The identity becomes
+  $1 - \betaL = \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}}
+  + \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}
+  + \delta_{\mathrm{boundary}}$ with a fifth term for
+  unassigned cooperative mass.
+\end{enumerate}
+The paper's stated results assume strategy~(a) by default: the
+priority-extension rule is the natural operational choice, and
+the practical prevalence of boundary cooperatives is small when
+the capability partition's priority classes are themselves
+well-structured (e.g., restrictions are cooperative-closed
+because restricting a cooperative implies restricting its
+participants).
+\end{remark}
 
 \begin{proposition}[Computability of Gap Decomposition]
 \label{prop:gap_computable}
