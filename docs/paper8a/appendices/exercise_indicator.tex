@@ -51,6 +51,25 @@ The indicator is scoped to the observation perimeter $O$.  The
 framework may use $e_t(d)$ for internal diagnostics within $O$,
 but may \emph{not} apply it to capabilities outside $O$ (where
 privacy constraints apply).
+
+The \emph{exercise-based realized volume} within $O$ is the
+$\volL$-weighted sum of exercised capabilities in the
+perimeter:
+\[
+  \volRexact(O) \;:=\;
+  \volL\bigl(\{d \in O : e_t(d) = 1\}\bigr).
+\]
+For the window-integrated form used by
+Theorem~\ref{thm:aggregate_bound}, we set
+\[
+  \volRexact^{[W]}(O) \;:=\;
+  \volL\bigl(O \cap P^{\mathrm{ex}}_W\bigr)
+\]
+where $P^{\mathrm{ex}}_W = \bigcup_{t \in W} \{d \in O : e_t(d)
+= 1\}$.  The instantaneous form $\volRexact(O)$ is the
+$t$-indexed specialization; references to $\volRexact$ without a
+window subscript refer to the window-integrated form under the
+same convention as Definition~\ref{def:volR}.
 \end{definition}
 
 \begin{remark}[The two channels are complementary]

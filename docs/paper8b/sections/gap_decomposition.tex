@@ -23,8 +23,10 @@ or residual-class capabilities beyond the channel's reach.
 
 \begin{remark}[Evidence alarm versus proxy-failure diagnosis]
 \label{rem:alarm_interpretation}
-Because $\betaL \leq \betatrue$, the alarm distinguishes two
-regimes:
+Let $\betatrue := \volR/\volL$ be the true (latent) exercised
+fraction, of which $\betaL = \volRlower/\volL$ is the
+sacrifice-channel lower bound.  Because $\betaL \leq \betatrue$
+by construction, the alarm distinguishes two regimes:
 \begin{itemize}
 \item \textbf{Alarm fires and $\delta_{\mathrm{covered}}$ is
   small relative to $\delta_{\mathrm{dormant}} +
@@ -67,46 +69,55 @@ term is its uncovered $\volL$ share:
   + \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}}
   + \delta_{\mathrm{residual}},
 \]
-where the capability partition is defined by priority-filtered
-derived sets:
+where the capability partition is constructed in two stages.
+\medskip\noindent
+\textbf{Stage 1 (raw seed cells, by priority).}
+Classify individual capabilities by the priority rule:
 \begin{itemize}
-\item \textbf{Restricted cell:} $R := \Xi$, where $\Xi$ is the
-  set of capabilities currently restricted under the
+\item \textbf{Seed restricted cell:} $R_0 := \Xi$, where $\Xi$
+  is the set of capabilities currently restricted under the
   preemptive-restriction criterion
   of~\citep[Proposition~1]{lasser2026horizon}.  Classified first
   regardless of sacrifice evidence.
-\item \textbf{Covered cell:} $C := \CovS \setminus \Xi$, where
-  $\CovS$ is the set of capabilities appearing in at least one
-  acquired bundle $Y_n$ of a theorem-admissible sacrifice event
-  in $[T - H, T]$.  A theorem-admissible event for Part~A
-  satisfies S0, S1, S2, and S4(a); for Part~B it additionally
-  satisfies S3, S5, and within-bundle poset-independence
-  (the event-local bundle decomposition~\citep{lasser2026paper8a}).
-\item \textbf{Dormant cell:} $D := \DorS$, where
+\item \textbf{Seed covered cell:} $C_0 := \CovS \setminus \Xi$,
+  where $\CovS$ is the set of capabilities appearing in at
+  least one acquired bundle $Y_n$ of a theorem-admissible
+  sacrifice event in $[T - H, T]$.  A theorem-admissible event
+  for Part~A satisfies S0, S1, S2, and S4(a); for Part~B it
+  additionally satisfies S3, S5, and within-bundle
+  poset-independence (the event-local bundle
+  decomposition~\citep{lasser2026paper8a}).
+\item \textbf{Seed dormant cell:} $D_0 := \DorS$, where
   $\DorS = \{d \in P : d \notin \Xi,\; d \notin \ResS,\;
-  d \notin \CovS\}$ is already priority-filtered by
-  construction.  These are tradable-in-principle capabilities
-  with zero want-pursuit sacrifice evidence---dormant
-  \emph{wants}.
-\item \textbf{Residual cell:} $S := \ResS \setminus \Xi$, where
-  $\ResS$ is the structural residual class
+  d \notin \CovS\}$.  Tradable-in-principle capabilities with
+  zero want-pursuit sacrifice evidence---dormant \emph{wants}.
+\item \textbf{Seed residual cell:} $S_0 := \ResS \setminus \Xi$,
+  where $\ResS$ is the structural residual class
   (Definition~\ref{def:residual_class}).  Residual capabilities
   outside $\Xi$; capabilities in $\Xi \cap \ResS$ are already
-  assigned to $R$ by priority.
+  assigned to $R_0$ by priority.
 \end{itemize}
-The four cells $\{R, C, D, S\}$ are pairwise disjoint and their
-union is~$P$: $R$ and $S$ are disjoint by construction; $C$ and
-$D$ are priority-filtered to exclude $\Xi$; $C \cap \ResS =
-\emptyset$ because residual capabilities admit no
-sacrifice-observable path in principle
+The four seed cells $\{R_0, C_0, D_0, S_0\}$ are pairwise
+disjoint and their union is~$P$: $R_0$ and $S_0$ are disjoint by
+construction; $C_0$ and $D_0$ are priority-filtered to exclude
+$\Xi$; $C_0 \cap \ResS = \emptyset$ because residual
+capabilities admit no sacrifice-observable path in principle
 (Definition~\ref{def:residual_class}) and therefore cannot
-appear in any admissible bundle; remaining pairs are disjoint by
-the bullet-stated exclusions.
+appear in any admissible bundle; remaining pairs are disjoint
+by the bullet-stated exclusions.
 
 \medskip\noindent
-\textbf{Poset-boundary closure hypothesis.}  We additionally
-require the partition $\{R, C, D, S\}$ to be
-\emph{poset-boundary closed}, meaning both:
+\textbf{Stage 2 (closure-adjusted cells).}
+The seed cells may contain cooperative or subsumption edges
+crossing cell boundaries; to license $\volL$-additivity we
+apply a closure policy (default: priority-extension per
+Remark~\ref{rem:cell_cooperative_closure}) to obtain
+\emph{closure-adjusted cells} $R, C, D, S$.  These are the cells
+used throughout the remainder of this definition and by
+Proposition~\ref{prop:gap_computable}; they are pairwise
+disjoint, union to~$P$, agree with the seeds on all
+individual-capability classifications except where closure
+redistributes poset-connected components, and satisfy both:
 \begin{enumerate}
 \item[(CC1)] \emph{Cooperative closure.}  For every cooperative
   capability $z \in P$, all participants of $z$ lie in the same
@@ -116,11 +127,12 @@ require the partition $\{R, C, D, S\}$ to be
   connected by subsumption in $P$, they lie in the same cell.
 \end{enumerate}
 Set-disjointness alone does not suffice for $\volL$-additivity
-across cells; by the category partition~\citep{lasser2026paper8a}(i) and
-the M4 axiom inherited from
-Proposition~1~\citep{lasser2026poset}, additivity requires full
-poset-independence---\emph{neither} cross-cell cooperative
-composition \emph{nor} cross-cell subsumption.  A cooperative
+across cells; by the category-partition poset-independence
+condition of the companion paper~\citep{lasser2026paper8a} and
+the M4 axiom of~\citep[Proposition~1]{lasser2026poset},
+additivity requires full poset-independence---\emph{neither}
+cross-cell cooperative composition \emph{nor} cross-cell
+subsumption.  A cooperative
 whose participants straddle two cells contributes to $\volL(P)$
 but to neither $\volL$-cell individually (CC1 failure);
 a subsumption edge crossing the boundary couples $\volL$-mass
