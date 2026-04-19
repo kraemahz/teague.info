@@ -179,46 +179,67 @@ Given
 (ii)~the restriction set $\Xi$,
 (iii)~the residual class $\ResS$
 (Definition~\ref{def:residual_class}),
-(iv)~the capability census (enumeration of $P$), and
+(iv)~the capability census (enumeration of $P$) together with
+the cooperative-composition structure $\mathcal{M}$
+(enumeration of cooperative nodes and their participants),
 (v)~an event-admissibility labelling designating which observed
 events satisfy the theorem-admissibility requirements (S0, S1,
-S2, and S4(a) for Part~A; S0--S5 for Part~B),
+S2, and S4(a) for Part~A; S0--S5 for Part~B), and
+(vi)~a closure policy from
+Remark~\ref{rem:cell_cooperative_closure}, with strategy~(a)
+(priority-extension to cooperatives) as the default,
 the four-term gap decomposition is computable in time
-$O(|P| + E)$, where $E$ is the total number of observed
-(capability, event) membership records in the trade window.
-The $O(|P|)$ term is per-capability classification; the $O(E)$
-term is one-pass aggregation over bundle-incidence records.
+$O(|P| + E + M)$, where $E$ is the number of observed
+(capability, event) membership records and $M = |\mathcal{M}|$
+is the number of cooperative nodes in the poset.  The $O(|P|)$
+term is per-individual-capability classification; the $O(E)$
+term is one-pass aggregation over bundle-incidence records; the
+$O(M)$ term is the closure-policy pass over cooperative nodes.
 No structural counterfactual computation is required (a
 direct-measurement approach would require $O(|P|^2)$
 counterfactual queries).
 \end{proposition}
 
 \begin{proof}
+\emph{Pass 1 (individual-capability classification,
+$O(|P|)$).}
 Maintain a hash table from capabilities to their current class
-labels, initialized in $O(|P|)$ time.  Sweep the capability set
-$P$ once: for each $c \in P$, check $c \in \Xi$ (restricted
-table lookup, $O(1)$); if not, check $c \in \ResS$
-($\ResS$ classification lookup, $O(1)$); if in neither, mark as
+labels, initialized in $O(|P|)$ time.  Sweep the individual
+capabilities in $P$ once: for each $c \in P$, check $c \in \Xi$
+(restricted table lookup, $O(1)$); if not, check $c \in \ResS$
+(residual classification lookup, $O(1)$); if in neither, mark as
 dormant.  This gives an initial classification in $O(|P|)$.
 
-One-pass aggregation over the sacrifice data: iterate through
-each (capability, event) incidence record.  For each record
-$(c, n)$ with event $n$ admissibility-labelled satisfying S0/S1/S2
-(input (v)), update $c$'s class from dormant to covered (if not
-already restricted or residual).  This is $O(E)$ total work, one
-constant-time update per record.  At the end of this pass, each
-capability has its final class.
+\emph{Pass 2 (event-sweep, $O(E)$).}
+Iterate through each (capability, event) incidence record.  For
+each record $(c, n)$ with event $n$ admissibility-labelled
+satisfying S0/S1/S2 (input (v)), update $c$'s class from
+dormant to covered (if not already restricted or residual).
+This is $O(E)$ total work, one constant-time update per record.
 
-Computing the $\delta$ terms: each class's aggregate $\volL$ and
-$\volRlower$ can be maintained incrementally during the sweep,
-giving the four quotients in $O(1)$ additional time.  The
-counterfactual comparison---removing capability $c$ and recomputing
-global reachability---is not performed; only membership checks
-and aggregation occur.  A direct-measurement approach requiring
-$O(|P|^2)$ counterfactuals (one per capability per reachability
-check) is avoided because covered/dormant classification here
-uses bundle-appearance evidence, not marginal-contribution
-evidence.
+\emph{Pass 3 (closure-policy pass, $O(M)$).}
+For each cooperative node $z \in \mathcal{M}$ with participants
+$\Pi(z) \subseteq P$: under default strategy~(a), place $z$ in
+the cell of its highest-priority participant (restricted $>$
+covered $>$ dormant $>$ residual).  Look up each participant's
+cell (at most $|\Pi(z)| = O(1)$ for bounded-arity cooperatives,
+$O(\max_z |\Pi(z)|)$ in general); assign $z$ to the maximal
+priority.  The cells become cooperative-closed
+(Definition~\ref{def:gap_decomp}) by construction.  Under
+strategy~(b) or~(c), the pass is replaced by the corresponding
+sub-partition or boundary-bucket construction, with the same
+$O(M)$ complexity modulo constants.
+
+\emph{Aggregation.}
+Each class's aggregate $\volL$ and $\volRlower$ is maintained
+incrementally across the three passes, giving the four quotients
+in $O(1)$ additional time.  The counterfactual
+comparison---removing capability $c$ and recomputing global
+reachability---is not performed; only membership checks,
+aggregation, and closure-policy lookups occur.  A
+direct-measurement approach requiring $O(|P|^2)$ counterfactuals
+is avoided because covered/dormant classification here uses
+bundle-appearance evidence, not marginal-contribution evidence.
 \end{proof}
 
 \begin{remark}[Admissibility-labelling is an external input]
