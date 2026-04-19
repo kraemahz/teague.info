@@ -133,56 +133,85 @@ not total.  Two specific residuals create genuine asymmetries
 where one channel captures something the other cannot substitute
 for.
 
-\begin{proposition}[Agent-Specific-Time Residual]
+\begin{proposition}[Agent-Specific-Time Residual (existential)]
 \label{prop:agent_specific_time}
-Capabilities whose exercise requires the \emph{agent's own time}
-(not any time, delegated or purchased) are captured by the time
-channel but not fully substitutable through the money channel.
+There exists a capability $c^\ast$ reachable by the time channel
+but whose $\volR$-content is not captured by any money-channel
+event on $c^\ast$ itself (access goods purchasable with money
+attach $\volR$-content to \emph{access categories}, not to
+$c^\ast$).  The non-substitutability is of the specific
+$c^\ast$, not a claim that all agent-specific-time capabilities
+evade the money channel entirely.
 \end{proposition}
 
 \begin{proof}
-We exhibit a witness.  Consider $c^\ast = $ ``sustained
-mentoring relationship with a specific individual.''  The
-relational capability is constituted by the interaction between
-this agent and the mentee; it is not transferable to a proxy.
-Money can purchase access goods (introductions, a mentor's
-scheduled time, coaching infrastructure), but these are distinct
-bundles whose $\volR$-content lies in access categories rather
-than in the relational capability itself.  In contrast, when
-agent~$i$ allocates $h$ hours foregoing wage income $r_i \cdot h$
-to the relationship, the time-sacrifice event
+We exhibit $c^\ast = $ ``sustained mentoring relationship with a
+specific individual.''  The relational capability is constituted
+by the interaction between this agent and the mentee; it is not
+transferable to a proxy.  Money can purchase access goods
+(introductions, a mentor's scheduled time, coaching
+infrastructure), but these are distinct bundles whose
+$\volR$-content lies in access categories rather than in the
+relational capability $c^\ast$ itself.  A paid mentoring
+engagement generates a money-channel event on \emph{scheduled
+access} rather than on the relationship capability $c^\ast$.
+When agent~$i$ allocates $h$ hours foregoing wage income
+$r_i \cdot h$ to the relationship, the time-sacrifice event
 (Definition~\ref{def:time_sacrifice}) produces
-$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ where
-$c^\ast \in Y$.  Agent-specific time is thus captured by the
-time channel and not reachable via the cooperative-market
-substitution of money for time.
+$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ with $c^\ast \in
+Y$, giving the time channel an event that the money channel
+does not produce for $c^\ast$.
 \end{proof}
 
-\begin{proposition}[Capital-Concentrated Residual]
+\begin{proposition}[Capital-Concentrated Residual (existential)]
 \label{prop:capital_concentrated}
-Capabilities whose exercise requires concentrated capital access
-(instruments, facilities, materials whose unit cost exceeds any
-individual agent's feasible time-sacrifice budget) are captured
-by the money channel but not fully substitutable through the
-time channel.
+There exists a capability $c^\ast$ reachable by the money
+channel but whose $\volR$-content is not captured by any
+time-channel event on $c^\ast$ itself (direct time-sacrifice on
+$c^\ast$ without capital access yields no realized exercise).
+The non-substitutability is of the specific $c^\ast$, not a
+claim that all capital-concentrated capabilities evade the time
+channel entirely.
 \end{proposition}
 
 \begin{proof}
-We exhibit a witness.  Consider $c^\ast = $ ``conduct a
-particle-physics experiment using a synchrotron.''  The exercise
-of $c^\ast$ requires access to specialized infrastructure whose
-acquisition or lease cost is concentrated in a single transaction
-(institutional budget, grant award, facility time purchased).
-An agent accumulating time-sacrifice at wage rate $r_i$ can only
-reach this capability by first converting time to money via
-employment and then purchasing access---which is the money
-channel, not the time channel.  Direct time-sacrifice (hours
-spent without capital access) yields no experimental event and
-no $\volR$ signal on $c^\ast$.  The money channel captures
-$c^\ast$ via the single access-purchase event; the time channel
-is silent because the time-sacrifice exchange rate is too small
-relative to the capital threshold.
+We exhibit $c^\ast = $ ``conduct a particle-physics experiment
+using a synchrotron.''  The exercise of $c^\ast$ requires access
+to specialized infrastructure whose acquisition or lease cost is
+concentrated in a single transaction (institutional budget,
+grant award, facility time purchased).  An agent accumulating
+time-sacrifice at wage rate $r_i$ can only reach this capability
+by first converting time to money via employment and then
+purchasing access---which is the money channel, not the time
+channel, since the converted-to-money event is a market
+transaction.  Direct time-sacrifice (hours spent without capital
+access) yields no experimental event and no $\volR$ signal on
+$c^\ast$.  The money channel captures $c^\ast$ via the single
+access-purchase event; the time channel is silent for $c^\ast$
+because the time-sacrifice exchange rate on direct-labor hours
+is too small relative to the capital threshold, and
+time-channel events accompanying capital-enabled exercise are
+attributable to labor categories rather than to $c^\ast$'s
+capital-concentrated access.
 \end{proof}
+
+\begin{remark}[Scope of the residual propositions]
+\label{rem:residual_scope}
+Propositions~\ref{prop:agent_specific_time}
+and~\ref{prop:capital_concentrated} are
+\emph{existential}---each witnesses one capability exhibiting
+the claimed residual behavior.  They do not establish that the
+descriptive class ``all agent-specific-time capabilities'' or
+``all capital-concentrated capabilities'' is uniformly
+channel-exclusive.  Mixed-mode coverage of such capabilities can
+and does occur (a paid mentor also incurs time-sacrifice; a
+well-funded scientist can generate labor-attributed time events
+alongside capital-access events).  The existential residuals
+are sufficient for Corollary~\ref{cor:joint_coverage}'s
+strict-improvement claim, which is stated conditional on the
+trade window actually containing at least one residual-category
+event.
+\end{remark}
 
 \begin{corollary}[Joint Channel Triangulation]
 \label{cor:joint_coverage}
