@@ -15,13 +15,27 @@ consenting sub-collective).
 \label{def:exercise_indicator}
 Let $G$ be a capability collective operating within an
 agreed-upon observation perimeter $O \subseteq P$.  We require
-$O$ to be \emph{boundary-closed}: for every cooperative
-capability $z \in P$, either all participants of $z$ lie in $O$
-or none do (so cooperatives are not split across the
-$O$/$P \setminus O$ partition).  Boundary-closure ensures that
-$O$ and $P \setminus O$ are poset-independent in the sense of
+$O$ to be \emph{boundary-closed in the poset-independence sense
+of Definition~\ref{def:category_partition}(i)}: neither
+cooperative-composition nor subsumption links cross the
+$O$/$P \setminus O$ partition.  Concretely, two conditions:
+\begin{enumerate}
+\item[(BC1)] \emph{Cooperative closure.}  For every cooperative
+  capability $z \in P$, either all participants of $z$ lie in
+  $O$ or none do (so cooperatives are not split across the
+  boundary).
+\item[(BC2)] \emph{Subsumption closure.}  No subsumption
+  relation crosses the boundary: if $c \succeq c'$ in $P$ (i.e.,
+  $c$ subsumes $c'$), then either both $c, c' \in O$ or both
+  $c, c' \in P \setminus O$.
+\end{enumerate}
+Together (BC1) and (BC2) make $O$ and $P \setminus O$
+poset-independent in the sense of
 Definition~\ref{def:category_partition}(i), which is what
-licenses additive composition across the boundary below.
+licenses additive composition across the boundary below.  (BC1)
+alone---the weaker cooperative-only condition---is insufficient:
+subsumption edges crossing the boundary would break M4 on the
+$O$/$P \setminus O$ partition.
 
 For each capability $d \in O$, define:
 \[
@@ -61,21 +75,29 @@ sacrifice channel.
 
 \begin{remark}[When boundary-closure fails]
 \label{rem:boundary_cooperative_undercount}
-If $O$ is not boundary-closed---some cooperative $z$ has
-participants split across $O$ and $P \setminus O$---then $z$
-contributes to $\volR(P)$ but to neither $\volRexact(O)$ nor
-$\volRlower(P \setminus O)$ individually (the exercise indicator
-inside $O$ evaluates only capabilities fully within $O$; the
-sacrifice channel outside $O$ cannot reach $z$ if $z$'s full
-participant set is not in $P \setminus O$).  In that case
-$\volRcomb$ remains a \emph{conservative} lower bound on
-$\volR(P)$---it simply undercounts boundary cooperatives by the
-subadditivity of $\volL$ on non-disjoint components---but the
-equality with $\volR(P)$ above no longer holds.  Practical
-perimeters (the collective's own operational scope,
-consenting sub-collectives) typically satisfy boundary-closure
-because cooperative capabilities are either wholly internal to
-the perimeter or wholly external; where boundary cooperatives
-exist, the undercount is quantified by the $\volL$-weight of
-those cooperatives.
+If $O$ fails either condition---a cooperative $z$ has
+participants split across $O$ and $P \setminus O$ (BC1 fails),
+or a subsumption edge $c \succeq c'$ crosses the boundary (BC2
+fails)---then $O$ and $P \setminus O$ are not
+poset-independent, and M4 additivity across the boundary does
+not apply.  Specifically: under a BC1 failure, $z$ contributes
+to $\volR(P)$ but to neither $\volRexact(O)$ nor $\volRlower(P
+\setminus O)$ individually (the exercise indicator inside $O$
+evaluates only capabilities fully within $O$; the sacrifice
+channel outside $O$ cannot reach $z$ if $z$'s full participant
+set is not in $P \setminus O$).  Under a BC2 failure, the
+subsumption edge couples $\volL$-mass across the boundary in
+ways that the independent-component additivity of M4 cannot
+decompose.  In either case $\volRcomb$ remains a
+\emph{conservative} lower bound on $\volR(P)$---the subadditivity
+of $\volL$ on non-independent components ensures the sum of
+pieces is $\leq$ the whole---but the equality with $\volR(P)$
+above no longer holds.  Practical perimeters (the collective's
+own operational scope, consenting sub-collectives) typically
+satisfy both boundary-closure conditions because cooperative
+capabilities and subsumption hierarchies are either wholly
+internal to the perimeter or wholly external; where either BC1
+or BC2 fails, the undercount is quantified by the $\volL$-weight
+of the offending cross-boundary cooperatives and subsumption
+edges.
 \end{remark}
