@@ -135,25 +135,38 @@ Remark~\ref{rem:hhi_alarm_governance}.
 \begin{proposition}[Third-Party Observability of the
 Concentration Signal (Part~A)]
 \label{prop:third_party_wireheading}
-The Part~A \emph{category-flow} concentration statistic
-$\widetilde\HHI$ is computable from public trade data (committed
-sacrifice events, Definition~\ref{def:committed_event}) without
-access to any agent's private state.  Specifically, define
+When the total observed sacrifice magnitude
+$\sum_n \Delta\volL(X_n) > 0$, the Part~A \emph{category-flow}
+concentration statistic $\widetilde\HHI$ is computable from
+public trade data (committed sacrifice events,
+Definition~\ref{def:committed_event}) without access to any
+agent's private state.  Specifically, define
 \[
   \tilde\lambda_{\mathrm{trade}}(j, T) \;=\;
-  \frac{\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)}
-       {\sum_n \Delta\volL(X_n)},
+  \begin{cases}
+    \dfrac{\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)}
+         {\sum_n \Delta\volL(X_n)}
+      & \text{if } \sum_n \Delta\volL(X_n) > 0, \\
+    \text{undefined (diagnostic suppressed)}
+      & \text{if } \sum_n \Delta\volL(X_n) = 0,
+  \end{cases}
   \qquad
   \widetilde\HHI \;=\; \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2,
 \]
-for the trade window $T$.  A third-party auditor with access
-only to the committed sacrifice ledger can compute
-$\widetilde\HHI$ and raise the Part~A category-flow alarm
-(wireheading-consistent in the sense of
+for the trade window $T$ (with $\widetilde\HHI$ correspondingly
+suppressed when $\tilde\lambda_{\mathrm{trade}}$ is undefined).
+A third-party auditor with access only to the committed
+sacrifice ledger can compute $\widetilde\HHI$ whenever the
+window contains positive-magnitude events and raise the Part~A
+category-flow alarm (wireheading-consistent in the sense of
 Proposition~\ref{prop:wireheading_hhi}, with
 $\tilde\lambda_{\mathrm{trade}}$ substituted for
 $\lambda_{\mathrm{trade}}$; not a wireheading determination on
-its own).
+its own).  When the window has zero total sacrifice flow, the
+diagnostic is suppressed (the relevant signal in that regime is
+the gap decomposition, \S\ref{sec:gap_decomposition}, matching
+the parallel suppression rule of
+Definition~\ref{def:trade_leverage}).
 \end{proposition}
 
 \begin{proof}
