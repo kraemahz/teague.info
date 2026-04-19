@@ -1,0 +1,145 @@
+\section{Notation Summary}
+\label{app:notation}
+
+\subsection{Symbols introduced in this paper}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Symbol} & \textbf{Definition} & \textbf{Ref.} \\
+\midrule
+$\{d_1,\ldots,d_m\}$ & Dimensions of a need bundle
+  & Def.~\ref{def:need_bundle} \\
+$\{s_1,\ldots,s_m\}$ & Sufficiency thresholds per dimension
+  & Def.~\ref{def:need_bundle} \\
+$p_N$ & Position of need $N$ in the poset
+  & Def.~\ref{def:need_bundle} \\
+$\Down(p_N)$ & Downstream cone of need $N$
+  & Def.~\ref{def:need_bundle} \\
+$\pi_N$ & Need-satisfaction pathway
+  & Def.~\ref{def:need_bundle} \\
+$\Pi_N^0$ & Class of threshold-satisfying pathways
+  & Def.~\ref{def:downstream_safe} \\
+$\Pi_N^{\mathrm{ref}}$ & Admissible reference set
+  (governance-designated)
+  & Def.~\ref{def:downstream_safe} \\
+$\pi^*$ & Element of $\Pi_N^{\mathrm{ref}}$
+  & Def.~\ref{def:downstream_safe} \\
+$G(s)$ & Downstream gate function
+  & Def.~\ref{def:downstream_gate} \\
+$\alpha_0$ & Gate floor ($G(0)$)
+  & Def.~\ref{def:downstream_gate} \\
+$W_{\mathrm{down}}(N), W_{\mathrm{out}}(N)$
+  & Downstream-cone weight, complementary weight
+  & Def.~\ref{def:downstream_gate} \\
+$\volL^{\mathrm{eff}}$ & Downstream-gated effective volume
+  & Def.~\ref{def:downstream_gate} \\
+$\Xi$ & Restriction set (preemptive-restriction criterion)
+  & Def.~\ref{def:gap_decomp} \\
+$\betaalarm$ & Alarm threshold
+  & Def.~\ref{def:alarm} \\
+$R, C, D, S$ & Gap-decomposition cells (priority-filtered)
+  & Def.~\ref{def:gap_decomp} \\
+$\delta_{\mathrm{restricted}}$, etc.
+  & Gap decomposition terms
+  & Def.~\ref{def:gap_decomp} \\
+$\NAC(T)$ & Need-access cost aggregate
+  & Def.~\ref{def:nac} \\
+$\NSE(i, N)$ & Per-agent need-satisfaction efficiency
+  & Def.~\ref{def:nse} \\
+$\lambda_{\mathrm{trade}}(j, T)$ & Trade-flow leverage
+  (Part~B)
+  & Def.~\ref{def:trade_leverage} \\
+$\tilde\lambda_{\mathrm{trade}}(j, T)$ & Category-flow leverage
+  (Part~A)
+  & Prop.~\ref{prop:third_party_wireheading} \\
+$\HHI, \widetilde\HHI$ & Herfindahl--Hirschman Index
+  (Part~B / Part~A)
+  & Prop.~\ref{prop:wireheading_hhi} \\
+$\HHI_{\mathrm{alarm}}$ & Wireheading detection threshold
+  & Prop.~\ref{prop:wireheading_hhi} \\
+$\ResB, \ResS$ & Benchmarkability- and
+  sacrifice-channel-residual classes
+  & Def.~\ref{def:residual_class} \\
+$e_t(d), O$ & Exercise indicator, observation perimeter
+  & Companion paper \\
+$\volRexact(O), \volRcomb$
+  & Exercise-based and combined $\volR$ diagnostics
+  & Companion paper \\
+$\OIfloor(k)$ & Observational individuation floor for agent
+  $k$
+  & Prop.~\ref{prop:oi_floor} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Symbols inherited from the companion
+paper~\citep{lasser2026paper8a}}
+
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Symbol} & \textbf{Definition (companion paper)} \\
+\midrule
+$(i, X, Y, t)$ & Revealed-sacrifice event \\
+$\Delta\volL(X)$ & Surrendered-capability $\volL$ contribution \\
+$\volRlower, \volRlower^{\mathrm{A}}$ & Part~B / Part~A lower
+  bounds \\
+$\betaL$ & B-to-C ratio under revealed sacrifice \\
+S0--S5 & Sacrifice-model assumptions \\
+$\alpha_{n,c}$ & Event-local decomposition coefficients \\
+$(\Gamma, \pi, t)$ & Committed revealed-sacrifice event \\
+$\catY$, $\mathcal{C}$ & Bundle's partition label, public
+  category partition \\
+$\Commit, \Ui$ & Commitment scheme, agent utility \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Dependencies on prior papers}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Paper} & \textbf{Result} & \textbf{Number}
+  & \textbf{Used in} \\
+\midrule
+\citep{lasser2026paper8a}
+  & Revealed-sacrifice event and assumptions & Def.~1, S0--S5
+  & \S\ref{sec:need_sufficiency} \\
+\citep{lasser2026paper8a}
+  & Aggregate B-to-C lower bound & Thm.~2
+  & \S\ref{sec:gap_decomposition},~\ref{sec:wireheading} \\
+\citep{lasser2026paper8a}
+  & Committed events and ZK rollup & \S6
+  & \S\ref{sec:wireheading} \\
+\citep{lasser2026gfm}
+  & Population empowerment & Def.~6
+  & \S\ref{sec:introduction} \\
+\citep{lasser2026poset}
+  & Benchmark & Def.~2
+  & \S\ref{sec:need_sufficiency} \\
+\citep{lasser2026poset}
+  & Poset measure $\volL$, axioms M1--M6 & Def.~7, Prop.~1
+  & \S\ref{sec:gap_decomposition} \\
+\citep{lasser2026horizon}
+  & Exercise pathway & Def.~2
+  & Rem.~\ref{rem:exercise_pathway} \\
+\citep{lasser2026horizon}
+  & Preemptive-restriction criterion & Prop.~1
+  & Def.~\ref{def:gap_decomp} \\
+\citep{lasser2026horizon}
+  & Observational individuation & Cor.~2.1
+  & Prop.~\ref{prop:oi_floor} \\
+\citep{lasser2026horizon}
+  & Information value of structure & Prop.~2
+  & Open Q \ref{oq:capability_stuffing} \\
+\citep{lasser2026wamura}
+  & Controlled relaxation & Def.~3
+  & \S\ref{sec:integration} \\
+\bottomrule
+\end{tabular}
+\end{center}

@@ -1,0 +1,218 @@
+\section{Wireheading-Consistent Signature via Trade-Flow
+Concentration}
+\label{sec:wireheading}
+
+Wireheading produces high $\betaL$ with degenerate exercise: the
+collective exercises capabilities, but only in narrow
+self-reinforcing loops.  Under the sacrifice-based observation
+model, the wireheading signature appears as \emph{trade-flow
+concentration}: the collective's sacrifice events cluster in a
+narrow category of unbenchmarked bundles, rather than distributing
+across the capability space.
+
+\begin{definition}[Trade-Flow Leverage]
+\label{def:trade_leverage}
+For bundle category $C_j \in \mathcal{C}$
+(the category partition~\citep{lasser2026paper8a}), the trade-flow
+leverage of $C_j$ at time $T$ is:
+\[
+  \lambda_{\mathrm{trade}}(j, T) \;=\;
+  \begin{cases}
+    \volRlower(C_j, T) \;/\; \volRlower(G, T)
+      & \text{if } \volRlower(G, T) > 0, \\
+    \text{undefined (diagnostic suppressed)}
+      & \text{if } \volRlower(G, T) = 0.
+  \end{cases}
+\]
+Under healthy trade diversity, leverage is distributed across many
+categories.  Under wireheading, leverage concentrates on the loop
+drivers.  When total observed trade flow is zero (the agent has
+produced no theorem-admissible sacrifice events in the window),
+$\lambda_{\mathrm{trade}}$ is not a meaningful quantity and the
+diagnostic is suppressed; the relevant signal in that regime is
+the gap decomposition (\S\ref{sec:gap_decomposition}), which
+classifies capabilities as dormant or residual rather than as
+concentration-anomalies.
+\end{definition}
+
+\begin{proposition}[Wireheading-Consistent Concentration
+Signal]
+\label{prop:wireheading_hhi}
+When $\volRlower(G, T) > 0$, the Herfindahl--Hirschman
+Index~\citep{rhoades1993herfindahl}
+\[
+  \HHI(\lambda_{\mathrm{trade}}) \;=\;
+  \sum_{j} \lambda_{\mathrm{trade}}(j)^2
+\]
+is \emph{Schur-convex} on the simplex of probability vectors:
+for leverage distributions $\lambda, \lambda'$ over the same
+support, if $\lambda$ majorizes $\lambda'$ (i.e., $\lambda$ is
+at least as concentrated as $\lambda'$ in the sense
+of~\citet{hardy1929majorization}), then $\HHI(\lambda) \geq
+\HHI(\lambda')$.  Concentration in the majorization order
+therefore induces a monotone ordering of $\HHI$ values, and
+comparing $\HHI$ against a governance-set threshold
+$\HHI_{\mathrm{alarm}}$ provides a
+concentration-consistent-with-wireheading alarm: if
+$\HHI > \HHI_{\mathrm{alarm}}$, a small number of bundle
+categories dominate the aggregate, which is the behavioural
+signature of narrow self-reinforcing exercise.
+\end{proposition}
+
+\begin{remark}[$\HHI_{\mathrm{alarm}}$ is a governance parameter,
+not a theorem-derived separator]
+\label{rem:hhi_alarm_governance}
+The alarm threshold $\HHI_{\mathrm{alarm}}$ is not derived from
+the framework's axioms; it is a governance parameter calibrated
+to the framework's tolerance for concentration risk, analogous
+to $\HHI$ thresholds in antitrust practice and to the sufficiency
+thresholds of Definition~\ref{def:need_bundle}.  Its appropriate
+value depends on the support size (number of categories with
+non-zero leverage), the domain's expected baseline concentration,
+and the framework's false-positive/false-negative tolerance.
+The structural guarantee is that $\HHI$ is monotone in
+concentration; the separation between wireheading-consistent and
+wireheading-inconsistent patterns is operational, not
+theorem-derived.
+\end{remark}
+
+\begin{proof}
+Let $m = |\{j : \volRlower(C_j) > 0\}|$ be the number of bundle
+categories with non-zero observed leverage.  The leverage vector
+$\lambda = (\lambda_{\mathrm{trade}}(j))_j$ is a probability
+distribution: $\lambda_j \geq 0$ and $\sum_j \lambda_j = 1$ by
+the normalization in Definition~\ref{def:trade_leverage}.
+
+\emph{Schur-convexity.}
+$\HHI(\lambda) = \sum_j \lambda_j^2$ is a sum of convex functions
+of the coordinates and is symmetric under permutation.  Any
+symmetric convex function on the simplex is Schur-convex by the
+Hardy--Littlewood--P\'olya
+theorem~\citep{hardy1929majorization,marshall2011inequalities};
+therefore $\lambda$ majorizing $\lambda'$ implies $\HHI(\lambda)
+\geq \HHI(\lambda')$.  Equivalently, spreading mass from heavier
+bins to lighter bins weakly decreases $\HHI$, and concentrating
+mass from lighter bins to heavier bins weakly increases it.
+
+\emph{Quantitative bounds.}
+For any probability distribution $\lambda$ with support of size
+$m$, Cauchy--Schwarz (or Jensen's inequality on the squaring
+map) gives $\HHI(\lambda) \geq 1/m$, with equality iff $\lambda$
+is uniform---the minimally-concentrated distribution in the
+majorization order.  At the other extreme, if the top $k$
+categories capture fraction $\rho$ of total leverage,
+$\HHI \geq \rho^2/k$ (achieved by concentrating the top-$k$ mass
+uniformly on those $k$ bins).
+
+\emph{Alarm criterion.}
+A wireheading signature concentrates trade flow in $k$
+loop-driver categories with $\rho$ close to $1$ and $k$ small,
+forcing $\HHI \geq \rho^2/k$.  A governance-chosen threshold
+$\HHI_{\mathrm{alarm}} \in (1/m, 1)$ determines which
+concentration levels trigger the alarm; by Schur-convexity, the
+alarm fires on a majorization-upper set of distributions (if
+$\lambda$ triggers the alarm and $\lambda' \succeq \lambda$ in
+the majorization order, then $\lambda'$ also triggers it).
+Whether any specific $\HHI_{\mathrm{alarm}}$ cleanly
+\emph{separates} ``diverse'' from ``loop-dominated'' depends on
+the domain's baseline concentration and the framework's
+tolerance for false positives/negatives---the threshold is a
+governance parameter, not a theorem-derived separator (see
+Remark~\ref{rem:hhi_alarm_governance}).
+\end{proof}
+
+\begin{remark}[Advantage over structural counterfactual]
+A direct-measurement approach would try to identify wireheading
+via exercise-leverage concentration, requiring the marginal
+$\volR$ contribution of each capability (a counterfactual query).
+The trade-flow formulation surfaces the concentration signal via
+$\HHI$ on observed trade data, requiring no counterfactual
+computation.  The diagnostic is strictly more tractable; it
+remains a signal rather than a definitive detection, per
+Remark~\ref{rem:hhi_alarm_governance}.
+\end{remark}
+
+\begin{proposition}[Third-Party Observability of the
+Concentration Signal (Part~A)]
+\label{prop:third_party_wireheading}
+When the total observed sacrifice magnitude
+$\sum_n \Delta\volL(X_n) > 0$, the Part~A \emph{category-flow}
+concentration statistic $\widetilde\HHI$ is computable from
+public trade data (committed sacrifice events,
+the committed event definition~\citep{lasser2026paper8a}) without access to any
+agent's private state.  Specifically, define
+\[
+  \tilde\lambda_{\mathrm{trade}}(j, T) \;=\;
+  \begin{cases}
+    \dfrac{\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)}
+         {\sum_n \Delta\volL(X_n)}
+      & \text{if } \sum_n \Delta\volL(X_n) > 0, \\
+    \text{undefined (diagnostic suppressed)}
+      & \text{if } \sum_n \Delta\volL(X_n) = 0,
+  \end{cases}
+  \qquad
+  \widetilde\HHI \;=\; \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2,
+\]
+for the trade window $T$ (with $\widetilde\HHI$ correspondingly
+suppressed when $\tilde\lambda_{\mathrm{trade}}$ is undefined).
+A third-party auditor with access only to the committed
+sacrifice ledger can compute $\widetilde\HHI$ whenever the
+window contains positive-magnitude events and raise the Part~A
+category-flow alarm (wireheading-consistent in the sense of
+Proposition~\ref{prop:wireheading_hhi}, with
+$\tilde\lambda_{\mathrm{trade}}$ substituted for
+$\lambda_{\mathrm{trade}}$; not a wireheading determination on
+its own).  When the window has zero total sacrifice flow, the
+diagnostic is suppressed (the relevant signal in that regime is
+the gap decomposition, \S\ref{sec:gap_decomposition}, matching
+the parallel suppression rule of
+Definition~\ref{def:trade_leverage}).
+\end{proposition}
+
+\begin{proof}
+By the committed event definition~\citep{lasser2026paper8a}, every committed
+sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
+in cleartext.  For the category-flow statistic, both the
+numerator $\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)$ (which
+sums only committed fields conditional on the committed category
+label) and the denominator $\sum_n \Delta\volL(X_n)$ are direct
+functions of the revealed-cleartext fields.  No hidden
+field---agent identity, bundle-interior subset, $\alpha_{n,c}$
+coefficients---enters the computation.  Hence
+$\widetilde\HHI = \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2$ is
+publicly computable.  The alarm test
+$\widetilde\HHI > \HHI_{\mathrm{alarm}}$ is consequently
+computable by any party with read access to the committed-event
+ledger.  Monotonicity of $\widetilde\HHI$ in trade-flow
+concentration across categories follows from the same
+Cauchy--Schwarz / Herfindahl argument as
+Proposition~\ref{prop:wireheading_hhi}, applied to the
+category-flow distribution.
+\end{proof}
+
+\begin{remark}[Part~B observability requires richer commitments]
+\label{rem:wireheading_part_b_obs}
+The per-capability Part~B concentration statistic
+$\HHI(\lambda_{\mathrm{trade}})$ built on
+$\volRlower(C_j, T) = \sum_{c \in C_j \cap U} \volRlower(c, T)$
+is \emph{not} third-party computable from the committed-event
+interface of the committed event definition~\citep{lasser2026paper8a}.  The
+committed form reveals only the partition label $\catY[_n]$ and
+attests $Y_n \subseteq C_{\catY[_n]}$; it does not reveal which
+subset of $C_{\catY[_n]}$ was actually acquired, nor the
+per-capability attribution coefficients $\alpha_{n,c}$.
+Computing $\volRlower(c, T) =
+\max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$
+therefore requires additional committed fields: per-event
+subset-membership openings (or a ZK attestation equivalent), and
+the $\alpha_{n,c}$ coefficients (public by an equal-weight
+default, or committed alongside the event under a richer
+Part~B variant as flagged in the Part~B commitment remark~\citep{lasser2026paper8a}).
+Under that richer commitment, the Part~B statistic becomes
+third-party observable; under the default Part~A commitment, it
+is not.  Within a consented operational perimeter~$O$
+(the exercise-indicator appendix of~\citep{lasser2026paper8a}), no richer commitment is
+needed because direct per-capability evaluation is permitted;
+the Part~B statistic is then available to the perimeter
+operator, not to arbitrary third parties.
+\end{remark}

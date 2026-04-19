@@ -1,0 +1,150 @@
+\section{Notation Summary}
+\label{app:notation}
+
+\subsection{Symbols introduced in this paper}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Symbol} & \textbf{Definition} & \textbf{Ref.} \\
+\midrule
+$(i, X, Y, t)$ & Revealed-sacrifice event
+  & Def.~\ref{def:sacrifice_event} \\
+$\Delta\volL(X)$ & $\volL$ contribution of surrendered
+  capability
+  & Def.~\ref{def:sacrifice_event} \\
+$\volRlower(Y)$ & Lower bound on $\volR$ of acquired bundle
+  & Def.~\ref{def:sacrifice_event} \\
+$[t_0, t_0 + T]$ & Aggregate trade window
+  & Def.~\ref{def:trade_window} \\
+$P^{\mathrm{ex}}_t$, $P^{\mathrm{ex}}_W$
+  & Exercised sub-poset (instantaneous / window-integrated)
+  & Def.~\ref{def:volR} \\
+$\volR_t$, $\volR^{[W]}$
+  & Realized capability volume (instantaneous /
+  window-integrated)
+  & Def.~\ref{def:volR} \\
+$\alpha_{n,c}$ & Event-local decomposition coefficients
+  & Def.~\ref{def:bundle_decomp} \\
+$\volRlower^{\mathrm{A}}(E)$ & Part~A lower bound via sub-batch
+  supremum
+  & Prop.~\ref{prop:monotone_part_a} \\
+$\betaL(G, T)$ & B-to-C ratio under revealed sacrifice
+  & Def.~\ref{def:btoc_ratio} \\
+$p$ & Price (money-sacrifice signal)
+  & Def.~\ref{def:money_sacrifice} \\
+$r_i$ & Agent $i$'s market wage rate
+  & Def.~\ref{def:time_sacrifice} \\
+$(\Gamma, \pi, t)$ & Committed revealed-sacrifice event
+  & Def.~\ref{def:committed_event} \\
+$\mathcal{C}$ & Public poset-independent partition of $U$
+  & Def.~\ref{def:category_partition} \\
+$\catY$ & Bundle's partition label
+  & Def.~\ref{def:category_partition} \\
+$e_t(d)$ & Exercise indicator (internal perimeter)
+  & Def.~\ref{def:exercise_indicator} \\
+$O$ & Observation perimeter
+  & Def.~\ref{def:exercise_indicator} \\
+$\volRexact(O)$ & Exercise-based realized volume within $O$
+  & Def.~\ref{def:exercise_indicator} \\
+$\volRcomb$ & Combined diagnostic (exact + lower bound)
+  & App.~\ref{app:exercise_indicator} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Assumptions}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Assumption} & \textbf{Name} & \textbf{ZK-verifiable?} \\
+\midrule
+S0 & Valuation-bounded-by-Exercise
+  ($\Ui(Y) \leq \volR^{[W]}(Y)$) & No \\
+S1 & Free choice (non-degrading alternative) & Partially \\
+S2 & Benchmark grounding ($\Ui(X) \geq \Delta\volL(X)$)
+  & Objective part only \\
+S3 & Bundle coherence (non-degenerate decomposition) & Yes \\
+S4(a) & Valuation additivity & No \\
+S4(b) & $\volR$ additivity on poset-independent capabilities
+  & Yes (via poset) \\
+S5 & Decomposition validity
+  ($\alpha$ are share lower bounds) & No \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Dependencies on prior papers}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Paper} & \textbf{Result} & \textbf{Number}
+  & \textbf{Used in} \\
+\midrule
+\citep{lasser2026gfm}
+  & Population empowerment & Def.~6
+  & \S\ref{sec:introduction} \\
+\citep{lasser2026gfm}
+  & Self-balancing & Prop.~1
+  & \S\ref{sec:introduction},
+  Cor.~\ref{cor:not_self_balancing} \\
+\citep{lasser2026poset}
+  & Benchmark & Def.~2
+  & Def.~\ref{def:sacrifice_event} \\
+\citep{lasser2026poset}
+  & Poset measure $\volL$ & Def.~7
+  & Def.~\ref{def:sacrifice_event},
+  Def.~\ref{def:btoc_ratio} \\
+\citep{lasser2026poset}
+  & Axioms M1--M6 & Prop.~1
+  & Thm.~\ref{thm:axiom_inheritance} \\
+\citep{lasser2026poset}
+  & Self-balancing on posets & Thm.~1
+  & Cor.~\ref{cor:not_self_balancing} \\
+\citep{lasser2026horizon}
+  & Anti-monopolar property & Prop.~6
+  & \S\ref{sec:introduction} \\
+\citep{lasser2026horizon}
+  & Preemptive-restriction criterion & Prop.~1
+  & \S\ref{sec:integration} \\
+\citep{lasser2026scm}
+  & Observation-window framing & (general)
+  & Def.~\ref{def:trade_window} \\
+\citep{lasser2026exo}
+  & Commitment Protocol & Def.~6
+  & Def.~\ref{def:committed_event} \\
+\citep{lasser2026exo}
+  & ZK Capability Proof & Def.~7
+  & Def.~\ref{def:committed_event} \\
+\citep{lasser2026phase}
+  & Phase boundary & Thm.~1
+  & \S\ref{sec:integration} \\
+\citep{lasser2026phase}
+  & Channel redundancy & Thm.~2
+  & \S\ref{sec:integration} \\
+\citep{lasser2026wamura}
+  & Controlled relaxation & Def.~3
+  & \S\ref{sec:integration} \\
+\citep{lasser2026wamura}
+  & Damage bound & Thm.~1
+  & \S\ref{sec:integration} \\
+\citep{lasser2026paper8b}
+  & Need-sufficiency architecture (S1 filter) & \S2
+  & Sec.~\ref{sec:sacrifice_model} (as external precondition) \\
+\citep{lasser2026paper8b}
+  & Gap decomposition & \S3
+  & \S\ref{sec:integration} \\
+\citep{lasser2026paper8b}
+  & Wireheading-consistent signature & \S4
+  & \S\ref{sec:integration} \\
+\citep{lasser2026paper8b}
+  & Residual class characterization & \S5
+  & \S\ref{sec:integration} \\
+\bottomrule
+\end{tabular}
+\end{center}

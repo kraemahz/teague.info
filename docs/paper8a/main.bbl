@@ -1,0 +1,94 @@
+\begin{thebibliography}{15}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Aguiar and Hurst(2007)]{aguiar2007measuring}
+Mark Aguiar and Erik Hurst.
+\newblock \emph{Measuring Trends in Leisure: The Allocation of Time over Five
+  Decades}.
+\newblock Quarterly Journal of Economics, 2007.
+\newblock Vol.~122, No.~3, pp.~969--1006.
+
+\bibitem[Goldwasser et~al.(1985)Goldwasser, Micali, and
+  Rackoff]{goldwasser1985knowledge}
+Shafi Goldwasser, Silvio Micali, and Charles Rackoff.
+\newblock The knowledge complexity of interactive proof-systems.
+\newblock In \emph{Proceedings of the 17th Annual ACM Symposium on Theory of
+  Computing}, pages 291--304, 1985.
+
+\bibitem[Lasser(2026{\natexlab{a}})]{lasser2026exo}
+Teague Lasser.
+\newblock Exogenous verification for alignment: Cryptographic commitments on
+  substrate-exclusive channels.
+\newblock \url{https://teague.info/papers/exo/}, 2026{\natexlab{a}}.
+
+\bibitem[Lasser(2026{\natexlab{b}})]{lasser2026gfm}
+Teague Lasser.
+\newblock Goal-frontier maximizers are civilization aligned.
+\newblock \url{https://teague.info/papers/gfm/}, 2026{\natexlab{b}}.
+
+\bibitem[Lasser(2026{\natexlab{c}})]{lasser2026horizon}
+Teague Lasser.
+\newblock Horizon-aware goal-frontier maximization and the anti-monopolar
+  property.
+\newblock \url{https://teague.info/papers/horizon/}, 2026{\natexlab{c}}.
+
+\bibitem[Lasser(2026{\natexlab{d}})]{lasser2026paper8b}
+Teague Lasser.
+\newblock Need-sufficiency architecture and gap diagnostics for the b-to-c gap.
+\newblock Companion paper to \emph{An Aggregate B-to-C Lower Bound from
+  Revealed-Sacrifice Observation}. Preprint., 2026{\natexlab{d}}.
+
+\bibitem[Lasser(2026{\natexlab{e}})]{lasser2026phase}
+Teague Lasser.
+\newblock Cross-substrate channel redundancy governs monopolar convergence.
+\newblock \url{https://teague.info/papers/phase/}, 2026{\natexlab{e}}.
+
+\bibitem[Lasser(2026{\natexlab{f}})]{lasser2026poset}
+Teague Lasser.
+\newblock Computable goal frontiers and the gradient toward
+  civilization-building.
+\newblock \url{https://teague.info/papers/poset/}, 2026{\natexlab{f}}.
+
+\bibitem[Lasser(2026{\natexlab{g}})]{lasser2026scm}
+Teague Lasser.
+\newblock A structural causal model for goal-frontier maximization.
+\newblock \url{https://teague.info/papers/scm/}, 2026{\natexlab{g}}.
+
+\bibitem[Lasser(2026{\natexlab{h}})]{lasser2026wamura}
+Teague Lasser.
+\newblock Controlled relaxation protocols for the {W}amura problem.
+\newblock \url{https://teague.info/papers/wamura/}, 2026{\natexlab{h}}.
+
+\bibitem[Manheim and Garrabrant(2019)]{manheim2019categorizing}
+David Manheim and Scott Garrabrant.
+\newblock Categorizing variants of {G}oodhart's law.
+\newblock \emph{arXiv preprint arXiv:1803.04585}, 2019.
+
+\bibitem[Mas-Colell et~al.(1995)Mas-Colell, Whinston, and
+  Green]{mascolell1995microeconomic}
+Andreu Mas-Colell, Michael~D. Whinston, and Jerry~R. Green.
+\newblock \emph{Microeconomic Theory}.
+\newblock Oxford University Press, 1995.
+
+\bibitem[Rosen(1974)]{rosen1974hedonic}
+Sherwin Rosen.
+\newblock Hedonic prices and implicit markets: Product differentiation in pure
+  competition.
+\newblock \emph{Journal of Political Economy}, 82\penalty0 (1):\penalty0
+  34--55, 1974.
+
+\bibitem[Samuelson(1938)]{samuelson1938note}
+Paul~A. Samuelson.
+\newblock A note on the pure theory of consumer's behaviour.
+\newblock \emph{Economica}, 5\penalty0 (17):\penalty0 61--71, 1938.
+
+\bibitem[Strathern(1997)]{strathern1997improving}
+Marilyn Strathern.
+\newblock `improving ratings': Audit in the {B}ritish university system.
+\newblock \emph{European Review}, 5\penalty0 (3):\penalty0 305--321, 1997.
+
+\end{thebibliography}

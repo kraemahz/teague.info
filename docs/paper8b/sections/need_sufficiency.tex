@@ -1,0 +1,834 @@
+\section{Need-Sufficiency Architecture}
+\label{sec:need_sufficiency}
+
+The revealed-sacrifice observation channel
+(\citep{lasser2026paper8a}) assumes all sacrifices have
+the same polarity: more sacrifice equals more revealed value.
+This is wrong for a class of sacrifices that are structurally
+involuntary.  An agent who pays \$500 for insulin is not revealing
+that insulin is worth \$500 beyond baseline, they are revealing
+that baseline functionality costs \$500 to maintain.  The sacrifice
+magnitude reveals \emph{cost-of-access} (how expensive it is for
+this agent to reach minimum viable functionality), not
+\emph{preference strength} (how much the agent values the outcome
+beyond baseline).  Larger sacrifice means a worse situation, not
+higher revealed value.
+
+The framework needs a structural requirement on poset
+construction that distinguishes need-satisfaction from want-pursuit
+and identifies the boundary where sacrifice polarity flips.
+
+\subsection{Three motivating observations}
+
+\paragraph{Needs are neither purely maximizing nor minimizing.}
+Every need has \emph{both} maximizing dimensions (quality, quantity,
+reliability) and minimizing dimensions (cost, distance, time). Needs are not a
+single-polarity class. What \emph{is} true: the minimizing dimensions of needs
+are where the polarity problem lives, because cost-of-access is involuntary.
+
+\paragraph{Scalar sufficiency hides structural defects.}
+A single ``water access: sufficient'' measurement might hide that the water is
+contaminated.  The agent has water (passes the scalar threshold) but the way
+the need is met actively degrades future $\volL$ through downstream effects on
+health, cognition, and reproduction.  The framework reports green while the
+system corrodes from the root.
+
+\paragraph{Downstream-safe bundles.}
+Three levels of sufficiency, each strictly stronger:
+\begin{itemize}
+\item \emph{Level~1: Scalar threshold (insufficient).}
+  ``Water: yes/no.''  Hides quality, reliability, and cost defects.
+\item \emph{Level~2: Bundle threshold (necessary but not
+  sufficient).}
+  All dimensions of the need must independently meet their thresholds
+        simultaneously. This catches contamination (quality dimension fails),
+        but misses subtler failures where the satisfaction pathway degrades
+        downstream capabilities over time. For example, when the contamination
+        thresholds are incorrectly tuned.
+\item \emph{Level~3: Downstream-safe bundle.}
+  Bundle thresholds are all met \emph{and} the need-satisfaction pathway does
+        not produce net-negative effects on capabilities in the need's
+        downstream capability cone.
+\end{itemize}
+
+\subsection{Formal definitions}
+
+\begin{definition}[Multi-Dimensional Need Bundle]
+\label{def:need_bundle}
+A capability $N$ identified as a need at position $p_N$ in the
+poset has:
+\begin{itemize}
+\item \textbf{Dimensions} $\{d_1, \ldots, d_m\}$ with sufficiency
+  thresholds $\{s_1, \ldots, s_m\}$.
+\item Each dimension has a \textbf{polarity}: maximizing (quality,
+  quantity, reliability) or minimizing (cost, distance, time).
+\item \textbf{Downstream cone}
+  $\Down(p_N) = \{c : c \text{ depends on } N \text{ in the
+  poset}\}$.
+\item \textbf{Satisfaction pathway} $\pi_N$: the specific way the
+  agent meets the need (which source, at what quality, at what
+  cost).
+\end{itemize}
+For cost dimensions (minimizing polarity), the benchmark inverts
+the natural direction: $\mathrm{actual}_k = 1 / \mathrm{cost}_k$,
+with sufficiency at $s_k = 1 / \mathrm{max\_acceptable\_cost}$,
+so that benchmark maximization aligns with cost minimization.
+\end{definition}
+
+\begin{definition}[Downstream-Safe Sufficiency]
+\label{def:downstream_safe}
+Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
+the class of pathways satisfying each dimension of~$N$ at exactly
+its sufficiency threshold (assumed non-empty).  Let
+$\Pi_N^{\mathrm{ref}} \subseteq \Pi_N^0$ be a non-empty
+\emph{admissible reference set}, designated externally by
+governance (Remark~\ref{rem:reference_pathway}): the
+threshold-level pathways against which downstream non-degradation
+is evaluated.  Need $N$ at position $p_N$ is
+\emph{downstream-safe sufficient} under satisfaction pathway
+$\pi_N$ iff:
+\begin{enumerate}
+\item[(a)] \textbf{Bundle thresholds met:}
+  $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
+  dimensions inverted per Definition~\ref{def:need_bundle}).
+\item[(b)] \textbf{Downstream non-degradation against all
+  admissible references:} $\pi_N$ dominates \emph{every}
+  $\pi^* \in \Pi_N^{\mathrm{ref}}$ on every downstream capability
+  simultaneously:
+  \[
+    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
+    \pi_N\bigr)
+    \;\geq\;
+    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
+    \pi^*\bigr)
+    \qquad \text{for all } c \in \Down(p_N)
+    \text{ and all } \pi^* \in \Pi_N^{\mathrm{ref}}.
+  \]
+\end{enumerate}
+The universal quantifier over $\Pi_N^{\mathrm{ref}}$ is
+load-bearing: a merely existential condition (``dominate
+\emph{some} threshold-level pathway'') would admit materially
+degrading pathways that happen to beat a pathologically weak
+reference.  Under the common singleton case
+$\Pi_N^{\mathrm{ref}} = \{\pi_N^{\mathrm{ref}}\}$, the condition
+reduces to dominance against one canonical baseline.  Each
+element of $\Pi_N^{\mathrm{ref}}$ must be a realizable pathway,
+not a coordinatewise supremum over $\Pi_N^0$ that no single
+pathway achieves.
+\end{definition}
+
+\begin{remark}[Governance designates the admissible reference
+set]
+\label{rem:reference_pathway}
+The admissible reference set $\Pi_N^{\mathrm{ref}}$ is a public
+governance input, not a framework-computed object.  Institutions
+typically adopt a specific reference pathway as the canonical
+baseline (``standard of care'' in medicine, ``best available
+technology'' in environmental policy); in those settings
+$\Pi_N^{\mathrm{ref}}$ is a singleton.  Multi-reference settings
+arise when different disciplines canonicalize differently and
+$\pi_N$ must satisfy all of them simultaneously; the
+downstream-safety condition then requires robust dominance over
+every admissible baseline.  Governance may update
+$\Pi_N^{\mathrm{ref}}$ over time as standards evolve; the
+framework reads the current $\Pi_N^{\mathrm{ref}}$ at evaluation
+time and does not attempt to re-derive it from first principles.
+\end{remark}
+
+\begin{remark}[Structural connection to exercise-pathway machinery]
+\label{rem:exercise_pathway}
+The need-satisfaction pathway $\pi_N$ is \emph{structurally} an
+exercise pathway in the sense
+of~\citep[Definition~2]{lasser2026horizon}: a sequence of
+capability invocations producing an outcome (here, the
+satisfaction of need~$N$).  This identification lets the framework
+treat $\pi_N$ as a first-class object rather than an abstract
+``way of satisfying the need.''
+
+The downstream-safety condition
+(Definition~\ref{def:downstream_safe}(b)) is, however, a distinct
+mathematical object from the concentration-risk measure
+of~\citep[Definition~3]{lasser2026horizon}.  Concentration risk
+is a scalar worst-case contraction estimate over an entire
+pathway; downstream-safety is a per-capability quality
+comparison $\mathrm{quality}_c(\pi_N) \geq \mathrm{quality}_c(\pi^*)$
+against every reference pathway $\pi^* \in \Pi_N^{\mathrm{ref}}$,
+indexed by $c \in \Down(p_N)$.  Neither reduces to the other.
+Evaluating $\mathrm{quality}_c(\pi_N)$ in practice requires
+either (i) direct observation of $c$'s performance conditional on
+the pathway, or (ii) structural inference from the poset's
+cooperative structure.  A full formalisation of the evaluation
+procedure is outside this paper's scope; within the paper,
+Definition~\ref{def:downstream_safe}(b) is a structural condition
+the framework \emph{enforces} (a pathway failing the condition is
+rejected as a satisfaction pathway for $N$), not a quantity the
+framework \emph{computes} directly.
+
+A policy consequence, not a theorem: because need-satisfaction
+pathways are not optional (the agent must satisfy the need), the
+framework's response to a pathway failing
+Definition~\ref{def:downstream_safe}(b) differs from its response
+to a risk claim under~\citep{lasser2026wamura}.  A failing risk
+pathway is \emph{restricted} (the capability is blocked).  A
+failing satisfaction pathway must be \emph{replaced} (the need
+must still be met, but through a pathway satisfying
+Definition~\ref{def:downstream_safe}).  This governance
+distinction is upstream of the paper's formal machinery; it names
+the correct operational response when the condition fails, not a
+new computation the framework performs.
+\end{remark}
+
+\begin{definition}[Sufficiency Threshold as Polarity Boundary]
+\label{def:polarity_boundary}
+The sufficiency bundle is the structural boundary where
+revealed-sacrifice polarity flips:
+\begin{itemize}
+\item \textbf{Below sufficiency on any dimension:} The agent is
+  investing to reach minimum viable functionality.  Sacrifice is
+  involuntary (the agent must reach sufficiency to operate).
+  Sacrifice magnitude reveals \textbf{cost-of-access}---how
+  expensive it is for this agent to reach baseline on this
+  dimension.  Larger sacrifice = worse situation.
+\item \textbf{Above sufficiency on all dimensions:} The agent has
+  reached functionality and is choosing to invest further.
+  Sacrifice is voluntary (the agent could stop at ``good
+  enough'').  Sacrifice magnitude reveals \textbf{preference
+  strength}---how much the agent values improvement beyond
+  baseline.  Larger sacrifice = higher revealed value.
+\end{itemize}
+The sufficiency threshold is where the need-insufficiency failure
+mode of Assumption~S1 (\citep{lasser2026paper8a}) is
+removed: below sufficiency, S1 fails because retaining the
+sacrificed capability is not a non-degrading alternative; above
+sufficiency, this specific failure mode does not apply (though S1
+can still fail via other mechanisms---see
+Proposition~\ref{prop:s1_sufficiency}, Remark).
+\end{definition}
+
+\begin{definition}[Polarity-Correct Benchmark]
+\label{def:polarity_benchmark}
+For each dimension $d_k$ of a need capability:
+\begin{itemize}
+\item \textbf{Below sufficiency:}
+  $\mathrm{benchmark}_k = \min(\mathrm{actual}_k / s_k,\, 1)$.
+  Climbs from $0$ toward $1$ as the agent approaches sufficiency.
+  Caps at $1$.  Maximizing this equals closing the sufficiency
+  gap.
+\item \textbf{Above sufficiency:}
+  $\mathrm{benchmark}_k = 1 + \alpha_k \cdot
+  \max\!\bigl((\mathrm{actual}_k - s_k)/s_k,\, 0\bigr)$,
+  where $\alpha_k < 1$ discounts above-sufficiency gains relative
+  to below-sufficiency gains.  This makes closing the sufficiency
+  gap more valuable per unit of improvement than enhancing beyond
+  sufficiency---the correct incentive structure for needs.
+\end{itemize}
+\end{definition}
+
+Definition~\ref{def:polarity_benchmark} operates at the
+single-capability level: it determines the benchmark score for
+each dimension of a given capability.  It does not, by itself,
+model the structural fact that need-satisfaction is a precondition
+for the exercise of downstream capabilities: an agent without
+water does not merely lose one bit of water-access capability,
+they lose access to the entire class of cooperative capabilities
+that require a hydrated body.  To capture this, the framework
+imposes a multiplicative gate on $\volL$-aggregation through the
+downstream cone.
+
+\begin{definition}[Downstream-Gated Capability Weighting]
+\label{def:downstream_gate}
+For each capability $c \in P$, let $\mathcal{N}(c) = \{N : c \in
+\mathrm{Down}(p_N)\}$ be the set of needs whose downstream cones
+contain $c$.  For each such $N$, let $s_N(c) \in [0, 1]$ be the
+sufficiency level of $N$ in the context where $c$ is exercised,
+with $s_N(c) = 1$ when $N$ is downstream-safe sufficient
+(Definition~\ref{def:downstream_safe}) and $s_N(c) = 0$ when $N$
+is fully unmet.  In the common case where sufficiency is uniform
+across the downstream cone, we abbreviate $s_N(c) \equiv s_N$ and
+treat $s_N$ as a scalar.
+
+The \emph{effective weight} of $c$ is:
+\[
+  w^{\mathrm{eff}}(c) \;=\; w(c) \cdot
+  \prod_{N \in \mathcal{N}(c)} G\bigl(s_N(c)\bigr),
+\]
+where $G : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
+$G(1) = 1$, $G(0) = \alpha_0 \in [0, 1)$ (the gate's
+\emph{floor}), $G$ monotone non-decreasing, and $G$
+right-continuous at $s = 0$ (so $\lim_{s \to 0^+} G(s) =
+\alpha_0$).  A gate with $\alpha_0 = 0$ is called a
+\emph{zero-floor gate}; a gate with $\alpha_0 > 0$ is called a
+\emph{positive-floor gate}.  The four candidate gates of
+Remark~\ref{rem:gate_candidates} all satisfy right-continuity;
+step-function gates are excluded.  Linear, ReLU, and power-law
+gates are zero-floor; leaky-ReLU with parameter $\alpha > 0$ is
+positive-floor with $\alpha_0 = \alpha$.
+
+The effective capability volume is:
+\[
+  \volL^{\mathrm{eff}}(G) \;=\; \sum_{c \in P} w^{\mathrm{eff}}(c).
+\]
+The framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
+$\volL$ once needs have been identified.
+\end{definition}
+
+\begin{remark}[Candidate gate functions]
+\label{rem:gate_candidates}
+The choice of $G$ is a design parameter that trades off
+smoothness, computational simplicity, and the strength of
+need-dominance.  Four candidates:
+\begin{itemize}
+\item \textbf{Linear:} $G(s) = s$.  Simplest; gentle
+  need-dominance; $s_N(c) = 0.5$ halves the downstream
+  contribution.
+\item \textbf{Leaky-ReLU:} $G(s) = \alpha$ for $s \leq s_0$,
+  then linear ramp from $\alpha$ at $s_0$ to $1$ at $s = 1$.
+  Parameters: threshold $s_0 \in [0, 1)$, leak $\alpha \in [0, 1)$.
+  Below threshold, downstream capabilities retain a constant
+  floor $\alpha$; above, rapid ramp to full contribution.
+\item \textbf{ReLU:} Leaky-ReLU with $\alpha = 0$.  Below
+  threshold, downstream capabilities are fully suppressed; above,
+  linear ramp.  Hardest gate; strongest need-dominance.
+\item \textbf{Power law:} $G(s) = s^\gamma$ for $\gamma \geq 1$.
+  Smooth everywhere; gradient vanishes at $s = 0$ for $\gamma > 1$,
+  giving progressively stronger penalty as the sufficiency gap
+  widens.  Single tunable parameter.
+\end{itemize}
+The appropriate gate shape depends on the domain.  Biological
+needs with cliff-like failure modes (dehydration, oxygen
+deprivation) warrant ReLU or high-$\gamma$ power law.  Needs with
+graceful degradation (social connection, mild nutritional
+deficit) warrant leaky-ReLU or low-$\gamma$ power law.  The paper
+leaves $G$ as a domain-specific design parameter and states
+subsequent results for any valid $G$.
+\end{remark}
+
+\begin{proposition}[Near-Total Collapse Under Unmet Need]
+\label{prop:near_total_collapse}
+Let $G$ be any valid gate function
+(Definition~\ref{def:downstream_gate}) with floor $\alpha_0 =
+G(0) \in [0, 1)$, and suppose $s_N(c) \equiv s_N$ for all $c \in
+\Down(p_N)$ (homogeneous sufficiency).  Partition the poset as
+$P = \Down(p_N) \sqcup \overline{\Down(p_N)}$, with weight sums
+$W_{\mathrm{down}} = \sum_{c \in \Down(p_N)} w(c)$ and
+$W_{\mathrm{out}} = \sum_{c \in \overline{\Down(p_N)}} w(c)$, so
+$\volL^{\mathrm{raw}} = W_{\mathrm{down}} + W_{\mathrm{out}}$.
+If the agent is at sufficiency level $s_N < 1$:
+\[
+  \volL^{\mathrm{eff}}(G)
+  \;\leq\; G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
+\]
+
+\medskip\noindent
+\textbf{Collapse limits.}
+As $s_N \to 0$, $G(s_N) \to \alpha_0$ by right-continuity:
+\begin{itemize}
+\item \emph{Zero-floor gate} ($\alpha_0 = 0$): the downstream
+  contribution vanishes, $\volL^{\mathrm{eff}} \to
+  W_{\mathrm{out}}$.  When $W_{\mathrm{down}} \gg
+  W_{\mathrm{out}}$, the effective volume collapses to a small
+  fraction of its unrestricted value.
+\item \emph{Positive-floor gate} ($\alpha_0 > 0$): the
+  downstream contribution collapses to its floor,
+  $\volL^{\mathrm{eff}} \to \alpha_0 W_{\mathrm{down}} +
+  W_{\mathrm{out}}$.  The effective volume retains a positive
+  fraction $\alpha_0$ of downstream weight even under fully
+  unmet need.
+\end{itemize}
+
+\medskip\noindent
+The multiplicative structure makes need-satisfaction a
+precondition for $\volL$ to register the \emph{full} downstream
+portion of the agent's capabilities; an agent cannot maximize
+$\volL^{\mathrm{eff}}$ without closing sufficiency gaps on needs
+whose downstream cones cover their capability-weight.  Whether
+unmet need collapses the downstream contribution \emph{entirely}
+or only to the floor $\alpha_0 W_{\mathrm{down}}$ is a design
+choice governed by the gate's floor parameter.
+\end{proposition}
+
+\begin{proof}
+Split the sum over $P$ by membership in $\Down(p_N)$.  For
+$c \in \Down(p_N)$, the effective weight is
+$w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N) \cdot \prod_{N' \in
+\mathcal{N}(c),\, N' \neq N} G(s_{N'}(c)) \leq w(c) \cdot G(s_N)$
+since each additional gate factor is $\leq 1$.  For
+$c \in \overline{\Down(p_N)}$, $N \notin \mathcal{N}(c)$, so
+$w^{\mathrm{eff}}(c) = w(c) \cdot \prod_{N' \in \mathcal{N}(c)}
+G(s_{N'}(c)) \leq w(c)$.  Summing the two cases:
+\[
+  \volL^{\mathrm{eff}}
+  \leq G(s_N) \cdot \!\!\sum_{c \in \Down(p_N)}\!\! w(c)
+       \;+\; \!\!\sum_{c \in \overline{\Down(p_N)}}\!\! w(c)
+  = G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
+\]
+Right-continuity of $G$ at $0$ gives $\lim_{s_N \to 0^+} G(s_N)
+= G(0) = \alpha_0$, so the downstream term tends to $\alpha_0
+W_{\mathrm{down}}$: zero for zero-floor gates, the floor value
+for positive-floor gates.
+\end{proof}
+
+\begin{remark}[The non-downstream floor and the gate floor]
+\label{rem:nondownstream_floor}
+Two floors appear at $s_N = 0$: the always-present
+\emph{non-downstream} floor $W_{\mathrm{out}}$ (capabilities
+not depending on $N$, which no gate can suppress), and the
+gate-dependent \emph{downstream floor} $\alpha_0
+W_{\mathrm{down}}$ (which is zero for zero-floor gates and
+$\alpha \cdot W_{\mathrm{down}}$ for leaky-ReLU with leak
+$\alpha > 0$).  The worked table in
+Remark~\ref{rem:gate_comparison} exhibits both: at $s_N = 0$,
+linear, ReLU, and power-law gates give $0.231 =
+W_{\mathrm{out}}/\volL^{\mathrm{raw}} = 3/13$ (only the
+non-downstream floor), while leaky-ReLU with $\alpha = 0.1$
+gives $0.308 = (3 + 10 \cdot 0.1)/13 = (W_{\mathrm{out}} +
+\alpha_0 W_{\mathrm{down}})/\volL^{\mathrm{raw}}$ (both floors).
+The proposition's ``total collapse'' force applies to zero-floor
+gates with $W_{\mathrm{down}} \gg W_{\mathrm{out}}$; for
+positive-floor gates, the collapse is bounded below by the
+gate's floor regardless of $W_{\mathrm{down}}/W_{\mathrm{out}}$
+ratio.
+\end{remark}
+
+\begin{proposition}[Need-Dominance in the Gradient]
+\label{prop:need_dominance}
+Assume homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c \in
+\Down(p_N)$ and that all other needs are at sufficiency
+($s_{N'}(c) = 1$ for $N' \neq N$), so that $s_N$ is a scalar.
+For any valid gate function $G$ differentiable at $s_N$ with
+$G'(s_N) > 0$, the two relevant partial derivatives of
+$\volL^{\mathrm{eff}}$ are
+\[
+  \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
+  \;=\; G'(s_N) \cdot W_{\mathrm{down}}(N),
+  \qquad
+  \frac{\partial \volL^{\mathrm{eff}}}{\partial w(c')}
+  \;=\;
+  \begin{cases}
+    1 & c' \notin \Down(p_N), \\
+    G(s_N) \leq 1 & c' \in \Down(p_N),
+  \end{cases}
+\]
+where $W_{\mathrm{down}}(N) = \sum_{c \in \Down(p_N)} w(c)$.
+Both derivatives are rates on the same unit-step scale
+(one unit of $s_N$ vs.\ one unit of $w(c')$, treating $s_N$ and
+$w$ as commensurable intervention variables; see
+Remark~\ref{rem:dominance_scale}).
+
+\medskip\noindent
+\textbf{Marginal-dominance condition.}  Under the common
+intervention scale, the marginal return to closing the
+sufficiency gap on $N$ exceeds the marginal return to unit-weight
+addition on any single capability whenever
+\[
+  G'(s_N) \cdot W_{\mathrm{down}}(N) \;>\; 1.
+\]
+For linear gates ($G(s) = s$), this reduces to
+$W_{\mathrm{down}}(N) > 1$.  For leaky-ReLU or ReLU gates, the
+condition holds at any $s_N$ in the ramp region provided
+$W_{\mathrm{down}}(N)$ exceeds the reciprocal of the local
+slope.  For power-law gates $G(s) = s^\gamma$ with $\gamma > 1$,
+the condition fails near $s_N = 0$ (where $G'(s_N)$ is small)
+even for large downstream cones---an intentional feature of
+gates that weight severity of unmet need over its breadth.
+\end{proposition}
+
+\begin{proof}
+Under the stated hypothesis, every gate product collapses: for
+$c \in \Down(p_N)$, the product $\prod_{N' \in \mathcal{N}(c)}
+G(s_{N'}(c))$ equals $G(s_N) \cdot \prod_{N' \neq N} G(1) =
+G(s_N)$.  Thus
+$w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N)$ for
+$c \in \Down(p_N)$ and $w^{\mathrm{eff}}(c) = w(c)$ otherwise.
+Summing gives
+$\volL^{\mathrm{eff}} = G(s_N) \cdot W_{\mathrm{down}}(N) +
+W_{\mathrm{out}}(N)$.
+Only the first term depends on $s_N$, so differentiation yields
+$\partial \volL^{\mathrm{eff}}/\partial s_N =
+G'(s_N) \cdot W_{\mathrm{down}}(N)$.  Differentiating in
+$w(c')$: the capability $c'$'s gated weight is $G(s_N) \cdot
+w(c')$ if $c' \in \Down(p_N)$ and $w(c')$ otherwise, giving the
+stated partial derivatives.  Comparing the two partials on the
+common unit-step scale yields the dominance condition.
+\end{proof}
+
+\begin{remark}[Finite-step form and intervention-cost scale]
+\label{rem:dominance_scale}
+The marginal-dominance condition is a per-unit-cost comparison
+under the convention that one unit of $\Delta s_N$ and one unit
+of $\Delta w$ have the same intervention cost.  Its finite-step
+form is the Taylor expansion: a sufficiency increment
+$\Delta s_N = \delta$ produces gain
+$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) =
+G'(s_N) W_{\mathrm{down}}(N) \cdot \delta + O(\delta^2)$, while
+a weight increment $\Delta w(c') = \delta$ on a single
+capability produces gain $\delta \cdot \max(1, G(s_N)) \leq
+\delta$.  For small enough $\delta$, the marginal condition
+$G'(s_N) W_{\mathrm{down}}(N) > 1$ implies the sufficiency
+increment strictly dominates; a finite $\delta$ for which
+$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) > \delta$
+is the exact condition.  The condition
+$G'(s_N) W_{\mathrm{down}}(N) > 1$ is \emph{not} a claim that a
+finite $\Delta s_N$ of arbitrary size beats a finite unit of
+weight: e.g., with $G(s) = s$ and $W_{\mathrm{down}} = 10$, a
+$\Delta s_N = 0.01$ gain of $0.1$ does not exceed a
+unit-weight gain of $1$ in absolute terms---only in
+per-unit-of-intervention terms (the sufficiency increment
+returned ten times the per-unit gain).  Interpreting the
+condition as anything other than a marginal-rate comparison
+would conflate the two intervention scales.
+\end{remark}
+
+\begin{remark}[Worked comparison across candidate gates]
+\label{rem:gate_comparison}
+Consider an agent with $10$ cooperative capabilities in
+$\mathrm{Down}(p_N)$ (weight $1$ each) and $3$ capabilities
+outside the cone (weight $1$ each), so
+$\volL^{\mathrm{raw}} = 13$.  At homogeneous sufficiency level
+$s_N(c) \equiv s$ for all $c \in \Down(p_N)$,
+$\volL^{\mathrm{eff}}(s) = 3 + 10 \cdot G(s)$.  The following
+table compares effective volume as a fraction of
+$\volL^{\mathrm{raw}}$ for the four candidate gates (Leaky-ReLU
+with $\alpha = 0.1$, $s_0 = 0.8$; ReLU with $s_0 = 0.8$; power
+law with $\gamma = 2$):
+
+\begin{center}
+\small
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$s$ & Linear & Leaky-ReLU & ReLU & Power ($\gamma{=}2$)
+   & Power ($\gamma{=}3$) \\
+\midrule
+$0.00$ & $0.231$ & $0.308$ & $0.231$ & $0.231$ & $0.231$ \\
+$0.25$ & $0.423$ & $0.308$ & $0.231$ & $0.279$ & $0.243$ \\
+$0.50$ & $0.615$ & $0.308$ & $0.231$ & $0.423$ & $0.327$ \\
+$0.75$ & $0.808$ & $0.308$ & $0.231$ & $0.663$ & $0.556$ \\
+$0.80$ & $0.846$ & $0.308$ & $0.231$ & $0.723$ & $0.625$ \\
+$0.90$ & $0.923$ & $0.654$ & $0.615$ & $0.854$ & $0.792$ \\
+$1.00$ & $1.000$ & $1.000$ & $1.000$ & $1.000$ & $1.000$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Linear gives the gentlest gate (at $s = 0.5$, downstream
+contributions are only halved, so $62\%$ of raw $\volL$ is still
+registered).  ReLU gives the hardest gate (below threshold
+$s_0 = 0.8$, downstream contributions are fully suppressed;
+$\volL^{\mathrm{eff}}$ stays at the non-downstream floor of
+$3/13 \approx 23\%$).  Power-law gates sit between, with
+higher $\gamma$ approaching ReLU's sharpness.  Leaky-ReLU
+preserves the ReLU shape above threshold while leaving a small
+floor $\alpha$ below.
+\end{remark}
+
+\subsection{Sacrifice-polarity (S1) connection}
+
+\begin{proposition}[S1--Sufficiency Connection]
+\label{prop:s1_sufficiency}
+Below-sufficiency sacrifices fail Assumption~S1 (free choice,
+\citep{lasser2026paper8a}).  S1 requires that retaining
+the sacrificed capability $X_n$ was a \emph{non-degrading}
+alternative---one that would not leave the agent below minimum
+viable functionality on any need dimension.  For an agent whose
+capability level on dimension $d_k$ is below the sufficiency
+threshold $s_k$, retaining $X_n$ (not making the trade) leaves
+the agent below functionality on $d_k$.  This is not a
+non-degrading alternative per S1's definition, so S1 fails for
+that event.
+\end{proposition}
+
+\noindent\textbf{Consequence for the sacrifice channel.}
+Below-sufficiency events are filtered from the revealed-sacrifice
+aggregate by S1 before they reach the aggregate lower bound
+(the aggregate lower bound theorem~\citep{lasser2026paper8a}).  The sacrifice channel
+operates only over events where S1 holds.  For above-sufficiency
+(want-pursuit) events, the need-insufficiency failure mode of S1
+is removed.  S1 may still fail for above-sufficiency events via
+other mechanisms (coercion, duress---see
+Remark~\ref{rem:s1_above} below).
+
+\begin{remark}[S1 is not automatically satisfied above
+sufficiency]
+\label{rem:s1_above}
+S1 can still fail for above-sufficiency events if the trade was
+coerced by other mechanisms (economic duress, political pressure,
+information asymmetry) even though the need-sufficiency condition
+is met.  The sufficiency threshold resolves one structural failure
+mode of S1 (the involuntary-need-satisfaction case); other S1
+failure modes (the coercion open question in~\citep{lasser2026paper8a},
+Section~\ref{sec:discussion}) remain.
+\end{remark}
+
+\begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
+Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
+agent~$i$'s capability level on need dimension $d_k$ would fall
+below the sufficiency threshold $s_k$.  Agent~$i$ must reach
+$s_k$ on $d_k$ to maintain minimum viable functionality.  The
+alternative of retaining $X$ (not making the trade) leaves the
+agent below $s_k$ on $d_k$.  S1 requires the retention
+alternative to be non-degrading: it must not drop the agent below
+minimum viable functionality on any need dimension.  Retention
+here does precisely that, so the non-degrading alternative
+requirement fails and S1 does not hold for this event.  Events
+with failed S1 are excluded from the aggregate by the
+applicable-assumptions clause of
+the aggregate lower bound theorem~\citep{lasser2026paper8a}.
+\end{proof}
+
+\subsection{The capability-stuffing problem}
+\label{sec:capability_stuffing}
+
+An agent optimizing $\volL$ under the non-triviality axiom M5
+(every valid capability with $s_{\max} \geq 1$ contributes
+positive weight~\citep[Proposition~1]{lasser2026poset}) has a
+natural incentive to add capabilities that pass structural
+validation but do not increase experiential optionality.  We call
+this the \emph{capability-stuffing} failure mode.
+
+The canonical form is redundant capability construction targeting
+a single underlying need from multiple vantage points.  ``Travel
+from home to a gas station'' is a real, benchmarkable
+\emph{do}-capability: it satisfies the axioms M1--M6, has a
+well-defined metric ($s_{\max} \geq 1$), and represents genuine
+structural knowledge about the world.  Adding ``travel from work
+to a gas station,'' ``travel from the grocery store to a gas
+station,'' and so on produces a sequence of further real,
+benchmarkable capabilities, each passing the same axiomatic
+checks.  Collectively they inflate $\volL$ without broadening
+what the agent can actually do: every addition instantiates the
+same underlying optionality (fuel access) from a different
+origin.
+
+Capability-stuffing is distinct from other failure modes in the
+sequence.  It is not \emph{wireheading}~(\cite{lasser2026exo},
+Discussion), which is narrow self-reinforcing exercise of
+existing capabilities; stuffing adds new capabilities without
+exercising them degenerately.  It is not the \emph{Doll
+Problem}~(\cite{lasser2026gfm}, Section~7.1), which is
+possessed-but-unexercised capabilities; the stuffed capabilities
+may be technically exercised (routing through the gas station
+``exercises'' the distance-measurement).  It is not the
+\emph{B-to-C gap} in the aggregate sense this paper otherwise
+treats; stuffing widens the gap through a specific mechanism
+(individual-weight inflation) that the aggregate lower bound of
+the aggregate lower bound theorem~\citep{lasser2026paper8a} does not, by itself, address.
+Stuffing is a framework-native perverse instantiation: the
+optimizer discovers it by following the $\volL$-maximization
+gradient under M5, not by departing from the framework's rules.
+
+\paragraph{Tension with structural discovery.}
+Capability-stuffing is closely related to a \emph{legitimate}
+mechanism: the structural discovery value
+of~\citep[Proposition~2]{lasser2026horizon}, which holds that
+discovering new poset structure is value-positive.  An agent
+adding a new distance-measurement capability to its repertoire is
+making a structural discovery in that sense.  The formal
+distinction between legitimate discovery and capability-stuffing
+turns on whether the new capability creates new cooperative
+structure:
+
+\begin{itemize}
+\item \textbf{Legitimate structural discovery} enriches the
+  poset by creating cooperative capabilities (axiom M6
+  superadditivity): the new capability interacts with existing
+  capabilities to produce outputs previously unachievable.  The
+  marginal contribution to $\volL$ includes cooperative terms
+  beyond the individual weight.
+\item \textbf{Capability-stuffing} adds individual capabilities
+  whose marginal cooperative contribution is zero (or
+  effectively so): the new capability's weight accrues through
+  M5 alone, not through M6.  No new cooperative outputs become
+  achievable.
+\end{itemize}
+
+Without a structural mechanism that distinguishes the two, the
+framework rewards both equally, and a $\volL$-maximizer with
+capability-discovery latitude will exploit the undifferentiated
+reward to stuff.
+
+\paragraph{What the need-sufficiency architecture does resolve.}
+The downstream-safe bundle sufficiency condition
+(Definition~\ref{def:downstream_safe}) and the polarity-correct
+benchmark (Definition~\ref{def:polarity_benchmark}) together
+handle one specific class of redundant construction: capabilities
+whose claimed contribution lies \emph{below} the sufficiency
+threshold on an already-satisfied need dimension.  For those, the
+below-sufficiency benchmark saturates at $1$, so additional
+instances do not inflate the benchmark.  This is a real structural
+property of the architecture and it is worth stating narrowly:
+
+\begin{proposition}[Below-Sufficiency Saturation (pointwise)]
+\label{prop:below_suff_saturation}
+For any need dimension $d_k$ of any single capability, the
+below-sufficiency component of the polarity-correct benchmark
+(Definition~\ref{def:polarity_benchmark}) saturates at $1$ once
+$\mathrm{actual}_k \geq s_k$.  This is a \emph{pointwise} cap:
+the benchmark value assigned to dimension $d_k$ of one
+capability does not exceed $1$, regardless of how many times
+that capability's $\mathrm{actual}_k$ is re-evaluated or
+re-instantiated.
+\end{proposition}
+
+\begin{proof}
+Below-sufficiency benchmark for dimension $d_k$ is
+$\min(\mathrm{actual}_k / s_k, 1)$, which is bounded above by $1$
+pointwise.
+\end{proof}
+
+\begin{remark}[The pointwise cap does not extend to an
+aggregate dimension-level cap]
+\label{rem:pointwise_not_aggregate}
+Proposition~\ref{prop:below_suff_saturation} is a
+\emph{per-capability, per-dimension} cap, not a dimension-level
+aggregate cap.  Distinct capabilities $c_1, c_2, \ldots$ each
+reporting $\mathrm{actual}_k \geq s_k$ on the same dimension
+$d_k$ each score $1$ under the below-sufficiency component;
+their M5-weighted sum in $\volL$ is not capped by this
+proposition and accumulates with each new capability.  The
+proposition therefore blocks only a narrow class of stuffing:
+re-instantiating a \emph{single} capability to inflate its own
+benchmark via repeated reporting.  The broader class of
+capability-stuffing---creating distinct capabilities that each
+satisfy sufficiency on the same dimension---is not structurally
+blocked and is acknowledged as unresolved below.
+\end{remark}
+
+\paragraph{What the need-sufficiency architecture does not
+resolve.}
+Proposition~\ref{prop:below_suff_saturation} is the full extent
+of the architecture's structural anti-stuffing contribution.  It
+does \emph{not} cover the following:
+\begin{enumerate}
+\item[(i)] Above-sufficiency re-instantiation.  An attacker can
+  construct capabilities with distinct
+  $\mathrm{actual}_k$ values exceeding $s_k$ (e.g.,
+  home-to-gas at 15~minutes and work-to-gas at 5~minutes).
+  Each earns positive above-sufficiency credit
+  $\alpha_k(\mathrm{actual}_k - s_k)/s_k$ under
+  Definition~\ref{def:polarity_benchmark}, even though the
+  underlying optionality (fuel access) is unchanged.
+\item[(ii)] Capabilities whose claimed dimension is not inside
+  any existing need's downstream cone, for which the gate
+  function (Definition~\ref{def:downstream_gate}) does not
+  apply and M5 weight accrues fully to $\volL$.
+\item[(iii)] Arbitrary asymmetric decoration --- distinct
+  cooperative descendants, minor weight perturbations, unique
+  subsumption edges --- that preserves M5 credit for the stuffed
+  capability regardless of whether the capability provides
+  genuinely new optionality.
+\end{enumerate}
+Each of these defeats any attempt to block stuffing using
+post-declaration poset properties or exercise patterns alone.
+The honest statement of the need-sufficiency architecture's
+contribution is sacrifice-polarity resolution (via
+Proposition~\ref{prop:s1_sufficiency} above, which is
+load-bearing for the sacrifice channel) together with the
+narrow below-sufficiency cap of
+Proposition~\ref{prop:below_suff_saturation}.  Full structural
+resolution of M5 stuffing requires machinery this paper does not
+develop.
+
+\paragraph{Capability-stuffing as structural avoidance.}
+The failure pattern across attempts is that every signature over
+post-declaration data is adversarially manipulable.  The move
+that changes the framing is recognizing stuffing as a specific
+instance of \emph{structural avoidance}, the pathology flagged
+as an open gap in~\citep[Discussion]{lasser2026poset}: when the
+framework rewards capability declarations additively, an agent
+optimizing $\volL$ has an incentive to \emph{decline to discover}
+that capabilities merge, factor, or are otherwise reducible.
+Stuffing is the concrete manifestation: the agent keeps
+``travel from home to gas station'' and ``travel from work to
+gas station'' distinct in $P$ rather than merging them into the
+canonical form ``access to fuel from multiple origins'' that a
+proper structural discovery would produce.  Each unmerged
+capability inflates the M5 count; the merged capability has the
+same optionality content.
+
+The positive dual is already in the sequence:
+\citep[Proposition~2]{lasser2026horizon} establishes that
+structural discovery is value-positive under conditions on the
+discovered structure's information value.  Making the symmetric
+claim---that refusal to discover is value-negative---requires
+mechanism, not entailment.  The direction is a \emph{proof-burden
+taxonomy} with \emph{claim-and-challenge back-pressure}.
+
+\paragraph{The proof-burden direction.}
+For each avoidance route, a corresponding burden the agent must
+discharge to retain $\volL$ credit.  Three types:
+proof-of-non-mergeability (for the stuffing-specific case),
+proof-of-provenance (blocking declarations without underlying
+structural work), and proof-of-use (blocking declarations that
+remain persistently dormant outside the residual class $\ResS$
+of \S\ref{sec:residual_class}).  Proof-burdens operate as
+preprocessing on the poset before M5 is applied; the M5 formula
+is preserved, but the measure is evaluated on the canonicalized
+poset rather than the presented one.  Canonicalization itself is
+new axiomatic content at the preprocessing layer.
+
+Claims are temporal and contestable.  An agent's
+proof-of-non-mergeability stands until a counter-argument
+demonstrates a merger mechanism; the discoverer of that
+mechanism receives structural-discovery credit
+(\citep[Proposition~2]{lasser2026horizon}); the avoider loses
+the M5 credit whose proof has been voided.  This makes avoidance
+economically risky rather than economically stable.  Analogous
+architectures exist in scientific consensus, patent challenge,
+and proof-of-stake slashing; adapting any of them requires
+substantive protocol and calibration work.
+
+\paragraph{Scope of the follow-up.}
+The sequence provides substrate for parts of this construction:
+Paper~5's commitment protocol for timestamped claims, Paper~8's
+sacrifice channel for partial use-evidence, Paper~6's controlled
+relaxation as an adjudication pattern.  Substrate is not
+implementation: formalizing the canonicalization operator, the
+three proof-burden types with admissible evidence classes, the
+claim-and-challenge protocol with challenge-market robustness
+(admission filtering against spam, identity weighting against
+Sybil flooding, independence requirements against cartel
+suppression), and the equilibrium-dominance theorem requires a
+dedicated follow-up paper.  This paper states the direction and
+leaves the formal work there.  The open-question entry in
+\S\ref{sec:discussion} describes the follow-up scope in more
+detail.
+
+\subsection{How sufficiency thresholds are set}
+\label{sec:threshold_setting}
+
+Four mechanisms, not mutually exclusive:
+
+\paragraph{(a) Poset-structural.}
+Capabilities with high fan-out (many downstream dependents) have
+their sufficiency level set by the minimum required for downstream
+capabilities to function.  Computable from poset topology.
+
+\paragraph{(b) Empirical / cross-sectional.}
+Observe the population's actual capability levels and identify the
+threshold below which agents demonstrably cease functioning on
+downstream capabilities.
+
+\paragraph{(c) Revealed-sacrifice-derived.}
+Sufficiency is the level at which sacrifice polarity flips.
+Below sufficiency, sacrifice is involuntary and increasing; above
+sufficiency, sacrifice becomes voluntary and choice-driven.  The
+transition point in the sacrifice data identifies the threshold
+empirically.  This is the most framework-native option but has a
+bootstrap problem: identifying the threshold requires classifying
+events, but classifying events requires the threshold.
+Resolution: start with structural/normative thresholds
+(mechanisms~(a) and~(d)), refine using sacrifice data.
+
+\paragraph{(d) Normative / external.}
+A human authority or governance process declares sufficiency
+levels.  This is the approach of~\citet{sen1999development}
+and~\citet{nussbaum2011creating}.  The framework's formal
+apparatus is agnostic to the source; it needs the thresholds as
+input.
+
+\medskip\noindent
+\textbf{Primary mechanism:} (c) with~(a) as structural
+validation.  The revealed-sacrifice data shows where the
+transition from involuntary to voluntary sacrifice occurs; the
+poset topology confirms the transition corresponds to a
+structurally meaningful threshold.

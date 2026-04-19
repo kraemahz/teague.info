@@ -1,0 +1,535 @@
+\section{Revealed-Sacrifice Observation Model}
+\label{sec:sacrifice_model}
+
+The privacy-compatible observation channel for $\volR$ is
+\emph{revealed sacrifice}: agents disclose the value they place on
+unbenchmarked capabilities through the benchmarked capabilities
+they voluntarily surrender to obtain them.  The framework does not
+observe \emph{what} the agent values privately---only \emph{what
+they commit to publicly through sacrifice}.
+
+\subsection{Core definitions}
+
+\begin{definition}[Revealed-Sacrifice Event]
+\label{def:sacrifice_event}
+A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
+\begin{itemize}
+\item $i$ is the agent performing the sacrifice;
+\item $X$ is a benchmarked capability (or capability bundle) with
+  known $\Delta\volL(X) \geq 0$, surrendered by agent~$i$ at
+  time~$t$;
+\item $Y = \{Y_1, \ldots, Y_k\}$ is an unbenchmarked capability
+  bundle acquired by agent~$i$, satisfying the \emph{genuine-
+  exchange conditions}:
+  (i)~$X \cap Y = \emptyset$ (the agent does not surrender and
+  reacquire the same capability);
+  (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
+  bundle is novel relative to the agent's retained holdings
+  $H_i \setminus X$, where $H_i$ is the agent's pre-trade
+  holdings);
+  (iii)~\emph{post-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $Y$
+  and $H_i \setminus X$ (so post-trade, no new cross-bundle
+  cooperative capability is activated by the combination);
+  and
+  (iv)~\emph{pre-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $X$
+  and $H_i \setminus X$ (so pre-trade, no cooperative
+  capability straddles the surrendered and retained
+  capability sets---only cooperatives contained entirely in
+  $X$ or entirely in $H_i \setminus X$ exist);
+\item $t$ is the event timestamp.
+\end{itemize}
+Conditions (i) and (ii) characterize \emph{genuine} trades: the
+agent exchanges distinct capabilities and acquires something
+novel.  Conditions (iii) and (iv) together ensure that the
+exchange-to-bundle cancellation in the revealed-preference
+derivation is exact: (iii) rules out post-trade cross-bundle
+cooperatives that would inflate $\Ui((H \setminus X) \cup Y)$
+beyond $\Ui(H \setminus X) + \Ui(Y)$; (iv) rules out pre-trade
+cross-bundle cooperatives that would inflate $\Ui(H)$ beyond
+$\Ui(H \setminus X) + \Ui(X)$.  Both closures are needed
+symmetrically for the cancellation of
+Lemma~\ref{lem:cancellation} to hold.  Trades violating
+(i)~or~(ii) are degenerate; trades violating (iii)~or~(iv) carry
+revealed-preference information about the marginal contribution
+of $Y$ in context rather than $\volR(Y)$ in isolation---the bound
+remains conservatively valid for the contextual quantity but
+the theorem's isolated-$\volR(Y)$ interpretation requires all
+four conditions.
+The event emits the signal:
+\[
+  \volRlower(Y) \;\geq\; \Delta\volL(X)
+\]
+under assumptions S0 (calibration), S1 (free choice), S2
+(benchmark grounding), and S4(a) (valuation additivity) stated
+below.  S4(a) is needed for the exchange-to-bundle cancellation
+(Lemma~\ref{lem:cancellation}).
+\end{definition}
+
+\begin{lemma}[Exchange-to-Bundle Cancellation]
+\label{lem:cancellation}
+Let $H$ be a finite capability holding set with $X \subseteq H$,
+and let $Y$ be a finite capability set satisfying the
+genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event} relative to $H$:
+(i)~$X \cap Y = \emptyset$;
+(ii)~$Y \cap (H \setminus X) = \emptyset$;
+(iii)~no cooperative capability in the poset has participants
+spanning both $Y$ and $H \setminus X$;
+(iv)~no cooperative capability in the poset has participants
+spanning both $X$ and $H \setminus X$.
+Under S4(a) (global valuation additivity:
+$\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
+$S \subseteq P$, with cooperative capabilities included as
+explicit nodes in $S$ when their participants are all in $S$):
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
+  \;=\; \Ui(Y) - \Ui(X).
+\]
+Equivalently,
+$\Ui((H \setminus X) \cup Y) \geq \Ui(H)
+\iff \Ui(Y) \geq \Ui(X)$.
+\end{lemma}
+
+\begin{proof}
+By S4(a), $\Ui(A) = \sum_{c \in A} u_i(c)$ for any finite
+capability set $A$.  To apply this cleanly we must track
+cooperative capabilities carefully: under S4(a), a cooperative
+capability $c_{\mathrm{coop}}$ contributes $u_i(c_{\mathrm{coop}})$
+to $\Ui(A)$ whenever $c_{\mathrm{coop}} \in A$, which holds iff
+all of $c_{\mathrm{coop}}$'s participants are in $A$.
+
+\emph{Pre-trade state $H$.}  $H = (H \setminus X) \sqcup X$.
+By (iv), no cooperative capability has participants spanning
+$X$ and $H \setminus X$, so every cooperative capability in $H$
+has participants entirely in $X$ or entirely in $H \setminus X$.
+Hence
+\[
+  \Ui(H) = \Ui(H \setminus X) + \Ui(X),
+\]
+where each term includes cooperatives formable within that set
+alone.
+
+\emph{Post-trade state $(H \setminus X) \cup Y$.}  By (ii) this
+is a disjoint union: $(H \setminus X) \sqcup Y$.  By (iii),
+no cooperative capability has participants spanning $Y$ and
+$H \setminus X$, so every cooperative in the post-trade state
+has participants entirely in $Y$ or entirely in $H \setminus X$.
+Hence
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr)
+  = \Ui(H \setminus X) + \Ui(Y).
+\]
+
+\emph{Cancellation.}
+Subtracting, the $\Ui(H \setminus X)$ terms cancel, leaving
+$\Ui((H \setminus X) \cup Y) - \Ui(H) = \Ui(Y) - \Ui(X)$.
+
+Condition (i) makes $\Ui(Y)$ and $\Ui(X)$ refer to distinct
+capability sets; violating (i) would cause $X \cap Y$ terms to
+cancel trivially on both sides, yielding no information.
+\end{proof}
+
+\paragraph{Justification (revealed-preference inequality).}
+The transfer from the observed trade to the framework-level
+bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
+steps.
+
+\begin{enumerate}
+\item \textbf{Exchange preference (revealed-preference
+  observation).}
+  When agent~$i$ trades $X$ for $Y$, revealed-preference
+  theory~\citep{samuelson1938note} establishes that the
+  post-trade state is weakly preferred to the pre-trade state:
+  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
+  where $H$ is the agent's pre-trade holdings.
+
+\item \textbf{Reduction to bundle-level comparison.}
+  By Lemma~\ref{lem:cancellation} under S4(a) and the
+  genuine-exchange conditions of
+  Definition~\ref{def:sacrifice_event}, the exchange comparison
+  reduces to $\Ui(Y) \geq \Ui(X)$.
+
+\item \textbf{Calibration chain.}
+  Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
+  bound uses:
+  \begin{itemize}
+  \item Sacrifice-side grounding (S2):
+    $\Ui(X) \geq \Delta\volL(X)$, which holds by construction
+    when $\volL$ is the operational target on the benchmarked
+    subspace.
+  \item Acquisition-side calibration (S0):
+    $\Ui(Y) \leq \volR^{[W]}(Y)$, asserting that agents do not
+    systematically overvalue unbenchmarked bundles relative to
+    their \emph{window-integrated} exercise contribution.  The
+    window-integrated form is what the observation channel
+    actually bounds: an acquisition at $t_n$ carries no
+    instantaneous exercise witness, but the bound is still
+    valid on the cumulative window quantity $\volR^{[W]}$
+    whenever the agent uses $Y$ during $W$.
+  \end{itemize}
+  Chaining: $\volR^{[W]}(Y) \geq \Ui(Y) \geq \Ui(X) \geq
+  \Delta\volL(X)$.
+\end{enumerate}
+
+\begin{remark}[S4(a) is a genuine assumption, not a consequence]
+\label{rem:s4a_status}
+S4(a) is a global additive-separability assumption on $\Ui$.
+It is stronger than the rationality-only premises of Samuelson's
+original revealed-preference
+theorem~\citep{samuelson1938note}, which establishes preferences
+over states rather than additivity over bundles.  In applied
+microeconomics~\citep{mascolell1995microeconomic}, bundle-level
+inference of the kind the sacrifice channel performs typically
+invokes either additive separability or quasilinearity in a
+numeraire.  The paper uses a special case implicitly via the
+time-sacrifice channel (Definition~\ref{def:time_sacrifice}),
+which values time at wage rate $r_i$---quasilinearity in
+wage-scaled time, a form of valuation additivity.  S4(a) is the
+explicit assumption that makes Lemma~\ref{lem:cancellation} go
+through; it is not a consequence of S0--S3.
+
+Complementarities that would break pure additivity in general
+consumer theory are absorbed into the poset as cooperative
+nodes via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
+capabilities are themselves capabilities with their own weights,
+so bundle-specific cooperative contributions appear as separate
+summands in $\Ui$.  S4(a)'s additivity is compatible with this
+structure because cooperative terms are explicit capabilities,
+not hidden non-linearities.
+\end{remark}
+
+\subsection{Assumptions}
+\label{sec:assumptions}
+
+The revealed-sacrifice channel and its aggregate bound
+(Section~\ref{sec:lower_bound}) operate under six named
+assumptions.  We collect them here for single-point reference.
+
+\begin{description}
+\item[S0 (Valuation-bounded-by-Exercise).] For each agent~$i_n$
+  with event at $t_n \in W$, the agent's valuation of the
+  unbenchmarked bundle $Y_n$ does not exceed $Y_n$'s
+  \emph{window-integrated} realized $\volR$ contribution:
+  $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
+  This is the \emph{substantive bridge} between valuation (what
+  the agent pays for at $t_n$) and realized exercise (what the
+  framework cares about, aggregated over the observation window
+  $W$).  It is not a calibration-in-the-narrow-sense (unbiased
+  estimation) but a one-sided conservatism claim: agents do not
+  systematically pay more than what the capability will actually
+  deliver in exercise \emph{within $W$}.  The window-integrated
+  form is essential: the sacrifice channel observes acquisition
+  at $t_n$, not exercise at any particular time, so S0's
+  consequent is about the cumulative exercise witness across the
+  window rather than the instantaneous value at $t_n$.  Agents
+  who buy capabilities they never use within $W$ violate S0 for
+  those events; this matches the intuition that the lower bound
+  is about \emph{realized} rather than \emph{stored} capability.
+
+\item[S1 (Free choice).] Each sacrifice event is a voluntary
+  trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
+  available.  The agent had \emph{non-degrading} alternatives:
+  retaining $X_n$ was a viable option that would not have left
+  the agent below minimum viable functionality on any need
+  dimension.  When retaining $X_n$ would cause the agent to
+  fall below a sufficiency threshold, S1 fails for that event
+  (see the companion paper~\citep{lasser2026paper8b} for the
+  need-sufficiency architecture that filters such
+  below-sufficiency events structurally).
+
+\item[S2 (Benchmark grounding).] The benchmarked sacrifice $X_n$
+  has a well-defined $\volL$ contribution $\Delta\volL(X_n)$
+  computed via~\citep[Proposition~1]{lasser2026poset}, and the
+  agent's valuation of $X_n$ is at least as large:
+  $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+
+\item[S3 (Bundle coherence).] The hedonic decomposition of each
+  bundle $Y_n$ into capabilities in $U$ is well-defined (no
+  multicollinearity degeneracy).
+
+\item[S4 (Additive separability).] \mbox{}
+  \begin{enumerate}
+  \item[(a)] \emph{Valuation additivity (global):}
+    $\Ui$ is additive over any finite capability set:
+    $\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
+    $S \subseteq P$, with $u_i(c) \geq 0$.  In particular this
+    applies to sacrifice bundles ($\Ui(X) = \sum_{c \in X}
+    u_i(c)$), acquired bundles ($\Ui(Y)$), and agent
+    holdings ($\Ui(H)$).  Complementarities are handled at the
+    poset level by treating cooperative capabilities as their
+    own nodes (M6), which appear as additional capabilities in
+    $S$ whose $u_i$ accounts for the cooperative term.
+  \item[(b)] \emph{$\volR$ additivity on poset-independent
+    capabilities:} The $\volR$ contribution of a set of
+    capabilities that are pairwise poset-independent (no
+    subsumption relations \emph{and} no cooperative composition
+    links) is additive.
+  \end{enumerate}
+
+\item[S5 (Decomposition validity).] The event-local decomposition
+  coefficients are \emph{lower bounds} on the true $\volR$ share:
+  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all $n$ and
+  $c \in Y_n$.
+\end{description}
+
+\begin{remark}[S5 is a conditional-refinement assumption]
+\label{rem:s5_heavy}
+S5 is the strongest of the six assumptions: it asserts a direct
+share inequality on the quantity Part~B of
+Theorem~\ref{thm:aggregate_bound} bounds.  Part~A makes no
+per-capability attribution claim and does not require S5.
+Part~B's per-capability refinement should be understood as a
+\emph{conditional result}: under the additional structural
+assumption that decomposition coefficients are conservative
+share lower bounds, \emph{and} the hypothesis of within-bundle
+poset-independence (Definition~\ref{def:bundle_decomp},
+Remark~\ref{rem:within_bundle_indep}), the aggregate can be
+refined to per-capability bounds.  Within-bundle
+poset-independence is what makes S5's share inequality
+compatible with the partition-of-unity constraint on the
+$\alpha$ coefficients: bundles with internal cooperative
+activation produce $\volR(Y_n) > \sum_{c \in Y_n} \volR(c)$,
+forcing $\sum_{c \in Y_n} \alpha_{n,c} < 1$ under S5 and
+violating Definition~\ref{def:bundle_decomp}.  Operationally, S5 holds when
+decomposition coefficients are set via conservative heuristics
+(e.g., equal-weight default $\alpha_{n,c} = 1/|Y_n|$ when $Y_n$
+is a small homogeneous bundle, known-bias corrections from prior
+hedonic~\citep{rosen1974hedonic} regressions) rather than via
+fitted models that could overstate individual capability
+contributions.
+\end{remark}
+
+Part~A of Theorem~\ref{thm:aggregate_bound} requires
+S0--S2 and S4(a): S4(a) is the valuation-additivity assumption
+used in the exchange-to-bundle reduction of the revealed-
+preference inequality (Step~2 of the justification above).
+Part~B additionally requires S3 (bundle coherence), S4(b)
+($\volR$ additivity on poset-independent capabilities), S5
+(decomposition validity), and within-bundle poset-independence
+of each admissible $Y_n$ (Definition~\ref{def:bundle_decomp}).
+The need-sufficiency architecture of the next section
+characterizes when S1 fails structurally and provides the filter
+that keeps the sacrifice channel clean.
+
+\begin{remark}[S0 is the substantive bridge, not a calibration
+detail]
+\label{rem:s0_substantive}
+S0 does the conceptual work of the theorem.  Revealed-preference
+reasoning on its own establishes only that traded bundles are
+valued at least as highly as surrendered bundles; it does not
+establish that what the agent values corresponds to what the
+capability \emph{delivers in exercise}.  S0 asserts precisely
+that correspondence (in the one-sided direction needed for a
+lower bound): subjective valuation is upper-bounded by realized
+exercise contribution.  This is a non-trivial behavioural claim.
+Agents who systematically overpay for status, novelty, or
+anticipated-but-unrealized utility violate S0 in realistic
+markets; the theorem's empirical validity depends on the
+prevalence of such violations.
+
+S0 does \emph{not} require that agent valuations perfectly track
+$\volR$---only that they do not \emph{overstate} it.  Agents may
+undervalue unbenchmarked bundles (sacrifice little for something
+very valuable), in which case the lower bound is conservative
+but still valid.  S0 fails only in the overpayment direction.
+Weakening S0 to expected/distributional conservatism
+(Open Question~\ref{oq:calibration}) is a priority direction for
+follow-up work.
+\end{remark}
+
+\begin{definition}[Aggregate Trade Window]
+\label{def:trade_window}
+An aggregate trade window $[t_0, t_0 + T]$ is an observation
+period over which revealed-sacrifice events are collected.  The
+window parameters are:
+\begin{itemize}
+\item $T$: window duration;
+\item $N$: number of observed sacrifice events in the window;
+\item $\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$: the event sequence.
+\end{itemize}
+The aggregate trade window plays a role analogous to the
+observation windows used elsewhere in the
+sequence~\citep{lasser2026scm}: it defines the timescale
+over which the framework accumulates sacrifice evidence.
+\end{definition}
+
+\subsection{Privacy properties}
+
+The channel's privacy properties split cleanly into two
+categories: \emph{formal} properties that follow directly from
+the observation-model construction (stated below as
+Theorem~\ref{thm:privacy}), and \emph{institutional}
+preconditions that require deployment-level infrastructure to
+hold operationally (stated as
+Proposition~\ref{prop:privacy_institutional}).  We state each
+category separately so that the theorem-level content covers
+only mathematical consequences of the construction, while
+institutional dependencies are flagged as preconditions rather
+than proved facts.
+
+\begin{theorem}[Formal Privacy Properties of Revealed-Sacrifice
+Observation]
+\label{thm:privacy}
+The revealed-sacrifice channel satisfies the following three
+formal privacy properties, each following from the observation
+tuple (Definition~\ref{def:sacrifice_event}) together with the
+commitment protocol
+of~\citep[Definition~6]{lasser2026exo}:
+
+\begin{enumerate}
+\item[\textbf{(P1)}] \textbf{No interior access.}  The framework
+  never observes what the agent values privately---only what they
+  commit to publicly through sacrifice.  The observation channel
+  records the tuple $(i, X, Y, t)$, not the agent's internal
+  valuation function $\Ui$.
+
+\item[\textbf{(P3)}] \textbf{Discretization as a feature.}  Trade
+  events are sparse by construction.  The channel's emission rate
+  is bounded by trade frequency, not by observation intensity:
+  each sacrifice event produces one output tuple, and no
+  continuous stream is emitted between events.  (This is an
+  emission-rate bound, not a Shannon-information-rate bound; the
+  information content per event is finite but non-trivial.)
+
+\item[\textbf{(P4)}] \textbf{Commitment-layer composability.}
+  The commitment protocol
+  of~\citep[Definition~6]{lasser2026exo} extends to
+  revealed-sacrifice events: a sacrifice event can be committed as
+  a proof-of-trade exposing only the $\volR$-category and
+  $\Delta\volL$-magnitude, not counterparty, price, or specific
+  goods (Section~\ref{sec:commitment}).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Each property is established from the structure of the observation
+channel (Definition~\ref{def:sacrifice_event}) and the aggregate
+bound (Theorem~\ref{thm:aggregate_bound}).
+
+\emph{(P1) No interior access.}
+The channel's output is, by Definition~\ref{def:sacrifice_event},
+the tuple $(i, X, Y, t)$.  The agent's internal valuation $\Ui$
+appears only as a bridge quantity in the calibration chain
+(S0 + S1 + S2 + S4(a)); it is never recorded, transmitted, or
+stored by the framework.  The aggregate bound
+(Theorem~\ref{thm:aggregate_bound}) depends only on
+$\{(\Delta\volL(X_n), Y_n)\}$, so the framework's behaviour is
+identical under any two agent-valuation functions producing the
+same trade sequence.  No interior access is required or obtained.
+
+\emph{(P3) Discretization as a feature.}
+The channel emits at most one output tuple per sacrifice event
+and produces no continuous stream otherwise.  Over a window of
+duration $T$ the total number of channel emissions is exactly
+the number of observed events, so the channel's \emph{emission
+rate} is $|\mathrm{events}|/T$.  Unlike continuous observation
+(which scales with sampling rate), the emission rate is bounded
+above by the agents' trade frequency---a behavioural rather than
+observational parameter---so increasing observation intensity
+does not increase the emission rate.  (Each emission carries
+finite information about the tuple $(i, X, Y, t)$; this is an
+emission-rate claim, not a Shannon-information-rate claim.)
+
+\emph{(P4) Commitment-layer composability.}
+Each sacrifice event admits a commitment
+$\Gamma = \Commit\bigl((\Delta\volL(X), \catY), r\bigr)$
+using the protocol of~\citep[Definition~6]{lasser2026exo},
+accompanied by a zero-knowledge
+proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds a
+valid revealed-sacrifice event: the event-local objectively
+verifiable facts---non-negativity of $\Delta\volL(X_n)$, bundle
+containment $Y_n \subseteq C_{\catY[_n]}$
+(Definition~\ref{def:committed_event}(d)), bundle coherence S3,
+and a verifiable link to an underlying trade record.  This is
+the event-level certification; S4(b) is not an event-level
+property but a batch-level structural fact about the category
+partition, established via pairwise-distinct category labels in
+Proposition~\ref{prop:zk_aggregation} and inherited from the
+poset-independence of distinct partition components
+(Definition~\ref{def:category_partition}(i)).  S0, S1, S4(a),
+and S5 are \emph{not} ZK-verifiable
+(Remark~\ref{rem:zk_limits}).
+Proposition~\ref{prop:commit_preserves} establishes that the
+Part~A aggregate bound is computable from committed events with
+\emph{pairwise-distinct} category labels, together with the
+category-partition structure; batches with colliding labels
+require the operational responses of
+Remark~\ref{rem:label_collision} (sub-batch partitioning, finer
+public partition, or richer commitments).  The committed form
+reveals only the sacrifice magnitude and bundle category; agent
+identity, specific $X$ and $Y$, and counterparty remain hidden
+by the hiding property of
+$\Commit$~\citep{goldwasser1985knowledge}.
+\end{proof}
+
+\begin{proposition}[Institutional Preconditions for
+Revealed-Sacrifice Observation]
+\label{prop:privacy_institutional}
+Two additional privacy properties hold operationally when the
+deployment environment supplies the corresponding institutional
+infrastructure.  These are not formal consequences of the
+channel's construction; they are preconditions the framework
+relies on but does not itself construct.
+
+\begin{enumerate}
+\item[\textbf{(P2)}] \textbf{Consent via participation
+  (institutional).}
+  The aggregate lower bound sums per-capability max-attribution
+  quantities over observed events
+  (Theorem~\ref{thm:aggregate_bound}, Part~B), so an agent with
+  zero observed sacrifice events contributes zero to the
+  aggregate.  This zero-contribution property is formal.  The
+  \emph{operational} interpretation as ``consent'' additionally
+  requires that participation in markets and labour exchanges be
+  legally and socially opt-in; in settings where participation
+  is coerced, the formal zero-contribution property holds but
+  the consent interpretation does not.
+
+\item[\textbf{(P5)}] \textbf{Third-party observability
+  (institutional).}
+  \emph{Money-sacrifice events} are observable from
+  public-facing ledger data (market exchanges, payment rails,
+  public commitments) with no agent participation required,
+  \emph{assuming} such public-ledger infrastructure exists.  The
+  sacrifice magnitude $\Delta\volL(X)$ is directly readable from
+  the price paid.
+
+  \emph{Time-sacrifice events} are observable from public-ledger
+  data only under an additional precondition: the agent's
+  outside-option wage rate $r_i$ (Definition~\ref{def:time_sacrifice})
+  must be computable from public inputs---e.g., a public wage
+  schedule, occupational census with public imputation rules, or
+  the agent's own published rate.  Where $r_i$ is private, the
+  hours $h$ may be observable but the sacrifice magnitude
+  $\Delta\volL(r_i \cdot h)$ is not third-party computable;
+  P5 then holds for the money channel and for
+  public-wage-imputation time events, but not for fully private
+  time-sacrifice valuations.
+
+  Where public-ledger infrastructure does not exist at all, P5
+  fails operationally on both channels even though the
+  construction is unchanged.  This contrasts with controlled
+  relaxation~\citep{lasser2026wamura} (framework must impose a
+  test) and with commitment-protocol
+  verification~\citep{lasser2026exo} (agent must generate a
+  proof).  P5 does not extend to private time-sacrifice
+  activities (parenting, contemplation), which require voluntary
+  disclosure regardless of ledger infrastructure and regardless
+  of wage imputation.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Why the split]
+\label{rem:privacy_mixed_status}
+Theorem~\ref{thm:privacy} restricts itself to properties that are
+mathematical consequences of the channel's construction.
+Proposition~\ref{prop:privacy_institutional} catalogues the
+deployment conditions under which P2 and P5 hold operationally.
+Treating P2 and P5 as institutional preconditions rather than as
+theorem consequences is the honest framing: they are load-bearing
+for how the channel behaves in practice, but they depend on facts
+about markets, legal systems, and public infrastructure that lie
+outside the paper's formal scope.
+\end{remark}

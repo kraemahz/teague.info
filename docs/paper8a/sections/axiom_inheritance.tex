@@ -1,0 +1,227 @@
+\section{Axiom Inheritance and the Non-Self-Balancing Finding}
+\label{sec:axiom_inheritance}
+
+Since $\volRlower$ is a lower bound on $\volR$, and $\volR =
+\volL$ restricted to the exercised sub-poset, the axiom
+inheritance analysis applies directly, with an additional layer:
+the lower bound itself is not a measure (it is a bound on a
+measure).
+
+\begin{theorem}[Axiom-Analogue Analysis for $\volRlower$]
+\label{thm:axiom_inheritance}
+$\volRlower$ is a lower-bound statistic, not a poset measure in
+the sense of~\citep[Proposition~1]{lasser2026poset}; the clauses
+below describe \emph{operational analogues} of M1--M6 for
+$\volRlower$, not literal axiom inheritance.  M4 and the
+structural M6-failure result are substantive; M1, M2, M3, and
+M5 are weaker conditional statements noted for completeness.
+
+\begin{description}
+\item[(M1) Non-negativity (analogue).] Satisfied.  $\volRlower$ is
+  a sum of non-negative terms ($\Delta\volL(X_n) \geq 0$ per event;
+  max-attribution preserves non-negativity).
+
+\item[(M2) Null empty set (analogue).] Satisfied.  With zero
+  sacrifice events, $\volRlower = 0$.
+
+\item[(M3) Monotonicity (conditional analogue).] Satisfied in the
+  observational direction: adding sacrifice events covering a
+  larger subset of $U$ weakly increases $\volRlower$
+  (Proposition~\ref{prop:monotone}).  M3 does \emph{not} hold
+  for the relationship between $\volL$ and $\volRlower$: adding
+  a benchmarked capability to the poset increases $\volL$ but
+  does not affect $\volRlower$ unless that capability is
+  subsequently sacrificed.  This is a lower-bound statistic
+  property, not a poset-measure axiom.
+
+\item[(M4) Additivity under disjointness (substantive).]
+  Satisfied.  By construction, $\volR$ is $\volL$ restricted
+  to the exercised sub-poset $P^{\mathrm{ex}} \subseteq P$.  M4
+  for $\volL$ on $P$ states that $\volL$ is additive over
+  components of $P$ that are pairwise poset-disjoint (no
+  subsumption or cooperative-composition links).  Let $A, B
+  \subseteq P^{\mathrm{ex}}$ be poset-disjoint in $P^{\mathrm{ex}}$.
+  Since $P^{\mathrm{ex}}$ inherits the relation structure of
+  $P$, $A$ and $B$ are also poset-disjoint in $P$.  M4 on $P$
+  gives $\volL(A \cup B) = \volL(A) + \volL(B)$; restricting
+  both sides to $P^{\mathrm{ex}}$ gives $\volR(A \cup B) =
+  \volR(A) + \volR(B)$, establishing M4 for $\volR$.
+  This inheritance is load-bearing for the aggregate bound
+  (Theorem~\ref{thm:aggregate_bound}, Part~A).
+
+\item[(M5) Non-triviality (conditional analogue).] A single
+  sacrifice event with $\Delta\volL(X) > 0$ produces
+  $\volRlower > 0$ on the capabilities the event covers.  This
+  is an observation-dependent analogue, not the structural
+  non-triviality of every valid capability.
+
+\item[(M6) Superadditivity under independence.]
+  The situation splits into a measure-axiom layer and a
+  system-level layer:
+  \begin{enumerate}
+  \item[(a)] \textbf{$\volR$ as a measure on a fixed exercised
+    sub-poset inherits M6.}
+    For any fixed $P^{\mathrm{ex}}_W$, if $A, B \subseteq P$ are
+    poset-independent in $P$, then $A \cap P^{\mathrm{ex}}_W$
+    and $B \cap P^{\mathrm{ex}}_W$ are poset-independent in
+    $P^{\mathrm{ex}}_W$, and $\volL$'s M6 on $P$ lifts to
+    $\volR$'s M6 on $P^{\mathrm{ex}}_W$ by the same restriction
+    argument used for M4 above.  This is literal axiom
+    inheritance for the set function $\volR$.
+
+    The structurally relevant failure is at the
+    \emph{system level}, not the measure-axiom level:
+    \emph{$\volR$ is non-invariant under capability removal}.
+    Removing an unexercised capability $c$ (a capability with
+    $e_t(c) = 0$ throughout $W$) from the system leaves
+    $\volR$ unchanged while $\volL$ drops by $w(c) > 0$.
+    Example~\ref{ex:volR_removal_invariance} witnesses this.
+    The property is about the mapping $\mathcal{P} \mapsto
+    \volR^{\mathcal{P}}$ from capability systems to the measure,
+    not about $\volR$ as a set function on any one
+    $P^{\mathrm{ex}}_W$; it is what breaks the self-balancing
+    transfer (Corollary~\ref{cor:not_self_balancing}).
+  \item[(b)] \textbf{$\volRlower$ fails M6 (observational).}
+    Merging two groups of sacrifice events changes per-capability
+    attributions under max-attribution: the joint maximum over
+    all events is less than the sum of within-group maxima.  This
+    failure is about the \emph{lower bound}, a weaker claim---a
+    lower bound failing superadditivity does not imply the
+    underlying quantity fails superadditivity.
+    Example~\ref{ex:m6_fail_volRlower} witnesses this.
+  \end{enumerate}
+\end{description}
+\end{theorem}
+
+\begin{example}[$\volR$ is invariant under removal of
+unexercised capabilities]
+\label{ex:volR_removal_invariance}
+Consider a single-agent system with two poset-independent
+capabilities:
+\begin{itemize}
+\item $c_A = $ ``drive to gas station $\alpha$'', $w(c_A) = 1$.
+\item $c_B = $ ``drive to gas station $\beta$'' (different
+  location), $w(c_B) = 1$.
+\end{itemize}
+The system poset is $P = \{c_A, c_B\}$ with $\volL(P) = 2$.
+$c_A$ and $c_B$ are poset-independent: different
+fuel-access pathways with no shared participants.
+
+Under the exercise indicator of
+Appendix~\ref{app:exercise_indicator}, the agent uses only $c_A$
+(gas station $\alpha$ is closer), so
+$P^{\mathrm{ex}}_W = \{c_A\}$ and
+$\volR(P) = \volL(P^{\mathrm{ex}}_W) = 1$.  (Note: $c_B$ is
+\emph{not} load-bearing at any time in $W$---removing it leaves
+all realized outputs unchanged.)
+
+Now remove $c_B$: the system becomes $P' = \{c_A\}$ with
+$\volL(P') = 1$ (so $\volL$ contracts by $w(c_B) = 1$).  The
+agent's behavior is unchanged, so $P^{\mathrm{ex}}_W = \{c_A\}$
+and $\volR(P') = 1$, unchanged.
+
+The measure $\volR$ is therefore \emph{invariant} under the
+removal of the unexercised $c_B$, while $\volL$ contracts by
+$w(c_B)$.  A $\volR$-maximizing actor would face no penalty for
+shedding unexercised capabilities; a $\volL$-maximizing actor
+would pay $w(c_B)$.
+
+This is not a counterexample to M6 as a measure axiom: for the
+fixed exercised sub-poset $P^{\mathrm{ex}}_W = \{c_A\}$, $\volR$
+trivially satisfies M6 (and all other $\volL$-inherited axioms
+by restriction).  The failure is at the level of the
+\emph{mapping} $\mathcal{P} \mapsto \volR^{\mathcal{P}}$: this
+mapping is not monotone under capability-set expansion
+($P \supset P'$ but $\volR(P) = \volR(P')$).  Equivalently, the
+mapping is not strictly contracted by capability removal when
+the removed capability is unexercised.  This non-invariance is
+what breaks the self-balancing transfer
+(Corollary~\ref{cor:not_self_balancing}).
+\end{example}
+
+\begin{example}[$\volRlower$ M6-failure via max-attribution]
+\label{ex:m6_fail_volRlower}
+Consider two sacrifice events with the same bundle
+$Y = \{a, b\}$ but different decomposition coefficients
+(permitted under S5, since event-local decomposition is fixed at
+observation time):
+\begin{itemize}
+\item Event $E_1$: $\Delta\volL(X_1) = 1$, $\alpha_{1,a} = 0.5$,
+  $\alpha_{1,b} = 0.5$.
+\item Event $E_2$: $\Delta\volL(X_2) = 1$, $\alpha_{2,a} = 0.3$,
+  $\alpha_{2,b} = 0.7$.
+\end{itemize}
+Let group $A = \{E_1\}$ and group $B = \{E_2\}$.  Under
+Theorem~\ref{thm:aggregate_bound} Part~B:
+\begin{align*}
+  \volRlower(a \mid A) &= 0.5, &
+  \volRlower(b \mid A) &= 0.5, \\
+  \volRlower(a \mid B) &= 0.3, &
+  \volRlower(b \mid B) &= 0.7.
+\end{align*}
+Summing per-capability:
+$\volRlower(A) = 1.0$, $\volRlower(B) = 1.0$.
+
+In the merged group $A \cup B$, max-attribution over both events:
+$\volRlower(a \mid A \cup B) = \max(0.5, 0.3) = 0.5$ and
+$\volRlower(b \mid A \cup B) = \max(0.5, 0.7) = 0.7$.
+Total: $\volRlower(A \cup B) = 1.2$.
+
+M6 (superadditivity) predicts $\volRlower(A \cup B) \geq
+\volRlower(A) + \volRlower(B) = 2.0$, but $\volRlower(A \cup B)
+= 1.2 < 2.0$.  M6 fails for $\volRlower$ in the subadditive
+direction---max-attribution over merged events takes the larger
+single contribution per capability rather than summing
+across groups, so the joint aggregate is bounded above by the
+sum of within-group aggregates.
+
+This is a property of the \emph{lower-bound construction}, not of
+the underlying $\volR$: the true $\volR$ aggregate of the merged
+events need not be subadditive, but our observational lower
+bound is.  The non-self-balancing corollary below therefore
+relies on the capability-removal non-invariance of M6(a), not
+on this lower-bound subadditivity.
+\end{example}
+
+\begin{corollary}[$\volR$ Is Not Self-Balancing]
+\label{cor:not_self_balancing}
+The self-balancing property does \emph{not} transfer from
+$\volL$ to $\volR$.  Paper~2's self-balancing
+theorem~\citep[Theorem~1]{lasser2026poset} relies on the fact
+that \emph{any} capability removal contracts $\volL$, making
+$\volL$-maximization incompatible with unilateral capability
+reduction.  For $\volR$, removing an unexercised capability
+leaves the measure unchanged
+(Example~\ref{ex:volR_removal_invariance}), so a
+$\volR$-maximizer can shed unused capabilities without penalty.
+The protective coupling between measure-maximization and
+capability preservation that $\volL$'s self-balancing encodes
+therefore does not apply to $\volR$.
+
+The corollary does \emph{not} follow from $\volR$ failing M6 as
+a measure axiom---it does not
+(Theorem~\ref{thm:axiom_inheritance}, M6(a))---nor from
+$\volRlower$ failing M6 alone (a lower bound failing measure
+axioms is unremarkable).  The corollary rests on the
+system-level non-invariance of M6(a): $\volR$'s value depends
+on which capabilities are exercised, and unexercised
+capabilities can be removed without affecting that value.
+\end{corollary}
+
+This is the structural reason to use $\volR$ as a diagnostic
+rather than an objective.  An actor maximizing $\volR$ would
+lack the automatic diversity-preservation that makes $\volL$
+safe: exercise is rewarded, but dormant optionality is not
+protected.
+
+\begin{remark}[When M6 does hold for $\volRlower$]
+M6 holds for $\volRlower$ when the merged groups have sacrifice
+events in poset-independent bundle categories
+(Definition~\ref{def:category_partition})---each unbenchmarked
+capability appears in sacrifice events from only one group, and
+cross-group capabilities are poset-independent.  Under this
+non-redundancy condition, $\volRlower$ inherits M1--M6.  Even
+so, the self-balancing property transfers to $\volRlower$ only as
+a \emph{lower bound} on self-balancing---$\volRlower$ being
+self-balancing does not imply $\volR$ itself is self-balancing.
+\end{remark}

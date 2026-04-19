@@ -1,0 +1,126 @@
+\section{Proof Sketches and Technical Notes}
+\label{app:proofs}
+
+\subsection{Privacy-minimality
+(Section~\ref{sec:sacrifice_model})}
+
+\paragraph{Theorem~\ref{thm:privacy} + Proposition~\ref{prop:privacy_institutional}
+strategy.}
+The three formal properties (P1, P3, P4) are proved
+independently from the channel's construction; the two
+institutional preconditions (P2, P5) are documented separately
+in Proposition~\ref{prop:privacy_institutional}.  Proof
+strategy:
+P1~(no interior access): by construction of the observation
+tuple.
+P3~(discretization): by bounding channel bandwidth with trade
+frequency.
+P4~(commitment composability): by composition
+with~\citep[Definition~6]{lasser2026exo}.
+P2 and P5 are not theorem content: P2's zero-contribution
+property is formal (a consequence of the aggregate's summation
+structure), but the consent interpretation depends on
+institutional opt-in conventions; P5 depends on public-ledger
+infrastructure external to the paper's formal scope, and is
+additionally split between money-channel events (observable
+from public ledger) and time-channel events (require an
+additional public wage schedule or imputation rule).
+
+\subsection{Aggregate lower bound
+(Section~\ref{sec:lower_bound})}
+
+\paragraph{Theorem~\ref{thm:aggregate_bound} strategy.}
+
+\emph{Part~A (bundle-level, S0--S2 and S4(a),
+poset-independent bundles, genuine-exchange conditions):}
+\begin{enumerate}
+\item Revealed-preference observation: $\Ui[_n]((H_n \setminus
+  X_n) \cup Y_n) \geq \Ui[_n](H_n)$.
+\item Cancellation to bundle comparison (S4(a) +
+  Definition~\ref{def:sacrifice_event} conditions (i)--(iv),
+  via Lemma~\ref{lem:cancellation}):
+  $\Ui[_n](Y_n) \geq \Ui[_n](X_n)$.
+\item Calibration chain (S0 + S2), S0 stated directly in
+  window-integrated form:
+  $\volR^{[W]}(Y_n) \geq \Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)
+  \geq \Delta\volL(X_n)$.  S0's consequent is against
+  $\volR^{[W]}$ rather than against the instantaneous
+  $\volR_{t_n}$: a sacrifice event records acquisition, not an
+  instantaneous exercise witness, so the bound is about
+  cumulative exercise of $Y_n$ anywhere in $W$
+  (Definition~\ref{def:volR},
+  Section~\ref{sec:assumptions}).
+\item Poset-independence of bundles
+  (Definition~\ref{def:category_partition}) gives M4 additivity
+  (inheritance proved in Theorem~\ref{thm:axiom_inheritance}
+  via sub-poset restriction):
+  $\volR^{[W]}(\bigcup Y_n) = \sum_n \volR^{[W]}(Y_n) \geq
+  \sum_n \Delta\volL(X_n)$.
+\end{enumerate}
+
+\emph{Part~B (per-capability refinement, additionally S3--S5
+and within-bundle poset-independence; conditional on S5, see
+Remark~\ref{rem:s5_heavy}):}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item Part~B is stated for events with $\Delta\volL(X_n) > 0$
+  and bundles $Y_n$ satisfying within-bundle poset-independence
+  (Definition~\ref{def:bundle_decomp},
+  Remark~\ref{rem:within_bundle_indep}); bundles with internal
+  cooperative activation fall back to Part~A only.  Positivity
+  $\volR(Y_n) > 0$ then follows from Part~A.
+\item Within-bundle poset-independence plus~M4 gives
+  $\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$, making the
+  partition-of-unity constraint
+  $\sum_{c \in Y_n} \alpha_{n,c} = 1$ compatible with S5's
+  share inequality $\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$
+  (equality achievable).  Combined: $\volR(c) \geq \alpha_{n,c}
+  \cdot \Delta\volL(X_n)$.  S3 (bundle coherence) ensures the
+  hedonic decomposition is non-degenerate so $\alpha_{n,c}$ is
+  well-specified.
+\item Per-capability max-attribution across overlapping events
+  (Proposition~\ref{prop:monotone}).
+\item Summation over capabilities in $U$ (pairwise
+  poset-independent) via a second M4 application.
+\end{enumerate}
+
+Key technical challenges:
+\begin{itemize}
+\item \emph{Poset-independence (Part~A):} the category
+  partition $\mathcal{C}$
+  (Definition~\ref{def:category_partition}) must be a genuine
+  poset partition.  Set-disjointness is necessary but not
+  sufficient (Remark~\ref{rem:poset_indep}).
+\item \emph{Decomposition validity (S5, Part~B):} hedonic
+  regression~\citep{rosen1974hedonic} produces attribution
+  weights, not $\volR$ share lower bounds.  S5 is the explicit
+  bridge.
+\item \emph{Calibration (S0):} the weakest assumption in the
+  chain but the hardest to verify empirically (Open
+  Question~\ref{oq:calibration}).
+\end{itemize}
+
+\subsection{Axiom inheritance
+(Section~\ref{sec:axiom_inheritance})}
+
+\paragraph{Theorem~\ref{thm:axiom_inheritance} strategy.}
+Axiom-by-axiom analysis:
+M1--M5 are direct from properties of summation/max over
+non-negative terms (detailed in the body; M4 is proved
+constructively via sub-poset restriction).
+M6 for $\volR$ as a measure on a fixed exercised sub-poset is
+inherited from $\volL$ by restriction---no axiom failure
+there.  The paper's non-self-balancing claim rests instead on
+\emph{capability-removal non-invariance}: removing an
+unexercised capability leaves $\volR$ unchanged while $\volL$
+drops by the removed weight
+(Example~\ref{ex:volR_removal_invariance}).  This is a
+system-level property (of the mapping
+$\mathcal{P} \mapsto \volR^{\mathcal{P}}$), not a measure-axiom
+failure.  M6(b) for $\volRlower$ is witnessed separately by
+Example~\ref{ex:m6_fail_volRlower}: max-attribution
+subadditivity.  Corollary~\ref{cor:not_self_balancing} follows
+from~(a)'s non-invariance, not from~(b)---a lower bound failing
+measure axioms is unremarkable; what breaks self-balancing
+transfer is that $\volR$ doesn't penalize shedding of unused
+capabilities.

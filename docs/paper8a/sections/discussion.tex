@@ -1,0 +1,171 @@
+\section{Discussion and Open Questions}
+\label{sec:discussion}
+
+\subsection{What this paper establishes}
+
+\paragraph{Direct $\volR$ measurement is privacy-incompatible.}
+The framework's commitments
+in~\citep{lasser2026exo,lasser2026phase,lasser2026wamura} rule
+out the panopticon-style observation that direct measurement
+would require.  This is a structural finding, not a practical
+limitation.
+
+\paragraph{Revealed sacrifice is a privacy-minimal surrogate.}
+The sacrifice channel satisfies three formal privacy properties
+(Theorem~\ref{thm:privacy}) plus two institutional preconditions
+(Proposition~\ref{prop:privacy_institutional}), and composes
+with the commitment layer of~\citep{lasser2026exo}
+(Propositions~\ref{prop:commit_preserves}
+and~\ref{prop:zk_aggregation}) to produce a privacy-minimal
+observation mechanism on distinct-category batches.
+
+\paragraph{The B-to-C gap is characterized by trade data.}
+The aggregate lower bound
+(Theorem~\ref{thm:aggregate_bound}) lower-bounds the exercised
+fraction $\beta$ (equivalently, upper-bounds the B-to-C gap
+$1 - \beta$) on the observed subset, under S0--S2 and S4(a).
+The constructed lower bound is non-decreasing in observed
+admissible events: Part~A via sub-batch supremum
+(Proposition~\ref{prop:monotone_part_a}) and Part~B via
+per-capability max-attribution
+(Proposition~\ref{prop:monotone}).
+
+\paragraph{Two sacrifice channels, substitutable with residuals.}
+The money and time channels are substitutable via cooperative
+markets (employment and hiring) and triangulate the same
+underlying sacrifice substrate.  The joint aggregate weakly
+dominates either channel alone unconditionally; strict
+domination obtains at the non-fungibility residuals
+(agent-specific time, capital-concentrated access) when the
+trade window contains an event in the relevant residual
+category, per Corollary~\ref{cor:joint_coverage}.
+
+\paragraph{$\volR$ is not self-balancing.}
+$\volR$ exhibits non-invariance under capability removal:
+eliminating an unexercised capability leaves $\volR$ unchanged
+while $\volL$ contracts
+(Theorem~\ref{thm:axiom_inheritance}, M6(a); Example
+\ref{ex:volR_removal_invariance}).  The self-balancing
+protection $\volL$ enjoys---every removal contracts the
+measure---therefore does not transfer to $\volR$
+(Corollary~\ref{cor:not_self_balancing}).  $\volR$ is a
+diagnostic, not an objective.  This structural finding is
+independent of the observation mechanism.
+
+\paragraph{Complementarity with controlled relaxation.}
+Together, this paper and~\citep{lasser2026wamura} cover the
+risk and value dimensions of the
+preemptive-restriction criterion of~\citep[Proposition~1]{lasser2026horizon}.
+Neither is sufficient alone.
+
+\subsection{Limitations}
+
+\paragraph{Assumption load.}
+The full per-capability refinement
+(Theorem~\ref{thm:aggregate_bound} Part~B) requires S0--S5 plus
+within-bundle poset-independence
+(Definition~\ref{def:bundle_decomp}).  S0 (calibration) and S1
+(free choice) are the most empirically demanding, and neither
+is ZK-verifiable (Remark~\ref{rem:zk_limits}).  Part~A (S0--S2
+and S4(a) only) is the more defensible result; Part~B should be
+understood as the refinement available under stronger
+conditions.
+
+\paragraph{B-to-C gap inheritance.}
+The damage bound of~\citep[Theorem~1]{lasser2026wamura} bounds
+contraction of $\volL$, not of the experiential target
+directly.  The present paper provides a lower bound on $\volR$
+as a diagnostic, but the diagnostic is itself subject to the
+B-to-C gap on the benchmarked side: the sacrifice signal
+$\Delta\volL(X)$ is only as accurate as $\volL$'s measurement
+of the benchmarked capability.
+
+\paragraph{External admissibility layer.}
+Several non-ZK-verifiable hypotheses require institutional
+attestation to hold operationally: S0 (valuation bounded by
+exercise), S1 (free choice and non-degradation), S4(a)
+(valuation additivity), and the genuine-exchange conditions
+(iii)--(iv) of
+Definition~\ref{def:sacrifice_event}.
+Remark~\ref{rem:external_attestation} describes the operational
+shape of this attestation layer.  The specific filter for S1's
+non-degradation condition---rejecting below-sufficiency
+sacrifices as structurally involuntary---is developed in the
+companion paper~\citep{lasser2026paper8b} and treated here as
+an external precondition.
+
+\subsection{Open questions}
+
+\begin{enumerate}
+
+\item \label{oq:hedonic}
+\textbf{Hedonic disaggregation of bundles.}
+Theorem~\ref{thm:aggregate_bound} Part~B requires event-local
+decomposition coefficients $\alpha_{n,c}$.  Classical hedonic
+regression~\citep{rosen1974hedonic} handles the money channel.
+The time-sacrifice channel needs an analogous framework: how
+does one decompose a block of time spent on a complex activity
+(parenting, which involves teaching, emotional regulation,
+physical care, relationship-building) into per-capability
+contributions?
+
+\item \label{oq:nonstationarity}
+\textbf{Non-stationarity of revealed preferences.}
+Preferences shift over time.  The lower bound from past trades
+may overstate $\volR$ at present.  An EWMA decay paralleling
+the risk-trust dynamics of~\citep[Definition~4]{lasser2026scm}
+seems natural but requires empirical calibration.
+
+\item \label{oq:coercion}
+\textbf{Coerced sacrifice.}
+Assumption S1 (free choice) is load-bearing.  Under duress,
+the agent's trade does not reveal preferences.  Filtering
+coerced sacrifice events may require commitment-based
+attestation of choice sets~\citep{lasser2026exo}.
+
+\item \label{oq:market_failure}
+\textbf{Market-failure cases.}
+In contexts without functioning markets (pre-capitalist
+societies, closed economies, intra-family sharing), the
+money-sacrifice channel is quiet even though $\volR$ activity
+is real.  Does the time-sacrifice channel alone suffice, or
+does the framework need a non-market sacrifice variant?
+
+\item \label{oq:commitment_infra}
+\textbf{Commitment infrastructure at scale.}
+A fully committed trade ledger at the scale of a modern
+economy is an infrastructure problem.  The privacy guarantee
+(Section~\ref{sec:commitment}) is conditional on the
+commitment infrastructure existing, which is the remit
+of~\citep{lasser2026exo}.
+
+\item \label{oq:calibration}
+\textbf{Population-level calibration (S0).}
+Assumption S0 requires that individual agents do not overvalue
+unbenchmarked bundles.  A robust version of
+Theorem~\ref{thm:aggregate_bound} would replace S0 with a
+weaker population-level condition:
+$E[\Ui(Y)] \leq \volR(Y) + \epsilon$ for some bounded bias
+$\epsilon$.  Specific behavioural mechanisms that stress
+individual-agent S0 and motivate a population-level weakening
+include: (i) \emph{ritualized payment}, where a transaction's
+nominal price is symbolic rather than exchange-valued (a token
+fee to ``soften'' receiving something for free);
+(ii) \emph{gift aversion}, where agents refuse free offers
+because they interpret absence of price as signalling hidden
+defect, inflating observed sacrifices on nominally free goods;
+(iii) \emph{time-for-money inefficiency}, where a given hour's
+wage rate $r_i$ does not reflect the agent's marginal valuation
+(labour-market frictions, status wages, family-care default
+allocations).  Each of these produces systematic biases on
+observed sacrifice magnitudes that the per-agent S0 cannot
+absorb; a population-level reformulation that lets such biases
+cancel (or bounds the residual) is the natural follow-up.
+
+\end{enumerate}
+
+\paragraph{Further open questions in the companion
+paper.} Open questions on threshold governance, need
+identification, capability-stuffing as structural avoidance,
+and the full architecture of gap-decomposition governance are
+collected in the companion paper~\citep{lasser2026paper8b}.

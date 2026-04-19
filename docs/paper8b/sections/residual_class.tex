@@ -1,0 +1,273 @@
+\section{Residual Class Under Revealed-Sacrifice Observation}
+\label{sec:residual_class}
+
+\subsection{Re-characterization}
+
+A natural alternative approach would define the residual class as
+capabilities failing benchmarkability (identity-individuated,
+non-repeatable, non-communicable).  The revealed-sacrifice framing
+produces a differently-shaped and operationally cleaner residual
+class.
+
+\begin{definition}[Residual Class Under Revealed Sacrifice]
+\label{def:residual_class}
+The residual class is the set of capabilities \emph{structurally
+outside the reach} of the sacrifice channel---capabilities whose
+exercise, by their nature, produces no sacrifice event even with
+unlimited observation time:
+\[
+  \ResS = \{c \in P : \text{no sacrifice-observable path exists
+  in principle}\}.
+\]
+$\ResS$ is a \emph{structural} property of the capability, not a
+property of the observation window.  A capability is in $\ResS$
+because the sacrifice channel \emph{cannot} reach it (purely
+private exercise with no material footprint), not because the
+channel has not yet observed it.  Examples: private contemplative
+experience, purely internal cognitive operations with no external
+inputs or time diversion.
+\end{definition}
+
+\begin{remark}[Structural versus evidential absence]
+$\ResS$ is distinct from the set of capabilities with no sacrifice
+evidence in a given window.  A capability outside $\ResS$
+(tradable in principle) may have no sacrifice evidence in a
+particular window simply because no trade happened to cover
+it---this is the \emph{dormant} category in the gap decomposition
+(Definition~\ref{def:gap_decomp}), not the residual class.
+Dormant capabilities can be resolved by waiting for more trade
+data; residual capabilities cannot.
+\end{remark}
+
+\begin{remark}[Conservatism of $\ResS$ classification]
+\label{rem:residual_conservatism}
+Classifying a capability as residual is a structural claim that
+should be conservative: if there is any plausible mechanism by
+which exercise of~$c$ could produce a sacrifice event (even
+indirectly---e.g., an artistic practice that requires purchasing
+supplies), $c$ should be classified as outside $\ResS$.  The
+residual class should be small by construction.
+\end{remark}
+
+\subsection{Relationship to the benchmarkability-based residual class}
+
+\begin{proposition}[Residual Class Intersection]
+\label{prop:residual_intersection}
+Let $\ResB$ be the benchmarkability-based residual class
+(capabilities failing benchmarkability under a direct-measurement
+approach) and $\ResS$ be the revealed-sacrifice residual class
+(Definition~\ref{def:residual_class}).  Then:
+\begin{enumerate}
+\item[(a)] $\ResB$ and $\ResS$ overlap but neither contains the
+  other.
+\item[(b)] Capabilities in $\ResB \setminus \ResS$:
+  identity-individuated capabilities that nonetheless involve
+  observable sacrifice.  Example: an artistic practice that is
+  identity-individuated but involves purchasing supplies, paying
+  for studio space, foregoing labour hours.  The time-sacrifice
+  channel captures a lower bound even though the capability is
+  identity-individuated.
+\item[(c)] Capabilities in $\ResS \setminus \ResB$: capabilities
+  that are benchmarkable (communicable, repeatable, externally
+  verifiable) but are exercised purely internally with no trade
+  event.  Example: a cognitive capability (mathematical reasoning,
+  strategic planning) that the agent exercises entirely in private
+  thought.
+\item[(d)] Capabilities in $\ResB \cap \ResS$:
+  identity-individuated capabilities exercised purely privately
+  with no sacrifice event.  Example: private contemplative
+  experience with no material input or time-sacrifice signal.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Each part is established by exhibiting a capability with the
+claimed membership, which proves non-containment in the relevant
+direction.
+
+\emph{(a) Neither class contains the other.}
+Parts (b) and (c) below produce witnesses for
+$\ResB \setminus \ResS \neq \emptyset$ and
+$\ResS \setminus \ResB \neq \emptyset$ respectively, ruling out
+either containment.
+
+\emph{(b) $\ResB \setminus \ResS$.}
+Consider the capability ``a specific artist's studio practice.''
+Under the benchmarkability criterion of~\citep[%
+Definition~2]{lasser2026poset}, this is identity-individuated: the
+artefact sequence is non-repeatable and non-communicable in the
+benchmark sense, so the capability lies in $\ResB$.  But the
+practice consumes materials (paid-for supplies, rent on studio
+space) and displaces outside-option labour hours; every session
+produces a money- or time-sacrifice event
+(\citep{lasser2026paper8a}) that emits a valid
+$\volRlower$ signal on the underlying bundle.  Thus the capability
+is reachable in principle by the sacrifice channel and so
+$\notin \ResS$.
+
+\emph{(c) $\ResS \setminus \ResB$.}
+The residual definition (Definition~\ref{def:residual_class})
+requires that \emph{no} exercise mode produces a sacrifice event
+in principle---not merely that some modes do not.  Many cognitive
+capabilities that feel purely internal (silent rehearsal,
+planning, reasoning) admit paid-training or dedicated-time
+exercise modes and therefore lie outside $\ResS$.  The genuine
+witnesses for $\ResS \setminus \ResB$ are capabilities exercised
+passively and concurrently with other activity, with no
+incremental material input, no incremental time displacement, and
+no counterparty.
+
+Consider ``ongoing interoceptive self-awareness (the felt sense
+of one's internal physiological state while engaged in other
+activity).''  This capability is benchmarkable: interoceptive
+acuity is measurable in clinical neuroscience, communicable
+through structured report, and repeatable across sessions, so it
+lies outside $\ResB$.  But interoception is exercised as a
+background condition of conscious embodiment, concurrent with
+every other activity the agent performs; no payment secures it
+independently of the body, and no hour of foregone wages is
+\emph{specifically} attributable to it (the same hours
+simultaneously produce whatever else the agent is doing).  No
+sacrifice event, in principle, distinguishes the incremental
+exercise of this capability from the baseline of being
+conscious.  Under the conservative reading of $\ResS$
+(Remark~\ref{rem:residual_conservatism}), this is a genuine
+witness.  The same structural argument applies to peripheral
+sensory integration, background attentional stability, and other
+passively-concurrent capabilities.
+
+\emph{(d) $\ResB \cap \ResS$.}
+Consider ``private contemplative experience with no material
+footprint.''  This is identity-individuated (non-communicable
+phenomenology, so $\in \ResB$) and emits no sacrifice event (no
+money, no time beyond idle cycles, no counterparty, so
+$\in \ResS$).  The intersection is witnessed and therefore
+non-empty.
+\end{proof}
+
+\begin{remark}[The new residual class is the correct carve]
+The prior residual class was defined by the \emph{measurement
+apparatus} (what benchmarks can test).  The new residual class is
+defined by the \emph{observation channel} (what trades reveal).
+The observation-channel carve is the correct one for a paper about
+what the framework can observe under its privacy commitments: the
+question is not ``what could we test if we had access?'' but
+``what do we actually see?''
+\end{remark}
+
+\subsection{Bounding the residual class}
+
+Paper~3's observational-individuation
+result~\citep[Corollary~2.1]{lasser2026horizon} establishes a
+\emph{structural} floor on $\volL$: for any distinguishable
+agent~$k$, the poset contains an identity capability $d_k$ with
+$\OIfloor(k) \geq 1$, so removing~$a_k$ contracts $\volL$ by at
+least $\OIfloor(k)$.  Paper~8's $\volRexact(O)$ diagnostic
+(the exercise indicator~\citep{lasser2026paper8a}), by contrast, sums
+$\volL$-weights of capabilities $d$ with $e_t(d) = 1$, where
+$e_t(d)$ requires a realized cooperative output in
+$[t-\Delta, t]$ that would be unrealizable if $d$ were removed
+from $O$.  Transferring the OI floor into $\volRexact(O)$
+therefore requires a bridge between the structural $\volL$ fact
+and the temporal exercise indicator.  We state that bridge
+explicitly as a hypothesis rather than derive it from
+Corollary~2.1.
+
+\begin{definition}[OI--Exercise Bridge Condition]
+\label{def:oi_exercise_bridge}
+An agent~$k$ with OI capability $d_k \in O$ satisfies the
+\emph{OI--exercise bridge} at time~$t$ if some realized
+cooperative output in $[t-\Delta, t]$ that agent~$k$
+participated in is identity-individuating in the sense that
+removing $d_k$ from $O$ would make that output unrealizable as
+an output attributable to~$k$.  Equivalently,
+$e_t(d_k) = 1$ under
+the exercise indicator~\citep{lasser2026paper8a}.  Active presence within
+$O$ that is merely dormant (e.g., $k$ is nominally in the
+perimeter but contributed nothing to realized cooperative
+outputs during $[t-\Delta, t]$) does not satisfy the bridge.
+\end{definition}
+
+\begin{proposition}[Active-Agent Floor Transfer, conditional on
+the bridge]
+\label{prop:oi_floor}
+Fix a window $W = [t_0, t_0 + T]$.  For an agent~$k$ with OI
+capability $d_k \in O$ satisfying the OI--exercise bridge
+(Definition~\ref{def:oi_exercise_bridge}) at some $t \in W$,
+$d_k$ is exercised within $W$ and therefore contributes
+$\OIfloor(k) \geq 1$ to $\volRexact^{[W]}(O)$ (with the weight
+bound from the binary default
+of~\citep[Corollary~2.1]{lasser2026horizon}).  Summing over
+agents $k \in K$ whose OI capabilities are pairwise
+poset-independent (the category partition~\citep{lasser2026paper8a}(i))
+and who each satisfy the bridge at some $t \in W$:
+\[
+  \volRexact^{[W]}(O) \;\geq\; \sum_{k \in K} \OIfloor(k)
+  \;=:\; \sum_{k \in K} \OIfloor(k).
+\]
+The floor transfers only under the bridge hypothesis; it is
+\emph{not} a consequence of Corollary~2.1 alone, which
+establishes a $\volL$ elimination floor rather than an exercise
+witness.
+\end{proposition}
+
+\begin{proof}
+By the bridge (Definition~\ref{def:oi_exercise_bridge}) at some
+$t \in W$, $e_t(d_k) = 1$, so $d_k \in P^{\mathrm{ex}}_t$ for
+that $t$.  Under Paper~8's window-integrated form
+(the $\volR$ definition~\citep{lasser2026paper8a}), $d_k \in P^{\mathrm{ex}}_W =
+\bigcup_{s \in W} P^{\mathrm{ex}}_s$, hence $d_k$ contributes
+$\OIfloor(k)$ to $\volRexact^{[W]}(O) = \volL(O \cap
+P^{\mathrm{ex}}_W)$.  By
+Paper~3~\citep[Corollary~2.1]{lasser2026horizon},
+$\OIfloor(k) \geq 1$ (the binary default, strengthened by any
+subsumption weight in $\volL$).  Pairwise poset-independence of
+the $\{d_k\}_{k \in K}$ lets $\volL$ decompose additively by
+axiom~M4 (\citep{lasser2026paper8a}), giving the sum
+form.  Without the bridge hypothesis,
+Corollary~2.1~\citep{lasser2026horizon} establishes only the
+structural $\volL$-on-elimination fact, which does \emph{not}
+supply the exercise witness required by
+the exercise indicator~\citep{lasser2026paper8a}.
+\end{proof}
+
+\begin{remark}[When the bridge holds and when it fails]
+\label{rem:oi_bridge_scope}
+The bridge holds when active participation is
+\emph{identity-coupled}: the agent's actions produce realized
+cooperative outputs whose attribution depends on the agent
+remaining in the perimeter.  Typical operational examples are
+participation in a committed trade event, execution of a
+verified action with agent-attributable signing, or
+contribution to a cooperative capability whose output is signed
+by the agent's identifier.  The bridge fails for \emph{dormant
+presence}: an agent is nominally within $O$ but contributed
+nothing attributable to them in $[t-\Delta, t]$.  In such
+windows the structural $\volL$ floor of Corollary~2.1 still
+holds (removing the agent would still contract $\volL$), but
+$\volRexact(O)$ receives no contribution from $d_k$ until the
+agent resumes identity-coupled activity.  This is consistent
+with the paper's stance that $\volR$ measures what the
+collective \emph{does}, not merely what it possesses.
+\end{remark}
+
+\begin{remark}[Channel separation]
+Under the boundary-closed hypothesis on $O$
+(the exercise indicator~\citep{lasser2026paper8a}, conditions BC1/BC2),
+the OI floor contributes exclusively to $\volRexact(O)$ in the
+combined diagnostic (the exercise-indicator appendix of~\citep{lasser2026paper8a}):
+\[
+  \volRcomb = \volRexact(O) + \volRlower(P \setminus O).
+\]
+It does \emph{not} contribute to $\volRlower$ (the
+sacrifice-based bound outside $O$).  Conflating the two channels
+would double-count.  When boundary-closure fails (either BC1 or
+BC2), $\volRcomb$ remains a conservative lower bound on
+$\volR(P)$ but undercounts the cross-boundary cooperatives and
+subsumption mass
+(see the boundary-cooperative-undercount remark
+in~\citep{lasser2026paper8a}); the OI floor's contribution is
+unaffected because the OI capability $d_k$ is, by construction,
+an internal capability of agent $k$'s substrate---not a
+cooperative or subsumption edge spanning the perimeter boundary.
+\end{remark}

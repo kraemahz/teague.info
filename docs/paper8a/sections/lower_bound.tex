@@ -1,0 +1,469 @@
+\section{Aggregate Lower Bound Theorem}
+\label{sec:lower_bound}
+
+\subsection{Realized capability volume ($\volR$)}
+
+Before stating the aggregate theorem, we make the object being
+bounded precise.  $\volR$ is the poset measure evaluated on the
+\emph{exercised sub-poset}: the restriction of the capability
+space to capabilities that are currently being exercised.
+
+\begin{definition}[Exercised Sub-Poset and Realized Capability
+Volume]
+\label{def:volR}
+Let $P$ be the full capability poset with measure
+$\volL$~\citep[Proposition~1]{lasser2026poset}.
+
+\medskip\noindent
+\textbf{Instantaneous form.}
+For each time $t$, the \emph{exercised sub-poset}
+$P^{\mathrm{ex}}_t \subseteq P$ is the set of capabilities being
+exercised at time $t$---a \emph{latent structural fact} about
+the system, independent of any observation mechanism:
+\[
+  P^{\mathrm{ex}}_t \;=\; \{d \in P : d \text{ is exercised at
+  time } t\},
+\]
+where ``exercised at $t$'' is formalized via the counterfactual
+exercise condition of Appendix~\ref{app:exercise_indicator}
+(Definition~\ref{def:exercise_indicator}): $d$ is exercised at
+$t$ iff removing $d$ at that time would make some realized
+cooperative output unrealizable.  The \emph{instantaneous
+realized capability volume} is the poset measure restricted to
+this sub-poset:
+\[
+  \volR_t(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_t\bigr)
+  \qquad \text{for any } S \subseteq P.
+\]
+
+\medskip\noindent
+\textbf{Window-integrated form.}
+For a trade window $W = [t_0, t_0 + T]$
+(Definition~\ref{def:trade_window}), the \emph{window-integrated
+exercised sub-poset} is the union of the instantaneous
+exercised sub-posets across the window,
+\[
+  P^{\mathrm{ex}}_W \;=\; \bigcup_{t \in W}
+  P^{\mathrm{ex}}_t,
+\]
+and the corresponding \emph{window-integrated realized
+capability volume} is
+\[
+  \volR^{[W]}(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_W\bigr)
+  \qquad \text{for any } S \subseteq P.
+\]
+$\volR^{[W]}$ counts a capability as contributing to realized
+volume if it was exercised at \emph{any} time during $W$; the
+instantaneous form $\volR_t$ counts only capabilities exercised
+exactly at $t$.  Both inherit the measure structure of $\volL$
+restricted to the corresponding sub-poset, and the
+axiom-analogue analysis of
+Section~\ref{sec:axiom_inheritance} applies to each.
+
+\medskip\noindent
+\textbf{Convention.}
+Unless otherwise noted, $\volR$ without a time subscript refers
+to the window-integrated form $\volR^{[W]}$ for the ambient
+trade window $W$.  This is the quantity the sacrifice channel
+(Theorem~\ref{thm:aggregate_bound}) actually bounds: a sacrifice
+event at $t_n$ records an acquisition, not an instantaneous
+exercise witness, so the theorem's lower bound is stated
+against $\volR^{[W]}$---which captures any exercise of $Y_n$
+anywhere in $W$---rather than against the instantaneous
+$\volR_{t}$ at a particular evaluation time.  Assumption~S0
+(Section~\ref{sec:assumptions}) is correspondingly stated
+directly in window-integrated form:
+$\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
+\end{definition}
+
+\begin{remark}[$\volR$ is latent; $\volRlower$ is the bound]
+\label{rem:volR_diagnostic}
+$\volR$ (in either form) is defined structurally as a
+ground-truth quantity about the system; computing it
+\emph{directly} requires evaluating the counterfactual exercise
+condition for every capability at every relevant time, which the
+Introduction rejects as intractable and privacy-incompatible at
+scale.  The revealed-sacrifice observation channel does not
+observe $P^{\mathrm{ex}}_t$ or $P^{\mathrm{ex}}_W$ directly; it
+produces a lower bound $\volRlower$ on the window-integrated
+$\volR^{[W]}$ restricted to an observed sub-space
+$U \subseteq P$.  Inside the observation perimeter $O$ of
+Appendix~\ref{app:exercise_indicator}, direct evaluation of
+$e_t(d)$ is permitted (no privacy barrier within consented
+operational scope) and contributes to a combined diagnostic
+$\volRcomb = \volRexact(O) + \volRlower(P \setminus O)$, which
+is a valid lower bound on $\volR(P)$ when $O$ is
+boundary-closed from $P \setminus O$ in the full
+poset-independence sense (neither cooperative-composition nor
+subsumption links cross the boundary; see
+Definition~\ref{def:exercise_indicator} conditions BC1/BC2); a
+conservative lower bound otherwise
+(Appendix~\ref{app:exercise_indicator},
+Remark~\ref{rem:boundary_cooperative_undercount}).  $\volR$ itself is the
+latent target; $\volRlower$ (and $\volRexact$ on $O$) are the
+observation-channel outputs the framework actually computes.
+\end{remark}
+
+\subsection{Event-local decomposition}
+
+\begin{definition}[Event-Local Bundle Decomposition]
+\label{def:bundle_decomp}
+For each revealed-sacrifice event $(i_n, X_n, Y_n, t_n)$ whose
+bundle $Y_n$ is \emph{within-bundle poset-independent} (no
+subsumption relations and no cooperative-composition links among
+the capabilities in $Y_n$; see
+Definition~\ref{def:category_partition}(i) applied internally to
+$Y_n$), define the \emph{event-local} decomposition coefficients
+$\alpha_{n,c} \geq 0$ for each capability $c \in Y_n$, satisfying:
+\[
+  \sum_{c \in Y_n} \alpha_{n,c} = 1
+  \qquad\text{(partition of unity within the bundle)}.
+\]
+The coefficients represent the share of bundle $Y_n$ attributable
+to capability~$c$, determined at the time of event~$n$ and
+\emph{fixed thereafter}.  Each event carries its own
+decomposition, independent of other events.  The decomposition can
+be obtained from prior hedonic
+regression~\citep{rosen1974hedonic} on similar trades, domain
+knowledge, or the equal-weight default
+$\alpha_{n,c} = 1/|Y_n|$.
+
+Within-bundle poset-independence is the hypothesis that makes
+the partition of unity compatible with S5's share inequality.
+Under within-bundle independence, no cooperative node activates
+from within $Y_n$, so
+$\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$ by axiom~M4, and S5's
+$\alpha_{n,c} \leq \volR(c)/\volR(Y_n)$ sums to at most one
+across $c \in Y_n$ with equality achievable.  Bundles with
+internal cooperative activation fall back to Part~A only (see
+Remark~\ref{rem:within_bundle_indep}).
+\end{definition}
+
+\begin{remark}[Why within-bundle independence is a Part~B
+hypothesis]
+\label{rem:within_bundle_indep}
+If $Y_n$ contains capabilities $a, b$ whose cooperative
+composition $z$ has all participants in $Y_n$, then S4(a)
+(Section~\ref{sec:assumptions}) treats $z$ as an explicit
+bundle summand, so
+$\volR(Y_n) = \volR(a) + \volR(b) + \volR(z) > \sum_{c \in Y_n}
+\volR(c)$.  S5's share inequality $\alpha_{n,c} \leq
+\volR(c)/\volR(Y_n)$ is then forced below $\volR(c)/(\volR(a) +
+\volR(b) + \volR(z))$ for each atomic $c \in Y_n$, and
+$\sum_{c \in Y_n} \alpha_{n,c} \leq [\volR(a) +
+\volR(b)]/\volR(Y_n) < 1$, contradicting the partition of
+unity.  Part~B's per-capability attribution therefore requires
+within-bundle poset-independence.  Part~A places no such
+constraint: its bundle-level bound $\volR(Y_n) \geq
+\Delta\volL(X_n)$ is valid regardless of internal cooperative
+structure.
+\end{remark}
+
+\begin{remark}[Event-local versus global regression]
+Classical hedonic regression~\citep{rosen1974hedonic} fits a
+\emph{global} model across all observed trades simultaneously,
+producing the tightest decomposition but breaking the monotonicity
+of the max-attribution bound
+(Proposition~\ref{prop:monotone}) when new observations refit all
+coefficients.  The event-local formulation fixes coefficients at
+observation time, sacrificing fit quality for the monotonicity
+guarantee.
+\end{remark}
+
+\subsection{Central result}
+
+\begin{theorem}[Aggregate B-to-C Lower Bound]
+\label{thm:aggregate_bound}
+Fix a trade window $W = [t_0, t_0 + T]$
+(Definition~\ref{def:trade_window}) and a sequence of
+revealed-sacrifice events
+$\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with $t_n \in W$, whose
+bundles jointly cover a subset $U$ of unbenchmarked
+capability-space.  All $\volR$ quantities below refer to the
+\emph{window-integrated} form $\volR^{[W]}$
+(Definition~\ref{def:volR}): the theorem bounds the realized
+volume accumulated during $W$, not the instantaneous
+$\volR_t$ at any single evaluation time.
+
+\medskip\noindent
+\textbf{Part~A (Main result --- bundle-level lower bound;
+requires S0--S2 and S4(a)).}
+For each event~$n$:
+\[
+  \volR^{[W]}(Y_n) \;\geq\; \Delta\volL(X_n).
+\]
+For $N$ events with \emph{pairwise poset-independent} bundles:
+\[
+  \volR^{U,[W]} \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
+\]
+where $\volR^{U,[W]}$ is the window-integrated realized
+capability volume restricted to the unbenchmarked subset $U$
+covered by the union of bundles.  Part~A is the paper's
+substantive result: the $\volL$-to-$\volR$ lower bound per unit
+of observed sacrifice magnitude.
+
+\medskip\noindent
+\textbf{Part~B (Conditional refinement --- per-capability
+attribution; requires S0--S5 and within-bundle
+poset-independence).}
+Restrict attention to events $n$ whose bundles $Y_n$ are
+within-bundle poset-independent
+(Definition~\ref{def:bundle_decomp}).  When bundles overlap and
+per-capability attribution is desired, define for each capability
+$c \in U$:
+\[
+  \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
+  \alpha_{n,c} \cdot \Delta\volL(X_n).
+\]
+Then, provided the capabilities $c \in U$ are pairwise
+poset-independent:
+\[
+  \volR^{U,[W]} \;\geq\; \sum_{c \in U} \volRlower(c).
+\]
+Part~B is \emph{conditional on S5}---a direct share inequality
+on the quantity being bounded (see
+Remark~\ref{rem:s5_heavy})---and should be read as a refinement
+when admissible, not as a result comparable in strength to
+Part~A.
+\end{theorem}
+
+\begin{proof}
+\emph{Part~A.}
+Fix an event $n$ with $t_n \in W$.  By S1, agent~$i_n$ chose
+$Y_n$ over $X_n$ while both were available.  Revealed preference
+gives $\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
+\Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By
+Lemma~\ref{lem:cancellation} under S4(a) and the genuine-
+exchange conditions of Definition~\ref{def:sacrifice_event},
+this reduces to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0
+(valuation-bounded-by-exercise, stated in window-integrated
+form), $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.  By S2
+(benchmark grounding), $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+Chaining:
+\[
+  \volR^{[W]}(Y_n) \;\geq\; \Ui[_{n}](Y_n)
+  \;\geq\; \Ui[_{n}](X_n)
+  \;\geq\; \Delta\volL(X_n),
+\]
+which is the per-event bound.  The window-integrated form is
+essential: the sacrifice channel observes acquisition of $Y_n$
+at $t_n$, not exercise at any particular instant.  S0's
+consequent is therefore stated as a bound on
+$\volR^{[W]}(Y_n)$---the cumulative exercise witness for $Y_n$
+across $W$---not on the instantaneous $\volR_t(Y_n)$ at any
+single evaluation time $t$, which could be zero even when
+$Y_n$ was exercised earlier or later in $W$.
+
+Suppose the $N$ bundles $\{Y_n\}$ are pairwise poset-independent:
+no subsumption relation and no cooperative-composition link
+connects any capability in $Y_n$ to any capability in $Y_{n'}$
+for $n \neq n'$.  Then the sub-posets carried by the bundles are
+disconnected components of the sub-poset on
+$U = \bigcup_n Y_n$.  Axiom~M4
+of~\citep[Proposition~1]{lasser2026poset} makes the poset
+measure additive over poset-disjoint components; $\volR^{[W]}$
+inherits M4 (Section~\ref{sec:axiom_inheritance},
+Theorem~\ref{thm:axiom_inheritance}), so
+$\volR^{[W]}(U) = \sum_n \volR^{[W]}(Y_n)$.  Summing the
+per-event bounds:
+\[
+  \volR^{U,[W]} \;=\; \sum_{n=1}^N \volR^{[W]}(Y_n)
+  \;\geq\; \sum_{n=1}^N \Delta\volL(X_n),
+\]
+establishing Part~A.
+
+\emph{Part~B.}
+Part~B is stated for events with $\Delta\volL(X_n) > 0$ and
+bundles $Y_n$ that are within-bundle poset-independent
+(Definition~\ref{def:bundle_decomp}); events with zero sacrifice
+carry no information, and bundles with internal cooperative
+activation fall back to Part~A
+(Remark~\ref{rem:within_bundle_indep}).  Fix an admissible event
+$n$ and its bundle $Y_n$.  By Part~A, $\volR(Y_n) \geq
+\Delta\volL(X_n) > 0$, so $\volR(Y_n) > 0$ and division is
+well-defined.  S3 (bundle coherence) additionally ensures the
+hedonic decomposition of $Y_n$ is non-degenerate, so
+$\alpha_{n,c}$ is well-specified.
+
+Within-bundle poset-independence plus~M4
+(Section~\ref{sec:axiom_inheritance},
+Theorem~\ref{thm:axiom_inheritance}) gives
+$\volR(Y_n) = \sum_{c \in Y_n} \volR(c)$: no cooperative node
+activates from within $Y_n$, so the bundle's $\volR$ decomposes
+atomically.  S5 then asserts that the event-local coefficients
+are lower bounds on the true atomic shares:
+\[
+  \alpha_{n,c} \;\leq\; \volR(c) / \volR(Y_n),
+  \qquad c \in Y_n,
+\]
+which is feasible with $\sum_{c \in Y_n} \alpha_{n,c} = 1$
+precisely under within-bundle independence.  Rearranging and
+applying the Part~A per-event bound:
+\[
+  \volR(c) \;\geq\; \alpha_{n,c} \cdot \volR(Y_n)
+  \;\geq\; \alpha_{n,c} \cdot \Delta\volL(X_n),
+\]
+for every $c \in Y_n$.  If $c$ appears in multiple admissible
+bundles, each quantity $\alpha_{n,c} \cdot \Delta\volL(X_n)$ is a
+valid lower bound on $\volR(c)$; taking the maximum preserves
+validity:
+\[
+  \volRlower(c) \;:=\;
+  \max_{n:\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)
+  \;\leq\; \volR(c).
+\]
+(Using the max rather than a sum is what underwrites the
+monotonicity of Proposition~\ref{prop:monotone}: additional
+events can only weakly increase a max.)
+
+By the Part~B hypothesis, the capabilities $c \in U$ are
+pairwise poset-independent, so a second application of~M4
+(to the poset of capabilities, not bundles) gives global
+additivity:
+\[
+  \volR^U \;=\; \sum_{c \in U} \volR(c)
+  \;\geq\; \sum_{c \in U} \volRlower(c).
+\]
+\end{proof}
+
+\begin{remark}[Why poset-independence, not set-disjointness]
+\label{rem:poset_indep}
+Set-disjointness ($Y_1 \cap Y_2 = \emptyset$) ensures no
+\emph{capability} appears in two bundles, but does not rule out
+subsumption or cooperative links across bundles.  If a cooperative
+capability $c_{\mathrm{coop}}$ depends on capabilities in both
+$Y_1$ and $Y_2$, its $\volR$ contribution is not attributable to
+either bundle alone.  Poset-independence rules this out: under
+poset-independence, the sub-posets are disconnected components
+and $\volL$ (hence $\volR$) decomposes additively by
+axiom~M4~\citep[Proposition~1]{lasser2026poset}.
+\end{remark}
+
+\begin{definition}[Subset and Category-Level $\volRlower$]
+\label{def:volRlower_subset}
+Under the Part~B hypotheses (S0--S5) of
+Theorem~\ref{thm:aggregate_bound}, the per-capability lower
+bound $\volRlower(c)$ extends naturally to subsets of
+capability-space.  For any $A \subseteq P$:
+\[
+  \volRlower(A) \;=\; \sum_{c \in A \cap U} \volRlower(c),
+\]
+where $U$ is the observed subset covered by bundles.  In
+particular:
+\begin{itemize}
+\item For a bundle category $C_j \in \mathcal{C}$
+  (Definition~\ref{def:category_partition}):
+  $\volRlower(C_j) = \sum_{c \in C_j \cap U} \volRlower(c)$.
+\item For the restriction set $\Xi$, residual class $\ResS$,
+  and other capability subsets used in the companion paper's
+  gap decomposition~\citep{lasser2026paper8b}:
+  $\volRlower(A)$ is defined analogously.
+\end{itemize}
+This extension is meaningful only under Part~B.  Under Part~A
+alone, only the per-bundle quantities
+$\volR(Y_n) \geq \Delta\volL(X_n)$ and the global aggregate
+$\volR^U \geq \sum_n \Delta\volL(X_n)$ are available.  The
+gap-decomposition and wireheading-detection machinery
+of~\citep{lasser2026paper8b} is stated under Part~B semantics
+unless otherwise noted.
+\end{definition}
+
+\subsection{B-to-C ratio and monotonicity}
+
+\begin{definition}[B-to-C Ratio Under Revealed Sacrifice]
+\label{def:btoc_ratio}
+The B-to-C ratio under revealed-sacrifice observation is:
+\[
+  \betaL(G, T) \;=\; \volRlower(G, T) \;/\; \volL(G),
+\]
+where $\volRlower$ is the aggregate lower bound from
+Theorem~\ref{thm:aggregate_bound} and $T$ indexes the trade
+window.  $\betaL \in [0, 1]$ because $\volR \leq \volL$ by
+definition (the exercised sub-poset is a subset of the full
+poset).
+\end{definition}
+
+\begin{proposition}[Part~B Monotone Accumulation Under
+Max-Attribution]
+\label{prop:monotone}
+Under Part~B hypotheses (S0--S5 and within-bundle
+poset-independence), define the per-capability lower bound as
+the maximum attribution across all observed events:
+\[
+  \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
+  \alpha_{n,c} \cdot \Delta\volL(X_n),
+\]
+and the aggregate as $\volRlower = \sum_{c \in U} \volRlower(c)$.
+Then the aggregate is non-decreasing in the number of observed
+admissible events: for event sets $E \subseteq E'$ both satisfying
+the Part~B admissibility conditions,
+\[
+  \volRlower(E') \;\geq\; \volRlower(E).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $c \in U$.  Let $S_N(c) = \{n \leq N : c \in Y_n\}$ be the
+set of events in the first $N$ observations that cover $c$.  For
+$N' > N$, $S_{N'}(c) \supseteq S_N(c)$, and
+\[
+  \volRlower^{(N')}(c)
+  = \max_{n \in S_{N'}(c)} \alpha_{n,c} \Delta\volL(X_n)
+  \;\geq\;
+  \max_{n \in S_N(c)} \alpha_{n,c} \Delta\volL(X_n)
+  = \volRlower^{(N)}(c),
+\]
+because a maximum over a superset is weakly larger.  If
+$c \notin Y_n$ for any $n$ then both sides are zero by convention
+and the inequality is trivial.  Summing the per-capability
+inequalities over $c \in U$:
+$\volRlower^{(N')} \geq \volRlower^{(N)}$.
+\end{proof}
+
+\begin{proposition}[Part~A Monotone Accumulation via
+Sub-Batch Supremum]
+\label{prop:monotone_part_a}
+Under Part~A hypotheses (S0--S2, S4(a), and the
+genuine-exchange conditions of
+Definition~\ref{def:sacrifice_event}), define the Part~A lower
+bound as the supremum over admissible pairwise-poset-independent
+sub-batches of the observed event set:
+\[
+  \volRlower^{\mathrm{A}}(E) \;:=\;
+  \sup\Bigl\{\, \sum_{n \in B} \Delta\volL(X_n)
+  \;:\; B \subseteq E \text{ and } B \text{ satisfies the
+  Part~A admissibility and pairwise poset-independence
+  hypotheses of Theorem~\ref{thm:aggregate_bound}} \,\Bigr\},
+\]
+with the supremum attaining $0$ on the empty sub-batch.  Then
+$\volRlower^{\mathrm{A}}$ is non-decreasing in $E$: for event
+sets $E \subseteq E'$,
+\[
+  \volRlower^{\mathrm{A}}(E') \;\geq\;
+  \volRlower^{\mathrm{A}}(E).
+\]
+\end{proposition}
+
+\begin{proof}
+Any admissible sub-batch $B \subseteq E$ is also an admissible
+sub-batch $B \subseteq E'$ (admissibility is a property of $B$
+itself, not of its ambient event set).  Hence the supremum over
+admissible sub-batches of $E$ is a supremum over a subset of the
+admissible sub-batches of $E'$, and the supremum over a superset
+is weakly larger.
+\end{proof}
+
+\begin{remark}[Interpretation of Part~A monotonicity]
+\label{rem:part_a_monotone_interp}
+$\volRlower^{\mathrm{A}}(E)$ is the tightest Part~A lower bound
+the framework can extract from the event set $E$ by choosing
+which sub-batches to apply Theorem~\ref{thm:aggregate_bound} to.
+Operationally, this is ``apply the theorem to each maximal
+admissible sub-batch and take the sum (over poset-disjoint
+components of the covered space, with max-attribution or
+union-bookkeeping where batches overlap).''  The sup-over-
+sub-batches definition is the principled monotone functional
+corresponding to the Part~A bound; $\volRlower^{\mathrm{A}}$ is
+what the paper refers to when it says ``the constructed Part~A
+lower bound is non-decreasing in observed admissible events.''
+\end{remark}

@@ -1,0 +1,357 @@
+\section{Commitment-Layer Composition}
+\label{sec:commitment}
+
+\subsection{Motivation}
+
+The revealed-sacrifice channel observes trade events.  In its raw
+form, each event exposes $(i, X, Y, t)$---the agent's identity,
+what they surrendered, what they acquired, and when.  This is
+already more private than direct $\volR$ measurement, but the
+framework can do better: the commitment protocol
+of~\citep[Definition~6]{lasser2026exo} allows the sacrifice event
+to be committed with hiding, so that only the $\volR$-relevant
+content (the magnitude $\Delta\volL(X)$ and the category of $Y$)
+is revealed.
+
+\subsection{Formal construction}
+
+\begin{definition}[Committed Revealed-Sacrifice Event]
+\label{def:committed_event}
+A committed revealed-sacrifice event is a tuple
+$(\Gamma, \pi, t)$ where:
+\begin{itemize}
+\item $\Gamma = \Commit((\Delta\volL(X), \catY), r)$ is a
+  commitment to the sacrifice magnitude and bundle category,
+  using randomness~$r$~\citep[Definition~6]{lasser2026exo};
+\item $\pi$ is a zero-knowledge
+  proof~\citep[Definition~7]{lasser2026exo}
+  that:
+  \begin{enumerate}
+  \item[(a)] the commitment $\Gamma$ corresponds to a valid
+    revealed-sacrifice event satisfying the objectively
+    verifiable components: S3 (bundle coherence) and the
+    objective component of S2;
+  \item[(b)] $\Delta\volL(X) \geq 0$;
+  \item[(c)] the trade actually occurred (linked to a verifiable
+    ledger entry);
+  \item[(d)] the bundle $Y$ lies wholly within the claimed
+    partition component: $Y \subseteq C_{\catY}$
+    (Definition~\ref{def:category_partition}(ii));
+  \end{enumerate}
+\item $t$ is the event timestamp (public).
+\end{itemize}
+
+The committed event reveals $\Delta\volL(X)$ (the sacrifice
+magnitude) and $\catY$ (the bundle's partition label).  It hides
+agent identity~$i$, the specific benchmarked capability~$X$, the
+specific unbenchmarked bundle~$Y$, and the counterparty.
+\end{definition}
+
+\begin{remark}[S0, S1, S4(a), and S5 are not ZK-verifiable]
+\label{rem:zk_limits}
+Assumptions S0 (calibration), S1 (free choice), S4(a) (valuation
+additivity), and S5 (decomposition validity) are about the
+agent's internal state or the true $\volR$ distribution.  These
+cannot be verified in zero
+knowledge~\citep{goldwasser1985knowledge} without an oracle for
+the agent's subjective state.  The ZK proof verifies the
+\emph{objective} conditions (S2, S3, and S4(b) via poset
+structure); the \emph{subjective} conditions are structural
+assumptions about the trade environment, not properties the
+commitment protocol can enforce.
+\end{remark}
+
+\begin{definition}[Category Partition]
+\label{def:category_partition}
+The function $\catY$ maps each unbenchmarked bundle to a label in
+a \emph{public partition}
+$\mathcal{C} = \{C_1, \ldots, C_m\}$ of the unbenchmarked
+capability space $U$, subject to two conditions:
+\begin{enumerate}
+\item[(i)] \emph{Poset-independence:} for any $j \neq k$, no
+  capability in $C_j$ is related by subsumption or cooperative
+  composition to any capability in $C_k$.
+\item[(ii)] \emph{Bundle containment:} each bundle $Y$ lies
+  wholly within a single partition component:
+  $\catY = j$ iff $Y \subseteq C_j$.
+\end{enumerate}
+The partition is published as part of the framework's measurement
+infrastructure and is fixed for a given trade window.  This
+definition is load-bearing for aggregation: distinct category
+labels imply poset-independence of the underlying bundles
+(Remark~\ref{rem:poset_indep}), which is what
+Theorem~\ref{thm:aggregate_bound} Part~A requires.
+\end{definition}
+
+\subsection{Computability of the Part~A formula from committed
+events}
+
+\begin{proposition}[Part~A Formula is Computable from
+Committed Events on Distinct-Category Batches]
+\label{prop:commit_preserves}
+For a batch of committed revealed-sacrifice events
+(Definition~\ref{def:committed_event}) whose revealed category
+labels $\{\catY[_n]\}$ are \emph{pairwise distinct}, the
+\emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A---the
+right-hand sum $\sum_n \Delta\volL(X_n)$ together with the
+poset-independence check between bundles---is evaluable without
+opening the hidden fields: the magnitudes $\Delta\volL(X_n)$ and
+labels $\catY[_n]$ are revealed, and distinct labels imply
+poset-independent bundles via
+Definition~\ref{def:category_partition}(i).  Batches with
+colliding labels fall outside this certificate and must be
+handled separately (Remark~\ref{rem:label_collision}).
+
+This is a \emph{computability} result, not an
+\emph{admissibility} result.  Applying
+Theorem~\ref{thm:aggregate_bound} Part~A to a batch of committed
+events additionally requires that the theorem's hypotheses
+hold---the genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event} and assumptions S0, S1, S2,
+and S4(a).  The ZK proof $\pi$ of
+Definition~\ref{def:committed_event} certifies only the
+objectively verifiable subset (S2's magnitude component, S3 for
+Part~B uses, and the bundle-containment check
+$Y_n \subseteq C_{\catY[_n]}$).  The remaining
+hypotheses---S0 (valuation-bounded-by-exercise), S1 (free
+choice), S4(a) (valuation additivity), and the
+cooperative-closure conditions (iii)--(iv)---are about
+agent-internal state or poset-structural facts the commitment
+protocol cannot itself attest
+(Remark~\ref{rem:zk_limits}).  Their validity must be
+established externally: by institutional filters on the trade
+environment, by sampled audit, or by assumption at the batch
+level.
+\end{proposition}
+
+\begin{proof}
+We establish formula computability; admissibility is discussed
+in the statement and is not claimed here.
+
+\emph{(i) Sacrifice magnitudes.}
+By Definition~\ref{def:committed_event}, each committed event
+reveals $\Delta\volL(X_n)$ directly, so the aggregate
+$\sum_n \Delta\volL(X_n)$ is evaluable without opening the
+commitment.  (In the hiding variant of
+Proposition~\ref{prop:zk_aggregation}, only $B$ and a ZK
+attestation $\sum_n \Delta\volL(X_n) \geq B$ are published;
+both forms expose the aggregate at the intended privacy level.)
+
+\emph{(ii) Pairwise poset-independence of bundles (distinct
+labels).}
+By Definition~\ref{def:category_partition}(i), any two distinct
+partition components $C_j$ and $C_k$ are poset-independent: no
+subsumption or cooperative-composition link connects any
+$c \in C_j$ to any $c' \in C_k$.
+Definition~\ref{def:committed_event}(d)'s ZK proof attests that
+$Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly within a
+single component.  Under the pairwise-distinct-label
+hypothesis, the bundles lie in distinct components and inherit
+poset-independence from the partition.  Both checks use only
+revealed or ZK-attested fields.
+
+When two events share the same category label
+$\catY[_{n}] = \catY[_{n'}]$, both bundles lie inside the same
+partition component $C_j$; poset-independence between
+$Y_n, Y_{n'} \subseteq C_j$ is a finer fact about sub-structure
+within~$C_j$ that Definition~\ref{def:committed_event} does not
+attest.  The distinct-label certificate is therefore a
+\emph{sufficient} certificate for Part~A's
+poset-independence hypothesis, not a \emph{necessary} one; see
+Remark~\ref{rem:label_collision} for how to handle batches with
+colliding labels.
+
+\emph{(iii) What is not certified.}
+Neither the above computation nor the ZK proof $\pi$ establishes
+the genuine-exchange conditions (iii)--(iv)
+(cooperative-closure across $X$/$H \setminus X$ and
+$Y$/$H \setminus X$), S0 (agent's valuation bounded by realized
+exercise), S1 (voluntariness and non-degradation), or S4(a)
+(valuation additivity over bundles).  These depend on facts
+about the agent's internal state, the pre-trade holding set,
+and the poset structure that are not exposed by the commitment.
+The Part~A bound is admissible only when those are established
+by an external mechanism (Remark~\ref{rem:external_attestation}).
+\end{proof}
+
+\begin{remark}[External attestation model]
+\label{rem:external_attestation}
+In practice, the non-ZK-verifiable hypotheses are handled at the
+institutional layer: (a)~the trade environment is filtered so
+only trades satisfying S1's non-degradation are admitted as
+sacrifice events; the need-sufficiency architecture developed
+in the companion paper~\citep{lasser2026paper8b} supplies the
+structural filter and polarity-boundary mechanism for this; (b)~the category partition
+$\mathcal{C}$ is curated so cooperative-closure conditions
+(iii)--(iv) hold structurally; (c)~S0 and S4(a) are assumed at
+the batch level with periodic sampled-audit reconciliation.  The
+commitment layer is orthogonal: it enforces privacy and
+certifies the objective facts, but does not and cannot certify
+the behavioural and structural assumptions.
+\end{remark}
+
+\begin{remark}[Handling category-label collisions]
+\label{rem:label_collision}
+When two committed events share a category label,
+Proposition~\ref{prop:commit_preserves}'s distinct-label
+certificate does not apply to that pair: both bundles lie in
+the same partition component $C_j$, and poset-independence
+between same-component subsets is finer structure than the
+commitment interface exposes.  Three operational responses are
+available without weakening the theorem:
+\begin{enumerate}
+\item[(a)] \emph{Sub-batch partitioning.} Partition the batch
+  into maximal sub-batches whose labels are pairwise distinct
+  and compute Part~A separately per sub-batch.  The resulting
+  lower bounds are valid for each sub-batch's covered subset;
+  the full-batch aggregate is the sum across sub-batches only
+  when the sub-batches are themselves poset-independent, which
+  is guaranteed when sub-batches are built from distinct
+  partition components.  A single-component batch with multiple
+  events yields at most the per-event Part~A bound,
+  $\volR(Y_n) \geq \Delta\volL(X_n)$ for each $n$; aggregation
+  requires the additional independence.
+\item[(b)] \emph{Finer partition.}  Refine the public partition
+  $\mathcal{C}$ to sub-components such that typical batch
+  collisions become distinct-label pairs.  This is a governance
+  choice trading category-granularity against commitment
+  complexity.
+\item[(c)] \emph{Richer commitments.}  Extend
+  Definition~\ref{def:committed_event} to attest explicit
+  subset-disjointness or cooperative-closure of $Y_n, Y_{n'}$
+  within their shared component $C_j$.  This is the path
+  Part~B's per-capability certificate (Remark~\ref{rem:commit_part_b})
+  also walks.
+\end{enumerate}
+The paper's stated results use option~(a) implicitly:
+Proposition~\ref{prop:zk_aggregation}'s ZK-aggregation rollup
+explicitly proves pairwise-distinct labels as part of its
+(ii), matching the distinct-batch certificate of
+Proposition~\ref{prop:commit_preserves}.
+\end{remark}
+
+\begin{remark}[Part~B requires additional committed fields]
+\label{rem:commit_part_b}
+Part~B's per-capability refinement requires $\alpha_{n,c}$
+coefficients and stable capability identities across events.
+The committed interface reveals only category labels.
+For Part~B to operate on committed data, the commitment must
+additionally expose a per-capability coordinate system within
+each category component and the corresponding $\alpha$ values.
+This is a richer commitment that reveals more structure than
+Part~A requires.
+\end{remark}
+
+\begin{proposition}[ZK Aggregation over Hiding-Committed Events]
+\label{prop:zk_aggregation}
+The Pedersen commitment scheme underlying
+Definition~\ref{def:committed_event} is
+hiding~\citep[Definition~6]{lasser2026exo} by default; the
+accompanying disclosure of $(\Delta\volL(X_n), \catY[_n])$ is an
+\emph{optional} publication choice.  Consider the \emph{hiding
+variant} of the committed-event interface in which each event
+publishes $(\Gamma_n, \pi_n, t_n)$ but does not release the pair
+$(\Delta\volL(X_n), \catY[_n])$ in cleartext; the ZK proof
+$\pi_n$ is strengthened to additionally attest that
+$\catY[_n] \in \{1, \ldots, m\}$ (a valid partition label).
+
+Fix a public upper bound $N_{\max}$ on batch size.  Given a batch
+of at most $N_{\max}$ hiding-variant committed events, a rollup
+proof can establish:
+\begin{enumerate}
+\item[(i)] $\sum_{n} \Delta\volL(X_n) \geq B$
+  (aggregate bound);
+\item[(ii)] the bundle category labels $\{\catY[_n]\}$ are
+  pairwise distinct (as a multiset over the $N_{\max}$
+  positions, with unused positions filled by a distinguished
+  ``null'' label);
+\end{enumerate}
+for a public bound $B$, without revealing the individual
+$\Delta\volL(X_n)$, the specific category labels, or the true
+batch size $N \leq N_{\max}$.
+
+By Definition~\ref{def:category_partition}, distinct category
+labels correspond to poset-independent partition components, so
+(ii) establishes the poset-independence required by
+Theorem~\ref{thm:aggregate_bound} Part~A.  Both (i) and (ii) are
+\emph{formula inputs} that the ZK rollup certifies; the
+theorem's admissibility hypotheses---the genuine-exchange
+conditions of Definition~\ref{def:sacrifice_event} and
+assumptions S0, S1, S2, S4(a)---remain outside the ZK layer
+(Remark~\ref{rem:zk_limits}) and must be supplied through
+external attestation (Remark~\ref{rem:external_attestation}).
+\end{proposition}
+
+\begin{proof}
+The prover holds the full set of $N$ committed events together
+with their openings $(\Delta\volL(X_n), \catY[_n], r_n)$.  To
+standardize batch size the prover pads with $N_{\max} - N$
+``null'' events committing to $(0, \mathrm{null})$ with fresh
+randomness.  Padding is homomorphically invisible---the
+contribution to the aggregate sum is zero and the null label is
+distinguished from all partition components---so the extended
+batch has the same aggregate and the same non-null category
+multiset.
+
+\emph{Component (i)---range proof on the aggregate sum.}
+Using a standard Pedersen commitment range
+proof~\citep[Definition~7]{lasser2026exo}, the prover
+demonstrates
+$\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$.  The summation
+commitment is the product $\prod_n \Gamma_n$, which binds to the
+aggregate by the additive-homomorphic property of $\Commit$.
+Null events contribute $0$ so the sum equals
+$\sum_{n=1}^N \Delta\volL(X_n)$.  The proof reveals neither the
+individual $\Delta\volL(X_n)$ nor the true $N$ (the verifier
+sees only a length-$N_{\max}$ vector of commitments).
+
+\emph{Component (ii)---pairwise-distinct non-null labels.}
+The prover commits to the extended label vector
+$(\catY[_1], \ldots, \catY[_{N_{\max}}])$, where positions
+corresponding to null events hold the null label.  The ZK
+argument shows (a) each non-null $\catY[_n]$ opens to a valid
+leaf of the public partition Merkle root $\mathcal{C}$, and (b)
+the multiset of non-null labels contains no duplicates.
+Duplicate-freeness is a standard ZK set-disjointness argument:
+commit to a sorted copy, prove strict-monotone ordering
+among non-null elements, and prove the permutation relation to
+the unsorted commitments via a shuffle
+argument~\citep[Definition~7]{lasser2026exo}.
+
+\emph{Formula-input certification.}
+By Definition~\ref{def:category_partition}(i), pairwise-distinct
+non-null labels imply pairwise poset-independent bundles.
+Combined with (i), the rollup certifies the two ZK-verifiable
+inputs to the Part~A formula
+(Proposition~\ref{prop:commit_preserves}): the aggregate
+sacrifice magnitude meets the threshold~$B$, and the bundles are
+pairwise poset-independent.  The verifier learns only the public
+parameters $(B, N_{\max}, \mathcal{C})$ and the
+length-$N_{\max}$ commitment vector.
+
+\emph{Admissibility is not ZK-certified.}  The inference
+$\volR^U \geq B$ requires, in addition, that
+Theorem~\ref{thm:aggregate_bound} Part~A's non-ZK-verifiable
+hypotheses hold across the batch: the genuine-exchange
+conditions (i)--(iv) of Definition~\ref{def:sacrifice_event},
+S0, S1, S2, and S4(a).  These are not part of the rollup proof
+(Remark~\ref{rem:zk_limits}).  Under external attestation of
+those hypotheses (Remark~\ref{rem:external_attestation}), the
+hidden-batch rollup certifies $\volR^U \geq B$; without such
+attestation, the rollup certifies only that the Part~A formula's
+inputs meet the stated thresholds while hiding individual
+$\Delta\volL(X_n)$, specific category labels, and the true $N$.
+\end{proof}
+
+\begin{remark}[Hiding variant is strictly richer than
+Definition~\ref{def:committed_event}]
+The hiding-variant interface is a strict privacy upgrade: it
+hides what Definition~\ref{def:committed_event} discloses.  The
+default interface suffices for routine operational accounting
+where committed events are published to a public ledger; the
+hiding variant is useful when a higher-level aggregator publishes
+only batch-level attestations to downstream verifiers.  Both
+interfaces rely on the same Pedersen commitment primitive;
+they differ only in which openings are released alongside the
+commitment.
+\end{remark}

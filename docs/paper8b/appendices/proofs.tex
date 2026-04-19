@@ -1,0 +1,137 @@
+\section{Proof Sketches and Technical Notes}
+\label{app:proofs}
+
+\subsection{Need-sufficiency architecture
+(Section~\ref{sec:need_sufficiency})}
+
+\paragraph{Proposition~\ref{prop:below_suff_saturation}
+(Below-Sufficiency Saturation, pointwise).}
+Below-sufficiency benchmark for dimension $d_k$ is
+$\min(\mathrm{actual}_k / s_k, 1)$, bounded above by $1$
+pointwise.  The proposition is deliberately narrow: it
+establishes a per-capability, per-dimension cap, not an
+aggregate dimension-level cap.  Distinct capabilities each
+scoring $1$ on the same dimension accumulate weight under M5;
+the broader class of capability-stuffing via distinct-capability
+re-instantiation is not blocked by this proposition and is
+acknowledged in Open
+Question~\ref{oq:capability_stuffing}.
+
+\paragraph{Proposition~\ref{prop:s1_sufficiency}
+(S1--Sufficiency Connection).}
+Below-sufficiency sacrifice events fail S1's non-degrading
+alternative condition of the companion
+paper~\citep{lasser2026paper8a}.  Key step: retaining $X$ (not
+making the trade) leaves the agent below functionality on
+dimension $d_k$.  S1 requires that retaining $X_n$ was a
+non-degrading alternative.  When retaining $X$ means falling
+below sufficiency on $d_k$, S1's condition fails directly,
+filtering the event from the aggregate.
+
+\paragraph{Proposition~\ref{prop:near_total_collapse}
+(Near-Total Collapse Under Unmet Need).}
+Under homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c
+\in \Down(p_N)$ and full sufficiency of all other needs,
+$\volL^{\mathrm{eff}} \leq G(s_N) \cdot W_{\mathrm{down}}(N) +
+W_{\mathrm{out}}$.  Collapse limits as $s_N \to 0$ split:
+zero-floor gates ($\alpha_0 = 0$: linear, ReLU, power-law)
+contract downstream weight to zero; positive-floor gates
+($\alpha_0 > 0$: leaky-ReLU with $\alpha > 0$) contract
+downstream weight only to the floor $\alpha_0
+W_{\mathrm{down}}$.
+
+\paragraph{Proposition~\ref{prop:need_dominance}
+(Need-Dominance in the Gradient).}
+Under the common intervention scale (one unit of $\Delta s_N$
+and one unit of $\Delta w$ have the same cost), the marginal
+return to closing the sufficiency gap on $N$ exceeds the
+marginal return to unit-weight addition whenever $G'(s_N) \cdot
+W_{\mathrm{down}}(N) > 1$.  The finite-step form via Taylor
+expansion (Remark~\ref{rem:dominance_scale}) clarifies that
+this is a per-unit-of-intervention comparison, not a claim
+about arbitrary-size finite steps.
+
+\subsection{Gap decomposition
+(Section~\ref{sec:gap_decomposition})}
+
+\paragraph{Definition~\ref{def:gap_decomp} (Gap Decomposition)
+and Proposition~\ref{prop:gap_computable} (Computability).}
+The four cells $\{R, C, D, S\}$ must be \emph{poset-boundary
+closed}: no cooperative's participants and no subsumption edge
+crosses a cell boundary.  Under this hypothesis, M4 licenses
+the additive identity $\volL(G) = \volL(R) + \volL(C) +
+\volL(D) + \volL(S)$, and combined with $\volRlower(P) =
+\volRlower(R) + \volRlower(C)$ (dormant and residual cells
+have zero $\volRlower$ by definition), the identity $1 -
+\betaL = \sum \delta$ follows.
+
+Computability ($O(|P| + E + M)$) is established by three
+passes: (1) per-individual-capability priority classification
+in $O(|P|)$; (2) event-sweep updating dormant $\to$ covered in
+$O(E)$; (3) poset-boundary closure pass via union-find over
+the combined cooperative/subsumption graph in $O(M \cdot
+\alpha(M))$.  The Part~B admissibility label must include the
+full Part~B hypothesis set (S0--S5, genuine-exchange
+conditions, within-bundle poset-independence from the
+event-local bundle decomposition~\citep{lasser2026paper8a}).
+
+\subsection{Wireheading-consistent concentration signal
+(Section~\ref{sec:wireheading})}
+
+\paragraph{Proposition~\ref{prop:wireheading_hhi}
+(Concentration Signal).}
+$\HHI(\lambda) = \sum_j \lambda_j^2$ is symmetric and
+coordinate-convex on the simplex; by the
+Hardy--Littlewood--P\'olya
+theorem~\citep{hardy1929majorization,marshall2011inequalities},
+any such function is Schur-convex: majorization-ordering of
+leverage distributions induces monotone HHI ordering.
+Cauchy--Schwarz bounds the support-normalized minimum
+$\HHI \geq 1/m$; top-$k$-mass concentration bounds the
+extremal side via $\HHI \geq \rho^2/k$.  The governance
+threshold $\HHI_{\mathrm{alarm}}$ is not theorem-derived
+(Remark~\ref{rem:hhi_alarm_governance}).
+
+\paragraph{Proposition~\ref{prop:third_party_wireheading}
+(Third-Party Observability of the Part-A variant).}
+The category-flow statistic
+$\tilde\lambda_{\mathrm{trade}}(j,T) = \sum_{n: \catY_n = j}
+\Delta\volL(X_n) / \sum_n \Delta\volL(X_n)$ is a direct
+function of cleartext-committed fields from the committed
+event definition~\citep{lasser2026paper8a}; no hidden field
+(agent identity, bundle-interior subset, $\alpha_{n,c}$
+coefficients) enters.  Diagnostic
+suppressed when total flow is zero.  Per-capability variant
+requires richer commitments or operation within a consented
+perimeter~$O$ (Remark~\ref{rem:wireheading_part_b_obs}).
+
+\subsection{Residual class
+(Section~\ref{sec:residual_class})}
+
+\paragraph{Proposition~\ref{prop:residual_intersection}
+(Residual Class Intersection).}
+$\ResB \setminus \ResS$, $\ResS \setminus \ResB$, and
+$\ResB \cap \ResS$ are each witnessed by an explicit
+capability.  Witnesses: (b)~artistic practice (identity-
+individuated, but consumes material sacrifice);
+(c)~interoceptive self-awareness (benchmarkable, but
+concurrent with all other activity and hence no incremental
+sacrifice event); (d)~private contemplative experience
+(identity-individuated, no material footprint).
+
+\paragraph{Proposition~\ref{prop:oi_floor}
+(Active-Agent Floor Transfer, conditional on the bridge).}
+The transfer from Paper~3's OI
+result~\citep[Corollary~2.1]{lasser2026horizon} to this
+paper's $\volRexact(O)$ is \emph{conditional} on the
+OI--exercise bridge (Definition~\ref{def:oi_exercise_bridge}):
+Paper~3 establishes a structural $\volL$ floor on elimination,
+not an exercise witness, so the bridge hypothesis supplies
+the temporal/semantic conversion to exercise-indicator
+semantics.  Where the bridge
+holds---identity-coupled participation producing cooperative
+output within $[t-\Delta, t]$---the OI floor contributes
+$\OIfloor(k) \geq 1$ to $\volRexact^{[W]}(O)$ independently of
+the sacrifice channel.  Where it fails (dormant presence),
+the structural $\volL$ fact still holds but $\volRexact(O)$
+receives no contribution.

@@ -1,0 +1,196 @@
+\section{Discussion and Open Questions}
+\label{sec:discussion}
+
+\subsection{What this paper establishes}
+
+\paragraph{Need-sufficiency resolves the polarity problem.}
+The sufficiency threshold identifies the structural boundary
+where sacrifice polarity flips.  Below-sufficiency sacrifices
+are involuntary and correctly filtered by S1
+(Proposition~\ref{prop:s1_sufficiency}).  The need-access cost
+diagnostic (Definitions~\ref{def:nac}--\ref{def:nse}) tracks
+need-satisfaction efficiency as a companion metric.
+
+\paragraph{The B-to-C gap decomposes into disjoint
+diagnostic cells.}
+Under poset-boundary closure, $1 - \betaL =
+\delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
+\delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}$
+(Definition~\ref{def:gap_decomp}).  The partition is
+computable in $O(|P| + E + M)$
+(Proposition~\ref{prop:gap_computable}) given the capability
+census, poset structure, restriction and residual sets, event
+admissibility labelling, and a closure policy.  Alarm firings
+can be interpreted diagnostically by which $\delta$ dominates.
+
+\paragraph{Wireheading is detectable from trade data.}
+Trade-flow concentration
+(Proposition~\ref{prop:wireheading_hhi}) provides a tractable
+wireheading-consistent concentration signal with
+Schur-convexity as its formal monotonicity basis.  The Part-A
+category-flow variant is third-party observable from public
+committed sacrifice events
+(Proposition~\ref{prop:third_party_wireheading}).
+
+\paragraph{The residual class is structurally irreducible.}
+Capabilities in $\ResS$
+(Definition~\ref{def:residual_class}) have zero sacrifice
+evidence by construction and cannot gain it regardless of
+observation time.  The residual class is the irreducible
+component of the gap decomposition.  The revealed-observation
+carve of $\ResS$ (as the set of capabilities
+\emph{structurally outside the channel's reach}) differs from
+and is operationally cleaner than the classical
+benchmarkability-based carve.
+
+\subsection{Limitations}
+
+\paragraph{Threshold governance is not framework-derived.}
+The sufficiency thresholds $s_k$ and the admissible
+reference set $\Pi_N^{\mathrm{ref}}$
+(Definition~\ref{def:downstream_safe}) are governance inputs,
+not framework-computed.  The framework reads them at evaluation
+time and does not attempt to derive them from first
+principles.
+
+\paragraph{The filter's interaction with capability-stuffing.}
+Proposition~\ref{prop:below_suff_saturation} establishes a
+pointwise below-sufficiency cap.  This is \emph{not} an
+aggregate dimension-level cap: distinct capabilities each
+satisfying sufficiency on the same dimension each score $1$
+and accumulate under M5.  Full structural resolution of
+capability-stuffing requires machinery outside this paper's
+scope.
+
+\paragraph{The gap decomposition requires poset-boundary
+closure.}
+The exact identity $1 - \betaL = \sum \delta$ holds only when
+the cells $\{R, C, D, S\}$ are poset-boundary closed (CC1 +
+CC2 in Definition~\ref{def:gap_decomp}).
+Remark~\ref{rem:cell_cooperative_closure} describes three
+strategies to achieve closure in practice.
+
+\paragraph{The residual class is characterized but not valued.}
+The residual class (Section~\ref{sec:residual_class})
+characterizes \emph{which} capabilities the framework cannot
+reach, not \emph{how} to value them.
+
+\subsection{Open questions}
+
+\begin{enumerate}
+
+\item \label{oq:threshold_governance}
+\textbf{Threshold governance.}
+Several interrelated questions surround the sufficiency
+thresholds.  (a)~\emph{Sensitivity}: if the threshold is set
+too low, need-costs between the threshold and true sufficiency
+are misclassified as want-pursuit events; if too high, the
+framework over-constrains the need.
+(b)~\emph{Dynamic update}: thresholds may shift as technology
+and social context evolve; a mechanism for threshold revision
+(analogous to controlled relaxation applied to sufficiency
+standards) is needed.
+(c)~\emph{Cross-cultural variation}: different populations may
+set thresholds differently; can the framework maintain
+culturally-indexed thresholds while preserving a coherent
+aggregate diagnostic, or does variation fragment it?
+
+\item \label{oq:need_identification}
+\textbf{Need identification and M5 interaction.}
+How does the framework identify which capabilities are needs
+versus wants?  The poset-structural approach (high fan-out $=$
+need) is a heuristic, not infallible; a hybrid of structural
+position and revealed-sacrifice polarity transition is likely
+required.  Relatedly, under the capped-benchmark discipline
+(Definition~\ref{def:polarity_benchmark}), sufficiency-met
+needs contribute a fixed cap whose weight is a design
+parameter affecting the relative importance of
+need-satisfaction versus want-pursuit in $\volL$.
+
+\item \label{oq:capability_stuffing}
+\textbf{Capability-stuffing as structural avoidance.}
+Capability-stuffing (Section~\ref{sec:capability_stuffing})
+remains an open M5 pathology under this paper's machinery.  No
+signature over post-declaration poset structure or exercise
+pattern separates stuffed from legitimate capabilities in a way
+the agent cannot adversarially manipulate.  The canonical
+example reveals itself as an instance of
+\emph{structural avoidance} flagged as an open gap
+in~\citep[Discussion]{lasser2026poset}: the agent declines to
+discover that ``travel from home to gas station'' and ``travel
+from work to gas station'' admit merger into a canonical
+multi-origin fuel-access capability.  Related avoidance
+pathologies include provenance-free declaration, the Doll
+Problem (declining exercise), and wireheading (declining broad
+engagement); these share the structural-avoidance shape but
+differ in formal detail.
+
+The intended resolution is a \emph{proof-burden taxonomy} with
+claim-and-challenge back-pressure.  Three burden types:
+proof-of-non-mergeability (stuffing-specific),
+proof-of-provenance (blocking pure-label declarations), and
+proof-of-use (blocking persistently-dormant declarations
+outside the residual class).  Proof-burdens operate as
+canonicalization preprocessing on $P$ before M5 is applied;
+M5's formula is preserved, but the preprocessing introduces
+substantive new axiomatic content.  Claims are temporal and
+contestable: a prior proof-of-non-mergeability can be voided by
+subsequent discovery of a merger mechanism, with the discoverer
+receiving structural-discovery credit
+per~\citep[Proposition~2]{lasser2026horizon} and the avoider
+losing the M5 credit the voided proof supported.  This makes
+structural avoidance economically risky rather than
+economically stable.
+
+The sequence provides substrate but not implementation.
+Paper~5 provides commitment infrastructure; the companion
+paper~\citep{lasser2026paper8a} provides partial use-evidence
+via the sacrifice aggregate (incomplete, because the
+persistent-dormancy attack and private time-sacrifice
+invisibility remain); Paper~6 provides a controlled-relaxation
+pattern for adjudication.  A dedicated follow-up paper must
+deliver: the formal canonicalization operator, the three
+proof-burden types with admissible evidence classes, the
+claim-and-challenge protocol with challenge-market robustness
+(admission filtering against spam, identity weighting against
+Sybil flooding, independence requirements against cartel
+suppression, bounds on governance capture of the adjudication
+layer), the discovery-reward calibration integrating with
+Paper~3's structural-discovery result, and the
+structural-avoidance dominance theorem under explicit
+quantitative conditions (minimum challenger arrival rate,
+minimum reward-to-cost ratio, maximum adjudication lag,
+challenger independence).  Honest residuals include
+information-asymmetry persistence, private time-sacrifice
+invisibility inherited from the companion paper's P5 scope,
+collusive-subsidy and external-funding edge cases,
+canonicalization order/non-uniqueness, and the
+deceptive-alignment residual that proof-burdens cannot
+currently address without interpretability.  This is
+substantial invention, grounded in existing sequence substrate
+but not reducible to it; the natural venue is a dedicated
+follow-up paper on the structural-avoidance architecture.
+
+\item \label{oq:gap_decomp_closure}
+\textbf{Automated verification of poset-boundary closure.}
+The default priority-extension strategy
+(Remark~\ref{rem:cell_cooperative_closure}(a)) produces
+cooperative- and subsumption-closed cells by construction, but
+verifying closure on adversarially-structured posets may be
+non-trivial.  A structural-verification protocol
+(analogous to controlled-relaxation testing against poset
+claims) is a natural follow-up.
+
+\item \label{oq:oi_bridge}
+\textbf{OI--exercise bridge conditions.}
+Proposition~\ref{prop:oi_floor} transfers Paper~3's
+observational-individuation floor to $\volRexact^{[W]}(O)$
+conditionally on the OI--exercise bridge
+(Definition~\ref{def:oi_exercise_bridge}).  Where the bridge
+fails (dormant presence), the structural $\volL$ floor still
+holds but $\volRexact$ receives no contribution.  A cleaner
+characterization of the bridge's domain of validity, and
+conditions under which Paper~3's floor transfers directly
+without the bridge, is open.
+
+\end{enumerate}

@@ -1,0 +1,89 @@
+\begin{thebibliography}{15}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Hardy et~al.(1929)Hardy, Littlewood, and
+  P{\'o}lya]{hardy1929majorization}
+G.~H. Hardy, J.~E. Littlewood, and G.~P{\'o}lya.
+\newblock Some simple inequalities satisfied by convex functions.
+\newblock \emph{Messenger of Mathematics}, 58:\penalty0 145--152, 1929.
+
+\bibitem[Lasser(2026{\natexlab{a}})]{lasser2026exo}
+Teague Lasser.
+\newblock Exogenous verification for alignment: Cryptographic commitments on
+  substrate-exclusive channels.
+\newblock \url{https://teague.info/papers/exo/}, 2026{\natexlab{a}}.
+
+\bibitem[Lasser(2026{\natexlab{b}})]{lasser2026gfm}
+Teague Lasser.
+\newblock Goal-frontier maximizers are civilization aligned.
+\newblock \url{https://teague.info/papers/gfm/}, 2026{\natexlab{b}}.
+
+\bibitem[Lasser(2026{\natexlab{c}})]{lasser2026horizon}
+Teague Lasser.
+\newblock Horizon-aware goal-frontier maximization and the anti-monopolar
+  property.
+\newblock \url{https://teague.info/papers/horizon/}, 2026{\natexlab{c}}.
+
+\bibitem[Lasser(2026{\natexlab{d}})]{lasser2026paper8a}
+Teague Lasser.
+\newblock An aggregate b-to-c lower bound from revealed-sacrifice observation.
+\newblock Companion paper to \emph{Need-Sufficiency Architecture and Gap
+  Diagnostics for the B-to-C Gap}. Preprint., 2026{\natexlab{d}}.
+
+\bibitem[Lasser(2026{\natexlab{e}})]{lasser2026phase}
+Teague Lasser.
+\newblock Cross-substrate channel redundancy governs monopolar convergence.
+\newblock \url{https://teague.info/papers/phase/}, 2026{\natexlab{e}}.
+
+\bibitem[Lasser(2026{\natexlab{f}})]{lasser2026poset}
+Teague Lasser.
+\newblock Computable goal frontiers and the gradient toward
+  civilization-building.
+\newblock \url{https://teague.info/papers/poset/}, 2026{\natexlab{f}}.
+
+\bibitem[Lasser(2026{\natexlab{g}})]{lasser2026scm}
+Teague Lasser.
+\newblock A structural causal model for goal-frontier maximization.
+\newblock \url{https://teague.info/papers/scm/}, 2026{\natexlab{g}}.
+
+\bibitem[Lasser(2026{\natexlab{h}})]{lasser2026wamura}
+Teague Lasser.
+\newblock Controlled relaxation protocols for the {W}amura problem.
+\newblock \url{https://teague.info/papers/wamura/}, 2026{\natexlab{h}}.
+
+\bibitem[Manheim and Garrabrant(2019)]{manheim2019categorizing}
+David Manheim and Scott Garrabrant.
+\newblock Categorizing variants of {G}oodhart's law.
+\newblock \emph{arXiv preprint arXiv:1803.04585}, 2019.
+
+\bibitem[Marshall et~al.(2011)Marshall, Olkin, and
+  Arnold]{marshall2011inequalities}
+Albert~W. Marshall, Ingram Olkin, and Barry~C. Arnold.
+\newblock \emph{Inequalities: Theory of Majorization and Its Applications}.
+\newblock Springer, 2nd edition, 2011.
+
+\bibitem[Nussbaum(2011)]{nussbaum2011creating}
+Martha~C. Nussbaum.
+\newblock \emph{Creating Capabilities: The Human Development Approach}.
+\newblock Belknap Press, 2011.
+
+\bibitem[Rhoades(1993)]{rhoades1993herfindahl}
+Stephen~A. Rhoades.
+\newblock The {H}erfindahl-{H}irschman index.
+\newblock \emph{Federal Reserve Bulletin}, 79:\penalty0 188--189, 1993.
+
+\bibitem[Sen(1999)]{sen1999development}
+Amartya Sen.
+\newblock \emph{Development as Freedom}.
+\newblock Oxford University Press, 1999.
+
+\bibitem[Strathern(1997)]{strathern1997improving}
+Marilyn Strathern.
+\newblock `improving ratings': Audit in the {B}ritish university system.
+\newblock \emph{European Review}, 5\penalty0 (3):\penalty0 305--321, 1997.
+
+\end{thebibliography}

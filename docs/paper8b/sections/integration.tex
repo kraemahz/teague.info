@@ -1,0 +1,91 @@
+\section{Integration: Architecture Complements the Measurement
+Theorem}
+\label{sec:integration}
+
+\subsection{Position in the GFM sequence}
+
+The companion paper~\citep{lasser2026paper8a} contributes the
+measurement theorem---a constructive lower bound on $\volR$
+from voluntary trade events.  This paper contributes the
+architectural layers that make that theorem \emph{operational}:
+the filter that keeps its admissibility hypotheses satisfied
+(need-sufficiency), the decomposition that interprets its
+output ($\delta$-partition of the gap), the concentration-based
+diagnostic that catches one specific failure mode (wireheading
+HHI), and the characterization of what the measurement cannot
+reach (residual class).
+
+The pair fits the preemptive-restriction
+criterion~\citep[Proposition~1]{lasser2026horizon} as follows.
+Controlled relaxation~\citep{lasser2026wamura} tests the risk
+dimension; revealed sacrifice (companion paper) tests the value
+dimension.  When a restriction decision is pending, controlled
+relaxation asks \emph{is the feared harm real?} and the
+measurement theorem asks \emph{is the forgone capability
+valuable enough to recover?}  The present paper adds: \emph{how
+should we interpret the measurement when it fires an alarm, and
+what is it structurally unable to see?}
+
+\subsection{Connection to the Goodhart mechanism}
+
+The need-sufficiency architecture
+(Section~\ref{sec:need_sufficiency}) gives a concrete mechanism
+for the kind of proxy failure studied in the Goodhart
+literature~\citep{strathern1997improving,manheim2019categorizing}.
+A framework that fails to distinguish needs from wants---or
+fails to invert cost-dimension benchmarks---produces a proxy
+$\volL$ that is systematically misaligned with $\volR$ on need
+dimensions: rewarding agents for having expensive-to-satisfy
+needs (high cost = high sacrifice = high ``revealed value''
+under a naive reading) when the correct interpretation is the
+opposite.
+
+The polarity boundary (Definition~\ref{def:polarity_boundary})
+is the framework's prophylactic against this specific Goodhart
+mechanism.  Establishing the boundary and filtering
+below-sufficiency sacrifices via S1 \emph{before} the sacrifice
+channel operates prevents need-cost inflation from corrupting
+the $\volR$ lower bound.  The $\NAC$ diagnostic
+(Definition~\ref{def:nac}) tracks the excluded need-costs
+separately, making the Goodhart pressure visible rather than
+hidden.
+
+\subsection{Connection to the capability approach}
+
+The below-sufficiency / above-sufficiency partition recovers
+the distinction between basic capabilities and complex
+capabilities of~\citet{sen1999development}
+and~\citet{nussbaum2011creating} within the single-poset
+treatment.  The framework adds three formal instruments the
+philosophical tradition lacks: (i)~the downstream-safety
+condition
+(Definition~\ref{def:downstream_safe}), which makes
+``sufficient'' structurally rigorous rather than normatively
+asserted; (ii)~the polarity-correct benchmark discipline
+(Definition~\ref{def:polarity_benchmark}), which aligns
+$\volL$-maximization with the agent's interest on both sides of
+the threshold; and (iii)~the revealed-sacrifice transition
+(mechanism~(c), Section~\ref{sec:threshold_setting}), which
+identifies the sufficiency threshold empirically.
+
+A fuller treatment of the correspondence between GFM and the
+Sen--Nussbaum capability approach, including a formal
+fungibility-collapse theorem reducing GFM to standard
+microeconomics as a special case, is the subject of a companion
+paper in preparation.
+
+\subsection{The shared privacy discipline}
+
+The present paper inherits the privacy discipline established
+in the companion paper and the broader GFM sequence:
+\emph{resolution through frequency, not through depth}.  The
+gap-decomposition computability
+(Proposition~\ref{prop:gap_computable}) operates in $O(|P| + E
++ M)$ using only public inputs (capability census, poset
+structure, admissibility labels, closure policy); the
+wireheading-consistent signal
+(Proposition~\ref{prop:third_party_wireheading}) is third-party
+observable from public committed trade data.  Neither
+diagnostic requires deeper access to individual agent state
+than the companion paper's measurement channel already
+permits.
