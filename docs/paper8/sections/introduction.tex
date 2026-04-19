@@ -171,15 +171,24 @@ quantity under the framework's privacy commitments.
   the same underlying sacrifice substrate rather than covering
   disjoint capability spaces.  Non-fungibility residuals
   (agent-specific time, capital-concentrated access) are where
-  the joint aggregate strictly improves on either channel alone
+  the joint aggregate can strictly improve on either channel
+  alone; strictness is conditional on the trade window actually
+  containing residual-category events
   (Corollary~\ref{cor:joint_coverage}).
 
 \item \textbf{Commitment-layer composition}
   (Section~\ref{sec:commitment}).
   The sacrifice channel composes with the commitment protocol
-  of~\citep{lasser2026exo} to produce a privacy-minimal aggregate
+  of~\citep{lasser2026exo} to produce a privacy-minimal
+  aggregate on distinct-category batches
   (Propositions~\ref{prop:commit_preserves}
-  and~\ref{prop:zk_aggregation}).
+  and~\ref{prop:zk_aggregation}).  The rollup ZK-certifies the
+  Part~A formula inputs; the theorem's non-ZK hypotheses (S0,
+  S1, S4(a), genuine-exchange conditions) require external
+  attestation (Remark~\ref{rem:external_attestation}).
+  Colliding-label batches require sub-batch partitioning,
+  finer partitions, or richer commitments
+  (Remark~\ref{rem:label_collision}).
 
 \item \textbf{Non-self-balancing finding}
   (Section~\ref{sec:axiom_inheritance}).
@@ -202,10 +211,15 @@ quantity under the framework's privacy commitments.
   (Section~\ref{sec:wireheading}).
   Trade-flow concentration, measured via the Herfindahl--Hirschman
   Index on sacrifice categories, provides a tractable
-  wireheading-consistent diagnostic computable from public
-  committed events.  The signal is a concentration alarm, not a
-  wireheading determination: the threshold $\HHI_{\mathrm{alarm}}$
-  is a governance parameter.
+  wireheading-consistent diagnostic.  The Part~A
+  \emph{category-flow} statistic $\widetilde\HHI$ is computable
+  from public committed events and is third-party observable
+  (Proposition~\ref{prop:third_party_wireheading}); the Part~B
+  per-capability variant requires richer commitments or
+  operation within a consented perimeter~$O$
+  (Remark~\ref{rem:wireheading_part_b_obs}).  The signal is a
+  concentration alarm, not a wireheading determination: the
+  threshold $\HHI_{\mathrm{alarm}}$ is a governance parameter.
 
 \item \textbf{Integration}
   (Section~\ref{sec:integration}).
