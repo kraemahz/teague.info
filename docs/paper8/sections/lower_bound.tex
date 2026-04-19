@@ -382,21 +382,23 @@ definition (the exercised sub-poset is a subset of the full
 poset).
 \end{definition}
 
-\begin{proposition}[Monotone Accumulation Under Max-Attribution]
+\begin{proposition}[Part~B Monotone Accumulation Under
+Max-Attribution]
 \label{prop:monotone}
-Define the per-capability lower bound as the maximum attribution
-across all observed events:
+Under Part~B hypotheses (S0--S5 and within-bundle
+poset-independence), define the per-capability lower bound as
+the maximum attribution across all observed events:
 \[
   \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
   \alpha_{n,c} \cdot \Delta\volL(X_n),
 \]
 and the aggregate as $\volRlower = \sum_{c \in U} \volRlower(c)$.
 Then the aggregate is non-decreasing in the number of observed
-events: for $N' > N$,
+admissible events: for event sets $E \subseteq E'$ both satisfying
+the Part~B admissibility conditions,
 \[
-  \volRlower(N') \;\geq\; \volRlower(N),
+  \volRlower(E') \;\geq\; \volRlower(E).
 \]
-provided the additional events satisfy the applicable assumptions.
 \end{proposition}
 
 \begin{proof}
@@ -416,3 +418,51 @@ and the inequality is trivial.  Summing the per-capability
 inequalities over $c \in U$:
 $\volRlower^{(N')} \geq \volRlower^{(N)}$.
 \end{proof}
+
+\begin{proposition}[Part~A Monotone Accumulation via
+Sub-Batch Supremum]
+\label{prop:monotone_part_a}
+Under Part~A hypotheses (S0--S2, S4(a), and the
+genuine-exchange conditions of
+Definition~\ref{def:sacrifice_event}), define the Part~A lower
+bound as the supremum over admissible pairwise-poset-independent
+sub-batches of the observed event set:
+\[
+  \volRlower^{\mathrm{A}}(E) \;:=\;
+  \sup\Bigl\{\, \sum_{n \in B} \Delta\volL(X_n)
+  \;:\; B \subseteq E \text{ and } B \text{ satisfies the
+  Part~A admissibility and pairwise poset-independence
+  hypotheses of Theorem~\ref{thm:aggregate_bound}} \,\Bigr\},
+\]
+with the supremum attaining $0$ on the empty sub-batch.  Then
+$\volRlower^{\mathrm{A}}$ is non-decreasing in $E$: for event
+sets $E \subseteq E'$,
+\[
+  \volRlower^{\mathrm{A}}(E') \;\geq\;
+  \volRlower^{\mathrm{A}}(E).
+\]
+\end{proposition}
+
+\begin{proof}
+Any admissible sub-batch $B \subseteq E$ is also an admissible
+sub-batch $B \subseteq E'$ (admissibility is a property of $B$
+itself, not of its ambient event set).  Hence the supremum over
+admissible sub-batches of $E$ is a supremum over a subset of the
+admissible sub-batches of $E'$, and the supremum over a superset
+is weakly larger.
+\end{proof}
+
+\begin{remark}[Interpretation of Part~A monotonicity]
+\label{rem:part_a_monotone_interp}
+$\volRlower^{\mathrm{A}}(E)$ is the tightest Part~A lower bound
+the framework can extract from the event set $E$ by choosing
+which sub-batches to apply Theorem~\ref{thm:aggregate_bound} to.
+Operationally, this is ``apply the theorem to each maximal
+admissible sub-batch and take the sum (over poset-disjoint
+components of the covered space, with max-attribution or
+union-bookkeeping where batches overlap).''  The sup-over-
+sub-batches definition is the principled monotone functional
+corresponding to the Part~A bound; $\volRlower^{\mathrm{A}}$ is
+what the paper refers to when it says ``the constructed Part~A
+lower bound is non-decreasing in observed admissible events.''
+\end{remark}
