@@ -221,8 +221,10 @@ $W$, and suppose the union $E = E_{\mathrm{money}} \cup
 E_{\mathrm{time}}$ satisfies the closure conditions of
 Theorem~\ref{thm:aggregate_bound} Part~A: the bundles
 $\{Y_n\}_{n \in E}$ are pairwise poset-independent across
-channels (no capability appears in bundles from both channels
-within $W$).
+channels---no subsumption relation and no cooperative-composition
+link connects any capability in a money-channel bundle to any
+capability in a time-channel bundle (set-disjointness of
+bundles across channels is necessary but not sufficient).
 
 \medskip\noindent
 \textbf{Weak containment (unconditional).}
@@ -272,18 +274,21 @@ population using one channel exclusively could produce
 single-channel coverage equal to the joint aggregate.
 \end{proof}
 
-\begin{remark}[Cross-channel capability overlap]
+\begin{remark}[Cross-channel poset coupling]
 \label{rem:cross_channel_overlap}
-The closure hypothesis rules out a capability $c$ appearing in
-both a money-channel bundle and a time-channel bundle during the
-same window $W$ (which would violate Part~A's pairwise
-poset-independence).  When cross-channel overlap occurs in
-practice, the operational responses of
+The closure hypothesis rules out all three forms of
+cross-channel coupling: (a)~a capability $c$ appearing in both
+a money-channel bundle and a time-channel bundle (set-overlap),
+(b)~subsumption across channels ($c \succeq c'$ with $c$ in one
+channel's bundle and $c'$ in the other's), and (c)~cooperative
+composition linking capabilities across channels.  When any of
+these occurs in practice, the operational responses of
 Remark~\ref{rem:label_collision} apply: partition events into
-maximal non-overlapping sub-batches per channel and aggregate
-separately, or fall back to Part~B's per-capability max-attribution
-(which natively handles overlapping events via the max across
-events covering each capability).
+maximal poset-independent sub-batches per channel and aggregate
+separately, or fall back to Part~B's per-capability
+max-attribution (which natively handles overlapping events via
+the max across events covering each capability, subject to
+Part~B's additional hypotheses).
 \end{remark}
 
 \subsection{The residual intersection}

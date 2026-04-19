@@ -104,19 +104,32 @@ appear in any admissible bundle; remaining pairs are disjoint by
 the bullet-stated exclusions.
 
 \medskip\noindent
-\textbf{Cooperative-closure hypothesis.}  We additionally require
-the partition $\{R, C, D, S\}$ to be \emph{cooperative-closed}:
-for every cooperative capability $z \in P$, all participants of
-$z$ lie in the same cell.  Set-disjointness alone does not
-suffice for $\volL$-additivity across cells because $\volL$
-counts cooperative contributions only when all participants are
-in the same subset (Remark~\ref{rem:poset_indep}); a cooperative
+\textbf{Poset-boundary closure hypothesis.}  We additionally
+require the partition $\{R, C, D, S\}$ to be
+\emph{poset-boundary closed}, meaning both:
+\begin{enumerate}
+\item[(CC1)] \emph{Cooperative closure.}  For every cooperative
+  capability $z \in P$, all participants of $z$ lie in the same
+  cell.
+\item[(CC2)] \emph{Subsumption closure.}  No subsumption edge
+  $c \succeq c'$ crosses a cell boundary: if $c, c'$ are
+  connected by subsumption in $P$, they lie in the same cell.
+\end{enumerate}
+Set-disjointness alone does not suffice for $\volL$-additivity
+across cells; by Definition~\ref{def:category_partition}(i) and
+the M4 axiom inherited from
+Proposition~1~\citep{lasser2026poset}, additivity requires full
+poset-independence---\emph{neither} cross-cell cooperative
+composition \emph{nor} cross-cell subsumption.  A cooperative
 whose participants straddle two cells contributes to $\volL(P)$
-but to neither $\volL$-cell individually.  Cooperative-closure
-ensures no such straddling and licenses additive decomposition
-by axiom~M4 (Section~\ref{sec:axiom_inheritance}).  See
+but to neither $\volL$-cell individually (CC1 failure);
+a subsumption edge crossing the boundary couples $\volL$-mass
+across cells in ways M4's independent-component additivity
+cannot decompose (CC2 failure).  Together (CC1) and (CC2) give
+the poset-independence that licenses $\volL(P) = \sum_X
+\volL(X)$ for $X \in \{R, C, D, S\}$.  See
 Remark~\ref{rem:cell_cooperative_closure} for how to achieve
-cooperative-closure in practice.
+poset-boundary closure in practice.
 
 The $\delta$ terms are:
 \begin{align*}
@@ -127,49 +140,63 @@ The $\delta$ terms are:
   \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(G), \\
   \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(G).
 \end{align*}
-Under cooperative-closure, the identity $1 - \betaL = \sum \delta$
-follows from $\volL(G) = \volL(R) + \volL(C) + \volL(D) +
-\volL(S)$ (cooperative-closure + set-disjoint union is $P$, via
-M4), combined with $\volRlower(P) = \volRlower(R) +
+Under poset-boundary closure, the identity $1 - \betaL = \sum
+\delta$ follows from $\volL(G) = \volL(R) + \volL(C) + \volL(D)
++ \volL(S)$ (poset-boundary closure + set-disjoint union is $P$,
+via M4), combined with $\volRlower(P) = \volRlower(R) +
 \volRlower(C) + 0 + 0$ (dormant and residual cells contribute
 zero $\volRlower$ by definition).
 \end{definition}
 
-\begin{remark}[Achieving cooperative-closure of the cells]
+\begin{remark}[Achieving poset-boundary closure of the cells]
 \label{rem:cell_cooperative_closure}
-Three operational strategies admit the cooperative-closure
-hypothesis without changing the framework's substantive content:
+Three operational strategies admit the poset-boundary closure
+hypothesis without changing the framework's substantive content.
+Each strategy handles both the cooperative (CC1) and subsumption
+(CC2) conditions jointly, since both are instances of the
+``edge connects different cells'' pattern; concretely, treat the
+poset's combined cooperative/subsumption graph (each cooperative
+contributes hyperedges to its participants; each subsumption
+relation contributes a directed edge) as the object whose
+boundary-crossing instances must be eliminated.
 \begin{enumerate}
-\item[(a)] \emph{Priority-extension to cooperatives.}  For each
-  cooperative $z \in P$ not already classified by priority rule,
-  place $z$ in the cell of its highest-priority participant
-  (restricted $>$ covered $>$ dormant $>$ residual).  When
-  $z$'s participants all share a cell, $z$ joins them; when
-  they straddle, $z$ follows the dominant priority.  The cells
-  become cooperative-closed by construction, and the underlying
-  individual-capability classification is unchanged.
-\item[(b)] \emph{Cooperative-closed sub-partition.}  Refine the
-  partition so each cell is partitioned into its cooperative
-  closures: the set of connected components under the
-  cooperative-composition relation.  The gap decomposition then
+\item[(a)] \emph{Priority-extension (default).}  For each node
+  $n \in P$ not yet in a settled cell, and for each subsumption
+  edge $c \succeq c'$ or cooperative $z$ with participant set
+  $\Pi(z)$ touching $n$: take the transitive closure under
+  cooperative participation and subsumption edges, collect the
+  resulting component, and place the whole component in the
+  cell of its highest-priority member
+  (restricted $>$ covered $>$ dormant $>$ residual).  After one
+  sweep, the cells are both cooperative-closed and
+  subsumption-closed (hence poset-boundary closed), and the
+  original individual-capability classification is preserved
+  except where a priority-dominated node was absorbed into a
+  higher-priority cell.
+\item[(b)] \emph{Poset-closed sub-partition.}  Refine the
+  partition so each cell is sub-partitioned into its
+  \emph{poset-connected components} under both cooperative
+  composition and subsumption.  The gap decomposition then
   operates at the sub-cell level and aggregates via two M4
   applications (within-cell and across-cell).
 \item[(c)] \emph{Boundary residual.}  Add a fifth bucket for
-  boundary cooperatives---cooperatives whose participants span
-  cells---and attribute its $\volL$-mass to a residual term.
-  The identity becomes
+  boundary-crossing cooperatives and subsumption edges.  The
+  identity becomes
   $1 - \betaL = \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}}
   + \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}
   + \delta_{\mathrm{boundary}}$ with a fifth term for
-  unassigned cooperative mass.
+  unassigned cross-cell poset mass (cooperative and
+  subsumption-crossing combined).
 \end{enumerate}
 The paper's stated results assume strategy~(a) by default: the
 priority-extension rule is the natural operational choice, and
-the practical prevalence of boundary cooperatives is small when
-the capability partition's priority classes are themselves
-well-structured (e.g., restrictions are cooperative-closed
-because restricting a cooperative implies restricting its
-participants).
+the practical prevalence of boundary-crossing poset edges is
+small when the capability partition's priority classes are
+themselves well-structured (e.g., restrictions are
+poset-boundary closed because restricting a cooperative implies
+restricting its participants, and restricting a capability
+implies restricting capabilities subsumed by it in cost-aligned
+posets).
 \end{remark}
 
 \begin{proposition}[Computability of Gap Decomposition]
@@ -180,8 +207,10 @@ Given
 (iii)~the residual class $\ResS$
 (Definition~\ref{def:residual_class}),
 (iv)~the capability census (enumeration of $P$) together with
-the cooperative-composition structure $\mathcal{M}$
-(enumeration of cooperative nodes and their participants),
+the \emph{poset structure} $\mathcal{M}$: the
+cooperative-composition hypergraph (cooperative nodes and their
+participants) and the subsumption relation graph (directed
+edges $c \succeq c'$),
 (v)~an event-admissibility labelling designating which observed
 events satisfy the theorem-admissibility requirements.  Because
 Definition~\ref{def:gap_decomp} operates under Part~B
@@ -196,10 +225,12 @@ Remark~\ref{rem:cell_cooperative_closure}, with strategy~(a)
 the four-term gap decomposition is computable in time
 $O(|P| + E + M)$, where $E$ is the number of observed
 (capability, event) membership records and $M = |\mathcal{M}|$
-is the number of cooperative nodes in the poset.  The $O(|P|)$
-term is per-individual-capability classification; the $O(E)$
-term is one-pass aggregation over bundle-incidence records; the
-$O(M)$ term is the closure-policy pass over cooperative nodes.
+is the total size of the poset structure (cooperative
+hyperedges plus subsumption edges).  The $O(|P|)$ term is
+per-individual-capability classification; the $O(E)$ term is
+one-pass aggregation over bundle-incidence records; the $O(M)$
+term is the closure-policy pass, which traverses cooperative
+and subsumption edges jointly via (amortized) union-find.
 No structural counterfactual computation is required (a
 direct-measurement approach would require $O(|P|^2)$
 counterfactual queries).
@@ -229,18 +260,22 @@ cooperative bundles are filtered out by the within-bundle
 poset-independence check.  This is $O(E)$ total work, one
 constant-time update per record.
 
-\emph{Pass 3 (closure-policy pass, $O(M)$).}
-For each cooperative node $z \in \mathcal{M}$ with participants
-$\Pi(z) \subseteq P$: under default strategy~(a), place $z$ in
-the cell of its highest-priority participant (restricted $>$
-covered $>$ dormant $>$ residual).  Look up each participant's
-cell (at most $|\Pi(z)| = O(1)$ for bounded-arity cooperatives,
-$O(\max_z |\Pi(z)|)$ in general); assign $z$ to the maximal
-priority.  The cells become cooperative-closed
-(Definition~\ref{def:gap_decomp}) by construction.  Under
-strategy~(b) or~(c), the pass is replaced by the corresponding
-sub-partition or boundary-bucket construction, with the same
-$O(M)$ complexity modulo constants.
+\emph{Pass 3 (poset-boundary closure pass, $O(M)$).}
+Under default strategy~(a), walk the combined
+cooperative/subsumption graph via union-find, identifying
+poset-connected components: two nodes are in the same component
+if connected by any chain of cooperative-participation or
+subsumption edges.  For each component, determine its highest-
+priority cell (restricted $>$ covered $>$ dormant $>$ residual)
+among member cells, and place the entire component in that
+cell.  The cells become both cooperative-closed and
+subsumption-closed (hence poset-boundary closed per
+Definition~\ref{def:gap_decomp}) by construction.  Union-find
+gives amortized $O(M \cdot \alpha(M))$ complexity, essentially
+linear in $M$.  Under strategy~(b) or~(c), the pass is replaced
+by the corresponding sub-partition or boundary-bucket
+construction over the same combined graph, with the same
+complexity modulo constants.
 
 \emph{Aggregation.}
 Each class's aggregate $\volL$ and $\volRlower$ is maintained
