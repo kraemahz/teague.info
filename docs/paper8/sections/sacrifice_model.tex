@@ -487,19 +487,35 @@ relies on but does not itself construct.
 
 \item[\textbf{(P5)}] \textbf{Third-party observability
   (institutional).}
-  Money-sacrifice events and publicly observable time-sacrifice
-  events are observable from public-facing ledger data (market
-  exchanges, payment rails, public commitments) with no agent
-  participation required, \emph{assuming} such public-ledger
-  infrastructure exists.  Where it does not, P5 fails
-  operationally even though the channel's construction is
-  unchanged.  This contrasts with controlled
+  \emph{Money-sacrifice events} are observable from
+  public-facing ledger data (market exchanges, payment rails,
+  public commitments) with no agent participation required,
+  \emph{assuming} such public-ledger infrastructure exists.  The
+  sacrifice magnitude $\Delta\volL(X)$ is directly readable from
+  the price paid.
+
+  \emph{Time-sacrifice events} are observable from public-ledger
+  data only under an additional precondition: the agent's
+  outside-option wage rate $r_i$ (Definition~\ref{def:time_sacrifice})
+  must be computable from public inputs---e.g., a public wage
+  schedule, occupational census with public imputation rules, or
+  the agent's own published rate.  Where $r_i$ is private, the
+  hours $h$ may be observable but the sacrifice magnitude
+  $\Delta\volL(r_i \cdot h)$ is not third-party computable;
+  P5 then holds for the money channel and for
+  public-wage-imputation time events, but not for fully private
+  time-sacrifice valuations.
+
+  Where public-ledger infrastructure does not exist at all, P5
+  fails operationally on both channels even though the
+  construction is unchanged.  This contrasts with controlled
   relaxation~\citep{lasser2026wamura} (framework must impose a
   test) and with commitment-protocol
   verification~\citep{lasser2026exo} (agent must generate a
   proof).  P5 does not extend to private time-sacrifice
   activities (parenting, contemplation), which require voluntary
-  disclosure regardless of ledger infrastructure.
+  disclosure regardless of ledger infrastructure and regardless
+  of wage imputation.
 \end{enumerate}
 \end{proposition}
 

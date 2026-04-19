@@ -44,9 +44,15 @@ Index~\citep{rhoades1993herfindahl}
   \HHI(\lambda_{\mathrm{trade}}) \;=\;
   \sum_{j} \lambda_{\mathrm{trade}}(j)^2
 \]
-is monotone in the concentration of observed trade flow.
-Comparing $\HHI$ against a governance-set threshold
-$\HHI_{\mathrm{alarm}}$ therefore provides a
+is \emph{Schur-convex} on the simplex of probability vectors:
+for leverage distributions $\lambda, \lambda'$ over the same
+support, if $\lambda$ majorizes $\lambda'$ (i.e., $\lambda$ is
+at least as concentrated as $\lambda'$ in the sense
+of~\citet{hardy1929majorization}), then $\HHI(\lambda) \geq
+\HHI(\lambda')$.  Concentration in the majorization order
+therefore induces a monotone ordering of $\HHI$ values, and
+comparing $\HHI$ against a governance-set threshold
+$\HHI_{\mathrm{alarm}}$ provides a
 concentration-consistent-with-wireheading alarm: if
 $\HHI > \HHI_{\mathrm{alarm}}$, a small number of bundle
 categories dominate the aggregate, which is the behavioural
@@ -73,36 +79,46 @@ theorem-derived.
 \begin{proof}
 Let $m = |\{j : \volRlower(C_j) > 0\}|$ be the number of bundle
 categories with non-zero observed leverage.  The leverage vector
-$(\lambda_{\mathrm{trade}}(j))_j$ is a probability distribution
-over those categories: $\lambda_{\mathrm{trade}}(j) \geq 0$ and
-$\sum_j \lambda_{\mathrm{trade}}(j) = 1$ by the normalization in
-Definition~\ref{def:trade_leverage}.
+$\lambda = (\lambda_{\mathrm{trade}}(j))_j$ is a probability
+distribution: $\lambda_j \geq 0$ and $\sum_j \lambda_j = 1$ by
+the normalization in Definition~\ref{def:trade_leverage}.
 
-\emph{Lower bound on $\HHI$ from concentration.}
-For any probability distribution $\lambda$, Cauchy--Schwarz gives
-$\sum_j \lambda_j^2 \geq 1/m$, with equality iff $\lambda$ is
-uniform over its $m$-element support.  More strongly, if the top
-$k$ categories capture at least a fraction $\rho$ of total
-leverage, then
-$\HHI \geq \rho^2/k$ by concentrating the mass evenly on those
-$k$ bins.
+\emph{Schur-convexity.}
+$\HHI(\lambda) = \sum_j \lambda_j^2$ is a sum of convex functions
+of the coordinates and is symmetric under permutation.  Any
+symmetric convex function on the simplex is Schur-convex by the
+Hardy--Littlewood--P\'olya
+theorem~\citep{hardy1929majorization,marshall2011inequalities};
+therefore $\lambda$ majorizing $\lambda'$ implies $\HHI(\lambda)
+\geq \HHI(\lambda')$.  Equivalently, spreading mass from heavier
+bins to lighter bins weakly decreases $\HHI$, and concentrating
+mass from lighter bins to heavier bins weakly increases it.
 
-\emph{Upper bound on $\HHI$ under diversity.}
-If no single category exceeds leverage $\lambda_{\max}$, then
-$\HHI \leq \lambda_{\max} \cdot \sum_j \lambda_j = \lambda_{\max}$,
-giving a tight upper bound under bounded individual leverage.
+\emph{Quantitative bounds.}
+For any probability distribution $\lambda$ with support of size
+$m$, Cauchy--Schwarz (or Jensen's inequality on the squaring
+map) gives $\HHI(\lambda) \geq 1/m$, with equality iff $\lambda$
+is uniform---the minimally-concentrated distribution in the
+majorization order.  At the other extreme, if the top $k$
+categories capture fraction $\rho$ of total leverage,
+$\HHI \geq \rho^2/k$ (achieved by concentrating the top-$k$ mass
+uniformly on those $k$ bins).
 
 \emph{Alarm criterion.}
-A wireheading signature---$k$ loop-driver categories concentrating
-most of the framework's trade flow---forces
-$\HHI \geq \rho^2/k$ for some $(\rho, k)$ with $\rho$ close to
-one and $k$ small.  Any $\HHI_{\mathrm{alarm}}$ chosen to exceed
-the uniform value $1/m$ but remain below the worst-case
-concentration bound therefore separates diverse trade from
-loop-dominated trade.  The choice of $\HHI_{\mathrm{alarm}}$ is a
-governance parameter fixed by the framework's tolerance for
-concentration risk; the structural guarantee is that the $\HHI$
-statistic is monotone in concentration.
+A wireheading signature concentrates trade flow in $k$
+loop-driver categories with $\rho$ close to $1$ and $k$ small,
+forcing $\HHI \geq \rho^2/k$.  A governance-chosen threshold
+$\HHI_{\mathrm{alarm}} \in (1/m, 1)$ determines which
+concentration levels trigger the alarm; by Schur-convexity, the
+alarm fires on a majorization-upper set of distributions (if
+$\lambda$ triggers the alarm and $\lambda' \succeq \lambda$ in
+the majorization order, then $\lambda'$ also triggers it).
+Whether any specific $\HHI_{\mathrm{alarm}}$ cleanly
+\emph{separates} ``diverse'' from ``loop-dominated'' depends on
+the domain's baseline concentration and the framework's
+tolerance for false positives/negatives---the threshold is a
+governance parameter, not a theorem-derived separator (see
+Remark~\ref{rem:hhi_alarm_governance}).
 \end{proof}
 
 \begin{remark}[Advantage over structural counterfactual]

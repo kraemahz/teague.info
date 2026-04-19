@@ -657,23 +657,41 @@ below-sufficiency benchmark saturates at $1$, so additional
 instances do not inflate the benchmark.  This is a real structural
 property of the architecture and it is worth stating narrowly:
 
-\begin{proposition}[Below-Sufficiency Saturation]
+\begin{proposition}[Below-Sufficiency Saturation (pointwise)]
 \label{prop:below_suff_saturation}
-For any need dimension $d_k$ already at or above its sufficiency
-threshold $s_k$, additional capabilities reporting
-$\mathrm{actual}_k \geq s_k$ on $d_k$ contribute at most $1$ each
-under the below-sufficiency component of the benchmark
-(Definition~\ref{def:polarity_benchmark}).  Consequently,
-below-sufficiency re-instantiation cannot increase the
-below-sufficiency benchmark of a dimension beyond its cap.
+For any need dimension $d_k$ of any single capability, the
+below-sufficiency component of the polarity-correct benchmark
+(Definition~\ref{def:polarity_benchmark}) saturates at $1$ once
+$\mathrm{actual}_k \geq s_k$.  This is a \emph{pointwise} cap:
+the benchmark value assigned to dimension $d_k$ of one
+capability does not exceed $1$, regardless of how many times
+that capability's $\mathrm{actual}_k$ is re-evaluated or
+re-instantiated.
 \end{proposition}
 
 \begin{proof}
 Below-sufficiency benchmark for dimension $d_k$ is
 $\min(\mathrm{actual}_k / s_k, 1)$, which is bounded above by $1$
-regardless of the number of capabilities reporting
-$\mathrm{actual}_k \geq s_k$.
+pointwise.
 \end{proof}
+
+\begin{remark}[The pointwise cap does not extend to an
+aggregate dimension-level cap]
+\label{rem:pointwise_not_aggregate}
+Proposition~\ref{prop:below_suff_saturation} is a
+\emph{per-capability, per-dimension} cap, not a dimension-level
+aggregate cap.  Distinct capabilities $c_1, c_2, \ldots$ each
+reporting $\mathrm{actual}_k \geq s_k$ on the same dimension
+$d_k$ each score $1$ under the below-sufficiency component;
+their M5-weighted sum in $\volL$ is not capped by this
+proposition and accumulates with each new capability.  The
+proposition therefore blocks only a narrow class of stuffing:
+re-instantiating a \emph{single} capability to inflate its own
+benchmark via repeated reporting.  The broader class of
+capability-stuffing---creating distinct capabilities that each
+satisfy sufficiency on the same dimension---is not structurally
+blocked and is acknowledged as unresolved below.
+\end{remark}
 
 \paragraph{What the need-sufficiency architecture does not
 resolve.}
