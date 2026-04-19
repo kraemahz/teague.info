@@ -252,13 +252,20 @@ collective \emph{does}, not merely what it possesses.
 \end{remark}
 
 \begin{remark}[Channel separation]
-The OI floor contributes exclusively to $\volRexact(O)$ in the
-combined diagnostic
-(Appendix~\ref{app:exercise_indicator}):
+Under the boundary-closed hypothesis on $O$
+(Definition~\ref{def:exercise_indicator}), the OI floor
+contributes exclusively to $\volRexact(O)$ in the combined
+diagnostic (Appendix~\ref{app:exercise_indicator}):
 \[
   \volRcomb = \volRexact(O) + \volRlower(P \setminus O).
 \]
 It does \emph{not} contribute to $\volRlower$ (the
 sacrifice-based bound outside $O$).  Conflating the two channels
-would double-count.
+would double-count.  When boundary-closure fails, $\volRcomb$
+remains a conservative lower bound on $\volR(P)$ but undercounts
+cooperatives spanning the perimeter
+(Remark~\ref{rem:boundary_cooperative_undercount}); the OI
+floor's contribution is unaffected because the OI capability
+$d_k$ is, by construction, an internal capability of agent $k$'s
+substrate---not a cooperative spanning the perimeter boundary.
 \end{remark}

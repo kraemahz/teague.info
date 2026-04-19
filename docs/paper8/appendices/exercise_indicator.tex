@@ -14,8 +14,16 @@ consenting sub-collective).
 \begin{definition}[Exercise Indicator, Internal Perimeter]
 \label{def:exercise_indicator}
 Let $G$ be a capability collective operating within an
-agreed-upon observation perimeter $O \subseteq P$.  For each
-capability $d \in O$, define:
+agreed-upon observation perimeter $O \subseteq P$.  We require
+$O$ to be \emph{boundary-closed}: for every cooperative
+capability $z \in P$, either all participants of $z$ lie in $O$
+or none do (so cooperatives are not split across the
+$O$/$P \setminus O$ partition).  Boundary-closure ensures that
+$O$ and $P \setminus O$ are poset-independent in the sense of
+Definition~\ref{def:category_partition}(i), which is what
+licenses additive composition across the boundary below.
+
+For each capability $d \in O$, define:
 \[
   e_t(d) = \begin{cases}
   1 & \text{if there exists a realized cooperative output in
@@ -34,11 +42,40 @@ privacy constraints apply).
 \begin{remark}[The two channels are complementary]
 Within the perimeter $O$, the exercise indicator provides exact
 exercise status ($e_t(d) \in \{0, 1\}$).  Outside $O$, the
-sacrifice channel provides a lower bound.  The aggregate $\volR$
-diagnostic combines both:
+sacrifice channel provides a lower bound.  Under the
+boundary-closed hypothesis of
+Definition~\ref{def:exercise_indicator}, the aggregate $\volR$
+diagnostic is a valid lower bound obtained by additive
+composition:
 \[
-  \volRcomb = \volRexact(O) + \volRlower(P \setminus O),
+  \volRcomb \;:=\; \volRexact(O) + \volRlower(P \setminus O)
+  \;\leq\; \volR(O) + \volR(P \setminus O)
+  \;=\; \volR(P),
 \]
-where $\volRexact(O)$ uses the exercise indicator and
-$\volRlower(P \setminus O)$ uses the sacrifice channel.
+where the final equality uses axiom M4 applied to the
+poset-independent pair $O$, $P \setminus O$
+(Section~\ref{sec:axiom_inheritance}).  $\volRexact(O)$ uses the
+exercise indicator and $\volRlower(P \setminus O)$ uses the
+sacrifice channel.
+\end{remark}
+
+\begin{remark}[When boundary-closure fails]
+\label{rem:boundary_cooperative_undercount}
+If $O$ is not boundary-closed---some cooperative $z$ has
+participants split across $O$ and $P \setminus O$---then $z$
+contributes to $\volR(P)$ but to neither $\volRexact(O)$ nor
+$\volRlower(P \setminus O)$ individually (the exercise indicator
+inside $O$ evaluates only capabilities fully within $O$; the
+sacrifice channel outside $O$ cannot reach $z$ if $z$'s full
+participant set is not in $P \setminus O$).  In that case
+$\volRcomb$ remains a \emph{conservative} lower bound on
+$\volR(P)$---it simply undercounts boundary cooperatives by the
+subadditivity of $\volL$ on non-disjoint components---but the
+equality with $\volR(P)$ above no longer holds.  Practical
+perimeters (the collective's own operational scope,
+consenting sub-collectives) typically satisfy boundary-closure
+because cooperative capabilities are either wholly internal to
+the perimeter or wholly external; where boundary cooperatives
+exist, the undercount is quantified by the $\volL$-weight of
+those cooperatives.
 \end{remark}
