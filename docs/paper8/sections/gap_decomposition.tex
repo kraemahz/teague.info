@@ -183,8 +183,13 @@ Given
 the cooperative-composition structure $\mathcal{M}$
 (enumeration of cooperative nodes and their participants),
 (v)~an event-admissibility labelling designating which observed
-events satisfy the theorem-admissibility requirements (S0, S1,
-S2, and S4(a) for Part~A; S0--S5 for Part~B), and
+events satisfy the theorem-admissibility requirements.  Because
+Definition~\ref{def:gap_decomp} operates under Part~B
+(Theorem~\ref{thm:aggregate_bound}), the full Part~B
+admissibility set is required: S0, S1, S2, S4(a), S3, S5, the
+genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event}, \emph{and} within-bundle
+poset-independence per Definition~\ref{def:bundle_decomp}; and
 (vi)~a closure policy from
 Remark~\ref{rem:cell_cooperative_closure}, with strategy~(a)
 (priority-extension to cooperatives) as the default,
@@ -213,9 +218,16 @@ dormant.  This gives an initial classification in $O(|P|)$.
 \emph{Pass 2 (event-sweep, $O(E)$).}
 Iterate through each (capability, event) incidence record.  For
 each record $(c, n)$ with event $n$ admissibility-labelled
-satisfying S0/S1/S2 (input (v)), update $c$'s class from
+satisfying the \emph{full Part~B admissibility set} of input
+(v)---S0, S1, S2, S4(a), S3, S5, the genuine-exchange
+conditions, and within-bundle poset-independence of $Y_n$ per
+Definition~\ref{def:bundle_decomp}---update $c$'s class from
 dormant to covered (if not already restricted or residual).
-This is $O(E)$ total work, one constant-time update per record.
+Events failing any component of the Part~B admissibility set do
+not contribute coverage; in particular, events with internally
+cooperative bundles are filtered out by the within-bundle
+poset-independence check.  This is $O(E)$ total work, one
+constant-time update per record.
 
 \emph{Pass 3 (closure-policy pass, $O(M)$).}
 For each cooperative node $z \in \mathcal{M}$ with participants
