@@ -85,40 +85,48 @@ analysis to incorporate the $\volL/\volR$ divergence.  The
 effective self-correction rate $\rS^{\mathrm{eff}}$ would depend
 on $\betaL$.
 
-\subsection{Bridge to the companion paper}
-\label{sec:bridge_companion}
+\subsection{Architecture layers developed in the companion
+paper}
+\label{sec:companion_pointer}
 
-This paper establishes the lower-bound measurement theorem; the
-companion paper~\citep{lasser2026paper8b} completes the
-architecture on three fronts that this paper takes as external
-preconditions or defers as diagnostics:
+This paper establishes the lower-bound measurement theorem as a
+self-contained result.  The companion
+paper~\citep{lasser2026paper8b} is a downstream work that
+builds three architectural layers atop the theorem proved here:
 
 \begin{itemize}
-\item \textbf{S1 admissibility filter.}
-  Theorem~\ref{thm:aggregate_bound} requires above-sufficiency
-  sacrifice events; below-sufficiency sacrifices have reversed
-  polarity and fail S1.  The \emph{need-sufficiency
-  architecture}~\citep[Section~2]{lasser2026paper8b} establishes
-  a structural poset-construction precondition that identifies
-  the polarity boundary and filters below-sufficiency events
-  before they reach the observation channel.
+\item \textbf{Operationalization of S1's non-degradation
+  primitive.}
+  This paper states S1 with ``below-sufficiency'' as a primitive
+  (Section~\ref{sec:assumptions}) and assumes an external filter
+  rejects below-sufficiency events from the aggregate.  The
+  companion paper~\citep[Section~2]{lasser2026paper8b} gives one
+  structural implementation of that filter via multi-dimensional
+  need bundles, downstream-safe sufficiency, polarity-correct
+  benchmarks, and downstream-gated weighting.
 \item \textbf{Gap decomposition and diagnostic interpretation.}
-  A low $\betaL$ has multiple possible causes (restricted
-  capabilities, uncovered want-space, structural
-  residual).~\citep[Section~3]{lasser2026paper8b} partitions the
-  gap into four disjoint cells---restricted, covered, dormant,
-  residual---and supplies an $O(|P| + E + M)$ computability
-  proposition under poset-boundary closure.
+  Theorem~\ref{thm:aggregate_bound} lower-bounds $\volR^{U,[W]}$
+  on the observed subset; interpreting \emph{why} $\betaL$ is
+  low for a given window requires partitioning the gap into
+  restricted, covered, dormant, and residual contributions.  The
+  companion paper~\citep[Section~3]{lasser2026paper8b} supplies
+  the four-cell decomposition and an $O(|P| + E + M)$
+  computability proposition under poset-boundary closure.
 \item \textbf{Wireheading-consistent signature and residual
-  class.}~\citep[Sections~4--5]{lasser2026paper8b} develops the
+  class.}  The companion
+  paper~\citep[Sections~4--5]{lasser2026paper8b} develops a
   Herfindahl--Hirschman-Index-based concentration signal from
-  trade-flow data and characterizes the residual class
-  (capabilities structurally outside the sacrifice channel's
-  reach) via a revealed-observation carve that shifts the
-  residual class from a measurement-apparatus question to a
-  channel-reach question.
+  trade-flow data---Schur-convex in the majorization order,
+  with a Part-A category-flow variant third-party observable
+  from public committed events---and characterizes the
+  residual class (capabilities structurally outside the
+  sacrifice channel's reach) via a revealed-observation carve.
 \end{itemize}
 
-Together, the two papers are the measurement theorem (this
-paper) and the diagnostic architecture that interprets what the
-measurement shows~\citep{lasser2026paper8b}.
+The present paper's results stand independently of the companion
+paper: the proofs do not invoke any definition developed
+in~\citep{lasser2026paper8b}.  Readers interested only in the
+measurement theorem and its commitment composition can stop
+here; readers interested in the structural filter, gap
+decomposition, and wireheading-consistent diagnostic should
+proceed to~\citep{lasser2026paper8b}.

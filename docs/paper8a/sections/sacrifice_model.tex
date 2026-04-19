@@ -232,12 +232,25 @@ assumptions.  We collect them here for single-point reference.
   trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
   available.  The agent had \emph{non-degrading} alternatives:
   retaining $X_n$ was a viable option that would not have left
-  the agent below minimum viable functionality on any need
-  dimension.  When retaining $X_n$ would cause the agent to
-  fall below a sufficiency threshold, S1 fails for that event
-  (see the companion paper~\citep{lasser2026paper8b} for the
-  need-sufficiency architecture that filters such
-  below-sufficiency events structurally).
+  the agent \emph{below-sufficiency} on any need dimension.
+  For this paper we treat ``below-sufficiency'' as a primitive:
+  an event is below-sufficiency iff retaining $X_n$ would leave
+  the agent unable to function on at least one need dimension
+  without corrective intervention (food, water, shelter,
+  medical care, etc.).  S1 fails for events in which retaining
+  $X_n$ would put the agent below-sufficiency, and the
+  institutional attestation layer
+  (Remark~\ref{rem:external_attestation}) is responsible for
+  filtering such events from the aggregate.  The full
+  poset-construction machinery that identifies below-sufficiency
+  structurally---multi-dimensional need bundles, downstream-safe
+  sufficiency, polarity-correct benchmarks, the downstream-gated
+  weighting that makes need-satisfaction a precondition for
+  $\volL$-registration of downstream capability weight---is
+  developed in the companion paper~\citep{lasser2026paper8b}.
+  This paper does not depend on that machinery for any proof;
+  the companion paper operationalizes what this paper
+  axiomatizes as a primitive.
 
 \item[S2 (Benchmark grounding).] The benchmarked sacrifice $X_n$
   has a well-defined $\volL$ contribution $\Delta\volL(X_n)$

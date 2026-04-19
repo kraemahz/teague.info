@@ -178,13 +178,18 @@ by an external mechanism (Remark~\ref{rem:external_attestation}).
 \label{rem:external_attestation}
 In practice, the non-ZK-verifiable hypotheses are handled at the
 institutional layer: (a)~the trade environment is filtered so
-only trades satisfying S1's non-degradation are admitted as
-sacrifice events; the need-sufficiency architecture developed
-in the companion paper~\citep{lasser2026paper8b} supplies the
-structural filter and polarity-boundary mechanism for this; (b)~the category partition
-$\mathcal{C}$ is curated so cooperative-closure conditions
-(iii)--(iv) hold structurally; (c)~S0 and S4(a) are assumed at
-the batch level with periodic sampled-audit reconciliation.  The
+only trades satisfying S1's non-degradation (events that are
+not below-sufficiency, per the primitive in
+Section~\ref{sec:assumptions}) are admitted as sacrifice events;
+(b)~the category partition $\mathcal{C}$ is curated so
+cooperative-closure conditions (iii)--(iv) hold structurally;
+(c)~S0 and S4(a) are assumed at the batch level with periodic
+sampled-audit reconciliation.  One concrete structural
+implementation of the below-sufficiency filter of~(a) via
+multi-dimensional need bundles, polarity-correct benchmarks,
+and downstream-gated weighting is given in the companion
+paper~\citep{lasser2026paper8b}; the present paper's theorems
+hold under any institutional realization of the primitive.  The
 commitment layer is orthogonal: it enforces privacy and
 certifies the objective facts, but does not and cannot certify
 the behavioural and structural assumptions.
