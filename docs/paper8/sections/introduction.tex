@@ -183,10 +183,14 @@ quantity under the framework's privacy commitments.
 
 \item \textbf{Non-self-balancing finding}
   (Section~\ref{sec:axiom_inheritance}).
-  $\volR$ fails axiom M6 structurally
-  (Theorem~\ref{thm:axiom_inheritance}), so it is a diagnostic, not
-  an objective.  This structural finding is independent of the
-  observation mechanism.
+  $\volR$ is non-invariant under capability removal: unexercised
+  capabilities can be eliminated without reducing $\volR$, while
+  $\volL$ contracts by their weight
+  (Theorem~\ref{thm:axiom_inheritance}; Corollary
+  \ref{cor:not_self_balancing}).  The self-balancing property
+  therefore does not transfer from $\volL$ to $\volR$, so $\volR$
+  is a diagnostic, not an objective.  This structural finding is
+  independent of the observation mechanism.
 
 \item \textbf{Gap decomposition and need-sufficiency diagnostic}
   (Section~\ref{sec:gap_decomposition}).

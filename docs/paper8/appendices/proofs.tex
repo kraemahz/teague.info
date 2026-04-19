@@ -127,13 +127,22 @@ Axiom-by-axiom analysis:
 M1--M5 are direct from properties of summation/max over
 non-negative terms (detailed in the body; M4 is proved
 constructively via sub-poset restriction).
-M6 failures~(a) and~(b) are witnessed by explicit counterexamples
-in Examples~\ref{ex:m6_fail_volR}
-and~\ref{ex:m6_fail_volRlower}: alternative-pathway subadditivity
-for $\volR$, max-attribution subadditivity for $\volRlower$.
-Corollary~\ref{cor:not_self_balancing} follows from~(a) only,
-since~(b) is a property of the lower-bound construction rather
-than of the underlying measure.
+M6 for $\volR$ as a measure on a fixed exercised sub-poset is
+inherited from $\volL$ by restriction---no axiom failure there.
+The paper's non-self-balancing claim rests instead on
+\emph{capability-removal non-invariance}: removing an
+unexercised capability leaves $\volR$ unchanged while $\volL$
+drops by the removed weight
+(Example~\ref{ex:volR_removal_invariance}).  This is a
+system-level property (of the mapping
+$\mathcal{P} \mapsto \volR^{\mathcal{P}}$), not a measure-axiom
+failure.  M6(b) for $\volRlower$ is witnessed separately by
+Example~\ref{ex:m6_fail_volRlower}: max-attribution
+subadditivity.  Corollary~\ref{cor:not_self_balancing} follows
+from~(a)'s non-invariance, not from~(b)---a lower bound failing
+measure axioms is unremarkable; what breaks self-balancing
+transfer is that $\volR$ doesn't penalize shedding of unused
+capabilities.
 
 \subsection{Connection to observational individuation}
 
