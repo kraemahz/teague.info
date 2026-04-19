@@ -95,12 +95,42 @@ $\mathrm{downstream\_safety} = \mathrm{degrading}$ (cooperative
 pathways that previously contributed to healthcare quality are no
 longer active).
 
-Combined diagnostic: $(\volRlower = 10.0,\; \NAC = 8.2,\;
-\NSE = \text{degrading on healthcare})$.  The need-sufficiency
-diagnostic catches a failure mode the gap decomposition alone
-would miss: automation is not merely making want-pursuit
-capabilities dormant---it is also degrading the need-satisfaction
-pathways for biological agents.
+\paragraph{Concentration diagnostic.}
+Suppose the 52 admissible trade events partition across four
+public categories: silicon-automation bundles $45$, mixed
+coop-silicon bundles $5$, biological-only $1$, other $1$.  With
+equal-magnitude events the category-flow
+shares~(Proposition~\ref{prop:third_party_wireheading}) are
+$\tilde\lambda_{\mathrm{trade}} = (45/52,\, 5/52,\, 1/52,\,
+1/52) \approx (0.865,\, 0.096,\, 0.019,\, 0.019)$, giving
+\[
+  \widetilde\HHI \;\approx\; 0.865^2 + 0.096^2 + 2(0.019)^2
+  \;\approx\; 0.758.
+\]
+For a governance threshold $\HHI_{\mathrm{alarm}} = 0.25$
+(typical of moderately-diverse healthy trade, below the uniform
+value $1/4 = 0.25$ with equal mass on four categories but above
+a near-uniform $1/52 \approx 0.019$ over all 52 events),
+$\widetilde\HHI \gg \HHI_{\mathrm{alarm}}$ fires the
+concentration alarm: observed trade is heavily concentrated on
+silicon-automation, consistent with
+(though not a determination of) wireheading via the
+self-reinforcing automation loop.  Under committed-mode
+operation, this statistic is third-party observable from the
+public committed-event ledger---no access to agent-private
+bundle interiors is required.
+
+Combined diagnostic:
+$(\volRlower = 10.0,\; \NAC = 8.2,\;
+\NSE = \text{degrading on healthcare},\;
+\widetilde\HHI \approx 0.76)$.  Three independent signals point
+the same direction: the gap decomposition flags biological
+capabilities as dormant, the need-sufficiency diagnostic flags
+healthcare as degrading, and the concentration statistic flags
+silicon-automation as dominating trade flow.  Each surfaces a
+different facet of the same underlying phenomenon (automation
+displacing biological participation); no single diagnostic
+would suffice.
 
 \subsection{Phase 3: Diagnosis and recovery}
 

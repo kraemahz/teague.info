@@ -97,26 +97,34 @@ sacrifice channel.
 If $O$ fails either condition---a cooperative $z$ has
 participants split across $O$ and $P \setminus O$ (BC1 fails),
 or a subsumption edge $c \succeq c'$ crosses the boundary (BC2
-fails)---then $O$ and $P \setminus O$ are not
-poset-independent, and M4 additivity across the boundary does
-not apply.  Specifically: under a BC1 failure, $z$ contributes
-to $\volR(P)$ but to neither $\volRexact(O)$ nor $\volRlower(P
-\setminus O)$ individually (the exercise indicator inside $O$
-evaluates only capabilities fully within $O$; the sacrifice
-channel outside $O$ cannot reach $z$ if $z$'s full participant
-set is not in $P \setminus O$).  Under a BC2 failure, the
-subsumption edge couples $\volL$-mass across the boundary in
-ways that the independent-component additivity of M4 cannot
-decompose.  In either case $\volRcomb$ remains a
-\emph{conservative} lower bound on $\volR(P)$---the subadditivity
-of $\volL$ on non-independent components ensures the sum of
-pieces is $\leq$ the whole---but the equality with $\volR(P)$
-above no longer holds.  Practical perimeters (the collective's
-own operational scope, consenting sub-collectives) typically
-satisfy both boundary-closure conditions because cooperative
-capabilities and subsumption hierarchies are either wholly
-internal to the perimeter or wholly external; where either BC1
-or BC2 fails, the undercount is quantified by the $\volL$-weight
-of the offending cross-boundary cooperatives and subsumption
-edges.
+fails)---then $O$ and $P \setminus O$ are not poset-independent,
+and M4 additivity across the boundary does not apply.  In that
+regime, the compositional lower-bound interpretation of
+$\volRcomb$ is \emph{not established}: the paper proves
+$\volRcomb \leq \volR(P)$ only under BC1 + BC2.  Outside that
+regime, the identity above becomes an equality $\volR(O) +
+\volR(P \setminus O)$ that no longer equals $\volR(P)$, and no
+general inequality between $\volRcomb$ and $\volR(P)$ is
+available in this paper without an additional lemma on
+subsumption-crossing or cooperative-crossing decompositions of
+$\volL$.  $\volRcomb$ can still be computed and reported as a
+heuristic composite of the two sub-diagnostics, but it should
+not be interpreted as a certified lower bound on $\volR(P)$ in
+that case.  Under BC1 failure specifically, the qualitative
+intuition is that $z$ contributes to $\volR(P)$ but to neither
+$\volRexact(O)$ nor $\volRlower(P \setminus O)$ individually---so
+$\volRcomb$ would \emph{undercount} the boundary cooperative's
+$\volR$ mass if a lower-bound interpretation were otherwise
+available; under BC2 failure, the subsumption coupling makes the
+sign of the gap between $\volRcomb$ and $\volR(P)$ undetermined
+by this paper's machinery.
+
+Practical perimeters (the collective's own operational scope,
+consenting sub-collectives) typically satisfy both
+boundary-closure conditions because cooperative capabilities
+and subsumption hierarchies are either wholly internal to the
+perimeter or wholly external.  When designing the perimeter,
+choose $O$ to respect both the cooperative and subsumption
+structure of $P$; the combined diagnostic's compositional
+guarantee requires both.
 \end{remark}
