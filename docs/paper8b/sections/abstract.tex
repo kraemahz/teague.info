@@ -1,55 +1,33 @@
 \begin{abstract}
 The companion paper~\citep{lasser2026paper8a} proves the
-Aggregate B-to-C Lower Bound theorem: voluntary trade events
-in a capability collective carry revealed-preference
-inequalities that compose into a lower bound on realized
-capability volume $\volR$.  The theorem's Part~A requires that
-events be \emph{above-sufficiency} and
-\emph{assumption-admissible} (S1 holds, the trade is a free
-choice with non-degrading alternatives).  This paper supplies
-the structural architecture that meets those preconditions and
-the diagnostic layers that interpret the bound's output.
+\emph{Aggregate B-to-C Lower Bound} theorem for a
+privacy-minimal observation channel on realized capability
+volume $\volR$, under admissibility conditions that include S1
+(free choice with non-degrading alternatives).  This paper
+supplies the structural architecture that enforces S1 across
+events and the diagnostic layers that interpret the bound's
+output.
 
-We introduce the \emph{need-sufficiency architecture}: a
-poset-construction precondition that distinguishes involuntary
-need-satisfaction (where sacrifice magnitude reveals
-cost-of-access) from voluntary want-pursuit (where sacrifice
-reveals preference strength).  Below-sufficiency sacrifices are
-structurally involuntary and filtered by the free-choice
-assumption (S1) before the observation channel operates.  The
-sufficiency threshold establishes a \emph{polarity boundary}
-for the sacrifice signal; the polarity-correct benchmark
-inverts cost dimensions so that $\volL$-maximization aligns
-with the agent's interest on both sides of the threshold; a
-multiplicative downstream-gate on $\volL$-aggregation makes
-need-satisfaction a structural precondition for registering
-downstream capability weight.  A parallel \emph{need-access
-cost} diagnostic tracks the benchmarked capability surrendered
-for need-satisfaction (companion metric to $\betaL$, separate
-from the lower bound).
+The \emph{need-sufficiency architecture} is a poset-construction
+precondition distinguishing involuntary need-satisfaction from
+voluntary want-pursuit via multi-dimensional sufficiency
+thresholds and downstream-safe gates.  Below-sufficiency
+sacrifices are structurally involuntary and filtered by S1
+before reaching the observation channel.  A parallel
+\emph{need-access cost} diagnostic tracks below-sufficiency
+expenditure as a companion metric.
 
-We then supply the diagnostic layers that interpret the
-measurement theorem's output.  The \emph{gap decomposition}
-partitions the B-to-C gap $1 - \betaL$ into four disjoint
-cells---restricted, covered, dormant, residual---each with a
-well-defined $\delta$ term, under a poset-boundary closure
-hypothesis.  The decomposition is computable in $O(|P| + E +
-M)$ time from observed trade data plus governance-supplied
-structural inputs (restriction set, residual class,
-event-admissibility labels, closure policy).  A \emph{wireheading-consistent
-concentration signal} derived from trade-flow
-Herfindahl--Hirschman Index (Schur-convex in the majorization
-order) provides a governance-thresholded alarm, with a Part-A
-category-flow variant third-party observable from public
-committed events.  Finally, we re-characterize the
-\emph{residual class}: the set of capabilities structurally
-outside the sacrifice channel's reach.  This revealed-observation
-carve differs from---and is more useful than---the classical
-benchmarkability-based residual class, yielding the irreducible
-component of the gap decomposition.
-
-A four-phase worked example---a two-substrate collective
-traced through healthy trade, automation-driven concentration,
-diagnosis and recovery, and complementary-diagnostic
-cross-checking---demonstrates the architecture end-to-end.
+The \emph{gap decomposition} partitions the B-to-C gap into four
+disjoint cells (restricted, covered, dormant, residual) under
+poset-boundary closure, computable in $O(|P|+E+M)$ from observed
+trade data plus governance-supplied structural inputs.  A
+\emph{wireheading-consistent concentration signal} from the
+trade-flow Herfindahl--Hirschman Index is Schur-convex in the
+majorization order; the Part-A category-flow variant is
+third-party observable from public committed events.  The
+\emph{residual class} is re-characterized from a
+measurement-apparatus question to a channel-reach question,
+yielding the decomposition's irreducible component.  A
+four-phase worked example demonstrates the architecture
+end-to-end.
 \end{abstract}
