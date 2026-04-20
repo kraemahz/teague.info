@@ -162,9 +162,11 @@ result~\citep[Corollary~2.1]{lasser2026horizon} establishes a
 \emph{structural} floor on $\volL$: for any distinguishable
 agent~$k$, the poset contains an identity capability $d_k$ with
 $\OIfloor(k) \geq 1$, so removing~$a_k$ contracts $\volL$ by at
-least $\OIfloor(k)$.  Paper~8's $\volRexact(O)$ diagnostic
-(the exercise indicator~\citep{lasser2026paper8a}), by contrast, sums
-$\volL$-weights of capabilities $d$ with $e_t(d) = 1$, where
+least $\OIfloor(k)$.  The companion paper's $\volRexact(O)$
+diagnostic
+(the exercise indicator~\citep{lasser2026paper8a}), by
+contrast, sums $\volL$-weights of capabilities $d$ with
+$e_t(d) = 1$, where
 $e_t(d)$ requires a realized cooperative output in
 $[t-\Delta, t]$ that would be unrealizable if $d$ were removed
 from $O$.  Transferring the OI floor into $\volRexact(O)$
@@ -198,9 +200,13 @@ $d_k$ is exercised within $W$ and therefore contributes
 $\OIfloor(k) \geq 1$ to $\volRexact^{[W]}(O)$ (with the weight
 bound from the binary default
 of~\citep[Corollary~2.1]{lasser2026horizon}).  Summing over
-agents $k \in K$ whose OI capabilities are pairwise
-poset-independent (the category partition~\citep{lasser2026paper8a}(i))
-and who each satisfy the bridge at some $t \in W$:
+agents $k \in K$ whose OI capabilities $\{d_k\}$ are pairwise
+poset-independent (stated as an explicit hypothesis on the
+agent set; the category partition of~\citep{lasser2026paper8a}
+covers the unbenchmarked space $U$, not necessarily the
+observation perimeter $O$, so this independence is imposed
+directly rather than imported) and who each satisfy the bridge
+at some $t \in W$:
 \[
   \volRexact^{[W]}(O) \;\geq\; \sum_{k \in K} \OIfloor(k)
   \;=:\; \sum_{k \in K} \OIfloor(k).
@@ -214,8 +220,9 @@ witness.
 \begin{proof}
 By the bridge (Definition~\ref{def:oi_exercise_bridge}) at some
 $t \in W$, $e_t(d_k) = 1$, so $d_k \in P^{\mathrm{ex}}_t$ for
-that $t$.  Under Paper~8's window-integrated form
-(the $\volR$ definition~\citep{lasser2026paper8a}), $d_k \in P^{\mathrm{ex}}_W =
+that $t$.  Under the window-integrated form of the companion
+paper's $\volR$ definition~\citep{lasser2026paper8a}, $d_k \in
+P^{\mathrm{ex}}_W =
 \bigcup_{s \in W} P^{\mathrm{ex}}_s$, hence $d_k$ contributes
 $\OIfloor(k)$ to $\volRexact^{[W]}(O) = \volL(O \cap
 P^{\mathrm{ex}}_W)$.  By

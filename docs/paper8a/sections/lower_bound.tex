@@ -345,29 +345,39 @@ axiom~M4~\citep[Proposition~1]{lasser2026poset}.
 \label{def:volRlower_subset}
 Under the Part~B hypotheses (S0--S5) of
 Theorem~\ref{thm:aggregate_bound}, the per-capability lower
-bound $\volRlower(c)$ extends naturally to subsets of
-capability-space.  For any $A \subseteq P$:
+bound $\volRlower(c)$ extends to any subset $A \subseteq P$
+whose covered capabilities are pairwise poset-independent:
 \[
-  \volRlower(A) \;=\; \sum_{c \in A \cap U} \volRlower(c),
+  \volRlower(A) \;:=\; \sum_{c \in A \cap U} \volRlower(c),
+  \qquad \text{when } A \cap U \text{ is pairwise
+  poset-independent,}
 \]
-where $U$ is the observed subset covered by bundles.  In
-particular:
+where $U$ is the observed subset covered by bundles.  In this
+regime the sum is a valid lower bound on $\volR(A)$, via
+Part~B applied to the sub-family $A \cap U$.  When $A \cap U$
+has internal poset-dependencies, the same expression can be
+formed but is an \emph{accounting score}, not a
+theorem-certified lower bound on $\volR(A)$.  In particular:
 \begin{itemize}
 \item For a bundle category $C_j \in \mathcal{C}$
-  (Definition~\ref{def:category_partition}):
-  $\volRlower(C_j) = \sum_{c \in C_j \cap U} \volRlower(c)$.
-\item For any other capability subset $A \subseteq P$
-  (e.g., a restriction set, residual class, or diagnostic
-  cell), $\volRlower(A)$ is defined analogously as the sum
-  over $A \cap U$.
+  (Definition~\ref{def:category_partition}), $C_j \cap U$ is
+  pairwise poset-independent only when the public partition is
+  refined below internal dependencies.  For coarser partitions,
+  $\volRlower(C_j)$ is an accounting score for the category.
+\item For any other capability subset $A$ used by downstream
+  diagnostics (restriction set, residual class, diagnostic
+  cell), certified lower-bound status requires the same
+  internal poset-independence of $A \cap U$.
 \end{itemize}
-This extension is meaningful only under Part~B.  Under Part~A
-alone, only the per-bundle quantities
-$\volR(Y_n) \geq \Delta\volL(X_n)$ and the global aggregate
-$\volR^U \geq \sum_n \Delta\volL(X_n)$ are available.  The
-companion paper's gap decomposition and wireheading diagnostic
-(\citep{lasser2026paper8b}, downstream applications) are stated
-under Part~B semantics unless otherwise noted.
+Under Part~A alone, $\volRlower$ is defined only at the
+per-bundle level; the global aggregate is $\volR^U \geq \sum_n
+\Delta\volL(X_n)$, and arbitrary subset-level $\volRlower(A)$
+is not a Part~A object.  The companion paper's gap decomposition
+and wireheading diagnostic~\citep{lasser2026paper8b} are stated
+under Part~B semantics and report subset/cell sums as
+theorem-certified lower bounds only when the corresponding
+internal poset-independence condition is met; otherwise the
+sums are reported as diagnostic accounting scores.
 \end{definition}
 
 \subsection{B-to-C ratio and monotonicity}
