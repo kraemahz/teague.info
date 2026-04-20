@@ -77,9 +77,12 @@ Within the perimeter $O$, the exercise indicator provides exact
 exercise status ($e_t(d) \in \{0, 1\}$).  Outside $O$, the
 sacrifice channel provides a lower bound.  Under the
 boundary-closed hypothesis of
-Definition~\ref{def:exercise_indicator}, the aggregate $\volR$
-diagnostic is a valid lower bound obtained by additive
-composition:
+Definition~\ref{def:exercise_indicator} \emph{and} under
+Theorem~\ref{thm:aggregate_bound} Part~B hypotheses (so that
+the subset-level quantity $\volRlower(P \setminus O)$ is
+well-defined per Definition~\ref{def:volRlower_subset}), the
+aggregate $\volR$ diagnostic is a valid lower bound obtained by
+additive composition:
 \[
   \volRcomb \;:=\; \volRexact(O) + \volRlower(P \setminus O)
   \;\leq\; \volR(O) + \volR(P \setminus O)
@@ -89,7 +92,12 @@ where the final equality uses axiom M4 applied to the
 poset-independent pair $O$, $P \setminus O$
 (Section~\ref{sec:axiom_inheritance}).  $\volRexact(O)$ uses the
 exercise indicator and $\volRlower(P \setminus O)$ uses the
-sacrifice channel.
+sacrifice channel.  Under Part~A alone, $\volRlower$ is defined
+only at the per-bundle level; in that regime $\volRcomb$ can be
+reported as the pair $(\volRexact(O), \volRlower_{\mathrm{A}})$
+where $\volRlower_{\mathrm{A}}$ is the Part~A bundle-level lower
+bound restricted to events whose bundles lie in $P \setminus O$,
+without the subset-aggregation interpretation.
 \end{remark}
 
 \begin{remark}[When boundary-closure fails]
