@@ -356,6 +356,34 @@ Weakening S0 to expected/distributional conservatism
 follow-up work.
 \end{remark}
 
+\begin{remark}[Common-scale convention for the calibration chain]
+\label{rem:units}
+The chain of inequalities $\volR^{[W]}(Y) \geq \Ui(Y) \geq \Ui(X)
+\geq \Delta\volL(X)$ presupposes a common scale on which the four
+quantities are comparable.  We adopt the \emph{poset-measure
+scale}: $\volL$ is the framework's measure-theoretic primitive
+(\citep[Proposition~1]{lasser2026poset}), and $\volR$ inherits its
+unit from $\volL$ on the exercised sub-poset
+(Definition~\ref{def:volR}).  S0 is the assumption that each
+agent's subjective valuation $\Ui$ is reported in this scale (i.e.,
+$\Ui(Y)$ has the same units as $\volR^{[W]}(Y)$); S2 is the
+analogous assumption on the benchmarked side ($\Ui(X)$ in the
+same units as $\Delta\volL(X)$).  Money price $p$ enters through
+the money-sacrifice channel
+(Definition~\ref{def:money_sacrifice}) only via
+$\Delta\volL(X(p))$, which converts price to poset-measure units
+through the benchmark calibration of~\citep[Definition~2]{lasser2026poset};
+analogously, the time-sacrifice channel
+(Definition~\ref{def:time_sacrifice}) converts the wage-valued
+quantity $r_i \cdot h$ to poset-measure units through
+$\Delta\volL(r_i \cdot h)$.  Currency and wage-time are not
+themselves on the poset-measure scale; they are inputs to the
+benchmark function whose output is.  The theorem's inequalities
+hold in this single common scale; cross-currency or cross-wage
+comparability is a property of the benchmark function, not of the
+theorem.
+\end{remark}
+
 \begin{definition}[Aggregate Trade Window]
 \label{def:trade_window}
 An aggregate trade window $[t_0, t_0 + T]$ is an observation
@@ -457,7 +485,7 @@ accompanied by a zero-knowledge
 proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds a
 valid revealed-sacrifice event: the event-local objectively
 verifiable facts---non-negativity of $\Delta\volL(X_n)$, bundle
-containment $Y_n \subseteq C_{\catY[_n]}$
+containment $Y_n \subseteq C_{\catYn{n}}$
 (Definition~\ref{def:committed_event}(d)), bundle coherence S3,
 and a verifiable link to an underlying trade record.  This is
 the event-level certification; S4(b) is not an event-level
@@ -478,7 +506,7 @@ public partition, or richer commitments).  The committed form
 reveals only the sacrifice magnitude and bundle category; agent
 identity, specific $X$ and $Y$, and counterparty remain hidden
 by the hiding property of
-$\Commit$~\citep{goldwasser1985knowledge}.
+$\Commit$~\citep{pedersen1991noninteractive,lasser2026exo}.
 \end{proof}
 
 \begin{proposition}[Institutional Preconditions for

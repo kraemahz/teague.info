@@ -91,12 +91,12 @@ Committed Events on Distinct-Category Batches]
 \label{prop:commit_preserves}
 For a batch of committed revealed-sacrifice events
 (Definition~\ref{def:committed_event}) whose revealed category
-labels $\{\catY[_n]\}$ are \emph{pairwise distinct}, the
+labels $\{\catYn{n}\}$ are \emph{pairwise distinct}, the
 \emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A---the
 right-hand sum $\sum_n \Delta\volL(X_n)$ together with the
 poset-independence check between bundles---is evaluable without
 opening the hidden fields: the magnitudes $\Delta\volL(X_n)$ and
-labels $\catY[_n]$ are revealed, and distinct labels imply
+labels $\catYn{n}$ are revealed, and distinct labels imply
 poset-independent bundles via
 Definition~\ref{def:category_partition}(i).  Batches with
 colliding labels fall outside this certificate and must be
@@ -112,7 +112,7 @@ and S4(a).  The ZK proof $\pi$ of
 Definition~\ref{def:committed_event} certifies only the
 objectively verifiable subset (S2's magnitude component, S3 for
 Part~B uses, and the bundle-containment check
-$Y_n \subseteq C_{\catY[_n]}$).  The remaining
+$Y_n \subseteq C_{\catYn{n}}$).  The remaining
 hypotheses---S0 (valuation-bounded-by-exercise), S1 (free
 choice), S4(a) (valuation additivity), and the
 cooperative-closure conditions (iii)--(iv)---are about
@@ -144,14 +144,14 @@ partition components $C_j$ and $C_k$ are poset-independent: no
 subsumption or cooperative-composition link connects any
 $c \in C_j$ to any $c' \in C_k$.
 Definition~\ref{def:committed_event}(d)'s ZK proof attests that
-$Y_n \subseteq C_{\catY[_n]}$, so $Y_n$ lies wholly within a
+$Y_n \subseteq C_{\catYn{n}}$, so $Y_n$ lies wholly within a
 single component.  Under the pairwise-distinct-label
 hypothesis, the bundles lie in distinct components and inherit
 poset-independence from the partition.  Both checks use only
 revealed or ZK-attested fields.
 
 When two events share the same category label
-$\catY[_{n}] = \catY[_{n'}]$, both bundles lie inside the same
+$\catYn{n} = \catYn{n'}$, both bundles lie inside the same
 partition component $C_j$; poset-independence between
 $Y_n, Y_{n'} \subseteq C_j$ is a finer fact about sub-structure
 within~$C_j$ that Definition~\ref{def:committed_event} does not
@@ -177,22 +177,40 @@ by an external mechanism (Remark~\ref{rem:external_attestation}).
 \begin{remark}[External attestation model]
 \label{rem:external_attestation}
 In practice, the non-ZK-verifiable hypotheses are handled at the
-institutional layer: (a)~the trade environment is filtered so
-only trades satisfying S1's non-degradation (events that are
-not below-sufficiency, per the primitive in
-Section~\ref{sec:assumptions}) are admitted as sacrifice events;
-(b)~the category partition $\mathcal{C}$ is curated so
-cooperative-closure conditions (iii)--(iv) hold structurally;
-(c)~S0 and S4(a) are assumed at the batch level with periodic
+institutional layer in three layers, each with a different
+attestation locus:
+(a)~the trade environment is filtered so only trades satisfying
+S1's non-degradation (events that are not below-sufficiency, per
+the primitive in Section~\ref{sec:assumptions}) are admitted as
+sacrifice events;
+(b)~\emph{public-poset facts} about the category partition
+$\mathcal{C}$---specifically, the cross-component
+poset-independence between distinct partition components $C_j$
+and $C_k$---are established by curating $\mathcal{C}$ to
+satisfy Definition~\ref{def:category_partition}(i);
+(c)~\emph{per-agent} facts that the public partition cannot
+certify, including the genuine-exchange conditions (iii)--(iv)
+of Definition~\ref{def:sacrifice_event} (which quantify over
+the agent-specific retained holdings $H_i \setminus X$),
+require trade-level attestation by the agent or counterparty
+or by a sampled audit of trade records, not by curation of the
+public partition;
+(d)~S0 and S4(a) are assumed at the batch level with periodic
 sampled-audit reconciliation.  One concrete structural
 implementation of the below-sufficiency filter of~(a) via
 multi-dimensional need bundles, polarity-correct benchmarks,
 and downstream-gated weighting is given in the companion
 paper~\citep{lasser2026paper8b}; the present paper's theorems
-hold under any institutional realization of the primitive.  The
-commitment layer is orthogonal: it enforces privacy and
-certifies the objective facts, but does not and cannot certify
-the behavioural and structural assumptions.
+hold under any institutional realization of the primitive.
+Curating $\mathcal{C}$ for cross-component independence is a
+governance choice; certifying that no cooperative or
+subsumption edge spans $X$ and $H_i \setminus X$ for a
+particular agent and trade is a per-event claim and lives at
+layer~(c), not layer~(b).  The commitment layer is orthogonal
+to all four: it enforces privacy and certifies the objectively
+verifiable facts, but does not and cannot certify the
+behavioural, per-agent retained-holdings, or batch-level
+assumptions.
 \end{remark}
 
 \begin{remark}[Handling category-label collisions]
@@ -252,13 +270,13 @@ Part~A requires.
 The Pedersen commitment scheme underlying
 Definition~\ref{def:committed_event} is
 hiding~\citep[Definition~6]{lasser2026exo} by default; the
-accompanying disclosure of $(\Delta\volL(X_n), \catY[_n])$ is an
+accompanying disclosure of $(\Delta\volL(X_n), \catYn{n})$ is an
 \emph{optional} publication choice.  Consider the \emph{hiding
 variant} of the committed-event interface in which each event
 publishes $(\Gamma_n, \pi_n, t_n)$ but does not release the pair
-$(\Delta\volL(X_n), \catY[_n])$ in cleartext; the ZK proof
+$(\Delta\volL(X_n), \catYn{n})$ in cleartext; the ZK proof
 $\pi_n$ is strengthened to additionally attest that
-$\catY[_n] \in \{1, \ldots, m\}$ (a valid partition label).
+$\catYn{n} \in \{1, \ldots, m\}$ (a valid partition label).
 
 Fix a public upper bound $N_{\max}$ on batch size.  Given a batch
 of at most $N_{\max}$ hiding-variant committed events, a rollup
@@ -266,7 +284,7 @@ proof can establish:
 \begin{enumerate}
 \item[(i)] $\sum_{n} \Delta\volL(X_n) \geq B$
   (aggregate bound);
-\item[(ii)] the bundle category labels $\{\catY[_n]\}$ are
+\item[(ii)] the bundle category labels $\{\catYn{n}\}$ are
   pairwise distinct (as a multiset over the $N_{\max}$
   positions, with unused positions filled by a distinguished
   ``null'' label);
@@ -289,7 +307,7 @@ external attestation (Remark~\ref{rem:external_attestation}).
 
 \begin{proof}
 The prover holds the full set of $N$ committed events together
-with their openings $(\Delta\volL(X_n), \catY[_n], r_n)$.  To
+with their openings $(\Delta\volL(X_n), \catYn{n}, r_n)$.  To
 standardize batch size the prover pads with $N_{\max} - N$
 ``null'' events committing to $(0, \mathrm{null})$ with fresh
 randomness.  Padding is homomorphically invisible---the
@@ -312,9 +330,9 @@ sees only a length-$N_{\max}$ vector of commitments).
 
 \emph{Component (ii)---pairwise-distinct non-null labels.}
 The prover commits to the extended label vector
-$(\catY[_1], \ldots, \catY[_{N_{\max}}])$, where positions
+$(\catYn{1}, \ldots, \catYn{N_{\max}})$, where positions
 corresponding to null events hold the null label.  The ZK
-argument shows (a) each non-null $\catY[_n]$ opens to a valid
+argument shows (a) each non-null $\catYn{n}$ opens to a valid
 leaf of the public partition Merkle root $\mathcal{C}$, and (b)
 the multiset of non-null labels contains no duplicates.
 Duplicate-freeness is a standard ZK set-disjointness argument:

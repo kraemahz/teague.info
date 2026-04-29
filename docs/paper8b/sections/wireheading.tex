@@ -140,11 +140,25 @@ $\sum_n \Delta\volL(X_n) > 0$, the Part~A \emph{category-flow}
 concentration statistic $\widetilde\HHI$ is computable from
 public trade data (committed sacrifice events,
 the committed event definition~\citep{lasser2026paper8a}) without access to any
-agent's private state.  Specifically, define
+agent's private state.  The Part~A statistic is built on the
+\emph{aggregate sacrifice mass} $\Delta\volL(X_n)$, not on the
+Part~B per-capability leverage $\volRlower(C_j, T)$ of
+Definition~\ref{def:trade_leverage}; the two coincide only when
+the per-event Part~A bound $\volR(Y_n) \geq \Delta\volL(X_n)$ is
+exactly proportional to the per-category Part~B aggregate, which
+is not generally the case (Part~B requires within-bundle
+poset-independence and the additional decomposition assumptions
+S3 and S5).  $\widetilde\HHI$ is therefore a sacrifice-mass
+concentration statistic that admits the
+wireheading-consistent reading of
+Proposition~\ref{prop:wireheading_hhi} via the same
+Schur-convexity argument applied to a different normalised
+distribution; it is not a public computation of the Part~B
+$\HHI$.  Specifically, define
 \[
   \tilde\lambda_{\mathrm{trade}}(j, T) \;=\;
   \begin{cases}
-    \dfrac{\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)}
+    \dfrac{\sum_{n :\, \catYn{n} = j} \Delta\volL(X_n)}
          {\sum_n \Delta\volL(X_n)}
       & \text{if } \sum_n \Delta\volL(X_n) > 0, \\
     \text{undefined (diagnostic suppressed)}
@@ -171,9 +185,9 @@ Definition~\ref{def:trade_leverage}).
 
 \begin{proof}
 By the committed event definition~\citep{lasser2026paper8a}, every committed
-sacrifice event exposes the pair $(\catY[_n], \Delta\volL(X_n))$
+sacrifice event exposes the pair $(\catYn{n}, \Delta\volL(X_n))$
 in cleartext.  For the category-flow statistic, both the
-numerator $\sum_{n :\, \catY[_n] = j} \Delta\volL(X_n)$ (which
+numerator $\sum_{n :\, \catYn{n} = j} \Delta\volL(X_n)$ (which
 sums only committed fields conditional on the committed category
 label) and the denominator $\sum_n \Delta\volL(X_n)$ are direct
 functions of the revealed-cleartext fields.  No hidden
@@ -197,9 +211,9 @@ $\HHI(\lambda_{\mathrm{trade}})$ built on
 $\volRlower(C_j, T) = \sum_{c \in C_j \cap U} \volRlower(c, T)$
 is \emph{not} third-party computable from the committed-event
 interface of the committed event definition~\citep{lasser2026paper8a}.  The
-committed form reveals only the partition label $\catY[_n]$ and
-attests $Y_n \subseteq C_{\catY[_n]}$; it does not reveal which
-subset of $C_{\catY[_n]}$ was actually acquired, nor the
+committed form reveals only the partition label $\catYn{n}$ and
+attests $Y_n \subseteq C_{\catYn{n}}$; it does not reveal which
+subset of $C_{\catYn{n}}$ was actually acquired, nor the
 per-capability attribution coefficients $\alpha_{n,c}$.
 Computing $\volRlower(c, T) =
 \max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$

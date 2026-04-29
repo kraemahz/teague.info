@@ -32,7 +32,7 @@ filtering the event from the aggregate.
 (Near-Total Collapse Under Unmet Need).}
 Under homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c
 \in \Down(p_N)$ and full sufficiency of all other needs,
-$\volL^{\mathrm{eff}} \leq G(s_N) \cdot W_{\mathrm{down}}(N) +
+$\volL^{\mathrm{eff}} \leq g(s_N) \cdot W_{\mathrm{down}}(N) +
 W_{\mathrm{out}}$.  Collapse limits as $s_N \to 0$ split:
 zero-floor gates ($\alpha_0 = 0$: linear, ReLU, power-law)
 contract downstream weight to zero; positive-floor gates
@@ -45,7 +45,7 @@ W_{\mathrm{down}}$.
 Under the common intervention scale (one unit of $\Delta s_N$
 and one unit of $\Delta w$ have the same cost), the marginal
 return to closing the sufficiency gap on $N$ exceeds the
-marginal return to unit-weight addition whenever $G'(s_N) \cdot
+marginal return to unit-weight addition whenever $g'(s_N) \cdot
 W_{\mathrm{down}}(N) > 1$.  The finite-step form via Taylor
 expansion (Remark~\ref{rem:dominance_scale}) clarifies that
 this is a per-unit-of-intervention comparison, not a claim
@@ -95,7 +95,7 @@ threshold $\HHI_{\mathrm{alarm}}$ is not theorem-derived
 \paragraph{Proposition~\ref{prop:third_party_wireheading}
 (Third-Party Observability of the Part-A variant).}
 The category-flow statistic
-$\tilde\lambda_{\mathrm{trade}}(j,T) = \sum_{n: \catY_n = j}
+$\tilde\lambda_{\mathrm{trade}}(j,T) = \sum_{n: \catYn{n} = j}
 \Delta\volL(X_n) / \sum_n \Delta\volL(X_n)$ is a direct
 function of cleartext-committed fields from the committed
 event definition~\citep{lasser2026paper8a}; no hidden field

@@ -3,27 +3,43 @@
 
 \subsection{What this paper establishes}
 
-\paragraph{Direct $\volR$ measurement is privacy-incompatible.}
+\paragraph{Global $\volR$ measurement is privacy-incompatible.}
 The framework's commitments
 in~\citep{lasser2026exo,lasser2026phase,lasser2026wamura} rule
-out the panopticon-style observation that direct measurement
-would require.  This is a structural finding, not a practical
-limitation.
+out the panopticon-style observation that direct global
+measurement would require.  Within a consented operational
+perimeter, exact direct measurement remains available
+(Appendix~\ref{app:exercise_indicator}); the privacy-incompatibility
+claim is about out-of-perimeter and global measurement, not about
+all direct measurement.  This is a structural finding, not a
+practical limitation.
 
-\paragraph{Revealed sacrifice is a privacy-minimal surrogate.}
+\paragraph{Revealed sacrifice is a privacy-respecting surrogate
+on the observed subset.}
 The sacrifice channel satisfies three formal privacy properties
 (Theorem~\ref{thm:privacy}) plus two institutional preconditions
 (Proposition~\ref{prop:privacy_institutional}), and composes
 with the commitment layer of~\citep{lasser2026exo}
 (Propositions~\ref{prop:commit_preserves}
-and~\ref{prop:zk_aggregation}) to produce a privacy-minimal
-observation mechanism on distinct-category batches.
+and~\ref{prop:zk_aggregation}) to produce an observation
+mechanism on distinct-category batches whose privacy profile is
+characterized by the formal-plus-institutional split above:
+the formal properties are theorem consequences, and the
+``privacy-minimal'' summary phrasing is conditional on the
+institutional preconditions of
+Proposition~\ref{prop:privacy_institutional} holding
+operationally.
 
 \paragraph{The B-to-C gap is characterized by trade data.}
 The aggregate lower bound
-(Theorem~\ref{thm:aggregate_bound}) lower-bounds the exercised
-fraction $\beta$ (equivalently, upper-bounds the B-to-C gap
-$1 - \beta$) on the observed subset, under S0--S2 and S4(a).
+(Theorem~\ref{thm:aggregate_bound}) lower-bounds the
+sacrifice-channel-observable fraction $\betaL$ (equivalently,
+upper-bounds $1 - \betaL$) on the observed subset, under S0--S2
+and S4(a).  Because $\betaL \leq \beta = \volR/\volL$ by
+construction, this also lower-bounds the true exercised fraction
+$\beta$ on the observed subset; the constructed object is
+$\betaL$ and the true $\beta$ is bounded only as a consequence,
+not measured directly.
 The constructed lower bound is non-decreasing in observed
 admissible events: Part~A via sub-batch supremum
 (Proposition~\ref{prop:monotone_part_a}) and Part~B via

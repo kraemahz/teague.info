@@ -117,7 +117,12 @@ used throughout the remainder of this definition and by
 Proposition~\ref{prop:gap_computable}; they are pairwise
 disjoint, union to~$P$, agree with the seeds on all
 individual-capability classifications except where closure
-redistributes poset-connected components, and satisfy both:
+redistributes poset-connected components (priority-extension
+can absorb a seed-residual capability into a higher-priority
+cell when it is poset-connected to a non-residual node;
+Remark~\ref{rem:residual_cell_irreducibility} discusses when
+this occurs and the condition under which the residual cell
+preserves its irreducibility), and satisfy both:
 \begin{enumerate}
 \item[(CC1)] \emph{Cooperative closure.}  For every cooperative
   capability $z \in P$, all participants of $z$ lie in the same
@@ -159,6 +164,40 @@ via M4), combined with $\volRlower(P) = \volRlower(R) +
 \volRlower(C) + 0 + 0$ (dormant and residual cells contribute
 zero $\volRlower$ by definition).
 \end{definition}
+
+\begin{remark}[When the residual cell preserves its
+irreducibility under closure]
+\label{rem:residual_cell_irreducibility}
+The closure-adjusted residual cell~$S$ equals the seed
+$S_0 = \ResS \setminus \Xi$ when $\ResS$ is itself
+\emph{poset-isolated}: no cooperative or subsumption edge
+connects a residual capability to a non-residual one.  Under
+the default priority-extension policy, an edge from $c \in
+\ResS \setminus \Xi$ to a non-residual node $c'$ in $C_0$,
+$D_0$, or $\Xi$ would absorb the entire connected component
+into the higher-priority cell of $c'$ (residual having lowest
+priority); the absorbed mass then registers as
+$\delta_{\mathrm{covered}}$, $\delta_{\mathrm{dormant}}$, or
+$\delta_{\mathrm{restricted}}$ rather than as
+$\delta_{\mathrm{residual}}$.  The
+``residual is structurally irreducible'' interpretation of
+Definition~\ref{def:residual_class} therefore holds for the
+$S$-cell of the decomposition only when~$\ResS$ is
+poset-isolated; when it is not, residual mass migrates to
+neighbouring cells under priority-extension.  Operationally,
+$\ResS$ being poset-isolated is the typical case because the
+residual class characterizes purely-private exercise
+(Definition~\ref{def:residual_class}), which by construction
+does not participate in cooperative or subsumption structure
+with publicly-observable capabilities; verifying isolation is
+nonetheless an explicit residual-class hygiene check.
+Strategies (b) and (c) of
+Remark~\ref{rem:cell_cooperative_closure} preserve residual
+mass by other means: (b) sub-partitions cells by connected
+component, so residual components are accounted for separately;
+(c) sends boundary-crossing mass to a fifth bucket rather than
+absorbing it into a neighbouring cell.
+\end{remark}
 
 \begin{remark}[Achieving poset-boundary closure of the cells]
 \label{rem:cell_cooperative_closure}

@@ -131,16 +131,20 @@ a precise measurement.
 \subsection{Summary of results}
 
 \begin{enumerate}
-\item \textbf{Privacy-minimal observation channel}
+\item \textbf{Privacy-respecting observation channel with
+  formal-plus-institutional privacy split}
   (Section~\ref{sec:sacrifice_model}).
   Revealed-sacrifice observation defines the sacrifice event and
   states six assumptions (S0--S5).  Three formal privacy
   properties are established (Theorem~\ref{thm:privacy}: no
   interior access, discretization, commitment-layer
-  composability) and two institutional preconditions
+  composability); two further properties hold operationally only
+  under named institutional preconditions
   (Proposition~\ref{prop:privacy_institutional}: consent via
-  participation, third-party observability) are documented as
-  deployment-level dependencies.
+  participation, third-party observability).  The
+  ``privacy-minimal'' interpretation is conditional on the
+  institutional preconditions; the formal layer alone establishes
+  P1, P3, P4.
 
 \item \textbf{Aggregate B-to-C Lower Bound}
   (Section~\ref{sec:lower_bound}).

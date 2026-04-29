@@ -218,9 +218,19 @@ For each dimension $d_k$ of a need capability:
   $\mathrm{benchmark}_k = 1 + \alpha_k \cdot
   \max\!\bigl((\mathrm{actual}_k - s_k)/s_k,\, 0\bigr)$,
   where $\alpha_k < 1$ discounts above-sufficiency gains relative
-  to below-sufficiency gains.  This makes closing the sufficiency
-  gap more valuable per unit of improvement than enhancing beyond
-  sufficiency---the correct incentive structure for needs.
+  to below-sufficiency gains \emph{at the margin}: the
+  per-unit-of-improvement contribution near sufficiency is
+  $\alpha_k$ above versus $1/s_k$ below, so closing the
+  sufficiency gap is more valuable per unit of improvement than
+  enhancing beyond sufficiency.  This is a marginal-rate claim,
+  not an absolute-magnitude claim: because the above-sufficiency
+  term is unbounded in $\mathrm{actual}_k$, sufficiently large
+  above-sufficiency gains can dominate the closed-gap benchmark
+  in absolute terms.  Bounding total above-sufficiency
+  contribution requires either a domain-specific cap on
+  $\mathrm{actual}_k/s_k$ or replacing the linear ramp with a
+  saturating function (e.g., $\alpha_k \cdot \min(\cdot, K)$);
+  this paper leaves the cap as an architecture parameter.
 \end{itemize}
 \end{definition}
 
@@ -250,12 +260,12 @@ treat $s_N$ as a scalar.
 The \emph{effective weight} of $c$ is:
 \[
   w^{\mathrm{eff}}(c) \;=\; w(c) \cdot
-  \prod_{N \in \mathcal{N}(c)} G\bigl(s_N(c)\bigr),
+  \prod_{N \in \mathcal{N}(c)} g\bigl(s_N(c)\bigr),
 \]
-where $G : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
-$G(1) = 1$, $G(0) = \alpha_0 \in [0, 1)$ (the gate's
-\emph{floor}), $G$ monotone non-decreasing, and $G$
-right-continuous at $s = 0$ (so $\lim_{s \to 0^+} G(s) =
+where $g : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
+$g(1) = 1$, $g(0) = \alpha_0 \in [0, 1)$ (the gate's
+\emph{floor}), $g$ monotone non-decreasing, and $g$
+right-continuous at $s = 0$ (so $\lim_{s \to 0^+} g(s) =
 \alpha_0$).  A gate with $\alpha_0 = 0$ is called a
 \emph{zero-floor gate}; a gate with $\alpha_0 > 0$ is called a
 \emph{positive-floor gate}.  The four candidate gates of
@@ -266,7 +276,7 @@ positive-floor with $\alpha_0 = \alpha$.
 
 The effective capability volume is:
 \[
-  \volL^{\mathrm{eff}}(G) \;=\; \sum_{c \in P} w^{\mathrm{eff}}(c).
+  \volL^{\mathrm{eff}}(g) \;=\; \sum_{c \in P} w^{\mathrm{eff}}(c).
 \]
 The framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
 $\volL$ once needs have been identified.
@@ -274,14 +284,14 @@ $\volL$ once needs have been identified.
 
 \begin{remark}[Candidate gate functions]
 \label{rem:gate_candidates}
-The choice of $G$ is a design parameter that trades off
+The choice of $g$ is a design parameter that trades off
 smoothness, computational simplicity, and the strength of
 need-dominance.  Four candidates:
 \begin{itemize}
-\item \textbf{Linear:} $G(s) = s$.  Simplest; gentle
+\item \textbf{Linear:} $g(s) = s$.  Simplest; gentle
   need-dominance; $s_N(c) = 0.5$ halves the downstream
   contribution.
-\item \textbf{Leaky-ReLU:} $G(s) = \alpha$ for $s \leq s_0$,
+\item \textbf{Leaky-ReLU:} $g(s) = \alpha$ for $s \leq s_0$,
   then linear ramp from $\alpha$ at $s_0$ to $1$ at $s = 1$.
   Parameters: threshold $s_0 \in [0, 1)$, leak $\alpha \in [0, 1)$.
   Below threshold, downstream capabilities retain a constant
@@ -289,7 +299,7 @@ need-dominance.  Four candidates:
 \item \textbf{ReLU:} Leaky-ReLU with $\alpha = 0$.  Below
   threshold, downstream capabilities are fully suppressed; above,
   linear ramp.  Hardest gate; strongest need-dominance.
-\item \textbf{Power law:} $G(s) = s^\gamma$ for $\gamma \geq 1$.
+\item \textbf{Power law:} $g(s) = s^\gamma$ for $\gamma \geq 1$.
   Smooth everywhere; gradient vanishes at $s = 0$ for $\gamma > 1$,
   giving progressively stronger penalty as the sufficiency gap
   widens.  Single tunable parameter.
@@ -299,15 +309,15 @@ needs with cliff-like failure modes (dehydration, oxygen
 deprivation) warrant ReLU or high-$\gamma$ power law.  Needs with
 graceful degradation (social connection, mild nutritional
 deficit) warrant leaky-ReLU or low-$\gamma$ power law.  The paper
-leaves $G$ as a domain-specific design parameter and states
-subsequent results for any valid $G$.
+leaves $g$ as a domain-specific design parameter and states
+subsequent results for any valid $g$.
 \end{remark}
 
 \begin{proposition}[Near-Total Collapse Under Unmet Need]
 \label{prop:near_total_collapse}
-Let $G$ be any valid gate function
+Let $g$ be any valid gate function
 (Definition~\ref{def:downstream_gate}) with floor $\alpha_0 =
-G(0) \in [0, 1)$, and suppose $s_N(c) \equiv s_N$ for all $c \in
+g(0) \in [0, 1)$, and suppose $s_N(c) \equiv s_N$ for all $c \in
 \Down(p_N)$ (homogeneous sufficiency).  Partition the poset as
 $P = \Down(p_N) \sqcup \overline{\Down(p_N)}$, with weight sums
 $W_{\mathrm{down}} = \sum_{c \in \Down(p_N)} w(c)$ and
@@ -315,13 +325,13 @@ $W_{\mathrm{out}} = \sum_{c \in \overline{\Down(p_N)}} w(c)$, so
 $\volL^{\mathrm{raw}} = W_{\mathrm{down}} + W_{\mathrm{out}}$.
 If the agent is at sufficiency level $s_N < 1$:
 \[
-  \volL^{\mathrm{eff}}(G)
-  \;\leq\; G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
+  \volL^{\mathrm{eff}}(g)
+  \;\leq\; g(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
 
 \medskip\noindent
 \textbf{Collapse limits.}
-As $s_N \to 0$, $G(s_N) \to \alpha_0$ by right-continuity:
+As $s_N \to 0$, $g(s_N) \to \alpha_0$ by right-continuity:
 \begin{itemize}
 \item \emph{Zero-floor gate} ($\alpha_0 = 0$): the downstream
   contribution vanishes, $\volL^{\mathrm{eff}} \to
@@ -350,20 +360,20 @@ choice governed by the gate's floor parameter.
 \begin{proof}
 Split the sum over $P$ by membership in $\Down(p_N)$.  For
 $c \in \Down(p_N)$, the effective weight is
-$w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N) \cdot \prod_{N' \in
-\mathcal{N}(c),\, N' \neq N} G(s_{N'}(c)) \leq w(c) \cdot G(s_N)$
+$w^{\mathrm{eff}}(c) = w(c) \cdot g(s_N) \cdot \prod_{N' \in
+\mathcal{N}(c),\, N' \neq N} g(s_{N'}(c)) \leq w(c) \cdot g(s_N)$
 since each additional gate factor is $\leq 1$.  For
 $c \in \overline{\Down(p_N)}$, $N \notin \mathcal{N}(c)$, so
 $w^{\mathrm{eff}}(c) = w(c) \cdot \prod_{N' \in \mathcal{N}(c)}
-G(s_{N'}(c)) \leq w(c)$.  Summing the two cases:
+g(s_{N'}(c)) \leq w(c)$.  Summing the two cases:
 \[
   \volL^{\mathrm{eff}}
-  \leq G(s_N) \cdot \!\!\sum_{c \in \Down(p_N)}\!\! w(c)
+  \leq g(s_N) \cdot \!\!\sum_{c \in \Down(p_N)}\!\! w(c)
        \;+\; \!\!\sum_{c \in \overline{\Down(p_N)}}\!\! w(c)
-  = G(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
+  = g(s_N) \cdot W_{\mathrm{down}} + W_{\mathrm{out}}.
 \]
-Right-continuity of $G$ at $0$ gives $\lim_{s_N \to 0^+} G(s_N)
-= G(0) = \alpha_0$, so the downstream term tends to $\alpha_0
+Right-continuity of $g$ at $0$ gives $\lim_{s_N \to 0^+} g(s_N)
+= g(0) = \alpha_0$, so the downstream term tends to $\alpha_0
 W_{\mathrm{down}}$: zero for zero-floor gates, the floor value
 for positive-floor gates.
 \end{proof}
@@ -395,18 +405,18 @@ ratio.
 Assume homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c \in
 \Down(p_N)$ and that all other needs are at sufficiency
 ($s_{N'}(c) = 1$ for $N' \neq N$), so that $s_N$ is a scalar.
-For any valid gate function $G$ differentiable at $s_N$ with
-$G'(s_N) > 0$, the two relevant partial derivatives of
+For any valid gate function $g$ differentiable at $s_N$ with
+$g'(s_N) > 0$, the two relevant partial derivatives of
 $\volL^{\mathrm{eff}}$ are
 \[
   \frac{\partial \volL^{\mathrm{eff}}}{\partial s_N}
-  \;=\; G'(s_N) \cdot W_{\mathrm{down}}(N),
+  \;=\; g'(s_N) \cdot W_{\mathrm{down}}(N),
   \qquad
   \frac{\partial \volL^{\mathrm{eff}}}{\partial w(c')}
   \;=\;
   \begin{cases}
     1 & c' \notin \Down(p_N), \\
-    G(s_N) \leq 1 & c' \in \Down(p_N),
+    g(s_N) \leq 1 & c' \in \Down(p_N),
   \end{cases}
 \]
 where $W_{\mathrm{down}}(N) = \sum_{c \in \Down(p_N)} w(c)$.
@@ -421,14 +431,14 @@ intervention scale, the marginal return to closing the
 sufficiency gap on $N$ exceeds the marginal return to unit-weight
 addition on any single capability whenever
 \[
-  G'(s_N) \cdot W_{\mathrm{down}}(N) \;>\; 1.
+  g'(s_N) \cdot W_{\mathrm{down}}(N) \;>\; 1.
 \]
-For linear gates ($G(s) = s$), this reduces to
+For linear gates ($g(s) = s$), this reduces to
 $W_{\mathrm{down}}(N) > 1$.  For leaky-ReLU or ReLU gates, the
 condition holds at any $s_N$ in the ramp region provided
 $W_{\mathrm{down}}(N)$ exceeds the reciprocal of the local
-slope.  For power-law gates $G(s) = s^\gamma$ with $\gamma > 1$,
-the condition fails near $s_N = 0$ (where $G'(s_N)$ is small)
+slope.  For power-law gates $g(s) = s^\gamma$ with $\gamma > 1$,
+the condition fails near $s_N = 0$ (where $g'(s_N)$ is small)
 even for large downstream cones---an intentional feature of
 gates that weight severity of unmet need over its breadth.
 \end{proposition}
@@ -436,17 +446,17 @@ gates that weight severity of unmet need over its breadth.
 \begin{proof}
 Under the stated hypothesis, every gate product collapses: for
 $c \in \Down(p_N)$, the product $\prod_{N' \in \mathcal{N}(c)}
-G(s_{N'}(c))$ equals $G(s_N) \cdot \prod_{N' \neq N} G(1) =
-G(s_N)$.  Thus
-$w^{\mathrm{eff}}(c) = w(c) \cdot G(s_N)$ for
+g(s_{N'}(c))$ equals $g(s_N) \cdot \prod_{N' \neq N} g(1) =
+g(s_N)$.  Thus
+$w^{\mathrm{eff}}(c) = w(c) \cdot g(s_N)$ for
 $c \in \Down(p_N)$ and $w^{\mathrm{eff}}(c) = w(c)$ otherwise.
 Summing gives
-$\volL^{\mathrm{eff}} = G(s_N) \cdot W_{\mathrm{down}}(N) +
+$\volL^{\mathrm{eff}} = g(s_N) \cdot W_{\mathrm{down}}(N) +
 W_{\mathrm{out}}(N)$.
 Only the first term depends on $s_N$, so differentiation yields
 $\partial \volL^{\mathrm{eff}}/\partial s_N =
-G'(s_N) \cdot W_{\mathrm{down}}(N)$.  Differentiating in
-$w(c')$: the capability $c'$'s gated weight is $G(s_N) \cdot
+g'(s_N) \cdot W_{\mathrm{down}}(N)$.  Differentiating in
+$w(c')$: the capability $c'$'s gated weight is $g(s_N) \cdot
 w(c')$ if $c' \in \Down(p_N)$ and $w(c')$ otherwise, giving the
 stated partial derivatives.  Comparing the two partials on the
 common unit-step scale yields the dominance condition.
@@ -459,18 +469,18 @@ under the convention that one unit of $\Delta s_N$ and one unit
 of $\Delta w$ have the same intervention cost.  Its finite-step
 form is the Taylor expansion: a sufficiency increment
 $\Delta s_N = \delta$ produces gain
-$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) =
-G'(s_N) W_{\mathrm{down}}(N) \cdot \delta + O(\delta^2)$, while
+$[g(s_N + \delta) - g(s_N)] \cdot W_{\mathrm{down}}(N) =
+g'(s_N) W_{\mathrm{down}}(N) \cdot \delta + O(\delta^2)$, while
 a weight increment $\Delta w(c') = \delta$ on a single
-capability produces gain $\delta \cdot \max(1, G(s_N)) \leq
+capability produces gain $\delta \cdot \max(1, g(s_N)) \leq
 \delta$.  For small enough $\delta$, the marginal condition
-$G'(s_N) W_{\mathrm{down}}(N) > 1$ implies the sufficiency
+$g'(s_N) W_{\mathrm{down}}(N) > 1$ implies the sufficiency
 increment strictly dominates; a finite $\delta$ for which
-$[G(s_N + \delta) - G(s_N)] \cdot W_{\mathrm{down}}(N) > \delta$
+$[g(s_N + \delta) - g(s_N)] \cdot W_{\mathrm{down}}(N) > \delta$
 is the exact condition.  The condition
-$G'(s_N) W_{\mathrm{down}}(N) > 1$ is \emph{not} a claim that a
+$g'(s_N) W_{\mathrm{down}}(N) > 1$ is \emph{not} a claim that a
 finite $\Delta s_N$ of arbitrary size beats a finite unit of
-weight: e.g., with $G(s) = s$ and $W_{\mathrm{down}} = 10$, a
+weight: e.g., with $g(s) = s$ and $W_{\mathrm{down}} = 10$, a
 $\Delta s_N = 0.01$ gain of $0.1$ does not exceed a
 unit-weight gain of $1$ in absolute terms---only in
 per-unit-of-intervention terms (the sufficiency increment
@@ -486,7 +496,7 @@ $\mathrm{Down}(p_N)$ (weight $1$ each) and $3$ capabilities
 outside the cone (weight $1$ each), so
 $\volL^{\mathrm{raw}} = 13$.  At homogeneous sufficiency level
 $s_N(c) \equiv s$ for all $c \in \Down(p_N)$,
-$\volL^{\mathrm{eff}}(s) = 3 + 10 \cdot G(s)$.  The following
+$\volL^{\mathrm{eff}}(s) = 3 + 10 \cdot g(s)$.  The following
 table compares effective volume as a fraction of
 $\volL^{\mathrm{raw}}$ for the four candidate gates (Leaky-ReLU
 with $\alpha = 0.1$, $s_0 = 0.8$; ReLU with $s_0 = 0.8$; power
