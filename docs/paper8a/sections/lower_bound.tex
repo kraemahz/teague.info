@@ -39,14 +39,14 @@ this sub-poset:
 \medskip\noindent
 \textbf{Window-integrated form.}
 For a trade window $W = [t_0, t_0 + T]$
-(Definition~\ref{def:trade_window}), the \emph{window-integrated
+(Definition~\ref{def:trade_window}), the \emph{window-active
 exercised sub-poset} is the union of the instantaneous
 exercised sub-posets across the window,
 \[
   P^{\mathrm{ex}}_W \;=\; \bigcup_{t \in W}
   P^{\mathrm{ex}}_t,
 \]
-and the corresponding \emph{window-integrated realized
+and the corresponding \emph{window-active realized
 capability volume} is
 \[
   \volR^{[W]}(S) \;=\; \volL\bigl(S \cap P^{\mathrm{ex}}_W\bigr)
@@ -61,9 +61,30 @@ axiom-analogue analysis of
 Section~\ref{sec:axiom_inheritance} applies to each.
 
 \medskip\noindent
+\textbf{Terminology: ``window-active,'' not a time integral.}
+We use the term \emph{window-active} for $\volR^{[W]}$ because
+the operation is the union over time
+$P^{\mathrm{ex}}_W = \bigcup_{t \in W} P^{\mathrm{ex}}_t$, not
+a duration- or frequency-weighted time integral.  A capability
+exercised once for an instant during $W$ contributes the same
+$\volL$ weight to $\volR^{[W]}$ as a capability exercised
+continuously throughout $W$; the diagnostic semantics is
+``did the capability witness any exercise in this window?''
+not ``how much exercise per unit time accumulated?''
+The bracket notation $[W]$ denotes ``indexed by $W$,'' not
+``integrated over $W$''; we keep the bracket for symbol
+continuity with the broader poset-measurement
+literature~\citep{lasser2026scm} but spell out the witness
+semantics here to avoid the dimensional misreading that
+``integrated'' would invite.  Where duration- or
+frequency-weighted exercise is needed (e.g., to distinguish
+intermittent from persistent exercise), an explicit weighted
+integral is required, which is outside this paper's scope.
+
+\medskip\noindent
 \textbf{Convention.}
 Unless otherwise noted, $\volR$ without a time subscript refers
-to the window-integrated form $\volR^{[W]}$ for the ambient
+to the window-active form $\volR^{[W]}$ for the ambient
 trade window $W$.  This is the quantity the sacrifice channel
 (Theorem~\ref{thm:aggregate_bound}) actually bounds: a sacrifice
 event at $t_n$ records an acquisition, not an instantaneous
@@ -72,7 +93,7 @@ against $\volR^{[W]}$---which captures any exercise of $Y_n$
 anywhere in $W$---rather than against the instantaneous
 $\volR_{t}$ at a particular evaluation time.  Assumption~S0
 (Section~\ref{sec:assumptions}) is correspondingly stated
-directly in window-integrated form:
+directly in window-active form:
 $\Uin{n}(Y_n) \leq \volR^{[W]}(Y_n)$.
 \end{definition}
 
@@ -85,7 +106,7 @@ condition for every capability at every relevant time, which the
 Introduction rejects as intractable and privacy-incompatible at
 scale.  The revealed-sacrifice observation channel does not
 observe $P^{\mathrm{ex}}_t$ or $P^{\mathrm{ex}}_W$ directly; it
-produces a lower bound $\volRlower$ on the window-integrated
+produces a lower bound $\volRlower$ on the window-active
 $\volR^{[W]}$ restricted to an observed sub-space
 $U \subseteq P$.  Inside the observation perimeter $O$ of
 Appendix~\ref{app:exercise_indicator}, direct evaluation of
@@ -182,7 +203,7 @@ revealed-sacrifice events
 $\{(i_n, X_n, Y_n, t_n)\}_{n=1}^N$ with $t_n \in W$, whose
 bundles jointly cover a subset $U$ of unbenchmarked
 capability-space.  All $\volR$ quantities below refer to the
-\emph{window-integrated} form $\volR^{[W]}$
+\emph{window-active} form $\volR^{[W]}$
 (Definition~\ref{def:volR}): the theorem bounds the realized
 volume accumulated during $W$, not the instantaneous
 $\volR_t$ at any single evaluation time.
@@ -198,7 +219,7 @@ For $N$ events with \emph{pairwise poset-independent} bundles:
 \[
   \volR^{U,[W]} \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
 \]
-where $\volR^{U,[W]}$ is the window-integrated realized
+where $\volR^{U,[W]}$ is the window-active realized
 capability volume restricted to the unbenchmarked subset $U$
 covered by the union of bundles.  Part~A is the paper's
 substantive result: the $\volL$-to-$\volR$ lower bound per unit
@@ -238,7 +259,7 @@ gives $\Uin{n}\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
 Lemma~\ref{lem:cancellation} under S4(a) and the genuine-
 exchange conditions of Definition~\ref{def:sacrifice_event},
 this reduces to $\Uin{n}(Y_n) \geq \Uin{n}(X_n)$.  By S0
-(valuation-bounded-by-exercise, stated in window-integrated
+(valuation-bounded-by-exercise, stated in window-active
 form), $\Uin{n}(Y_n) \leq \volR^{[W]}(Y_n)$.  By S2
 (benchmark grounding), $\Uin{n}(X_n) \geq \Delta\volL(X_n)$.
 Chaining:
@@ -247,7 +268,7 @@ Chaining:
   \;\geq\; \Uin{n}(X_n)
   \;\geq\; \Delta\volL(X_n),
 \]
-which is the per-event bound.  The window-integrated form is
+which is the per-event bound.  The window-active form is
 essential: the sacrifice channel observes acquisition of $Y_n$
 at $t_n$, not exercise at any particular instant.  S0's
 consequent is therefore stated as a bound on

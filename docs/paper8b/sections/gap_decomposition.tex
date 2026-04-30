@@ -8,9 +8,16 @@
 The B-to-C evidence alarm fires when the lower-bound B-to-C
 ratio drops below a threshold:
 \[
-  \mathrm{ALARM}(T) \;=\; \betaL(G, T) \;<\; \betaalarm,
+  \mathrm{ALARM}(T) \;=\; \betaL(P, T) \;<\; \betaalarm,
 \]
-where $\betaalarm \in (0, 1)$ is configurable.  The alarm is an
+where $\betaL(P, T)$ is the global conservative ratio of the
+companion paper~\citep{lasser2026paper8a} on the full
+capability poset $P$ (numerator $\volRlower(U, T)$ extended by
+zero outside the observed subset $U$, denominator $\volL(P)$),
+and $\betaalarm \in (0, 1)$ is configurable.  The
+gap-decomposition identity below is stated against this same
+denominator $\volL(P)$; the alarm and decomposition use a
+common denominator throughout.  The alarm is an
 \emph{evidence alarm}, not a proxy-failure alarm directly: when
 $\betaL$ is low, the sacrifice channel shows little evidence of
 $\volR$-content proportional to $\volL$, but this does not by
@@ -33,11 +40,25 @@ $\delta$ term dominates the gap $1 - \betaL$:
   dominates the gap:} on the covered cell, observed trade
   evidence is small relative to that cell's $\volL$-weight
   ($\delta_{\mathrm{covered}} = [\volL(C) - \volRlower(C)] /
-  \volL(G)$ is large, indicating
-  $\volRlower(C) \ll \volL(C)$).  This is the canonical
-  proxy-failure signature: capabilities the sacrifice channel
-  \emph{can} reach are present in $\volL$ but registering little
-  exercise evidence.
+  \volL(P)$ is large, indicating
+  $\volRlower(C) \ll \volL(C)$).  This is the
+  proxy-failure-\emph{candidate} signature: capabilities the
+  sacrifice channel can reach are present in $\volL$ but
+  registering little exercise evidence.  Reaching a
+  proxy-failure conclusion from this signature additionally
+  requires ruling out the lower-bound's slack as the
+  explanation: low $\volRlower(C)$ relative to $\volL(C)$ can
+  reflect (i)~genuine low exercise (the proxy-failure
+  reading), (ii)~Part-A supremum or Part-B max-attribution
+  loose against the true $\volR(C)$ (the lower-bound is
+  conservative by construction, and its conservatism varies
+  with bundle structure and the $\alpha_{n,c}$ defaults),
+  (iii)~admissibility filtering rejecting events that would
+  otherwise contribute to $\volRlower(C)$, or (iv)~sparse
+  observation in $W$.  The covered-deficit signature is
+  necessary but not sufficient for a proxy-failure
+  determination; institutional review of the explanation
+  is required before escalation.
 \item \textbf{Alarm fires and $\delta_{\mathrm{residual}}$ or
   $\delta_{\mathrm{restricted}}$ dominates:} the low $\betaL$
   reflects structural invisibility or policy restriction, not
@@ -45,24 +66,33 @@ $\delta$ term dominates the gap $1 - \betaL$:
   cases; the alarm is firing on what the sacrifice channel cannot
   reach, not on degraded exercise on what it can reach.
 \end{itemize}
-The alarm has no false positives in the narrow sense---low
-$\betaL$ is real and the sacrifice channel genuinely sees little
-evidence---but it has false positives in the proxy-failure
-sense, which is why the gap decomposition below is necessary to
-distinguish the regimes.  The converse failure mode---true
-$\volR$ high but the sacrifice channel sees little
-evidence---produces low $\betaL$ and would also fire the alarm,
-making the alarm a false-positive proxy-failure signal in that
-regime as well; this is the structural cost of
-privacy-respecting observation, and the gap decomposition's
-$\delta_{\mathrm{residual}}$ and $\delta_{\mathrm{restricted}}$
-cells are precisely the diagnostic that distinguishes
-``low-evidence-but-true-low-exercise'' from
-``low-evidence-but-channel-blind.''  The alarm has no
-\emph{false negative} in the conventional sense ($\betaL$ is
-computed from observed events; the alarm fires deterministically
-whenever the threshold is crossed), only the proxy-failure
-false-positive modes flagged here.
+As a diagnostic for genuine
+$\volR$-degradation, the alarm has both
+false-positive and false-negative regimes:
+\begin{itemize}
+\item \emph{False positives} (alarm fires, no proxy failure)
+  arise when low $\betaL$ reflects channel-blindness (high
+  $\delta_{\mathrm{residual}}$ or $\delta_{\mathrm{restricted}}$),
+  bound looseness (Part-A's supremum or Part-B's
+  max-attribution falling well below the truth on covered
+  capabilities), admissibility-filter exclusions, or sparse
+  observation rather than degraded exercise.  The gap
+  decomposition's cell-attribution is the diagnostic that
+  distinguishes these from genuine proxy failure.
+\item \emph{False negatives} (alarm does not fire, but
+  proxy-failure pathology is present) arise when wireheading
+  or other pathologies produce high $\volRlower$ on
+  loop-driver categories without depressing $\betaL$ below the
+  threshold; the wireheading-consistent concentration signal
+  of Section~\ref{sec:wireheading} is the diagnostic
+  complementing $\betaL$ for these cases.  Pathologies that
+  neither lower $\betaL$ nor concentrate observed flow are
+  outside the joint signal's reach.
+\end{itemize}
+Both regimes are structural costs of privacy-respecting
+observation; the multi-diagnostic combination
+(Proposition~\ref{prop:combined_diagnostic}) is what reduces
+their individual blind spots.
 \end{remark}
 
 \subsection{Diagnostic decomposition}
@@ -165,14 +195,14 @@ poset-boundary closure in practice.
 The $\delta$ terms are:
 \begin{align*}
   \delta_{\mathrm{restricted}} &= [\volL(R) -
-    \volRlower(R)] \;/\; \volL(G), \\
+    \volRlower(R)] \;/\; \volL(P), \\
   \delta_{\mathrm{covered}} &= [\volL(C) -
-    \volRlower(C)] \;/\; \volL(G), \\
-  \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(G), \\
-  \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(G).
+    \volRlower(C)] \;/\; \volL(P), \\
+  \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(P), \\
+  \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(P).
 \end{align*}
 Under poset-boundary closure, the identity $1 - \betaL = \sum
-\delta$ follows from $\volL(G) = \volL(R) + \volL(C) + \volL(D)
+\delta$ follows from $\volL(P) = \volL(R) + \volL(C) + \volL(D)
 + \volL(S)$ (poset-boundary closure + set-disjoint union is $P$,
 via M4), combined with $\volRlower(P) = \volRlower(R) +
 \volRlower(C) + 0 + 0$ (dormant and residual cells contribute
@@ -288,14 +318,19 @@ poset-independence per the event-local bundle decomposition~\citep{lasser2026pap
 Remark~\ref{rem:cell_cooperative_closure}, with strategy~(a)
 (priority-extension to cooperatives) as the default,
 the four-term gap decomposition is computable in time
-$O(|P| + E + M)$, where $E$ is the number of observed
-(capability, event) membership records and $M = |\mathcal{M}|$
-is the total size of the poset structure (cooperative
-hyperedges plus subsumption edges).  The $O(|P|)$ term is
-per-individual-capability classification; the $O(E)$ term is
-one-pass aggregation over bundle-incidence records; the $O(M)$
-term is the closure-policy pass, which traverses cooperative
-and subsumption edges jointly via (amortized) union-find.
+$O\bigl(|P| + E + M \cdot \alpha(M)\bigr)$, where $E$ is the
+number of observed (capability, event) membership records,
+$M = |\mathcal{M}|$ is the total size of the poset structure
+(cooperative hyperedges plus subsumption edges), and
+$\alpha(\cdot)$ is the inverse Ackermann function from the
+amortized analysis of union-find.  Since $\alpha(M)$ is
+$\leq 5$ for any $M$ realizable in physical computation, this
+is near-linear $\widetilde{O}(|P| + E + M)$ for practical
+purposes.  The $O(|P|)$ term is per-individual-capability
+classification; the $O(E)$ term is one-pass aggregation over
+bundle-incidence records; the $O(M \cdot \alpha(M))$ term is
+the closure-policy pass, which traverses cooperative and
+subsumption edges jointly via amortized union-find.
 No structural counterfactual computation is required (a
 direct-measurement approach would require $O(|P|^2)$
 counterfactual queries).

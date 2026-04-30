@@ -289,28 +289,47 @@ hiding~\citep[Definition~6]{lasser2026exo} by default; the
 accompanying disclosure of $(\Delta\volL(X_n), \catYn{n})$ is an
 \emph{optional} publication choice.  Consider the \emph{hiding
 variant} of the committed-event interface in which each event
-publishes $(\Gamma_n, \pi_n, t_n)$ but does not release the pair
-$(\Delta\volL(X_n), \catYn{n})$ in cleartext; the ZK proof
-$\pi_n$ is strengthened to additionally attest that
-$\catYn{n} \in \{1, \ldots, m\}$ (a valid partition label).
+$n$ publishes a pair of separate Pedersen commitments
+$(\Gamma^{\Delta}_n, \Gamma^{\mathrm{cat}}_n)$ to
+$\Delta\volL(X_n)$ and to $\catYn{n}$ respectively, together
+with a rollup-stage tuple-binding proof linking the two
+commitments to the same event~$n$, and the rollup-stage proof
+$\pi$ described below.  Per-event timestamps $t_n$ are
+\emph{not} published individually; the rollup publishes only
+the aggregate window $W = [t_0, t_0 + T]$ within which all
+events fall.  (Publishing per-event timestamps would leak the
+true batch size $N$ via a count of timestamp tuples; the
+hiding variant therefore aggregates timestamps to the window
+level.)
 
 Fix a public upper bound $N_{\max}$ on batch size.  Given a batch
 of at most $N_{\max}$ hiding-variant committed events, a rollup
-proof can establish:
+proof $\pi$ can establish:
 \begin{enumerate}
 \item[(i)] $\sum_{n} \Delta\volL(X_n) \geq B$
-  (aggregate bound);
+  (aggregate bound on magnitudes alone, using the homomorphism
+  on the magnitude commitments $\{\Gamma^{\Delta}_n\}$);
 \item[(ii)] the \emph{non-null} bundle category labels
-  $\{\catYn{n} : \catYn{n} \neq \mathrm{null}\}$ are
-  pairwise distinct (i.e., among the $N \leq N_{\max}$ real
-  events, no two share a category label; the $N_{\max} - N$
-  null-padded positions are excluded from the
-  pairwise-distinct check, so multiple null entries do not
-  violate the condition);
+  $\{\catYn{n} : \catYn{n} \neq \mathrm{null}\}$ committed by
+  $\{\Gamma^{\mathrm{cat}}_n\}$ are pairwise distinct (i.e.,
+  among the $N \leq N_{\max}$ real events, no two share a
+  category label; the $N_{\max} - N$ null-padded positions are
+  excluded from the pairwise-distinct check, so multiple null
+  entries do not violate the condition);
+\item[(iii)] each $\Gamma^{\mathrm{cat}}_n$ commits to a label
+  in the public partition $\mathcal{C}$ (Merkle membership),
+  and is bound to the same event~$n$ as $\Gamma^{\Delta}_n$
+  via the tuple-binding proof;
 \end{enumerate}
 for a public bound $B$, without revealing the individual
 $\Delta\volL(X_n)$, the specific category labels, or the true
-batch size $N \leq N_{\max}$.
+batch size $N \leq N_{\max}$.  Separating the two commitments
+is what isolates the magnitude sum from the label-vector
+constraint: the homomorphic product
+$\prod_n \Gamma^{\Delta}_n$ binds only to
+$\sum_n \Delta\volL(X_n)$, and the label-vector proof on
+$\{\Gamma^{\mathrm{cat}}_n\}$ operates on a disjoint commitment
+set.
 
 By Definition~\ref{def:category_partition}, distinct category
 labels correspond to poset-independent partition components, so
@@ -326,31 +345,40 @@ external attestation (Remark~\ref{rem:external_attestation}).
 
 \begin{proof}
 The prover holds the full set of $N$ committed events together
-with their openings $(\Delta\volL(X_n), \catYn{n}, r_n)$.  To
-standardize batch size the prover pads with $N_{\max} - N$
-``null'' events committing to $(0, \mathrm{null})$ with fresh
-randomness.  Padding is homomorphically invisible---the
-contribution to the aggregate sum is zero and the null label is
-distinguished from all partition components---so the extended
-batch has the same aggregate and the same non-null category
-multiset.
+with their openings $(\Delta\volL(X_n), \catYn{n}, r^{\Delta}_n,
+r^{\mathrm{cat}}_n)$.  To standardize batch size the prover
+pads with $N_{\max} - N$ ``null'' events for which the magnitude
+commitment $\Gamma^{\Delta}_n$ commits to $0$ and the category
+commitment $\Gamma^{\mathrm{cat}}_n$ commits to the
+distinguished null label, both with fresh randomness.  Padding
+is homomorphically invisible on the magnitude side---null
+events contribute $0$ to the magnitude sum---and the null
+label is excluded from the non-null pairwise-distinct check on
+the category side.
 
-\emph{Component (i)---range proof on the aggregate sum.}
+\emph{Component (i)---range proof on the aggregate magnitude
+sum.}
 Using a standard Pedersen commitment range
 proof~\citep[Definition~7]{lasser2026exo}, the prover
 demonstrates
-$\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$.  The summation
-commitment is the product $\prod_n \Gamma_n$, which binds to the
-aggregate by the additive-homomorphic property of $\Commit$.
-Null events contribute $0$ so the sum equals
-$\sum_{n=1}^N \Delta\volL(X_n)$.  The proof reveals neither the
-individual $\Delta\volL(X_n)$ nor the true $N$ (the verifier
-sees only a length-$N_{\max}$ vector of commitments).
+$\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$.  The
+magnitude-summation commitment is the product
+$\prod_n \Gamma^{\Delta}_n$, which binds to
+$\sum_n \Delta\volL(X_n)$ by the additive-homomorphic property
+of $\Commit$ on the magnitude commitments.  Because
+$\Gamma^{\Delta}_n$ is committed independently of
+$\Gamma^{\mathrm{cat}}_n$, the homomorphic product does not
+mix magnitudes with category labels.  Null events contribute
+$0$ so the sum equals $\sum_{n=1}^N \Delta\volL(X_n)$.  The
+proof reveals neither the individual $\Delta\volL(X_n)$ nor
+the true $N$ (the verifier sees only a length-$N_{\max}$
+vector of magnitude commitments).
 
 \emph{Component (ii)---pairwise-distinct non-null labels.}
-The prover commits to the extended label vector
-$(\catYn{1}, \ldots, \catYn{N_{\max}})$, where positions
-corresponding to null events hold the null label.  The ZK
+The prover operates on the existing category commitments
+$\{\Gamma^{\mathrm{cat}}_n\}_{n=1}^{N_{\max}}$ (no new commitment
+to a separate label vector is needed; the rollup binds to the
+already-committed $\Gamma^{\mathrm{cat}}_n$ values).  The ZK
 argument shows (a) each non-null $\catYn{n}$ opens to a valid
 leaf of the public partition Merkle root $\mathcal{C}$, and (b)
 the multiset of non-null labels contains no duplicates.
@@ -359,6 +387,14 @@ commit to a sorted copy, prove strict-monotone ordering
 among non-null elements, and prove the permutation relation to
 the unsorted commitments via a shuffle
 argument~\citep[Definition~7]{lasser2026exo}.
+
+\emph{Component (iii)---tuple binding.}
+For each~$n$, a tuple-binding proof links $\Gamma^{\Delta}_n$
+and $\Gamma^{\mathrm{cat}}_n$ to the same underlying event,
+preventing label-magnitude reshuffling across events.  Standard
+Pedersen-commitment-based tuple-binding suffices: the prover
+commits to a sequencing tag and proves both commitments share
+the tag.
 
 \emph{Formula-input certification.}
 By Definition~\ref{def:category_partition}(i), pairwise-distinct

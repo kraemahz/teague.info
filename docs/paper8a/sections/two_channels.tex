@@ -14,14 +14,17 @@ specific non-fungibility residuals.
 \begin{definition}[Money-Sacrifice Event]
 \label{def:money_sacrifice}
 A money-sacrifice event is a revealed-sacrifice event
-$(i, X, Y, t)$ where the benchmarked sacrifice $X$ is purchasing
-power: agent~$i$ pays a price $p$ for an unbenchmarked bundle $Y$.
+$(i, X, Y, t)$ where the benchmarked sacrifice $X = X(p)$ is the
+purchasing-power capability bundle corresponding to surrendering
+price~$p$: agent~$i$ pays $p$ for an unbenchmarked bundle $Y$.
 The signal is:
 \[
-  \volRlower(Y) \;\geq\; \Delta\volL(p),
+  \volRlower(Y) \;\geq\; \Delta\volL\bigl(X(p)\bigr),
 \]
-where $\Delta\volL(p)$ is the $\volL$ contribution of the
-purchasing power surrendered.
+where $X(p)$ denotes the purchasing-power capability bundle of
+magnitude~$p$ and $\Delta\volL(X(p))$ is the $\volL$ contribution
+of the surrendered bundle (computed via the public benchmark
+function on purchasing power).
 \end{definition}
 
 \noindent\textbf{Properties of the money channel:}
@@ -45,15 +48,20 @@ purchasing power surrendered.
 \begin{definition}[Time-Sacrifice Event]
 \label{def:time_sacrifice}
 A time-sacrifice event is a revealed-sacrifice event
-$(i, X, Y, t)$ where the benchmarked sacrifice $X$ is the agent's
-outside-option labour hours, valued at market wage rate $r_i$.
-Agent~$i$ foregoes $h$ hours of wage-earning time (wage income
-$r_i \cdot h$ at market rate $r_i$) to engage in an
-unbenchmarked activity (volunteering, parenting, craft practice,
+$(i, X, Y, t)$ where the benchmarked sacrifice
+$X = X(r_i \cdot h)$ is the purchasing-power-equivalent bundle
+of foregone wage income $r_i \cdot h$, with $r_i$ the agent's
+market wage rate and $h$ the foregone hours.  Agent~$i$ foregoes
+$h$ hours of wage-earning time to engage in an unbenchmarked
+activity (volunteering, parenting, craft practice,
 relationship-building, contemplation).  The signal is:
 \[
-  \volRlower(Y) \;\geq\; \Delta\volL(r_i \cdot h).
+  \volRlower(Y) \;\geq\; \Delta\volL\bigl(X(r_i \cdot h)\bigr),
 \]
+where $X(r_i \cdot h)$ is the purchasing-power-equivalent
+bundle of magnitude $r_i \cdot h$ (so the time channel reduces
+to a money-channel evaluation through the wage-rate
+identification).
 \end{definition}
 
 \noindent\textbf{Properties of the time channel:}

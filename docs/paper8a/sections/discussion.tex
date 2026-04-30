@@ -32,15 +32,17 @@ operationally.
 
 \paragraph{The B-to-C gap is partially constrained by trade data.}
 The aggregate lower bound
-(Theorem~\ref{thm:aggregate_bound}) lower-bounds the
-sacrifice-channel-observable fraction $\betaL$ (equivalently,
-upper-bounds $1 - \betaL$) on the observed subset, under
-S0--S2, S4(a), and the genuine-exchange conditions of
-Definition~\ref{def:sacrifice_event}.  Because
-$\betaL \leq \beta = \volR/\volL$ by construction, this also
-lower-bounds the true exercised fraction $\beta$ on the observed
-subset; the constructed object is $\betaL$ and the true $\beta$
-is bounded only as a consequence, not measured directly.  The
+(Theorem~\ref{thm:aggregate_bound}) constructs the
+sacrifice-channel ratio $\betaL = \volRlower / \volL$, which is
+itself a lower bound on the true exercised fraction
+$\beta = \volR/\volL$ (since $\volRlower \leq \volR$ by
+construction).  Equivalently, $1 - \betaL \geq 1 - \beta$
+upper-bounds the true B-to-C gap from above.  Both inequalities
+hold on the observed subset under S0--S2, S4(a), and the
+genuine-exchange conditions of
+Definition~\ref{def:sacrifice_event}.  $\betaL$ is the object
+the framework computes; $\beta$ is the latent quantity bounded
+indirectly through it.  The
 lower bound is silent on capabilities outside the observed
 subset and on the residual class
 of~\citep{lasser2026paper8b}; it does not characterize the
@@ -55,12 +57,18 @@ per-capability max-attribution
 \paragraph{Two sacrifice channels, substitutable with residuals.}
 The money and time channels are substitutable via cooperative
 markets (employment and hiring) and triangulate the same
-underlying sacrifice substrate.  The joint aggregate weakly
-dominates either channel alone unconditionally; strict
-domination obtains at the non-fungibility residuals
-(agent-specific time, capital-concentrated access) when the
-trade window contains an event in the relevant residual
-category, per Corollary~\ref{cor:joint_coverage}.
+underlying sacrifice substrate.  Under the cross-channel
+closure and admissibility hypotheses of
+Corollary~\ref{cor:joint_coverage}, the joint aggregate weakly
+dominates either channel alone; strict domination obtains at
+the non-fungibility residuals (agent-specific time,
+capital-concentrated access) when the trade window contains an
+event in the relevant residual category.  ``Weakly dominates''
+here is a corollary statement, not an unconditional claim:
+without the closure hypothesis (cross-channel pairwise
+poset-independence), Part~A's M4 step does not apply across
+the two channels' bundles and the weak-domination claim does
+not follow.
 
 \paragraph{$\volR$ is not self-balancing.}
 $\volR$ exhibits non-invariance under capability removal:

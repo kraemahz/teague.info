@@ -35,19 +35,31 @@ M5 are weaker conditional statements noted for completeness.
   property, not a poset-measure axiom.
 
 \item[(M4) Additivity under disjointness (substantive).]
-  Satisfied.  By construction, $\volR$ is $\volL$ restricted
-  to the exercised sub-poset $P^{\mathrm{ex}} \subseteq P$.  M4
-  for $\volL$ on $P$ states that $\volL$ is additive over
-  components of $P$ that are pairwise poset-disjoint (no
-  subsumption or cooperative-composition links).  Let $A, B
-  \subseteq P^{\mathrm{ex}}$ be poset-disjoint in $P^{\mathrm{ex}}$.
-  Since $P^{\mathrm{ex}}$ inherits the relation structure of
-  $P$, $A$ and $B$ are also poset-disjoint in $P$.  M4 on $P$
+  Satisfied under the parent-poset hypothesis.  By construction,
+  $\volR$ is $\volL$ restricted to the exercised sub-poset
+  $P^{\mathrm{ex}} \subseteq P$.  M4 for $\volL$ on $P$ states
+  that $\volL$ is additive over components of $P$ that are
+  pairwise poset-disjoint (no subsumption or
+  cooperative-composition links).  Take subsets $A, B
+  \subseteq P^{\mathrm{ex}}$ that are
+  \emph{poset-disjoint in $P$}---neither cooperative nor
+  subsumption edges in the full poset connect any $a \in A$ to
+  any $b \in B$, even via unexercised mediating capabilities.
+  Note this is a stronger hypothesis than poset-disjointness in
+  $P^{\mathrm{ex}}$ alone: the latter could permit $a, b$ to
+  share a parent-poset cooperative whose other participants
+  happen to be unexercised in $W$, in which case $A, B$ would
+  be poset-connected in $P$ even though neither cooperative
+  nor subsumption edges restricted to $P^{\mathrm{ex}}$
+  connect them.  Under poset-disjointness in $P$, M4 on $P$
   gives $\volL(A \cup B) = \volL(A) + \volL(B)$; restricting
   both sides to $P^{\mathrm{ex}}$ gives $\volR(A \cup B) =
   \volR(A) + \volR(B)$, establishing M4 for $\volR$.
-  This inheritance is load-bearing for the aggregate bound
-  (Theorem~\ref{thm:aggregate_bound}, Part~A).
+  Theorem~\ref{thm:aggregate_bound}'s pairwise
+  poset-independence hypothesis is stated against the parent
+  poset $P$ for this reason; the aggregate bound's M4
+  application uses parent-poset independence, not
+  $P^{\mathrm{ex}}$-internal independence.
 
 \item[(M5) Non-triviality (conditional analogue).] A single
   sacrifice event with $\Delta\volL(X) > 0$ produces
@@ -141,8 +153,20 @@ what breaks the self-balancing transfer
 (Corollary~\ref{cor:not_self_balancing}).
 \end{example}
 
-\begin{example}[$\volRlower$ M6-failure via max-attribution]
+\begin{example}[$\volRlower$ non-additivity over event-set
+union]
 \label{ex:m6_fail_volRlower}
+The example below illustrates that $\volRlower$ aggregated
+across two event groups is not in general the sum of the
+within-group aggregates.  This is a property of the lower-bound
+construction over \emph{event sets}, not a counterexample to
+M6 on capability subsets: M6 quantifies over poset-independent
+capability subsets, while max-attribution operates over events
+covering each capability.  We retain the example for
+operational clarity (max-attribution does not behave
+super-additively when event sets are merged) and flag the
+distinction below.
+
 Consider two sacrifice events with the same bundle
 $Y = \{a, b\}$ but different decomposition coefficients
 (permitted under S5, since event-local decomposition is fixed at
@@ -169,20 +193,31 @@ $\volRlower(a \mid A \cup B) = \max(0.5, 0.3) = 0.5$ and
 $\volRlower(b \mid A \cup B) = \max(0.5, 0.7) = 0.7$.
 Total: $\volRlower(A \cup B) = 1.2$.
 
-M6 (superadditivity) predicts $\volRlower(A \cup B) \geq
-\volRlower(A) + \volRlower(B) = 2.0$, but $\volRlower(A \cup B)
-= 1.2 < 2.0$.  M6 fails for $\volRlower$ in the subadditive
-direction---max-attribution over merged events takes the larger
-single contribution per capability rather than summing
-across groups, so the joint aggregate is bounded above by the
-sum of within-group aggregates.
+If we (informally) compare a within-group sum
+$\volRlower(A) + \volRlower(B) = 2.0$ to the merged-event
+aggregate $\volRlower(A \cup B) = 1.2$, the merged aggregate
+is strictly smaller.  This is \emph{not} an M6 counterexample
+on capability subsets: $A$ and $B$ here are event sets, not
+poset-independent capability subsets, and M6 makes claims
+about the latter, not the former.  What the example shows is
+that \emph{max-attribution does not commute with event-set
+union}: merging two event groups whose attributions disagree
+on the same capability produces a per-capability max bounded
+above by the sum of within-group maxes.  When restricted to
+the M6 setting (poset-independent capability subsets, with
+each capability covered by a single attribution event), this
+non-additivity does not arise; M6(b) below therefore fails for
+$\volRlower$ specifically through the event-set-union
+subadditivity exhibited here, not through any axiom-level
+failure on capability subsets.
 
-This is a property of the \emph{lower-bound construction}, not of
-the underlying $\volR$: the true $\volR$ aggregate of the merged
-events need not be subadditive, but our observational lower
-bound is.  The non-self-balancing corollary below therefore
-relies on the capability-removal non-invariance of M6(a), not
-on this lower-bound subadditivity.
+This is a property of the \emph{lower-bound construction over
+event sets}, not of the underlying $\volR$: the true $\volR$
+aggregate of the merged events need not be subadditive, but
+our observational lower bound is.  The non-self-balancing
+corollary below therefore relies on the capability-removal
+non-invariance of M6(a), not on this lower-bound
+event-set subadditivity.
 \end{example}
 
 \begin{corollary}[$\volR$ Is Not Self-Balancing]

@@ -31,19 +31,36 @@ targets.
 
 \paragraph{Trade data.}
 50 above-sufficiency sacrifice events over the window, covering
-all 16 non-residual capabilities.  Additionally, 12
-below-sufficiency events are observed (biological agents purchasing
-healthcare, food, shelter) but these fail S1
-(Proposition~\ref{prop:s1_sufficiency}) and do not enter the
+all 16 non-residual capabilities.  We adopt the
+\emph{saturation stylization}: for each non-residual capability
+$c$, the bundles and Part-B decomposition coefficients are such
+that the per-capability max-attribution $\volRlower(c) =
+\max_{n :\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n)$
+equals $c$'s full $\volL$ weight $w(c)$.  This is a stylized
+condition for the worked example---coverage alone does not
+imply saturation, so the equality $\volRlower = \sum_{c \in U}
+w(c) = 19$ is an example-specific assumption rather than a
+theorem consequence.  Additionally, 12 below-sufficiency events
+are observed (biological agents purchasing healthcare, food,
+shelter) but these fail S1 by
+Proposition~\ref{prop:s1_sufficiency} (under the example's
+stipulation that retention is the sole non-degrading
+alternative for each such event) and do not enter the
 sacrifice aggregate.
 
 \paragraph{Diagnostics.}
-$\betaL = 19.0 / 22.0 = 0.864$.  Gap decomposition:
+Under the saturation stylization above, $\volRlower = 19.0$ and
+$\betaL = 19.0 / 22.0 = 0.864$.  Gap decomposition under
+\emph{boundary-residual closure} (strategy~(c) of
+Remark~\ref{rem:cell_cooperative_closure}; chosen here to
+preserve seed-cell attributions cleanly):
 $\delta_{\mathrm{restricted}} = 0$,
 $\delta_{\mathrm{covered}} = 0$,
 $\delta_{\mathrm{dormant}} = 0$,
-$\delta_{\mathrm{residual}} = 3.0 / 22.0 = 0.136$ (residual
-class contribution).  No alarm.
+$\delta_{\mathrm{residual}} = 3.0 / 22.0 = 0.136$,
+$\delta_{\mathrm{boundary}} = 0$ (Phase~1 has no cross-cell
+cooperatives because all non-residual capabilities are
+covered).  No alarm.
 
 \paragraph{Need-sufficiency diagnostic.}
 $\NAC = 3.5$ (an upper bound on true need-access costs per
@@ -69,49 +86,66 @@ Silicon trade events increase.  New aggregate: 52
 above-sufficiency events covering only 10 of 16 non-residual
 capabilities.
 
+\paragraph{Cell membership under boundary-residual closure.}
+Among the 8 cooperatives, four are wholly within the covered
+cell ($\{b_1, s_1\}$, $\{b_1, s_2\}$, $\{s_1, s_2\}$,
+$\{s_3, s_4\}$, total weight $4$) and four cross dormant and
+covered cells ($\{b_2, s_3\}$, $\{b_2, s_4\}$, $\{b_3, s_5\}$,
+$\{b_1, b_2\}$, total weight $4$).  Under
+\emph{boundary-residual closure}, cross-cell cooperatives are
+collected into a fifth $\delta_{\mathrm{boundary}}$ bucket
+rather than absorbed into either the covered or dormant cell.
+The closure-adjusted cells are then:
+$\volL(R) = 0$;
+$\volL(C) = w(b_1) + 5 \cdot w(s_j) + 4 \text{ same-cell coops}
+= 2 + 5 + 4 = 11$;
+$\volL(D) = w(b_2) + w(b_3) = 4$;
+$\volL(S) = 3$ (residual class);
+$\volL(\mathrm{boundary}) = 4$ (cross-cell coops).
+Total: $11 + 4 + 3 + 4 = 22$.
+
 \paragraph{Diagnostics.}
-$\betaL = 10.0 / 22.0 = 0.455$.  \textbf{ALARM fires}
-($\betaL < 0.8$).  Gap decomposition (\emph{Stage~1 seed cells,
-pre-closure}; see closure caveat below):
+Assume the saturation stylization continues to apply on the
+covered cell ($\volRlower(C) = w$ for each $c$ in covered) so
+$\volRlower = \volL(C) - 1 = 10$ where the $-1$ reflects one
+covered same-cell cooperative whose participating events fall
+short of saturating its weight (e.g., $\{s_3, s_4\}$ with mixed
+attribution).  Then $\betaL = 10.0 / 22.0 = 0.455$.
+\textbf{ALARM fires} ($\betaL < 0.8$).  Gap decomposition
+(boundary-residual closure):
 \begin{align*}
 \delta_{\mathrm{restricted}} &= 0, \\
-\delta_{\mathrm{covered}} &= 1.0/22 = 0.045, \\
-\delta_{\mathrm{dormant}} &= 8.0/22 = 0.364 \quad
-  \text{($b_2$, $b_3$, and 4 cooperatives: dormant wants)}, \\
-\delta_{\mathrm{residual}} &= 3.0/22 = 0.136. \\
+\delta_{\mathrm{covered}} &= [\volL(C) - \volRlower(C)]/22
+  = 1.0/22 \approx 0.045, \\
+\delta_{\mathrm{dormant}} &= \volL(D)/22 = 4.0/22 \approx 0.182
+  \quad \text{($b_2, b_3$ dormant)}, \\
+\delta_{\mathrm{residual}} &= \volL(S)/22 = 3.0/22 \approx 0.136, \\
+\delta_{\mathrm{boundary}} &= \volL(\mathrm{boundary})/22
+  = 4.0/22 \approx 0.182 \quad \text{(four cross-cell coops)}. \\
 \intertext{Check:}
 \betaL + \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}}
-  + \delta_{\mathrm{residual}} &= 0.455 + 0.045 + 0.364
-  + 0.136 = 1.000.
+  + \delta_{\mathrm{residual}} + \delta_{\mathrm{boundary}}
+  &= 0.455 + 0.045 + 0.182 + 0.136 + 0.182 = 1.000.
 \end{align*}
 
-\paragraph{Closure caveat.}
-The cooperative $\{b_2, s_3\}$ links a dormant biological
-capability ($b_2$) to a covered silicon capability ($s_3$);
-similarly $\{b_2, s_4\}$ and $\{b_3, s_5\}$ cross dormant
-biological and covered silicon nodes.  Under the default
-priority-extension closure of
-Remark~\ref{rem:cell_cooperative_closure}, these cross-cell
-cooperative connections would absorb the dormant nodes into the
-higher-priority covered cell, redistributing mass from
-$\delta_{\mathrm{dormant}}$ to $\delta_{\mathrm{covered}}$ and
-producing different numbers.  The example reports the
-\emph{Stage~1 seed-cell decomposition} for illustrative clarity
-(it makes the dormancy directly readable from the absence of
-trade evidence on $b_2, b_3$); a closure-adjusted Stage~2
-decomposition under priority-extension would shift roughly
-$5.0/22 = 0.227$ of biology-coupled-to-silicon-cooperative mass
-from dormant to covered, leaving $\delta_{\mathrm{dormant}}
-\approx 3.0/22$ and $\delta_{\mathrm{covered}} \approx 6.0/22$,
-with the alarm-firing $\betaL$ unchanged.  Strategy~(c)
-(boundary-residual) of
-Remark~\ref{rem:cell_cooperative_closure} would instead
-preserve the dormant attribution while sending the
-boundary-cooperative mass to a fifth $\delta_{\mathrm{boundary}}$
-bucket.  All three closure variants flag the same underlying
-phenomenon (automation displacing biological participation)
-through the same alarm; the numerical attribution to specific
-cells is closure-policy-dependent.
+\paragraph{Closure-policy interpretation.}
+Boundary-residual closure isolates the cross-cell cooperative
+mass in $\delta_{\mathrm{boundary}}$ rather than absorbing it
+into the covered cell (priority-extension, strategy~(a)) or
+sub-partitioning by connected component (strategy~(b)).  The
+choice matters for diagnostic attribution: under
+priority-extension, the four cross-cell coops would have been
+absorbed into the covered cell, producing
+$\delta_{\mathrm{dormant}} \approx 2.0/22$ (the two atomic
+dormant biological capabilities $b_2, b_3$ would migrate to
+covered along with the boundary cooperatives that link them)
+and $\delta_{\mathrm{covered}} \approx 5.0/22$.  The alarm
+fires identically across closure choices because $\betaL$
+depends only on $\volRlower / \volL(P)$; only the cell
+attribution changes.  We adopt boundary-residual here to
+preserve the directly-readable dormancy of $b_2, b_3$ and
+expose cross-cell cooperative mass as a separate diagnostic
+bucket.
 
 \paragraph{Need-sufficiency diagnostic.}
 $\NAC$ rises from $3.5$ to $8.2$ as automation displaces

@@ -23,9 +23,22 @@ $\ResS$ is a \emph{structural} property of the capability, not a
 property of the observation window.  A capability is in $\ResS$
 because the sacrifice channel \emph{cannot} reach it (purely
 private exercise with no material footprint), not because the
-channel has not yet observed it.  Examples: private contemplative
-experience, purely internal cognitive operations with no external
-inputs or time diversion.
+channel has not yet observed it.  Examples are restricted to
+capabilities that admit \emph{no} sacrifice-observable exercise
+mode in principle: private contemplative experience whose
+exercise consumes neither paid material nor time-displaced
+opportunity beyond idle cycles, and passively-concurrent
+internal capabilities such as ongoing interoceptive
+self-awareness exercised concurrently with all other activity
+(see proof of
+Proposition~\ref{prop:residual_intersection}(c) for a worked
+witness).  Cognitive capabilities that admit paid-training,
+dedicated-time, or counterparty-supported exercise modes
+(silent rehearsal as a paid course, planning sessions on
+deliberately blocked time, supervised reasoning practice) lie
+\emph{outside} $\ResS$ because at least one
+sacrifice-observable mode exists in principle, even if no
+specific window observes it.
 \end{definition}
 
 \begin{remark}[Structural versus evidential absence]
@@ -152,14 +165,19 @@ $\in \ResS$).  The intersection is witnessed and therefore
 non-empty.
 \end{proof}
 
-\begin{remark}[The new residual class is the correct carve]
+\begin{remark}[The observation-channel carve is the
+appropriate one for this paper]
 The prior residual class was defined by the \emph{measurement
-apparatus} (what benchmarks can test).  The new residual class is
-defined by the \emph{observation channel} (what trades reveal).
-The observation-channel carve is the correct one for a paper about
-what the framework can observe under its privacy commitments: the
-question is not ``what could we test if we had access?'' but
-``what do we actually see?''
+apparatus} (what benchmarks can test).  The new residual class
+is defined by the \emph{observation channel} (what trades
+reveal).  The observation-channel carve is the appropriate one
+for a paper about what the framework can observe under its
+privacy commitments: the question is not ``what could we test
+if we had access?'' but ``what do we actually see?''  Other
+carves (benchmarkability, computability) remain appropriate
+for other questions; we do not claim the
+observation-channel carve is correct in the absolute, only
+that it is the relevant carve for sacrifice-based diagnostics.
 \end{remark}
 
 \subsection{Bounding the residual class}
@@ -234,22 +252,34 @@ direct weight lower bound.
 \begin{proof}
 By the bridge (Definition~\ref{def:oi_exercise_bridge}) at some
 $t \in W$, $e_t(d_k) = 1$, so $d_k \in P^{\mathrm{ex}}_t$ for
-that $t$.  Under the window-integrated form of the companion
+that $t$.  Under the window-active form of the companion
 paper's $\volR$ definition~\citep{lasser2026paper8a}, $d_k \in
-P^{\mathrm{ex}}_W =
-\bigcup_{s \in W} P^{\mathrm{ex}}_s$, hence $d_k$ contributes
-$\OIfloor(k)$ to $\volRexact^{[W]}(O) = \volL(O \cap
-P^{\mathrm{ex}}_W)$.  By
+P^{\mathrm{ex}}_W = \bigcup_{s \in W} P^{\mathrm{ex}}_s$, hence
+$d_k$ contributes its $\volL$ weight $w(d_k)$ to
+$\volRexact^{[W]}(O) = \volL(O \cap P^{\mathrm{ex}}_W)$ (the
+window-active sum is $\volL$ on the union of instantaneous
+exercised sub-posets, so an exercised capability contributes
+its full $w$).  By the weight premise of the proposition,
+$w(d_k) \geq \OIfloor(k)$; combining,
+$d_k$ contributes at least $\OIfloor(k)$ to
+$\volRexact^{[W]}(O)$.  By
 Paper~3~\citep[Corollary~2.1]{lasser2026horizon},
 $\OIfloor(k) \geq 1$ (the binary default, strengthened by any
 subsumption weight in $\volL$).  Pairwise poset-independence of
-the $\{d_k\}_{k \in K}$ lets $\volL$ decompose additively by
-axiom~M4~\citep[Proposition~1]{lasser2026poset}, giving the sum
-form.  Without the bridge hypothesis,
+the $\{d_k\}_{k \in K}$ in the parent poset $P$ lets $\volL$
+decompose additively by
+axiom~M4~\citep[Proposition~1]{lasser2026poset}, so the
+$\volL$ contributions sum without overlap, giving
+$\volRexact^{[W]}(O) \geq \sum_{k \in K} w(d_k) \geq
+\sum_{k \in K} \OIfloor(k)$.  Without the bridge hypothesis,
 Corollary~2.1~\citep{lasser2026horizon} establishes only the
 structural $\volL$-on-elimination fact, which does \emph{not}
-supply the exercise witness required by
-the exercise indicator~\citep{lasser2026paper8a}.
+supply the exercise witness required by the exercise indicator
+of the companion paper~\citep{lasser2026paper8a}.  Without the
+weight premise $w(d_k) \geq \OIfloor(k)$, the proof reaches
+$\volRexact^{[W]}(O) \geq \sum_{k} w(d_k)$ from the bridge
+alone, but the further inequality
+$\sum_k w(d_k) \geq \sum_k \OIfloor(k)$ is left unestablished.
 \end{proof}
 
 \begin{remark}[When the bridge holds and when it fails]

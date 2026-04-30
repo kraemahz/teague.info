@@ -69,21 +69,25 @@ poset has:
   agent meets the need (which source, at what quality, at what
   cost).
 \end{itemize}
-For cost dimensions (minimizing polarity), the benchmark inverts
-the natural direction: $\mathrm{actual}_k = 1 / \mathrm{cost}_k$,
-with sufficiency at $s_k = 1 / \mathrm{max\_acceptable\_cost}$,
-so that benchmark maximization aligns with cost minimization.
-The inversion is defined on $\mathrm{cost}_k > 0$; the
-zero-cost limit is read as ``no cost-dimension constraint
-binds'' and treated as benchmark-saturated rather than via
-$1/0$ (operationally: cap $1/\mathrm{cost}_k$ at a domain-set
-ceiling above $s_k$, or apply a saturating transform such as
-$\mathrm{cost}_k / (\mathrm{cost}_k + \epsilon)$ inverted on
-$\mathrm{cost}_k + \epsilon$ for a small floor $\epsilon > 0$).
-The choice of regularisation is a domain parameter; this paper
-adopts the cap-at-ceiling convention by default and notes the
-saturating-transform alternative for cost dimensions where
-$\mathrm{cost}_k$ approaches zero in normal operation.
+For cost dimensions (minimizing polarity), the benchmark
+inverts via a domain-supplied positive cost reference
+$\mathrm{cost}_k^{\mathrm{ref}} > 0$: define
+$\mathrm{actual}_k = \mathrm{cost}_k^{\mathrm{ref}} /
+\mathrm{cost}_k$ and the sufficiency threshold
+$s_k = \mathrm{cost}_k^{\mathrm{ref}} /
+\mathrm{cost}_k^{\mathrm{max}}$ where
+$\mathrm{cost}_k^{\mathrm{max}}$ is the maximum acceptable
+cost.  Both quantities are dimensionless ratios in
+cost-reference units, so $\mathrm{actual}_k$ and $s_k$ live on
+the same scale and benchmark maximization aligns with cost
+minimization.  The inversion is defined on
+$\mathrm{cost}_k > 0$; the zero-cost limit is read as ``no
+cost-dimension constraint binds'' and treated as
+benchmark-saturated, with the convention $\mathrm{actual}_k =
+\mathrm{cost}_k^{\mathrm{ref}} / \mathrm{cost}_k$ capped at
+some domain-set ceiling $M_k > s_k$ to avoid the $\mathrm{cost}_k
+\to 0^+$ singularity.  The reference and ceiling are domain
+parameters; the paper does not legislate specific values.
 \end{definition}
 
 \begin{definition}[Downstream-Safe Sufficiency]
@@ -295,22 +299,26 @@ $\volL^{\mathrm{eff}}$ is constructed as a downstream-gated
 \emph{reweighting} of $\volL$'s atomic capability sum, with
 each $c \in P$ contributing $w^{\mathrm{eff}}(c) = w(c) \cdot
 \prod_{N \in \mathcal{N}(c)} g(s_N(c))$ in place of $w(c)$.
-The rewighting is compatible with M5 (each capability still
-contributes a non-negative weight) and with M4 on the
-poset-independent direct sum (the gate factor depends on
-$s_N$, not on poset position, so additivity over
-poset-independent components transfers from $\volL$ to
-$\volL^{\mathrm{eff}}$).  M6 (cooperative superadditivity) is
-preserved when cooperative capabilities themselves carry
-cooperative-node weights $w(c_{\mathrm{coop}})$ that are
-gated alongside their participants; the cooperative term is
-gated independently of (and multiplicatively with) its
-participants' gates because $\mathcal{N}(c_{\mathrm{coop}})$
-is computed for the cooperative node itself.
-$\volL^{\mathrm{eff}}$ is therefore a reweighting of the same
-$\volL$-sum, not a new measure with its own axioms; the
+We treat $\volL^{\mathrm{eff}}$ as a \emph{gated diagnostic
+quantity} for need-context optimization, not as a new
+poset-measure inheriting M1--M6 by construction.  M5
+non-negativity is preserved trivially (each gate factor is in
+$[0,1]$, so $w^{\mathrm{eff}}(c) \geq 0$).  Compatibility with
+M4-type additivity on poset-independent direct sums and with
+M6-type cooperative superadditivity depends on whether the
+gate factors $\prod_N g(s_N(c))$ are constant across the
+relevant subset (so the gated weights factor cleanly); for
+homogeneous-sufficiency settings (Section
+\ref{sec:threshold_setting}) the factors are constant on each
+downstream cone and the additivity carries through, but the
+general case requires care and we do not claim
+$\volL^{\mathrm{eff}}$ inherits M4 or M6 unconditionally.  The
 framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
-$\volL$ once needs have been identified.
+$\volL$ once needs have been identified, treating the gated
+quantity as an objective-substitute justified by its
+incentive properties (Proposition~\ref{prop:near_total_collapse},
+Proposition~\ref{prop:need_dominance}) rather than by axiom
+inheritance.
 \end{definition}
 
 \begin{remark}[Candidate gate functions]
@@ -595,14 +603,22 @@ below-sufficiency \emph{and} no third alternative exists.
 \end{proposition}
 
 \noindent\textbf{Consequence for the sacrifice channel.}
-Below-sufficiency events are filtered from the revealed-sacrifice
+Below-sufficiency sacrifices in the proposition's narrow sense
+(retention degrades \emph{and} no third non-degrading
+alternative exists) are filtered from the revealed-sacrifice
 aggregate by S1 before they reach the aggregate lower bound
-(the aggregate lower bound theorem~\citep{lasser2026paper8a}).  The sacrifice channel
-operates only over events where S1 holds.  For above-sufficiency
-(want-pursuit) events, the need-insufficiency failure mode of S1
-is removed.  S1 may still fail for above-sufficiency events via
-other mechanisms (coercion, duress---see
-Remark~\ref{rem:s1_above} below).
+(the aggregate lower bound
+theorem~\citep{lasser2026paper8a}).  Below-sufficiency
+\emph{targeting} where a third alternative exists is not
+automatically filtered by this proposition: such events may
+still satisfy S1 if the agent's choice set contains a
+non-degrading option, and the institutional attestation layer
+must determine which class an event belongs to.  For
+above-sufficiency events (retention does not put the agent
+below threshold), the need-insufficiency failure mode of S1
+is removed structurally.  S1 may still fail for
+above-sufficiency events via other mechanisms (coercion,
+duress---see Remark~\ref{rem:s1_above} below).
 
 \begin{remark}[S1 is not automatically satisfied above
 sufficiency]
@@ -618,19 +634,45 @@ paper~\citep{lasser2026paper8a}) remain.
 \end{remark}
 
 \begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
-Let $(i, X, Y, t)$ be a sacrifice event where, absent this trade,
-agent~$i$'s capability level on need dimension $d_k$ would fall
-below the sufficiency threshold $s_k$.  Agent~$i$ must reach
-$s_k$ on $d_k$ to maintain minimum viable functionality.  The
-alternative of retaining $X$ (not making the trade) leaves the
-agent below $s_k$ on $d_k$.  S1 requires the retention
-alternative to be non-degrading: it must not drop the agent below
-minimum viable functionality on any need dimension.  Retention
-here does precisely that, so the non-degrading alternative
-requirement fails and S1 does not hold for this event.  Events
-with failed S1 are excluded from the aggregate by the
-applicable-assumptions clause of
-the aggregate lower bound theorem~\citep{lasser2026paper8a}.
+Let $(i, X, Y, t)$ be a sacrifice event satisfying the
+proposition's hypotheses: retention of $X_n$ leaves the agent
+below threshold $s_k$ on need dimension $d_k$, and no third
+alternative exists in the agent's choice set that is
+non-degrading on every need dimension.
+
+S1 requires that some alternative to making the trade is
+\emph{non-degrading}: it must not drop the agent below minimum
+viable functionality on any need dimension.  S1's alternative
+ranges over the agent's choice set, which we partition into
+two classes: (a)~the retention alternative (refuse the trade,
+keep $X_n$), and (b)~any third alternative (a different trade,
+or a different non-trade action).
+
+By the first hypothesis, retention drops the agent below $s_k$
+on $d_k$, so retention is degrading and class~(a) fails the
+non-degrading-alternative condition.  By the second hypothesis,
+no element of class~(b) is non-degrading on every need
+dimension, so class~(b) also fails.  Together, no
+non-degrading alternative exists in the agent's choice set, so
+S1's condition fails for this event.  Events with failed S1
+are excluded from the aggregate by the applicable-assumptions
+clause of the aggregate lower bound
+theorem~\citep{lasser2026paper8a}.
+
+The second hypothesis is what distinguishes ``below-sufficiency
+sacrifice'' (S1 fails) from ``below-sufficiency targeting''
+(S1 may still hold via a third alternative): the latter is
+consistent with S1 because the agent could choose a different
+non-degrading option, in which case the trade is not forced
+and reveals genuine preference.  In practice the second
+hypothesis must be established by the institutional
+attestation layer of the companion
+paper~\citep{lasser2026paper8a} (the external-attestation
+remark there describes how per-event hypotheses about the
+agent's choice set are certified through trade-level audit or
+attestation, not through the public partition $\mathcal{C}$
+alone), not derived structurally from sufficiency status
+alone.
 \end{proof}
 
 \subsection{The capability-stuffing problem}
