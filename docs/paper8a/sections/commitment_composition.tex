@@ -45,6 +45,22 @@ The committed event reveals $\Delta\volL(X)$ (the sacrifice
 magnitude) and $\catY$ (the bundle's partition label).  It hides
 agent identity~$i$, the specific benchmarked capability~$X$, the
 specific unbenchmarked bundle~$Y$, and the counterparty.
+\emph{Price hiding caveat (money channel).}  Because the
+benchmark function on purchasing power
+(Definition~\ref{def:money_sacrifice}) is publicly known and
+typically monotone in price, the committed
+$\Delta\volL(X)$ is informative about~$p$: a verifier with the
+benchmark function can invert $\Delta\volL$ to recover~$p$ for
+the surrendered purchasing power.  The commitment hides the
+\emph{counterparty} of the trade and the \emph{specific
+unbenchmarked bundle}~$Y$, not the price; the
+``price hiding'' phrasing in informal summaries should be
+read as ``hides what was bought from whom,'' not ``hides what
+was paid.''  Where stronger price hiding is required (e.g.,
+trade volumes that would identify the agent), the hiding
+variant of Proposition~\ref{prop:zk_aggregation} additionally
+hides $\Delta\volL(X)$ itself, releasing only an aggregate
+threshold $B$.
 \end{definition}
 
 \begin{remark}[S0, S1, S4(a), and S5 are not ZK-verifiable]
@@ -284,10 +300,13 @@ proof can establish:
 \begin{enumerate}
 \item[(i)] $\sum_{n} \Delta\volL(X_n) \geq B$
   (aggregate bound);
-\item[(ii)] the bundle category labels $\{\catYn{n}\}$ are
-  pairwise distinct (as a multiset over the $N_{\max}$
-  positions, with unused positions filled by a distinguished
-  ``null'' label);
+\item[(ii)] the \emph{non-null} bundle category labels
+  $\{\catYn{n} : \catYn{n} \neq \mathrm{null}\}$ are
+  pairwise distinct (i.e., among the $N \leq N_{\max}$ real
+  events, no two share a category label; the $N_{\max} - N$
+  null-padded positions are excluded from the
+  pairwise-distinct check, so multiple null entries do not
+  violate the condition);
 \end{enumerate}
 for a public bound $B$, without revealing the individual
 $\Delta\volL(X_n)$, the specific category labels, or the true

@@ -65,9 +65,13 @@ $\volR$-content through an existing, privacy-respecting channel:
 \textbf{sacrifice}.  When an agent surrenders a benchmarkable
 capability (whose $\volL$ contribution is known) in exchange for
 an unbenchmarked bundle (whose $\volR$ contribution is unknown),
-the rational-choice inequality reveals the unbenchmarked bundle
-is worth at least what was surrendered.  Each such event
-produces a lower bound on a portion of $\volR$.  Aggregating
+revealed preference establishes a valuation comparison
+($\Ui(Y) \geq \Ui(X)$); composing this with S0
+(valuation-bounded-by-exercise), S2 (benchmark grounding), and
+S4(a) (valuation additivity) under the genuine-exchange
+conditions of Definition~\ref{def:sacrifice_event} yields a
+lower bound $\volR^{[W]}(Y) \geq \Delta\volL(X)$ on the
+unbenchmarked bundle's exercise contribution.  Aggregating
 across events with pairwise poset-independent bundles produces
 a constructive lower bound on the B-to-C gap.
 
@@ -159,10 +163,12 @@ a precise measurement.
   $\betaL(U, T) = \volRlower(U, T) / \volL(U)$ on the observed
   $U$, and the global conservative fraction $\betaL(P, T) =
   \volRlower(U, T) / \volL(P)$ on the full capability-space
-  denominator.  The subset-local ratio is sharp on $U$; the
-  global ratio is a lower bound on the true whole-system
-  exercised fraction.  We write simply $\betaL$ when the choice
-  of $G$ is fixed by context.  Part~A
+  denominator.  The subset-local ratio is the lower bound
+  restricted to $U$; the global ratio is a lower bound on the
+  true whole-system exercised fraction.  Both are lower bounds,
+  not tight estimates: no sharpness/optimality theorem is
+  claimed.  We write simply $\betaL$ when the choice of
+  denominator is fixed by context.  Part~A
   (bundle-level, requires S0--S2 and S4(a)) is the main result;
   Part~B (per-capability, requires S0--S5 plus within-bundle
   poset-independence) is a conditional refinement.  The

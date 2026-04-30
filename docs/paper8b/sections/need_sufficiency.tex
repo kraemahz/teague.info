@@ -73,6 +73,17 @@ For cost dimensions (minimizing polarity), the benchmark inverts
 the natural direction: $\mathrm{actual}_k = 1 / \mathrm{cost}_k$,
 with sufficiency at $s_k = 1 / \mathrm{max\_acceptable\_cost}$,
 so that benchmark maximization aligns with cost minimization.
+The inversion is defined on $\mathrm{cost}_k > 0$; the
+zero-cost limit is read as ``no cost-dimension constraint
+binds'' and treated as benchmark-saturated rather than via
+$1/0$ (operationally: cap $1/\mathrm{cost}_k$ at a domain-set
+ceiling above $s_k$, or apply a saturating transform such as
+$\mathrm{cost}_k / (\mathrm{cost}_k + \epsilon)$ inverted on
+$\mathrm{cost}_k + \epsilon$ for a small floor $\epsilon > 0$).
+The choice of regularisation is a domain parameter; this paper
+adopts the cap-at-ceiling convention by default and notes the
+saturating-transform alternative for cost dimensions where
+$\mathrm{cost}_k$ approaches zero in normal operation.
 \end{definition}
 
 \begin{definition}[Downstream-Safe Sufficiency]
@@ -278,7 +289,27 @@ The effective capability volume is:
 \[
   \volL^{\mathrm{eff}}(g) \;=\; \sum_{c \in P} w^{\mathrm{eff}}(c).
 \]
-The framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
+The summation is over the same capability census~$P$ that
+defines $\volL$ in~\citep[Proposition~1]{lasser2026poset};
+$\volL^{\mathrm{eff}}$ is constructed as a downstream-gated
+\emph{reweighting} of $\volL$'s atomic capability sum, with
+each $c \in P$ contributing $w^{\mathrm{eff}}(c) = w(c) \cdot
+\prod_{N \in \mathcal{N}(c)} g(s_N(c))$ in place of $w(c)$.
+The rewighting is compatible with M5 (each capability still
+contributes a non-negative weight) and with M4 on the
+poset-independent direct sum (the gate factor depends on
+$s_N$, not on poset position, so additivity over
+poset-independent components transfers from $\volL$ to
+$\volL^{\mathrm{eff}}$).  M6 (cooperative superadditivity) is
+preserved when cooperative capabilities themselves carry
+cooperative-node weights $w(c_{\mathrm{coop}})$ that are
+gated alongside their participants; the cooperative term is
+gated independently of (and multiplicatively with) its
+participants' gates because $\mathcal{N}(c_{\mathrm{coop}})$
+is computed for the cooperative node itself.
+$\volL^{\mathrm{eff}}$ is therefore a reweighting of the same
+$\volL$-sum, not a new measure with its own axioms; the
+framework optimizes $\volL^{\mathrm{eff}}$ rather than raw
 $\volL$ once needs have been identified.
 \end{definition}
 
@@ -426,13 +457,23 @@ $w$ as commensurable intervention variables; see
 Remark~\ref{rem:dominance_scale}).
 
 \medskip\noindent
-\textbf{Marginal-dominance condition.}  Under the common
-intervention scale, the marginal return to closing the
-sufficiency gap on $N$ exceeds the marginal return to unit-weight
-addition on any single capability whenever
+\textbf{Marginal-dominance condition (subject to a
+domain-supplied intervention metric).}
+``Closing the sufficiency gap is more valuable than adding
+unit weight'' is a statement about a per-unit-of-intervention
+comparison; it requires a domain-supplied metric that maps
+sufficiency increments and weight increments to a common
+intervention-cost scale.  Under such a metric, with one unit
+of $\Delta s_N$ and one unit of $\Delta w$ identified as
+equally costly, the marginal return to closing the sufficiency
+gap on $N$ exceeds the marginal return to unit-weight addition
+whenever
 \[
   g'(s_N) \cdot W_{\mathrm{down}}(N) \;>\; 1.
 \]
+Without the metric, the partial derivatives are not
+directly comparable and no marginal-dominance claim follows
+from the formula alone.
 For linear gates ($g(s) = s$), this reduces to
 $W_{\mathrm{down}}(N) > 1$.  For leaky-ReLU or ReLU gates, the
 condition holds at any $s_N$ in the ramp region provided
@@ -535,16 +576,22 @@ floor $\alpha$ below.
 
 \begin{proposition}[S1--Sufficiency Connection]
 \label{prop:s1_sufficiency}
-Below-sufficiency sacrifices fail Assumption~S1 (free choice,
-\citep{lasser2026paper8a}).  S1 requires that retaining
-the sacrificed capability $X_n$ was a \emph{non-degrading}
-alternative---one that would not leave the agent below minimum
-viable functionality on any need dimension.  For an agent whose
-capability level on dimension $d_k$ is below the sufficiency
-threshold $s_k$, retaining $X_n$ (not making the trade) leaves
-the agent below functionality on $d_k$.  This is not a
-non-degrading alternative per S1's definition, so S1 fails for
-that event.
+S1 fails for any sacrifice event in which the sole non-trade
+alternative consistent with the agent's choice set is to retain
+the sacrificed capability $X_n$, and retention would leave the
+agent below the sufficiency threshold on at least one need
+dimension.  Concretely: if for some need dimension $d_k$ and
+threshold $s_k$, retaining $X_n$ produces capability level
+below $s_k$ on $d_k$ \emph{and} no other alternative in the
+choice set is non-degrading on every need dimension, then no
+non-degrading retention alternative exists, S1's
+non-degrading-alternative condition fails, and the event is
+filtered.  We refer to events in this regime as
+\emph{below-sufficiency sacrifices}.  Below-sufficiency
+\emph{targeting} (i.e., sacrifice aimed at improving an unmet
+need dimension) does not by itself imply S1 failure; S1 fails
+specifically when retention would leave the agent
+below-sufficiency \emph{and} no third alternative exists.
 \end{proposition}
 
 \noindent\textbf{Consequence for the sacrifice channel.}
@@ -611,11 +658,12 @@ same underlying optionality (fuel access) from a different
 origin.
 
 Capability-stuffing is distinct from other failure modes in the
-sequence.  It is not \emph{wireheading}~(\cite{lasser2026exo},
-Discussion), which is narrow self-reinforcing exercise of
-existing capabilities; stuffing adds new capabilities without
-exercising them degenerately.  It is not the \emph{Doll
-Problem}~(\cite{lasser2026gfm}, Section~7.1), which is
+sequence.  It is not \emph{wireheading}
+(\citealp[Discussion]{lasser2026exo}), which is narrow
+self-reinforcing exercise of existing capabilities; stuffing
+adds new capabilities without exercising them degenerately.
+It is not the \emph{Doll
+Problem} (\citealp[Section~7.1]{lasser2026gfm}), which is
 possessed-but-unexercised capabilities; the stuffed capabilities
 may be technically exercised (routing through the gas station
 ``exercises'' the distance-measurement).  It is not the
@@ -808,7 +856,17 @@ detail.
 \subsection{How sufficiency thresholds are set}
 \label{sec:threshold_setting}
 
-Four mechanisms, not mutually exclusive:
+The framework treats sufficiency thresholds as
+\emph{governance-supplied inputs}: the formal apparatus reads
+$\{s_k\}$ at evaluation time and does not derive them from
+first principles within the paper's measurement-theoretic
+machinery (consistent with the limitations statement of
+Section~\ref{sec:discussion}).  What is structurally rigorous
+in the architecture is the \emph{downstream-safety condition}
+(Definition~\ref{def:downstream_safe}) that any candidate
+$\pi_N$ must satisfy at a given threshold, not the
+threshold-setting procedure itself.  Four upstream mechanisms
+can produce the governance input, not mutually exclusive:
 
 \paragraph{(a) Poset-structural.}
 Capabilities with high fan-out (many downstream dependents) have
@@ -820,16 +878,20 @@ Observe the population's actual capability levels and identify the
 threshold below which agents demonstrably cease functioning on
 downstream capabilities.
 
-\paragraph{(c) Revealed-sacrifice-derived.}
+\paragraph{(c) Revealed-sacrifice-derived (heuristic).}
 Sufficiency is the level at which sacrifice polarity flips.
 Below sufficiency, sacrifice is involuntary and increasing; above
 sufficiency, sacrifice becomes voluntary and choice-driven.  The
 transition point in the sacrifice data identifies the threshold
 empirically.  This is the most framework-native option but has a
 bootstrap problem: identifying the threshold requires classifying
-events, but classifying events requires the threshold.
-Resolution: start with structural/normative thresholds
-(mechanisms~(a) and~(d)), refine using sacrifice data.
+events, but classifying events requires the threshold.  This
+mechanism is heuristic, not theorem-derived: the
+revealed-sacrifice channel does not by itself certify a
+threshold value, only suggest a transition region for governance
+to ratify.  Resolution in practice: start with
+structural/normative thresholds (mechanisms~(a) and~(d)),
+refine using sacrifice data.
 
 \paragraph{(d) Normative / external.}
 A human authority or governance process declares sufficiency

@@ -31,9 +31,12 @@ filtering the event from the aggregate.
 \paragraph{Proposition~\ref{prop:near_total_collapse}
 (Near-Total Collapse Under Unmet Need).}
 Under homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c
-\in \Down(p_N)$ and full sufficiency of all other needs,
+\in \Down(p_N)$,
 $\volL^{\mathrm{eff}} \leq g(s_N) \cdot W_{\mathrm{down}}(N) +
-W_{\mathrm{out}}$.  Collapse limits as $s_N \to 0$ split:
+W_{\mathrm{out}}$ (the upper bound holds without
+assumptions on other needs because each additional gate factor
+is $\leq 1$; full sufficiency of other needs is required only
+for the equality case).  Collapse limits as $s_N \to 0$ split:
 zero-floor gates ($\alpha_0 = 0$: linear, ReLU, power-law)
 contract downstream weight to zero; positive-floor gates
 ($\alpha_0 > 0$: leaky-ReLU with $\alpha > 0$) contract

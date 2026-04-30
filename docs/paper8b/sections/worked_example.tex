@@ -71,7 +71,8 @@ capabilities.
 
 \paragraph{Diagnostics.}
 $\betaL = 10.0 / 22.0 = 0.455$.  \textbf{ALARM fires}
-($\betaL < 0.8$).  Gap decomposition:
+($\betaL < 0.8$).  Gap decomposition (\emph{Stage~1 seed cells,
+pre-closure}; see closure caveat below):
 \begin{align*}
 \delta_{\mathrm{restricted}} &= 0, \\
 \delta_{\mathrm{covered}} &= 1.0/22 = 0.045, \\
@@ -83,6 +84,34 @@ $\betaL = 10.0 / 22.0 = 0.455$.  \textbf{ALARM fires}
   + \delta_{\mathrm{residual}} &= 0.455 + 0.045 + 0.364
   + 0.136 = 1.000.
 \end{align*}
+
+\paragraph{Closure caveat.}
+The cooperative $\{b_2, s_3\}$ links a dormant biological
+capability ($b_2$) to a covered silicon capability ($s_3$);
+similarly $\{b_2, s_4\}$ and $\{b_3, s_5\}$ cross dormant
+biological and covered silicon nodes.  Under the default
+priority-extension closure of
+Remark~\ref{rem:cell_cooperative_closure}, these cross-cell
+cooperative connections would absorb the dormant nodes into the
+higher-priority covered cell, redistributing mass from
+$\delta_{\mathrm{dormant}}$ to $\delta_{\mathrm{covered}}$ and
+producing different numbers.  The example reports the
+\emph{Stage~1 seed-cell decomposition} for illustrative clarity
+(it makes the dormancy directly readable from the absence of
+trade evidence on $b_2, b_3$); a closure-adjusted Stage~2
+decomposition under priority-extension would shift roughly
+$5.0/22 = 0.227$ of biology-coupled-to-silicon-cooperative mass
+from dormant to covered, leaving $\delta_{\mathrm{dormant}}
+\approx 3.0/22$ and $\delta_{\mathrm{covered}} \approx 6.0/22$,
+with the alarm-firing $\betaL$ unchanged.  Strategy~(c)
+(boundary-residual) of
+Remark~\ref{rem:cell_cooperative_closure} would instead
+preserve the dormant attribution while sending the
+boundary-cooperative mass to a fifth $\delta_{\mathrm{boundary}}$
+bucket.  All three closure variants flag the same underlying
+phenomenon (automation displacing biological participation)
+through the same alarm; the numerical attribution to specific
+cells is closure-policy-dependent.
 
 \paragraph{Need-sufficiency diagnostic.}
 $\NAC$ rises from $3.5$ to $8.2$ as automation displaces

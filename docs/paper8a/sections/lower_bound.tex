@@ -73,7 +73,7 @@ anywhere in $W$---rather than against the instantaneous
 $\volR_{t}$ at a particular evaluation time.  Assumption~S0
 (Section~\ref{sec:assumptions}) is correspondingly stated
 directly in window-integrated form:
-$\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
+$\Uin{n}(Y_n) \leq \volR^{[W]}(Y_n)$.
 \end{definition}
 
 \begin{remark}[$\volR$ is latent; $\volRlower$ is the bound]
@@ -233,18 +233,18 @@ Part~A.
 \emph{Part~A.}
 Fix an event $n$ with $t_n \in W$.  By S1, agent~$i_n$ chose
 $Y_n$ over $X_n$ while both were available.  Revealed preference
-gives $\Ui[_n]\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
-\Ui[_n](H_n)$ for pre-trade holdings $H_n$.  By
+gives $\Uin{n}\bigl((H_n \setminus X_n) \cup Y_n\bigr) \geq
+\Uin{n}(H_n)$ for pre-trade holdings $H_n$.  By
 Lemma~\ref{lem:cancellation} under S4(a) and the genuine-
 exchange conditions of Definition~\ref{def:sacrifice_event},
-this reduces to $\Ui[_{n}](Y_n) \geq \Ui[_{n}](X_n)$.  By S0
+this reduces to $\Uin{n}(Y_n) \geq \Uin{n}(X_n)$.  By S0
 (valuation-bounded-by-exercise, stated in window-integrated
-form), $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.  By S2
-(benchmark grounding), $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+form), $\Uin{n}(Y_n) \leq \volR^{[W]}(Y_n)$.  By S2
+(benchmark grounding), $\Uin{n}(X_n) \geq \Delta\volL(X_n)$.
 Chaining:
 \[
-  \volR^{[W]}(Y_n) \;\geq\; \Ui[_{n}](Y_n)
-  \;\geq\; \Ui[_{n}](X_n)
+  \volR^{[W]}(Y_n) \;\geq\; \Uin{n}(Y_n)
+  \;\geq\; \Uin{n}(X_n)
   \;\geq\; \Delta\volL(X_n),
 \]
 which is the per-event bound.  The window-integrated form is
@@ -388,11 +388,23 @@ The B-to-C ratio under revealed-sacrifice observation is:
 \[
   \betaL(G, T) \;=\; \volRlower(G, T) \;/\; \volL(G),
 \]
-where $\volRlower$ is the aggregate lower bound from
-Theorem~\ref{thm:aggregate_bound} and $T$ indexes the trade
-window.  $\betaL \in [0, 1]$ because $\volR \leq \volL$ by
-definition (the exercised sub-poset is a subset of the full
-poset).
+where $G$ is a capability subset on which $\volRlower(G, T)$ is
+defined.  The two reference choices are:
+(a)~$G = U$, where $U$ is the observed subset covered by
+admissible bundles (so $\volRlower(U, T)$ is the per-capability
+or sub-batch-supremum aggregate of
+Theorem~\ref{thm:aggregate_bound});
+(b)~$G = P$, the full capability-space denominator, with
+numerator $\volRlower(U, T)$ extended by zero outside $U$ to
+yield a global conservative ratio.  In both cases
+$\betaL \in [0, 1]$: the numerator is $\geq 0$ by construction
+and is bounded above by $\volL(G)$ because $\volRlower(G, T)
+\leq \volR(G) \leq \volL(G)$ (Part-A/Part-B inequalities chained
+with $\volR \leq \volL$).  For arbitrary $G \subseteq P$ outside
+case~(a) or~(b), $\volRlower(G, T)$ requires the subset-extension
+hypotheses of Definition~\ref{def:volRlower_subset}; without
+those, $\betaL(G, T)$ is an accounting score, not a
+theorem-certified ratio.  $T$ indexes the trade window.
 \end{definition}
 
 \begin{proposition}[Part~B Monotone Accumulation Under
@@ -469,13 +481,18 @@ is weakly larger.
 \label{rem:part_a_monotone_interp}
 $\volRlower^{\mathrm{A}}(E)$ is the tightest Part~A lower bound
 the framework can extract from the event set $E$ by choosing
-which sub-batches to apply Theorem~\ref{thm:aggregate_bound} to.
-Operationally, this is ``apply the theorem to each maximal
-admissible sub-batch and take the sum (over poset-disjoint
-components of the covered space, with max-attribution or
-union-bookkeeping where batches overlap).''  The sup-over-
-sub-batches definition is the principled monotone functional
-corresponding to the Part~A bound; $\volRlower^{\mathrm{A}}$ is
-what the paper refers to when it says ``the constructed Part~A
-lower bound is non-decreasing in observed admissible events.''
+which sub-batch to apply Theorem~\ref{thm:aggregate_bound} to.
+The supremum is over single sub-batches; computing it does
+\emph{not} entail summing across multiple disjoint sub-batches
+of $E$, because doing so could double-count when an underlying
+capability appears in multiple sub-batches.  Operationally, the
+framework selects the single sub-batch maximising the Part~A
+sum; if multiple maximal admissible sub-batches partition the
+covered space into poset-disjoint components, their sum is also
+admissible (and equal to the supremum on that one combined
+sub-batch), but the principled definition is the supremum over
+sub-batches, not the sum across them.  $\volRlower^{\mathrm{A}}$
+is what the paper refers to when it says ``the constructed
+Part~A lower bound is non-decreasing in observed admissible
+events.''
 \end{remark}

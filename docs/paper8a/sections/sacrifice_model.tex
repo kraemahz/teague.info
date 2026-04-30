@@ -214,7 +214,7 @@ assumptions.  We collect them here for single-point reference.
   with event at $t_n \in W$, the agent's valuation of the
   unbenchmarked bundle $Y_n$ does not exceed $Y_n$'s
   \emph{window-integrated} realized $\volR$ contribution:
-  $\Ui[_{n}](Y_n) \leq \volR^{[W]}(Y_n)$.
+  $\Uin{n}(Y_n) \leq \volR^{[W]}(Y_n)$.
   This is the \emph{substantive bridge} between valuation (what
   the agent pays for at $t_n$) and realized exercise (what the
   framework cares about, aggregated over the observation window
@@ -258,7 +258,7 @@ assumptions.  We collect them here for single-point reference.
   has a well-defined $\volL$ contribution $\Delta\volL(X_n)$
   computed via~\citep[Proposition~1]{lasser2026poset}, and the
   agent's valuation of $X_n$ is at least as large:
-  $\Ui[_{n}](X_n) \geq \Delta\volL(X_n)$.
+  $\Uin{n}(X_n) \geq \Delta\volL(X_n)$.
 
 \item[S3 (Bundle coherence).] The hedonic decomposition of each
   bundle $Y_n$ into capabilities in $U$ is well-defined (no
@@ -283,10 +283,14 @@ assumptions.  We collect them here for single-point reference.
     links) is additive.
   \end{enumerate}
 
-\item[S5 (Decomposition validity).] The event-local decomposition
-  coefficients are \emph{lower bounds} on the true $\volR$ share:
-  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all $n$ and
-  $c \in Y_n$.
+\item[S5 (Decomposition validity).] For events with
+  $\volR(Y_n) > 0$, the event-local decomposition
+  coefficients are \emph{lower bounds} on the true $\volR$
+  share:
+  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all such $n$
+  and $c \in Y_n$.  Events with $\volR(Y_n) = 0$ carry no
+  share information and are excluded from Part~B by the
+  positivity precondition of the proof.
 \end{description}
 
 \begin{remark}[S5 is a conditional-refinement assumption]
@@ -538,8 +542,13 @@ relies on but does not itself construct.
   public-facing ledger data (market exchanges, payment rails,
   public commitments) with no agent participation required,
   \emph{assuming} such public-ledger infrastructure exists.  The
-  sacrifice magnitude $\Delta\volL(X)$ is directly readable from
-  the price paid.
+  price~$p$ is directly readable from public ledger data; the
+  sacrifice magnitude $\Delta\volL(X)$ is then computed from~$p$
+  via the benchmark function on the surrendered purchasing
+  power (Definition~\ref{def:money_sacrifice}).  ``Directly
+  readable'' refers to~$p$; $\Delta\volL$ is a function of~$p$
+  through a public benchmark, not a separately-disclosed
+  quantity.
 
   \emph{Time-sacrifice events} are observable from public-ledger
   data only under an additional precondition: the agent's

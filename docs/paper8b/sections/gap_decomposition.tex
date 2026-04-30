@@ -26,29 +26,43 @@ or residual-class capabilities beyond the channel's reach.
 Let $\betatrue := \volR/\volL$ be the true (latent) exercised
 fraction, of which $\betaL = \volRlower/\volL$ is the
 sacrifice-channel lower bound.  Because $\betaL \leq \betatrue$
-by construction, the alarm distinguishes two regimes:
+by construction, the alarm distinguishes two regimes by which
+$\delta$ term dominates the gap $1 - \betaL$:
 \begin{itemize}
-\item \textbf{Alarm fires and $\delta_{\mathrm{covered}}$ is
-  small relative to $\delta_{\mathrm{dormant}} +
-  \delta_{\mathrm{restricted}} + \delta_{\mathrm{residual}}$:}
-  the low $\betaL$ reflects insufficient observed trade on
-  non-residual, non-restricted capabilities.  This is the
-  canonical proxy-failure signature: $\volL$-weighted capabilities
-  exist that are observable in principle but not being traded.
+\item \textbf{Alarm fires and $\delta_{\mathrm{covered}}$
+  dominates the gap:} on the covered cell, observed trade
+  evidence is small relative to that cell's $\volL$-weight
+  ($\delta_{\mathrm{covered}} = [\volL(C) - \volRlower(C)] /
+  \volL(G)$ is large, indicating
+  $\volRlower(C) \ll \volL(C)$).  This is the canonical
+  proxy-failure signature: capabilities the sacrifice channel
+  \emph{can} reach are present in $\volL$ but registering little
+  exercise evidence.
 \item \textbf{Alarm fires and $\delta_{\mathrm{residual}}$ or
   $\delta_{\mathrm{restricted}}$ dominates:} the low $\betaL$
   reflects structural invisibility or policy restriction, not
   proxy failure.  The framework should not escalate in these
   cases; the alarm is firing on what the sacrifice channel cannot
-  reach, not on degraded exercise.
+  reach, not on degraded exercise on what it can reach.
 \end{itemize}
 The alarm has no false positives in the narrow sense---low
 $\betaL$ is real and the sacrifice channel genuinely sees little
 evidence---but it has false positives in the proxy-failure
 sense, which is why the gap decomposition below is necessary to
-distinguish the regimes.  False negatives ($\volR$ high but
-invisible to the sacrifice channel) are also possible and are
-the structural cost of privacy-minimal observation.
+distinguish the regimes.  The converse failure mode---true
+$\volR$ high but the sacrifice channel sees little
+evidence---produces low $\betaL$ and would also fire the alarm,
+making the alarm a false-positive proxy-failure signal in that
+regime as well; this is the structural cost of
+privacy-respecting observation, and the gap decomposition's
+$\delta_{\mathrm{residual}}$ and $\delta_{\mathrm{restricted}}$
+cells are precisely the diagnostic that distinguishes
+``low-evidence-but-true-low-exercise'' from
+``low-evidence-but-channel-blind.''  The alarm has no
+\emph{false negative} in the conventional sense ($\betaL$ is
+computed from observed events; the alarm fires deterministically
+whenever the threshold is crossed), only the proxy-failure
+false-positive modes flagged here.
 \end{remark}
 
 \subsection{Diagnostic decomposition}

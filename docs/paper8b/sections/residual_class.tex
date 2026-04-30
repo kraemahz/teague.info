@@ -99,11 +99,18 @@ artefact sequence is non-repeatable and non-communicable in the
 benchmark sense, so the capability lies in $\ResB$.  But the
 practice consumes materials (paid-for supplies, rent on studio
 space) and displaces outside-option labour hours; every session
-produces a money- or time-sacrifice event
-(\citep{lasser2026paper8a}) that emits a valid
-$\volRlower$ signal on the underlying bundle.  Thus the capability
-is reachable in principle by the sacrifice channel and so
-$\notin \ResS$.
+admits a money- or time-sacrifice event
+(\citep{lasser2026paper8a}) on the underlying bundle.  Whether
+that event ultimately emits a $\volRlower$ signal additionally
+requires the sacrifice channel's S0--S5 admissibility and
+genuine-exchange conditions to hold for the event; what
+$\ResS$-membership turns on is the \emph{reachability in
+principle} of a sacrifice-observable path, not the
+admissibility of any particular event.  Reachability is
+satisfied here because each session admits an admissible
+sacrifice event under standard market conditions; therefore
+the capability is reachable in principle by the sacrifice
+channel and so $\notin \ResS$.
 
 \emph{(c) $\ResS \setminus \ResB$.}
 The residual definition (Definition~\ref{def:residual_class})
@@ -196,10 +203,16 @@ the bridge]
 Fix a window $W = [t_0, t_0 + T]$.  For an agent~$k$ with OI
 capability $d_k \in O$ satisfying the OI--exercise bridge
 (Definition~\ref{def:oi_exercise_bridge}) at some $t \in W$,
-$d_k$ is exercised within $W$ and therefore contributes
-$\OIfloor(k) \geq 1$ to $\volRexact^{[W]}(O)$ (with the weight
-bound from the binary default
-of~\citep[Corollary~2.1]{lasser2026horizon}).  Summing over
+$d_k$ is exercised within $W$ and therefore contributes its
+$\volL$ weight $w(d_k)$ to $\volRexact^{[W]}(O)$.  Assume
+additionally that $w(d_k) \geq \OIfloor(k)$, where $\OIfloor(k)$
+is the elimination floor
+of~\citep[Corollary~2.1]{lasser2026horizon}.  This weight
+premise holds under the binary-default poset construction of
+Corollary~2.1 ($w(d_k) = \OIfloor(k) = 1$); under non-binary
+weight schemes it must be checked explicitly because
+Corollary~2.1 establishes a contraction floor on capability
+removal, not a direct lower bound on $w(d_k)$.  Summing over
 agents $k \in K$ whose OI capabilities $\{d_k\}$ are pairwise
 poset-independent (stated as an explicit hypothesis on the
 agent set; the category partition of~\citep{lasser2026paper8a}
@@ -208,13 +221,14 @@ observation perimeter $O$, so this independence is imposed
 directly rather than imported) and who each satisfy the bridge
 at some $t \in W$:
 \[
-  \volRexact^{[W]}(O) \;\geq\; \sum_{k \in K} \OIfloor(k)
-  \;=:\; \sum_{k \in K} \OIfloor(k).
+  \volRexact^{[W]}(O) \;\geq\; \sum_{k \in K} w(d_k)
+  \;\geq\; \sum_{k \in K} \OIfloor(k).
 \]
-The floor transfers only under the bridge hypothesis; it is
-\emph{not} a consequence of Corollary~2.1 alone, which
-establishes a $\volL$ elimination floor rather than an exercise
-witness.
+The floor transfers only under both the bridge hypothesis and
+the weight premise $w(d_k) \geq \OIfloor(k)$; it is \emph{not}
+a consequence of Corollary~2.1 alone, which establishes a
+$\volL$ elimination floor rather than an exercise witness or a
+direct weight lower bound.
 \end{proposition}
 
 \begin{proof}
