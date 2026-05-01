@@ -44,6 +44,14 @@ const ArticlePreview: React.FC = () => {
             <p className="subtitle">Engineer, Philosopher, Dreamer</p>
 
             <h3 className="section-title">Papers</h3>
+            <a href="/papers/need-sufficiency/" className="paper-link">
+                <p className="paper-title">Need-Sufficiency Architecture and Gap Diagnostics for the B-to-C Gap</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.7 (1M context), GPT 5.5</p>
+            </a>
+            <a href="/papers/revealed-sacrifice/" className="paper-link">
+                <p className="paper-title">An Aggregate B-to-C Lower Bound from Revealed-Sacrifice Observation</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.7 (1M context), GPT 5.5</p>
+            </a>
             <a href="/papers/wamura/" className="paper-link">
                 <p className="paper-title">Controlled Relaxation Protocols for the Wamura Problem</p>
                 <p className="paper-meta">2026 · Lasser, Claude Opus 4.6, GPT 5.4</p>
