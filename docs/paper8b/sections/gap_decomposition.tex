@@ -280,7 +280,8 @@ sacrifice evidence).  CC1 and CC2 are
 required only for the $\volL$ step above.  Under the literal-partition
 variant (strategy~(c)), the $\volL$ identity expands to a
 five-term sum $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
-\volL(S) + \volL(B)$ by literal M5 weight summation across the
+\volL(S) + \volL(B)$ by literal atomic-weight summation
+$\volL(X) := \sum_{c \in X} w(c)$ across the
 five-cell partition; the $\volRlower$ aggregate similarly
 sums literally over the partitioned subset.  $\volRlower(B)$
 is computed by the same Part-B max-attribution rule as any
@@ -412,7 +413,7 @@ boundary-crossing instances must be eliminated.
   $\volL$ weight $w(c_{\mathrm{coop}})$ from M5; the
   literal-partition assignment makes
   $\volL(B) = \sum_{z \in \mathrm{cross-cell\ coops}} w(z)$
-  by direct M5 weight summation.  Subsumption-crossing
+  by the strategy-(c) atomic-weight accounting convention.  Subsumption-crossing
   edges, which carry no standalone $\volL$ weight, do not
   contribute additional bucket mass; their structural effect
   on additivity is what the literal-partition framing
