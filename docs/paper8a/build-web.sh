@@ -259,7 +259,7 @@ cat > "$OUT_DIR/index.html" << 'TEMPLATE_START'
       "affiliations": [{"name": "Subseq"}]
     },
     {
-      "author": "Claude Opus 4.7 (1M context)",
+      "author": "Claude Opus 4.7",
       "affiliations": [{"name": "Anthropic"}]
     },
     {
