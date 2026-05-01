@@ -8,245 +8,17 @@ they voluntarily surrender to obtain them.  The framework does not
 observe \emph{what} the agent values privately, only \emph{what
 they commit to publicly through sacrifice}.
 
-\subsection{Core definitions}
-
-\begin{definition}[Revealed-Sacrifice Event]
-\label{def:sacrifice_event}
-A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
-\begin{itemize}
-\item $i$ is the agent performing the sacrifice;
-\item $X$ is a benchmarked capability (or capability bundle) with
-  known $\Delta\volL(X) \geq 0$, surrendered by agent~$i$ at
-  time~$t$;
-\item $Y = \{Y_1, \ldots, Y_k\}$ is an unbenchmarked capability
-  bundle acquired by agent~$i$, satisfying the \emph{genuine-
-  exchange conditions}:
-  (i)~$X \cap Y = \emptyset$ (the agent does not surrender and
-  reacquire the same capability);
-  (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
-  bundle is novel relative to the agent's retained holdings
-  $H_i \setminus X$, where $H_i$ is the agent's pre-trade
-  holdings);
-  (iii)~\emph{post-trade cooperative closure}: no cooperative
-  capability in the poset has participants spanning both $Y$
-  and $H_i \setminus X$ (so post-trade, no new cross-bundle
-  cooperative capability is activated by the combination);
-  and
-  (iv)~\emph{pre-trade cooperative closure}: no cooperative
-  capability in the poset has participants spanning both $X$
-  and $H_i \setminus X$ (so pre-trade, no cooperative
-  capability straddles the surrendered and retained
-  capability sets---only cooperatives contained entirely in
-  $X$ or entirely in $H_i \setminus X$ exist);
-\item $t$ is the event timestamp.
-\end{itemize}
-Conditions (i) and (ii) characterize \emph{genuine} trades: the
-agent exchanges distinct capabilities and acquires something
-novel.  Conditions (iii) and (iv) together ensure that the
-exchange-to-bundle cancellation in the revealed-preference
-derivation is exact: (iii) rules out post-trade cross-bundle
-cooperatives that would inflate $\Ui((H \setminus X) \cup Y)$
-beyond $\Ui(H \setminus X) + \Ui(Y)$; (iv) rules out pre-trade
-cross-bundle cooperatives that would inflate $\Ui(H)$ beyond
-$\Ui(H \setminus X) + \Ui(X)$.  Both closures are needed
-symmetrically for the cancellation of
-Lemma~\ref{lem:cancellation} to hold.  Trades violating
-(i)~or~(ii) are degenerate; trades violating (iii)~or~(iv) carry
-revealed-preference information about the marginal contribution
-of $Y$ in context rather than $\volR(Y)$ in isolation, but the
-theorem's isolated-$\volR(Y)$ interpretation and
-Lemma~\ref{lem:cancellation} require all four conditions.
-Contextual-quantity salvage is outside this paper's formal
-scope and is flagged as a future-work direction in
-Section~\ref{sec:discussion}.
-The event emits the signal:
-\[
-  \volRlower(Y) \;\geq\; \Delta\volL(X)
-\]
-under assumptions S0 (calibration), S1 (free choice), S2
-(benchmark grounding), and S4(a) (valuation additivity) stated
-below.  S4(a) is needed for the exchange-to-bundle cancellation
-(Lemma~\ref{lem:cancellation}).
-\end{definition}
-
-\begin{lemma}[Exchange-to-Bundle Cancellation]
-\label{lem:cancellation}
-Let $H$ be a finite capability holding set with $X \subseteq H$,
-and let $Y$ be a finite capability set satisfying the
-genuine-exchange conditions (i)--(iv) of
-Definition~\ref{def:sacrifice_event} relative to $H$:
-(i)~$X \cap Y = \emptyset$;
-(ii)~$Y \cap (H \setminus X) = \emptyset$;
-(iii)~no cooperative capability in the poset has participants
-spanning both $Y$ and $H \setminus X$;
-(iv)~no cooperative capability in the poset has participants
-spanning both $X$ and $H \setminus X$.
-Under S4(a) (global valuation additivity:
-$\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
-$S \subseteq P$, with cooperative capabilities included as
-explicit nodes in $S$ when their participants are all in $S$):
-\[
-  \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
-  \;=\; \Ui(Y) - \Ui(X).
-\]
-Equivalently,
-$\Ui((H \setminus X) \cup Y) \geq \Ui(H)
-\iff \Ui(Y) \geq \Ui(X)$.
-\end{lemma}
-
-\begin{proof}
-By S4(a), $\Ui(A) = \sum_{c \in A} u_i(c)$ for any finite
-capability set $A$.  To apply this cleanly we must track
-cooperative capabilities carefully: under S4(a), a cooperative
-capability $c_{\mathrm{coop}}$ contributes $u_i(c_{\mathrm{coop}})$
-to $\Ui(A)$ whenever $c_{\mathrm{coop}} \in A$, which holds iff
-all of $c_{\mathrm{coop}}$'s participants are in $A$.
-
-\emph{Pre-trade state $H$.}  $H = (H \setminus X) \sqcup X$.
-By (iv), no cooperative capability has participants spanning
-$X$ and $H \setminus X$, so every cooperative capability in $H$
-has participants entirely in $X$ or entirely in $H \setminus X$.
-Hence
-\[
-  \Ui(H) = \Ui(H \setminus X) + \Ui(X),
-\]
-where each term includes cooperatives formable within that set
-alone.
-
-\emph{Post-trade state $(H \setminus X) \cup Y$.}  By (ii) this
-is a disjoint union: $(H \setminus X) \sqcup Y$.  By (iii),
-no cooperative capability has participants spanning $Y$ and
-$H \setminus X$, so every cooperative in the post-trade state
-has participants entirely in $Y$ or entirely in $H \setminus X$.
-Hence
-\[
-  \Ui\bigl((H \setminus X) \cup Y\bigr)
-  = \Ui(H \setminus X) + \Ui(Y).
-\]
-
-\emph{Cancellation.}
-Subtracting, the $\Ui(H \setminus X)$ terms cancel, leaving
-$\Ui((H \setminus X) \cup Y) - \Ui(H) = \Ui(Y) - \Ui(X)$.
-
-Condition (i) makes $\Ui(Y)$ and $\Ui(X)$ refer to distinct
-capability sets; violating (i) would cause $X \cap Y$ terms to
-cancel trivially on both sides, yielding no information.
-\end{proof}
-
-\begin{remark}[Cooperative closure of capability sets]
-\label{rem:cooperative_closure_op}
-Throughout this section, ``$\Ui(S)$'' for a finite capability
-set $S$ is computed via S4(a) over the
-\emph{cooperative-closure} of $S$: the set $S^{*}$ obtained by
-adding to $S$ every cooperative capability $z \in P$ all of
-whose participants are already in $S$.  Concretely,
-$\Ui(S) = \sum_{c \in S^{*}} u_i(c)$, where the sum runs over
-the closed set rather than the bare $S$.  Cooperatives whose
-participants are not all in $S$ are not added, even if some are.
-The genuine-exchange conditions (iii) and (iv) of
-Definition~\ref{def:sacrifice_event} ensure cooperative
-closures of $H \setminus X$, $X$, $Y$, $H$, and $(H \setminus
-X) \cup Y$ behave compatibly: condition (iv) makes $H^{*} =
-(H \setminus X)^{*} \sqcup X^{*}$ (no cooperative spans the
-$X$/$H \setminus X$ split), and condition (iii) makes
-$((H \setminus X) \cup Y)^{*} = (H \setminus X)^{*} \sqcup
-Y^{*}$ (no cooperative spans the $Y$/$H \setminus X$ split).
-The cancellation of Lemma~\ref{lem:cancellation} runs over
-these closed sets.
-\end{remark}
-
-\paragraph{Justification (revealed-preference inequality).}
-The transfer from the observed trade to the framework-level
-bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
-steps.
-
-\begin{enumerate}
-\item \textbf{Exchange preference (revealed-preference
-  observation).}
-  When agent~$i$ trades $X$ for $Y$, revealed-preference
-  theory~\citep{samuelson1938note} establishes that the
-  post-trade state is weakly preferred to the pre-trade state:
-  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
-  where $H$ is the agent's pre-trade holdings.
-
-\item \textbf{Reduction to bundle-level comparison.}
-  By Lemma~\ref{lem:cancellation} under S4(a) and the
-  genuine-exchange conditions of
-  Definition~\ref{def:sacrifice_event}, the exchange comparison
-  reduces to $\Ui(Y) \geq \Ui(X)$.
-
-\item \textbf{Calibration chain.}
-  Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
-  bound uses:
-  \begin{itemize}
-  \item Sacrifice-side grounding (S2):
-    $\Ui(X) \geq \Delta\volL(X)$, which holds by construction
-    when $\volL$ is the operational target on the benchmarked
-    subspace.
-  \item Acquisition-side calibration (S0):
-    $\Ui(Y) \leq \volR^{[W]}(Y)$, asserting that agents do not
-    systematically overvalue unbenchmarked bundles relative to
-    their \emph{window-active} exercise contribution.  The
-    window-active form is what the observation channel
-    actually bounds: an acquisition at $t_n$ carries no
-    instantaneous exercise witness, but the bound is still
-    valid on the cumulative window quantity $\volR^{[W]}$
-    whenever the agent uses $Y$ during $W$.
-  \end{itemize}
-  Chaining: $\volR^{[W]}(Y) \geq \Ui(Y) \geq \Ui(X) \geq
-  \Delta\volL(X)$.
-\end{enumerate}
-
-\begin{remark}[S4(a) is a genuine assumption, not a consequence]
-\label{rem:s4a_status}
-S4(a) is a global additive-separability assumption on $\Ui$.
-It is stronger than the rationality-only premises of Samuelson's
-original revealed-preference
-theorem~\citep{samuelson1938note}, which establishes preferences
-over states rather than additivity over bundles.  In applied
-microeconomics~\citep{mascolell1995microeconomic}, bundle-level
-inference of the kind the sacrifice channel performs typically
-invokes either additive separability or quasilinearity in a
-numeraire.  The paper uses a special case implicitly via the
-time-sacrifice channel (Definition~\ref{def:time_sacrifice}),
-which values time at wage rate $r_i$---quasilinearity in
-wage-scaled time, a form of valuation additivity.  S4(a) is the
-explicit assumption that makes Lemma~\ref{lem:cancellation} go
-through; it is not a consequence of S0--S3.
-
-Complementarities that would break pure additivity in general
-consumer theory are absorbed into the poset as cooperative
-nodes via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
-capabilities are themselves capabilities with their own weights,
-so bundle-specific cooperative contributions appear as separate
-summands in $\Ui$.  S4(a)'s additivity is compatible with this
-structure because cooperative terms are explicit capabilities,
-not hidden non-linearities.
-
-\emph{The cooperative-absorption argument is framework-internal,
-not a general claim about real-world valuation functions.}  S4(a)
-is plausible in this paper because the GFM framework's poset
-construction is disciplined to internalize complementarities as
-cooperative capabilities (M6); it is not the general claim that
-any agent's valuation decomposes additively over bundle elements.
-Outside the framework, S4(a) would be a strong empirical
-hypothesis about real consumers; inside the framework, its
-plausibility is inherited from the construction discipline that
-puts each empirically-observed complementarity into the poset
-explicitly as a cooperative node.  A poset that fails to do this
-(complementarities present in the agent's valuation but absent
-from the poset's cooperative structure) violates S4(a) by
-construction; the assumption is therefore as strong as the
-poset-construction discipline allows it to be, and no stronger.
-This is the architectural reason S4(a) appears as an explicit
-named assumption rather than a derived consequence, and the
-reason its operational adequacy is a property of the
-poset-construction governance layer, not of agent behaviour
-per se.
-\end{remark}
-
 \subsection{Assumptions}
 \label{sec:assumptions}
+
+\noindent\emph{Notation used throughout this section.}  A sacrifice
+event is denoted as a tuple $(i_n, X_n, Y_n, t_n)$ with $i_n$ the
+agent, $X_n$ the surrendered benchmarked capability (or bundle),
+$Y_n$ the acquired unbenchmarked bundle, and $t_n$ the event
+timestamp; the formal definition with its genuine-exchange
+conditions appears as Definition~\ref{def:sacrifice_event} in
+Section~\ref{sec:sacrifice_events}.  We use the tuple notation
+in the assumption statements below.
 
 The revealed-sacrifice channel and its aggregate bound
 (Section~\ref{sec:lower_bound}) operate under six named
@@ -537,6 +309,245 @@ observation windows used elsewhere in the
 sequence~\citep{lasser2026scm}: it defines the timescale
 over which the framework accumulates sacrifice evidence.
 \end{definition}
+
+\subsection{Sacrifice events and the cancellation lemma}
+\label{sec:sacrifice_events}
+
+\begin{definition}[Revealed-Sacrifice Event]
+\label{def:sacrifice_event}
+A revealed-sacrifice event is a tuple $(i, X, Y, t)$ where:
+\begin{itemize}
+\item $i$ is the agent performing the sacrifice;
+\item $X$ is a benchmarked capability (or capability bundle) with
+  known $\Delta\volL(X) \geq 0$, surrendered by agent~$i$ at
+  time~$t$;
+\item $Y = \{Y_1, \ldots, Y_k\}$ is an unbenchmarked capability
+  bundle acquired by agent~$i$, satisfying the \emph{genuine-
+  exchange conditions}:
+  (i)~$X \cap Y = \emptyset$ (the agent does not surrender and
+  reacquire the same capability);
+  (ii)~$Y \cap (H_i \setminus X) = \emptyset$ (the acquired
+  bundle is novel relative to the agent's retained holdings
+  $H_i \setminus X$, where $H_i$ is the agent's pre-trade
+  holdings);
+  (iii)~\emph{post-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $Y$
+  and $H_i \setminus X$ (so post-trade, no new cross-bundle
+  cooperative capability is activated by the combination);
+  and
+  (iv)~\emph{pre-trade cooperative closure}: no cooperative
+  capability in the poset has participants spanning both $X$
+  and $H_i \setminus X$ (so pre-trade, no cooperative
+  capability straddles the surrendered and retained
+  capability sets---only cooperatives contained entirely in
+  $X$ or entirely in $H_i \setminus X$ exist);
+\item $t$ is the event timestamp.
+\end{itemize}
+Conditions (i) and (ii) characterize \emph{genuine} trades: the
+agent exchanges distinct capabilities and acquires something
+novel.  Conditions (iii) and (iv) together ensure that the
+exchange-to-bundle cancellation in the revealed-preference
+derivation is exact: (iii) rules out post-trade cross-bundle
+cooperatives that would inflate $\Ui((H \setminus X) \cup Y)$
+beyond $\Ui(H \setminus X) + \Ui(Y)$; (iv) rules out pre-trade
+cross-bundle cooperatives that would inflate $\Ui(H)$ beyond
+$\Ui(H \setminus X) + \Ui(X)$.  Both closures are needed
+symmetrically for the cancellation of
+Lemma~\ref{lem:cancellation} to hold.  Trades violating
+(i)~or~(ii) are degenerate; trades violating (iii)~or~(iv) carry
+revealed-preference information about the marginal contribution
+of $Y$ in context rather than $\volR(Y)$ in isolation, but the
+theorem's isolated-$\volR(Y)$ interpretation and
+Lemma~\ref{lem:cancellation} require all four conditions.
+Contextual-quantity salvage is outside this paper's formal
+scope and is flagged as a future-work direction in
+Section~\ref{sec:discussion}.
+The event emits the signal:
+\[
+  \volRlower(Y) \;\geq\; \Delta\volL(X)
+\]
+under assumptions S0 (calibration), S1 (free choice), S2
+(benchmark grounding), and S4(a) (valuation additivity) of
+Section~\ref{sec:assumptions}.  S4(a) is needed for the
+exchange-to-bundle cancellation
+(Lemma~\ref{lem:cancellation}).
+\end{definition}
+
+\begin{lemma}[Exchange-to-Bundle Cancellation]
+\label{lem:cancellation}
+Let $H$ be a finite capability holding set with $X \subseteq H$,
+and let $Y$ be a finite capability set satisfying the
+genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event} relative to $H$:
+(i)~$X \cap Y = \emptyset$;
+(ii)~$Y \cap (H \setminus X) = \emptyset$;
+(iii)~no cooperative capability in the poset has participants
+spanning both $Y$ and $H \setminus X$;
+(iv)~no cooperative capability in the poset has participants
+spanning both $X$ and $H \setminus X$.
+Under S4(a) (global valuation additivity:
+$\Ui(S) = \sum_{c \in S} u_i(c)$ for any finite
+$S \subseteq P$, with cooperative capabilities included as
+explicit nodes in $S$ when their participants are all in $S$):
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr) - \Ui(H)
+  \;=\; \Ui(Y) - \Ui(X).
+\]
+Equivalently,
+$\Ui((H \setminus X) \cup Y) \geq \Ui(H)
+\iff \Ui(Y) \geq \Ui(X)$.
+\end{lemma}
+
+\begin{proof}
+By S4(a), $\Ui(A) = \sum_{c \in A} u_i(c)$ for any finite
+capability set $A$.  To apply this cleanly we must track
+cooperative capabilities carefully: under S4(a), a cooperative
+capability $c_{\mathrm{coop}}$ contributes $u_i(c_{\mathrm{coop}})$
+to $\Ui(A)$ whenever $c_{\mathrm{coop}} \in A$, which holds iff
+all of $c_{\mathrm{coop}}$'s participants are in $A$.
+
+\emph{Pre-trade state $H$.}  $H = (H \setminus X) \sqcup X$.
+By (iv), no cooperative capability has participants spanning
+$X$ and $H \setminus X$, so every cooperative capability in $H$
+has participants entirely in $X$ or entirely in $H \setminus X$.
+Hence
+\[
+  \Ui(H) = \Ui(H \setminus X) + \Ui(X),
+\]
+where each term includes cooperatives formable within that set
+alone.
+
+\emph{Post-trade state $(H \setminus X) \cup Y$.}  By (ii) this
+is a disjoint union: $(H \setminus X) \sqcup Y$.  By (iii),
+no cooperative capability has participants spanning $Y$ and
+$H \setminus X$, so every cooperative in the post-trade state
+has participants entirely in $Y$ or entirely in $H \setminus X$.
+Hence
+\[
+  \Ui\bigl((H \setminus X) \cup Y\bigr)
+  = \Ui(H \setminus X) + \Ui(Y).
+\]
+
+\emph{Cancellation.}
+Subtracting, the $\Ui(H \setminus X)$ terms cancel, leaving
+$\Ui((H \setminus X) \cup Y) - \Ui(H) = \Ui(Y) - \Ui(X)$.
+
+Condition (i) makes $\Ui(Y)$ and $\Ui(X)$ refer to distinct
+capability sets; violating (i) would cause $X \cap Y$ terms to
+cancel trivially on both sides, yielding no information.
+\end{proof}
+
+\begin{remark}[Cooperative closure of capability sets]
+\label{rem:cooperative_closure_op}
+Throughout this section, ``$\Ui(S)$'' for a finite capability
+set $S$ is computed via S4(a) over the
+\emph{cooperative-closure} of $S$: the set $S^{*}$ obtained by
+adding to $S$ every cooperative capability $z \in P$ all of
+whose participants are already in $S$.  Concretely,
+$\Ui(S) = \sum_{c \in S^{*}} u_i(c)$, where the sum runs over
+the closed set rather than the bare $S$.  Cooperatives whose
+participants are not all in $S$ are not added, even if some are.
+The genuine-exchange conditions (iii) and (iv) of
+Definition~\ref{def:sacrifice_event} ensure cooperative
+closures of $H \setminus X$, $X$, $Y$, $H$, and $(H \setminus
+X) \cup Y$ behave compatibly: condition (iv) makes $H^{*} =
+(H \setminus X)^{*} \sqcup X^{*}$ (no cooperative spans the
+$X$/$H \setminus X$ split), and condition (iii) makes
+$((H \setminus X) \cup Y)^{*} = (H \setminus X)^{*} \sqcup
+Y^{*}$ (no cooperative spans the $Y$/$H \setminus X$ split).
+The cancellation of Lemma~\ref{lem:cancellation} runs over
+these closed sets.
+\end{remark}
+
+\paragraph{Justification (revealed-preference inequality).}
+The transfer from the observed trade to the framework-level
+bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
+steps.
+
+\begin{enumerate}
+\item \textbf{Exchange preference (revealed-preference
+  observation).}
+  When agent~$i$ trades $X$ for $Y$, revealed-preference
+  theory~\citep{samuelson1938note} establishes that the
+  post-trade state is weakly preferred to the pre-trade state:
+  $\Ui\bigl((H \setminus X) \cup Y\bigr) \geq \Ui(H)$,
+  where $H$ is the agent's pre-trade holdings.
+
+\item \textbf{Reduction to bundle-level comparison.}
+  By Lemma~\ref{lem:cancellation} under S4(a) and the
+  genuine-exchange conditions of
+  Definition~\ref{def:sacrifice_event}, the exchange comparison
+  reduces to $\Ui(Y) \geq \Ui(X)$.
+
+\item \textbf{Calibration chain.}
+  Given $\Ui(Y) \geq \Ui(X)$, the bridge to the framework-level
+  bound uses:
+  \begin{itemize}
+  \item Sacrifice-side grounding (S2):
+    $\Ui(X) \geq \Delta\volL(X)$, which holds by construction
+    when $\volL$ is the operational target on the benchmarked
+    subspace.
+  \item Acquisition-side calibration (S0):
+    $\Ui(Y) \leq \volR^{[W]}(Y)$, asserting that agents do not
+    systematically overvalue unbenchmarked bundles relative to
+    their \emph{window-active} exercise contribution.  The
+    window-active form is what the observation channel
+    actually bounds: an acquisition at $t_n$ carries no
+    instantaneous exercise witness, but the bound is still
+    valid on the cumulative window quantity $\volR^{[W]}$
+    whenever the agent uses $Y$ during $W$.
+  \end{itemize}
+  Chaining: $\volR^{[W]}(Y) \geq \Ui(Y) \geq \Ui(X) \geq
+  \Delta\volL(X)$.
+\end{enumerate}
+
+\begin{remark}[S4(a) is a genuine assumption, not a consequence]
+\label{rem:s4a_status}
+S4(a) is a global additive-separability assumption on $\Ui$.
+It is stronger than the rationality-only premises of Samuelson's
+original revealed-preference
+theorem~\citep{samuelson1938note}, which establishes preferences
+over states rather than additivity over bundles.  In applied
+microeconomics~\citep{mascolell1995microeconomic}, bundle-level
+inference of the kind the sacrifice channel performs typically
+invokes either additive separability or quasilinearity in a
+numeraire.  The paper uses a special case implicitly via the
+time-sacrifice channel (Definition~\ref{def:time_sacrifice}),
+which values time at wage rate $r_i$---quasilinearity in
+wage-scaled time, a form of valuation additivity.  S4(a) is the
+explicit assumption that makes Lemma~\ref{lem:cancellation} go
+through; it is not a consequence of S0--S3.
+
+Complementarities that would break pure additivity in general
+consumer theory are absorbed into the poset as cooperative
+nodes via M6~\citep[Proposition~1]{lasser2026poset}: cooperative
+capabilities are themselves capabilities with their own weights,
+so bundle-specific cooperative contributions appear as separate
+summands in $\Ui$.  S4(a)'s additivity is compatible with this
+structure because cooperative terms are explicit capabilities,
+not hidden non-linearities.
+
+\emph{The cooperative-absorption argument is framework-internal,
+not a general claim about real-world valuation functions.}  S4(a)
+is plausible in this paper because the GFM framework's poset
+construction is disciplined to internalize complementarities as
+cooperative capabilities (M6); it is not the general claim that
+any agent's valuation decomposes additively over bundle elements.
+Outside the framework, S4(a) would be a strong empirical
+hypothesis about real consumers; inside the framework, its
+plausibility is inherited from the construction discipline that
+puts each empirically-observed complementarity into the poset
+explicitly as a cooperative node.  A poset that fails to do this
+(complementarities present in the agent's valuation but absent
+from the poset's cooperative structure) violates S4(a) by
+construction; the assumption is therefore as strong as the
+poset-construction discipline allows it to be, and no stronger.
+This is the architectural reason S4(a) appears as an explicit
+named assumption rather than a derived consequence, and the
+reason its operational adequacy is a property of the
+poset-construction governance layer, not of agent behaviour
+per se.
+\end{remark}
 
 \subsection{Privacy properties}
 
