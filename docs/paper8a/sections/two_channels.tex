@@ -38,9 +38,21 @@ function on purchasing power).
   signals per trade.
 \item \textbf{Third-party observability.}  Money-sacrifice events
   leave public ledger traces (prices, timestamps, category
-  labels); auditors can compute the money-channel aggregate
-  without agent cooperation (Property~P5 of
-  Proposition~\ref{prop:privacy_institutional}).
+  labels); auditors can compute the
+  \emph{public-ledger flow aggregate} without agent cooperation
+  (Property~P5 of
+  Proposition~\ref{prop:privacy_institutional}).  Computing
+  the \emph{theorem-admissible} aggregate
+  $\sum_n \Delta\volL(X_n)$ that
+  Theorem~\ref{thm:aggregate_bound} certifies as a $\volR$
+  lower bound additionally requires the public
+  S1-admissibility labelling and the other
+  external-attestation outputs of
+  Remark~\ref{rem:external_attestation} (genuine-exchange
+  conditions, S0 calibration, S4(a)).  Ledger auditability is
+  the data-availability property; admissibility-label
+  auditability is a separate institutional property whose
+  realization is governance-supplied.
 \end{itemize}
 
 \subsection{Time-sacrifice channel}
