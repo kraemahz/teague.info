@@ -33,23 +33,20 @@ assumptions.  We collect them here for single-point reference.
   This is the \emph{substantive bridge} between valuation (what
   the agent pays for at $t_n$) and realized exercise (what the
   framework cares about, aggregated over the observation window
-  $W$).  It is not a calibration-in-the-narrow-sense (unbiased
-  estimation) but a per-event one-sided conservatism claim:
-  for each individual event~$n$, the agent's valuation does not
+  $W$).  S0 is a per-event one-sided conservatism claim: for
+  each individual event~$n$, the agent's valuation does not
   exceed the bundle's $W$-window exercise contribution.  The
-  prose elsewhere uses ``systematically'' to describe the
-  empirical rationale for adopting S0 (typical agents in
-  typical markets do not pay more than what the capability
-  delivers); this rationale is not part of the formal
-  per-event statement, which holds or fails on each individual
-  event.  The window-active
-  form is essential: the sacrifice channel observes acquisition
-  at $t_n$, not exercise at any particular time, so S0's
-  consequent is about the cumulative exercise witness across the
-  window rather than the instantaneous value at $t_n$.  Agents
-  who buy capabilities they never use within $W$ violate S0 for
-  those events; this matches the intuition that the lower bound
-  is about \emph{realized} rather than \emph{stored} capability.
+  empirical rationale is that typical agents in typical markets
+  do not pay more than what the capability delivers; this
+  rationale supports adopting S0 but is not itself part of the
+  per-event statement.  The window-active form is essential:
+  the sacrifice channel observes acquisition at $t_n$, not
+  exercise at any particular time, so S0's consequent is about
+  the cumulative exercise witness across the window rather than
+  the instantaneous value at $t_n$.  Agents who buy capabilities
+  they never use within $W$ violate S0 for those events; the
+  lower bound is about \emph{realized} rather than \emph{stored}
+  capability.
 
 \item[S1 (Free choice).] Each sacrifice event is a voluntary
   trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
@@ -286,12 +283,9 @@ through the benchmark calibration of~\citep[Definition~2]{lasser2026poset};
 analogously, the time-sacrifice channel
 (Definition~\ref{def:time_sacrifice}) converts the wage-valued
 quantity $r_i \cdot h$ to poset-measure units through
-$\Delta\volL(r_i \cdot h)$.  Currency and wage-time are not
-themselves on the poset-measure scale; they are inputs to the
-benchmark function whose output is.  The theorem's inequalities
-hold in this single common scale; cross-currency or cross-wage
-comparability is a property of the benchmark function, not of the
-theorem.
+$\Delta\volL(r_i \cdot h)$.  Currency and wage-time are inputs
+to the benchmark function whose poset-measure-valued output is
+what enters the calibration chain.
 \end{remark}
 
 \begin{definition}[Aggregate Trade Window]

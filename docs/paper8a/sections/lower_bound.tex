@@ -50,8 +50,7 @@ this sub-poset:
 \]
 
 \medskip\noindent
-\textbf{Window-active form (union over time, not a time
-integral).}
+\textbf{Window-active form (union over time).}
 For a trade window $W = [t_0, t_0 + T]$
 (Definition~\ref{def:trade_window}), the \emph{window-active
 exercised sub-poset} is the union of the instantaneous
@@ -73,27 +72,6 @@ exactly at $t$.  Both inherit the measure structure of $\volL$
 restricted to the corresponding sub-poset, and the
 axiom-analogue analysis of
 Section~\ref{sec:axiom_inheritance} applies to each.
-
-\medskip\noindent
-\textbf{Terminology: ``window-active,'' not a time integral.}
-We use the term \emph{window-active} for $\volR^{[W]}$ because
-the operation is the union over time
-$P^{\mathrm{ex}}_W = \bigcup_{t \in W} P^{\mathrm{ex}}_t$, not
-a duration- or frequency-weighted time integral.  A capability
-exercised once for an instant during $W$ contributes the same
-$\volL$ weight to $\volR^{[W]}$ as a capability exercised
-continuously throughout $W$; the diagnostic semantics is
-``did the capability witness any exercise in this window?''
-not ``how much exercise per unit time accumulated?''
-The bracket notation $[W]$ denotes ``indexed by $W$,'' not
-``integrated over $W$''; we keep the bracket for symbol
-continuity with the broader poset-measurement
-literature~\citep{lasser2026scm} but spell out the witness
-semantics here to avoid the dimensional misreading that
-``integrated'' would invite.  Where duration- or
-frequency-weighted exercise is needed (e.g., to distinguish
-intermittent from persistent exercise), an explicit weighted
-integral is required, which is outside this paper's scope.
 
 \medskip\noindent
 \textbf{Convention.}

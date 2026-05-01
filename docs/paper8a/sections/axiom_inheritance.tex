@@ -170,18 +170,17 @@ $w(c_B)$.  A $\volR$-maximizing actor would face no penalty for
 shedding unexercised capabilities; a $\volL$-maximizing actor
 would pay $w(c_B)$.
 
-This is not a counterexample to M6 as a measure axiom: for the
-fixed exercised sub-poset $P^{\mathrm{ex}}_W = \{c_A\}$, $\volR$
-trivially satisfies M6 (and all other $\volL$-inherited axioms
-by restriction).  The failure is at the level of the
+The non-invariance lives at the level of the
 \emph{mapping} $\mathcal{P} \mapsto \volR^{\mathcal{P}}$: this
 mapping is not \emph{strictly} monotone under capability-set
 expansion ($P \supset P'$ but $\volR(P) = \volR(P')$).  Weak
 monotonicity ($P \supseteq P' \implies \volR(P) \geq \volR(P')$)
-holds; what fails is strict monotonicity.  Equivalently, the
-mapping is not strictly contracted by capability removal when
-the removed capability is unexercised.  This non-invariance is
-what breaks the self-balancing transfer
+holds; strict monotonicity fails, and the mapping is not
+strictly contracted by capability removal when the removed
+capability is unexercised.  M6 itself remains satisfied on the
+fixed exercised sub-poset $P^{\mathrm{ex}}_W$ by restriction;
+the mapping-level non-invariance is what breaks the
+self-balancing transfer
 (Corollary~\ref{cor:not_self_balancing}).
 \end{example}
 
@@ -190,14 +189,10 @@ union]
 \label{ex:m6_fail_volRlower}
 The example below illustrates that $\volRlower$ aggregated
 across two event groups is not in general the sum of the
-within-group aggregates.  This is a property of the lower-bound
-construction over \emph{event sets}, not a counterexample to
-M6 on capability subsets: M6 quantifies over poset-independent
-capability subsets, while max-attribution operates over events
-covering each capability.  We retain the example for
-operational clarity (max-attribution does not behave
-super-additively when event sets are merged) and flag the
-distinction below.
+within-group aggregates.  Max-attribution operates over events
+covering each capability rather than over poset-independent
+capability subsets, so the failure is on event-set merging
+specifically.
 
 The example is \emph{constructed outside Part~B's strict
 admissibility regime}: under Part~B's within-bundle

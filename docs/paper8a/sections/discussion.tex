@@ -10,13 +10,9 @@ in~\citep{lasser2026exo,lasser2026phase,lasser2026wamura} rule
 out the panopticon-style observation that direct global
 measurement would require.  Within a consented operational
 perimeter, exact direct measurement remains available
-(Appendix~\ref{app:exercise_indicator}); the privacy-incompatibility
-claim is about out-of-perimeter and global measurement, not about
-all direct measurement.  This is a stipulation downstream of
-the framework's privacy commitments, not a complexity-theoretic
-impossibility theorem; we have not proved that no
-privacy-respecting direct-measurement scheme exists, only that
-the framework's existing commitments rule the obvious one out.
+(Appendix~\ref{app:exercise_indicator}); the
+privacy-incompatibility claim is about out-of-perimeter and
+global measurement.
 
 \paragraph{Revealed sacrifice is a privacy-respecting surrogate
 on the observed subset.}
@@ -88,13 +84,11 @@ removal: eliminating an unexercised capability leaves $\volR$
 unchanged while $\volL$ contracts
 (Example~\ref{ex:volR_removal_invariance}).  This is a property
 of the mapping $\mathcal{P} \mapsto \volR^{\mathcal{P}}$ from
-capability systems to the measure, not a failure of M6 as a
-measure axiom on any one fixed exercised sub-poset
-(Theorem~\ref{thm:axiom_inheritance}, M6(a) explicitly notes
-$\volR$ inherits M6 on a fixed $P^{\mathrm{ex}}_W$; the
-non-invariance is layered above the axiom level).  The self-balancing
-protection $\volL$ enjoys---every removal contracts the
-measure---therefore does not transfer to $\volR$
+capability systems to the measure, separate from M6 on any
+fixed exercised sub-poset
+(Theorem~\ref{thm:axiom_inheritance}).  The self-balancing
+protection $\volL$ enjoys (every removal contracts the
+measure) therefore does not transfer to $\volR$
 (Corollary~\ref{cor:not_self_balancing}).  $\volR$ is a
 diagnostic, not an objective.  This structural finding is
 independent of the observation mechanism.
