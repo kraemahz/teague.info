@@ -13,7 +13,7 @@ across the capability space.
 \begin{definition}[Trade-Flow Leverage]
 \label{def:trade_leverage}
 For bundle category $C_j \in \mathcal{C}$
-(the category partition~\citep{lasser2026paper8a}), the trade-flow
+(the category partition~\citep[paper~8a]{lasser2026paper8a}), the trade-flow
 leverage of $C_j$ at time $T$ is:
 \[
   \lambda_{\mathrm{trade}}(j, T) \;=\;
@@ -168,7 +168,7 @@ $\sum_{n :\, n \text{ S1-admissible}} \Delta\volL(X_n) > 0$,
 the Part~A \emph{category-flow} concentration statistic
 $\widetilde\HHI$ is computable from
 public trade data (committed sacrifice events,
-the committed event definition~\citep{lasser2026paper8a})
+the committed event definition~\citep[paper~8a]{lasser2026paper8a})
 restricted to S1-admissible events, without access to any
 agent's private state beyond the admissibility label itself
 (which is a public attestation, not interior state).
@@ -227,7 +227,7 @@ can compute the statistic from public inputs; it does
 admissibility labels remain external attestations whose
 correctness is the responsibility of the attestation layer
 (Remark of the companion paper's external-attestation model
-in~\citep{lasser2026paper8a}).  When the window has zero total sacrifice flow, the
+in~\citep[paper~8a]{lasser2026paper8a}).  When the window has zero total sacrifice flow, the
 diagnostic is suppressed (the relevant signal in that regime is
 the gap decomposition, \S\ref{sec:gap_decomposition}, matching
 the parallel suppression rule of
@@ -235,7 +235,7 @@ Definition~\ref{def:trade_leverage}).
 \end{proposition}
 
 \begin{proof}
-By the committed event definition~\citep{lasser2026paper8a}, every committed
+By the committed event definition~\citep[paper~8a]{lasser2026paper8a}, every committed
 sacrifice event exposes the pair $(\catYn{n}, \Delta\volL(X_n))$
 in cleartext.  For the category-flow statistic, both the
 numerator $\sum_{n \in \mathcal{E}_{S1} :\, \catYn{n} = j}
@@ -264,7 +264,7 @@ The per-capability Part~B concentration statistic
 $\HHI(\lambda_{\mathrm{trade}})$ built on
 $\volRlower(C_j, T) = \sum_{c \in C_j \cap U} \volRlower(c, T)$
 is \emph{not} third-party computable from the committed-event
-interface of the committed event definition~\citep{lasser2026paper8a}.  The
+interface of the committed event definition~\citep[paper~8a]{lasser2026paper8a}.  The
 committed form reveals only the partition label $\catYn{n}$ and
 attests $Y_n \subseteq C_{\catYn{n}}$; it does not reveal which
 subset of $C_{\catYn{n}}$ was actually acquired, nor the
@@ -275,11 +275,11 @@ therefore requires additional committed fields: per-event
 subset-membership openings (or a ZK attestation equivalent), and
 the $\alpha_{n,c}$ coefficients (public by an equal-weight
 default, or committed alongside the event under a richer
-Part~B variant as flagged in the Part~B commitment remark~\citep{lasser2026paper8a}).
+Part~B variant as flagged in the Part~B commitment remark~\citep[paper~8a]{lasser2026paper8a}).
 Under that richer commitment, the Part~B statistic becomes
 third-party observable; under the default Part~A commitment, it
 is not.  Within a consented operational perimeter~$O$
-(the exercise-indicator appendix of~\citep{lasser2026paper8a}), no richer commitment is
+(the exercise-indicator appendix of~\citep[paper~8a]{lasser2026paper8a}), no richer commitment is
 needed because direct per-capability evaluation is permitted;
 the Part~B statistic is then available to the perimeter
 operator, not to arbitrary third parties.

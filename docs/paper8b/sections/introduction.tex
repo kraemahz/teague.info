@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The companion paper~\citep{lasser2026paper8a} proves the
+The companion paper~\citep[paper~8a]{lasser2026paper8a} proves the
 \emph{Aggregate B-to-C Lower Bound} theorem for the GFM
 framework's exercised capability volume $\volR$:
 \[
@@ -56,7 +56,7 @@ signalling when a low $\betaL$ fires an alarm.
   cost-of-access and must be excluded from the want-pursuit
   aggregate; above it, sacrifice reveals preference strength
   and enters the companion paper's
-  aggregate~\citep{lasser2026paper8a}.  A
+  aggregate~\citep[paper~8a]{lasser2026paper8a}.  A
   polarity-correct benchmark inverts cost dimensions; a
   multiplicative downstream-gate on $\volL$-aggregation makes
   need-satisfaction a structural precondition for registering
@@ -66,12 +66,16 @@ signalling when a low $\betaL$ fires an alarm.
 
 \item \textbf{Gap decomposition
   (Section~\ref{sec:gap_decomposition}).}
-  A four-cell partition of the B-to-C gap---restricted,
-  covered, dormant, residual---with an exact identity $1 -
-  \betaL = \sum \delta$ under poset-boundary closure
-  (strategies (a)/(b)), or a five-cell variant with an
-  additional boundary-residual bucket under the
-  literal-partition variant (strategy (c)).  Supplies a
+  A five-cell partition of the B-to-C gap---restricted,
+  covered, dormant, residual, boundary-residual---with an exact
+  identity $1 - \betaL = \sum \delta$ under the default
+  literal-partition variant (strategy (c)), preserving
+  seed-cell attribution so that $\delta_{\mathrm{covered}}$
+  remains interpretable as proxy-failure on observed
+  capabilities.  A four-cell variant under cooperative-closure
+  semantics (strategies (a)/(b)) is also available, at the cost
+  of priority-extension absorbing dormant and residual atoms
+  into the covered cell.  Supplies a
   near-linear $\widetilde{O}(|P|+E+M)$ computability
   proposition from observed trade data plus
   governance-supplied structural inputs.  Interprets alarm firings: low $\betaL$ with high
@@ -110,7 +114,7 @@ signalling when a low $\betaL$ fires an alarm.
 \subsection{Relationship to the companion paper}
 \label{sec:companion_relationship}
 
-The companion paper~\citep{lasser2026paper8a} establishes the
+The companion paper~\citep[paper~8a]{lasser2026paper8a} establishes the
 measurement theorem; this paper supplies the filter that keeps
 the channel clean and the diagnostic architecture that
 interprets its output.  The division of labor:
@@ -119,7 +123,7 @@ interprets its output.  The division of labor:
 \small
 \begin{tabular}{@{}ll@{}}
 \toprule
-\textbf{Companion paper} (\citep{lasser2026paper8a})
+\textbf{Companion paper} (\citep[paper~8a]{lasser2026paper8a})
   & \textbf{This paper} \\
 \midrule
 Sacrifice observation model, S0--S5
@@ -143,7 +147,7 @@ B-to-C lower bound theorem, committed event, privacy theorem)
 without re-deriving them; the companion paper's notation
 conventions carry over.  \emph{Submission-package note.}  This
 paper is intended for submission as a companion in the same
-package as~\citep{lasser2026paper8a}; reviewers should have
+package as~\citep[paper~8a]{lasser2026paper8a}; reviewers should have
 access to both.  Where a venue requires a single self-contained
 submission, the load-bearing definitions (revealed-sacrifice
 event, S0--S5, aggregate lower bound) would be inlined into a
@@ -156,5 +160,5 @@ will accompany the sequence as it reaches archival status.
 This paper inherits the GFM
 framework~\citep{lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase,lasser2026wamura}
 and the measurement-theoretic infrastructure of the companion
-paper~\citep{lasser2026paper8a}.  A summary dependency table is
+paper~\citep[paper~8a]{lasser2026paper8a}.  A summary dependency table is
 collected in Appendix~\ref{app:notation}.

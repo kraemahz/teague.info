@@ -1,5 +1,5 @@
 \begin{abstract}
-The companion paper~\citep{lasser2026paper8a} proves the
+The companion paper~\citep[paper~8a]{lasser2026paper8a} proves the
 \emph{Aggregate B-to-C Lower Bound} theorem for a
 privacy-respecting observation channel on realized capability
 volume $\volR$, under admissibility conditions including S1
@@ -23,13 +23,16 @@ A parallel \emph{need-access cost} diagnostic tracks
 below-sufficiency expenditure as a companion metric.
 
 The \emph{gap decomposition} partitions the B-to-C gap into
-four cells (restricted, covered, dormant, residual) under
-poset-boundary closure (cooperative-closure semantics,
-strategies (a)/(b)) or into five cells with an additional
-boundary-residual bucket under the literal-partition variant
+five cells (restricted, covered, dormant, residual,
+boundary-residual) under the default literal-partition variant
 (strategy (c), used in the worked example to preserve
-seed-cell attribution); the choice of closure strategy is
-documented in Remark~\ref{rem:cell_cooperative_closure}.
+seed-cell attribution and to keep $\delta_{\mathrm{covered}}$
+interpretable as proxy-failure on observed capabilities), or
+into four cells under cooperative-closure semantics (strategies
+(a)/(b)) at the cost of priority-extension absorbing dormant
+and residual atoms into the covered cell; the choice of closure
+strategy is documented in
+Remark~\ref{rem:cell_cooperative_closure}.
 Cell classification is computable in near-linear
 $\widetilde{O}(|P|+E+M)$ time given external admissibility
 labels and governance inputs.  A

@@ -222,6 +222,27 @@ so bundle-specific cooperative contributions appear as separate
 summands in $\Ui$.  S4(a)'s additivity is compatible with this
 structure because cooperative terms are explicit capabilities,
 not hidden non-linearities.
+
+\emph{The cooperative-absorption argument is framework-internal,
+not a general claim about real-world valuation functions.}  S4(a)
+is plausible in this paper because the GFM framework's poset
+construction is disciplined to internalize complementarities as
+cooperative capabilities (M6); it is not the general claim that
+any agent's valuation decomposes additively over bundle elements.
+Outside the framework, S4(a) would be a strong empirical
+hypothesis about real consumers; inside the framework, its
+plausibility is inherited from the construction discipline that
+puts each empirically-observed complementarity into the poset
+explicitly as a cooperative node.  A poset that fails to do this
+(complementarities present in the agent's valuation but absent
+from the poset's cooperative structure) violates S4(a) by
+construction; the assumption is therefore as strong as the
+poset-construction discipline allows it to be, and no stronger.
+This is the architectural reason S4(a) appears as an explicit
+named assumption rather than a derived consequence, and the
+reason its operational adequacy is a property of the
+poset-construction governance layer, not of agent behaviour
+per se.
 \end{remark}
 
 \subsection{Assumptions}
@@ -285,7 +306,7 @@ assumptions.  We collect them here for single-point reference.
   sufficiency, polarity-correct benchmarks, the downstream-gated
   weighting that makes need-satisfaction a precondition for
   $\volL$-registration of downstream capability weight---is
-  developed in the companion paper~\citep{lasser2026paper8b}.
+  developed in the companion paper~\citep[paper~8b]{lasser2026paper8b}.
   This paper does not depend on that machinery for any proof;
   the companion paper operationalizes what this paper
   axiomatizes as a primitive.
@@ -396,7 +417,7 @@ Part~B additionally requires S3 (bundle coherence), S4(b)
 (decomposition validity), and within-bundle poset-independence
 of each admissible $Y_n$ (Definition~\ref{def:bundle_decomp}).
 The need-sufficiency architecture of the companion
-paper~\citep{lasser2026paper8b} characterizes when S1 fails
+paper~\citep[paper~8b]{lasser2026paper8b} characterizes when S1 fails
 structurally and provides the filter that keeps the sacrifice
 channel clean; this paper treats the filter as an external
 precondition supplied by Remark~\ref{rem:external_attestation}.
@@ -425,6 +446,42 @@ but still valid.  S0 fails only in the overpayment direction.
 Weakening S0 to expected/distributional conservatism
 (Open Question~\ref{oq:calibration}) is a priority direction for
 follow-up work.
+
+\emph{Systematic overpayment patterns.}  In markets with status
+goods, speculative assets, or anticipation-driven purchases,
+agents routinely sacrifice substantially more than the
+exercise value they will realize within any reasonable window.
+Ritualized payment (sacrifices made for participation rather
+than benefit), gift aversion (sacrifices that signal commitment
+beyond exercise contribution), and time-for-money inefficiency
+(sacrifice-rate calibration that diverges from exercise
+contribution because of preference-misalignment with the wage
+channel) are all empirically prevalent failure modes of S0.
+The theorem's empirical validity is bounded by the
+prevalence of such violations in the trade pool being aggregated:
+the bound is only as good as S0 holds across the events being
+summed.
+
+\emph{S0 is not diagnosable from trade data alone.}  Of the
+theorem's load-bearing assumptions, S2 is checkable via the
+benchmark function, and the genuine-exchange conditions (i)--(iv)
+of Definition~\ref{def:sacrifice_event} are checkable
+via trade records.  S0 is the
+one assumption that cannot in principle be verified from the
+trade pool because it concerns the relationship between
+subjective valuation and realized exercise---neither directly
+observable in the sacrifice channel.  No
+structural mechanism in this paper or its
+companion~\citep[paper~8b]{lasser2026paper8b} diagnoses S0
+failure; calibration of S0 is the work of
+\emph{institutional attestation}
+(Remark~\ref{rem:external_attestation}) acting on data sources
+outside the sacrifice channel itself (e.g., longitudinal
+exercise studies, market-segment behavioural analysis,
+controlled-relaxation testing of the calibration chain). Open
+Question~\ref{oq:calibration} is the formal extension; the
+present limitation is that the bound's quality is bounded by
+the institutional-attestation layer's quality on S0.
 \end{remark}
 
 \begin{remark}[Common-scale convention for the calibration chain]

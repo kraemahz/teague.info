@@ -2,7 +2,7 @@
 \label{sec:need_sufficiency}
 
 The revealed-sacrifice observation channel
-(\citep{lasser2026paper8a}) assumes all sacrifices have
+(\citep[paper~8a]{lasser2026paper8a}) assumes all sacrifices have
 the same polarity: more sacrifice equals more revealed value.
 This is wrong for a class of sacrifices that are structurally
 involuntary.  An agent who pays \$500 for insulin is not revealing
@@ -197,6 +197,33 @@ the framework \emph{enforces} (a pathway failing the condition is
 rejected as a satisfaction pathway for $N$), not a quantity the
 framework \emph{computes} directly.
 
+\emph{Coherence with the framework's privacy stance.}  Option~(i)
+above (direct observation of $c$'s performance conditional on the
+pathway) is precisely the kind of agent-interior measurement that
+the companion paper's privacy commitments rule out at scale on the
+sacrifice channel.  Downstream-safety evaluation therefore lives
+in one of two regimes: (a) \emph{public structural} evaluation,
+where $\mathrm{quality}_c$ is determined from governance-supplied
+reference-pathway specifications and the poset's structural
+cooperative/subsumption topology---no agent-interior access
+required, suitable for population-scale deployment; (b)
+\emph{consented-perimeter} evaluation, where institutions with
+explicit consent (the regime of the companion paper's
+exercise-indicator machinery,
+\citep[paper~8a, Appendix~A]{lasser2026paper8a}) directly observe
+pathway performance on enumerable downstream capabilities.
+Mixed deployments use~(a) for poset-wide screening and~(b) for
+adjudication of contested pathways within consented sub-domains.
+The architecture is coherent with the framework's privacy stance
+under either regime: regime~(a) requires no privacy commitment
+because no interior data is read, and regime~(b) operates inside
+the perimeter where privacy commitments are explicitly waived.
+Outside both regimes---ad hoc agent-interior measurement at
+population scale---downstream-safety evaluation would be both
+infeasible and inconsistent with the framework's stated
+deployment constraints, and the architecture should not be
+deployed in such a regime.
+
 A policy consequence, not a theorem: because need-satisfaction
 pathways are not optional (the agent must satisfy the need), the
 framework's response to a pathway failing
@@ -246,7 +273,7 @@ choice-set hypothesis stated below:
 \end{itemize}
 The sufficiency threshold is where the need-insufficiency
 failure mode of Assumption~S1
-(\citep{lasser2026paper8a}) becomes structurally
+(\citep[paper~8a]{lasser2026paper8a}) becomes structurally
 diagnosable: events with retention-degradation \emph{and} no
 third non-degrading alternative fail S1 by
 Definition~\ref{def:s1_sufficiency}; above sufficiency, this
@@ -691,7 +718,7 @@ when both:
 \begin{remark}[Below-sufficiency sacrifices fail S1]
 \label{rem:s1_sufficiency_failure}
 A below-sufficiency sacrifice fails S1
-(\citep{lasser2026paper8a}) directly: H2 asserts that no
+(\citep[paper~8a]{lasser2026paper8a}) directly: H2 asserts that no
 alternative-to-the-trade in $\mathcal{A}_i$ is non-degrading,
 which is exactly the S1 failure condition (S1 requires the
 existence of at least one non-degrading alternative to the
@@ -721,7 +748,7 @@ Below-sufficiency sacrifices in the proposition's narrow sense
 alternative exists) are filtered from the revealed-sacrifice
 aggregate by S1 before they reach the aggregate lower bound
 (the aggregate lower bound
-theorem~\citep{lasser2026paper8a}).  Below-sufficiency
+theorem~\citep[paper~8a]{lasser2026paper8a}).  Below-sufficiency
 \emph{targeting} where a third alternative exists is not
 automatically filtered by this proposition: such events may
 still satisfy S1 if the agent's choice set contains a
@@ -743,7 +770,7 @@ is met.  The sufficiency threshold resolves one structural failure
 mode of S1 (the involuntary-need-satisfaction case); other S1
 failure modes (economic duress, information asymmetry, and the
 coercion open question discussed in the companion
-paper~\citep{lasser2026paper8a}) remain.
+paper~\citep[paper~8a]{lasser2026paper8a}) remain.
 \end{remark}
 
 \begin{remark}[Operational sourcing of the H1+H2 conditions]
@@ -756,7 +783,7 @@ quantifies over the agent's full choice set $\mathcal{A}_i$,
 which is not directly observable from public trade data.  In
 practice, H2 must be established by the institutional
 attestation layer of the companion
-paper~\citep{lasser2026paper8a} (the external-attestation
+paper~\citep[paper~8a]{lasser2026paper8a} (the external-attestation
 remark there describes how per-event hypotheses about the
 agent's choice set are certified through trade-level audit or
 attestation, not through the public partition $\mathcal{C}$
@@ -804,7 +831,7 @@ may be technically exercised (routing through the gas station
 \emph{B-to-C gap} in the aggregate sense this paper otherwise
 treats; stuffing widens the gap through a specific mechanism
 (individual-weight inflation) that the aggregate lower bound of
-the aggregate lower bound theorem~\citep{lasser2026paper8a} does not, by itself, address.
+the aggregate lower bound theorem~\citep[paper~8a]{lasser2026paper8a} does not, by itself, address.
 Stuffing is a framework-native perverse instantiation: the
 optimizer discovers it by following the $\volL$-maximization
 gradient under M5, not by departing from the framework's rules.
@@ -973,7 +1000,7 @@ substantive protocol and calibration work.
 \paragraph{Scope of the follow-up.}
 The sequence provides substrate for parts of this construction:
 Paper~5's commitment protocol for timestamped claims, the
-companion paper's sacrifice channel~\citep{lasser2026paper8a}
+companion paper's sacrifice channel~\citep[paper~8a]{lasser2026paper8a}
 for partial use-evidence, Paper~6's controlled relaxation as an
 adjudication pattern.  Substrate is not
 implementation: formalizing the canonicalization operator, the
@@ -1040,3 +1067,38 @@ validation.  The revealed-sacrifice data shows where the
 transition from involuntary to voluntary sacrifice occurs; the
 poset topology confirms the transition corresponds to a
 structurally meaningful threshold.
+
+\medskip\noindent
+\textbf{Descriptive vs.\ normative thresholds.}
+Mechanisms~(a)--(c) produce \emph{descriptive} thresholds:
+they identify levels at which downstream functionality
+breaks down or sacrifice polarity inverts---empirical or
+structural facts about agents in the deployment context.
+Mechanism~(d) produces a \emph{normative} threshold:
+the level a human authority has \emph{decided} agents should
+not have to fall below, irrespective of the descriptive
+breakdown level.  Descriptive and normative thresholds can
+diverge in either direction: a society may set a normative
+food-sufficiency threshold above the biological minimum to
+respect dignity, or (perversely) a normative threshold below
+the descriptive breakdown level for budgetary reasons.  The
+framework's formal apparatus reads whatever threshold
+governance supplies and does not by itself adjudicate between
+descriptive and normative provenance; downstream-safety and
+the structural arguments of
+Section~\ref{sec:need_sufficiency}
+proceed identically under either kind of threshold.  However,
+the \emph{interpretation} of $\delta_{\mathrm{covered}}$ alarms
+and the meaning of below-sufficiency event filtering depend on
+which kind of threshold is in force: a poset-structural
+threshold means ``below this level, downstream capabilities
+literally cannot function''; a normative threshold means
+``below this level, the governance regime has stipulated
+agents should not have to sacrifice.''  Deployments should
+document the provenance of each threshold so that diagnostic
+output is read against the correct interpretive backdrop.
+Mixed deployments---structural thresholds for biological needs
+and normative thresholds for socially-constructed needs---are
+operationally common, and the framework accommodates them as
+long as each threshold's provenance is recorded with the
+threshold value.

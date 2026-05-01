@@ -11,7 +11,7 @@ ratio drops below a threshold:
   \mathrm{ALARM}(T) \;=\; \betaL(P, T) \;<\; \betaalarm,
 \]
 where $\betaL(P, T)$ is the global conservative ratio of the
-companion paper~\citep{lasser2026paper8a} on the full
+companion paper~\citep[paper~8a]{lasser2026paper8a} on the full
 capability poset $P$ (numerator $\volRlower(U, T)$ extended by
 zero outside the observed subset $U$, denominator $\volL(P)$),
 and $\betaalarm \in (0, 1)$ is configurable.  The
@@ -100,10 +100,10 @@ their individual blind spots.
 \begin{definition}[Gap Decomposition Under Revealed Sacrifice]
 \label{def:gap_decomp}
 Under the Part~B hypotheses of the aggregate lower bound
-theorem of the companion paper~\citep{lasser2026paper8a}
+theorem of the companion paper~\citep[paper~8a]{lasser2026paper8a}
 (S0--S5), the per-capability aggregate $\volRlower(c)$ is
 well-defined, and subset aggregates $\volRlower(A)$ are given
-by the subset-extension of $\volRlower$~\citep{lasser2026paper8a}.  Under those
+by the subset-extension of $\volRlower$~\citep[paper~8a]{lasser2026paper8a}.  Under those
 hypotheses, the B-to-C gap ($1 - \betaL$) decomposes into four
 \emph{disjoint} sources.  Each capability in $P$ is assigned to
 exactly one category by priority ordering (restricted $>$
@@ -131,7 +131,7 @@ Classify individual capabilities by the priority rule:
   for Part~A satisfies S0, S1, S2, and S4(a); for Part~B it
   additionally satisfies S3, S5, and within-bundle
   poset-independence (the event-local bundle
-  decomposition~\citep{lasser2026paper8a}).
+  decomposition~\citep[paper~8a]{lasser2026paper8a}).
 \item \textbf{Seed dormant cell:} $D_0 := \DorS$, where
   $\DorS = \{d \in P : d \notin \Xi,\; d \notin \ResS,\;
   d \notin \CovS\}$.  Tradable-in-principle capabilities with
@@ -154,20 +154,29 @@ by the bullet-stated exclusions.
 \medskip\noindent
 \textbf{Stage 2 (closure-adjusted cells).}
 The seed cells may contain cooperative or subsumption edges
-crossing cell boundaries; to license $\volL$-additivity we
-apply a closure policy (default: priority-extension per
-Remark~\ref{rem:cell_cooperative_closure}) to obtain
-\emph{closure-adjusted cells} $R, C, D, S$.  These are the cells
-used throughout the remainder of this definition and by
-Proposition~\ref{prop:gap_computable}; they are pairwise
-disjoint, union to~$P$, agree with the seeds on all
+crossing cell boundaries; to obtain a closed additive identity
+we apply a closure policy.  The default is the literal-partition
+variant (strategy~(c) of
+Remark~\ref{rem:cell_cooperative_closure}), which preserves
+seed-cell attribution by routing every boundary-crossing
+cooperative node into a separate boundary-residual bucket~$B$
+rather than absorbing it into a participant's cell; this yields
+the five-cell partition $\{R, C, D, S, B\}$ used by the worked
+example, with the additivity identity following from
+set-disjoint M5 weight summation alone (no M4 invocation).
+Under cooperative-closure semantics
+(strategies~(a)/(b)), an alternative four-cell partition
+$\{R, C, D, S\}$ is available at the cost of priority-extension
+absorbing seed-dormant and seed-residual atoms into the covered
+cell when they are poset-connected to a non-residual node.  In
+either regime the cells are pairwise
+disjoint, union to~$P$, and agree with the seeds on all
 individual-capability classifications except where closure
-redistributes poset-connected components (priority-extension
-can absorb a seed-residual capability into a higher-priority
-cell when it is poset-connected to a non-residual node;
-Remark~\ref{rem:residual_cell_irreducibility} discusses when
-this occurs and the condition under which the residual cell
-preserves its irreducibility), and satisfy both:
+redistributes poset-connected components
+(Remark~\ref{rem:residual_cell_irreducibility} discusses when
+the absorption occurs under (a)/(b) and the condition under
+which the residual cell preserves its irreducibility).  The
+four-cell variant additionally satisfies:
 \begin{enumerate}
 \item[(CC1)] \emph{Cooperative closure.}  For every cooperative
   capability $z \in P$, all participants of $z$ lie in the same
@@ -182,7 +191,7 @@ $\volL$ values---where each cell $X$ is read as $X^{*} := X
 and $\volL(X)$ is summed over $X^{*}$---set-disjointness alone
 does not suffice for $\volL$-additivity across cells.  By the
 category-partition poset-independence
-condition of the companion paper~\citep{lasser2026paper8a} and
+condition of the companion paper~\citep[paper~8a]{lasser2026paper8a} and
 the M4 axiom of~\citep[Proposition~1]{lasser2026poset},
 additivity requires full poset-independence---\emph{neither}
 cross-cell cooperative composition \emph{nor} cross-cell
@@ -210,12 +219,16 @@ The $\delta$ terms are:
   \delta_{\mathrm{covered}} &= [\volL(C) -
     \volRlower(C)] \;/\; \volL(P), \\
   \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(P), \\
-  \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(P).
+  \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(P), \\
+  \delta_{\mathrm{boundary}} &= [\volL(B) -
+    \volRlower(B)] \;/\; \volL(P)
+    \quad \text{(default strategy~(c) only;}
+    \\ &\hphantom{={}} \text{omit under~(a)/(b))}.
 \end{align*}
 Each $\delta \geq 0$: $\volRlower(X) \leq \volR(X) \leq
 \volL(X)$ holds for any cell~$X$ (the first inequality by
 construction of $\volRlower$ as a lower bound on $\volR$
-\citep{lasser2026paper8a}, the second because $\volR$ is
+\citep[paper~8a]{lasser2026paper8a}, the second because $\volR$ is
 $\volL$ restricted to the exercised sub-poset and so cannot
 exceed $\volL$ on any subset), so the
 $\delta_{\mathrm{restricted}}$ and $\delta_{\mathrm{covered}}$
@@ -236,7 +249,7 @@ steps.  First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
 M4~\citep[Proposition~1]{lasser2026poset}.  Second,
 $\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ via
 the subset-extension of
-$\volRlower$~\citep{lasser2026paper8a}, applied to the
+$\volRlower$~\citep[paper~8a]{lasser2026paper8a}, applied to the
 disjoint poset-boundary-closed cells $R$ and $C$: the cells'
 internal poset-independence (CC1+CC2) makes
 $\volRlower(R \cup C) = \volRlower(R) + \volRlower(C)$ a Part-B
@@ -262,11 +275,18 @@ $\volRlower(B) = 0$).
 \begin{remark}[When the residual cell preserves its
 irreducibility under closure]
 \label{rem:residual_cell_irreducibility}
-The closure-adjusted residual cell~$S$ equals the seed
-$S_0 = \ResS \setminus \Xi$ when $\ResS$ is itself
+Under the default literal-partition strategy~(c) the residual
+cell~$S$ always equals the seed $S_0 = \ResS \setminus \Xi$
+because (c) does not redistribute seed-classified atoms
+across cells (boundary-crossing cooperative nodes go to~$B$,
+not to a participant's cell).  The remainder of this remark
+addresses the cooperative-closure strategies~(a)/(b), where
+seed-cell preservation is conditional.  Under~(a)/(b),
+the closure-adjusted residual cell~$S$ equals the seed
+$S_0$ when $\ResS$ is itself
 \emph{poset-isolated}: no cooperative or subsumption edge
 connects a residual capability to a non-residual one.  Under
-the default priority-extension policy, an edge from $c \in
+priority-extension, an edge from $c \in
 \ResS \setminus \Xi$ to a non-residual node $c'$ in $C_0$,
 $D_0$, or $\Xi$ would absorb the entire connected component
 into the higher-priority cell of $c'$ (residual having lowest
@@ -305,7 +325,7 @@ contributes hyperedges to its participants; each subsumption
 relation contributes a directed edge) as the object whose
 boundary-crossing instances must be eliminated.
 \begin{enumerate}
-\item[(a)] \emph{Priority-extension (default).}  For each node
+\item[(a)] \emph{Priority-extension.}  For each node
   $n \in P$ not yet in a settled cell, and for each subsumption
   edge $c \succeq c'$ or cooperative $z$ with participant set
   $\Pi(z)$ touching $n$: take the transitive closure under
@@ -345,7 +365,7 @@ boundary-crossing instances must be eliminated.
   difference is presentational (sub-partitioning makes the
   component structure explicit before priority assignment).
 \item[(c)] \emph{Boundary residual (literal-partition
-  variant; weaker license than~(a)).}  Define a literal
+  variant; default).}  Define a literal
   set-partition of $P$ into five buckets $\{R, C, D, S, B\}$
   by stipulation: classify each capability into the
   highest-priority cell among its membership-determined seeds
@@ -381,21 +401,34 @@ boundary-crossing instances must be eliminated.
   \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
   \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}} +
   \delta_{\mathrm{boundary}}$ with all five terms well-defined
-  as $\volL$-fractions.  Strategy~(c) is the variant the
-  worked example uses (Section~\ref{sec:worked_example}); it
+  as $\volL$-fractions.  Strategy~(c) is the paper's default
+  and the variant the worked example uses
+  (Section~\ref{sec:worked_example}): it
   preserves seed-cell attribution (dormant atoms stay in $D$
-  rather than being absorbed into $C$ as under (a)) at the
-  cost of foregoing the stronger M4-additivity guarantee.
+  rather than being absorbed into $C$ as under (a)) so that
+  $\delta_{\mathrm{covered}}$ remains diagnostically
+  interpretable as proxy-failure on observed capabilities and
+  $\delta_{\mathrm{dormant}}$, $\delta_{\mathrm{residual}}$
+  retain their literal seed-classification meanings, at the
+  cost of foregoing the stronger M4-additivity guarantee that
+  (a) provides.
 \end{enumerate}
-The paper's stated results assume strategy~(a) by default: the
-priority-extension rule is the natural operational choice, and
+The paper's stated results assume strategy~(c) by default: the
+literal-partition rule preserves the diagnostic-interpretation
+discipline that the worked example demonstrates, at the
+cost of a weaker (M5-only) additivity license.  Strategies (a)
+and (b) remain available for deployments that prefer the
+stronger M4-additivity guarantee and accept the
+$\delta_{\mathrm{covered}}$ absorption ambiguity in exchange;
 the practical prevalence of boundary-crossing poset edges is
 small when the capability partition's priority classes are
 themselves well-structured (e.g., restrictions are
 poset-boundary closed because restricting a cooperative implies
 restricting its participants, and restricting a capability
 implies restricting capabilities subsumed by it in cost-aligned
-posets).
+posets), so the choice between (a)/(b) and (c) is largely a
+matter of which interpretive discipline the deployment
+requires.
 \end{remark}
 
 \begin{proposition}[Computability of Gap Decomposition,
@@ -422,15 +455,17 @@ edges $c \succeq c'$),
 (v)~an event-admissibility labelling designating which observed
 events satisfy the theorem-admissibility requirements.  Because
 Definition~\ref{def:gap_decomp} operates under Part~B
-(the aggregate lower bound theorem~\citep{lasser2026paper8a}), the full Part~B
+(the aggregate lower bound theorem~\citep[paper~8a]{lasser2026paper8a}), the full Part~B
 admissibility set is required: S0, S1, S2, S4(a), S3, S5, the
 genuine-exchange conditions (i)--(iv) of
-the revealed-sacrifice event definition~\citep{lasser2026paper8a}, \emph{and} within-bundle
-poset-independence per the event-local bundle decomposition~\citep{lasser2026paper8a}; and
+the revealed-sacrifice event definition~\citep[paper~8a]{lasser2026paper8a}, \emph{and} within-bundle
+poset-independence per the event-local bundle decomposition~\citep[paper~8a]{lasser2026paper8a}; and
 (vi)~a closure policy from
-Remark~\ref{rem:cell_cooperative_closure}, with strategy~(a)
-(priority-extension to cooperatives) as the default,
-the four-term gap decomposition is computable in time
+Remark~\ref{rem:cell_cooperative_closure}, with strategy~(c)
+(literal-partition with boundary-residual bucket) as the
+default and (a)/(b) available as alternatives,
+the gap decomposition (five-term under~(c), four-term under
+(a)/(b)) is computable in time
 $O\bigl(|P| + E + M \cdot \alpha(M)\bigr)$, where $E$ is the
 number of observed (capability, event) membership records,
 $M = |\mathcal{M}|$ is the total size of the poset structure
@@ -465,7 +500,7 @@ For each record $(c, n)$ with event $n$ admissibility-labelled
 satisfying the \emph{full Part~B admissibility set} of input
 (v)---S0, S1, S2, S4(a), S3, S5, the genuine-exchange
 conditions, and within-bundle poset-independence of $Y_n$ per
-the event-local bundle decomposition~\citep{lasser2026paper8a}---accumulate the
+the event-local bundle decomposition~\citep[paper~8a]{lasser2026paper8a}---accumulate the
 event's $\volRlower$ contribution to $c$ regardless of $c$'s
 priority class (so that $\volRlower(R)$ for restricted
 capabilities and $\volRlower(C)$ for covered capabilities are
@@ -482,8 +517,16 @@ bundles are filtered out by the within-bundle
 poset-independence check.  This is $O(E)$ total work, one
 constant-time update per record.
 
-\emph{Pass 3 (poset-boundary closure pass, $O(M)$).}
-Under default strategy~(a), walk the combined
+\emph{Pass 3 (closure-policy pass, $O(M)$).}
+Under default strategy~(c), walk the cooperative hyperedges
+identifying boundary-crossing cooperative nodes (cooperatives
+whose participants span two or more original cells) and place
+each into the boundary-residual bucket~$B$; non-boundary-crossing
+cooperatives remain in their participants' cell.  Subsumption
+edges contribute no $\volL$ weight and are therefore not
+processed; the literal-partition framing sidesteps their
+additivity contribution.  Under alternative strategy~(a), walk
+the combined
 cooperative/subsumption graph via union-find, identifying
 poset-connected components: two nodes are in the same component
 if connected by any chain of cooperative-participation or
@@ -494,10 +537,12 @@ cell.  The cells become both cooperative-closed and
 subsumption-closed (hence poset-boundary closed per
 Definition~\ref{def:gap_decomp}) by construction.  Union-find
 gives amortized $O(M \cdot \alpha(M))$ complexity, essentially
-linear in $M$.  Under strategy~(b) or~(c), the pass is replaced
-by the corresponding sub-partition or boundary-bucket
-construction over the same combined graph, with the same
-complexity modulo constants.
+linear in $M$.  Under strategy~(b), the pass is replaced
+by the sub-partition construction over the same combined graph,
+with the same complexity modulo constants.  Strategy~(c)'s
+single hyperedge sweep is $O(M)$ outright (no union-find
+needed since no transitive-closure of cell membership is
+performed).
 
 \emph{Aggregation.}
 Each class's aggregate $\volL$ and $\volRlower$ is maintained
@@ -525,7 +570,7 @@ external admissibility layer: events must be labelled admissible
 (by trust-weighted attestation, auditor sampling, or explicit
 agent commitment) before the decomposition can classify
 capabilities into ``covered.''  Under committed-mode operation
-(\citep{lasser2026paper8a}), the labelling is carried by the
+(\citep[paper~8a]{lasser2026paper8a}), the labelling is carried by the
 commitment protocol's proof attachment; in unrestricted mode, the
 framework must rely on governance processes to supply it.  The
 $O(|P|)$ complexity is the \emph{classification} cost given the
@@ -536,12 +581,12 @@ labelling, not the cost of producing the labelling itself.
 Under Part~A alone (category-level aggregates, requiring S0,
 S1, S2, S4(a), and the genuine-exchange conditions of the
 revealed-sacrifice event definition in the companion
-paper~\citep{lasser2026paper8a}), the
+paper~\citep[paper~8a]{lasser2026paper8a}), the
 decomposition operates at the category level: each partition
 component $C_j$
-(the category partition~\citep{lasser2026paper8a}) is classified as
+(the category partition~\citep[paper~8a]{lasser2026paper8a}) is classified as
 restricted, covered, dormant, or residual.  Under committed data
-(\citep{lasser2026paper8a}), S2 is not directly verifiable;
+(\citep[paper~8a]{lasser2026paper8a}), S2 is not directly verifiable;
 the committed-mode decomposition therefore \emph{assumes} S2
 holds for committed events.  The per-capability decomposition is
 the refinement available when Part~B assumptions hold.
@@ -571,7 +616,7 @@ baseline functionality rather than pursuing wants.
 
 $\NAC$ does \emph{not} enter
 the aggregate lower bound of the companion
-paper~\citep{lasser2026paper8a} or
+paper~\citep[paper~8a]{lasser2026paper8a} or
 $\betaL$.  It is a separate diagnostic that tracks the cost side
 of the agent's capability budget.
 \end{definition}
@@ -584,6 +629,35 @@ $\NAC$ overestimates the true need-access cost by including any
 attached want-pursuit spend.  $\NAC$ should be read as an
 \emph{upper bound} on need-access cost, not a precise
 measurement.
+
+\emph{Looseness magnitude depends on the deployment's mixed-event
+prevalence.}  In economies where most below-sufficiency events
+involve pure-need bundles (a clinic visit purely for medical care,
+a bottle of water purely for hydration), $\NAC$ is close to the
+true need-access cost.  In economies where below-sufficiency
+events typically carry attached want-pursuit (a grocery basket
+that contains both staple food at below-sufficiency-cost wages and
+discretionary items, a transit pass that provides both
+need-satisfaction and recreational mobility), $\NAC$ can
+substantially overstate the true need-access cost---potentially
+by factors of two or more in dense mixed-bundle markets.  The
+diagnostic interpretation of ``high $\NAC$ alarms'' in
+Proposition~\ref{prop:combined_diagnostic}'s quadrants is
+therefore sensitive to the deployment's mixed-bundle prevalence:
+a low-mixed-prevalence deployment can read $\NAC$ thresholds
+nearly literally; a high-mixed-prevalence deployment should
+treat $\NAC$ thresholds as conservative upper-bound triggers
+that may fire on inflated values rather than on true
+need-access cost increases.  A bundle-decomposition
+extension that splits $\Delta\volL(X_n)$ into need-satisfying
+and want-pursuing components via the event-local bundle
+decomposition of the companion
+paper~\citep[paper~8a]{lasser2026paper8a} would tighten $\NAC$ to
+the need-component aggregate and is the natural follow-up; it
+is not part of this paper's $\NAC$ definition because the
+event-local decomposition coefficients $\alpha_{n,c}$ are not
+generally available at the granularity required without
+additional governance attestation.
 \end{remark}
 
 \begin{definition}[Need-Satisfaction Efficiency]
@@ -611,7 +685,7 @@ degrading pathways.
 
 \begin{remark}[Observability under commitment]
 When sacrifice events are committed
-(\citep{lasser2026paper8a}), per-agent $\NSE(i, N)$ is not
+(\citep[paper~8a]{lasser2026paper8a}), per-agent $\NSE(i, N)$ is not
 recoverable.  The committed-mode fallback is a population-level
 proxy: $\NSE_{\mathrm{proxy}}(T)$ reports $\NAC(T)$ by need
 category and counts of below-sufficiency events.  Full $\NSE(T)$
@@ -670,7 +744,7 @@ partition}; $\NAC$ is an \emph{event aggregate}; $\NSE$ is a
 \emph{per-need state assessment}.  The two diagnostics cover
 complementary portions of the sacrifice event stream:
 S1-satisfying events (that also satisfy S0 and S2) enter the gap
-decomposition via the aggregate lower bound theorem~\citep{lasser2026paper8a}; events
+decomposition via the aggregate lower bound theorem~\citep[paper~8a]{lasser2026paper8a}; events
 failing S1 due to below-sufficiency enter $\NAC$.  Events failing
 S1 for non-need reasons (coercion, duress) are excluded from
 both diagnostics and constitute an undiagnosed event-stream

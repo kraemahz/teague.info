@@ -176,7 +176,7 @@ economically stable.
 
 The sequence provides substrate but not implementation.
 Paper~5 provides commitment infrastructure; the companion
-paper~\citep{lasser2026paper8a} provides partial use-evidence
+paper~\citep[paper~8a]{lasser2026paper8a} provides partial use-evidence
 via the sacrifice aggregate (incomplete, because the
 persistent-dormancy attack and private time-sacrifice
 invisibility remain); Paper~6 provides a controlled-relaxation
@@ -205,13 +205,16 @@ follow-up paper on the structural-avoidance architecture.
 
 \item \label{oq:gap_decomp_closure}
 \textbf{Automated verification of poset-boundary closure.}
-The default priority-extension strategy
-(Remark~\ref{rem:cell_cooperative_closure}(a)) produces
+The cooperative-closure strategies
+(Remark~\ref{rem:cell_cooperative_closure}(a)/(b)) produce
 cooperative- and subsumption-closed cells by construction, but
 verifying closure on adversarially-structured posets may be
 non-trivial.  A structural-verification protocol
 (analogous to controlled-relaxation testing against poset
-claims) is a natural follow-up.
+claims) is a natural follow-up.  Under the default
+literal-partition strategy~(c), no closure verification is
+required since the identity follows from set-disjoint M5
+weight summation alone.
 
 \item \label{oq:oi_bridge}
 \textbf{OI--exercise bridge conditions.}
@@ -224,5 +227,24 @@ holds but $\volRexact$ receives no contribution.  A cleaner
 characterization of the bridge's domain of validity, and
 conditions under which Paper~3's floor transfers directly
 without the bridge, is open.
+
+\item \label{oq:attestation_protocol}
+\textbf{Institutional-attestation protocol formalization.}
+The architecture's non-ZK-verifiable inputs---sufficiency
+thresholds, downstream-safety adjudication, residual-class
+classification, S1 admissibility labels, and the
+companion paper's S0/S4(a) and genuine-exchange
+attestations~\citep[paper~8a, Remark on external
+attestation]{lasser2026paper8a}---all route through an
+institutional-attestation layer that this pair specifies in
+input/output terms but does not formalize as a protocol.
+A dedicated treatment of the attestation protocol
+(credentialing, cross-checking, audit cadence,
+dispute-resolution, and adversarial robustness) is the natural
+follow-up to this pair and the primary open dependency for
+deployment.  It is out of scope here because formalizing it
+requires substrate-specific governance design rather than the
+measurement-theoretic and architectural machinery these papers
+develop.
 
 \end{enumerate}

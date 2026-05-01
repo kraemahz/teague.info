@@ -52,7 +52,7 @@ the framework computes; $\beta$ is the latent quantity bounded
 indirectly through it.  The
 lower bound is silent on capabilities outside the observed
 subset and on the residual class
-of~\citep{lasser2026paper8b}; it does not characterize the
+of~\citep[paper~8b]{lasser2026paper8b}; it does not characterize the
 B-to-C gap globally, only constrains the gap from above
 ($1 - \beta \leq 1 - \betaL$) on what trade data covers.
 The constructed lower bound is non-decreasing in observed
@@ -138,7 +138,7 @@ shape of this attestation layer.  The present paper's theorems
 hold under any realization of the admissibility layer that
 correctly identifies below-sufficiency events and rejects them
 from the aggregate; one structural implementation is given in
-the companion paper~\citep{lasser2026paper8b}.
+the companion paper~\citep[paper~8b]{lasser2026paper8b}.
 
 \subsection{Open questions}
 
@@ -156,7 +156,8 @@ physical care, relationship-building) into per-capability
 contributions?
 
 \item \label{oq:nonstationarity}
-\textbf{Non-stationarity of revealed preferences.}
+\textbf{Non-stationarity of revealed preferences and trade-exercise
+temporal mismatch.}
 Preferences shift over time.  The bound
 $\volRlower$ reported by the framework is the
 \emph{window-active historical} aggregate: it summarises trade
@@ -172,6 +173,27 @@ window's age and any preference-shift signal.  An EWMA decay
 paralleling the risk-trust dynamics
 of~\citep[Definition~4]{lasser2026scm} seems natural but
 requires empirical calibration.
+
+A related coverage limitation is the \emph{trade-exercise
+temporal mismatch}: a sacrifice event $X_n$ at time $t_n \in W$
+may be made on the basis of anticipated exercise that does not
+materialize within $W$ (e.g., a long-horizon acquisition whose
+exercise begins only after $W$ ends).  S0 in window-active form
+bounds $\Ui(Y_n)$ by $\volR^{[W]}$, so such trades technically
+violate S0 (agent valuation reflects future-window exercise
+that is invisible to the current window) and are filtered if
+S0-attestation is enforced.  The aggregate is therefore
+biased toward agents whose exercise lands within $W$ relative
+to those whose exercise lands beyond $W$: trade-early/
+exercise-late patterns are systematically underrepresented.
+This is conservative (it shrinks $\volRlower$, never inflates
+it), but it should be acknowledged when interpreting low
+$\betaL$ in populations with long-horizon trades.  A
+multi-window or rolling-window extension that aggregates
+across overlapping $W_k$ to capture deferred exercise is a
+natural follow-up; the formal extension is straightforward but
+the empirical calibration of how far to extend the rolling
+window is a deployment-dependent governance question.
 
 \item \label{oq:coercion}
 \textbf{Coerced sacrifice.}
@@ -225,4 +247,4 @@ cancel (or bounds the residual) is the natural follow-up.
 paper.} Open questions on threshold governance, need
 identification, capability-stuffing as structural avoidance,
 and the full architecture of gap-decomposition governance are
-collected in the companion paper~\citep{lasser2026paper8b}.
+collected in the companion paper~\citep[paper~8b]{lasser2026paper8b}.
