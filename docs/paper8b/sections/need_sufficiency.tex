@@ -98,15 +98,15 @@ parameters; the paper does not legislate specific values.
 
 \begin{definition}[Downstream-Safe Sufficiency]
 \label{def:downstream_safe}
-Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
-the class of pathways satisfying each dimension of~$N$ at exactly
-its sufficiency threshold (assumed non-empty by governance
-realizability hygiene; in discrete-valued domains where exact
-threshold-achievement may be infeasible, $\Pi_N^0$ should be
-relaxed to $\{\pi : d_k(\pi) \geq s_k \text{ and within a
-domain-set tolerance}\}$, with the framework's downstream
-arguments preserved by treating the relaxed set as the
-admissible reference base).  Let
+Let
+$\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$
+be the class of pathways satisfying each dimension of~$N$ at
+exactly its sufficiency threshold, assumed non-empty by
+governance realizability hygiene.  In discrete-valued domains
+where exact threshold-achievement may be infeasible, $\Pi_N^0$
+is relaxed to pathways within a domain-set tolerance of the
+threshold; the framework's downstream arguments are preserved
+by treating the relaxed set as the admissible reference base.  Let
 $\Pi_N^{\mathrm{ref}} \subseteq \Pi_N^0$ be a non-empty
 \emph{admissible reference set}, designated externally by
 governance (Remark~\ref{rem:reference_pathway}): the
@@ -118,9 +118,9 @@ $\pi_N$ iff:
 \item[(a)] \textbf{Bundle thresholds met:}
   $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
   dimensions inverted per Definition~\ref{def:need_bundle}).
-\item[(b)] \textbf{Downstream non-degradation against all
-  admissible references:} for each downstream capability $c \in
-  \Down(p_N)$, let $\mathrm{quality}_c : \Pi_N^0 \cup
+\item[(b)] \textbf{Downstream non-degradation.}
+  For each downstream capability $c \in \Down(p_N)$, let
+  $\mathrm{quality}_c : \Pi_N^0 \cup
   \{\pi_N\} \to \mathbb{R}$ be a domain-supplied scalar quality
   function on satisfaction pathways, providing a total order on
   pathways relative to capability~$c$ (e.g., for medical care
@@ -131,17 +131,16 @@ $\pi_N$ iff:
   computed quantity; the choice of quality function is part of
   the institutional adjudication that
   Definition~\ref{def:downstream_safe} delegates to governance.
-  Under such a function, $\pi_N$ dominates \emph{every}
+  Write $\mathrm{quality}_c[\pi]$ for the quality of capability
+  $c$ when need~$N$ is satisfied via pathway~$\pi$.  Then
+  $\pi_N$ must dominate \emph{every}
   $\pi^* \in \Pi_N^{\mathrm{ref}}$ on every downstream
   capability simultaneously:
   \[
-    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
-    \pi_N\bigr)
-    \;\geq\;
-    \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
-    \pi^*\bigr)
-    \qquad \text{for all } c \in \Down(p_N)
-    \text{ and all } \pi^* \in \Pi_N^{\mathrm{ref}}.
+    \mathrm{quality}_c[\pi_N] \;\geq\;
+    \mathrm{quality}_c[\pi^*]
+    \quad\text{for all } c \in \Down(p_N),
+    \;\pi^* \in \Pi_N^{\mathrm{ref}}.
   \]
 \end{enumerate}
 The universal quantifier over $\Pi_N^{\mathrm{ref}}$ is
