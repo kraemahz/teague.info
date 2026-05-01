@@ -27,9 +27,13 @@ four disjoint cells (restricted, covered, dormant, residual)
 under poset-boundary closure---with an optional fifth bucket
 ($\delta_{\mathrm{boundary}}$) when the boundary-residual
 closure variant is selected, used in the worked example to
-preserve seed-cell attribution---computable in
-near-linear $\widetilde{O}(|P|+E+M)$ time from observed
-trade data plus governance-supplied structural inputs.  A
+preserve seed-cell attribution.  The cell-attribution
+\emph{classification step} is computable in near-linear
+$\widetilde{O}(|P|+E+M)$ time given upstream inputs
+(admissibility labels, residual-class membership,
+restriction set, sufficiency thresholds), which are themselves
+external attestations or governance-supplied structural data
+rather than computed by this step.  A
 \emph{wireheading-consistent concentration signal} from the
 trade-flow Herfindahl--Hirschman Index is Schur-convex in the
 majorization order; the Part-A category-flow variant is

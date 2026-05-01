@@ -99,7 +99,8 @@ their individual blind spots.
 
 \begin{definition}[Gap Decomposition Under Revealed Sacrifice]
 \label{def:gap_decomp}
-Under the aggregate lower bound theorem~\citep{lasser2026paper8a} Part~B's hypotheses
+Under the Part~B hypotheses of the aggregate lower bound
+theorem of the companion paper~\citep{lasser2026paper8a}
 (S0--S5), the per-capability aggregate $\volRlower(c)$ is
 well-defined, and subset aggregates $\volRlower(A)$ are given
 by the subset-extension of $\volRlower$~\citep{lasser2026paper8a}.  Under those
@@ -201,12 +202,27 @@ The $\delta$ terms are:
   \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(P), \\
   \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(P).
 \end{align*}
-Under poset-boundary closure, the identity $1 - \betaL = \sum
-\delta$ follows from $\volL(P) = \volL(R) + \volL(C) + \volL(D)
-+ \volL(S)$ (poset-boundary closure + set-disjoint union is $P$,
-via M4), combined with $\volRlower(P) = \volRlower(R) +
-\volRlower(C) + 0 + 0$ (dormant and residual cells contribute
-zero $\volRlower$ by definition).
+Under poset-boundary closure, the identity
+$1 - \betaL = \sum \delta$ follows from two additivity steps.
+First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) + \volL(S)$
+by poset-boundary closure plus set-disjoint union via
+M4~\citep[Proposition~1]{lasser2026poset}.  Second,
+$\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ via
+the subset-extension of
+$\volRlower$~\citep{lasser2026paper8a}, applied to the
+disjoint poset-boundary-closed cells $R$ and $C$: the cells'
+internal poset-independence (CC1+CC2) makes
+$\volRlower(R \cup C) = \volRlower(R) + \volRlower(C)$ a Part-B
+M4-aggregation step on capabilities, and $D, S$ contribute zero
+$\volRlower$ by definition (dormant cells have no admissible
+sacrifice events covering them; residual cells admit no
+sacrifice-observable path even in principle).  Combining:
+$1 - \betaL = 1 - \volRlower(P)/\volL(P) = [\volL(P) -
+\volRlower(P)] / \volL(P) = \sum_X [\volL(X) -
+\volRlower(X)] / \volL(P)$, which expands to the four-term
+identity (with $\volRlower(D) = \volRlower(S) = 0$ giving
+$\delta_D = \volL(D)/\volL(P)$ and $\delta_S =
+\volL(S)/\volL(P)$ directly).
 \end{definition}
 
 \begin{remark}[When the residual cell preserves its
@@ -271,17 +287,41 @@ boundary-crossing instances must be eliminated.
 \item[(b)] \emph{Poset-closed sub-partition.}  Refine the
   partition so each cell is sub-partitioned into its
   \emph{poset-connected components} under both cooperative
-  composition and subsumption.  The gap decomposition then
-  operates at the sub-cell level and aggregates via two M4
-  applications (within-cell and across-cell).
-\item[(c)] \emph{Boundary residual.}  Add a fifth bucket for
-  boundary-crossing cooperatives and subsumption edges.  The
-  identity becomes
-  $1 - \betaL = \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}}
-  + \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}
-  + \delta_{\mathrm{boundary}}$ with a fifth term for
-  unassigned cross-cell poset mass (cooperative and
-  subsumption-crossing combined).
+  composition and subsumption \emph{globally across the entire
+  $P$}, not within the original cell only: the decomposition
+  operates over the global connected-component partition of
+  $P$, then assigns each component to a cell by its
+  highest-priority member (as in strategy~(a)).  Sub-partitioning
+  within an original cell alone does not eliminate edges
+  crossing other original cells; the global-component view is
+  what licenses M4.  In practice strategy~(b) coincides with
+  strategy~(a) on the global-component partition; the
+  difference is presentational (sub-partitioning makes the
+  component structure explicit before priority assignment).
+\item[(c)] \emph{Boundary residual.}  Identify
+  \emph{boundary-crossing cooperative nodes} (cooperatives in
+  $P$ whose participants span two or more original cells) and
+  \emph{boundary-crossing subsumption pairs} (pairs $c \succeq
+  c'$ with $c, c'$ in different original cells), and assign
+  the boundary cooperative nodes' $\volL$ weight together with
+  any subsumption-crossing weight redistribution to a fifth
+  bucket $\delta_{\mathrm{boundary}}$.  Cooperative nodes carry
+  explicit $\volL$ weight ($w(c_{\mathrm{coop}})$) and migrate
+  cleanly to the bucket; subsumption-crossing edges do not have
+  standalone $\volL$ mass, so their contribution to
+  $\delta_{\mathrm{boundary}}$ is the $\volL$ weight of the
+  $\succeq$-coupled node-pair under M4-decomposition that fails
+  for them in the cell partition---formally, the weight
+  $w(c) + w(c')$ minus whatever contribution the cells
+  separately accommodate, which is zero under the convention
+  that subsumption-crossing pairs are placed wholly in the
+  bucket.  The identity becomes
+  $1 - \betaL = \delta_{\mathrm{restricted}} +
+  \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}} +
+  \delta_{\mathrm{residual}} + \delta_{\mathrm{boundary}}$ with
+  the fifth term capturing all cross-cell poset mass.  Strategy
+  (c) is what the worked example uses
+  (Section~\ref{sec:worked_example}).
 \end{enumerate}
 The paper's stated results assume strategy~(a) by default: the
 priority-extension rule is the natural operational choice, and
@@ -406,7 +446,10 @@ labelling, not the cost of producing the labelling itself.
 \end{remark}
 
 \begin{remark}[Part~A versus Part~B granularity]
-Under Part~A alone (category-level aggregates, S0--S2), the
+Under Part~A alone (category-level aggregates, requiring S0,
+S1, S2, S4(a), and the genuine-exchange conditions of the
+revealed-sacrifice event definition in the companion
+paper~\citep{lasser2026paper8a}), the
 decomposition operates at the category level: each partition
 component $C_j$
 (the category partition~\citep{lasser2026paper8a}) is classified as
@@ -440,7 +483,8 @@ need-satisfaction---purchasing power and time spent reaching
 baseline functionality rather than pursuing wants.
 
 $\NAC$ does \emph{not} enter
-the aggregate lower bound theorem~\citep{lasser2026paper8a}'s aggregate lower bound or
+the aggregate lower bound of the companion
+paper~\citep{lasser2026paper8a} or
 $\betaL$.  It is a separate diagnostic that tracks the cost side
 of the agent's capability budget.
 \end{definition}

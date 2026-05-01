@@ -241,9 +241,15 @@ assumptions.  We collect them here for single-point reference.
   the agent pays for at $t_n$) and realized exercise (what the
   framework cares about, aggregated over the observation window
   $W$).  It is not a calibration-in-the-narrow-sense (unbiased
-  estimation) but a one-sided conservatism claim: agents do not
-  systematically pay more than what the capability will actually
-  deliver in exercise \emph{within $W$}.  The window-active
+  estimation) but a per-event one-sided conservatism claim:
+  for each individual event~$n$, the agent's valuation does not
+  exceed the bundle's $W$-window exercise contribution.  The
+  prose elsewhere uses ``systematically'' to describe the
+  empirical rationale for adopting S0 (typical agents in
+  typical markets do not pay more than what the capability
+  delivers); this rationale is not part of the formal
+  per-event statement, which holds or fails on each individual
+  event.  The window-active
   form is essential: the sacrifice channel observes acquisition
   at $t_n$, not exercise at any particular time, so S0's
   consequent is about the cumulative exercise witness across the
@@ -254,7 +260,14 @@ assumptions.  We collect them here for single-point reference.
 
 \item[S1 (Free choice).] Each sacrifice event is a voluntary
   trade: agent~$i_n$ chose $Y_n$ over $X_n$ when both were
-  available.  The agent had \emph{non-degrading} alternatives:
+  available, the trade was free of \emph{material confounds}
+  (no transaction costs that would distort the comparison
+  beyond $\Delta\volL(X_n)$, no hidden side payments altering
+  the effective $X$ or $Y$, no risk/expectation mismatch
+  between $\Ui[_n](Y_n)$ at trade time and the realized
+  $\volR^{[W]}(Y_n)$, and no unmodeled bundle attributes
+  outside the declared $Y_n$ that contribute to valuation),
+  and the agent had \emph{non-degrading} alternatives:
   retaining $X_n$ was a viable option that would not have left
   the agent \emph{below-sufficiency} on any need dimension.
   For this paper we treat ``below-sufficiency'' as a primitive:
@@ -262,7 +275,8 @@ assumptions.  We collect them here for single-point reference.
   the agent unable to function on at least one need dimension
   without corrective intervention (food, water, shelter,
   medical care, etc.).  S1 fails for events in which retaining
-  $X_n$ would put the agent below-sufficiency, and the
+  $X_n$ would put the agent below-sufficiency or in which the
+  material-confound conditions are violated, and the
   institutional attestation layer
   (Remark~\ref{rem:external_attestation}) is responsible for
   filtering such events from the aggregate.  The full

@@ -29,8 +29,15 @@ $(\Gamma, \pi, t)$ where:
   \begin{enumerate}
   \item[(a)] the commitment $\Gamma$ corresponds to a valid
     revealed-sacrifice event satisfying the objectively
-    verifiable components: S3 (bundle coherence) and the
-    objective component of S2;
+    verifiable components: the objective component of S2
+    ($\Delta\volL(X)$ correctly computed from~$X$ via the
+    public benchmark);  S3 (bundle coherence:
+    non-degenerate hedonic decomposition) is \emph{not}
+    certified by this proof---it requires either
+    institutional attestation (Remark~\ref{rem:external_attestation})
+    or a richer commitment with explicit decomposition fields
+    (cf.\ Remark~\ref{rem:commit_part_b} for the Part~B
+    extension);
   \item[(b)] $\Delta\volL(X) \geq 0$;
   \item[(c)] the trade actually occurred (linked to a verifiable
     ledger entry);
@@ -63,18 +70,28 @@ hides $\Delta\volL(X)$ itself, releasing only an aggregate
 threshold $B$.
 \end{definition}
 
-\begin{remark}[S0, S1, S4(a), and S5 are not ZK-verifiable]
+\begin{remark}[S0, S1, S3, S4(a), and S5 are not ZK-verifiable
+under the default commitment]
 \label{rem:zk_limits}
-Assumptions S0 (calibration), S1 (free choice), S4(a) (valuation
-additivity), and S5 (decomposition validity) are about the
-agent's internal state or the true $\volR$ distribution.  These
-cannot be verified in zero
-knowledge~\citep{goldwasser1985knowledge} without an oracle for
-the agent's subjective state.  The ZK proof verifies the
-\emph{objective} conditions (S2, S3, and S4(b) via poset
-structure); the \emph{subjective} conditions are structural
-assumptions about the trade environment, not properties the
-commitment protocol can enforce.
+Assumptions S0 (calibration), S1 (free choice), S3 (bundle
+coherence), S4(a) (valuation additivity), and S5 (decomposition
+validity) are about the agent's internal state, the true
+$\volR$ distribution, or the bundle's hedonic decomposition.
+These cannot be verified in zero
+knowledge~\citep{goldwasser1985knowledge} via the default
+committed event of Definition~\ref{def:committed_event} without
+an oracle for the agent's subjective state or richer committed
+fields exposing the decomposition.  The default ZK proof
+verifies the \emph{objective magnitude} conditions (S2's
+benchmark computation, and S4(b) via poset structure on the
+public partition); the remaining conditions are structural
+assumptions about the trade environment or per-bundle
+decomposition, not properties the default commitment protocol
+can enforce.  S3 in particular requires either external
+attestation that the bundle's decomposition is
+non-degenerate, or a richer commitment that exposes per-bundle
+decomposition fields and proves their full-rank property in
+ZK; cf.\ Remark~\ref{rem:commit_part_b}.
 \end{remark}
 
 \begin{definition}[Category Partition]

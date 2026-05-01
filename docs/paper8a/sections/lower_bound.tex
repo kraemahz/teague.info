@@ -234,13 +234,15 @@ of observed sacrifice magnitude.
 
 \medskip\noindent
 \textbf{Part~B (Conditional refinement --- per-capability
-attribution; requires S0--S5 and within-bundle
-poset-independence).}
-Restrict attention to events $n$ whose bundles $Y_n$ are
-within-bundle poset-independent
-(Definition~\ref{def:bundle_decomp}).  When bundles overlap and
-per-capability attribution is desired, define for each capability
-$c \in U$:
+attribution; requires S0--S5, within-bundle
+poset-independence, and positive sacrifice magnitude).}
+Restrict attention to events $n$ with $\Delta\volL(X_n) > 0$
+whose bundles $Y_n$ are within-bundle poset-independent
+(Definition~\ref{def:bundle_decomp}).  Events with
+$\Delta\volL(X_n) = 0$ carry no Part-B information and are
+excluded from the attribution.  When bundles overlap and
+per-capability attribution is desired, define for each
+capability $c \in U$:
 \[
   \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
   \alpha_{n,c} \cdot \Delta\volL(X_n).

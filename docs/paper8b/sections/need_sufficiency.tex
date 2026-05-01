@@ -107,9 +107,21 @@ $\pi_N$ iff:
   $d_k(\pi_N) \geq s_k$ for all dimensions~$k$ (with cost
   dimensions inverted per Definition~\ref{def:need_bundle}).
 \item[(b)] \textbf{Downstream non-degradation against all
-  admissible references:} $\pi_N$ dominates \emph{every}
-  $\pi^* \in \Pi_N^{\mathrm{ref}}$ on every downstream capability
-  simultaneously:
+  admissible references:} for each downstream capability $c \in
+  \Down(p_N)$, let $\mathrm{quality}_c : \Pi_N^0 \cup
+  \{\pi_N\} \to \mathbb{R}$ be a domain-supplied scalar quality
+  function on satisfaction pathways, providing a total order on
+  pathways relative to capability~$c$ (e.g., for medical care
+  domain, the standard-of-care quality function defined on the
+  bundle-of-care pathways; for water access,
+  the contamination-adjusted access function).  The framework
+  reads $\mathrm{quality}_c$ as a governance input, not a
+  computed quantity; the choice of quality function is part of
+  the institutional adjudication that
+  Definition~\ref{def:downstream_safe} delegates to governance.
+  Under such a function, $\pi_N$ dominates \emph{every}
+  $\pi^* \in \Pi_N^{\mathrm{ref}}$ on every downstream
+  capability simultaneously:
   \[
     \mathrm{quality}_c\bigl(\text{with } N \text{ satisfied via }
     \pi_N\bigr)
@@ -295,8 +307,13 @@ The \emph{effective weight} of $c$ is:
 where $g : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
 $g(1) = 1$, $g(0) = \alpha_0 \in [0, 1)$ (the gate's
 \emph{floor}), $g$ monotone non-decreasing, and $g$
-right-continuous at $s = 0$ (so $\lim_{s \to 0^+} g(s) =
-\alpha_0$).  A gate with $\alpha_0 = 0$ is called a
+right-continuous at every $s \in [0, 1]$ (so the function has
+no jump discontinuities approached from the right; in
+particular $\lim_{s \to 0^+} g(s) = \alpha_0$).  Right-continuity
+everywhere is what excludes step-function gates with abrupt
+jumps in the interior of $[0,1]$; the boundary-only condition
+$\lim_{s \to 0^+} g(s) = \alpha_0$ alone would not suffice.  A
+gate with $\alpha_0 = 0$ is called a
 \emph{zero-floor gate}; a gate with $\alpha_0 > 0$ is called a
 \emph{positive-floor gate}.  The four candidate gates of
 Remark~\ref{rem:gate_candidates} all satisfy right-continuity;
@@ -599,22 +616,32 @@ floor $\alpha$ below.
 
 \begin{proposition}[S1--Sufficiency Connection]
 \label{prop:s1_sufficiency}
-S1 fails for any sacrifice event in which the sole non-trade
-alternative consistent with the agent's choice set is to retain
-the sacrificed capability $X_n$, and retention would leave the
-agent below the sufficiency threshold on at least one need
-dimension.  Concretely: if for some need dimension $d_k$ and
-threshold $s_k$, retaining $X_n$ produces capability level
-below $s_k$ on $d_k$ \emph{and} no other alternative in the
-choice set is non-degrading on every need dimension, then no
-non-degrading retention alternative exists, S1's
-non-degrading-alternative condition fails, and the event is
-filtered.  We refer to events in this regime as
-\emph{below-sufficiency sacrifices}.  Below-sufficiency
-\emph{targeting} (i.e., sacrifice aimed at improving an unmet
-need dimension) does not by itself imply S1 failure; S1 fails
-specifically when retention would leave the agent
-below-sufficiency \emph{and} no third alternative exists.
+Let $\mathcal{A}_i$ denote agent $i$'s choice set at trade
+time, including the trade ($Y_n$ for $X_n$), the retention
+alternative (refuse the trade, keep $X_n$), and any other
+alternative actions or trades available.  S1 fails for a
+sacrifice event $(i, X_n, Y_n, t_n)$ when both:
+\begin{enumerate}
+\item[(H1)] retention is degrading: keeping $X_n$ leaves the
+  agent below the sufficiency threshold $s_k$ on some need
+  dimension $d_k$;
+\item[(H2)] no alternative in $\mathcal{A}_i$ other than the
+  trade itself is non-degrading on every need dimension; that
+  is, for every $a \in \mathcal{A}_i \setminus \{(\text{the
+  trade})\}$, taking action $a$ leaves the agent below $s_k$ on
+  some need dimension.
+\end{enumerate}
+Under (H1) and (H2), no non-degrading alternative-to-the-trade
+exists in $\mathcal{A}_i$, S1's non-degrading-alternative
+condition fails, and the event is filtered.  We refer to
+events satisfying (H1)+(H2) as \emph{below-sufficiency
+sacrifices}.  Below-sufficiency \emph{targeting}
+(sacrifice aimed at improving an unmet need dimension where
+(H1) holds but (H2) fails because $\mathcal{A}_i$ contains a
+non-degrading non-trade alternative such as a different trade
+or non-trade action) does not by itself imply S1 failure: S1
+can still hold via that third alternative, in which case the
+trade reveals genuine preference between non-degrading options.
 \end{proposition}
 
 \noindent\textbf{Consequence for the sacrifice channel.}
