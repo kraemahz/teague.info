@@ -56,11 +56,11 @@ framework may use $e_t(d)$ for internal diagnostics within $O$,
 but may \emph{not} apply it to capabilities outside $O$ (where
 privacy constraints apply).
 
-The \emph{exercise-based realized volume} within $O$ is the
-$\volL$-weighted sum of exercised capabilities in the
-perimeter:
+The \emph{exercise-based realized volume} within $O$ at
+time~$t$ is the $\volL$-weighted sum of currently-exercised
+capabilities in the perimeter:
 \[
-  \volRexact(O) \;:=\;
+  \volRexact_t(O) \;:=\;
   \volL\bigl(\{d \in O : e_t(d) = 1\}\bigr).
 \]
 For the window-active form used by
@@ -70,10 +70,13 @@ Theorem~\ref{thm:aggregate_bound}, we set
   \volL\bigl(O \cap P^{\mathrm{ex}}_W\bigr)
 \]
 where $P^{\mathrm{ex}}_W = \bigcup_{t \in W} \{d \in O : e_t(d)
-= 1\}$.  The instantaneous form $\volRexact(O)$ is the
-$t$-indexed specialization; references to $\volRexact$ without a
-window subscript refer to the window-active form under the
-same convention as Definition~\ref{def:volR}.
+= 1\}$.  The instantaneous form $\volRexact_t(O)$ is the
+$t$-indexed specialization (right-endpoint $t$ of the lookback);
+the window-active form $\volRexact^{[W]}(O)$ is the union over
+$t \in W$.  Bare $\volRexact(O)$ in body prose refers to the
+window-active form unless an instant $t$ is explicit in the
+surrounding context, matching the same convention as
+Definition~\ref{def:volR}.
 \end{definition}
 
 \begin{remark}[The two channels are complementary]

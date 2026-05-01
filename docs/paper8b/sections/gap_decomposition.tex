@@ -212,7 +212,14 @@ $\delta_{\mathrm{restricted}}$ and $\delta_{\mathrm{covered}}$
 numerators are non-negative.  The $\delta_{\mathrm{dormant}}$
 and $\delta_{\mathrm{residual}}$ terms are non-negative by
 M5 ($\volL \geq 0$).
-Under poset-boundary closure (strategies (a) or (b)), the
+Two additivity stories underlie the identity, depending on
+closure strategy: (a)/(b) use M4 on poset-boundary-closed cells
+to obtain $\volL$ additivity, while (c) uses literal weight
+summation on a five-bucket set partition.  These are not
+incompatible: (c) is a strictly weaker license that delivers
+the identity by direct summation without invoking M4 on
+cells, while (a)/(b) deliver the same identity via M4 on the
+four poset-boundary-closed cells.  Under strategies (a) or (b), the
 identity $1 - \betaL = \sum \delta$ follows from two additivity
 steps.  First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
 \volL(S)$ by poset-boundary closure plus set-disjoint union via
@@ -300,7 +307,19 @@ boundary-crossing instances must be eliminated.
   subsumption-closed (hence poset-boundary closed), and the
   original individual-capability classification is preserved
   except where a priority-dominated node was absorbed into a
-  higher-priority cell.
+  higher-priority cell.  \emph{Caveat: dormant absorption.}
+  Priority-extension can absorb dormant or residual atomic
+  capabilities into the covered cell when they are
+  poset-connected to a covered atom.  Their $\volL$ weight
+  then contributes to $\volL(C)$ but not to $\volRlower(C)$
+  (since they had no admissible sacrifice evidence by hypothesis),
+  inflating $\delta_{\mathrm{covered}}$ relative to a literal
+  classification.  This means \emph{$\delta_{\mathrm{covered}}$
+  under priority-extension does not exclusively measure
+  proxy-failure on observed capabilities}; some of its mass
+  may be absorbed dormancy or absorbed residual.  Strategies
+  (b) and (c) do not have this absorption effect, at the cost
+  of weaker M4 license.
 \item[(b)] \emph{Poset-closed sub-partition.}  Refine the
   partition so each cell is sub-partitioned into its
   \emph{poset-connected components} under both cooperative
@@ -526,7 +545,7 @@ The need-access cost aggregate for trade window $[T - H, T]$ is:
   \Delta\volL(X_n),
 \]
 where $F_{S1}$ is the set of events failing S1 due to
-below-sufficiency (Proposition~\ref{prop:s1_sufficiency}).
+below-sufficiency (Definition~\ref{prop:s1_sufficiency}).
 $\NAC$ measures the total benchmarked capability surrendered for
 need-satisfaction---purchasing power and time spent reaching
 baseline functionality rather than pursuing wants.
@@ -602,12 +621,18 @@ $(\volRlower, \NAC, \NSE)$ as a joint diagnostic:
   The collective exercises rich capabilities above sufficiency
   and needs are cheap to meet.
 \item[(b)] \textbf{Low $\volRlower$ + high $\NAC$:} Proxy
-  failure on needs.  $\volL$ may be high, but agents are
-  spending most of their benchmarked capability budget on basic
-  need-satisfaction.  The sacrifice channel correctly excludes
-  these events (S1 fails), so the low $\volRlower$ accurately
-  reflects low above-sufficiency exercise.  $\NAC$ surfaces
-  \emph{why} $\volRlower$ is low.
+  failure candidate.  $\volL$ may be high, but agents are
+  spending most of their benchmarked capability budget on
+  basic need-satisfaction.  The sacrifice channel excludes
+  below-sufficiency events (S1 fails) per
+  Definition~\ref{prop:s1_sufficiency}, so a low $\volRlower$
+  alongside a high $\NAC$ is \emph{consistent with} low
+  above-sufficiency exercise; the gap-decomposition's
+  alarm-interpretation caveats
+  (Remark~\ref{rem:alarm_interpretation}) still apply (the low
+  $\volRlower$ may also reflect bound-looseness, sparse
+  observation, or admissibility filtering).  $\NAC$ surfaces a
+  candidate explanation for the low $\volRlower$.
 \item[(c)] \textbf{Low $\volRlower$ + low $\NAC$:} Dormancy,
   residual, or theorem-inadmissible activity.  The gap
   decomposition (Definition~\ref{def:gap_decomp}) distinguishes

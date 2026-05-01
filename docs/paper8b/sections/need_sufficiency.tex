@@ -241,7 +241,7 @@ choice-set hypothesis stated below:
   third non-degrading alternative exists:} polarity is not
   determined by sufficiency status alone.  S1 can still hold
   via the third alternative; classification requires
-  institutional review (Proposition~\ref{prop:s1_sufficiency}
+  institutional review (Definition~\ref{prop:s1_sufficiency}
   and Remark~\ref{rem:s1_above}).
 \end{itemize}
 The sufficiency threshold is where the need-insufficiency
@@ -249,10 +249,11 @@ failure mode of Assumption~S1
 (\citep{lasser2026paper8a}) becomes structurally
 diagnosable: events with retention-degradation \emph{and} no
 third non-degrading alternative fail S1 by
-Proposition~\ref{prop:s1_sufficiency}; above sufficiency, this
+Definition~\ref{prop:s1_sufficiency}; above sufficiency, this
 specific failure mode does not apply (though S1 can still fail
 via other mechanisms---see
-Proposition~\ref{prop:s1_sufficiency}, Remark).
+Definition~\ref{prop:s1_sufficiency} and
+Remark~\ref{rem:s1_above}).
 \end{definition}
 
 \begin{definition}[Polarity-Correct Benchmark]
@@ -503,11 +504,21 @@ gate's floor regardless of $W_{\mathrm{down}}/W_{\mathrm{out}}$
 ratio.
 \end{remark}
 
-\begin{proposition}[Need-Dominance in the Gradient]
+\begin{proposition}[Need-Dominance Marginal Rate, conditional
+on a domain-supplied intervention metric]
 \label{prop:need_dominance}
 Assume homogeneous sufficiency $s_N(c) \equiv s_N$ for all $c \in
 \Down(p_N)$ and that all other needs are at sufficiency
 ($s_{N'}(c) = 1$ for $N' \neq N$), so that $s_N$ is a scalar.
+We compute partial derivatives of $\volL^{\mathrm{eff}}$
+with respect to the design parameters $s_N$ and $w(c')$.
+The dominance \emph{condition} below is conditional on a
+domain-supplied intervention metric that prices unit
+increments of $s_N$ and unit increments of $w(c')$ on a common
+cost scale; without that metric, the partial derivatives are
+not directly comparable and no formal dominance result
+follows.  This is a design-convention statement, not a
+free-standing inequality on the framework's primitives.
 For any valid gate function $g$ differentiable at $s_N$ with
 $g'(s_N) > 0$, the two relevant partial derivatives of
 $\volL^{\mathrm{eff}}$ are
@@ -654,13 +665,14 @@ floor $\alpha$ below.
 
 \subsection{Sacrifice-polarity (S1) connection}
 
-\begin{proposition}[S1--Sufficiency Connection]
+\begin{definition}[Below-sufficiency sacrifice]
 \label{prop:s1_sufficiency}
 Let $\mathcal{A}_i$ denote agent $i$'s choice set at trade
 time, including the trade ($Y_n$ for $X_n$), the retention
 alternative (refuse the trade, keep $X_n$), and any other
-alternative actions or trades available.  S1 fails for a
-sacrifice event $(i, X_n, Y_n, t_n)$ when both:
+alternative actions or trades available.  A sacrifice event
+$(i, X_n, Y_n, t_n)$ is a \emph{below-sufficiency sacrifice}
+when both:
 \begin{enumerate}
 \item[(H1)] retention is degrading: keeping $X_n$ leaves the
   agent below the sufficiency threshold $s_k$ on some need
@@ -674,18 +686,34 @@ sacrifice event $(i, X_n, Y_n, t_n)$ when both:
   failing dimension may differ across alternatives, and need
   not coincide with the $d_k$ from H1).
 \end{enumerate}
-Under (H1) and (H2), no non-degrading alternative-to-the-trade
-exists in $\mathcal{A}_i$, S1's non-degrading-alternative
-condition fails, and the event is filtered.  We refer to
-events satisfying (H1)+(H2) as \emph{below-sufficiency
-sacrifices}.  Below-sufficiency \emph{targeting}
-(sacrifice aimed at improving an unmet need dimension where
-(H1) holds but (H2) fails because $\mathcal{A}_i$ contains a
-non-degrading non-trade alternative such as a different trade
-or non-trade action) does not by itself imply S1 failure: S1
-can still hold via that third alternative, in which case the
-trade reveals genuine preference between non-degrading options.
-\end{proposition}
+\end{definition}
+
+\begin{remark}[Below-sufficiency sacrifices fail S1]
+\label{rem:s1_sufficiency_failure}
+A below-sufficiency sacrifice fails S1
+(\citep{lasser2026paper8a}) directly: H2 asserts that no
+alternative-to-the-trade in $\mathcal{A}_i$ is non-degrading,
+which is exactly the S1 failure condition (S1 requires the
+existence of at least one non-degrading alternative to the
+trade).  H1 in this construction names \emph{why} the
+alternatives are degrading---retention is one specific
+degrading option---ensuring the failure is need-driven rather
+than artifactual.  The named-pattern value of
+Definition~\ref{prop:s1_sufficiency} is operational: it picks
+out the structural sub-class of S1 failures that the
+need-sufficiency architecture identifies (retention is
+degrading and no third option escapes degradation), letting
+the institutional attestation layer filter such events
+without rederiving the S1 logic per case.
+Below-sufficiency \emph{targeting} (sacrifice aimed at
+improving an unmet need dimension where H1 holds but H2 fails
+because $\mathcal{A}_i$ contains a non-degrading non-trade
+alternative) does not satisfy
+Definition~\ref{prop:s1_sufficiency} and does not imply S1
+failure: S1 can still hold via that third alternative, in
+which case the trade reveals genuine preference between
+non-degrading options.
+\end{remark}
 
 \noindent\textbf{Consequence for the sacrifice channel.}
 Below-sufficiency sacrifices in the proposition's narrow sense
@@ -718,47 +746,26 @@ coercion open question discussed in the companion
 paper~\citep{lasser2026paper8a}) remain.
 \end{remark}
 
-\begin{proof}[Proof of Proposition~\ref{prop:s1_sufficiency}]
-Let $(i, X, Y, t)$ be a sacrifice event satisfying the
-proposition's hypotheses: retention of $X_n$ leaves the agent
-below threshold $s_k$ on need dimension $d_k$, and no third
-alternative exists in the agent's choice set that is
-non-degrading on every need dimension.
-
-S1 requires that some alternative to making the trade is
-\emph{non-degrading}: it must not drop the agent below minimum
-viable functionality on any need dimension.  S1's alternative
-ranges over the agent's choice set, which we partition into
-two classes: (a)~the retention alternative (refuse the trade,
-keep $X_n$), and (b)~any third alternative (a different trade,
-or a different non-trade action).
-
-By the first hypothesis, retention drops the agent below $s_k$
-on $d_k$, so retention is degrading and class~(a) fails the
-non-degrading-alternative condition.  By the second hypothesis,
-no element of class~(b) is non-degrading on every need
-dimension, so class~(b) also fails.  Together, no
-non-degrading alternative exists in the agent's choice set, so
-S1's condition fails for this event.  Events with failed S1
-are excluded from the aggregate by the applicable-assumptions
-clause of the aggregate lower bound
-theorem~\citep{lasser2026paper8a}.
-
-The second hypothesis is what distinguishes ``below-sufficiency
-sacrifice'' (S1 fails) from ``below-sufficiency targeting''
-(S1 may still hold via a third alternative): the latter is
-consistent with S1 because the agent could choose a different
-non-degrading option, in which case the trade is not forced
-and reveals genuine preference.  In practice the second
-hypothesis must be established by the institutional
+\begin{remark}[Operational sourcing of the H1+H2 conditions]
+\label{rem:s1_sufficiency_sourcing}
+H1 (retention degrades) is checkable from the agent's
+sufficiency state on each need dimension, which is computable
+from the poset construction once thresholds are supplied.  H2
+(no third non-degrading alternative) is the harder claim: it
+quantifies over the agent's full choice set $\mathcal{A}_i$,
+which is not directly observable from public trade data.  In
+practice, H2 must be established by the institutional
 attestation layer of the companion
 paper~\citep{lasser2026paper8a} (the external-attestation
 remark there describes how per-event hypotheses about the
 agent's choice set are certified through trade-level audit or
 attestation, not through the public partition $\mathcal{C}$
-alone), not derived structurally from sufficiency status
-alone.
-\end{proof}
+alone).  Without H2 attestation, an event with H1 holding
+should be classified as below-sufficiency \emph{targeting}
+(potentially S1-admissible) rather than below-sufficiency
+\emph{sacrifice} (S1-failing); the conservative default is to
+require explicit H2 attestation before filtering.
+\end{remark}
 
 \subsection{The capability-stuffing problem}
 \label{sec:capability_stuffing}
@@ -907,7 +914,7 @@ Each of these defeats any attempt to block stuffing using
 post-declaration poset properties or exercise patterns alone.
 The honest statement of the need-sufficiency architecture's
 contribution is sacrifice-polarity resolution (via
-Proposition~\ref{prop:s1_sufficiency} above, which is
+Definition~\ref{prop:s1_sufficiency} above, which is
 load-bearing for the sacrifice channel) together with the
 narrow below-sufficiency cap of
 Proposition~\ref{prop:below_suff_saturation}.  Full structural

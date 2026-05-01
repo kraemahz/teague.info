@@ -61,11 +61,15 @@ relationship-building, contemplation).  The signal is:
 where $X(r_i \cdot h)$ is the purchasing-power-equivalent
 bundle of magnitude $r_i \cdot h$ (so the time channel reduces
 to a money-channel evaluation through the wage-rate
-identification).  \emph{Admissibility cap.}  S0 implicitly
-caps $\Delta\volL(X(r_i \cdot h))$ at the bundle's
-window-active $\volR$ ceiling
-$\sum_{c \in Y} w(c)$; events where the wage-imputed magnitude
-exceeds this ceiling violate S0 and are inadmissible
+identification).  \emph{Admissibility cap.}  Through the
+calibration chain
+$\Ui(Y) \geq \Ui(X) \geq \Delta\volL(X)$ (revealed preference
+plus S2) combined with S0
+($\Ui(Y) \leq \volR^{[W]}(Y) \leq \sum_{c \in Y} w(c)$), the
+event-magnitude $\Delta\volL(X(r_i \cdot h))$ is implicitly
+capped at the bundle's window-active $\volR$ ceiling; events
+where the wage-imputed magnitude exceeds this ceiling violate
+the assumption stack and are inadmissible
 (Remark~\ref{rem:s0_time_cap} below).
 \end{definition}
 
@@ -99,9 +103,10 @@ review rather than a free pass to inflate $\volRlower$.
 \noindent\textbf{Properties of the time channel:}
 \begin{itemize}
 \item \textbf{Signal strength.}  Opportunity cost is a
-  quantitative signal grounded in market wage rates.  Every agent
-  has a time endowment and an outside option, regardless of
-  wealth.
+  quantitative signal grounded in market wage rates.  Every
+  agent has a time endowment; agents in the labour market have
+  a market-wage outside option, while non-market agents
+  (next bullet) require an imputed or substitute valuation.
 \item \textbf{Bias.}  More egalitarian than the money channel.
   Time is the scarcest capability every agent shares.  A
   high-wage agent's time sacrifice has higher $\Delta\volL$ per
@@ -170,78 +175,62 @@ capability spaces}.  Observing both yields:
 \subsection{Non-fungibility residuals}
 
 The substitutability in \S\ref{sec:channel_substitutability} is
-not total.  Two specific residuals create genuine asymmetries
-where one channel captures something the other cannot substitute
-for.
+not total.  Two informal observations identify capabilities
+where one channel produces sacrifice events that the other
+does not produce on the \emph{same} capability.  We label
+these as \emph{examples} rather than propositions because the
+arguments rely on the intuitive notion ``$c$ generates an
+event of channel $X$ on $c$'' rather than on a formal
+predicate; the intent is to motivate that the joint aggregate
+strictly improves on either channel alone in non-trivial
+cases, not to prove a structural impossibility.
 
-\begin{proposition}[Agent-Specific-Time Residual (existential)]
+\begin{example}[Agent-specific-time non-substitutability,
+informal]
 \label{prop:agent_specific_time}
-There exists a capability $c^\ast$ reachable by the time channel
-but whose $\volR$-content is not captured by any money-channel
-event on $c^\ast$ itself (access goods purchasable with money
-attach $\volR$-content to \emph{access categories}, not to
-$c^\ast$).  The non-substitutability is of the specific
-$c^\ast$, not a claim that all agent-specific-time capabilities
-evade the money channel entirely.
-\end{proposition}
-
-\begin{proof}
-We exhibit $c^\ast = $ ``sustained mentoring relationship with a
-specific individual.''  The relational capability is constituted
-by the interaction between this agent and the mentee; it is not
-transferable to a proxy.  Money can purchase access goods
-(introductions, a mentor's scheduled time, coaching
-infrastructure), but these are distinct bundles whose
-$\volR$-content lies in access categories rather than in the
-relational capability $c^\ast$ itself.  A paid mentoring
-engagement generates a money-channel event on \emph{scheduled
-access} rather than on the relationship capability $c^\ast$.
-When agent~$i$ allocates $h$ hours foregoing wage income
-$r_i \cdot h$ to the relationship, the time-sacrifice event
+Take $c^\ast = $ ``sustained mentoring relationship with a
+specific individual.''  The capability is constituted by the
+interaction between agent and mentee; it is not transferable
+to a proxy.  Money-channel events on $c^\ast$ are not produced:
+purchasable access goods (introductions, scheduled mentor time,
+coaching infrastructure) are distinct bundles whose
+$\volR$-content lies in those access bundles, not in the
+relational $c^\ast$ itself.  A time-sacrifice event of $h$
+hours allocated to the relationship at wage rate $r_i$
 (Definition~\ref{def:time_sacrifice}) produces
-$\volRlower(Y) \geq \Delta\volL(r_i \cdot h)$ with $c^\ast \in
-Y$, giving the time channel an event that the money channel
-does not produce for $c^\ast$.
-\end{proof}
+$\volRlower(Y) \geq \Delta\volL(X(r_i \cdot h))$ with $c^\ast
+\in Y$, an event the money channel does not produce on
+$c^\ast$.  The asymmetry is informal-existential: it identifies
+one capability where the time channel reaches $c^\ast$ via a
+sacrifice event and the money channel does not, not a claim
+that all agent-specific-time capabilities evade the money
+channel.
+\end{example}
 
-\begin{proposition}[Capital-Concentrated Residual (existential)]
+\begin{example}[Capital-concentrated non-substitutability,
+informal]
 \label{prop:capital_concentrated}
-There exists a capability $c^\ast$ reachable by the money
-channel but whose $\volR$-content is not captured by any
-time-channel event on $c^\ast$ itself (direct time-sacrifice on
-$c^\ast$ without capital access yields no realized exercise).
-The non-substitutability is of the specific $c^\ast$, not a
-claim that all capital-concentrated capabilities evade the time
-channel entirely.
-\end{proposition}
-
-\begin{proof}
-We exhibit $c^\ast = $ ``conduct a particle-physics experiment
-using a synchrotron.''  The exercise of $c^\ast$ requires access
-to specialized infrastructure whose acquisition or lease cost is
+Take $c^\ast = $ ``conduct a particle-physics experiment using
+a synchrotron.''  Exercise of $c^\ast$ requires access to
+specialized infrastructure whose acquisition or lease cost is
 concentrated in a single transaction (institutional budget,
 grant award, facility time purchased).  An agent accumulating
-time-sacrifice at wage rate $r_i$ can only reach this capability
-by first converting time to money via employment and then
-purchasing access---which is the money channel, not the time
-channel, since the converted-to-money event is a market
-transaction.  Direct time-sacrifice (hours spent without capital
-access) yields no experimental event and no $\volR$ signal on
-$c^\ast$.  The money channel captures $c^\ast$ via the single
-access-purchase event; the time channel is silent for $c^\ast$
-because the time-sacrifice exchange rate on direct-labor hours
-is too small relative to the capital threshold, and
-time-channel events accompanying capital-enabled exercise are
-attributable to labor categories rather than to $c^\ast$'s
-capital-concentrated access.
-\end{proof}
+time-sacrifice at wage rate $r_i$ can only reach this
+capability by first converting time to money via employment and
+then purchasing access---a money-channel event on the access
+category.  Direct time-sacrifice on $c^\ast$ without capital
+access does not produce a $\volRlower$ signal on $c^\ast$.
+The asymmetry is informal-existential: it identifies one
+capability where the money channel reaches $c^\ast$ via a
+sacrifice event and the time channel does not.
+\end{example}
 
-\begin{remark}[Scope of the residual propositions]
+\begin{remark}[Scope of the residual examples]
 \label{rem:residual_scope}
-Propositions~\ref{prop:agent_specific_time}
+Examples~\ref{prop:agent_specific_time}
 and~\ref{prop:capital_concentrated} are
-\emph{existential}---each witnesses one capability exhibiting
-the claimed residual behavior.  They do not establish that the
+\emph{informal-existential}---each exhibits one capability
+that motivates the claimed residual behaviour.  They do not establish that the
 descriptive class ``all agent-specific-time capabilities'' or
 ``all capital-concentrated capabilities'' is uniformly
 channel-exclusive.  Mixed-mode coverage of such capabilities can
@@ -283,7 +272,7 @@ above; it is not a claim of unconditional containment.
 \medskip\noindent
 \textbf{Strict improvement (conditional on observed coverage).}
 The non-fungibility residuals
-(Propositions~\ref{prop:agent_specific_time}
+(Examples~\ref{prop:agent_specific_time}
 and~\ref{prop:capital_concentrated}) make strict improvement
 \emph{possible}: agent-specific-time capabilities lie in the
 coverage gap of the money channel alone, and
@@ -309,9 +298,9 @@ lower bound is monotone in observed admissible events under
 sub-batch supremum
 (Proposition~\ref{prop:monotone_part_a}), so the union's bound
 is $\geq$ either single channel's bound.  Strict improvement on the
-residuals: Proposition~\ref{prop:agent_specific_time} witnesses
+residuals: Example~\ref{prop:agent_specific_time} witnesses
 a capability captured by time but not by money;
-Proposition~\ref{prop:capital_concentrated} witnesses a
+Example~\ref{prop:capital_concentrated} witnesses a
 capability captured by money but not by time.  Both residuals
 guarantee strict improvement of the joint aggregate over either
 channel alone when the trade window includes at least one event
@@ -359,7 +348,7 @@ residual class is the intersection of the coverage gaps of both
 channels after accounting for the cooperative-market
 substitutability of \S\ref{sec:channel_substitutability} and the
 non-fungibility residuals of
-Propositions~\ref{prop:agent_specific_time}
+Examples~\ref{prop:agent_specific_time}
 and~\ref{prop:capital_concentrated}.  This is a strictly smaller
 set than the union of the two channels' individual coverage gaps:
 capabilities in one channel's gap but reachable via the other

@@ -25,11 +25,17 @@ the system, independent of any observation mechanism:
   P^{\mathrm{ex}}_t \;=\; \{d \in P : d \text{ is exercised at
   time } t\},
 \]
-where ``exercised at $t$'' is formalized via the counterfactual
-exercise condition of Appendix~\ref{app:exercise_indicator}
+where ``exercised at $t$'' is formalized via the
+counterfactual exercise condition of
+Appendix~\ref{app:exercise_indicator}
 (Definition~\ref{def:exercise_indicator}): $d$ is exercised at
-$t$ iff removing $d$ at that time would make some realized
-cooperative output unrealizable.  The \emph{instantaneous
+$t$ iff some realized cooperative output in the lookback
+window $[t - \Delta, t]$ becomes unrealizable when $d$ is
+removed from $O$.  The lookback width $\Delta$ and the
+exercise indicator's other parameters are specified in
+Definition~\ref{def:exercise_indicator}; ``at $t$'' here
+denotes that $t$ is the right endpoint of the lookback,
+not that the exercise happens instantaneously at $t$.  The \emph{instantaneous
 realized capability volume} is the poset measure restricted to
 this sub-poset:
 \[
@@ -224,9 +230,12 @@ For $N$ events with \emph{pairwise poset-independent} bundles
 Definition~\ref{def:category_partition}(i): no subsumption
 relation and no cooperative-composition link connects any
 capability in $Y_n$ to any capability in $Y_{n'}$ for
-$n \neq n'$; this implies set-disjointness $Y_n \cap Y_{n'} =
-\emptyset$ as a special case, since a capability in both
-bundles would be trivially poset-related to itself):
+$n \neq n'$).  We additionally require set-disjointness
+$Y_n \cap Y_{n'} = \emptyset$ for $n \neq n'$, which is
+implicit when subsumption is taken as a strict partial order
+on distinct capabilities; we make it explicit here so that
+the proof's M4 step does not have to invoke reflexivity of the
+relation:
 \[
   \volR^{U,[W]} \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
 \]

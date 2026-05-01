@@ -46,16 +46,15 @@ sub-poset---capabilities counterfactually load-bearing for
 realized outputs---and monitor the ratio $\beta = \volR/\volL$.
 This fails on two grounds:
 
-\paragraph{Tractability failure.}
+\paragraph{Tractability concern.}
 The counterfactual query (``which capabilities are
 load-bearing for which realized outputs?'') requires global
 knowledge of every realized output the collective produces and
 of every causal pathway from each capability to those outputs.
-Even establishing a tight upper bound on this query's
-complexity is outside the present paper's scope; the
-qualitative observation suffices for our purposes that the
-direct computation is intractable and privacy-incompatible at
-collective scale.
+Establishing a complexity lower bound is outside this paper's
+scope; the qualitative observation that direct computation
+faces high practical cost at collective scale, alongside the
+privacy concern below, motivates the indirect channel.
 
 \paragraph{Privacy failure.}
 Computing realized-output sets requires observational access to

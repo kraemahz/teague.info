@@ -190,15 +190,21 @@ wireheading-consistent reading of
 Proposition~\ref{prop:wireheading_hhi} via the same
 Schur-convexity argument applied to a different normalised
 distribution; it is not a public computation of the Part~B
-$\HHI$.  Specifically, define
+$\HHI$.  Let $\mathcal{E}_{S1}$ denote the set of S1-admissible
+events in the trade window (events that have passed the
+institutional admissibility-attestation pipeline).
+Specifically, define
 \[
   \tilde\lambda_{\mathrm{trade}}(j, T) \;=\;
   \begin{cases}
-    \dfrac{\sum_{n :\, \catYn{n} = j} \Delta\volL(X_n)}
-         {\sum_n \Delta\volL(X_n)}
-      & \text{if } \sum_n \Delta\volL(X_n) > 0, \\
+    \dfrac{\sum_{n \in \mathcal{E}_{S1} :\, \catYn{n} = j}
+            \Delta\volL(X_n)}
+         {\sum_{n \in \mathcal{E}_{S1}} \Delta\volL(X_n)}
+      & \text{if } \sum_{n \in \mathcal{E}_{S1}}
+        \Delta\volL(X_n) > 0, \\
     \text{undefined (diagnostic suppressed)}
-      & \text{if } \sum_n \Delta\volL(X_n) = 0,
+      & \text{if } \sum_{n \in \mathcal{E}_{S1}}
+        \Delta\volL(X_n) = 0,
   \end{cases}
   \qquad
   \widetilde\HHI \;=\; \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2,

@@ -393,14 +393,19 @@ of the magnitudes; we assume a domain-supplied fixed-point
 encoding with scale~$\sigma$ and per-event upper bound
 $\Delta_{\max}$ such that each $\Delta\volL(X_n)$ is encoded
 as a non-negative integer in $[0, \lfloor \sigma \cdot
-\Delta_{\max} \rfloor]$, and the aggregate fits in
-$[0, N_{\max} \cdot \lfloor \sigma \cdot \Delta_{\max}
-\rfloor] \subset \mathbb{Z}_p$ for the curve order~$p$.
-Rounding error per event is bounded by $1/\sigma$ in
-$\volL$-units and propagates additively across the batch
-($N \leq N_{\max}$ events giving total rounding bound
-$N/\sigma$); the threshold~$B$ is set with margin
-$\geq N_{\max}/\sigma$ to absorb worst-case accumulation.
+\Delta_{\max} \rfloor]$ via floor rounding (encoded
+magnitude $\leq \sigma \cdot$ true magnitude), and the
+aggregate fits in $[0, N_{\max} \cdot \lfloor \sigma \cdot
+\Delta_{\max} \rfloor] \subset \mathbb{Z}_p$ for the curve
+order~$p$.  Floor rounding ensures the encoded sum is a lower
+bound on $\sigma$ times the true real-valued sum, so a
+range-proof certifying ``encoded sum $\geq \sigma B$'' implies
+``true sum $\geq B$'' directly.  Rounding error per event is
+bounded by $1/\sigma$ in $\volL$-units and propagates
+additively across the batch ($N \leq N_{\max}$ events giving
+total rounding bound $N/\sigma$); the threshold~$B$ should be
+set with margin $\geq N_{\max}/\sigma$ above the true bound
+to absorb worst-case accumulation.
 Using a standard Pedersen commitment range
 proof~\citep[Definition~7]{lasser2026exo}, the prover
 demonstrates

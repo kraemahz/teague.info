@@ -103,21 +103,36 @@ M5 are weaker conditional statements noted for completeness.
     $P^{\mathrm{ex}}_W$; it is what breaks the self-balancing
     transfer (Corollary~\ref{cor:not_self_balancing}).
   \item[(b)] \textbf{$\volRlower$: event-set non-additivity
-    (not an M6 violation).}
+    (a property of the lower-bound construction, not an M6
+    statement).}
     M6 is a measure axiom on poset-independent capability
-    subsets; $\volRlower$ as a set function inherits M6 by the
-    same restriction argument as M4.  A separate property
-    holds at the \emph{event-set} level: merging two groups of
-    sacrifice events changes per-capability attributions under
-    max-attribution, and the joint maximum over all events can
-    be less than the sum of within-group maxima.  This is not
-    an M6 counterexample (M6 quantifies over capability subsets,
-    not event sets); it is a non-superadditivity property of
-    the lower-bound construction over event-set unions.
-    Example~\ref{ex:m6_fail_volRlower} illustrates this property
-    in a constructed scenario outside Part~B's strict admissibility
-    regime, retained for operational clarity about what
-    max-attribution does on merged event groups.
+    subsets, and applies to $\volR$ on a fixed exercised
+    sub-poset by the restriction argument of (a).  $\volRlower$
+    is \emph{not} a measure of $\volR$'s restriction; it is an
+    observation-derived lower-bound functional of trade events.
+    M6 is therefore not a property we have to inherit for
+    $\volRlower$, and we make no claim that $\volRlower$ is
+    super- or sub-additive on capability subsets.
+    A separate property holds at the \emph{event-set}
+    level: merging two groups of sacrifice events changes
+    per-capability attributions under max-attribution, and the
+    joint maximum over all events can be less than the sum of
+    within-group maxima.  This is a non-superadditivity property
+    of the lower-bound construction over event-set unions
+    (Example~\ref{ex:m6_fail_volRlower} illustrates it in a
+    constructed scenario outside Part~B's strict admissibility
+    regime), retained for operational clarity about what
+    max-attribution does on merged event groups.  M4 still
+    applies to $\volRlower$ on poset-independent capability
+    subsets through the per-capability max-attribution sum:
+    $\volRlower(A \cup B) = \volRlower(A) + \volRlower(B)$ when
+    $A, B$ are poset-disjoint, since the per-capability sums
+    decouple over disjoint cooperative-closed subsets.
+    M5 (every valid capability has positive weight) applies to
+    $\volR$ on the exercised sub-poset by restriction, but
+    $\volRlower$ assigns zero to any capability not covered by
+    an admissible event, so $\volRlower$ is not an M5-style
+    measure on the unexercised side.
   \end{enumerate}
 \end{description}
 \end{theorem}
