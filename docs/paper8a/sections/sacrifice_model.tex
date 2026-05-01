@@ -288,19 +288,28 @@ assumptions.  We collect them here for single-point reference.
   between $\Uin{n}(Y_n)$ at trade time and the realized
   $\volR^{[W]}(Y_n)$, and no unmodeled bundle attributes
   outside the declared $Y_n$ that contribute to valuation),
-  and the agent had \emph{non-degrading} alternatives:
-  retaining $X_n$ was a viable option that would not have left
-  the agent \emph{below-sufficiency} on any need dimension.
-  For this paper we treat ``below-sufficiency'' as a primitive:
-  an event is below-sufficiency iff retaining $X_n$ would leave
+  and the agent had at least one \emph{non-degrading}
+  alternative in their choice set: an option (retaining $X_n$,
+  or some third option not equal to the trade itself) that
+  would not have left the agent \emph{below-sufficiency} on
+  any need dimension.  For this paper we treat
+  ``below-sufficiency'' as a primitive: an event is
+  below-sufficiency iff retaining $X_n$ would leave
   the agent unable to function on at least one need dimension
   without corrective intervention (food, water, shelter,
-  medical care, etc.).  S1 fails for events in which retaining
-  $X_n$ would put the agent below-sufficiency or in which the
-  material-confound conditions are violated, and the
+  medical care, etc.).  S1 fails for events in which
+  \emph{no} non-degrading alternative exists in the agent's
+  choice set (in particular: retention is degrading
+  \emph{and} no third non-degrading option is available) or in
+  which the material-confound conditions are violated; the
   institutional attestation layer
   (Remark~\ref{rem:external_attestation}) is responsible for
-  filtering such events from the aggregate.  The full
+  filtering such events from the aggregate.  S1 holds (and the
+  event is admissible) when retention is non-degrading, or when
+  retention is degrading but the agent has a non-trade
+  non-degrading alternative; the latter case requires
+  attestation that the third alternative was actually available
+  and non-degrading.  The full
   poset-construction machinery that identifies below-sufficiency
   structurally---multi-dimensional need bundles, downstream-safe
   sufficiency, polarity-correct benchmarks, the downstream-gated

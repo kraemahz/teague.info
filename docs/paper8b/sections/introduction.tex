@@ -30,9 +30,13 @@ This paper contributes the structural architecture that supplies a sufficient
 filter condition for one below-sufficiency failure mode of S1
 (Definition~\ref{def:s1_sufficiency}): events in which retention degrades the
 agent and no third non-degrading alternative exists fail S1 and are filtered
-from the aggregate.  Other S1 failure modes (below-sufficiency targeting with a
-third alternative available; coercion; duress; information asymmetry) require
-institutional attestation rather than this structural filter
+from the aggregate.  Below-sufficiency \emph{targeting} where a third
+non-degrading alternative is available is not by itself an S1 failure mode
+(S1 may still hold via that third alternative), but classification requires
+institutional attestation to confirm the third alternative's existence and
+non-degrading status.  Other S1 failure modes proper (coercion, duress,
+information asymmetry) likewise require institutional attestation rather
+than this structural filter
 (Remark~\ref{rem:s1_above}).  The paper also develops the diagnostic layers
 that interpret what the lower bound is signalling when a low $\betaL$ fires an
 alarm.
@@ -83,17 +87,19 @@ alarm.
   provides a tractable, governance-thresholded concentration
   alarm that is Schur-convex in the majorization order.  A
   Part-A category-flow variant is third-party observable from
-  public committed events.
+  public committed events plus the public S1-admissibility
+  labelling.
 
 \item \textbf{Residual class characterization
   (Section~\ref{sec:residual_class}).}
   A revealed-observation carve of the residual class: the set
   of capabilities structurally outside the sacrifice channel's
   reach.  This differs from the classical
-  benchmarkability-based residual class; explicit witnesses
-  show $\ResB \setminus \ResS$ and $\ResB \cap \ResS$ are
-  non-empty, while $\ResS \setminus \ResB$ depends on
-  individuation choices (Proposition~\ref{prop:residual_intersection}).
+  benchmarkability-based residual class; an explicit witness
+  shows $\ResB \setminus \ResS$ is non-empty, while
+  $\ResS \setminus \ResB$ and $\ResB \cap \ResS$ depend on
+  individuation choices
+  (Proposition~\ref{prop:residual_intersection}).
 
 \item \textbf{Worked example
   (Section~\ref{sec:worked_example}).}

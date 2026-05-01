@@ -71,11 +71,13 @@ and Proposition~\ref{prop:gap_computable} (Computability).}
 Under the default literal-partition strategy~(c), the cells
 $\{R, C, D, S, B\}$ form a set-partition of $P$ by stipulation
 (boundary-crossing cooperative nodes go to $B$ rather than to a
-participant's cell), and $\volL$-additivity follows from M5
-weight summation alone:
-$\volL(P) = \sum_{X \in \{R,C,D,S,B\}} \volL(X)$ since
-$\volL(X) = \sum_{c \in X} w(c)$ and the cells are
-set-disjoint.  The Part-B subset-extension of $\volRlower$ via
+participant's cell), and $\volL$-additivity follows from the
+strategy-(c) atomic-weight accounting convention
+$\volL(X) := \sum_{c \in X} w(c)$, which is distinct from the
+inherited M1--M6 poset-measure semantics on
+poset-independent subsets:
+$\volL(P) = \sum_{X \in \{R,C,D,S,B\}} \volL(X)$ since the
+cells are set-disjoint and the atomic sum rearranges directly.  The Part-B subset-extension of $\volRlower$ via
 per-capability max-attribution
 \citep[Revealed~Sacrifice]{lasser2026paper8a} is similarly
 set-additive over disjoint cells:
@@ -125,35 +127,42 @@ threshold $\HHI_{\mathrm{alarm}}$ is not theorem-derived
 
 \paragraph{Proposition~\ref{prop:third_party_wireheading}
 (Third-Party Observability of the Part-A variant).}
-The category-flow statistic
-$\tilde\lambda_{\mathrm{trade}}(j,T) = \sum_{n: \catYn{n} = j}
-\Delta\volL(X_n) / \sum_n \Delta\volL(X_n)$ is a direct
+Let $\mathcal{N}_{S1}$ denote the index set of
+S1-admissible committed events as marked by the public
+admissibility labelling.  The category-flow statistic
+$\tilde\lambda_{\mathrm{trade}}(j,T) =
+\sum_{n \in \mathcal{N}_{S1}: \catYn{n} = j}
+\Delta\volL(X_n) /
+\sum_{n \in \mathcal{N}_{S1}} \Delta\volL(X_n)$ is a direct
 function of cleartext-committed fields from the committed
-event definition~\citep[Revealed~Sacrifice]{lasser2026paper8a}; no hidden field
-(agent identity, bundle-interior subset, $\alpha_{n,c}$
+event definition~\citep[Revealed~Sacrifice]{lasser2026paper8a}
+together with the public S1-admissibility labelling; no hidden
+field (agent identity, bundle-interior subset, $\alpha_{n,c}$
 coefficients) enters.  Diagnostic
-suppressed when total flow is zero.  Per-capability variant
-requires richer commitments or operation within a consented
-perimeter~$O$ (Remark~\ref{rem:wireheading_part_b_obs}).
+suppressed when total S1-admissible flow is zero.  Per-capability
+variant requires richer commitments or operation within a
+consented perimeter~$O$
+(Remark~\ref{rem:wireheading_part_b_obs}).
 
 \subsection{Residual class
 (Section~\ref{sec:residual_class})}
 
 \paragraph{Proposition~\ref{prop:residual_intersection}
 (Residual Class Intersection).}
-$\ResB \setminus \ResS$ and $\ResB \cap \ResS$ are each
-witnessed by an explicit capability; whether
-$\ResS \setminus \ResB$ is non-empty is conditional on
-poset-construction individuation choices.  Witnesses:
+$\ResB \setminus \ResS$ is witnessed unconditionally by
 (b)~artistic practice (identity-individuated, but consumes
-material sacrifice);
+material sacrifice).  Whether $\ResS \setminus \ResB$ and
+$\ResB \cap \ResS$ are non-empty is conditional on
+poset-construction individuation choices.  Conditional
+witnesses:
 (c)~baseline interoceptive self-awareness (candidate witness
 under individuation that distinguishes baseline from trained
 acuity; the strict reading would treat clinical measurement
 as a sacrifice path attaching to the baseline, in which case
 the witness fails);
 (d)~private contemplative experience
-(identity-individuated, no material footprint).
+(identity-individuated, no material footprint, conditional on
+treating idle time as not opportunity-cost-attributable).
 
 \paragraph{Proposition~\ref{prop:oi_floor}
 (Active-Agent Floor Transfer, conditional on the bridge).}

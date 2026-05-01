@@ -172,8 +172,12 @@ seed-cell attribution by routing every boundary-crossing
 cooperative node into a separate boundary-residual bucket~$B$
 rather than absorbing it into a participant's cell; this yields
 the five-cell partition $\{R, C, D, S, B\}$ used by the worked
-example, with the additivity identity following from
-set-disjoint M5 weight summation alone (no M4 invocation).
+example, with the additivity identity following from the
+strategy-(c) atomic-weight accounting convention
+$\volL(X) := \sum_{c \in X} w(c)$ summed over the disjoint
+cells (no M4 invocation; see
+Remark~\ref{rem:cell_cooperative_closure} for the precise
+semantics).
 Under cooperative-closure semantics
 (strategies~(a)/(b)), an alternative four-cell partition
 $\{R, C, D, S\}$ is available at the cost of priority-extension
@@ -216,9 +220,13 @@ the poset-independence that licenses $\volL(P) = \sum_X
 cooperative-closure semantics.  Strategy~(c) below uses a
 \emph{literal-partition semantics} instead, where each
 capability (cooperatives included) is assigned to exactly one
-cell by stipulation; under that weaker semantics, the
-identity follows from set-disjoint M5 weight summation alone
-without the (CC1)/(CC2) hypotheses, but the cells are no
+cell by stipulation and cell-level $\volL$ values are read as
+atomic-weight accounting aggregates
+$\volL(X) := \sum_{c \in X} w(c)$ rather than as the M1--M6
+poset measure on poset-independent components; under that
+weaker semantics, the identity follows from direct rearrangement
+of the atomic sum across set-disjoint cells without the
+(CC1)/(CC2) hypotheses, but the cells are no
 longer M4-additive in the cooperative-closure sense.  See
 Remark~\ref{rem:cell_cooperative_closure} for both regimes.
 
