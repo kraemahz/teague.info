@@ -2,50 +2,34 @@
 The companion paper~\citep{lasser2026paper8a} proves the
 \emph{Aggregate B-to-C Lower Bound} theorem for a
 privacy-respecting observation channel on realized capability
-volume $\volR$, under admissibility conditions that include S1
+volume $\volR$, under admissibility conditions including S1
 (free choice with non-degrading alternatives).  This paper
-supplies the structural architecture that gives a
-sufficient filter condition (subject to externally attested
-hypotheses and governance-supplied thresholds) for the
-below-sufficiency failure mode of S1, leaving other S1 failure
-modes (coercion, duress) as residual filtering
-responsibilities of the institutional attestation layer.  It
-also develops the diagnostic layers that interpret the bound's
-output.
+supplies the filter that makes S1's below-sufficiency failure
+mode diagnosable and the diagnostic architecture that
+interprets the bound's output.
 
-The \emph{need-sufficiency architecture} is a poset-construction
-precondition distinguishing involuntary need-satisfaction from
-voluntary want-pursuit via multi-dimensional sufficiency
-thresholds and downstream-safe gates.  Below-sufficiency
-sacrifices in which retention is degrading and no third
-non-degrading alternative exists are structurally involuntary;
-under that narrow condition S1 fails
-(Proposition~\ref{prop:s1_sufficiency}) and the events are
-filtered before reaching the observation channel.  A parallel
-\emph{need-access cost} diagnostic tracks below-sufficiency
-expenditure as a companion metric.
+The \emph{need-sufficiency architecture} is a
+poset-construction precondition distinguishing involuntary
+need-satisfaction from voluntary want-pursuit via
+multi-dimensional sufficiency thresholds and downstream-safe
+gates.  Proposition~\ref{prop:s1_sufficiency} establishes a
+sufficient condition under which S1 fails (retention degrades
+the agent below threshold and no third non-degrading
+alternative exists), filtering such events from the aggregate.
+A parallel \emph{need-access cost} diagnostic tracks
+below-sufficiency expenditure as a companion metric.
 
 The \emph{gap decomposition} partitions the B-to-C gap into
 four disjoint cells (restricted, covered, dormant, residual)
-under poset-boundary closure---with an optional fifth bucket
-($\delta_{\mathrm{boundary}}$) when the boundary-residual
-closure variant is selected, used in the worked example to
-preserve seed-cell attribution.  The cell-attribution
-\emph{classification step} is computable in near-linear
-$\widetilde{O}(|P|+E+M)$ time given upstream inputs
-(admissibility labels, residual-class membership,
-restriction set, sufficiency thresholds), which are themselves
-external attestations or governance-supplied structural data
-rather than computed by this step.  A
+under poset-boundary closure, with cell classification
+computable in near-linear $\widetilde{O}(|P|+E+M)$ time given
+external admissibility labels and governance inputs.  A
 \emph{wireheading-consistent concentration signal} from the
 trade-flow Herfindahl--Hirschman Index is Schur-convex in the
 majorization order; the Part-A category-flow variant is
 third-party observable from public committed events.  The
 \emph{residual class} is re-characterized from a
-measurement-apparatus question to a channel-reach question,
-yielding the decomposition's structurally-distinct component
-(irreducible under the residual-isolation hygiene check
-described in Section~\ref{sec:gap_decomposition}).  A
-four-phase worked example demonstrates the architecture
+measurement-apparatus question to a channel-reach question.
+A four-phase worked example demonstrates the architecture
 end-to-end.
 \end{abstract}

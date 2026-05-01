@@ -2,50 +2,32 @@
 The Goal-Frontier Maximization framework's central measure
 $\volL$ quantifies capability \emph{possession}, but the
 experiential value it protects requires capability
-\emph{exercise}~($\volR$).  Global direct measurement of $\volR$
-would require panopticon-scale observation, which the framework's
-privacy commitments rule out.  We introduce
-\emph{revealed-sacrifice observation}: under assumption S1
-(free choice with non-degrading alternatives), each voluntary
-trade event---an agent surrendering a benchmarked $X$ for an
-unbenchmarked bundle $Y$---reveals the preference comparison
-$\Ui(Y) \geq \Ui(X)$.  Combined with S0
-(valuation-bounded-by-exercise; an assumed bridge from
-agent valuation to realized exercise, not itself observed),
-S2 (benchmark grounding), and S4(a) (valuation additivity),
-the preference comparison extends to a realized-contribution
-lower bound $\volR^{[W]}(Y) \geq \Delta\volL(X)$.  The bound
-is a theorem about the pairing of observation and
-assumption-stack, not a direct disclosure of $\volR$ content.  Aggregating across events with
-pairwise poset-independent bundles yields the \emph{Aggregate
-B-to-C Lower Bound theorem}: on the observed subset $U$ within a
-trade window $W$,
-$\volR^{U,[W]} \geq \sum_n \Delta\volL(X_n)$,
-under assumptions S0--S2, S4(a), and the genuine-exchange
-conditions of Definition~\ref{def:sacrifice_event}.  The bound
-is non-decreasing in observed events, satisfies three formal
-privacy properties, and composes with the commitment protocol
-of~\citep{lasser2026exo} to produce two interfaces: a default
-distinct-category batch interface that publishes per-event
-$(\Delta\volL, \mathrm{category})$ pairs, and a hiding-variant
-rollup that certifies only an aggregate threshold over a
-hidden subset.  Both interfaces' privacy profiles depend on
-two named institutional preconditions
-(Proposition~\ref{prop:privacy_institutional}) in addition to
-the formal properties.  Money and time
-sacrifice channels triangulate the same underlying substrate.
-We also show that the mapping
-$\mathcal{P} \mapsto \volR^{\mathcal{P}}$ from capability
-systems to the realized volume is \emph{not strictly monotone
-under capability removal}: removing an unexercised capability
-leaves $\volR$ unchanged while $\volL$ strictly contracts.  The
-self-balancing property of~\citep[Theorem~1]{lasser2026poset}
-therefore does not transfer to $\volR$ (this is a system-level
-mapping property, not a measure-axiom failure on a fixed
-exercised sub-poset, where $\volR$ inherits M1--M6 by
-restriction).  Consequently $\volR$ is a diagnostic, not an
-optimization target.  The need-sufficiency filter enabling S1 across events,
-the gap decomposition, wireheading-consistent concentration
-signal, and residual class are developed
+\emph{exercise} ($\volR$).  Global direct measurement of $\volR$
+is privacy-incompatible at scale.  We introduce
+\emph{revealed-sacrifice observation}: under assumptions
+S0--S2, S4(a), S1 (free choice with non-degrading
+alternatives), and the genuine-exchange conditions of
+Definition~\ref{def:sacrifice_event}, each voluntary trade
+event---an agent surrendering a benchmarked $X$ for an
+unbenchmarked bundle $Y$---yields a lower bound
+$\volR^{[W]}(Y) \geq \Delta\volL(X)$ on $Y$'s exercise
+contribution within window~$W$.  Aggregating across events with
+pairwise poset-independent (cooperative-closed) bundles yields
+the \emph{Aggregate B-to-C Lower Bound theorem}: on the
+observed subset $U$,
+$\volR^{U,[W]} \geq \sum_n \Delta\volL(X_n)$.  The bound is
+non-decreasing in observed events and composes with the
+commitment protocol of~\citep{lasser2026exo} via two
+interfaces---per-event and hiding-variant rollup---both with
+three formal privacy properties plus two named institutional
+preconditions (Proposition~\ref{prop:privacy_institutional}).
+Money and time sacrifice channels triangulate the same
+underlying substrate.  We also show that $\volR$'s mapping
+from capability systems is not strictly monotone under removal
+of unexercised capabilities, so $\volL$'s self-balancing
+property does not transfer to $\volR$; $\volR$ is a diagnostic,
+not an optimization target.  The need-sufficiency S1 filter,
+gap decomposition, wireheading-consistent concentration signal,
+and residual class are developed
 in~\citep{lasser2026paper8b}.
 \end{abstract}
