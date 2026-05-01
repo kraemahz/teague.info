@@ -7,11 +7,14 @@
 sub-case.}
 The sufficiency threshold identifies the structural boundary
 where sacrifice polarity flips.  Below-sufficiency sacrifices
-in which retention is the sole non-degrading alternative are
-involuntary and correctly filtered by S1
-(Proposition~\ref{prop:s1_sufficiency}); below-sufficiency
-targeting where a third alternative exists requires
-institutional attestation to classify.  The need-access cost
+in which retention is degrading on at least one need dimension
+\emph{and} no third non-degrading alternative exists in the
+agent's choice set are involuntary and correctly filtered by
+S1 (Proposition~\ref{prop:s1_sufficiency}); below-sufficiency
+targeting where a non-degrading third alternative is
+available requires institutional attestation to classify
+(such targeting may still satisfy S1 because the agent had a
+non-degrading option).  The need-access cost
 diagnostic (Definitions~\ref{def:nac}--\ref{def:nse}) tracks
 need-satisfaction efficiency as a companion metric.
 
@@ -21,7 +24,7 @@ Under poset-boundary closure, $1 - \betaL =
 \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
 \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}$
 (Definition~\ref{def:gap_decomp}).  The partition is
-computable in $O(|P| + E + M)$
+computable in near-linear $\widetilde{O}(|P| + E + M)$ time
 (Proposition~\ref{prop:gap_computable}) given the capability
 census, poset structure, restriction and residual sets, event
 admissibility labelling, and a closure policy.  Alarm firings

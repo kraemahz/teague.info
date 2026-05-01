@@ -44,8 +44,9 @@ theorem consequence.  Additionally, 12 below-sufficiency events
 are observed (biological agents purchasing healthcare, food,
 shelter) but these fail S1 by
 Proposition~\ref{prop:s1_sufficiency} (under the example's
-stipulation that retention is the sole non-degrading
-alternative for each such event) and do not enter the
+stipulation that retention is degrading on the relevant need
+dimension and no third non-degrading alternative is available
+in the agent's choice set for each such event) and do not enter the
 sacrifice aggregate.
 
 \paragraph{Diagnostics.}
@@ -133,19 +134,31 @@ Boundary-residual closure isolates the cross-cell cooperative
 mass in $\delta_{\mathrm{boundary}}$ rather than absorbing it
 into the covered cell (priority-extension, strategy~(a)) or
 sub-partitioning by connected component (strategy~(b)).  The
-choice matters for diagnostic attribution: under
-priority-extension, the four cross-cell coops would have been
-absorbed into the covered cell, producing
-$\delta_{\mathrm{dormant}} \approx 2.0/22$ (the two atomic
-dormant biological capabilities $b_2, b_3$ would migrate to
-covered along with the boundary cooperatives that link them)
-and $\delta_{\mathrm{covered}} \approx 5.0/22$.  The alarm
-fires identically across closure choices because $\betaL$
-depends only on $\volRlower / \volL(P)$; only the cell
-attribution changes.  We adopt boundary-residual here to
-preserve the directly-readable dormancy of $b_2, b_3$ and
-expose cross-cell cooperative mass as a separate diagnostic
-bucket.
+choice matters for diagnostic attribution.  Under
+\emph{priority-extension}, walk the combined cooperative graph:
+$b_2$ is poset-connected to covered nodes $b_1, s_3, s_4$ (via
+$\{b_1, b_2\}$, $\{b_2, s_3\}$, $\{b_2, s_4\}$), so the entire
+$\{b_1, b_2, s_1, s_2, s_3, s_4\}$-component plus its seven
+incident cooperatives migrates to the covered cell.  Similarly
+$b_3$ is poset-connected to covered $s_5$ via $\{b_3, s_5\}$,
+so $\{b_3, s_5\}$ plus the cooperative $\{b_3, s_5\}$ migrates
+to covered.  After absorption, no dormant atoms remain:
+$\volL(D) = 0$ and $\volL(C) = 19$ (all $11$ covered seed
+plus $4$ from absorbed dormants and boundary coops),
+$\volRlower(C)$ stays at $10$ (the absorbed nodes carry no new
+trade evidence), giving
+$\delta_{\mathrm{dormant}} = 0$ and
+$\delta_{\mathrm{covered}} = (19-10)/22 = 9/22 \approx 0.409$.
+The alarm fires identically across closure choices because
+$\betaL$ depends only on $\volRlower / \volL(P)$; only the
+cell attribution changes.  We adopt boundary-residual here to
+preserve the directly-readable dormancy of $b_2, b_3$ in
+$\delta_{\mathrm{dormant}}$ and expose cross-cell cooperative
+mass as a separate diagnostic bucket; priority-extension would
+collapse the dormancy into a larger
+$\delta_{\mathrm{covered}}$ deficit, requiring the gap-decomp
+reader to recover dormancy from the $\delta_{\mathrm{covered}}$
+share rather than read it directly.
 
 \paragraph{Need-sufficiency diagnostic.}
 $\NAC$ rises from $3.5$ to $8.2$ as automation displaces

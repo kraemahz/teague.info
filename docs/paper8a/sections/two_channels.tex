@@ -64,6 +64,30 @@ to a money-channel evaluation through the wage-rate
 identification).
 \end{definition}
 
+\begin{remark}[S0 implicitly caps long-duration time
+sacrifices]
+\label{rem:s0_time_cap}
+$\Delta\volL(X(r_i \cdot h))$ scales with $h$, while
+$\volR^{[W]}(Y)$ is the window-active sum
+(Definition~\ref{def:volR}) bounded above by $\sum_{c \in Y}
+w(c)$ regardless of how long $Y$ is exercised.  A time-sacrifice
+event with $r_i \cdot h$ large enough that $\Delta\volL(X(r_i
+\cdot h)) > \sum_{c \in Y} w(c)$ implies the agent is paying
+more (in benchmarked $\volL$ units) than the bundle's full
+window-active $\volR$ ceiling, which violates S0
+($\Ui(Y) \leq \volR^{[W]}(Y)$) for any reasonable identification
+$\Ui(Y) \leq \sum_{c \in Y} w(c)$ (which holds when valuations
+are bounded by capability ceilings).  Such overpayment events
+are rejected by S0 and excluded from the aggregate; the cap is
+automatic from the assumption stack rather than imposed by an
+explicit filter.  Operationally, this means very-long-duration
+time sacrifices on small bundles indicate either (i)~genuine
+S0 violation (the agent overvalues), (ii)~hidden bundle
+content not in $Y$ (the sacrifice is for a larger bundle than
+declared), or (iii)~mis-imputed $r_i$.  Each is a flag for
+review rather than a free pass to inflate $\volRlower$.
+\end{remark}
+
 \noindent\textbf{Properties of the time channel:}
 \begin{itemize}
 \item \textbf{Signal strength.}  Opportunity cost is a
@@ -281,10 +305,15 @@ capability captured by money but not by time.  Both residuals
 guarantee strict improvement of the joint aggregate over either
 channel alone when the trade window includes at least one event
 from the relevant residual category.  Outside the residuals,
-strictness becomes a data-coverage statement: the joint
-aggregate strictly exceeds either single channel if and only if
-the trade window includes events in categories the other
-channel does not cover.  Substitutability in principle does not
+strictness becomes a data-coverage statement: the trade window
+including admissible events in categories the other channel
+does not cover is \emph{sufficient} for the joint aggregate to
+strictly exceed that channel alone (via the supremum
+monotonicity of Proposition~\ref{prop:monotone_part_a}); the
+converse direction is not claimed by this corollary, since
+strict improvement could in principle arise from other
+configurations of the sub-batch supremum that this proof does
+not enumerate.  Substitutability in principle does not
 guarantee equality in practice; heterogeneous agent populations
 generically produce strict improvement, but a theoretical
 population using one channel exclusively could produce

@@ -14,16 +14,21 @@ The \emph{need-sufficiency architecture} is a poset-construction
 precondition distinguishing involuntary need-satisfaction from
 voluntary want-pursuit via multi-dimensional sufficiency
 thresholds and downstream-safe gates.  Below-sufficiency
-sacrifices in which retention is the only available alternative
-are structurally involuntary; under that narrow condition S1
-fails (Proposition~\ref{prop:s1_sufficiency}) and the events
-are filtered before reaching the observation channel.  A parallel
+sacrifices in which retention is degrading and no third
+non-degrading alternative exists are structurally involuntary;
+under that narrow condition S1 fails
+(Proposition~\ref{prop:s1_sufficiency}) and the events are
+filtered before reaching the observation channel.  A parallel
 \emph{need-access cost} diagnostic tracks below-sufficiency
 expenditure as a companion metric.
 
-The \emph{gap decomposition} partitions the B-to-C gap into four
-disjoint cells (restricted, covered, dormant, residual) under
-poset-boundary closure, computable in $O(|P|+E+M)$ from observed
+The \emph{gap decomposition} partitions the B-to-C gap into
+four disjoint cells (restricted, covered, dormant, residual)
+under poset-boundary closure---with an optional fifth bucket
+($\delta_{\mathrm{boundary}}$) when the boundary-residual
+closure variant is selected, used in the worked example to
+preserve seed-cell attribution---computable in
+near-linear $\widetilde{O}(|P|+E+M)$ time from observed
 trade data plus governance-supplied structural inputs.  A
 \emph{wireheading-consistent concentration signal} from the
 trade-flow Herfindahl--Hirschman Index is Schur-convex in the

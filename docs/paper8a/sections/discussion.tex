@@ -46,8 +46,8 @@ indirectly through it.  The
 lower bound is silent on capabilities outside the observed
 subset and on the residual class
 of~\citep{lasser2026paper8b}; it does not characterize the
-B-to-C gap globally, only constrains it from below on what trade
-data covers.
+B-to-C gap globally, only constrains the gap from above
+($1 - \beta \leq 1 - \betaL$) on what trade data covers.
 The constructed lower bound is non-decreasing in observed
 admissible events: Part~A via sub-batch supremum
 (Proposition~\ref{prop:monotone_part_a}) and Part~B via
@@ -71,11 +71,16 @@ the two channels' bundles and the weak-domination claim does
 not follow.
 
 \paragraph{$\volR$ is not self-balancing.}
-$\volR$ exhibits non-invariance under capability removal:
-eliminating an unexercised capability leaves $\volR$ unchanged
-while $\volL$ contracts
-(Theorem~\ref{thm:axiom_inheritance}, M6(a); Example
-\ref{ex:volR_removal_invariance}).  The self-balancing
+$\volR$ exhibits a system-level non-invariance under capability
+removal: eliminating an unexercised capability leaves $\volR$
+unchanged while $\volL$ contracts
+(Example~\ref{ex:volR_removal_invariance}).  This is a property
+of the mapping $\mathcal{P} \mapsto \volR^{\mathcal{P}}$ from
+capability systems to the measure, not a failure of M6 as a
+measure axiom on any one fixed exercised sub-poset
+(Theorem~\ref{thm:axiom_inheritance}, M6(a) explicitly notes
+$\volR$ inherits M6 on a fixed $P^{\mathrm{ex}}_W$; the
+non-invariance is layered above the axiom level).  The self-balancing
 protection $\volL$ enjoys---every removal contracts the
 measure---therefore does not transfer to $\volR$
 (Corollary~\ref{cor:not_self_balancing}).  $\volR$ is a

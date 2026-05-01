@@ -196,27 +196,39 @@ new computation the framework performs.
 \begin{definition}[Sufficiency Threshold as Polarity Boundary]
 \label{def:polarity_boundary}
 The sufficiency bundle is the structural boundary where
-revealed-sacrifice polarity flips:
+revealed-sacrifice polarity flips, conditional on the
+choice-set hypothesis stated below:
 \begin{itemize}
-\item \textbf{Below sufficiency on any dimension:} The agent is
-  investing to reach minimum viable functionality.  Sacrifice is
-  involuntary (the agent must reach sufficiency to operate).
-  Sacrifice magnitude reveals \textbf{cost-of-access}---how
-  expensive it is for this agent to reach baseline on this
-  dimension.  Larger sacrifice = worse situation.
-\item \textbf{Above sufficiency on all dimensions:} The agent has
-  reached functionality and is choosing to invest further.
+\item \textbf{Below sufficiency on any dimension, with no
+  third non-degrading alternative:} The agent is
+  investing to reach minimum viable functionality and has no
+  alternative path that avoids degrading some need.  Sacrifice
+  is involuntary (the agent must reach sufficiency to operate
+  and has no other option).  Sacrifice magnitude reveals
+  \textbf{cost-of-access}---how expensive it is for this agent
+  to reach baseline on this dimension.  Larger sacrifice =
+  worse situation.
+\item \textbf{Above sufficiency on all dimensions:} The agent
+  has reached functionality and is choosing to invest further.
   Sacrifice is voluntary (the agent could stop at ``good
   enough'').  Sacrifice magnitude reveals \textbf{preference
   strength}---how much the agent values improvement beyond
   baseline.  Larger sacrifice = higher revealed value.
+\item \textbf{Below sufficiency on some dimension, but a
+  third non-degrading alternative exists:} polarity is not
+  determined by sufficiency status alone.  S1 can still hold
+  via the third alternative; classification requires
+  institutional review (Proposition~\ref{prop:s1_sufficiency}
+  and its Remark).
 \end{itemize}
-The sufficiency threshold is where the need-insufficiency failure
-mode of Assumption~S1 (\citep{lasser2026paper8a}) is
-removed: below sufficiency, S1 fails because retaining the
-sacrificed capability is not a non-degrading alternative; above
-sufficiency, this specific failure mode does not apply (though S1
-can still fail via other mechanisms---see
+The sufficiency threshold is where the need-insufficiency
+failure mode of Assumption~S1
+(\citep{lasser2026paper8a}) becomes structurally
+diagnosable: events with retention-degradation \emph{and} no
+third non-degrading alternative fail S1 by
+Proposition~\ref{prop:s1_sufficiency}; above sufficiency, this
+specific failure mode does not apply (though S1 can still fail
+via other mechanisms---see
 Proposition~\ref{prop:s1_sufficiency}, Remark).
 \end{definition}
 
@@ -234,15 +246,18 @@ For each dimension $d_k$ of a need capability:
   \max\!\bigl((\mathrm{actual}_k - s_k)/s_k,\, 0\bigr)$,
   where $\alpha_k < 1$ discounts above-sufficiency gains relative
   to below-sufficiency gains \emph{at the margin}: the
-  per-unit-of-improvement contribution near sufficiency is
-  $\alpha_k$ above versus $1/s_k$ below, so closing the
-  sufficiency gap is more valuable per unit of improvement than
-  enhancing beyond sufficiency.  This is a marginal-rate claim,
-  not an absolute-magnitude claim: because the above-sufficiency
-  term is unbounded in $\mathrm{actual}_k$, sufficiently large
-  above-sufficiency gains can dominate the closed-gap benchmark
-  in absolute terms.  Bounding total above-sufficiency
-  contribution requires either a domain-specific cap on
+  derivative of $\mathrm{benchmark}_k$ with respect to
+  $\mathrm{actual}_k$ is $1/s_k$ below sufficiency (where the
+  benchmark is $\min(\mathrm{actual}_k/s_k, 1)$) and
+  $\alpha_k/s_k$ above sufficiency, so the per-unit ratio of
+  marginal contribution is $\alpha_k:1$ in favour of closing
+  the gap rather than enhancing beyond it.  This is a
+  marginal-rate claim, not an absolute-magnitude claim: because
+  the above-sufficiency term is unbounded in
+  $\mathrm{actual}_k$, sufficiently large above-sufficiency
+  gains can dominate the closed-gap benchmark in absolute
+  terms.  Bounding total above-sufficiency contribution
+  requires either a domain-specific cap on
   $\mathrm{actual}_k/s_k$ or replacing the linear ramp with a
   saturating function (e.g., $\alpha_k \cdot \min(\cdot, K)$);
   this paper leaves the cap as an architecture parameter.

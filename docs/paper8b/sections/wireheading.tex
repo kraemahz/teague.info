@@ -18,10 +18,10 @@ leverage of $C_j$ at time $T$ is:
 \[
   \lambda_{\mathrm{trade}}(j, T) \;=\;
   \begin{cases}
-    \volRlower(C_j, T) \;/\; \volRlower(G, T)
-      & \text{if } \volRlower(G, T) > 0, \\
+    \volRlower(C_j, T) \;/\; \volRlower(P, T)
+      & \text{if } \volRlower(P, T) > 0, \\
     \text{undefined (diagnostic suppressed)}
-      & \text{if } \volRlower(G, T) = 0.
+      & \text{if } \volRlower(P, T) = 0.
   \end{cases}
 \]
 Under healthy trade diversity, leverage is distributed across many
@@ -38,7 +38,7 @@ concentration-anomalies.
 \begin{proposition}[Wireheading-Consistent Concentration
 Signal]
 \label{prop:wireheading_hhi}
-When $\volRlower(G, T) > 0$, the Herfindahl--Hirschman
+When $\volRlower(P, T) > 0$, the Herfindahl--Hirschman
 Index~\citep{rhoades1993herfindahl}
 \[
   \HHI(\lambda_{\mathrm{trade}}) \;=\;
@@ -121,8 +121,13 @@ its inclusion only strengthens the lower bound.
 A wireheading signature concentrates trade flow in $k$
 loop-driver categories with $\rho$ close to $1$ and $k$ small,
 forcing $\HHI \geq \rho^2/k$.  A governance-chosen threshold
-$\HHI_{\mathrm{alarm}} \in (1/m, 1)$ determines which
-concentration levels trigger the alarm; by Schur-convexity, the
+$\HHI_{\mathrm{alarm}} \in [1/m, 1)$ when $m \geq 2$, and the
+alarm degenerates to ``always fires'' when $m = 1$ (a single
+active category with $\HHI = 1$ exceeds any threshold below
+$1$); the latter case is the limiting wireheading signature
+where every observed event is in the same category, so the
+auto-alarm matches the diagnostic intent.  The threshold
+determines which concentration levels trigger the alarm; by Schur-convexity, the
 alarm fires on a majorization-upper set of distributions (if
 $\lambda$ triggers the alarm and $\lambda' \succeq \lambda$ in
 the majorization order, then $\lambda'$ also triggers it).

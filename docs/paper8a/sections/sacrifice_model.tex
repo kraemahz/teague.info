@@ -133,6 +133,28 @@ capability sets; violating (i) would cause $X \cap Y$ terms to
 cancel trivially on both sides, yielding no information.
 \end{proof}
 
+\begin{remark}[Cooperative closure of capability sets]
+\label{rem:cooperative_closure_op}
+Throughout this section, ``$\Ui(S)$'' for a finite capability
+set $S$ is computed via S4(a) over the
+\emph{cooperative-closure} of $S$: the set $S^{*}$ obtained by
+adding to $S$ every cooperative capability $z \in P$ all of
+whose participants are already in $S$.  Concretely,
+$\Ui(S) = \sum_{c \in S^{*}} u_i(c)$, where the sum runs over
+the closed set rather than the bare $S$.  Cooperatives whose
+participants are not all in $S$ are not added, even if some are.
+The genuine-exchange conditions (iii) and (iv) of
+Definition~\ref{def:sacrifice_event} ensure cooperative
+closures of $H \setminus X$, $X$, $Y$, $H$, and $(H \setminus
+X) \cup Y$ behave compatibly: condition (iv) makes $H^{*} =
+(H \setminus X)^{*} \sqcup X^{*}$ (no cooperative spans the
+$X$/$H \setminus X$ split), and condition (iii) makes
+$((H \setminus X) \cup Y)^{*} = (H \setminus X)^{*} \sqcup
+Y^{*}$ (no cooperative spans the $Y$/$H \setminus X$ split).
+The cancellation of Lemma~\ref{lem:cancellation} runs over
+these closed sets.
+\end{remark}
+
 \paragraph{Justification (revealed-preference inequality).}
 The transfer from the observed trade to the framework-level
 bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three
@@ -543,16 +565,20 @@ relies on but does not itself construct.
 \begin{enumerate}
 \item[\textbf{(P2)}] \textbf{Consent via participation
   (institutional).}
-  The aggregate lower bound sums per-capability max-attribution
-  quantities over observed events
-  (Theorem~\ref{thm:aggregate_bound}, Part~B), so an agent with
-  zero observed sacrifice events contributes zero to the
-  aggregate.  This zero-contribution property is formal.  The
-  \emph{operational} interpretation as ``consent'' additionally
-  requires that participation in markets and labour exchanges be
-  legally and socially opt-in; in settings where participation
-  is coerced, the formal zero-contribution property holds but
-  the consent interpretation does not.
+  The aggregate lower bound sums event-magnitudes
+  (Theorem~\ref{thm:aggregate_bound}, Part~A) or per-capability
+  max-attribution quantities (Part~B) over observed events; in
+  both Parts an agent with zero observed sacrifice events
+  contributes zero to the aggregate.  This zero-contribution
+  property is formal and holds under Part~A's lighter
+  hypothesis stack as well as Part~B's; we state P2 in its
+  Part-A form to keep the privacy claim independent of
+  Part~B's stronger assumptions.  The \emph{operational}
+  interpretation as ``consent'' additionally requires that
+  participation in markets and labour exchanges be legally and
+  socially opt-in; in settings where participation is coerced,
+  the formal zero-contribution property holds but the consent
+  interpretation does not.
 
 \item[\textbf{(P5)}] \textbf{Third-party observability
   (institutional).}
