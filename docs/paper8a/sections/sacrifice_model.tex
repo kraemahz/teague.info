@@ -264,7 +264,7 @@ assumptions.  We collect them here for single-point reference.
   (no transaction costs that would distort the comparison
   beyond $\Delta\volL(X_n)$, no hidden side payments altering
   the effective $X$ or $Y$, no risk/expectation mismatch
-  between $\Ui[_n](Y_n)$ at trade time and the realized
+  between $\Uin{n}(Y_n)$ at trade time and the realized
   $\volR^{[W]}(Y_n)$, and no unmodeled bundle attributes
   outside the declared $Y_n$ that contribute to valuation),
   and the agent had \emph{non-degrading} alternatives:
@@ -322,11 +322,24 @@ assumptions.  We collect them here for single-point reference.
 \item[S5 (Decomposition validity).] For events with
   $\volR(Y_n) > 0$, the event-local decomposition
   coefficients are \emph{lower bounds} on the true $\volR$
-  share:
-  $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all such $n$
-  and $c \in Y_n$.  Events with $\volR(Y_n) = 0$ carry no
-  share information and are excluded from Part~B by the
-  positivity precondition of the proof.
+  share: $\alpha_{n,c} \leq \volR(c) / \volR(Y_n)$ for all
+  such $n$ and $c \in Y_n$.  Events with $\volR(Y_n) = 0$
+  carry no share information and are excluded from Part~B by
+  the positivity precondition of the proof.  Under the Part~B
+  hypothesis of within-bundle poset-independence
+  (Definition~\ref{def:bundle_decomp}), $\sum_{c \in Y_n}
+  \volR(c) / \volR(Y_n) = 1$, so the share lower bounds and
+  the partition of unity $\sum_c \alpha_{n,c} = 1$ jointly
+  force $\alpha_{n,c} = \volR(c)/\volR(Y_n)$ exactly: under
+  Part~B's hypotheses, S5 collapses to a share-equality
+  assumption rather than a strict inequality.  We retain the
+  inequality form because it is the operationally natural
+  default---practitioners typically have lower-bound share
+  estimates rather than exact share knowledge---but
+  acknowledge that under within-bundle independence the
+  inequality is binding throughout, so Part~B is effectively
+  conditional on the analyst supplying \emph{exact} share
+  estimates compatible with the true (unknown) shares.
 \end{description}
 
 \begin{remark}[S5 is a conditional-refinement assumption]
@@ -544,16 +557,19 @@ proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds a
 valid revealed-sacrifice event: the event-local objectively
 verifiable facts---non-negativity of $\Delta\volL(X_n)$, bundle
 containment $Y_n \subseteq C_{\catYn{n}}$
-(Definition~\ref{def:committed_event}(d)), bundle coherence S3,
-and a verifiable link to an underlying trade record.  This is
-the event-level certification; S4(b) is not an event-level
-property but a batch-level structural fact about the category
-partition, established via pairwise-distinct category labels in
+(Definition~\ref{def:committed_event}(d)), and a verifiable
+link to an underlying trade record.  This is the event-level
+certification; S4(b) is not an event-level property but a
+batch-level structural fact about the category partition,
+established via pairwise-distinct category labels in
 Proposition~\ref{prop:zk_aggregation} and inherited from the
 poset-independence of distinct partition components
-(Definition~\ref{def:category_partition}(i)).  S0, S1, S4(a),
-and S5 are \emph{not} ZK-verifiable
-(Remark~\ref{rem:zk_limits}).
+(Definition~\ref{def:category_partition}(i)).  S0, S1, S3,
+S4(a), and S5 are \emph{not} ZK-verifiable under the default
+commitment (Remark~\ref{rem:zk_limits}); S3 in particular
+requires either external attestation that the bundle's
+hedonic decomposition is non-degenerate, or a richer
+commitment exposing decomposition fields.
 Proposition~\ref{prop:commit_preserves} establishes that the
 Part~A aggregate bound is computable from committed events with
 \emph{pairwise-distinct} category labels, together with the

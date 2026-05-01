@@ -301,27 +301,30 @@ boundary-crossing instances must be eliminated.
 \item[(c)] \emph{Boundary residual.}  Identify
   \emph{boundary-crossing cooperative nodes} (cooperatives in
   $P$ whose participants span two or more original cells) and
-  \emph{boundary-crossing subsumption pairs} (pairs $c \succeq
-  c'$ with $c, c'$ in different original cells), and assign
-  the boundary cooperative nodes' $\volL$ weight together with
-  any subsumption-crossing weight redistribution to a fifth
-  bucket $\delta_{\mathrm{boundary}}$.  Cooperative nodes carry
-  explicit $\volL$ weight ($w(c_{\mathrm{coop}})$) and migrate
-  cleanly to the bucket; subsumption-crossing edges do not have
-  standalone $\volL$ mass, so their contribution to
-  $\delta_{\mathrm{boundary}}$ is the $\volL$ weight of the
-  $\succeq$-coupled node-pair under M4-decomposition that fails
-  for them in the cell partition---formally, the weight
-  $w(c) + w(c')$ minus whatever contribution the cells
-  separately accommodate, which is zero under the convention
-  that subsumption-crossing pairs are placed wholly in the
-  bucket.  The identity becomes
-  $1 - \betaL = \delta_{\mathrm{restricted}} +
-  \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}} +
-  \delta_{\mathrm{residual}} + \delta_{\mathrm{boundary}}$ with
-  the fifth term capturing all cross-cell poset mass.  Strategy
-  (c) is what the worked example uses
-  (Section~\ref{sec:worked_example}).
+  \emph{boundary-crossing subsumption pairs} (pairs
+  $c \succeq c'$ with $c, c'$ in different original cells).
+  Cooperative nodes carry explicit $\volL$ weight
+  $w(c_{\mathrm{coop}})$ from M5; assign that weight to a
+  fifth bucket $B$ (so $\volL(B) \supseteq \sum_{z \in
+  \mathrm{cross-cell\ coops}} w(z)$).  For
+  subsumption-crossing pairs, the $\succeq$ relation does not
+  carry standalone $\volL$ weight; we handle them by
+  \emph{relocating one endpoint into the fifth bucket}.
+  Specifically, for each cross-cell subsumption pair
+  $(c, c')$, move whichever endpoint has lower priority (or
+  fewer in-cell connections, by tie-break) into~$B$; this
+  removes the cross-cell edge from the cell partition (the
+  endpoint is no longer in its original cell, so the edge no
+  longer crosses cells) and contributes that endpoint's
+  $w$-weight to $\volL(B)$.  After this relocation step, the
+  cells $\{R, C, D, S, B\}$ are pairwise poset-independent in
+  the same sense as Definition~\ref{def:gap_decomp}, M4
+  applies across them, and the identity becomes $1 - \betaL =
+  \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
+  \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}} +
+  \delta_{\mathrm{boundary}}$ with all five terms now well-
+  defined as $\volL$-fractions.  Strategy~(c) is the variant
+  the worked example uses (Section~\ref{sec:worked_example}).
 \end{enumerate}
 The paper's stated results assume strategy~(a) by default: the
 priority-extension rule is the natural operational choice, and
@@ -419,8 +422,13 @@ complexity modulo constants.
 
 \emph{Aggregation.}
 Each class's aggregate $\volL$ and $\volRlower$ is maintained
-incrementally across the three passes, giving the four quotients
-in $O(1)$ additional time.  The counterfactual
+incrementally across the three passes; computing the four
+quotients from the running totals at the end of Pass~3 is
+$O(|\mathrm{cells}|) = O(1)$ since there is a constant number
+of cells, but the running totals themselves are updated as
+nodes move between cells under closure (Pass~3), so the
+total accounting cost is folded into Passes~1--3 rather than
+literally appended.  The counterfactual
 comparison---removing capability $c$ and recomputing global
 reachability---is not performed; only membership checks,
 aggregation, and closure-policy lookups occur.  A

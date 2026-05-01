@@ -107,12 +107,15 @@ is uniform---the minimally-concentrated distribution in the
 majorization order.  At the other extreme, if the top $k$
 categories capture fraction $\rho$ of total leverage,
 $\HHI \geq \rho^2/k$ from the top-$k$ mass alone (concentrating
-that mass uniformly on the $k$ heavy bins).  The full $\HHI$
-also includes a tail contribution $\geq (1-\rho)^2/(m-k)$ from
-the remaining mass spread across the $m-k$ tail bins
-(Cauchy--Schwarz applied to the tail), giving
-$\HHI \geq \rho^2/k + (1-\rho)^2/(m-k)$ when $m$ is finite and
-$\rho < 1$.  The simpler $\rho^2/k$ bound is what the alarm
+that mass uniformly on the $k$ heavy bins).  When $k < m$ and
+$\rho < 1$, the full $\HHI$ also includes a tail contribution
+$\geq (1-\rho)^2/(m-k)$ from the remaining mass spread across
+the $m-k$ tail bins (Cauchy--Schwarz applied to the tail),
+giving $\HHI \geq \rho^2/k + (1-\rho)^2/(m-k)$.  When $k = m$
+(top set is the whole support) the tail bound is vacuous and
+the bound reduces to $\HHI \geq \rho^2/k = 1/m$, recovering the
+uniform lower bound; when $\rho = 1$ the top set absorbs all
+mass and again the tail term vanishes.  The simpler $\rho^2/k$ bound is what the alarm
 condition uses in practice; the tail term is small for highly
 concentrated distributions ($\rho$ near $1$ or $m \gg k$) and
 its inclusion only strengthens the lower bound.

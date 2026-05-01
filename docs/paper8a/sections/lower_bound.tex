@@ -37,7 +37,8 @@ this sub-poset:
 \]
 
 \medskip\noindent
-\textbf{Window-integrated form.}
+\textbf{Window-active form (union over time, not a time
+integral).}
 For a trade window $W = [t_0, t_0 + T]$
 (Definition~\ref{def:trade_window}), the \emph{window-active
 exercised sub-poset} is the union of the instantaneous
@@ -296,7 +297,7 @@ of~\citep[Proposition~1]{lasser2026poset} makes the poset
 measure additive over poset-disjoint components; $\volR^{[W]}$
 inherits M4 (Section~\ref{sec:axiom_inheritance},
 Theorem~\ref{thm:axiom_inheritance}), so
-$\volR^{[W]}(U) = \sum_n \volR^{[W]}(Y_n)$.  Summing the
+$\volR^{U,[W]} = \sum_n \volR^{[W]}(Y_n)$.  Summing the
 per-event bounds:
 \[
   \volR^{U,[W]} \;=\; \sum_{n=1}^N \volR^{[W]}(Y_n)
@@ -353,7 +354,7 @@ pairwise poset-independent, so a second application of~M4
 (to the poset of capabilities, not bundles) gives global
 additivity:
 \[
-  \volR^U \;=\; \sum_{c \in U} \volR(c)
+  \volR^{U,[W]} \;=\; \sum_{c \in U} \volR(c)
   \;\geq\; \sum_{c \in U} \volRlower(c).
 \]
 \end{proof}
@@ -400,7 +401,7 @@ theorem-certified lower bound on $\volR(A)$.  In particular:
   internal poset-independence of $A \cap U$.
 \end{itemize}
 Under Part~A alone, $\volRlower$ is defined only at the
-per-bundle level; the global aggregate is $\volR^U \geq \sum_n
+per-bundle level; the global aggregate is $\volR^{U,[W]} \geq \sum_n
 \Delta\volL(X_n)$, and arbitrary subset-level $\volRlower(A)$
 is not a Part~A object.  The companion paper's gap decomposition
 and wireheading diagnostic~\citep{lasser2026paper8b} are stated

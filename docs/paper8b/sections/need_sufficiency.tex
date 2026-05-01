@@ -307,17 +307,21 @@ The \emph{effective weight} of $c$ is:
 where $g : [0, 1] \to [0, 1]$ is a \emph{gate function} satisfying:
 $g(1) = 1$, $g(0) = \alpha_0 \in [0, 1)$ (the gate's
 \emph{floor}), $g$ monotone non-decreasing, and $g$
-right-continuous at every $s \in [0, 1]$ (so the function has
-no jump discontinuities approached from the right; in
-particular $\lim_{s \to 0^+} g(s) = \alpha_0$).  Right-continuity
-everywhere is what excludes step-function gates with abrupt
-jumps in the interior of $[0,1]$; the boundary-only condition
-$\lim_{s \to 0^+} g(s) = \alpha_0$ alone would not suffice.  A
-gate with $\alpha_0 = 0$ is called a
+\emph{continuous on $(0, 1]$ with right-limit
+$\lim_{s \to 0^+} g(s) = \alpha_0$}.  Continuity on $(0, 1]$
+excludes step-function gates with jump discontinuities in the
+interior; the right-limit condition at $0$ pins the floor.
+Right-continuity alone (e.g., a step from $\alpha_0$ at $s_0$
+defined-from-the-right) would be insufficient because
+right-continuous step functions admit interior jumps; we use
+the stronger continuous-on-$(0,1]$ condition to rule them out.
+A gate with $\alpha_0 = 0$ is called a
 \emph{zero-floor gate}; a gate with $\alpha_0 > 0$ is called a
 \emph{positive-floor gate}.  The four candidate gates of
-Remark~\ref{rem:gate_candidates} all satisfy right-continuity;
-step-function gates are excluded.  Linear, ReLU, and power-law
+Remark~\ref{rem:gate_candidates} all satisfy
+continuity-on-$(0,1]$ with the prescribed right-limit at zero;
+gates with interior jump discontinuities (e.g., bare step
+functions) are excluded.  Linear, ReLU, and power-law
 gates are zero-floor; leaky-ReLU with parameter $\alpha > 0$ is
 positive-floor with $\alpha_0 = \alpha$.
 
@@ -491,10 +495,18 @@ $\volL^{\mathrm{eff}}$ are
   \end{cases}
 \]
 where $W_{\mathrm{down}}(N) = \sum_{c \in \Down(p_N)} w(c)$.
-Both derivatives are rates on the same unit-step scale
-(one unit of $s_N$ vs.\ one unit of $w(c')$, treating $s_N$ and
-$w$ as commensurable intervention variables; see
-Remark~\ref{rem:dominance_scale}).
+The two derivatives have different domains ($s_N$ is a
+dimensionless sufficiency level in $[0,1]$, while $w(c')$
+carries $\volL$-weight units) and are not directly
+commensurable.  A meaningful comparison requires a
+domain-supplied \emph{intervention-cost map}
+$\kappa : \Delta s_N \times \Delta w \to \mathbb{R}_{\geq 0}$
+that prices increments in $s_N$ and increments in $w$ on a
+common cost scale; the marginal-dominance discussion below is
+the statement of when, under such a $\kappa$ identifying one
+unit of $\Delta s_N$ with one unit of $\Delta w$ as equally
+costly, the sufficiency gradient dominates.  Without~$\kappa$,
+no comparison is meaningful; see Remark~\ref{rem:dominance_scale}.
 
 \medskip\noindent
 \textbf{Marginal-dominance condition (subject to a

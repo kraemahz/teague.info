@@ -106,12 +106,14 @@ $\volL(\mathrm{boundary}) = 4$ (cross-cell coops).
 Total: $11 + 4 + 3 + 4 = 22$.
 
 \paragraph{Diagnostics.}
-Assume the saturation stylization continues to apply on the
-covered cell ($\volRlower(C) = w$ for each $c$ in covered) so
-$\volRlower = \volL(C) - 1 = 10$ where the $-1$ reflects one
-covered same-cell cooperative whose participating events fall
-short of saturating its weight (e.g., $\{s_3, s_4\}$ with mixed
-attribution).  Then $\betaL = 10.0 / 22.0 = 0.455$.
+Assume \emph{partial} saturation on the covered cell: each
+covered atomic capability and most covered cooperatives
+saturate (per-capability $\volRlower$ equals
+$\volL$-weight), \emph{except} one covered same-cell
+cooperative whose participating events fall short of
+saturating its weight (e.g., $\{s_3, s_4\}$ with mixed
+attribution).  This gives $\volRlower(C) = \volL(C) - 1 = 10$
+under the explicit unit-shortfall on the one cooperative.  Then $\betaL = 10.0 / 22.0 = 0.455$.
 \textbf{ALARM fires} ($\betaL < 0.8$).  Gap decomposition
 (boundary-residual closure):
 \begin{align*}
@@ -143,8 +145,10 @@ incident cooperatives migrates to the covered cell.  Similarly
 $b_3$ is poset-connected to covered $s_5$ via $\{b_3, s_5\}$,
 so $\{b_3, s_5\}$ plus the cooperative $\{b_3, s_5\}$ migrates
 to covered.  After absorption, no dormant atoms remain:
-$\volL(D) = 0$ and $\volL(C) = 19$ (all $11$ covered seed
-plus $4$ from absorbed dormants and boundary coops),
+$\volL(D) = 0$ and $\volL(C) = 19$ ($11$ covered seed plus $4$
+from absorbed dormant atomic capabilities $b_2, b_3$ at weight
+$2$ each plus $4$ from the four absorbed boundary cooperatives
+at weight $1$ each: $11 + 4 + 4 = 19$),
 $\volRlower(C)$ stays at $10$ (the absorbed nodes carry no new
 trade evidence), giving
 $\delta_{\mathrm{dormant}} = 0$ and

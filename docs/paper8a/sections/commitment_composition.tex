@@ -143,15 +143,17 @@ hold---the genuine-exchange conditions (i)--(iv) of
 Definition~\ref{def:sacrifice_event} and assumptions S0, S1, S2,
 and S4(a).  The ZK proof $\pi$ of
 Definition~\ref{def:committed_event} certifies only the
-objectively verifiable subset (S2's magnitude component, S3 for
-Part~B uses, and the bundle-containment check
+objectively verifiable subset (S2's magnitude component and
+the bundle-containment check
 $Y_n \subseteq C_{\catYn{n}}$).  The remaining
 hypotheses---S0 (valuation-bounded-by-exercise), S1 (free
-choice), S4(a) (valuation additivity), and the
-cooperative-closure conditions (iii)--(iv)---are about
-agent-internal state or poset-structural facts the commitment
-protocol cannot itself attest
-(Remark~\ref{rem:zk_limits}).  Their validity must be
+choice), S3 (bundle coherence), S4(a) (valuation additivity),
+and the cooperative-closure conditions (iii)--(iv)---are about
+agent-internal state, per-bundle hedonic structure, or
+poset-structural facts the default commitment protocol cannot
+itself attest (Remark~\ref{rem:zk_limits}).  S3 in particular
+requires external attestation under the default commitment;
+Part~B's per-capability use of S3 inherits this dependency.  Their validity must be
 established externally: by institutional filters on the trade
 environment, by sampled audit, or by assumption at the batch
 level.
@@ -375,10 +377,24 @@ the category side.
 
 \emph{Component (i)---range proof on the aggregate magnitude
 sum.}
+Pedersen commitments operate on a finite-field representation
+of the magnitudes; we assume a domain-supplied fixed-point
+encoding with scale~$\sigma$ and per-event upper bound
+$\Delta_{\max}$ such that each $\Delta\volL(X_n)$ is encoded
+as a non-negative integer in $[0, \lfloor \sigma \cdot
+\Delta_{\max} \rfloor]$, and the aggregate fits in
+$[0, N_{\max} \cdot \lfloor \sigma \cdot \Delta_{\max}
+\rfloor] \subset \mathbb{Z}_p$ for the curve order~$p$.
+Rounding error per event is bounded by $1/\sigma$ in
+$\volL$-units and propagates additively across the batch
+($N \leq N_{\max}$ events giving total rounding bound
+$N/\sigma$); the threshold~$B$ is set with margin
+$\geq N_{\max}/\sigma$ to absorb worst-case accumulation.
 Using a standard Pedersen commitment range
 proof~\citep[Definition~7]{lasser2026exo}, the prover
 demonstrates
-$\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$.  The
+$\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$ in the
+encoded units.  The
 magnitude-summation commitment is the product
 $\prod_n \Gamma^{\Delta}_n$, which binds to
 $\sum_n \Delta\volL(X_n)$ by the additive-homomorphic property
@@ -425,17 +441,25 @@ parameters $(B, N_{\max}, \mathcal{C})$ and the
 length-$N_{\max}$ commitment vector.
 
 \emph{Admissibility is not ZK-certified.}  The inference
-$\volR^U \geq B$ requires, in addition, that
+$\volR^{U,[W]} \geq B$ requires, in addition, that
 Theorem~\ref{thm:aggregate_bound} Part~A's non-ZK-verifiable
 hypotheses hold across the batch: the genuine-exchange
 conditions (i)--(iv) of Definition~\ref{def:sacrifice_event},
 S0, S1, S2, and S4(a).  These are not part of the rollup proof
 (Remark~\ref{rem:zk_limits}).  Under external attestation of
 those hypotheses (Remark~\ref{rem:external_attestation}), the
-hidden-batch rollup certifies $\volR^U \geq B$; without such
-attestation, the rollup certifies only that the Part~A formula's
-inputs meet the stated thresholds while hiding individual
-$\Delta\volL(X_n)$, specific category labels, and the true $N$.
+hidden-batch rollup certifies the existential statement
+``there exists a subset $U \subseteq P$ of unbenchmarked
+capabilities, drawn from the public partition $\mathcal{C}$ and
+covered by this batch's hidden bundles, on which $\volR^{U,[W]}
+\geq B$.''  $U$ itself is not exposed by the hiding-variant
+rollup---the verifier learns the threshold $B$ and the
+existence of such a $U$, but not which categories of
+$\mathcal{C}$ comprise it.  Without external attestation, the
+rollup certifies only that the Part~A formula's inputs meet the
+stated thresholds while hiding individual $\Delta\volL(X_n)$,
+specific category labels, the true $N$, and the realized
+subset $U$.
 \end{proof}
 
 \begin{remark}[Hiding variant is strictly richer than
