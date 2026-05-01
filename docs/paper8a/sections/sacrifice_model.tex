@@ -5,7 +5,7 @@ The privacy-compatible observation channel for $\volR$ is
 \emph{revealed sacrifice}: agents disclose the value they place on
 unbenchmarked capabilities through the benchmarked capabilities
 they voluntarily surrender to obtain them.  The framework does not
-observe \emph{what} the agent values privately---only \emph{what
+observe \emph{what} the agent values privately, only \emph{what
 they commit to publicly through sacrifice}.
 
 \subsection{Core definitions}
@@ -311,11 +311,12 @@ assumptions.  We collect them here for single-point reference.
   attestation that the third alternative was actually available
   and non-degrading.  The full
   poset-construction machinery that identifies below-sufficiency
-  structurally---multi-dimensional need bundles, downstream-safe
-  sufficiency, polarity-correct benchmarks, the downstream-gated
-  weighting that makes need-satisfaction a precondition for
-  $\volL$-registration of downstream capability weight---is
-  developed in the companion paper~\citep[Need~Sufficiency]{lasser2026paper8b}.
+  structurally (multi-dimensional need bundles, downstream-safe
+  sufficiency, polarity-correct benchmarks, and the
+  downstream-gated weighting that makes need-satisfaction a
+  precondition for $\volL$-registration of downstream capability
+  weight) is developed in the companion
+  paper~\citep[Need~Sufficiency]{lasser2026paper8b}.
   This paper does not depend on that machinery for any proof;
   the companion paper operationalizes what this paper
   axiomatizes as a primitive.
@@ -448,7 +449,7 @@ markets; the theorem's empirical validity depends on the
 prevalence of such violations.
 
 S0 does \emph{not} require that agent valuations perfectly track
-$\volR$---only that they do not \emph{overstate} it.  Agents may
+$\volR$, only that they do not \emph{overstate} it.  Agents may
 undervalue unbenchmarked bundles (sacrifice little for something
 very valuable), in which case the lower bound is conservative
 but still valid.  S0 fails only in the overpayment direction.
@@ -478,8 +479,8 @@ of Definition~\ref{def:sacrifice_event} are checkable
 via trade records.  S0 is the
 one assumption that cannot in principle be verified from the
 trade pool because it concerns the relationship between
-subjective valuation and realized exercise---neither directly
-observable in the sacrifice channel.  No
+subjective valuation and realized exercise, neither of which
+is directly observable in the sacrifice channel.  No
 structural mechanism in this paper or its
 companion~\citep[Need~Sufficiency]{lasser2026paper8b} diagnoses S0
 failure; calibration of S0 is the work of
@@ -562,7 +563,7 @@ of~\citep[Definition~6]{lasser2026exo}:
 
 \begin{enumerate}
 \item[\textbf{(P1)}] \textbf{No interior access.}  The framework
-  never observes what the agent values privately---only what they
+  never observes what the agent values privately, only what they
   commit to publicly through sacrifice.  The observation channel
   records the tuple $(i, X, Y, t)$, not the agent's internal
   valuation function $\Ui$.
@@ -626,8 +627,8 @@ duration $T$ the total number of channel emissions is exactly
 the number of observed events, so the channel's \emph{emission
 rate} is $|\mathrm{events}|/T$.  Unlike continuous observation
 (which scales with sampling rate), the emission rate is bounded
-above by the agents' trade frequency---a behavioural rather than
-observational parameter---so increasing observation intensity
+above by the agents' trade frequency (a behavioural rather than
+observational parameter), so increasing observation intensity
 does not increase the emission rate.  (Each emission carries
 finite information about the tuple $(i, X, Y, t)$; this is an
 emission-rate claim, not a Shannon-information-rate claim.)
@@ -641,11 +642,12 @@ proof~\citep[Definition~7]{lasser2026exo} that $\Gamma$ binds
 the event-local objectively verifiable facts: non-negativity
 of $\Delta\volL(X_n)$, bundle containment $Y_n \subseteq
 C_{\catYn{n}}$ (Definition~\ref{def:committed_event}(d)), and
-a verifiable link to an underlying trade record.  ``Valid revealed-sacrifice event'' in the strict sense---all
-of S0, S1, S2, S3, S4(a), and the genuine-exchange
-conditions (with S4(b) and S5 additionally for Part~B)---is
-not what the proof certifies; the non-objective hypotheses
-remain external attestations (Remark~\ref{rem:zk_limits}).  This is the event-level
+a verifiable link to an underlying trade record.  The proof
+does not certify ``valid revealed-sacrifice event'' in the
+strict sense (all of S0, S1, S2, S3, S4(a), and the
+genuine-exchange conditions, with S4(b) and S5 additionally
+for Part~B); the non-objective hypotheses remain external
+attestations (Remark~\ref{rem:zk_limits}).  This is the event-level
 certification; S4(b) is not an event-level property but a
 batch-level structural fact about the category partition,
 established via pairwise-distinct category labels in

@@ -33,8 +33,8 @@ $(\Gamma, \pi, t)$ where:
     ($\Delta\volL(X)$ correctly computed from~$X$ via the
     public benchmark) and the bundle-containment check
     (item (d) below).  ``Valid revealed-sacrifice event''
-    in the strict sense---all of S0, S1, S2, S3, S4(a),
-    and the genuine-exchange conditions---is \emph{not}
+    in the strict sense (all of S0, S1, S2, S3, S4(a),
+    and the genuine-exchange conditions) is \emph{not}
     certified by this proof; the proof attests only the
     objective magnitude and containment fields, leaving
     the substantive admissibility hypotheses to external
@@ -133,9 +133,9 @@ Committed Events on Distinct-Category Batches]
 For a batch of committed revealed-sacrifice events
 (Definition~\ref{def:committed_event}) whose revealed category
 labels $\{\catYn{n}\}$ are \emph{pairwise distinct}, the
-\emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A---the
+\emph{formula} of Theorem~\ref{thm:aggregate_bound} Part~A (the
 right-hand sum $\sum_n \Delta\volL(X_n)$ together with the
-poset-independence check between bundles---is evaluable without
+poset-independence check between bundles) is evaluable without
 opening the hidden fields: the magnitudes $\Delta\volL(X_n)$ and
 labels $\catYn{n}$ are revealed, and distinct labels imply
 poset-independent bundles via
@@ -147,16 +147,16 @@ This is a \emph{computability} result, not an
 \emph{admissibility} result.  Applying
 Theorem~\ref{thm:aggregate_bound} Part~A to a batch of committed
 events additionally requires that the theorem's Part~A
-hypotheses hold---the genuine-exchange conditions (i)--(iv) of
+hypotheses hold: the genuine-exchange conditions (i)--(iv) of
 Definition~\ref{def:sacrifice_event} and assumptions S0, S1,
 S2, and S4(a).  The ZK proof $\pi$ of
 Definition~\ref{def:committed_event} certifies only the
 objectively verifiable subset (S2's magnitude component and
 the bundle-containment check
 $Y_n \subseteq C_{\catYn{n}}$).  The remaining
-Part~A hypotheses---S0 (valuation-bounded-by-exercise), S1
-(free choice), S4(a) (valuation additivity), and the
-cooperative-closure conditions (iii)--(iv)---are about
+Part~A hypotheses (S0 valuation-bounded-by-exercise, S1
+free choice, S4(a) valuation additivity, and the
+cooperative-closure conditions (iii)--(iv)) are about
 agent-internal state or poset-structural facts the default
 commitment protocol cannot itself attest
 (Remark~\ref{rem:zk_limits}).  Part~B additionally requires
@@ -235,9 +235,9 @@ structurally-diagnosable sub-case of S1 failure, while
 below-sufficiency targeting with an attested third non-degrading
 alternative may still be admitted;
 (b)~\emph{public-poset facts} about the category partition
-$\mathcal{C}$---specifically, the cross-component
+$\mathcal{C}$ (specifically, the cross-component
 poset-independence between distinct partition components $C_j$
-and $C_k$---are established by curating $\mathcal{C}$ to
+and $C_k$) are established by curating $\mathcal{C}$ to
 satisfy Definition~\ref{def:category_partition}(i);
 (c)~\emph{per-agent} facts that the public partition cannot
 certify, including the genuine-exchange conditions (iii)--(iv)
@@ -274,9 +274,9 @@ residual-class classification) routes through it.  This paper
 specifies \emph{what} the attestation layer must produce
 (layers (a)--(d) above) but does not formalize \emph{how} an
 institutional attestation protocol should be structured to
-produce those outputs reliably---what credentialing,
+produce those outputs reliably (what credentialing,
 cross-checking, audit cadence, and dispute-resolution
-machinery the layer requires.  A dedicated treatment of the
+machinery the layer requires).  A dedicated treatment of the
 attestation protocol is the natural follow-up to this pair;
 it is out of scope here because formalizing it requires
 substrate-specific governance design rather than measurement
@@ -401,9 +401,9 @@ labels correspond to poset-independent partition components, so
 (ii) establishes the poset-independence required by
 Theorem~\ref{thm:aggregate_bound} Part~A.  Both (i) and (ii) are
 \emph{formula inputs} that the ZK rollup certifies; the
-theorem's admissibility hypotheses---the genuine-exchange
+theorem's admissibility hypotheses (the genuine-exchange
 conditions of Definition~\ref{def:sacrifice_event} and
-assumptions S0, S1, S2, S4(a)---remain outside the ZK layer
+assumptions S0, S1, S2, S4(a)) remain outside the ZK layer
 (Remark~\ref{rem:zk_limits}) and must be supplied through
 external attestation (Remark~\ref{rem:external_attestation}).
 \end{proposition}
@@ -416,8 +416,8 @@ pads with $N_{\max} - N$ ``null'' events for which the magnitude
 commitment $\Gamma^{\Delta}_n$ commits to $0$ and the category
 commitment $\Gamma^{\mathrm{cat}}_n$ commits to the
 distinguished null label, both with fresh randomness.  Padding
-is homomorphically invisible on the magnitude side---null
-events contribute $0$ to the magnitude sum---and the null
+is homomorphically invisible on the magnitude side (null
+events contribute $0$ to the magnitude sum), and the null
 label is excluded from the non-null pairwise-distinct check on
 the category side.
 

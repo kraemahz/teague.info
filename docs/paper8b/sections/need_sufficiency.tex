@@ -211,8 +211,8 @@ sacrifice channel.  Downstream-safety evaluation therefore lives
 in one of two regimes: (a) \emph{public structural} evaluation,
 where $\mathrm{quality}_c$ is determined from governance-supplied
 reference-pathway specifications and the poset's structural
-cooperative/subsumption topology---no agent-interior access
-required, suitable for population-scale deployment; (b)
+cooperative/subsumption topology (no agent-interior access
+required, suitable for population-scale deployment); (b)
 \emph{consented-perimeter} evaluation, where institutions with
 explicit consent (the regime of the companion paper's
 exercise-indicator machinery,
@@ -224,8 +224,8 @@ The architecture is coherent with the framework's privacy stance
 under either regime: regime~(a) requires no privacy commitment
 because no interior data is read, and regime~(b) operates inside
 the perimeter where privacy commitments are explicitly waived.
-Outside both regimes---ad hoc agent-interior measurement at
-population scale---downstream-safety evaluation would be both
+Outside both regimes (ad hoc agent-interior measurement at
+population scale), downstream-safety evaluation would be both
 infeasible and inconsistent with the framework's stated
 deployment constraints, and the architecture should not be
 deployed in such a regime.
@@ -256,7 +256,7 @@ choice-set hypothesis stated below:
   alternative path that avoids degrading some need.  Sacrifice
   is involuntary (the agent must reach sufficiency to operate
   and has no other option).  Sacrifice magnitude reveals
-  \textbf{cost-of-access}---how expensive it is for this agent
+  \textbf{cost-of-access}: how expensive it is for this agent
   to reach baseline on this dimension.  Larger sacrifice =
   worse situation.
 \item \textbf{Above sufficiency on all dimensions:} The agent
@@ -267,7 +267,7 @@ choice-set hypothesis stated below:
   coercion, duress, information asymmetry, and the other
   material confounds of S1; see Remark~\ref{rem:s1_above}).
   Above-sufficiency status alone does not establish S1 in
-  full---it removes one structural failure mode while leaving
+  full; it removes one structural failure mode while leaving
   others to institutional attestation.  Larger sacrifice =
   higher revealed value, conditional on residual S1 holding.
 \item \textbf{Below sufficiency on some dimension, but a
@@ -284,7 +284,7 @@ diagnosable: events with retention-degradation \emph{and} no
 third non-degrading alternative fail S1 by
 Definition~\ref{def:s1_sufficiency}; above sufficiency, this
 specific failure mode does not apply (though S1 can still fail
-via other mechanisms---see
+via other mechanisms; see
 Definition~\ref{def:s1_sufficiency} and
 Remark~\ref{rem:s1_above}).
 \end{definition}
@@ -604,7 +604,7 @@ condition holds at any $s_N$ in the ramp region provided
 $W_{\mathrm{down}}(N)$ exceeds the reciprocal of the local
 slope.  For power-law gates $g(s) = s^\gamma$ with $\gamma > 1$,
 the condition fails near $s_N = 0$ (where $g'(s_N)$ is small)
-even for large downstream cones---an intentional feature of
+even for large downstream cones, an intentional feature of
 gates that weight severity of unmet need over its breadth.
 \end{proposition}
 
@@ -647,7 +647,7 @@ $g'(s_N) W_{\mathrm{down}}(N) > 1$ is \emph{not} a claim that a
 finite $\Delta s_N$ of arbitrary size beats a finite unit of
 weight: e.g., with $g(s) = s$ and $W_{\mathrm{down}} = 10$, a
 $\Delta s_N = 0.01$ gain of $0.1$ does not exceed a
-unit-weight gain of $1$ in absolute terms---only in
+unit-weight gain of $1$ in absolute terms, only in
 per-unit-of-intervention terms (the sufficiency increment
 returned ten times the per-unit gain).  Interpreting the
 condition as anything other than a marginal-rate comparison
@@ -729,8 +729,8 @@ alternative-to-the-trade in $\mathcal{A}_i$ is non-degrading,
 which is exactly the S1 failure condition (S1 requires the
 existence of at least one non-degrading alternative to the
 trade).  H1 in this construction names \emph{why} the
-alternatives are degrading---retention is one specific
-degrading option---ensuring the failure is need-driven rather
+alternatives are degrading (retention is one specific
+degrading option), ensuring the failure is need-driven rather
 than artifactual.  The named-pattern value of
 Definition~\ref{def:s1_sufficiency} is operational: it picks
 out the structural sub-class of S1 failures that the
@@ -765,7 +765,7 @@ above-sufficiency events (retention does not put the agent
 below threshold), the need-insufficiency failure mode of S1
 is removed structurally.  S1 may still fail for
 above-sufficiency events via other mechanisms (coercion,
-duress---see Remark~\ref{rem:s1_above} below).
+duress; see Remark~\ref{rem:s1_above} below).
 
 \begin{remark}[S1 is not automatically satisfied above
 sufficiency]
@@ -826,22 +826,23 @@ same underlying optionality (fuel access) from a different
 origin.
 
 Capability-stuffing is distinct from other failure modes in the
-sequence.  It is not \emph{wireheading}
-(\citealp[Discussion]{lasser2026exo}), which is narrow
-self-reinforcing exercise of existing capabilities; stuffing
-adds new capabilities without exercising them degenerately.
-It is not the \emph{Doll
-Problem} (\citealp[Section~7.1]{lasser2026gfm}), which is
-possessed-but-unexercised capabilities; the stuffed capabilities
-may be technically exercised (routing through the gas station
-``exercises'' the distance-measurement).  It is not the
-\emph{B-to-C gap} in the aggregate sense this paper otherwise
-treats; stuffing widens the gap through a specific mechanism
-(individual-weight inflation) that the aggregate lower bound of
-the aggregate lower bound theorem~\citep[Revealed~Sacrifice]{lasser2026paper8a} does not, by itself, address.
-Stuffing is a framework-native perverse instantiation: the
-optimizer discovers it by following the $\volL$-maximization
-gradient under M5, not by departing from the framework's rules.
+sequence.  Wireheading
+(\citealp[Discussion]{lasser2026exo}) is narrow
+self-reinforcing exercise of existing capabilities, whereas
+stuffing adds new capabilities without exercising them
+degenerately.  The Doll Problem
+(\citealp[Section~7.1]{lasser2026gfm}) concerns
+possessed-but-unexercised capabilities, whereas stuffed
+capabilities may be technically exercised (routing through the
+gas station ``exercises'' the distance-measurement).  The
+B-to-C gap in the aggregate sense this paper otherwise treats
+is widened by stuffing through a specific mechanism
+(individual-weight inflation) that the aggregate lower
+bound theorem~\citep[Revealed~Sacrifice]{lasser2026paper8a}
+does not, by itself, address.  Stuffing is a framework-native
+perverse instantiation: the optimizer discovers it by following
+the $\volL$-maximization gradient under M5, not by departing
+from the framework's rules.
 
 \paragraph{Tension with structural discovery.}
 Capability-stuffing is closely related to a \emph{legitimate}
@@ -915,8 +916,8 @@ proposition and accumulates with each new capability.  The
 proposition therefore blocks only a narrow class of stuffing:
 re-instantiating a \emph{single} capability to inflate its own
 benchmark via repeated reporting.  The broader class of
-capability-stuffing---creating distinct capabilities that each
-satisfy sufficiency on the same dimension---is not structurally
+capability-stuffing (creating distinct capabilities that each
+satisfy sufficiency on the same dimension) is not structurally
 blocked and is acknowledged as unresolved below.
 \end{remark}
 
@@ -938,9 +939,9 @@ does \emph{not} cover the following:
   any existing need's downstream cone, for which the gate
   function (Definition~\ref{def:downstream_gate}) does not
   apply and M5 weight accrues fully to $\volL$.
-\item[(iii)] Arbitrary asymmetric decoration --- distinct
+\item[(iii)] Arbitrary asymmetric decoration (distinct
   cooperative descendants, minor weight perturbations, unique
-  subsumption edges --- that preserves M5 credit for the stuffed
+  subsumption edges) that preserves M5 credit for the stuffed
   capability regardless of whether the capability provides
   genuinely new optionality.
 \end{enumerate}
@@ -976,7 +977,7 @@ The positive dual is already in the sequence:
 \citep[Proposition~2]{lasser2026horizon} establishes that
 structural discovery is value-positive under conditions on the
 discovered structure's information value.  Making the symmetric
-claim---that refusal to discover is value-negative---requires
+claim (that refusal to discover is value-negative) requires
 mechanism, not entailment.  The direction is a \emph{proof-burden
 taxonomy} with \emph{claim-and-challenge back-pressure}.
 
@@ -1096,8 +1097,9 @@ population-level functioning side.  No single mechanism is
 \textbf{Descriptive vs.\ normative thresholds.}
 Mechanisms~(a)--(c) produce \emph{descriptive} thresholds:
 they identify levels at which downstream functionality
-breaks down or sacrifice polarity inverts---empirical or
-structural facts about agents in the deployment context.
+breaks down or sacrifice polarity inverts, which are
+empirical or structural facts about agents in the deployment
+context.
 Mechanism~(d) produces a \emph{normative} threshold:
 the level a human authority has \emph{decided} agents should
 not have to fall below, irrespective of the descriptive
@@ -1121,8 +1123,8 @@ literally cannot function''; a normative threshold means
 agents should not have to sacrifice.''  Deployments should
 document the provenance of each threshold so that diagnostic
 output is read against the correct interpretive backdrop.
-Mixed deployments---structural thresholds for biological needs
-and normative thresholds for socially-constructed needs---are
+Mixed deployments (structural thresholds for biological needs
+and normative thresholds for socially-constructed needs) are
 operationally common, and the framework accommodates them as
 long as each threshold's provenance is recorded with the
 threshold value.
