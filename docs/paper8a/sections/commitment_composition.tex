@@ -425,26 +425,26 @@ as a non-negative integer in $[0, \lfloor \sigma \cdot
 magnitude $\leq \sigma \cdot$ true magnitude), and the
 aggregate fits in $[0, N_{\max} \cdot \lfloor \sigma \cdot
 \Delta_{\max} \rfloor] \subset \mathbb{Z}_p$ for the curve
-order~$p$.  Floor rounding makes the encoded sum a lower
-bound on $\sigma$ times the true real-valued sum:
-$\mathrm{encoded\_sum} \leq \sigma \cdot
-\mathrm{true\_sum}$, but
-$\mathrm{encoded\_sum} \geq \sigma \cdot \mathrm{true\_sum} -
-N$ where $N$ is the actual batch size (each event loses at
-most $1$ in the encoding).  Equivalently,
-$\mathrm{true\_sum} \geq (\mathrm{encoded\_sum} + N) / \sigma$.
-A range-proof on the encoded sum certifying
-``$\mathrm{encoded\_sum} \geq \sigma B - N_{\max}$''
-therefore implies $\mathrm{true\_sum} \geq B$ for any actual
-$N \leq N_{\max}$.  The threshold passed to the range-proof
-must be \emph{below} the desired real-valued threshold by the
-worst-case rounding margin $N_{\max}/\sigma$ (in true-sum
-units), not above it.
-Using a standard Pedersen commitment range
+order~$p$.  Floor rounding gives, per event,
+$\mathrm{encoded}_n \leq \sigma \cdot \mathrm{true}_n$, hence
+summing,
+$\mathrm{encoded\_sum} \leq \sigma \cdot \mathrm{true\_sum}$,
+equivalently
+$\mathrm{true\_sum} \geq \mathrm{encoded\_sum}/\sigma$.
+This direction of the floor-rounding inequality is
+\emph{conservative for lower bounds on $\mathrm{true\_sum}$}:
+a range-proof on the encoded sum certifying
+``$\mathrm{encoded\_sum} \geq \sigma B$''
+therefore implies $\mathrm{true\_sum} \geq B$ directly, with
+\emph{no} rounding margin needed in this direction (the
+$N_{\max}/\sigma$ slack runs the other way and would matter
+only for upper-bounding $\mathrm{true\_sum}$, which the rollup
+does not do).  Using a standard Pedersen commitment range
 proof~\citep[Definition~7]{lasser2026exo}, the prover
 demonstrates
 $\sum_{n=1}^{N_{\max}} \Delta\volL(X_n) \geq B$ in the
-encoded units.  The
+true-sum units by certifying
+$\mathrm{encoded\_sum} \geq \sigma B$ in encoded units.  The
 magnitude-summation commitment is the product
 $\prod_n \Gamma^{\Delta}_n$, which binds to
 $\sum_n \Delta\volL(X_n)$ by the additive-homomorphic property

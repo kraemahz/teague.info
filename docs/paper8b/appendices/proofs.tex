@@ -68,24 +68,43 @@ about arbitrary-size finite steps.
 
 \paragraph{Definition~\ref{def:gap_decomp} (Gap Decomposition)
 and Proposition~\ref{prop:gap_computable} (Computability).}
-The four cells $\{R, C, D, S\}$ must be \emph{poset-boundary
-closed}: no cooperative's participants and no subsumption edge
-crosses a cell boundary.  Under this hypothesis, M4 licenses
-the additive identity $\volL(P) = \volL(R) + \volL(C) +
-\volL(D) + \volL(S)$, and combined with $\volRlower(P) =
-\volRlower(R) + \volRlower(C)$ (dormant and residual cells
-have zero $\volRlower$ by definition), the identity $1 -
-\betaL = \sum \delta$ follows.
+Under the default literal-partition strategy~(c), the cells
+$\{R, C, D, S, B\}$ form a set-partition of $P$ by stipulation
+(boundary-crossing cooperative nodes go to $B$ rather than to a
+participant's cell), and $\volL$-additivity follows from M5
+weight summation alone:
+$\volL(P) = \sum_{X \in \{R,C,D,S,B\}} \volL(X)$ since
+$\volL(X) = \sum_{c \in X} w(c)$ and the cells are
+set-disjoint.  The Part-B subset-extension of $\volRlower$ via
+per-capability max-attribution
+\citep[Revealed~Sacrifice]{lasser2026paper8a} is similarly
+set-additive over disjoint cells:
+$\volRlower(P) = \sum_X \volRlower(X)$ with $\volRlower(D) =
+\volRlower(S) = 0$ by the dormant/residual definitions and
+$\volRlower(B)$ a typically-zero contribution from cross-cell
+cooperatives whose participants span dormant/residual cells
+(non-zero when admissible bundles cover the cooperative
+directly; the formula admits either case).  Combining,
+$1 - \betaL = \sum_X \delta_X$.  Under cooperative-closure
+strategies~(a)/(b), $B = \emptyset$ and the four-cell identity
+$\volL(P) = \volL(R) + \volL(C) + \volL(D) + \volL(S)$ requires
+M4 over poset-boundary-closed cells (CC1: no cooperative spans
+two cells; CC2: no subsumption edge crosses); the $\volRlower$
+step is set-additive in either regime and does not require
+CC1+CC2.
 
 Computability ($O(|P| + E + M)$) is established by three
 passes: (1) per-individual-capability priority classification
 in $O(|P|)$; (2) event-sweep updating dormant $\to$ covered in
-$O(E)$; (3) poset-boundary closure pass via union-find over
-the combined cooperative/subsumption graph in $O(M \cdot
-\alpha(M))$.  The Part~B admissibility label must include the
-full Part~B hypothesis set (S0--S5, genuine-exchange
-conditions, within-bundle poset-independence from the
-event-local bundle decomposition~\citep[Revealed~Sacrifice]{lasser2026paper8a}).
+$O(E)$ with unconditional $\volRlower$ accumulation; (3)
+closure-policy pass over the cooperative/subsumption graph in
+$O(M \cdot \alpha(M))$ for strategies (a)/(b) via union-find,
+or $O(M)$ outright for strategy~(c) via a single hyperedge
+sweep classifying boundary-crossing cooperatives into $B$.
+The Part~B admissibility label must include the full Part~B
+hypothesis set (S0--S5, genuine-exchange conditions,
+within-bundle poset-independence from the event-local bundle
+decomposition~\citep[Revealed~Sacrifice]{lasser2026paper8a}).
 
 \subsection{Wireheading-consistent concentration signal
 (Section~\ref{sec:wireheading})}

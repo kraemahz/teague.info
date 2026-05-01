@@ -104,17 +104,27 @@ theorem of the companion paper~\citep[Revealed~Sacrifice]{lasser2026paper8a}
 (S0--S5), the per-capability aggregate $\volRlower(c)$ is
 well-defined, and subset aggregates $\volRlower(A)$ are given
 by the subset-extension of $\volRlower$~\citep[Revealed~Sacrifice]{lasser2026paper8a}.  Under those
-hypotheses, the B-to-C gap ($1 - \betaL$) decomposes into four
-\emph{disjoint} sources.  Each capability in $P$ is assigned to
-exactly one category by priority ordering (restricted $>$
-covered $>$ dormant $>$ residual), and each category's $\delta$
-term is its uncovered $\volL$ share:
+hypotheses, the B-to-C gap ($1 - \betaL$) decomposes into
+\emph{disjoint} sources whose count depends on the closure
+strategy (Remark~\ref{rem:cell_cooperative_closure}): five
+under the default literal-partition strategy~(c), four under
+cooperative-closure strategies~(a)/(b).  Each individual
+capability in $P$ is assigned to exactly one cell by priority
+ordering (restricted $>$ covered $>$ dormant $>$ residual);
+under~(c), boundary-crossing cooperative nodes form a fifth
+bucket~$B$.  Each cell's $\delta$ term is its uncovered $\volL$
+share:
 \[
   1 - \betaL \;=\; \delta_{\mathrm{restricted}}
   + \delta_{\mathrm{covered}} + \delta_{\mathrm{dormant}}
-  + \delta_{\mathrm{residual}},
+  + \delta_{\mathrm{residual}}
+  + \delta_{\mathrm{boundary}},
 \]
-where the capability partition is constructed in two stages.
+where $\delta_{\mathrm{boundary}}$ is omitted under
+strategies~(a)/(b) (which absorb cross-cell cooperatives via
+priority-extension into a participant's cell rather than
+routing them to~$B$).  The capability partition is constructed
+in two stages.
 \medskip\noindent
 \textbf{Stage 1 (raw seed cells, by priority).}
 Classify individual capabilities by the priority rule:
@@ -246,30 +256,47 @@ four poset-boundary-closed cells.  Under strategies (a) or (b), the
 identity $1 - \betaL = \sum \delta$ follows from two additivity
 steps.  First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
 \volL(S)$ by poset-boundary closure plus set-disjoint union via
-M4~\citep[Proposition~1]{lasser2026poset}.  Second,
-$\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ via
-the subset-extension of
-$\volRlower$~\citep[Revealed~Sacrifice]{lasser2026paper8a}, applied to the
-disjoint poset-boundary-closed cells $R$ and $C$: the cells'
-internal poset-independence (CC1+CC2) makes
-$\volRlower(R \cup C) = \volRlower(R) + \volRlower(C)$ a Part-B
-M4-aggregation step on capabilities, and $D, S$ contribute zero
-$\volRlower$ by definition.  Under the literal-partition
+M4~\citep[Proposition~1]{lasser2026poset}: CC1 prevents any
+cooperative from spanning two cells and CC2 prevents any
+subsumption from crossing, so the cells form an M4-additive
+partition for $\volL$.  Second,
+$\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ by
+the Part-B subset-extension of $\volRlower$, which under
+Part-B's per-capability max-attribution
+\citep[Revealed~Sacrifice]{lasser2026paper8a}
+is defined by $\volRlower(A) = \sum_{c \in A} \volRlower(c)$,
+making set-disjointness alone sufficient for additivity across
+cells; $D$ and $S$ contribute zero by definition (no admissible
+sacrifice evidence).  CC1 and CC2 are
+\emph{not} required for this $\volRlower$ step---they are
+required only for the $\volL$ step above.  Under the literal-partition
 variant (strategy~(c)), the $\volL$ identity expands to a
 five-term sum $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
 \volL(S) + \volL(B)$ by literal M5 weight summation across the
 five-cell partition; the $\volRlower$ aggregate similarly
-sums literally over the partitioned subset, with the
-boundary bucket $B$ contributing $\volRlower(B) = 0$ when its
-cooperatives are not covered by admissible bundles (the typical
-case for cross-cell cooperatives whose participants span
-dormant cells).  Combining either route:
+sums literally over the partitioned subset.  $\volRlower(B)$
+is computed by the same Part-B max-attribution rule as any
+other cell---it is \emph{not assumed zero}---and equals zero
+only when no admissible bundle covers a boundary cooperative
+in $B$.  This is the typical case (cross-cell cooperatives
+whose participants span at least one dormant or residual cell
+inherit zero $\volRlower$ contribution from those cells'
+absence of admissible bundle coverage), but it is a
+typical-case observation, not a definitional one; a
+cross-cell cooperative whose participants happen to be covered
+by an admissible bundle that contains the cooperative as a
+whole would contribute non-zero $\volRlower(B)$, and the
+$\delta_{\mathrm{boundary}}$ formula
+$[\volL(B) - \volRlower(B)]/\volL(P)$ accommodates this
+case.  Combining either route:
 $1 - \betaL = 1 - \volRlower(P)/\volL(P) = [\volL(P) -
 \volRlower(P)] / \volL(P) = \sum_X [\volL(X) -
 \volRlower(X)] / \volL(P)$, which expands to the four-term
 identity under (a)/(b) (with $\volRlower(D) = \volRlower(S) =
-0$) or the five-term identity under (c) (additionally with
-$\volRlower(B) = 0$).
+0$ by the dormant/residual definitions, $B = \emptyset$) or the
+five-term identity under (c) (with $\volRlower(D) =
+\volRlower(S) = 0$ and $\volRlower(B)$ given by the
+max-attribution rule, typically zero).
 \end{definition}
 
 \begin{remark}[When the residual cell preserves its

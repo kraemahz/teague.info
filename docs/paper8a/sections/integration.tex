@@ -114,11 +114,15 @@ builds three architectural layers atop the theorem proved here:
   Theorem~\ref{thm:aggregate_bound} lower-bounds $\volR^{U,[W]}$
   on the observed subset; interpreting \emph{why} $\betaL$ is
   low for a given window requires partitioning the gap into
-  restricted, covered, dormant, and residual contributions.  The
-  companion paper~\citep[Need~Sufficiency, Section~3]{lasser2026paper8b}
-  supplies
-  the four-cell decomposition and an $O(|P| + E + M)$
-  computability proposition under poset-boundary closure.
+  restricted, covered, dormant, residual, and (under the default
+  literal-partition strategy) boundary-residual contributions.
+  The companion
+  paper~\citep[Need~Sufficiency, Section~3]{lasser2026paper8b}
+  supplies the five-cell decomposition (default strategy~(c),
+  identity by set-disjoint M5 weight summation alone), a
+  four-cell variant under cooperative-closure
+  strategies~(a)/(b), and an $O(|P| + E + M)$ computability
+  proposition.
 \item \textbf{Wireheading-consistent signature and residual
   class.}  The companion
   paper~\citep[Need~Sufficiency, Sections~4--5]{lasser2026paper8b}
