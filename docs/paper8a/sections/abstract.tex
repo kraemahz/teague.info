@@ -25,16 +25,26 @@ under assumptions S0--S2, S4(a), and the genuine-exchange
 conditions of Definition~\ref{def:sacrifice_event}.  The bound
 is non-decreasing in observed events, satisfies three formal
 privacy properties, and composes with the commitment protocol
-of~\citep{lasser2026exo} to produce a public aggregate on
-distinct-category batches whose privacy profile depends on two
-named institutional preconditions
+of~\citep{lasser2026exo} to produce two interfaces: a default
+distinct-category batch interface that publishes per-event
+$(\Delta\volL, \mathrm{category})$ pairs, and a hiding-variant
+rollup that certifies only an aggregate threshold over a
+hidden subset.  Both interfaces' privacy profiles depend on
+two named institutional preconditions
 (Proposition~\ref{prop:privacy_institutional}) in addition to
 the formal properties.  Money and time
 sacrifice channels triangulate the same underlying substrate.
-We also show that $\volR$ is \emph{not self-balancing}: removing
-an unexercised capability leaves $\volR$ unchanged while $\volL$
-contracts, so $\volR$ is a diagnostic, not an optimization
-target.  The need-sufficiency filter enabling S1 across events,
+We also show that the mapping
+$\mathcal{P} \mapsto \volR^{\mathcal{P}}$ from capability
+systems to the realized volume is \emph{not strictly monotone
+under capability removal}: removing an unexercised capability
+leaves $\volR$ unchanged while $\volL$ strictly contracts.  The
+self-balancing property of~\citep[Theorem~1]{lasser2026poset}
+therefore does not transfer to $\volR$ (this is a system-level
+mapping property, not a measure-axiom failure on a fixed
+exercised sub-poset, where $\volR$ inherits M1--M6 by
+restriction).  Consequently $\volR$ is a diagnostic, not an
+optimization target.  The need-sufficiency filter enabling S1 across events,
 the gap decomposition, wireheading-consistent concentration
 signal, and residual class are developed
 in~\citep{lasser2026paper8b}.

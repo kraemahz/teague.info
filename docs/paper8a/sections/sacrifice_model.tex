@@ -498,7 +498,12 @@ of~\citep[Definition~6]{lasser2026exo}:
   each sacrifice event produces one output tuple, and no
   continuous stream is emitted between events.  (This is an
   emission-rate bound, not a Shannon-information-rate bound; the
-  information content per event is finite but non-trivial.)
+  per-event payload tuple $(i, X, Y, t)$ has finite information
+  content under the framework's standing assumption that the
+  capability poset $P$ and category alphabet $\mathcal{C}$ are
+  finite at evaluation time, but ``finite'' is not bounded
+  uniformly across deployments---larger $P$ or $\mathcal{C}$
+  produces larger per-event payloads.)
 
 \item[\textbf{(P4)}] \textbf{Commitment-layer composability.}
   The commitment protocol

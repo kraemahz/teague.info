@@ -258,17 +258,25 @@ between same-component subsets is finer structure than the
 commitment interface exposes.  Three operational responses are
 available without weakening the theorem:
 \begin{enumerate}
-\item[(a)] \emph{Sub-batch partitioning.} Partition the batch
-  into maximal sub-batches whose labels are pairwise distinct
-  and compute Part~A separately per sub-batch.  The resulting
-  lower bounds are valid for each sub-batch's covered subset;
-  the full-batch aggregate is the sum across sub-batches only
-  when the sub-batches are themselves poset-independent, which
-  is guaranteed when sub-batches are built from distinct
-  partition components.  A single-component batch with multiple
-  events yields at most the per-event Part~A bound,
-  $\volR(Y_n) \geq \Delta\volL(X_n)$ for each $n$; aggregation
-  requires the additional independence.
+\item[(a)] \emph{Sub-batch partitioning (caveat: not generally
+  summable).} Partition the batch into maximal sub-batches
+  whose labels are pairwise distinct, and compute Part~A
+  separately per sub-batch; each sub-batch's lower bound is
+  valid for its own covered subset.  Summing across sub-batches
+  to obtain a full-batch aggregate is \emph{not} generally
+  licensed: when the same category label appears in multiple
+  sub-batches (the typical case for a colliding batch), the
+  sub-batches share that category's bundles, so adding their
+  Part-A sums double-counts the shared category.  The
+  full-batch aggregate via sub-batch sum is licensed only if
+  the sub-batches partition by \emph{distinct} categories
+  (i.e., each category label appears in exactly one
+  sub-batch), which holds trivially when the original batch
+  had no collisions.  For genuinely colliding batches, fall
+  back to Part-A's sub-batch supremum
+  (Proposition~\ref{prop:monotone_part_a}): the tightest Part~A
+  bound is the supremum over admissible sub-batches, not the
+  sum across them.
 \item[(b)] \emph{Finer partition.}  Refine the public partition
   $\mathcal{C}$ to sub-components such that typical batch
   collisions become distinct-label pairs.  This is a governance

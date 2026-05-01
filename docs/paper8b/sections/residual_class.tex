@@ -61,7 +61,29 @@ data; residual capabilities cannot.
 \begin{remark}[Conservatism of $\ResS$ classification]
 \label{rem:residual_conservatism}
 Classifying a capability as residual is a structural claim that
-should be conservative: if there is any plausible mechanism by
+should be conservative.  The criterion ``any plausible
+mechanism'' is intentionally strict, but ``plausible'' is
+itself contestable: ``private contemplative experience'' might
+displace idle cycles that have time-opportunity cost,
+``baseline'' awareness capabilities might be measurable through
+clinical assessment that costs the agent's time.  We adopt the
+strict reading: classify $c \in \ResS$ only when every
+proposed sacrifice path can be shown to belong to a
+\emph{distinct capability} (e.g., the act of being assessed is a
+distinct capability from the assessed underlying state) under
+the framework's poset-construction discipline.  The strict
+reading shrinks $\ResS$ relative to a looser reading; this is
+the conservative direction (a smaller residual class makes the
+gap-decomposition's residual cell smaller, which is
+preferable since $\delta_{\mathrm{residual}}$ is the
+irreducible component beyond the channel's reach).  In
+practice, residual-class membership claims should be
+accompanied by an explicit argument that all candidate
+sacrifice paths attach to distinct capabilities, not the target
+$c$ itself.  When such arguments are absent, classify $c$ as
+non-residual by default.
+
+If there is any plausible mechanism by
 which exercise of~$c$ could produce a sacrifice event (even
 indirectly---e.g., an artistic practice that requires purchasing
 supplies), $c$ should be classified as outside $\ResS$.  The
@@ -77,8 +99,8 @@ Let $\ResB$ be the benchmarkability-based residual class
 approach) and $\ResS$ be the revealed-sacrifice residual class
 (Definition~\ref{def:residual_class}).  Then:
 \begin{enumerate}
-\item[(a)] $\ResB$ and $\ResS$ overlap but neither contains the
-  other.
+\item[(a)] $\ResB \setminus \ResS$ is non-empty (witnessed in
+  (b) below).
 \item[(b)] Capabilities in $\ResB \setminus \ResS$:
   identity-individuated capabilities that nonetheless involve
   observable sacrifice.  Example: an artistic practice that is
@@ -86,22 +108,28 @@ approach) and $\ResS$ be the revealed-sacrifice residual class
   for studio space, foregoing labour hours.  The time-sacrifice
   channel captures a lower bound even though the capability is
   identity-individuated.
-\item[(c)] Capabilities in $\ResS \setminus \ResB$: capabilities
-  that are benchmarkable (communicable, repeatable, externally
-  verifiable) but admit no sacrifice-observable exercise mode
-  in principle.  Example: ongoing interoceptive self-awareness
-  exercised concurrently with all other activity (the proof
-  below works through this witness in detail).  Cognitive
-  capabilities such as mathematical reasoning or strategic
-  planning are typically \emph{outside} $\ResS$, not inside,
-  because they admit paid-training, dedicated-time, or
-  counterparty-supported exercise modes that produce sacrifice
-  events; the proof below makes this distinction explicit.
-\item[(d)] Capabilities in $\ResB \cap \ResS$:
-  identity-individuated capabilities exercised purely privately
-  with no sacrifice event.  Example: private contemplative
-  experience with no material input or time-sacrifice signal.
+\item[(c)] Whether $\ResS \setminus \ResB$ is non-empty is
+  \emph{individuation-dependent}: under poset-construction
+  choices that distinguish baseline from trained/honed forms
+  of internal capabilities (treating them as distinct nodes),
+  candidate witnesses such as baseline interoceptive
+  self-awareness lie in $\ResS \setminus \ResB$; under
+  individuation choices that treat baseline and trained as
+  co-extensive, no witness in $\ResS \setminus \ResB$ has
+  been established by this paper.  See (c) of the proof.
+\item[(d)] $\ResB \cap \ResS$ is non-empty (witnessed in (d)
+  below): identity-individuated capabilities exercised purely
+  privately with no sacrifice event.  Example: private
+  contemplative experience with no material input or
+  time-sacrifice signal.
 \end{enumerate}
+The proposition's downstream uses in this paper require only
+(a), (b), and (d); the conditional (c) is presented for
+completeness.  The classical and channel-reach residual carves
+therefore overlap (witnessed by (d)) but are not in a
+containment relationship in the strict direction $\ResB \subseteq
+\ResS$ (witnessed by (b)); the converse direction
+$\ResS \subseteq \ResB$ is not asserted by this paper.
 \end{proposition}
 
 \begin{proof}

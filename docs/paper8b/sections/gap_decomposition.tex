@@ -202,10 +202,20 @@ The $\delta$ terms are:
   \delta_{\mathrm{dormant}} &= \volL(D) \;/\; \volL(P), \\
   \delta_{\mathrm{residual}} &= \volL(S) \;/\; \volL(P).
 \end{align*}
-Under poset-boundary closure, the identity
-$1 - \betaL = \sum \delta$ follows from two additivity steps.
-First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) + \volL(S)$
-by poset-boundary closure plus set-disjoint union via
+Each $\delta \geq 0$: $\volRlower(X) \leq \volR(X) \leq
+\volL(X)$ holds for any cell~$X$ (the first inequality by
+construction of $\volRlower$ as a lower bound on $\volR$
+\citep{lasser2026paper8a}, the second because $\volR$ is
+$\volL$ restricted to the exercised sub-poset and so cannot
+exceed $\volL$ on any subset), so the
+$\delta_{\mathrm{restricted}}$ and $\delta_{\mathrm{covered}}$
+numerators are non-negative.  The $\delta_{\mathrm{dormant}}$
+and $\delta_{\mathrm{residual}}$ terms are non-negative by
+M5 ($\volL \geq 0$).
+Under poset-boundary closure (strategies (a) or (b)), the
+identity $1 - \betaL = \sum \delta$ follows from two additivity
+steps.  First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
+\volL(S)$ by poset-boundary closure plus set-disjoint union via
 M4~\citep[Proposition~1]{lasser2026poset}.  Second,
 $\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ via
 the subset-extension of
@@ -214,15 +224,22 @@ disjoint poset-boundary-closed cells $R$ and $C$: the cells'
 internal poset-independence (CC1+CC2) makes
 $\volRlower(R \cup C) = \volRlower(R) + \volRlower(C)$ a Part-B
 M4-aggregation step on capabilities, and $D, S$ contribute zero
-$\volRlower$ by definition (dormant cells have no admissible
-sacrifice events covering them; residual cells admit no
-sacrifice-observable path even in principle).  Combining:
+$\volRlower$ by definition.  Under the literal-partition
+variant (strategy~(c)), the $\volL$ identity expands to a
+five-term sum $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
+\volL(S) + \volL(B)$ by literal M5 weight summation across the
+five-cell partition; the $\volRlower$ aggregate similarly
+sums literally over the partitioned subset, with the
+boundary bucket $B$ contributing $\volRlower(B) = 0$ when its
+cooperatives are not covered by admissible bundles (the typical
+case for cross-cell cooperatives whose participants span
+dormant cells).  Combining either route:
 $1 - \betaL = 1 - \volRlower(P)/\volL(P) = [\volL(P) -
 \volRlower(P)] / \volL(P) = \sum_X [\volL(X) -
 \volRlower(X)] / \volL(P)$, which expands to the four-term
-identity (with $\volRlower(D) = \volRlower(S) = 0$ giving
-$\delta_D = \volL(D)/\volL(P)$ and $\delta_S =
-\volL(S)/\volL(P)$ directly).
+identity under (a)/(b) (with $\volRlower(D) = \volRlower(S) =
+0$) or the five-term identity under (c) (additionally with
+$\volRlower(B) = 0$).
 \end{definition}
 
 \begin{remark}[When the residual cell preserves its
@@ -298,33 +315,48 @@ boundary-crossing instances must be eliminated.
   strategy~(a) on the global-component partition; the
   difference is presentational (sub-partitioning makes the
   component structure explicit before priority assignment).
-\item[(c)] \emph{Boundary residual.}  Identify
-  \emph{boundary-crossing cooperative nodes} (cooperatives in
-  $P$ whose participants span two or more original cells) and
-  \emph{boundary-crossing subsumption pairs} (pairs
-  $c \succeq c'$ with $c, c'$ in different original cells).
-  Cooperative nodes carry explicit $\volL$ weight
-  $w(c_{\mathrm{coop}})$ from M5; assign that weight to a
-  fifth bucket $B$ (so $\volL(B) \supseteq \sum_{z \in
-  \mathrm{cross-cell\ coops}} w(z)$).  For
-  subsumption-crossing pairs, the $\succeq$ relation does not
-  carry standalone $\volL$ weight; we handle them by
-  \emph{relocating one endpoint into the fifth bucket}.
-  Specifically, for each cross-cell subsumption pair
-  $(c, c')$, move whichever endpoint has lower priority (or
-  fewer in-cell connections, by tie-break) into~$B$; this
-  removes the cross-cell edge from the cell partition (the
-  endpoint is no longer in its original cell, so the edge no
-  longer crosses cells) and contributes that endpoint's
-  $w$-weight to $\volL(B)$.  After this relocation step, the
-  cells $\{R, C, D, S, B\}$ are pairwise poset-independent in
-  the same sense as Definition~\ref{def:gap_decomp}, M4
-  applies across them, and the identity becomes $1 - \betaL =
+\item[(c)] \emph{Boundary residual (literal-partition
+  variant; weaker license than~(a)).}  Define a literal
+  set-partition of $P$ into five buckets $\{R, C, D, S, B\}$
+  by stipulation: classify each capability into the
+  highest-priority cell among its membership-determined seeds
+  (as in~(a) without the priority-extension absorption step),
+  and place every \emph{boundary-crossing cooperative node}
+  (cooperatives in $P$ whose participants span two or more
+  original cells) into~$B$ rather than absorbing it into a
+  participant's cell.  Cooperative nodes carry explicit
+  $\volL$ weight $w(c_{\mathrm{coop}})$ from M5; the
+  literal-partition assignment makes
+  $\volL(B) = \sum_{z \in \mathrm{cross-cell\ coops}} w(z)$
+  by direct M5 weight summation.  Subsumption-crossing
+  edges, which carry no standalone $\volL$ weight, do not
+  contribute additional bucket mass; their structural effect
+  on additivity is what the literal-partition framing
+  sidesteps.  The five-cell identity
+  \[
+    \volL(P) = \volL(R) + \volL(C) + \volL(D) + \volL(S) +
+    \volL(B)
+  \]
+  follows from \emph{literal weight summation over the
+  partitioned capability census} ($\volL(X) = \sum_{c \in X}
+  w(c)$ for each cell~$X$, and the cells partition $P$
+  set-disjointly), \emph{without invoking M4-style
+  poset-independence} between cells.  This is a strictly
+  weaker license than~(a)'s M4-licensed identity: strategy
+  (c) does not claim cross-cell poset-independence and does
+  not certify M6-superadditivity properties of the partition.
+  What it provides is the additive identity needed for the
+  $\delta$-decomposition, plus the diagnostic interpretation
+  of $\delta_{\mathrm{boundary}}$ as ``cross-cell cooperative
+  mass.''  The identity becomes $1 - \betaL =
   \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
   \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}} +
-  \delta_{\mathrm{boundary}}$ with all five terms now well-
-  defined as $\volL$-fractions.  Strategy~(c) is the variant
-  the worked example uses (Section~\ref{sec:worked_example}).
+  \delta_{\mathrm{boundary}}$ with all five terms well-defined
+  as $\volL$-fractions.  Strategy~(c) is the variant the
+  worked example uses (Section~\ref{sec:worked_example}); it
+  preserves seed-cell attribution (dormant atoms stay in $D$
+  rather than being absorbed into $C$ as under (a)) at the
+  cost of foregoing the stronger M4-additivity guarantee.
 \end{enumerate}
 The paper's stated results assume strategy~(a) by default: the
 priority-extension rule is the natural operational choice, and

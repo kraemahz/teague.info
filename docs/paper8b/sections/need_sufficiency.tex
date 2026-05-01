@@ -221,11 +221,16 @@ choice-set hypothesis stated below:
   to reach baseline on this dimension.  Larger sacrifice =
   worse situation.
 \item \textbf{Above sufficiency on all dimensions:} The agent
-  has reached functionality and is choosing to invest further.
-  Sacrifice is voluntary (the agent could stop at ``good
-  enough'').  Sacrifice magnitude reveals \textbf{preference
-  strength}---how much the agent values improvement beyond
-  baseline.  Larger sacrifice = higher revealed value.
+  has reached functionality on every need dimension; the
+  need-insufficiency failure mode of S1 is removed.  Sacrifice
+  reveals \textbf{preference strength} \emph{provided} the
+  trade is voluntary in the residual S1 sense (free of
+  coercion, duress, information asymmetry, and the other
+  material confounds of S1; see Remark~\ref{rem:s1_above}).
+  Above-sufficiency status alone does not establish S1 in
+  full---it removes one structural failure mode while leaving
+  others to institutional attestation.  Larger sacrifice =
+  higher revealed value, conditional on residual S1 holding.
 \item \textbf{Below sufficiency on some dimension, but a
   third non-degrading alternative exists:} polarity is not
   determined by sufficiency status alone.  S1 can still hold
@@ -376,7 +381,18 @@ need-dominance.  Four candidates:
   linear ramp.  Hardest gate; strongest need-dominance.
 \item \textbf{Power law:} $g(s) = s^\gamma$ for $\gamma \geq 1$.
   Smooth everywhere; gradient vanishes at $s = 0$ for $\gamma > 1$,
-  giving progressively stronger penalty as the sufficiency gap
+  creating an \emph{optimization dead zone near zero
+  sufficiency}: an agent with severely unmet need would receive
+  near-zero marginal incentive from $\volL^{\mathrm{eff}}$ to
+  improve sufficiency, despite the situation being where the
+  framework most wants improvement.  This is a structural
+  trade-off of high-$\gamma$ power-law gates: severity is
+  weighted strongly in absolute level (collapse magnitude is
+  large) but weakly in marginal gradient (rate of improvement
+  is small at low $s$); domains where this dead zone is
+  unacceptable should use leaky-ReLU or low-$\gamma$ power-law
+  gates.  Power law also gives progressively stronger penalty
+  as the sufficiency gap
   widens.  Single tunable parameter.
 \end{itemize}
 The appropriate gate shape depends on the domain.  Biological

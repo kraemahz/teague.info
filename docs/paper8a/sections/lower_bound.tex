@@ -11,8 +11,9 @@ space to capabilities that are currently being exercised.
 \begin{definition}[Exercised Sub-Poset and Realized Capability
 Volume]
 \label{def:volR}
-Let $P$ be the full capability poset with measure
-$\volL$~\citep[Proposition~1]{lasser2026poset}.
+Let $P$ be the full capability poset with the poset measure
+$\volL$~\citep[Definition~7]{lasser2026poset} satisfying axioms
+M1--M6~\citep[Proposition~1]{lasser2026poset}.
 
 \medskip\noindent
 \textbf{Instantaneous form.}
@@ -212,7 +213,9 @@ $\volR_t$ at any single evaluation time.
 \medskip\noindent
 \textbf{Part~A (Main result --- bundle-level lower bound;
 requires S0--S2 and S4(a)).}
-For each event~$n$:
+Each bundle $Y_n$ is taken as \emph{cooperative-closed}: $Y_n$
+contains a cooperative capability $z$ iff all participants of
+$z$ are in $Y_n$.  For each event~$n$:
 \[
   \volR^{[W]}(Y_n) \;\geq\; \Delta\volL(X_n).
 \]
@@ -227,9 +230,12 @@ bundles would be trivially poset-related to itself):
 \[
   \volR^{U,[W]} \;\geq\; \sum_{n=1}^{N} \Delta\volL(X_n),
 \]
-where $\volR^{U,[W]}$ is the window-active realized
-capability volume restricted to the unbenchmarked subset $U$
-covered by the union of bundles.  Part~A is the paper's
+where $U = \bigcup_n Y_n$ and $\volR^{U,[W]}$ is the
+window-active realized capability volume restricted to $U$.
+Pairwise poset-independence makes $U$ itself
+cooperative-closed (no cooperative spans any pair $Y_n, Y_{n'}$,
+so each cooperative whose participants lie in $U$ has
+participants entirely in some single $Y_n$).  Part~A is the paper's
 substantive result: the $\volL$-to-$\volR$ lower bound per unit
 of observed sacrifice magnitude.
 
@@ -287,15 +293,17 @@ across $W$---not on the instantaneous $\volR_t(Y_n)$ at any
 single evaluation time $t$, which could be zero even when
 $Y_n$ was exercised earlier or later in $W$.
 
-Suppose the $N$ bundles $\{Y_n\}$ are pairwise poset-independent:
-no subsumption relation and no cooperative-composition link
-connects any capability in $Y_n$ to any capability in $Y_{n'}$
-for $n \neq n'$.  Then the sub-posets carried by the bundles are
-disconnected components of the sub-poset on
-$U = \bigcup_n Y_n$.  Axiom~M4
-of~\citep[Proposition~1]{lasser2026poset} makes the poset
-measure additive over poset-disjoint components; $\volR^{[W]}$
-inherits M4 (Section~\ref{sec:axiom_inheritance},
+Suppose the $N$ bundles $\{Y_n\}$ are pairwise poset-independent
+and each is cooperative-closed (no cooperative is split between
+$Y_n$ and any other bundle, and each $Y_n$ contains its own
+internal cooperatives).  Then the sub-posets carried by the
+bundles are disconnected components of the sub-poset on
+$U = \bigcup_n Y_n$, and $U$ inherits cooperative closure from
+the per-bundle closure plus pairwise independence.
+Axiom~M4 of~\citep[Proposition~1]{lasser2026poset} makes the
+poset measure additive over poset-disjoint cooperative-closed
+components; $\volR^{[W]}$ inherits M4
+(Section~\ref{sec:axiom_inheritance},
 Theorem~\ref{thm:axiom_inheritance}), so
 $\volR^{U,[W]} = \sum_n \volR^{[W]}(Y_n)$.  Summing the
 per-event bounds:
@@ -443,14 +451,21 @@ Max-Attribution]
 \label{prop:monotone}
 Under Part~B hypotheses (S0--S5 and within-bundle
 poset-independence), define the per-capability lower bound as
-the maximum attribution across all observed events:
+the maximum attribution across all observed events, with the
+zero-extension convention $\volRlower(c) = 0$ when $c$ is in
+no observed bundle:
 \[
-  \volRlower(c) \;=\; \max_{n:\, c \in Y_n}
-  \alpha_{n,c} \cdot \Delta\volL(X_n),
+  \volRlower(c) \;=\;
+  \max_{n:\, c \in Y_n} \alpha_{n,c} \cdot \Delta\volL(X_n),
+  \qquad
+  \text{or } 0 \text{ if no event covers } c.
 \]
-and the aggregate as $\volRlower = \sum_{c \in U} \volRlower(c)$.
-Then the aggregate is non-decreasing in the number of observed
-admissible events: for event sets $E \subseteq E'$ both satisfying
+Aggregating over a fixed common universe $U^* \supseteq
+\bigcup_{n \in E'} Y_n$ (any superset of the largest observed
+$U$ across the event sets compared, with capabilities outside
+the observed bundles contributing zero by the convention
+above), $\volRlower(E) := \sum_{c \in U^*} \volRlower(c \mid E)$
+satisfies: for event sets $E \subseteq E'$ both satisfying
 the Part~B admissibility conditions,
 \[
   \volRlower(E') \;\geq\; \volRlower(E).
