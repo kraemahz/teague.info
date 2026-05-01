@@ -493,12 +493,14 @@ bound as the supremum over admissible pairwise-poset-independent
 sub-batches of the observed event set:
 \[
   \volRlower^{\mathrm{A}}(E) \;:=\;
-  \sup\Bigl\{\, \sum_{n \in B} \Delta\volL(X_n)
-  \;:\; B \subseteq E \text{ and } B \text{ satisfies the
-  Part~A admissibility and pairwise poset-independence
-  hypotheses of Theorem~\ref{thm:aggregate_bound}} \,\Bigr\},
+  \sup_{B \in \mathcal{B}(E)}\, \sum_{n \in B}
+  \Delta\volL(X_n),
 \]
-with the supremum attaining $0$ on the empty sub-batch.  Then
+where $\mathcal{B}(E)$ is the family of sub-batches $B
+\subseteq E$ satisfying the Part~A admissibility and pairwise
+poset-independence hypotheses of
+Theorem~\ref{thm:aggregate_bound}, with the supremum attaining
+$0$ on the empty sub-batch.  Then
 $\volRlower^{\mathrm{A}}$ is non-decreasing in $E$: for event
 sets $E \subseteq E'$,
 \[
