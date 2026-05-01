@@ -220,70 +220,152 @@ by an external mechanism (Remark~\ref{rem:external_attestation}).
 
 \begin{remark}[External attestation model]
 \label{rem:external_attestation}
-In practice, the non-ZK-verifiable hypotheses are handled at the
-institutional layer in three layers, each with a different
-attestation locus:
-(a)~the trade environment is filtered so only S1-admissible
-trades are admitted as sacrifice events---events for which at
-least one non-degrading alternative to the trade existed in the
-agent's choice set (retention or a third non-trade option),
-per the primitive in Section~\ref{sec:assumptions}; the H1+H2
-below-sufficiency sub-class formalized in the companion
-paper's S1-sufficiency
-definition~\citep[Need~Sufficiency]{lasser2026paper8b} is the
-structurally-diagnosable sub-case of S1 failure, while
-below-sufficiency targeting with an attested third non-degrading
-alternative may still be admitted;
-(b)~\emph{public-poset facts} about the category partition
-$\mathcal{C}$ (specifically, the cross-component
-poset-independence between distinct partition components $C_j$
-and $C_k$) are established by curating $\mathcal{C}$ to
-satisfy Definition~\ref{def:category_partition}(i);
-(c)~\emph{per-agent} facts that the public partition cannot
-certify, including the genuine-exchange conditions (iii)--(iv)
-of Definition~\ref{def:sacrifice_event} (which quantify over
-the agent-specific retained holdings $H_i \setminus X$),
-require trade-level attestation by the agent or counterparty
-or by a sampled audit of trade records, not by curation of the
-public partition;
-(d)~S0 and S4(a) are assumed at the batch level with periodic
-sampled-audit reconciliation.  One concrete structural
-implementation of the below-sufficiency filter of~(a) via
-multi-dimensional need bundles, polarity-correct benchmarks,
-and downstream-gated weighting is given in the companion
-paper~\citep[Need~Sufficiency]{lasser2026paper8b}; the present paper's theorems
-hold under any institutional realization of the primitive.
-Curating $\mathcal{C}$ for cross-component independence is a
-governance choice; certifying that no cooperative or
-subsumption edge spans $X$ and $H_i \setminus X$ for a
-particular agent and trade is a per-event claim and lives at
-layer~(c), not layer~(b).  The commitment layer is orthogonal
-to all four: it enforces privacy and certifies the objectively
-verifiable facts, but does not and cannot certify the
-behavioural, per-agent retained-holdings, or batch-level
-assumptions.
+The aggregate lower bound theorem separates two kinds of facts:
+those a ZK proof on committed events can certify, and those it
+cannot.  This remark characterizes the second class, the
+infrastructure required to attest to it, and the framework's
+graceful-degradation behaviour when that infrastructure is
+partial.
 
-\emph{Scope and follow-up stance.}  The institutional-attestation
-layer is the primary open dependency for deployment of the
-sacrifice channel and its companion architecture
-\citep[Need~Sufficiency]{lasser2026paper8b}: every assumption that the
-ZK-commitment layer cannot certify (S0, S1, S4(a),
-genuine-exchange (iii)--(iv), and on the companion side,
+\paragraph{1.~What makes a property non-ZK-verifiable.}
+A property is ZK-verifiable from a committed event when it is
+a function of the cleartext fields of that event (magnitude,
+category, timestamp) together with public structural inputs
+(the poset $P$, the category partition $\mathcal{C}$, the
+benchmark function on $\volL$).  It is non-ZK-verifiable when
+its truth depends on data outside this surface:
+\begin{enumerate}
+\item[(i)] \emph{Agent-internal state} not encoded in the event
+  tuple: the agent's subjective valuation function $\Ui$ and
+  its scale alignment with $\volR$ (S0); the additivity
+  structure of $\Ui$ over bundles (S4(a)); the agent's choice
+  set $\mathcal{A}_i$ and which alternatives in it are
+  non-degrading (S1).
+\item[(ii)] \emph{Counterfactual claims} about unrealized
+  behaviour: whether the trade would have happened under
+  coercion or duress, whether retention would have been
+  degrading, whether a third non-degrading alternative was
+  actually available.
+\item[(iii)] \emph{Per-agent global state} not exposed by
+  any single event: the agent's pre-trade holdings
+  $H_i \setminus X$ used in the genuine-exchange conditions
+  (iii)--(iv) of Definition~\ref{def:sacrifice_event}, which
+  quantify over the cooperative/subsumption structure spanning
+  $X$ and $H_i \setminus X$.
+\end{enumerate}
+S0, S1, and S4(a) fail criterion~(i); coercion/non-degradation
+attestations fail (ii); the genuine-exchange retained-holdings
+conditions fail (iii).  The companion
+paper~\citep[Need~Sufficiency]{lasser2026paper8b}'s
 sufficiency thresholds, downstream-safety adjudication, and
-residual-class classification) routes through it.  This paper
-specifies \emph{what} the attestation layer must produce
-(layers (a)--(d) above) but does not formalize \emph{how} an
-institutional attestation protocol should be structured to
-produce those outputs reliably (what credentialing,
-cross-checking, audit cadence, and dispute-resolution
-machinery the layer requires).  A dedicated treatment of the
-attestation protocol is the natural follow-up to this pair;
-it is out of scope here because formalizing it requires
-substrate-specific governance design rather than measurement
-theory.  Pending that follow-up, deployments of the sacrifice
-channel and its diagnostic architecture should be read as
-contingent on the attestation layer's practical adequacy
-in the specific deployment context.
+residual-class classification fail (i) and (ii) similarly.
+Every assumption the commitment layer cannot certify is
+non-ZK-verifiable for at least one of these reasons.
+
+\paragraph{2.~What constitutes an ``institutional layer.''}
+An institutional layer is any infrastructure that produces
+\emph{attestations}: signed claims, with audit trail, that
+bind a named attesting authority to a specific assertion about
+a non-ZK-verifiable property.  An attestation protocol
+comprises (i)~credentialing of attesting authorities (who is
+permitted to attest); (ii)~attestation
+content (what is asserted, how it is bound to specific events
+or batches); (iii)~audit infrastructure (sampled records,
+dispute resolution, evidence retention); (iv)~consequences for
+false attestation that make the protocol incentive-compatible
+in deployment.  The framework does not legislate any specific
+institutional design; it requires that attestations of the
+types catalogued in~3 below are produced with reliability
+adequate to the diagnostic's stated confidence level.
+Plausible institutional realizations span regulatory bodies,
+auditors, multi-stakeholder governance councils, and
+substrate-internal compliance functions; selection is a
+deployment-context decision.
+
+\paragraph{3.~Required versus degraded operation.}
+The attestation outputs the framework consumes are catalogued
+in four layers, each with a different attestation locus and
+each with a defined behaviour when partially supplied:
+\begin{enumerate}
+\item[(A)] \emph{S1-admissibility labelling.}  Every event
+  entering the aggregate must carry an attested label asserting
+  S1 holds (some non-degrading alternative to the trade
+  existed in $\mathcal{A}_i$).  The H1+H2 below-sufficiency
+  sub-class of the companion paper's S1-sufficiency
+  definition~\citep[Need~Sufficiency]{lasser2026paper8b}
+  is the structurally-diagnosable sub-case;
+  below-sufficiency targeting with an attested third
+  non-degrading alternative may still be admitted; events
+  failing both routes are filtered.
+\item[(B)] \emph{Public-poset curation.}  The category
+  partition $\mathcal{C}$ must be curated for cross-component
+  poset-independence (Definition~\ref{def:category_partition}(i)).
+  This is a governance act on a public structural artefact, not
+  a per-event attestation; once curated, the property is
+  ZK-verifiable for any committed event whose label opens to a
+  valid leaf of $\mathcal{C}$.
+\item[(C)] \emph{Per-event genuine-exchange attestations.}
+  The retained-holdings conditions (iii)--(iv) of
+  Definition~\ref{def:sacrifice_event} require trade-level
+  attestation by the agent, the counterparty, or sampled audit
+  of trade records.  This is the per-event analogue of (B):
+  unlike public-partition curation, retained-holdings facts are
+  agent-specific and cannot be certified by curating
+  $\mathcal{C}$.
+\item[(D)] \emph{Batch-level S0 and S4(a) reconciliation.}
+  S0 (calibration) and S4(a) (valuation additivity) are
+  assumed at the batch level with periodic sampled-audit
+  reconciliation against external evidence (longitudinal
+  exercise studies, market-segment behavioural analysis,
+  controlled-relaxation testing of the calibration chain).
+\end{enumerate}
+\emph{Required} for the theorem to apply at full strength is
+that all four layers produce their attested outputs at the
+aggregate's stated confidence level.  \emph{Degradation} is
+the framework's graceful-degradation behaviour when an
+attestation layer is partial:
+\begin{itemize}
+\item Missing layer-(A) labels filter events conservatively
+  (excluded from the aggregate); the lower bound holds on the
+  attested subset and shrinks as the unlabeled fraction grows.
+\item Missing layer-(C) attestations on a fraction of events
+  filter those events; the bound holds on the attested
+  remainder.
+\item Missing layer-(D) batch reconciliation does not
+  immediately invalidate the bound but means the deployment
+  cannot certify S0/S4(a) hold; the diagnostic should be
+  reported with the unverified-S0/S4(a) caveat, and the bound
+  should be read as conditional on the un-attested
+  assumptions.
+\item Missing layer-(B) curation invalidates the partition's
+  cross-component independence and disables Part~A's
+  category-aggregation route on the affected partition; Part~B
+  per-capability aggregation may remain available where its
+  hypotheses hold per event.
+\end{itemize}
+The graceful-degradation property is one-sided: missing
+attestation always shrinks (or invalidates) the lower bound,
+never inflates it.  The framework cannot produce false alarms
+from missing attestation; it can produce under-counted bounds
+that fail to fire alarms that the truth would justify.
+
+\paragraph{4.~What this pair of papers calls for.}
+This pair specifies \emph{what} the institutional layer must
+produce (Layers~A--D above) and \emph{how the framework
+behaves} when those outputs are partial.  It does not specify
+\emph{how} the attestation protocol should be structured to
+produce those outputs reliably; protocol design is
+substrate- and jurisdiction-specific, and a national-scale
+governmental deployment looks different from a
+single-organization deployment.  The natural follow-up is a
+dedicated treatment of the attestation protocol covering
+credentialing, attestation content, audit cadence, dispute
+resolution, and adversarial robustness.  Pending that
+follow-up, deployments of the sacrifice channel and its
+diagnostic architecture should be read as contingent on the
+attestation layer's practical adequacy in the specific
+deployment context, with the graceful-degradation property
+above as the formal floor.
 \end{remark}
 
 \begin{remark}[Handling category-label collisions]
