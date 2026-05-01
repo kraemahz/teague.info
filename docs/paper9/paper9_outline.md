@@ -26,21 +26,31 @@ instrumentally related to true preferences, optimising the proxy produces
 alignment guarantees that degrade proportionally to the proxy-to-truth gap
 ε_gap. This is the formal version of "a weak economic model produces bad
 alignment through the proxy being instrumental." The companion claim: as
-ε_gap → 0 (the economic model converges toward a true model of inner
+ε_gap → 0 — the economic model converges toward a true model of inner
 preference, grounded operationally via the revealed-sacrifice channel of
-Paper 8), every alignment property proved in the sequence tightens at a
-characterised rate.
+[Revealed Sacrifice] (paper 8a) and interpreted through the gap-decomposition
+architecture of [Need Sufficiency] (paper 8b) — every alignment property
+proved in the sequence tightens in the direction of the truth, with the
+rate dependent on deployment-specific S0/S4(a) attestation quality.
 
 This converts the B-to-C gap from a binary precondition into a continuous
 gradient and connects the alignment-quality question to the
 economic-model-quality question: **better economic models → tighter
-alignment, at a rate the framework can measure.**
+alignment, with the tightening direction measurable via the
+revealed-sacrifice channel and the gap decomposition.**
 
 The full tightening proof (perturbation analysis of each prior result under
-ε_gap ≠ 0) is deferred to a subsequent paper (Paper 10). This paper
-establishes (a) the correspondence, (b) the structural-prediction class,
-(c) the Goodhart theorem, and (d) the qualitative direction of the
-tightening claim with concrete worked examples.
+ε_gap ≠ 0, with quantitative rates) is deferred to a subsequent paper
+(Paper 10). This paper establishes (a) the correspondence, (b) the
+structural-prediction class, (c) the Goodhart theorem, and (d) the
+qualitative direction of the tightening claim with concrete worked examples.
+
+A structural caveat that 8a's residual-class characterization makes
+unavoidable: ε_gap cannot in general be driven to zero. The residual class
+(capabilities structurally outside the sacrifice channel's reach) sets a
+non-zero floor on ε_gap in any deployment with non-empty residual
+capabilities. The fungibility-collapse limit (§2) is precisely the limit
+where the residual class is empty; real deployments operate above the floor.
 
 ---
 
@@ -146,13 +156,20 @@ Standard economics is GFM with all the interesting structure deleted. The
 correspondence is exact at the macro level (where markets are liquid and
 goods are approximately fungible); it breaks at the micro level (where
 non-fungibility, cooperative capabilities, and individuation are
-operationally significant). The four structural features GFM adds beyond
+operationally significant). The five structural features GFM adds beyond
 P_std are:
 
 1. **Non-fungibility** — poset structure with distinct capability dimensions
 2. **Cooperative capabilities** — first-class objects not reducible to sums
 3. **Anti-monopolar reasoning** — the γ* threshold with no utility-theory analogue
 4. **Individuation without interpersonal comparison** — vol_P over shared poset
+5. **Residual class** — capabilities structurally outside the sacrifice
+   channel's reach (purely-private exercise with no material footprint).
+   Standard economics has no notion of capability exercise that does not
+   pass through markets; everything happens through prices and trade. The
+   residual class of [Revealed Sacrifice] (Definition 12 of [Need
+   Sufficiency]) is non-trivial only when fungibility-collapse fails. Under
+   collapse, ResS = ∅ and the framework's measurement reach is total.
 
 ---
 
@@ -199,7 +216,22 @@ occurs).
 higher capability diversity (measured via revealed-sacrifice dispersion
 across categories) should exhibit higher long-run welfare correlates than
 populations with equivalent total capability magnitude but lower diversity.
-This is the population-scale γ* threshold.
+This is the population-scale γ* threshold. The wireheading-consistent HHI
+of [Need Sufficiency] (Proposition 6) is the formal instrument for this
+prediction: trade-flow concentration measured cross-sectionally should
+correlate with wellbeing-correlate trajectories.
+
+**Prediction 5: Mixed-polarity bundle-for-bundle traces.** Trades
+surrendering a bundle for another bundle (canonical: residential
+relocation) carry mixed need-side and want-side polarities on different
+components of the surrendered/acquired bundles. GFM (with the
+bundle-decomposition extension flagged in [Revealed Sacrifice], Remark 5
+and Open Question 2) predicts that two agents performing nominally
+identical priced trades will produce different need-share vs want-share
+splits depending on their pre-trade need-satisfaction state. Utility theory
+has no analog: it sees only the priced trade and a single-axis utility
+delta. The prediction is testable cross-sectionally given pre-trade
+need-attestation data.
 
 ---
 
@@ -222,16 +254,35 @@ This is the paper's novel formal contribution. The shape:
 **Definition 1 (ε_gap).** For a capability measure P (the proxy) and a
 true-preference measure T (the anchor), define the proxy-to-truth gap as
 
-    ε_gap = sup_k | P(k) - T(k) | / T(k)
+    ε_gap = sup_{k : c_k ∉ ResS}  | P(c_k) - T(c_k) | / T(c_k)
 
-over all capability dimensions k with T(k) > 0. This is the worst-case
-relative deviation of the proxy from the truth. Under the revealed-sacrifice
-channel of Paper 8, T is operationalised as the revealed-sacrifice lower
-bound on vol_R.
+over all capability dimensions k whose underlying capability c_k is not in
+the structural residual class ResS of [Need Sufficiency], Definition 12,
+and with T(c_k) > 0. This is the worst-case relative deviation of the
+proxy from the truth on capabilities the sacrifice channel can in principle
+reach. The residual class is excluded from the sup not because it is
+proxy-aligned but because the proxy's measurement scope structurally
+excludes it; capabilities in ResS contribute neither to the proxy's
+disagreement budget nor to its alignment guarantee. Under the
+revealed-sacrifice channel of [Revealed Sacrifice], T(c_k) is
+operationalised as vol_R^[W](c_k), with vol_R^lower as a constructible
+lower bound (Theorem 2 of [Revealed Sacrifice]).
 
-*Remark.* The sup-norm means a single badly-proxied dimension controls the
-gap. This is conservative but correct for alignment: one dimension where the
-proxy is misleading is sufficient to produce a misaligned decision.
+*Remarks.*
+1. The sup-norm means a single badly-proxied dimension controls the gap.
+   This is conservative but correct for alignment: one dimension where the
+   proxy is misleading is sufficient to produce a misaligned decision.
+2. ε_gap is bounded above by (1 − β^lower)/β^lower on the
+   observed-and-non-residual subset, giving a *measurable* ceiling from
+   trade data. The 5-cell δ-decomposition of [Need Sufficiency] (Definition 8)
+   further attributes the ceiling across cells: δ_covered is the
+   proxy-failure-candidate component, δ_dormant + δ_restricted +
+   δ_boundary is the structural-invisibility component, δ_residual is
+   the residual-class floor.
+3. ε_gap inherits a non-zero floor in any deployment with non-empty ResS.
+   The fungibility-collapse limit of §2 is the limit where this floor is
+   zero; real deployments operate above it, and the floor's magnitude is
+   itself a property of the deployment's individuation discipline.
 
 ### Theorem (Goodhart for vol_P)
 
@@ -240,9 +291,9 @@ proxy is misleading is sufficient to produce a misaligned decision.
 
 (a) **Gap-proportional degradation.** For each alignment property in the
 sequence (anti-monopolar threshold, phase-boundary location, convergence
-rate, damage bound), the guarantee under the true preferences T is the
-guarantee under the proxy P minus a correction term that is O(ε_gap). The
-correction is:
+rate, damage bound, aggregate lower bound's slack), the guarantee under the
+true preferences T is the guarantee under the proxy P minus a correction
+term that is O(ε_gap). The correction is:
 
 - Anti-monopolar: |γ*_true - γ*_proxy| ≤ C_γ · ε_gap
 - Phase boundary: the self-correcting basin under T contains the basin under
@@ -251,6 +302,12 @@ correction is:
   sign depends on whether the proxy overestimates or underestimates the risk)
 - Damage bound: the true-preference damage during a CR test is the
   vol_P-damage ± ε_gap · max_contraction(S)
+- Aggregate lower bound slack: β^lower from [Revealed Sacrifice] approaches
+  the true β as ε_gap → ε_gap^floor, with the per-property Lipschitz factor
+  decomposing into S0 attestation slack, Part-A vs Part-B aggregation, and
+  observation density. This is the most direct connection between Goodhart
+  and the measurement theorem: 8a's lower bound is itself a property whose
+  tightness is governed by the ε_gap.
 
 (b) **Optimisation pressure widens the gap (Goodhart divergence).** Under
 vol_P-maximisation by an agent with capability measure C (a proxy for
@@ -270,6 +327,17 @@ the regions where P-maximisation is cheapest relative to T. This is the
 standard Goodhart mechanism, stated for capability-space structure rather
 than for scalar reward.
 
+*Empirical witness for (b):* The wireheading-consistent HHI of [Need
+Sufficiency] (Proposition 6) is a concrete instrument for the
+optimization-pressure → gap-widening claim. As an optimiser's capability
+grows and it begins exploiting proxy-truth divergence regions, the trade-flow
+distribution concentrates on a narrower set of bundle categories — exactly
+the signature the HHI detects. Part (b)'s qualitative claim is empirically
+operationalized by the third-party-observable HHI variant (Proposition 7 of
+8b), which reads concentration directly from the public committed-event
+ledger plus S1-admissibility labels. f(C) is hard to characterize
+analytically but has empirical-witness backing through this instrument.
+
 ### Proof approach
 
 Part (a): perturbation analysis. Each alignment property is stated as a
@@ -288,12 +356,23 @@ their trajectories diverge at a rate controlled by C.
 
 ### Corollary (Better economics → better alignment)
 
-**Corollary 1.** If the revealed-sacrifice channel of Paper 8 drives ε_gap
-toward zero at rate r_sacrifice(n) (where n is the number of trade
-observations), then each alignment property tightens at rate
-Lip(g) · r_sacrifice(n). Improving the economic model (more trade data,
-better bundle disaggregation, wider coverage of the capability space) is
-formally equivalent to tightening the alignment guarantee.
+**Corollary 1 (Direction).** If the revealed-sacrifice channel of [Revealed
+Sacrifice] is admissibly accumulating observations, then β^lower is
+non-decreasing in the observation count (Propositions 2 and 3 of 8a), and
+the upper bound on ε_gap derived from (1 − β^lower)/β^lower is
+non-increasing. By Theorem 2(a), each alignment property's deviation from
+the truth is non-increasing in the same direction. Improving the economic
+model (more trade data, better bundle disaggregation, wider coverage,
+sharper S0 attestation, finer 5-cell δ-attribution) tightens each
+alignment guarantee in the direction of the truth.
+
+*Caveats on rate.* This corollary states a *direction* (monotonicity), not
+a rate. 8a's Propositions 2 and 3 are existence statements about
+non-decreasing β^lower; they do not bound *how fast* β^lower converges, and
+the convergence rate depends on (i) S0 attestation quality, (ii) Part-A vs
+Part-B aggregation choice, (iii) observation density, (iv) the residual-
+class floor ε_gap^floor, none of which 8a quantifies. Bounding the rate is
+the natural follow-up direction (Paper 10).
 
 ---
 
@@ -326,13 +405,15 @@ GFM maps this distinction onto measurement rather than ontology:
 
 | Sen/Nussbaum | GFM | Where formalised |
 |---|---|---|
-| Capability set | Poset P with vol_P | Paper 2, M1–M6 |
-| Functioning vector | Exercised sub-poset P^ex with vol_R | Paper 8 |
-| Capability–functioning gap | B-to-C gap (vol_P vs vol_R) | Paper 8, Thm 2 |
-| Basic capabilities | Below-sufficiency needs | Paper 8, §2 |
-| Higher capabilities | Above-sufficiency wants | Paper 8, §2 |
-| Conversion factors | Cooperative caps + downstream cone | Papers 2, 3, 8 |
+| Capability set | Poset P with vol_P | [Poset Definition], M1–M6 |
+| Functioning vector | Exercised sub-poset P^ex with vol_R | [Revealed Sacrifice], Def 3 |
+| Capability–functioning gap | B-to-C gap (vol_P vs vol_R), 5-cell δ-decomp | [Revealed Sacrifice] Thm 2; [Need Sufficiency] Def 8 |
+| Basic capabilities | Below-sufficiency needs | [Need Sufficiency] §2 |
+| Higher capabilities | Above-sufficiency wants | [Need Sufficiency] §2 |
+| Conversion factors | Cooperative caps + downstream cone | [Poset Definition], [Horizon Aware], [Need Sufficiency] |
 | Central capabilities list | No analog — normative loading external | (by design) |
+| Freedom vs achievement | Polarity boundary + S1-attestation layer | [Need Sufficiency] §2.3 (def:polarity_boundary); [Revealed Sacrifice] Rem 18 (rem:external_attestation) |
+| Residual capabilities | Structural residual class ResS | [Need Sufficiency] §5 (def:residual_class) |
 
 The single-poset treatment places both functionings and capabilities in ONE
 structure and separates them through measurement (vol_P for the option set,
@@ -355,21 +436,37 @@ vol_R for the exercised subset). This has structural consequences:
 1. The "freedom" dimension is implicit. Sen's capability IS the freedom to
    achieve a functioning — the word "freedom" is load-bearing. In GFM, the
    distinction between "chooses not to exercise" and "cannot exercise" lives
-   at the measurement level (revealed-sacrifice polarity: voluntary vs
-   involuntary) rather than structurally. The framework *recovers* the
-   freedom dimension through measurement but does not *constitute* it.
+   at the measurement level: [Need Sufficiency]'s polarity boundary
+   (Definition 3) plus [Revealed Sacrifice]'s S1-attestation layer
+   (Remark 18) jointly carry the freedom dimension. Above the polarity
+   boundary, sacrifice reveals preference (the agent could have done
+   otherwise). Below, sacrifice reveals cost-of-access (the agent had no
+   non-degrading alternative). The S1-attestation layer formalizes the
+   "could have done otherwise" check that makes "freedom" operationally
+   distinguishable from "achievement". The framework *recovers* the freedom
+   dimension through measurement + attestation rather than *constituting*
+   it ontologically — but the recovery is now formally complete, not
+   informal.
 2. No normative content. GFM does not answer "which capabilities should a
    society guarantee?" — only "given a capability set, what does maximising
    its volume imply?" The normative question is upstream.
 
-Paper 8's sufficiency architecture recovers Sen's basic/higher capability
-distinction within the single poset by defining the sufficiency threshold:
-below-sufficiency = Sen's basic capabilities (minimum functionings for a
-viable life); above-sufficiency = Sen's capabilities proper (freedoms the
-agent can exercise). The downstream-safety condition (Paper 8, Definition
-2B(b)) is GFM's formal addition beyond Sen: not just "the basic capability
-is met" but "the way it is met does not corrupt the downstream capability
-structure."
+[Need Sufficiency]'s sufficiency architecture recovers Sen's basic/higher
+capability distinction within the single poset by defining the sufficiency
+threshold (def:polarity_boundary): below-sufficiency = Sen's basic
+capabilities (minimum functionings for a viable life); above-sufficiency =
+Sen's capabilities proper (freedoms the agent can exercise). The
+downstream-safety condition ([Need Sufficiency], Definition 2(b)) is GFM's
+formal addition beyond Sen: not just "the basic capability is met" but
+"the way it is met does not corrupt the downstream capability structure."
+
+The residual class ([Need Sufficiency] Definition 12) is a third dimension
+Sen does not have: capabilities structurally outside the sacrifice
+channel's reach (purely-private exercise with no material footprint). These
+are Sen's capabilities *that the framework cannot measure*, not capabilities
+that fail Sen's normative criteria. Recognizing the residual class as
+analytically distinct from "low-priority" capabilities is a formal addition
+that the philosophical literature has had no instrument for.
 
 The positioning claim: GFM provides the formal/measure-theoretic completion
 of the Sen programme. The semantic distinctions Sen cares about (freedom,
@@ -411,22 +508,46 @@ it sidesteps, rather than hand-waving that "it's not a ranking."
 
 ## 6. Empirical Testability via Revealed Sacrifice
 
-### The bridge to Paper 8
+### The bridge to Paper 8a/8b
 
-Paper 8's revealed-sacrifice observation channel is the empirical entry
-point connecting GFM to observable economic data. Purchase records, time-use
+[Revealed Sacrifice]'s observation channel is the empirical entry point
+connecting GFM to observable economic data. Purchase records, time-use
 surveys, labour-supply data, public-commitment ledgers are all
-revealed-sacrifice data in the GFM sense. The structural predictions of §3
-are testable against this data.
+revealed-sacrifice data in the GFM sense. [Need Sufficiency]'s diagnostic
+architecture (gap decomposition + wireheading HHI + need-access cost)
+provides the interpretation layer that turns raw observation into testable
+predictions. The structural predictions of §3 are testable against this
+data through a small set of formal instruments:
+
+1. **Two channels (money + time)** ([Revealed Sacrifice] §4) provide
+   independent observation modalities. Predictions 1–3 are testable via
+   either channel; cross-channel triangulation gives robustness.
+2. **Aggregate lower bound β^lower** ([Revealed Sacrifice] Theorem 2)
+   provides the per-domain ε_gap upper estimate.
+3. **Five-cell δ-decomposition** ([Need Sufficiency] Definition 8) attributes
+   ε_gap across cells (covered, dormant, restricted, residual,
+   boundary-residual), distinguishing proxy-failure from
+   structural-invisibility components.
+4. **Wireheading-consistent HHI** ([Need Sufficiency] Proposition 6, 7) is
+   the population-scale concentration instrument for Prediction 4 and the
+   empirical witness for Theorem 2(b).
+5. **Need-access cost (NAC)** ([Need Sufficiency] Definition 9) tracks
+   below-sufficiency expenditure; Prediction 5 (mixed-polarity bundles) is
+   testable through NAC vs above-sufficiency aggregate splits.
+6. **Worked example** ([Need Sufficiency] §6) is a four-phase
+   computed-end-to-end demonstration that all of these instruments compose;
+   it serves as a methodology template for cross-domain studies.
 
 ### Operationalising the Goodhart theorem
 
-The Goodhart theorem of §4 is testable: compute ε_gap from
-revealed-sacrifice data for a specific capability domain, then check whether
-the framework's alignment properties (restriction-landscape accuracy,
-cooperative-output quality, diversity maintenance) are tighter in domains
-with smaller ε_gap. This is a cross-domain empirical prediction: domains
-with richer revealed-sacrifice data should exhibit tighter alignment.
+The Goodhart theorem of §4 is testable: compute the upper estimate of
+ε_gap as (1 − β^lower)/β^lower from revealed-sacrifice data for a specific
+capability domain, decompose across cells via the δ-attribution, then check
+whether the framework's alignment properties (restriction-landscape
+accuracy, cooperative-output quality, diversity maintenance) are tighter
+in domains with smaller ε_gap. This is a cross-domain empirical prediction:
+domains with richer revealed-sacrifice data and smaller residual-class
+floors should exhibit tighter alignment.
 
 ---
 
@@ -444,36 +565,90 @@ sacrifice purchasing power for a depreciating asset (a boat)?
   distinct capability dimensions with cooperative structure that purchasing
   power alone cannot synthesise. The sacrifice magnitude is predicted by
   the cooperative-capability gain from adding the bundle to the agent's
-  current poset. Testable: agents with existing water-access capabilities
-  (e.g., living by a lake) should sacrifice less for the boat than agents
-  without.
+  current poset, formalised via [Revealed Sacrifice]'s event-local bundle
+  decomposition (Definition 4): the α_{n,c} coefficients per capability
+  per event quantify the per-component contribution to the trade's
+  ΔvolL(X_n). Testable: agents with existing water-access capabilities
+  (e.g., living by a lake) should produce smaller cooperative-gain
+  α-coefficients on the {water access} component, predicting smaller
+  sacrifice magnitude.
 
 ### 7.2 The Goodhart gradient (alignment-tightening under observation)
 
-Consider an AI capability-restriction domain with two scenarios:
+Consider an AI capability-restriction domain with two scenarios, each
+characterizable through 8a/8b's instruments:
 
 - **Scenario A:** The framework measures capabilities via a coarse proxy
-  (binary can/can't), ε_gap is large. The anti-monopolar threshold γ* is
-  estimated with wide error bars; the phase boundary is conservatively
-  placed; the restriction landscape is systematically over-cautious (Wamura
-  pattern).
+  (binary can/can't), with sparse trade observation and weak S0
+  attestation. β^lower is low (high (1 − β^lower)/β^lower upper bound on
+  ε_gap), with substantial mass in δ_residual + δ_dormant +
+  δ_restricted (structural invisibility) plus a wide δ_covered band
+  (proxy-failure-candidates not separable from observation slack). The
+  anti-monopolar threshold γ* is estimated with wide error bars; the phase
+  boundary is conservatively placed; the restriction landscape is
+  systematically over-cautious (Wamura pattern).
 - **Scenario B:** The framework measures capabilities via a fine-grained
-  proxy (graded benchmarks + revealed-sacrifice trade data), ε_gap is small.
-  γ* is estimated tightly; the phase boundary is accurately located; the
-  restriction landscape tracks the true-risk landscape closely.
+  proxy (graded benchmarks + dense revealed-sacrifice trade data + sharp
+  S0 attestation). β^lower is high, δ_residual is at the structural floor,
+  δ_covered is small. γ* is estimated tightly; the phase boundary is
+  accurately located; the restriction landscape tracks the true-risk
+  landscape closely.
 
 The Goodhart theorem predicts: Scenario B's alignment guarantees are
-tighter than A's by O(ε_gap_A - ε_gap_B), and the tightening is
-observable as a reduction in the restriction-landscape divergence.
+tighter than A's by O(ε_gap_A − ε_gap_B), where the difference decomposes
+across cells (smaller δ_covered, smaller δ_dormant, same-or-smaller
+δ_residual). The tightening is observable as a reduction in the
+restriction-landscape divergence — and the cell-wise attribution tells the
+deployer *which* improvement (more observation, sharper attestation,
+finer individuation) is producing the tightening.
 
 ### 7.3 The fungibility collapse (standard economics as limit)
 
 Reproduce the well-known empirical success of money-maximisation models at
 the macro scale as a consequence of the correspondence theorem: when the
 capability space is effectively single-dimensional (fungible goods, liquid
-markets, representative agents), GFM reduces to standard economics and the
-structural predictions of §3 vanish. The success of standard economics is
-the ε_gap → 0 limit on the fungible subdimension.
+markets, representative agents), GFM reduces to standard economics, the
+residual class is empty (ResS = ∅), the gap decomposition collapses to
+δ_covered alone (no dormant, residual, restricted, or boundary cells),
+and ε_gap → 0 globally. The structural predictions of §3 vanish under
+collapse. The success of standard economics is the ε_gap → 0 limit on the
+fungible subdimension; its limitations are the regions where the limit
+fails (residual-class capabilities, cooperative structure, individuation
+asymmetries).
+
+### 7.4 Residential relocation (mixed-polarity bundle-for-bundle)
+
+A bundle-for-bundle trade illustrating Prediction 5 and the
+mixed-polarity gap in 8a's Open Question 2. An agent moves from home A to
+home B, surrendering a bundle {location_A, neighborhood_A, school_A,
+commute_A, ...} for {location_B, neighborhood_B, school_B, commute_B, ...}.
+
+- **Utility-theory account:** ΔU = U(B) − U(A) > 0 because the agent
+  chose B. No further structure.
+- **GFM account:** The trade carries mixed polarity. The shelter
+  dimension is need-side (retention without shelter is degrading); the
+  remaining dimensions (kitchen, neighborhood, square footage) are
+  want-side. Different agents performing nominally identical priced
+  trades produce different need-share vs want-share splits depending on
+  their pre-trade need-satisfaction state. An agent moving from a
+  foreclosed home to renter-shelter has high need-share; an agent moving
+  for a higher-paying job has high want-share.
+
+Testable predictions: (i) agents with similar priced relocation but
+different pre-trade need-attestation should produce different δ_NAC vs
+above-sufficiency contributions in the gap decomposition; (ii) the
+S1-attestation layer's H1+H2 classification (retention degrading, no
+non-degrading third alternative) should bifurcate the population into the
+two regimes; (iii) the wireheading-consistent HHI on relocation
+sub-categories should distinguish concentration patterns
+(forced-relocation regions vs voluntary-mobility regions).
+
+This example also illustrates the Goodhart corollary's deployment
+sensitivity: a relocation-tax framework optimising "average price paid"
+(volP proxy) without distinguishing need-share from want-share would tax
+both regimes identically, generating misalignment with the framework's
+aggregate well-being target. Sharper economics (the bundle decomposition)
+produces better alignment.
 
 ---
 
@@ -486,8 +661,12 @@ the ε_gap → 0 limit on the fungible subdimension.
 3. GFM makes structural predictions that utility theory does not.
 4. Proxy-instrumental alignment degrades proportionally to the proxy-truth
    gap (Goodhart theorem).
-5. Better economic models → tighter alignment, at a characterised rate tied
-   to the proxy-truth gap.
+5. Better economic models → tighter alignment, in the direction of the
+   truth, with the magnitude attributable across the 5-cell δ-decomposition
+   of the gap.
+6. The residual class sets a non-zero floor on ε_gap in any deployment
+   with non-empty residual capabilities; alignment-tightening is bounded
+   below by this floor.
 
 ### What it defers
 
@@ -529,18 +708,40 @@ the ε_gap → 0 limit on the fungible subdimension.
    different alignment guarantees from the same framework — the economics
    affects the tightness, but the normative loading affects the target.
 
+6. **Quantitative rate for ε_gap convergence.** [Revealed Sacrifice]'s
+   Propositions 2 and 3 prove monotonicity of β^lower under admissible
+   accumulation but do not bound the convergence rate. Bounding the rate
+   requires modelling S0 attestation quality as a function of attestation
+   infrastructure (which [Revealed Sacrifice]'s Remark 18 explicitly scopes
+   to a follow-up paper), Part-A vs Part-B aggregation choice, and
+   observation density. Corollary 1's "rate" claim depends on this; until
+   it is bounded, the corollary is restricted to direction (monotonicity).
+   This is Paper 10's territory.
+
+7. **Residual-class floor on tightening.** The residual class ResS sets a
+   structural floor ε_gap^floor below which the gap cannot be driven by
+   any amount of observation. Characterizing what governs the floor
+   (individuation discipline, governance choices about what counts as
+   "purely-private exercise") and how a deployment can shrink ResS through
+   re-individuation is open. The fungibility-collapse correspondence shows
+   ε_gap^floor → 0 as the deployment moves toward the standard-economics
+   limit, but real-world deployments operate above the floor. This
+   open question is structurally distinct from OQ 6: OQ 6 asks how fast
+   we approach the floor; OQ 7 asks how low the floor goes.
+
 ---
 
 ## Dependencies
 
 | Paper | Result used | Role in Paper 9 |
 |-------|-------------|-----------------|
-| P2 | Axioms M1–M6 (Prop 1), vol_P self-balancing (Thm 1) | The structural apparatus utility theory lacks |
-| P3 | Anti-monopolar property (Prop 6), γ* threshold | Structural prediction with no utility analog |
-| P3 | Exercise Pathway (Def 2), Preemptive Restriction (Prop 1) | Risk machinery the Goodhart theorem perturbs |
-| P6 | Phase boundary (Thm 1), design criterion (Thm 2) | Alignment properties that tighten under ε_gap → 0 |
-| P7 | Convergence (Thm 2), damage bound (Thm 1) | Alignment properties that tighten under ε_gap → 0 |
-| P8 | Revealed-sacrifice observation, aggregate lower bound | The measurement channel that drives ε_gap → 0 |
+| [Poset Definition] | Axioms M1–M6 (Prop 1), vol_P self-balancing (Thm 1) | The structural apparatus utility theory lacks |
+| [Horizon Aware] | Anti-monopolar property (Prop 6), γ* threshold | Structural prediction with no utility analog |
+| [Horizon Aware] | Exercise Pathway (Def 2), Preemptive Restriction (Prop 1) | Risk machinery the Goodhart theorem perturbs |
+| [Phase Redundancy] | Phase boundary (Thm 1), design criterion (Thm 2) | Alignment properties that tighten under ε_gap → 0 |
+| [Controlled Relaxation] | Convergence (Thm 2), damage bound (Thm 1) | Alignment properties that tighten under ε_gap → 0 |
+| [Revealed Sacrifice] | Aggregate B-to-C lower bound (Thm 2), monotone accumulation (Props 2, 3), bundle decomposition (Def 4), residual-class structure | The measurement channel that drives β^lower upward + the structural floor from the residual class |
+| [Need Sufficiency] | Need-sufficiency architecture (Def 2), polarity boundary (§2.3), gap decomposition (Def 8), wireheading HHI (Props 6, 7), residual class characterization (Def 12), need-access cost (Def 9) | The architecture that interprets β^lower; the diagnostic instruments (HHI, NAC, δ-decomp) that operationalize ε_gap |
 | Sen 1985 | Capability approach | Lineage |
 | Nussbaum 2000 | Central capabilities list | Lineage |
 | Becker 1965 | Household production | Lineage |
@@ -554,11 +755,23 @@ the ε_gap → 0 limit on the fungible subdimension.
    claim. The paper must be clear: this is better alignment *relative to
    the GFM framework's own guarantees*, not a universal alignment result.
    Other alignment concerns (mesa-optimisation, deceptive alignment) are
-   orthogonal.
+   orthogonal. The two distinct sources of tightening — observation
+   density via [Revealed Sacrifice] and diagnostic decomposition via [Need
+   Sufficiency] — should not be conflated; they contribute through
+   different mechanisms (better β^lower vs better cell-level attribution
+   of the gap), and the paper should keep them separate when discussing
+   what "better economics" delivers.
 
 2. **The Goodhart theorem's f(C) may be hard to characterise.** If the paper
    can only give existence (f is increasing) without a concrete functional
-   form, the result is qualitative rather than quantitative.
+   form, the result is qualitative rather than quantitative. The risk is
+   partially mitigated by [Need Sufficiency]'s wireheading-consistent HHI
+   (Propositions 6, 7), which provides an empirical witness for f(C):
+   trade-flow concentration is a directly measurable signal of
+   optimization-pressure-induced gap-widening. f(C) remains hard to
+   characterize *analytically*, but has empirical-witness backing through
+   this instrument; the paper can offer the HHI as a deployment-readable
+   proxy for f(C) rather than a closed-form bound.
 
 3. **Empirical validation is deferred.** The structural predictions (§3) are
    testable in principle but the paper doesn't test them. This is honest
@@ -574,3 +787,15 @@ the ε_gap → 0 limit on the fungible subdimension.
 revealed-sacrifice reframing (Paper 8), the capability-economics positioning
 (Paper 9 proposal), and the proxy-alignment-tightening direction. Supersedes
 paper9_proposal.md for the section structure and thesis.*
+
+*Revision 2026-05-01: updated for Paper 8 split (8a Revealed Sacrifice +
+8b Need Sufficiency) and 22 rounds of cold-review iteration on those
+papers. Added: residual-class floor on ε_gap (thesis caveat, §2 bullet 5,
+§4 Definition 1 remarks 2-3, OQ 7); aggregate-lower-bound-slack as a
+listed alignment property in Theorem 2(a); HHI as empirical witness for
+Theorem 2(b); Prediction 5 (mixed-polarity bundle-for-bundle); §7.4
+worked example (residential relocation); freedom-vs-achievement row in
+the Sen/Nussbaum mapping; OQ 6 (quantitative rate, deferred to Paper 10).
+Tonal change: Corollary 1 reframed from "rate" to "direction"
+(monotonicity) since 8a's Propositions 2 and 3 prove direction, not rate.
+Citation conventions updated to bracket-name shorthand throughout.*
