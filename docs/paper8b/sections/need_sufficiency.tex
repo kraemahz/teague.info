@@ -77,10 +77,10 @@ $\mathrm{actual}_k = \mathrm{cost}_k^{\mathrm{ref}} /
 $s_k = \mathrm{cost}_k^{\mathrm{ref}} /
 \mathrm{cost}_k^{\mathrm{max}}$ where
 $\mathrm{cost}_k^{\mathrm{max}}$ is the maximum acceptable
-cost.  Both quantities are dimensionless ratios in
-cost-reference units, so $\mathrm{actual}_k$ and $s_k$ live on
-the same scale and benchmark maximization aligns with cost
-minimization.  The inversion is defined on
+cost.  Both quantities are dimensionless ratios sharing the same
+cost-reference normalization, so $\mathrm{actual}_k$ and $s_k$
+live on a common scale and benchmark maximization aligns with
+cost minimization.  The inversion is defined on
 $\mathrm{cost}_k > 0$; the zero-cost limit is read as ``no
 cost-dimension constraint binds'' and treated as
 benchmark-saturated, with the convention $\mathrm{actual}_k =
@@ -241,7 +241,7 @@ choice-set hypothesis stated below:
   third non-degrading alternative exists:} polarity is not
   determined by sufficiency status alone.  S1 can still hold
   via the third alternative; classification requires
-  institutional review (Definition~\ref{prop:s1_sufficiency}
+  institutional review (Definition~\ref{def:s1_sufficiency}
   and Remark~\ref{rem:s1_above}).
 \end{itemize}
 The sufficiency threshold is where the need-insufficiency
@@ -249,10 +249,10 @@ failure mode of Assumption~S1
 (\citep{lasser2026paper8a}) becomes structurally
 diagnosable: events with retention-degradation \emph{and} no
 third non-degrading alternative fail S1 by
-Definition~\ref{prop:s1_sufficiency}; above sufficiency, this
+Definition~\ref{def:s1_sufficiency}; above sufficiency, this
 specific failure mode does not apply (though S1 can still fail
 via other mechanisms---see
-Definition~\ref{prop:s1_sufficiency} and
+Definition~\ref{def:s1_sufficiency} and
 Remark~\ref{rem:s1_above}).
 \end{definition}
 
@@ -666,7 +666,7 @@ floor $\alpha$ below.
 \subsection{Sacrifice-polarity (S1) connection}
 
 \begin{definition}[Below-sufficiency sacrifice]
-\label{prop:s1_sufficiency}
+\label{def:s1_sufficiency}
 Let $\mathcal{A}_i$ denote agent $i$'s choice set at trade
 time, including the trade ($Y_n$ for $X_n$), the retention
 alternative (refuse the trade, keep $X_n$), and any other
@@ -699,7 +699,7 @@ trade).  H1 in this construction names \emph{why} the
 alternatives are degrading---retention is one specific
 degrading option---ensuring the failure is need-driven rather
 than artifactual.  The named-pattern value of
-Definition~\ref{prop:s1_sufficiency} is operational: it picks
+Definition~\ref{def:s1_sufficiency} is operational: it picks
 out the structural sub-class of S1 failures that the
 need-sufficiency architecture identifies (retention is
 degrading and no third option escapes degradation), letting
@@ -709,7 +709,7 @@ Below-sufficiency \emph{targeting} (sacrifice aimed at
 improving an unmet need dimension where H1 holds but H2 fails
 because $\mathcal{A}_i$ contains a non-degrading non-trade
 alternative) does not satisfy
-Definition~\ref{prop:s1_sufficiency} and does not imply S1
+Definition~\ref{def:s1_sufficiency} and does not imply S1
 failure: S1 can still hold via that third alternative, in
 which case the trade reveals genuine preference between
 non-degrading options.
@@ -914,7 +914,7 @@ Each of these defeats any attempt to block stuffing using
 post-declaration poset properties or exercise patterns alone.
 The honest statement of the need-sufficiency architecture's
 contribution is sacrifice-polarity resolution (via
-Definition~\ref{prop:s1_sufficiency} above, which is
+Definition~\ref{def:s1_sufficiency} above, which is
 load-bearing for the sacrifice channel) together with the
 narrow below-sufficiency cap of
 Proposition~\ref{prop:below_suff_saturation}.  Full structural

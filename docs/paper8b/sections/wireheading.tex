@@ -238,17 +238,20 @@ Definition~\ref{def:trade_leverage}).
 By the committed event definition~\citep{lasser2026paper8a}, every committed
 sacrifice event exposes the pair $(\catYn{n}, \Delta\volL(X_n))$
 in cleartext.  For the category-flow statistic, both the
-numerator $\sum_{n :\, \catYn{n} = j} \Delta\volL(X_n)$ (which
-sums only committed fields conditional on the committed category
-label) and the denominator $\sum_n \Delta\volL(X_n)$ are direct
-functions of the revealed-cleartext fields.  No hidden
+numerator $\sum_{n \in \mathcal{E}_{S1} :\, \catYn{n} = j}
+\Delta\volL(X_n)$ and the denominator $\sum_{n \in
+\mathcal{E}_{S1}} \Delta\volL(X_n)$ are direct functions of
+the revealed-cleartext fields plus the public S1-admissibility
+attestation labels (which mark which committed events belong
+to $\mathcal{E}_{S1}$).  No hidden
 field---agent identity, bundle-interior subset, $\alpha_{n,c}$
 coefficients---enters the computation.  Hence
 $\widetilde\HHI = \sum_j \tilde\lambda_{\mathrm{trade}}(j)^2$ is
-publicly computable.  The alarm test
+publicly computable from the committed-event ledger plus the
+admissibility attestation labels.  The alarm test
 $\widetilde\HHI > \HHI_{\mathrm{alarm}}$ is consequently
-computable by any party with read access to the committed-event
-ledger.  Monotonicity of $\widetilde\HHI$ in trade-flow
+computable by any party with read access to both the
+committed-event ledger and the admissibility attestations.  Monotonicity of $\widetilde\HHI$ in trade-flow
 concentration across categories follows from the same
 Cauchy--Schwarz / Herfindahl argument as
 Proposition~\ref{prop:wireheading_hhi}, applied to the

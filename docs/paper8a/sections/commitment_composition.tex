@@ -86,8 +86,13 @@ committed event of Definition~\ref{def:committed_event} without
 an oracle for the agent's subjective state or richer committed
 fields exposing the decomposition.  The default ZK proof
 verifies the \emph{objective magnitude} conditions (S2's
-benchmark computation, and S4(b) via poset structure on the
-public partition); the remaining conditions are structural
+benchmark computation) and \emph{cross-category}
+poset-independence (which is the part of S4(b) needed for
+Part~A aggregation across distinct partition components, via
+Definition~\ref{def:category_partition}(i)); within-bundle and
+per-capability S4(b) facts needed for Part~B's per-capability
+attribution are not certified by the default commitment.  The
+remaining conditions are structural
 assumptions about the trade environment or per-bundle
 decomposition, not properties the default commitment protocol
 can enforce.  S3 in particular requires either external
@@ -141,22 +146,23 @@ handled separately (Remark~\ref{rem:label_collision}).
 This is a \emph{computability} result, not an
 \emph{admissibility} result.  Applying
 Theorem~\ref{thm:aggregate_bound} Part~A to a batch of committed
-events additionally requires that the theorem's hypotheses
-hold---the genuine-exchange conditions (i)--(iv) of
-Definition~\ref{def:sacrifice_event} and assumptions S0, S1, S2,
-and S4(a).  The ZK proof $\pi$ of
+events additionally requires that the theorem's Part~A
+hypotheses hold---the genuine-exchange conditions (i)--(iv) of
+Definition~\ref{def:sacrifice_event} and assumptions S0, S1,
+S2, and S4(a).  The ZK proof $\pi$ of
 Definition~\ref{def:committed_event} certifies only the
 objectively verifiable subset (S2's magnitude component and
 the bundle-containment check
 $Y_n \subseteq C_{\catYn{n}}$).  The remaining
-hypotheses---S0 (valuation-bounded-by-exercise), S1 (free
-choice), S3 (bundle coherence), S4(a) (valuation additivity),
-and the cooperative-closure conditions (iii)--(iv)---are about
-agent-internal state, per-bundle hedonic structure, or
-poset-structural facts the default commitment protocol cannot
-itself attest (Remark~\ref{rem:zk_limits}).  S3 in particular
-requires external attestation under the default commitment;
-Part~B's per-capability use of S3 inherits this dependency.  Their validity must be
+Part~A hypotheses---S0 (valuation-bounded-by-exercise), S1
+(free choice), S4(a) (valuation additivity), and the
+cooperative-closure conditions (iii)--(iv)---are about
+agent-internal state or poset-structural facts the default
+commitment protocol cannot itself attest
+(Remark~\ref{rem:zk_limits}).  Part~B additionally requires
+S3 (bundle coherence), which is not certified by the default
+commitment either; Part~B's per-capability use of S3 inherits
+this dependency.  Their validity must be
 established externally: by institutional filters on the trade
 environment, by sampled audit, or by assumption at the batch
 level.
@@ -397,15 +403,21 @@ as a non-negative integer in $[0, \lfloor \sigma \cdot
 magnitude $\leq \sigma \cdot$ true magnitude), and the
 aggregate fits in $[0, N_{\max} \cdot \lfloor \sigma \cdot
 \Delta_{\max} \rfloor] \subset \mathbb{Z}_p$ for the curve
-order~$p$.  Floor rounding ensures the encoded sum is a lower
-bound on $\sigma$ times the true real-valued sum, so a
-range-proof certifying ``encoded sum $\geq \sigma B$'' implies
-``true sum $\geq B$'' directly.  Rounding error per event is
-bounded by $1/\sigma$ in $\volL$-units and propagates
-additively across the batch ($N \leq N_{\max}$ events giving
-total rounding bound $N/\sigma$); the threshold~$B$ should be
-set with margin $\geq N_{\max}/\sigma$ above the true bound
-to absorb worst-case accumulation.
+order~$p$.  Floor rounding makes the encoded sum a lower
+bound on $\sigma$ times the true real-valued sum:
+$\mathrm{encoded\_sum} \leq \sigma \cdot
+\mathrm{true\_sum}$, but
+$\mathrm{encoded\_sum} \geq \sigma \cdot \mathrm{true\_sum} -
+N$ where $N$ is the actual batch size (each event loses at
+most $1$ in the encoding).  Equivalently,
+$\mathrm{true\_sum} \geq (\mathrm{encoded\_sum} + N) / \sigma$.
+A range-proof on the encoded sum certifying
+``$\mathrm{encoded\_sum} \geq \sigma B - N_{\max}$''
+therefore implies $\mathrm{true\_sum} \geq B$ for any actual
+$N \leq N_{\max}$.  The threshold passed to the range-proof
+must be \emph{below} the desired real-valued threshold by the
+worst-case rounding margin $N_{\max}/\sigma$ (in true-sum
+units), not above it.
 Using a standard Pedersen commitment range
 proof~\citep[Definition~7]{lasser2026exo}, the prover
 demonstrates

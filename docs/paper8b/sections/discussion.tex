@@ -10,7 +10,7 @@ where sacrifice polarity flips.  Below-sufficiency sacrifices
 in which retention is degrading on at least one need dimension
 \emph{and} no third non-degrading alternative exists in the
 agent's choice set are involuntary and correctly filtered by
-S1 (Definition~\ref{prop:s1_sufficiency}); below-sufficiency
+S1 (Definition~\ref{def:s1_sufficiency}); below-sufficiency
 targeting where a non-degrading third alternative is
 available requires institutional attestation to classify
 (such targeting may still satisfy S1 because the agent had a
@@ -19,12 +19,18 @@ diagnostic (Definitions~\ref{def:nac}--\ref{def:nse}) tracks
 need-satisfaction efficiency as a companion metric.
 
 \paragraph{The B-to-C gap decomposes into disjoint
-diagnostic cells.}
-Under poset-boundary closure, $1 - \betaL =
+diagnostic cells (4 or 5, depending on closure strategy).}
+Under cooperative-closure semantics (strategies~(a)/(b),
+Remark~\ref{rem:cell_cooperative_closure}),
+$1 - \betaL =
 \delta_{\mathrm{restricted}} + \delta_{\mathrm{covered}} +
 \delta_{\mathrm{dormant}} + \delta_{\mathrm{residual}}$
-(Definition~\ref{def:gap_decomp}).  The partition is
-computable in near-linear $\widetilde{O}(|P| + E + M)$ time
+(Definition~\ref{def:gap_decomp}).  Under literal-partition
+semantics (strategy~(c), used in the worked example), the
+identity adds a boundary bucket
+$\delta_{\mathrm{boundary}}$ for cross-cell cooperatives.
+The cell classification is computable in near-linear
+$\widetilde{O}(|P| + E + M)$ time
 (Proposition~\ref{prop:gap_computable}) given the capability
 census, poset structure, restriction and residual sets, event
 admissibility labelling, and a closure policy.  Alarm firings

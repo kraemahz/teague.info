@@ -157,10 +157,21 @@ contributions?
 
 \item \label{oq:nonstationarity}
 \textbf{Non-stationarity of revealed preferences.}
-Preferences shift over time.  The lower bound from past trades
-may overstate $\volR$ at present.  An EWMA decay paralleling
-the risk-trust dynamics of~\citep[Definition~4]{lasser2026scm}
-seems natural but requires empirical calibration.
+Preferences shift over time.  The bound
+$\volRlower$ reported by the framework is the
+\emph{window-active historical} aggregate: it summarises trade
+evidence over the trade window $W$.  ``Current'' exercise at
+time $t$ may differ from the historical aggregate when
+preferences shift mid-window or after $W$ ends.  The
+window-active framing preserves the formal interpretation
+(``$\volR^{[W]}$'' is the latent quantity the bound targets,
+which captures any exercise during $W$, not exercise at a
+specific instant), but a downstream user who reads
+$\volRlower$ as a current diagnostic should account for the
+window's age and any preference-shift signal.  An EWMA decay
+paralleling the risk-trust dynamics
+of~\citep[Definition~4]{lasser2026scm} seems natural but
+requires empirical calibration.
 
 \item \label{oq:coercion}
 \textbf{Coerced sacrifice.}
