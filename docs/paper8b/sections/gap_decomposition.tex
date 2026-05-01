@@ -11,7 +11,7 @@ ratio drops below a threshold:
   \mathrm{ALARM}(T) \;=\; \betaL(P, T) \;<\; \betaalarm,
 \]
 where $\betaL(P, T)$ is the global conservative ratio of the
-companion paper~\citep[paper~8a]{lasser2026paper8a} on the full
+companion paper~\citep[Revealed~Sacrifice]{lasser2026paper8a} on the full
 capability poset $P$ (numerator $\volRlower(U, T)$ extended by
 zero outside the observed subset $U$, denominator $\volL(P)$),
 and $\betaalarm \in (0, 1)$ is configurable.  The
@@ -100,10 +100,10 @@ their individual blind spots.
 \begin{definition}[Gap Decomposition Under Revealed Sacrifice]
 \label{def:gap_decomp}
 Under the Part~B hypotheses of the aggregate lower bound
-theorem of the companion paper~\citep[paper~8a]{lasser2026paper8a}
+theorem of the companion paper~\citep[Revealed~Sacrifice]{lasser2026paper8a}
 (S0--S5), the per-capability aggregate $\volRlower(c)$ is
 well-defined, and subset aggregates $\volRlower(A)$ are given
-by the subset-extension of $\volRlower$~\citep[paper~8a]{lasser2026paper8a}.  Under those
+by the subset-extension of $\volRlower$~\citep[Revealed~Sacrifice]{lasser2026paper8a}.  Under those
 hypotheses, the B-to-C gap ($1 - \betaL$) decomposes into four
 \emph{disjoint} sources.  Each capability in $P$ is assigned to
 exactly one category by priority ordering (restricted $>$
@@ -131,7 +131,7 @@ Classify individual capabilities by the priority rule:
   for Part~A satisfies S0, S1, S2, and S4(a); for Part~B it
   additionally satisfies S3, S5, and within-bundle
   poset-independence (the event-local bundle
-  decomposition~\citep[paper~8a]{lasser2026paper8a}).
+  decomposition~\citep[Revealed~Sacrifice]{lasser2026paper8a}).
 \item \textbf{Seed dormant cell:} $D_0 := \DorS$, where
   $\DorS = \{d \in P : d \notin \Xi,\; d \notin \ResS,\;
   d \notin \CovS\}$.  Tradable-in-principle capabilities with
@@ -191,7 +191,7 @@ $\volL$ values---where each cell $X$ is read as $X^{*} := X
 and $\volL(X)$ is summed over $X^{*}$---set-disjointness alone
 does not suffice for $\volL$-additivity across cells.  By the
 category-partition poset-independence
-condition of the companion paper~\citep[paper~8a]{lasser2026paper8a} and
+condition of the companion paper~\citep[Revealed~Sacrifice]{lasser2026paper8a} and
 the M4 axiom of~\citep[Proposition~1]{lasser2026poset},
 additivity requires full poset-independence---\emph{neither}
 cross-cell cooperative composition \emph{nor} cross-cell
@@ -228,7 +228,7 @@ The $\delta$ terms are:
 Each $\delta \geq 0$: $\volRlower(X) \leq \volR(X) \leq
 \volL(X)$ holds for any cell~$X$ (the first inequality by
 construction of $\volRlower$ as a lower bound on $\volR$
-\citep[paper~8a]{lasser2026paper8a}, the second because $\volR$ is
+\citep[Revealed~Sacrifice]{lasser2026paper8a}, the second because $\volR$ is
 $\volL$ restricted to the exercised sub-poset and so cannot
 exceed $\volL$ on any subset), so the
 $\delta_{\mathrm{restricted}}$ and $\delta_{\mathrm{covered}}$
@@ -249,7 +249,7 @@ steps.  First, $\volL(P) = \volL(R) + \volL(C) + \volL(D) +
 M4~\citep[Proposition~1]{lasser2026poset}.  Second,
 $\volRlower(P) = \volRlower(R) + \volRlower(C) + 0 + 0$ via
 the subset-extension of
-$\volRlower$~\citep[paper~8a]{lasser2026paper8a}, applied to the
+$\volRlower$~\citep[Revealed~Sacrifice]{lasser2026paper8a}, applied to the
 disjoint poset-boundary-closed cells $R$ and $C$: the cells'
 internal poset-independence (CC1+CC2) makes
 $\volRlower(R \cup C) = \volRlower(R) + \volRlower(C)$ a Part-B
@@ -455,11 +455,11 @@ edges $c \succeq c'$),
 (v)~an event-admissibility labelling designating which observed
 events satisfy the theorem-admissibility requirements.  Because
 Definition~\ref{def:gap_decomp} operates under Part~B
-(the aggregate lower bound theorem~\citep[paper~8a]{lasser2026paper8a}), the full Part~B
+(the aggregate lower bound theorem~\citep[Revealed~Sacrifice]{lasser2026paper8a}), the full Part~B
 admissibility set is required: S0, S1, S2, S4(a), S3, S5, the
 genuine-exchange conditions (i)--(iv) of
-the revealed-sacrifice event definition~\citep[paper~8a]{lasser2026paper8a}, \emph{and} within-bundle
-poset-independence per the event-local bundle decomposition~\citep[paper~8a]{lasser2026paper8a}; and
+the revealed-sacrifice event definition~\citep[Revealed~Sacrifice]{lasser2026paper8a}, \emph{and} within-bundle
+poset-independence per the event-local bundle decomposition~\citep[Revealed~Sacrifice]{lasser2026paper8a}; and
 (vi)~a closure policy from
 Remark~\ref{rem:cell_cooperative_closure}, with strategy~(c)
 (literal-partition with boundary-residual bucket) as the
@@ -500,7 +500,7 @@ For each record $(c, n)$ with event $n$ admissibility-labelled
 satisfying the \emph{full Part~B admissibility set} of input
 (v)---S0, S1, S2, S4(a), S3, S5, the genuine-exchange
 conditions, and within-bundle poset-independence of $Y_n$ per
-the event-local bundle decomposition~\citep[paper~8a]{lasser2026paper8a}---accumulate the
+the event-local bundle decomposition~\citep[Revealed~Sacrifice]{lasser2026paper8a}---accumulate the
 event's $\volRlower$ contribution to $c$ regardless of $c$'s
 priority class (so that $\volRlower(R)$ for restricted
 capabilities and $\volRlower(C)$ for covered capabilities are
@@ -570,7 +570,7 @@ external admissibility layer: events must be labelled admissible
 (by trust-weighted attestation, auditor sampling, or explicit
 agent commitment) before the decomposition can classify
 capabilities into ``covered.''  Under committed-mode operation
-(\citep[paper~8a]{lasser2026paper8a}), the labelling is carried by the
+(\citep[Revealed~Sacrifice]{lasser2026paper8a}), the labelling is carried by the
 commitment protocol's proof attachment; in unrestricted mode, the
 framework must rely on governance processes to supply it.  The
 $O(|P|)$ complexity is the \emph{classification} cost given the
@@ -581,12 +581,12 @@ labelling, not the cost of producing the labelling itself.
 Under Part~A alone (category-level aggregates, requiring S0,
 S1, S2, S4(a), and the genuine-exchange conditions of the
 revealed-sacrifice event definition in the companion
-paper~\citep[paper~8a]{lasser2026paper8a}), the
+paper~\citep[Revealed~Sacrifice]{lasser2026paper8a}), the
 decomposition operates at the category level: each partition
 component $C_j$
-(the category partition~\citep[paper~8a]{lasser2026paper8a}) is classified as
+(the category partition~\citep[Revealed~Sacrifice]{lasser2026paper8a}) is classified as
 restricted, covered, dormant, or residual.  Under committed data
-(\citep[paper~8a]{lasser2026paper8a}), S2 is not directly verifiable;
+(\citep[Revealed~Sacrifice]{lasser2026paper8a}), S2 is not directly verifiable;
 the committed-mode decomposition therefore \emph{assumes} S2
 holds for committed events.  The per-capability decomposition is
 the refinement available when Part~B assumptions hold.
@@ -616,7 +616,7 @@ baseline functionality rather than pursuing wants.
 
 $\NAC$ does \emph{not} enter
 the aggregate lower bound of the companion
-paper~\citep[paper~8a]{lasser2026paper8a} or
+paper~\citep[Revealed~Sacrifice]{lasser2026paper8a} or
 $\betaL$.  It is a separate diagnostic that tracks the cost side
 of the agent's capability budget.
 \end{definition}
@@ -652,7 +652,7 @@ need-access cost increases.  A bundle-decomposition
 extension that splits $\Delta\volL(X_n)$ into need-satisfying
 and want-pursuing components via the event-local bundle
 decomposition of the companion
-paper~\citep[paper~8a]{lasser2026paper8a} would tighten $\NAC$ to
+paper~\citep[Revealed~Sacrifice]{lasser2026paper8a} would tighten $\NAC$ to
 the need-component aggregate and is the natural follow-up; it
 is not part of this paper's $\NAC$ definition because the
 event-local decomposition coefficients $\alpha_{n,c}$ are not
@@ -685,7 +685,7 @@ degrading pathways.
 
 \begin{remark}[Observability under commitment]
 When sacrifice events are committed
-(\citep[paper~8a]{lasser2026paper8a}), per-agent $\NSE(i, N)$ is not
+(\citep[Revealed~Sacrifice]{lasser2026paper8a}), per-agent $\NSE(i, N)$ is not
 recoverable.  The committed-mode fallback is a population-level
 proxy: $\NSE_{\mathrm{proxy}}(T)$ reports $\NAC(T)$ by need
 category and counts of below-sufficiency events.  Full $\NSE(T)$
@@ -744,7 +744,7 @@ partition}; $\NAC$ is an \emph{event aggregate}; $\NSE$ is a
 \emph{per-need state assessment}.  The two diagnostics cover
 complementary portions of the sacrifice event stream:
 S1-satisfying events (that also satisfy S0 and S2) enter the gap
-decomposition via the aggregate lower bound theorem~\citep[paper~8a]{lasser2026paper8a}; events
+decomposition via the aggregate lower bound theorem~\citep[Revealed~Sacrifice]{lasser2026paper8a}; events
 failing S1 due to below-sufficiency enter $\NAC$.  Events failing
 S1 for non-need reasons (coercion, duress) are excluded from
 both diagnostics and constitute an undiagnosed event-stream
