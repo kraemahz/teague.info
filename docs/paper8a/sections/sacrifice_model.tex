@@ -453,6 +453,57 @@ The cancellation of Lemma~\ref{lem:cancellation} runs over
 these closed sets.
 \end{remark}
 
+\begin{remark}[Bundle-for-bundle trades and mixed-polarity events]
+\label{rem:bundle_for_bundle}
+Definition~\ref{def:sacrifice_event} permits $X$ to be a
+benchmarked capability \emph{or} bundle, and $Y$ is always an
+unbenchmarked bundle, so bundle-for-bundle trades are
+formally supported: the genuine-exchange conditions
+(i)--(iv) and Lemma~\ref{lem:cancellation} operate on
+set-level $X$ and $Y$ regardless of whether either side is
+singleton.  When $X$ is a bundle, $\Delta\volL(X)$ is the
+benchmark function evaluated on the bundle as a single
+entity (typically via a transaction price or composite
+benchmark covering the bundle), inheriting whatever
+internal cooperative structure $X$ carries by the
+cooperative-closure conditions.
+
+A complication this paper does not formally resolve is the
+\emph{mixed-polarity} bundle-for-bundle case in which the
+same trade carries need-side and want-side polarities on
+different components of the surrendered bundle.  A canonical
+example: an agent who moves from one home to another
+surrenders a bundle of capabilities (location, neighborhood,
+school district, commute, etc.) and acquires a different
+bundle of the same capability dimensions.  Some dimensions are
+need-side (retention without shelter is degrading on the
+shelter dimension), others are want-side (the new home's
+kitchen is preferred but retention was non-degrading on that
+dimension).  Under the current architecture, S1 admits such a
+trade whenever \emph{any} non-degrading alternative existed
+(retention via refinancing, renting elsewhere, etc.), and the
+full $\Delta\volL(X)$ enters $\volRlower$ as want-side
+preference revelation.  This is conservative for $\volRlower$
+(it cannot inflate the lower bound) but loose for the
+companion paper's need-access cost
+diagnostic~\citep[Need~Sufficiency]{lasser2026paper8b}, which
+counts the entire $\Delta\volL(X)$ of a mixed event as
+need-access cost and so overstates true need-access cost when
+most of the bundle is want-side.
+
+The natural follow-up is an event-local bundle decomposition
+that splits $\Delta\volL(X)$ across the surrendered bundle's
+component capabilities with polarity tags, yielding a
+need-share and a want-share separately.  This extension is
+flagged as an open direction
+(Section~\ref{sec:discussion}) and is the operational form
+of the side-move-versus-upgrade disambiguation problem (a
+trade that is a side-move on most dimensions and an upgrade
+on one is currently indistinguishable on the ledger from a
+trade that is an upgrade on most dimensions and a side-move
+on one).
+\end{remark}
+
 \paragraph{Justification (revealed-preference inequality).}
 The transfer from the observed trade to the framework-level
 bound $\volRlower(Y) \geq \Delta\volL(X)$ proceeds in three

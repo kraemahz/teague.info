@@ -152,6 +152,35 @@ does one decompose a block of time spent on a complex activity
 physical care, relationship-building) into per-capability
 contributions?
 
+\item \label{oq:mixed_polarity}
+\textbf{Mixed-polarity bundle-for-bundle trades.}
+Bundle-for-bundle trades are formally supported by
+Definition~\ref{def:sacrifice_event} (cf.\
+Remark~\ref{rem:bundle_for_bundle}), but events whose
+surrendered and acquired bundles carry both need-side and
+want-side polarities on different components are handled only
+conservatively under the current architecture: the full
+$\Delta\volL(X)$ enters $\volRlower$ as want-side preference
+revelation, and the companion paper's need-access cost
+diagnostic~\citep[Need~Sufficiency]{lasser2026paper8b}
+counts the entire mixed-event magnitude as need-access cost.
+A canonical instance is residential relocation, where the
+agent surrenders a bundle of capabilities (location,
+neighborhood, school district, commute) and acquires a
+different bundle of the same dimensions, with shelter as the
+need-side baseline and the remaining dimensions ranging from
+side-move to upgrade.  From the trade ledger alone, a
+side-move-with-one-upgrade is currently indistinguishable
+from an upgrade-with-one-side-move; both register as the
+trade's full $\Delta\volL(X)$.  An event-local bundle
+decomposition with polarity tags
+(\citep[Need~Sufficiency]{lasser2026paper8b} flags this as the
+NAC-tightening direction) is the natural follow-up:
+$\Delta\volL(X) = \sum_c \alpha^{X}_{n,c} \cdot
+\Delta\volL_c(X)$ on the surrendered side with each
+$\alpha^{X}_{n,c}$ carrying a need-side / want-side polarity
+tag, yielding a need-share and a want-share separately.
+
 \item \label{oq:nonstationarity}
 \textbf{Non-stationarity of revealed preferences and trade-exercise
 temporal mismatch.}
