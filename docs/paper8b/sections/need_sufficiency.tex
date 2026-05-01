@@ -110,8 +110,8 @@ by treating the relaxed set as the admissible reference base.  Let
 $\Pi_N^{\mathrm{ref}} \subseteq \Pi_N^0$ be a non-empty
 \emph{admissible reference set}, designated externally by
 governance (Remark~\ref{rem:reference_pathway}): the
-threshold-level pathways against which downstream non-degradation
-is evaluated.  Need $N$ at position $p_N$ is
+threshold-level pathways against which downstream
+non-degradation is evaluated.  Need $N$ at position $p_N$ is
 \emph{downstream-safe sufficient} under satisfaction pathway
 $\pi_N$ iff:
 \begin{enumerate}
@@ -123,10 +123,9 @@ $\pi_N$ iff:
   $\mathrm{quality}_c : \Pi_N^0 \cup
   \{\pi_N\} \to \mathbb{R}$ be a domain-supplied scalar quality
   function on satisfaction pathways, providing a total order on
-  pathways relative to capability~$c$ (e.g., for medical care
-  domain, the standard-of-care quality function defined on the
-  bundle-of-care pathways; for water access,
-  the contamination-adjusted access function).  The framework
+  pathways relative to capability~$c$ (e.g., for medical care,
+  the standard-of-care quality function on care bundles; for
+  water access, the contamination-adjusted access function).  The framework
   reads $\mathrm{quality}_c$ as a governance input, not a
   computed quantity; the choice of quality function is part of
   the institutional adjudication that
@@ -1006,9 +1005,9 @@ substantive protocol and calibration work.
 
 \paragraph{Scope of the follow-up.}
 The sequence provides substrate for parts of this construction:
-Paper~5's commitment protocol for timestamped claims, the
+The GFM commitment protocol for timestamped claims, the
 companion paper's sacrifice channel~\citep[Revealed~Sacrifice]{lasser2026paper8a}
-for partial use-evidence, Paper~6's controlled relaxation as an
+for partial use-evidence, and risk controlled relaxation as an
 adjudication pattern.  Substrate is not
 implementation: formalizing the canonicalization operator, the
 three proof-burden types with admissible evidence classes, the
