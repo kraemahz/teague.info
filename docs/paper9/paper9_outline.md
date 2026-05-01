@@ -49,8 +49,15 @@ A structural caveat that 8a's residual-class characterization makes
 unavoidable: ε_gap cannot in general be driven to zero. The residual class
 (capabilities structurally outside the sacrifice channel's reach) sets a
 non-zero floor on ε_gap in any deployment with non-empty residual
-capabilities. The fungibility-collapse limit (§2) is precisely the limit
-where the residual class is empty; real deployments operate above the floor.
+capabilities. This floor is *not* removed by fungibility collapse: the
+collapse simplifies the poset structure (single money axis, no cooperative
+capabilities, no individuation) but does not extend the observation
+channel's reach. Standard economics has the same channel-reach limit and
+has been contending with it informally under names like "shadow economy,"
+"household production," "non-market activity" (Stiglitz-Sen-Fitoussi 2009).
+GFM's residual class is the formal version of what economists have called
+"the parts GDP misses." Real deployments — under either framework —
+operate above this floor.
 
 ---
 
@@ -163,13 +170,24 @@ P_std are:
 2. **Cooperative capabilities** — first-class objects not reducible to sums
 3. **Anti-monopolar reasoning** — the γ* threshold with no utility-theory analogue
 4. **Individuation without interpersonal comparison** — vol_P over shared poset
-5. **Residual class** — capabilities structurally outside the sacrifice
-   channel's reach (purely-private exercise with no material footprint).
-   Standard economics has no notion of capability exercise that does not
-   pass through markets; everything happens through prices and trade. The
-   residual class of [Revealed Sacrifice] (Definition 12 of [Need
-   Sufficiency]) is non-trivial only when fungibility-collapse fails. Under
-   collapse, ResS = ∅ and the framework's measurement reach is total.
+5. **Formal recognition of the residual class.** Capabilities structurally
+   outside the sacrifice channel's reach (purely-private exercise, household
+   production, volunteer labor, subsistence, gift economies, dark markets)
+   are a real measurement gap *for any framework that derives observation
+   from trade events*, GFM and standard economics alike. Standard economics
+   contends with this informally — Stiglitz-Sen-Fitoussi 2009 documents at
+   length how GDP misses non-market production and quality-of-life
+   capabilities. What GFM adds is the formal identification of ResS as a
+   structural class with a definition (channel-reach criterion, [Need
+   Sufficiency] §5.1), a reserved cell in the gap decomposition
+   (δ_residual, [Need Sufficiency] §3), and an explicit governance question
+   (which capabilities admit "no sacrifice-observable path in principle").
+   The fungibility-collapse correspondence does *not* empty ResS — the
+   collapse simplifies poset structure (cooperative capabilities,
+   individuation, non-fungibility) but does not extend channel reach.
+   Standard economics' shadow-economy / non-market-activity gap and GFM's
+   residual class are the same structural object viewed from different
+   sides; the lineage in §5 makes this explicit.
 
 ---
 
@@ -280,9 +298,16 @@ lower bound (Theorem 2 of [Revealed Sacrifice]).
    δ_boundary is the structural-invisibility component, δ_residual is
    the residual-class floor.
 3. ε_gap inherits a non-zero floor in any deployment with non-empty ResS.
-   The fungibility-collapse limit of §2 is the limit where this floor is
-   zero; real deployments operate above it, and the floor's magnitude is
-   itself a property of the deployment's individuation discipline.
+   The fungibility-collapse limit of §2 drives the *non-residual*
+   component of ε_gap to zero — the proxy is exact on observed trades when
+   the poset is single-dimensional and fungible — but the residual-class
+   component persists under collapse. Standard economics has the same
+   floor, expressed informally as the shadow-economy / non-market-activity
+   gap that imputation methods (imputed rent, time-use surveys, satellite
+   accounts) only partially close. The floor's magnitude is a property of
+   the deployment's individuation discipline and observation infrastructure
+   (which capabilities admit channel-reach paths in principle), not of the
+   poset's structural complexity.
 
 ### Theorem (Goodhart for vol_P)
 
@@ -487,10 +512,32 @@ predictive bite Becker's framework lacks.
 
 The 2009 report's argument that GDP measures poorly capture welfare because
 they miss non-market production, quality-of-life capabilities, and
-distributional equity is vindicated by the GFM framing: GDP approximates a
-macro-level vol_P projection onto the fungible-money dimension, missing
-everything off that axis. GFM's multidimensional poset is the formal object
-the report was calling for.
+distributional equity is vindicated by the GFM framing in two senses, one
+about poset structure and one about channel reach.
+
+*Poset structure:* GDP approximates a macro-level vol_P projection onto the
+fungible-money dimension, missing everything off that axis. GFM's
+multidimensional poset (cooperative capabilities + non-fungible dimensions
++ individuation) is the formal object the report was calling for on the
+"capabilities the framework should be able to model" front.
+
+*Channel reach:* The non-market-production gap the report documents is the
+*same structural object* as 8b's residual class. Household production,
+volunteer labor, subsistence, gift economies, and shadow-market activity
+are capabilities exercised without producing trade events the observation
+channel can witness. SSF identifies this gap informally and argues for
+imputation methods (imputed rent, time-use surveys, satellite accounts) as
+partial mitigations. GFM's residual class is the formal version: a
+structural class with a channel-reach definition ([Need Sufficiency]
+Definition 12), a reserved cell in the gap decomposition (δ_residual),
+and an explicit acknowledgment that the floor it sets on ε_gap is shared
+between GFM and standard economics. Imputation methods translate, in GFM
+terms, to *re-individuation choices* that move capabilities from ResS into
+the observable subset (e.g., individuating "household labor" as a distinct
+capability with imputed-time pricing brings it into channel reach).
+Whether GFM's apparatus (cooperative caps, individuation discipline,
+downstream cone) gives sharper imputation tools than the standard methods
+is an empirical follow-up direction (OQ 7).
 
 ### Arrow's impossibility
 
@@ -608,13 +655,29 @@ Reproduce the well-known empirical success of money-maximisation models at
 the macro scale as a consequence of the correspondence theorem: when the
 capability space is effectively single-dimensional (fungible goods, liquid
 markets, representative agents), GFM reduces to standard economics, the
-residual class is empty (ResS = ∅), the gap decomposition collapses to
-δ_covered alone (no dormant, residual, restricted, or boundary cells),
-and ε_gap → 0 globally. The structural predictions of §3 vanish under
-collapse. The success of standard economics is the ε_gap → 0 limit on the
-fungible subdimension; its limitations are the regions where the limit
-fails (residual-class capabilities, cooperative structure, individuation
-asymmetries).
+gap decomposition's covered cell becomes the full observed subset (no
+cooperative cells, no individuation cells), and ε_gap → 0 *on the
+observed-and-non-residual subset*. The structural predictions of §3
+(cooperative capabilities, individuation, polarity boundary) vanish under
+collapse — they have nothing to predict on a flat fungible axis.
+
+What does *not* vanish under collapse: the residual class. Standard
+economics has the same channel-reach limit as GFM. Capabilities exercised
+without producing trade events (household production, volunteer labor,
+subsistence, gift economies, dark markets) remain in ResS even when the
+observed-trades poset is fully fungible. Standard economics' empirical
+success is on the observed-and-non-residual subset; the well-known
+limitations of GDP-based welfare measurement (the SSF report's central
+concern) are on the residual subset.
+
+This is a structurally satisfying reading of the success-and-limits of
+standard economics: it works precisely on the regime where (i) the
+observed poset is approximately fungible, (ii) the residual class is
+small enough to be neglected, and (iii) cooperative/individuation structure
+is operationally insignificant. Where any of these conditions fails — at
+micro scales, in non-market sectors, or in domains with strong cooperative
+dynamics — the standard model breaks down and GFM's added structure
+becomes load-bearing.
 
 ### 7.4 Residential relocation (mixed-polarity bundle-for-bundle)
 
@@ -718,16 +781,26 @@ produces better alignment.
    it is bounded, the corollary is restricted to direction (monotonicity).
    This is Paper 10's territory.
 
-7. **Residual-class floor on tightening.** The residual class ResS sets a
-   structural floor ε_gap^floor below which the gap cannot be driven by
-   any amount of observation. Characterizing what governs the floor
-   (individuation discipline, governance choices about what counts as
-   "purely-private exercise") and how a deployment can shrink ResS through
-   re-individuation is open. The fungibility-collapse correspondence shows
-   ε_gap^floor → 0 as the deployment moves toward the standard-economics
-   limit, but real-world deployments operate above the floor. This
-   open question is structurally distinct from OQ 6: OQ 6 asks how fast
-   we approach the floor; OQ 7 asks how low the floor goes.
+7. **Residual-class floor on tightening (shared with welfare economics).**
+   The residual class ResS sets a structural floor ε_gap^floor below which
+   the gap cannot be driven by any amount of observation. This floor is
+   *not unique to GFM*: it is the formal version of the same structural
+   measurement gap that standard welfare economics has navigated for
+   decades under names like "shadow economy," "household production,"
+   "non-market activity" (SSF 2009). Imputation methods (imputed rent,
+   time-use surveys, satellite accounts) are the existing partial answer
+   in welfare economics; in GFM terms, these are *re-individuation choices*
+   that move capabilities from ResS into the observable subset by
+   identifying them as distinct capabilities with imputed pricing.
+   Characterizing what governs the floor (individuation discipline,
+   governance choices about what counts as "purely-private exercise") and
+   whether GFM's apparatus (cooperative caps, individuation discipline,
+   downstream cone, polarity boundary) gives sharper imputation tools than
+   the standard methods is open. This open question is structurally
+   distinct from OQ 6: OQ 6 asks how fast we approach the floor (an
+   attestation-infrastructure question); OQ 7 asks how low the floor goes
+   (an individuation-and-imputation question, shared with welfare
+   economics).
 
 ---
 
@@ -799,3 +872,19 @@ the Sen/Nussbaum mapping; OQ 6 (quantitative rate, deferred to Paper 10).
 Tonal change: Corollary 1 reframed from "rate" to "direction"
 (monotonicity) since 8a's Propositions 2 and 3 prove direction, not rate.
 Citation conventions updated to bracket-name shorthand throughout.*
+
+*Revision 2026-05-01 (correction): the initial 2026-05-01 revision
+incorrectly claimed the fungibility-collapse limit empties the residual
+class. The collapse simplifies the *poset structure* (cooperative caps,
+non-fungibility, individuation) but does not extend the observation
+channel's reach. Standard economics has the same channel-reach limit, and
+ResS is the formal version of welfare economics' shadow-economy /
+non-market-activity gap that SSF 2009 documents. This correction
+strengthens the lineage claim (GFM formalizes a problem standard
+economics has navigated informally) and reframes OQ 7 as a problem shared
+with welfare economics, with imputation methods as the existing partial
+answer. Sites updated: thesis caveat, §2 bullet 5, §4 Definition 1
+remark 3, §5 SSF subsection (now substantially expanded), §7.3
+worked example, OQ 7. The δ_residual cell of [Need Sufficiency] is
+the formal counterpart to GDP's "non-market production gap"; the
+δ_residual quantity makes the gap explicit rather than an absence.*
