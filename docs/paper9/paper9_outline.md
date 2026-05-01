@@ -144,26 +144,56 @@ magnitude:
 
 ### Theorem (Correspondence)
 
-**Theorem 1 (Fungibility-Collapse Reduction).** An actor maximising vol_P on
-P_std with discount factor γ is observationally equivalent to an
-expected-utility-maximising agent with utility u(x) = x (linear utility over
-wealth) and discount factor γ.
+**Theorem 1 (Fungibility-Collapse Reduction, linear-utility special
+case).** An actor maximising vol_P on P_std with discount factor γ is
+observationally equivalent to an expected-utility-maximising agent with
+utility u(x) = x (linear utility over wealth, i.e., risk-neutral) and
+discount factor γ.
 
 *Proof approach.* Under fungibility collapse, vol_P reduces to the sum of
-individual capability weights (axiom M4 additivity with no cooperative terms).
-The sum of weights on a single-dimension purchasing-power axis is total
-wealth. Maximising total discounted wealth is the standard money-maximisation
-problem. The anti-monopolar property (Paper 3 Prop 6) becomes trivial on
-P_std (no diversity dimension to protect). All cooperative-capability terms
+individual capability weights (axiom M4 additivity with no cooperative
+terms). The sum of weights on a single-dimension purchasing-power axis is
+total wealth. Maximising total discounted wealth with weights w(d) = d is
+the linear money-maximisation problem with risk-neutrality. The
+anti-monopolar property ([Horizon Aware] Prop 6) becomes trivial on P_std
+(no diversity dimension to protect). All cooperative-capability terms
 vanish. QED.
+
+*Scope of Theorem 1 vs scope of "standard utility theory".*  Theorem 1
+covers the linear-utility / risk-neutral special case of standard
+economics. Recovering more of standard utility theory (concavity,
+risk-aversion, heterogeneous u(·) across agents) requires *additional*
+structure beyond fungibility collapse:
+- *Concave utility* corresponds to a re-weighting w'(d) = u(d) on the
+  single-dimensional axis; this is a recalibration of the benchmark
+  function rather than a new poset structure, and the GFM machinery on
+  the recalibrated axis remains observationally equivalent to
+  expected-utility maximization with that u(·).
+- *Risk-aversion* corresponds to additional structure on the discount
+  factor or the bundle's risk-distribution; this requires the
+  controlled-relaxation machinery of [Controlled Relaxation] composed
+  with the calibration chain.
+- *Heterogeneous utility across agents* corresponds to per-agent
+  benchmark calibrations w_i(d); the framework's individuation-without-
+  interpersonal-comparison stance ([Foundation], M5) makes this natural,
+  but the macro-aggregation across agents under heterogeneity is its
+  own analytical question (cf. SSF on aggregation).
+
+The full mapping between standard utility theory and GFM under
+fungibility collapse is therefore: Theorem 1 establishes the linear /
+risk-neutral / homogeneous case; recovering broader utility-theoretic
+content requires additional calibrations and is a small step beyond
+Theorem 1 rather than a new theorem.
 
 ### Interpretation
 
-Standard economics is GFM with all the interesting structure deleted. The
-correspondence is exact at the macro level (where markets are liquid and
-goods are approximately fungible); it breaks at the micro level (where
-non-fungibility, cooperative capabilities, and individuation are
-operationally significant). The five structural features GFM adds beyond
+Standard economics is GFM with the cooperative / individuation /
+non-fungibility structure deleted. The linear-utility case is exact at
+the macro level (where markets are liquid, goods are approximately
+fungible, and risk-neutrality is a reasonable approximation for
+representative-agent reasoning); it breaks at the micro level (where
+non-fungibility, cooperative capabilities, individuation, and risk
+heterogeneity are operationally significant). The five structural features GFM adds beyond
 P_std are:
 
 1. **Non-fungibility** — poset structure with distinct capability dimensions
@@ -198,6 +228,19 @@ P_std are:
 Identify classes of agent decisions where GFM makes predictions that utility
 theory does not (or where utility theory can only match GFM's prediction
 by adding ad hoc structure that is itself unfalsifiable).
+
+*Observability prerequisite.* The predictions below are testable in
+deployments with sufficient observation infrastructure to expose the
+relevant capability inventory and per-capability sacrifice attribution.
+[Revealed Sacrifice]'s default privacy discipline does *not* expose the
+agent's full capability inventory or per-capability cooperative gains;
+the predictions therefore live in deployments where consented-perimeter
+attestation, hedonic-disaggregation panels, or richer commitment
+schemes (e.g., per-event subset-membership openings, [Revealed Sacrifice]
+Remark on Part-B commitments) provide the additional observability.
+Predictions stated in the public-ledger-only regime require additional
+softening, which we note inline where it changes the prediction's
+operational form.
 
 **Prediction 1: Bundle-completion magnitude.** An agent purchasing a bundle
 Y whose cooperative capabilities complete a previously-missing region of
@@ -255,113 +298,209 @@ need-attestation data.
 
 ## 4. The Goodhart Theorem for Proxy-Instrumental Alignment
 
+### What "T" denotes (operational truth, not metaphysical preference)
+
+A clarifying note before the central claim. We use T as an *operational*
+truth measure, not as a metaphysical model of inner preference. The
+distinction matters because [Revealed Sacrifice] supplies a one-sided
+lower bound on *realized exercise contribution* (vol_R^[W]) under
+assumption S0, not a full true-preference model. The Goodhart machinery
+operates on operational T:
+
+- **Operational T (what this paper uses):** T(c) is the realized exercise
+  contribution of capability c over the trade window, vol_R^[W](c). This
+  is what [Revealed Sacrifice]'s aggregate lower bound (Theorem 2)
+  bounds from below via vol_R^lower. Operationally observable (with
+  attestation infrastructure).
+- **Metaphysical T (what we do not use):** the agent's "true inner
+  preference" considered as an abstract object. This is unobservable in
+  principle; the framework does not pretend to access it.
+
+The bridge from inner preference to operational T is assumption S0 of
+[Revealed Sacrifice]: the agent's valuation U_i(Y) does not exceed the
+window-active realized exercise contribution vol_R^[W](Y). S0 is
+empirically delicate (typical agents in typical markets do not pay more
+than what the capability delivers in exercise), and it is what makes
+"P correlates with T" operationally meaningful — given S0,
+revealed-sacrifice trades give a one-sided constraint relating proxy
+disagreement to realized-exercise truth. Without S0, the bridge collapses
+and this paper's Goodhart theorem reverts to a claim about "the proxy P
+versus whatever model anchors T," which is non-vacuous but loses its
+operational anchor.
+
+For the rest of §4, T = vol_R^[W] is the operational truth; ε_gap is
+relative deviation of P from this operational T; the alignment
+guarantees we discuss are guarantees on what the framework can witness
+under S0.
+
 ### The central claim
 
 This is the paper's novel formal contribution. The shape:
 
-> When the framework optimises a proxy P for true preferences T, and the
-> proxy is related to T only instrumentally (P correlates with T but does not
-> constitute it), the framework's alignment guarantees degrade proportionally
-> to the proxy-to-truth gap ε_gap = d(P, T) for an appropriate metric d.
-> Moreover, under optimisation pressure the gap *widens* as the optimiser's
-> capability increases: the more capable the optimiser, the more efficiently
-> it exploits the gap between P and T.
+> When the framework optimises a proxy P for the operational truth T
+> (= vol_R^[W] under [Revealed Sacrifice]'s S0), and the proxy is
+> related to T only instrumentally (P correlates with T but does not
+> constitute it), the framework's alignment guarantees degrade
+> proportionally to the proxy-to-truth gap ε_gap. Moreover, under
+> optimisation pressure regions of capability space where P-T diverge
+> become attractive directions for the optimiser to exploit, widening
+> the observed ε_gap at equilibrium.
 
 ### Definition (Proxy-to-truth gap)
 
-**Definition 1 (ε_gap).** For a capability measure P (the proxy) and a
-true-preference measure T (the anchor), define the proxy-to-truth gap as
+The proxy-to-truth gap has two structurally distinct components: a
+*disagreement* component on capabilities the proxy and the truth both
+have access to, and a *floor* component on capabilities the proxy cannot
+reach at all. We define each separately and combine them at the end.
 
-    ε_gap = sup_{k : c_k ∉ ResS}  | P(c_k) - T(c_k) | / T(c_k)
+**Definition 1a (ε_gap^nonres, proxy-truth disagreement on observed
+capabilities).** For a capability measure P (the proxy) and a
+true-preference measure T (the anchor), the disagreement gap on
+non-residual capabilities is
 
-over all capability dimensions k whose underlying capability c_k is not in
-the structural residual class ResS of [Need Sufficiency], Definition 12,
-and with T(c_k) > 0. This is the worst-case relative deviation of the
-proxy from the truth on capabilities the sacrifice channel can in principle
-reach. The residual class is excluded from the sup not because it is
-proxy-aligned but because the proxy's measurement scope structurally
-excludes it; capabilities in ResS contribute neither to the proxy's
-disagreement budget nor to its alignment guarantee. Under the
-revealed-sacrifice channel of [Revealed Sacrifice], T(c_k) is
+    ε_gap^nonres = sup_{k : c_k ∉ ResS}  | P(c_k) - T(c_k) | / T(c_k)
+
+over all capability dimensions k whose underlying capability c_k is not
+in the structural residual class ResS of [Need Sufficiency], Definition
+12, and with T(c_k) > 0. This is the worst-case relative deviation of
+the proxy from the truth on capabilities the sacrifice channel can in
+principle reach.
+
+**Definition 1b (ε_floor^res, residual-class floor).** Capabilities in
+ResS are structurally outside the proxy's measurement scope. They
+contribute a *floor* component to the alignment slack that no amount of
+within-channel observation can shrink. Define
+
+    ε_floor^res = (vol_R(ResS)) / (vol_R(P))
+
+— the share of true exercise the proxy structurally cannot witness. This
+is bounded above (under the residual-class characterization of [Need
+Sufficiency], Proposition 8) by deployment-specific individuation choices
+about which capabilities admit "no sacrifice-observable path in
+principle."
+
+**Definition 1c (ε_gap, total alignment slack).**
+
+    ε_gap = ε_gap^nonres + λ · ε_floor^res
+
+where λ ∈ [0, 1] weights the residual-class floor's contribution to
+alignment slack relative to the within-channel disagreement. λ = 0
+corresponds to the framework's "we make alignment guarantees only on
+what the channel can witness" stance; λ = 1 treats unobservable
+capability mass as fully contributing to misalignment.  The paper's main
+results (§4 Theorem 2) are stated for ε_gap^nonres; ε_floor^res sets a
+deployment-dependent ceiling on how tight the alignment guarantees can
+in principle become regardless of attestation infrastructure.
+
+Under the revealed-sacrifice channel of [Revealed Sacrifice], T(c_k) is
 operationalised as vol_R^[W](c_k), with vol_R^lower as a constructible
-lower bound (Theorem 2 of [Revealed Sacrifice]).
+lower bound (Theorem 2 of [Revealed Sacrifice]).  See §6 for the
+distinction between T as inner preference vs T as operational realized
+exercise, and the bridging assumption that lets the latter substitute
+for the former in the Goodhart machinery.
 
 *Remarks.*
-1. The sup-norm means a single badly-proxied dimension controls the gap.
-   This is conservative but correct for alignment: one dimension where the
-   proxy is misleading is sufficient to produce a misaligned decision.
-2. ε_gap is bounded above by (1 − β^lower)/β^lower on the
-   observed-and-non-residual subset, giving a *measurable* ceiling from
-   trade data. The 5-cell δ-decomposition of [Need Sufficiency] (Definition 8)
-   further attributes the ceiling across cells: δ_covered is the
-   proxy-failure-candidate component, δ_dormant + δ_restricted +
-   δ_boundary is the structural-invisibility component, δ_residual is
-   the residual-class floor.
-3. ε_gap inherits a non-zero floor in any deployment with non-empty ResS.
-   The fungibility-collapse limit of §2 drives the *non-residual*
-   component of ε_gap to zero — the proxy is exact on observed trades when
-   the poset is single-dimensional and fungible — but the residual-class
-   component persists under collapse. Standard economics has the same
+1. The sup-norm in 1a means a single badly-proxied dimension controls
+   the disagreement gap. This is conservative but correct for alignment:
+   one dimension where the proxy is misleading is sufficient to produce a
+   misaligned decision.
+2. ε_gap^nonres admits an *aggregate* upper estimate from trade data via
+   (1 − β^lower)/β^lower (Theorem 2 of [Revealed Sacrifice] gives β^lower
+   as an aggregate-level slack ratio, not a per-dimension bound). The
+   aggregate ratio bounds ε_gap^nonres from above only if per-capability
+   lower-ratio assumptions hold; without them, β^lower bounds an
+   *aggregate* version of ε_gap^nonres. We use β^lower as a tractable
+   diagnostic ceiling rather than as the sup-norm itself.
+3. The 5-cell δ-decomposition of [Need Sufficiency] (Definition 8)
+   attributes the diagnostic-ceiling across cells: δ_covered is the
+   within-channel proxy-failure-candidate component (contributing to
+   ε_gap^nonres), δ_dormant + δ_restricted + δ_boundary are
+   structural-invisibility components on capabilities the channel could
+   reach but hasn't, and δ_residual is the ε_floor^res component.
+4. ε_floor^res is non-zero in any deployment with non-empty ResS. The
+   fungibility-collapse limit of §2 drives ε_gap^nonres on the observed
+   subset to zero (the proxy is exact when the poset is fungible) but
+   does *not* drive ε_floor^res to zero. Standard economics has the same
    floor, expressed informally as the shadow-economy / non-market-activity
    gap that imputation methods (imputed rent, time-use surveys, satellite
-   accounts) only partially close. The floor's magnitude is a property of
-   the deployment's individuation discipline and observation infrastructure
-   (which capabilities admit channel-reach paths in principle), not of the
-   poset's structural complexity.
+   accounts) only partially close.
 
 ### Theorem (Goodhart for vol_P)
 
-**Theorem 2 (Goodhart).** Under vol_P-maximisation with proxy-to-truth gap
-ε_gap > 0:
+**Theorem 2 (Goodhart, qualitative form).** Under vol_P-maximisation with
+proxy-to-truth disagreement gap ε_gap^nonres > 0:
 
-(a) **Gap-proportional degradation.** For each alignment property in the
-sequence (anti-monopolar threshold, phase-boundary location, convergence
-rate, damage bound, aggregate lower bound's slack), the guarantee under the
-true preferences T is the guarantee under the proxy P minus a correction
-term that is O(ε_gap). The correction is:
+(a) **Gap-proportional degradation (conditional Lipschitz transfer).**
+Each alignment property g(·) in the sequence is a function of the proxy P;
+under the true preferences T the property's value is g(T). When g is
+Lipschitz-continuous over the relevant capability subspace with property-
+specific Lipschitz constant Lip(g), the difference satisfies
 
-- Anti-monopolar: |γ*_true - γ*_proxy| ≤ C_γ · ε_gap
-- Phase boundary: the self-correcting basin under T contains the basin under
-  P minus a boundary layer of width O(ε_gap)
-- Convergence rate: the KL rate under T is the rate under P ± O(ε_gap) (the
-  sign depends on whether the proxy overestimates or underestimates the risk)
-- Damage bound: the true-preference damage during a CR test is the
-  vol_P-damage ± ε_gap · max_contraction(S)
-- Aggregate lower bound slack: β^lower from [Revealed Sacrifice] approaches
-  the true β as ε_gap → ε_gap^floor, with the per-property Lipschitz factor
-  decomposing into S0 attestation slack, Part-A vs Part-B aggregation, and
-  observation density. This is the most direct connection between Goodhart
-  and the measurement theorem: 8a's lower bound is itself a property whose
-  tightness is governed by the ε_gap.
+    | g(T) - g(P) | ≤ Lip(g) · ε_gap^nonres
 
-(b) **Optimisation pressure widens the gap (Goodhart divergence).** Under
-vol_P-maximisation by an agent with capability measure C (a proxy for
-optimisation power), the observed ε_gap at equilibrium satisfies
+so the alignment property under the truth deviates from the property under
+the proxy by O(ε_gap^nonres). Establishing Lip(g) per-property requires
+property-specific perturbation analysis. This paper states the conditional
+Lipschitz-transfer result and indicates the candidate alignment properties
+(anti-monopolar threshold, phase-boundary location, convergence rate,
+damage bound, aggregate lower bound's slack) as the *roadmap* for the
+follow-up; the per-property constants and comparison theorems are Paper
+10's territory.
 
-    ε_gap(C) ≥ ε_gap(0) · f(C)
+*Examples (deferred for full proof to Paper 10):*
 
-where f(C) is increasing in C and f(0) = 1. The more capable the optimiser,
-the wider the gap at equilibrium, because more capable agents more
-efficiently exploit the proxy-truth divergence in their favour.
+- *Anti-monopolar:* expected to satisfy |γ*_true − γ*_proxy| ≤ C_γ ·
+  ε_gap^nonres for an appropriate C_γ derived from the
+  anti-monopolar-property's structure.
+- *Phase boundary:* the self-correcting basin under T expected to differ
+  from the basin under P by a boundary layer of width O(ε_gap^nonres).
+- *Convergence rate:* the KL rate under T expected to differ from the
+  rate under P by O(ε_gap^nonres), sign deployment-dependent.
+- *Damage bound:* the true-preference damage expected to differ from the
+  vol_P-damage by O(ε_gap^nonres · max_contraction(S)).
+- *Aggregate lower bound slack:* β^lower from [Revealed Sacrifice]
+  expected to approach the true β as ε_gap^nonres shrinks; the per-property
+  factor decomposes into S0 attestation slack, Part-A vs Part-B aggregation,
+  and observation density. This is the most direct connection between
+  Goodhart and the measurement theorem.
 
-*Intuition for (b):* An optimiser that can only make small local moves finds
-the proxy and truth mostly agree (the proxy is a good local approximation).
-An optimiser that can make large moves finds regions of the capability space
-where the proxy and truth diverge — and it moves there, because those are
-the regions where P-maximisation is cheapest relative to T. This is the
-standard Goodhart mechanism, stated for capability-space structure rather
-than for scalar reward.
+The per-example Lipschitz constants are not established by Paper 9's
+machinery and are listed only to indicate where the conditional transfer
+result lands. Paper 10's perturbation analysis closes each per-property
+bound.
 
-*Empirical witness for (b):* The wireheading-consistent HHI of [Need
-Sufficiency] (Proposition 6) is a concrete instrument for the
-optimization-pressure → gap-widening claim. As an optimiser's capability
-grows and it begins exploiting proxy-truth divergence regions, the trade-flow
-distribution concentrates on a narrower set of bundle categories — exactly
-the signature the HHI detects. Part (b)'s qualitative claim is empirically
-operationalized by the third-party-observable HHI variant (Proposition 7 of
-8b), which reads concentration directly from the public committed-event
-ledger plus S1-admissibility labels. f(C) is hard to characterize
-analytically but has empirical-witness backing through this instrument.
+(b) **Optimisation pressure correlates with gap-exploitation
+(qualitative).** Under vol_P-maximisation by an agent with capability
+measure C, regions of capability space where P and T diverge are
+*available* directions for the optimiser to move into; cheaper P-gain
+per unit T-loss makes these regions attractive relative to regions where
+P and T agree. The qualitative shape of the claim:
+
+> More capable optimisers, with greater reach across capability space,
+> have access to a larger set of P-T-divergence regions; an optimiser
+> that exploits any of them widens the observed ε_gap^nonres at
+> equilibrium beyond what a less-reaching optimiser produces.
+
+This is the standard Goodhart mechanism stated for capability-space
+structure rather than scalar reward. A precise formulation (a function
+f(C) such that ε_gap(C) ≥ f(C) · ε_gap(0) at equilibrium) is
+optimiser-architecture-dependent and is not established at the generality
+of Theorem 2; Paper 9 states the qualitative direction and identifies
+specific optimiser models as future-work bounds (OQ 3).
+
+*Empirical witness — concentration consistency, not causal proof.* The
+wireheading-consistent HHI of [Need Sufficiency] (Propositions 6, 7) is
+a *concentration-consistent-with* instrument for the
+optimization-pressure → gap-exploitation claim, not a theorem-derived
+separator or causal-inference proof. Trade-flow concentration in a
+narrow set of bundle categories is a signature *consistent with* an
+optimiser exploiting P-T divergence, but other mechanisms also produce
+concentration (market consolidation, demand shocks, supply-side
+limitations). The HHI is a deployment-readable indicator that warrants
+further investigation when crossed; it does not by itself establish that
+optimization pressure is the cause. As [Need Sufficiency]'s Definition 11
+explicitly states: "wireheading-consistent" is the right operational
+phrasing.
 
 ### Proof approach
 
@@ -521,23 +660,47 @@ multidimensional poset (cooperative capabilities + non-fungible dimensions
 + individuation) is the formal object the report was calling for on the
 "capabilities the framework should be able to model" front.
 
-*Channel reach:* The non-market-production gap the report documents is the
-*same structural object* as 8b's residual class. Household production,
-volunteer labor, subsistence, gift economies, and shadow-market activity
-are capabilities exercised without producing trade events the observation
-channel can witness. SSF identifies this gap informally and argues for
-imputation methods (imputed rent, time-use surveys, satellite accounts) as
-partial mitigations. GFM's residual class is the formal version: a
-structural class with a channel-reach definition ([Need Sufficiency]
-Definition 12), a reserved cell in the gap decomposition (δ_residual),
-and an explicit acknowledgment that the floor it sets on ε_gap is shared
-between GFM and standard economics. Imputation methods translate, in GFM
-terms, to *re-individuation choices* that move capabilities from ResS into
-the observable subset (e.g., individuating "household labor" as a distinct
-capability with imputed-time pricing brings it into channel reach).
-Whether GFM's apparatus (cooperative caps, individuation discipline,
-downstream cone) gives sharper imputation tools than the standard methods
-is an empirical follow-up direction (OQ 7).
+*Channel reach (with care).* The non-market-production gap the SSF
+report documents is *related to* but *broader than* 8b's residual class
+ResS. Specifically:
+
+- **ResS** is conservative and small. [Need Sufficiency]'s residual-class
+  definition (Definition 12, Remark on conservatism) requires that *no*
+  plausible sacrifice path exists in principle for the capability —
+  household production and volunteer labor typically have *time-sacrifice
+  traces* (foregone wage hours, time-use survey data) and so usually
+  fall *outside* ResS. Only capabilities with no material *and* no
+  time-displacement footprint (purely passive contemplation, baseline
+  interoceptive self-awareness exercised concurrently with all other
+  activity) are residual under the strict reading.
+- **SSF's gap** is broader. It includes: ResS (capabilities the channel
+  cannot reach); δ_dormant (capabilities the channel could reach but
+  hasn't yet — under-observation); attestation-limited capabilities
+  (trades the channel can witness but the institutional layer hasn't
+  attested under S0/S1/S4 — cf. [Revealed Sacrifice] Remark 18); and
+  imputation-limited capabilities (trades that need imputed pricing
+  because no direct market exists — household labor at imputed wage,
+  imputed rent for owner-occupied housing). The first three are
+  formally separate cells in [Need Sufficiency]'s gap decomposition
+  (δ_residual, δ_dormant, the attestation contributions to δ_covered);
+  the imputation case sits between channel-reach and individuation
+  discipline and is the most directly addressable by re-individuation
+  choices.
+
+The lineage claim is therefore: GFM's gap-decomposition apparatus gives
+*more* structure than SSF's informal "non-market-production" lump —
+the SSF gap can be decomposed into ResS proper plus several distinct
+within-channel-but-unwitnessed contributions, each addressable by
+different deployment moves. Imputation methods translate, in GFM
+terms, to *re-individuation choices* that move capabilities from
+imputation-limited status (or in the extreme case, from ResS itself)
+into the observable-and-attested subset (e.g., individuating "household
+labor" as a distinct capability with imputed-time pricing brings it
+into channel reach via the time-sacrifice channel of [Revealed
+Sacrifice]). Whether GFM's apparatus (cooperative caps, individuation
+discipline, downstream cone) gives sharper imputation tools than the
+standard methods, or sharper attribution between ResS-proper vs the
+broader SSF-gap categories, is an empirical follow-up direction (OQ 7).
 
 ### Arrow's impossibility
 
@@ -782,25 +945,49 @@ produces better alignment.
    This is Paper 10's territory.
 
 7. **Residual-class floor on tightening (shared with welfare economics).**
-   The residual class ResS sets a structural floor ε_gap^floor below which
-   the gap cannot be driven by any amount of observation. This floor is
-   *not unique to GFM*: it is the formal version of the same structural
-   measurement gap that standard welfare economics has navigated for
-   decades under names like "shadow economy," "household production,"
-   "non-market activity" (SSF 2009). Imputation methods (imputed rent,
-   time-use surveys, satellite accounts) are the existing partial answer
-   in welfare economics; in GFM terms, these are *re-individuation choices*
-   that move capabilities from ResS into the observable subset by
-   identifying them as distinct capabilities with imputed pricing.
-   Characterizing what governs the floor (individuation discipline,
-   governance choices about what counts as "purely-private exercise") and
-   whether GFM's apparatus (cooperative caps, individuation discipline,
-   downstream cone, polarity boundary) gives sharper imputation tools than
-   the standard methods is open. This open question is structurally
-   distinct from OQ 6: OQ 6 asks how fast we approach the floor (an
-   attestation-infrastructure question); OQ 7 asks how low the floor goes
-   (an individuation-and-imputation question, shared with welfare
-   economics).
+   The residual class ResS sets a structural floor ε_floor^res below which
+   the within-channel gap component cannot be driven by any amount of
+   observation. This floor is *not unique to GFM*: it is the formal
+   version of the same structural measurement gap that standard welfare
+   economics has navigated for decades under names like "shadow economy,"
+   "household production," "non-market activity" (SSF 2009). Imputation
+   methods (imputed rent, time-use surveys, satellite accounts) are the
+   existing partial answer in welfare economics; in GFM terms, these are
+   *re-individuation choices* that move capabilities from ResS into the
+   observable subset by identifying them as distinct capabilities with
+   imputed pricing.  Characterizing what governs the floor (individuation
+   discipline, governance choices about what counts as "purely-private
+   exercise") and whether GFM's apparatus (cooperative caps, individuation
+   discipline, downstream cone, polarity boundary) gives sharper
+   imputation tools than the standard methods is open. This open question
+   is structurally distinct from OQ 6: OQ 6 asks how fast we approach the
+   floor (an attestation-infrastructure question); OQ 7 asks how low the
+   floor goes (an individuation-and-imputation question, shared with
+   welfare economics).
+
+8. **Adversarial degradation of attestation under optimization
+   pressure.** [Revealed Sacrifice]'s S0 (calibration), S1 (free choice),
+   and S4(a) (valuation additivity) are not ZK-verifiable under the
+   default commitment ([Revealed Sacrifice], Remark 17 on external
+   attestation): they require institutional attestation. Paper 9's
+   tightening claim (Theorem 2 + Corollary 1) depends on attestation
+   *quality* — the framework can drive ε_gap^nonres downward only when
+   the attestation layer reliably classifies events under S0/S1/S4(a).
+   But the same optimization pressure that widens P-T divergence regions
+   (Theorem 2(b)) also incentivizes adversarial degradation of the
+   attestation layer itself: a sufficiently capable optimizer that finds
+   P-T divergence cheaper to exploit than P-truth alignment will *also*
+   find attestation manipulation cheaper than honest attestation, given
+   any institutional layer that admits adversarial pressure. Bounding
+   the attestation layer's adversarial robustness — sybil resistance,
+   collusion resistance, dispute-resolution adequacy under
+   optimizer-controlled inputs — is essential to the operational
+   substance of Corollary 1. This is the natural follow-up to [Revealed
+   Sacrifice]'s scope-and-follow-up note (the attestation-protocol
+   formalization paper) but with the Goodhart-theorem framing: how does
+   attestation quality scale under adversarial pressure, and what
+   incentive-compatibility properties does the layer need to deliver
+   reliable ε_gap^nonres reduction in the optimizer-pressure regime?
 
 ---
 
@@ -888,3 +1075,34 @@ remark 3, §5 SSF subsection (now substantially expanded), §7.3
 worked example, OQ 7. The δ_residual cell of [Need Sufficiency] is
 the formal counterpart to GDP's "non-market production gap"; the
 δ_residual quantity makes the gap explicit rather than an absence.*
+
+*Revision 2026-05-01 (cold review): codex outline review surfaced 6 P1
++ 3 P2 findings, all targeting load-bearing-claim hygiene. Applied:
+(P1.1) split ε_gap into ε_gap^nonres (within-channel disagreement)
+and ε_floor^res (residual-class floor) with a combined definition,
+resolving the contradiction where ε_gap excluded ResS yet had a
+residual-class floor; (P1.2) downgraded (1−β^lower)/β^lower from
+sup-norm bound to aggregate-slack diagnostic ceiling, since
+[Revealed Sacrifice]'s β is aggregate-level, not per-dimension;
+(P1.3) reframed Theorem 2(a) as a conditional Lipschitz-transfer
+result (per-property Lipschitz constants are Paper 10 territory), with
+the listed property bounds presented as roadmap-not-theorem;
+(P1.4) softened Theorem 2(b)'s f(C) to a qualitative-direction claim;
+HHI is "concentration consistent with" rather than causal-proof of
+optimization-pressure widening; (P1.5) restricted Theorem 1 to the
+linear-utility / risk-neutral special case, with explicit notes on
+what additional structure recovers concavity / risk-aversion /
+heterogeneous utility; (P1.6) added §4 opener disambiguating T as
+operational truth (vol_R^[W] under S0) vs metaphysical inner
+preference, with the S0-bridging assumption made explicit;
+(P2.1) softened §5 SSF subsection: SSF's gap is broader than ResS,
+including δ_dormant + attestation-limited + imputation-limited
+contributions in addition to ResS proper; (P2.2) added §3 observability
+prerequisite note, scoping the structural predictions to deployments
+with adequate observation infrastructure beyond the public-ledger
+default; (P2.3) added OQ 8 on adversarial degradation of S0/S1/S4
+attestation under optimization pressure — Theorem 2(b)'s natural
+counterpart on the attestation side. The eight-section structure and
+overall thesis are unchanged; the revision is a precision pass on
+load-bearing claims so the outline accurately reflects what 8a/8b
+deliver vs what Paper 10 must close.*
