@@ -156,12 +156,27 @@ Remark~\ref{rem:hhi_alarm_governance}.
 \begin{proposition}[Third-Party Observability of the
 Concentration Signal (Part~A)]
 \label{prop:third_party_wireheading}
-When the total observed sacrifice magnitude
-$\sum_n \Delta\volL(X_n) > 0$, the Part~A \emph{category-flow}
-concentration statistic $\widetilde\HHI$ is computable from
+Restrict attention to events that have been labelled
+S1-admissible by the institutional attestation layer (the
+ones that pass below-sufficiency filtering and the other S1
+hypotheses; the unfiltered public ledger may contain events
+that fail S1, and including those would let
+need-driven cost-of-access spending drive the concentration
+statistic, conflating wireheading with poverty).  When the
+total \emph{S1-admissible} sacrifice magnitude
+$\sum_{n :\, n \text{ S1-admissible}} \Delta\volL(X_n) > 0$,
+the Part~A \emph{category-flow} concentration statistic
+$\widetilde\HHI$ is computable from
 public trade data (committed sacrifice events,
-the committed event definition~\citep{lasser2026paper8a}) without access to any
-agent's private state.  The Part~A statistic is built on the
+the committed event definition~\citep{lasser2026paper8a})
+restricted to S1-admissible events, without access to any
+agent's private state beyond the admissibility label itself
+(which is a public attestation, not interior state).
+\emph{Without} the S1-admissibility filter, $\widetilde\HHI$
+remains computable but loses its wireheading-consistent
+reading: a high HHI on the unfiltered ledger could reflect
+concentrated need-driven below-sufficiency sacrifice rather
+than narrow want-pursuit loops.  The Part~A statistic is built on the
 \emph{aggregate sacrifice mass} $\Delta\volL(X_n)$, not on the
 Part~B per-capability leverage $\volRlower(C_j, T)$ of
 Definition~\ref{def:trade_leverage}; the two coincide only when
@@ -191,13 +206,22 @@ $\HHI$.  Specifically, define
 for the trade window $T$ (with $\widetilde\HHI$ correspondingly
 suppressed when $\tilde\lambda_{\mathrm{trade}}$ is undefined).
 A third-party auditor with access only to the committed
-sacrifice ledger can compute $\widetilde\HHI$ whenever the
-window contains positive-magnitude events and raise the Part~A
-category-flow alarm (wireheading-consistent in the sense of
+sacrifice ledger \emph{plus the admissibility-label
+attestations} (which are public attestation outputs, not the
+agent's interior state) can compute $\widetilde\HHI$ whenever
+the window contains positive-magnitude S1-admissible events
+and raise the Part~A category-flow alarm
+(wireheading-consistent in the sense of
 Proposition~\ref{prop:wireheading_hhi}, with
 $\tilde\lambda_{\mathrm{trade}}$ substituted for
 $\lambda_{\mathrm{trade}}$; not a wireheading determination on
-its own).  When the window has zero total sacrifice flow, the
+its own).  ``Third-party observable'' here means the auditor
+can compute the statistic from public inputs; it does
+\emph{not} mean the statistic is self-verifying---the
+admissibility labels remain external attestations whose
+correctness is the responsibility of the attestation layer
+(Remark of the companion paper's external-attestation model
+in~\citep{lasser2026paper8a}).  When the window has zero total sacrifice flow, the
 diagnostic is suppressed (the relevant signal in that regime is
 the gap decomposition, \S\ref{sec:gap_decomposition}, matching
 the parallel suppression rule of

@@ -369,8 +369,17 @@ implies restricting capabilities subsumed by it in cost-aligned
 posets).
 \end{remark}
 
-\begin{proposition}[Computability of Gap Decomposition]
+\begin{proposition}[Computability of Gap Decomposition,
+given precomputed governance inputs]
 \label{prop:gap_computable}
+The complexity bound below is for the
+\emph{cell-classification step alone}, given precomputed
+governance inputs as listed.  Producing those inputs
+(admissibility labels via institutional attestation,
+residual classification by domain-expert review,
+governance-set restriction set $\Xi$ and sufficiency
+thresholds) is itself a non-trivial pipeline whose cost is
+not part of this complexity claim.
 Given
 (i)~the aggregate sacrifice data (events in $[T - H, T]$),
 (ii)~the restriction set $\Xi$,

@@ -41,12 +41,16 @@ For each capability $d \in O$, define:
 \[
   e_t(d) = \begin{cases}
   1 & \text{if there exists a realized cooperative output in
-    $[t - \Delta, t]$} \\
+    $[t - \Delta, t] \cap W$} \\
     & \text{such that removing $d$ from $O$ makes the output
       unrealizable,} \\
   0 & \text{otherwise.}
   \end{cases}
 \]
+The lookback is clipped to the window $W$: for $t$ near the
+left endpoint $t_0$ of $W$, the lookback interval is
+$[\max(t_0, t - \Delta), t]$, so realized outputs strictly
+before $W$ do not contribute to $\volR^{[W]}$.
 The indicator is scoped to the observation perimeter $O$.  The
 framework may use $e_t(d)$ for internal diagnostics within $O$,
 but may \emph{not} apply it to capabilities outside $O$ (where

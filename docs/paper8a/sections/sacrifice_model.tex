@@ -499,11 +499,15 @@ of~\citep[Definition~6]{lasser2026exo}:
   continuous stream is emitted between events.  (This is an
   emission-rate bound, not a Shannon-information-rate bound; the
   per-event payload tuple $(i, X, Y, t)$ has finite information
-  content under the framework's standing assumption that the
-  capability poset $P$ and category alphabet $\mathcal{C}$ are
-  finite at evaluation time, but ``finite'' is not bounded
-  uniformly across deployments---larger $P$ or $\mathcal{C}$
-  produces larger per-event payloads.)
+  content under three standing assumptions: the capability
+  poset $P$ and category alphabet $\mathcal{C}$ are finite at
+  evaluation time, the agent universe is finite, and timestamps
+  are recorded at a public bounded precision (i.e., $t$ takes
+  values on a finite discretization grid spanning the trade
+  window).  Under all three, ``finite'' is bounded by the
+  per-event payload size; absent any one---e.g., real-valued
+  timestamps with unbounded precision---the per-event payload
+  is not bounded uniformly.)
 
 \item[\textbf{(P4)}] \textbf{Commitment-layer composability.}
   The commitment protocol

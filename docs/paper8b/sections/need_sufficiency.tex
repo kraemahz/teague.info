@@ -94,7 +94,13 @@ parameters; the paper does not legislate specific values.
 \label{def:downstream_safe}
 Let $\Pi_N^0 = \{\pi : d_k(\pi) = s_k \text{ for all } k\}$ be
 the class of pathways satisfying each dimension of~$N$ at exactly
-its sufficiency threshold (assumed non-empty).  Let
+its sufficiency threshold (assumed non-empty by governance
+realizability hygiene; in discrete-valued domains where exact
+threshold-achievement may be infeasible, $\Pi_N^0$ should be
+relaxed to $\{\pi : d_k(\pi) \geq s_k \text{ and within a
+domain-set tolerance}\}$, with the framework's downstream
+arguments preserved by treating the relaxed set as the
+admissible reference base).  Let
 $\Pi_N^{\mathrm{ref}} \subseteq \Pi_N^0$ be a non-empty
 \emph{admissible reference set}, designated externally by
 governance (Remark~\ref{rem:reference_pathway}): the
@@ -236,7 +242,7 @@ choice-set hypothesis stated below:
   determined by sufficiency status alone.  S1 can still hold
   via the third alternative; classification requires
   institutional review (Proposition~\ref{prop:s1_sufficiency}
-  and its Remark).
+  and Remark~\ref{rem:s1_above}).
 \end{itemize}
 The sufficiency threshold is where the need-insufficiency
 failure mode of Assumption~S1
@@ -421,20 +427,26 @@ If the agent is at sufficiency level $s_N < 1$:
 \]
 
 \medskip\noindent
-\textbf{Collapse limits.}
-As $s_N \to 0$, $g(s_N) \to \alpha_0$ by right-continuity:
+\textbf{Collapse limits (upper-bound form).}
+As $s_N \to 0$, $g(s_N) \to \alpha_0$ by the floor condition.
+The proposition's upper bound becomes:
 \begin{itemize}
-\item \emph{Zero-floor gate} ($\alpha_0 = 0$): the downstream
-  contribution vanishes, $\volL^{\mathrm{eff}} \to
-  W_{\mathrm{out}}$.  When $W_{\mathrm{down}} \gg
-  W_{\mathrm{out}}$, the effective volume collapses to a small
-  fraction of its unrestricted value.
-\item \emph{Positive-floor gate} ($\alpha_0 > 0$): the
-  downstream contribution collapses to its floor,
-  $\volL^{\mathrm{eff}} \to \alpha_0 W_{\mathrm{down}} +
-  W_{\mathrm{out}}$.  The effective volume retains a positive
-  fraction $\alpha_0$ of downstream weight even under fully
-  unmet need.
+\item \emph{Zero-floor gate} ($\alpha_0 = 0$): the upper bound
+  on the downstream contribution vanishes,
+  $\volL^{\mathrm{eff}} \leq W_{\mathrm{out}}$ in the limit.
+  When $W_{\mathrm{down}} \gg W_{\mathrm{out}}$, the upper
+  bound on effective volume falls to a small fraction of the
+  unrestricted value (and the actual effective volume is at
+  most this).
+\item \emph{Positive-floor gate} ($\alpha_0 > 0$): the upper
+  bound on downstream contribution falls to
+  $\volL^{\mathrm{eff}} \leq \alpha_0 W_{\mathrm{down}} +
+  W_{\mathrm{out}}$.  The effective volume retains \emph{at
+  most} a fraction $\alpha_0$ of downstream weight even under
+  fully unmet need; equality with $\alpha_0 W_{\mathrm{down}} +
+  W_{\mathrm{out}}$ requires all other gates evaluating to $1$
+  (otherwise the additional gate factors push the actual
+  effective volume strictly below the upper bound).
 \end{itemize}
 
 \medskip\noindent
@@ -656,8 +668,11 @@ sacrifice event $(i, X_n, Y_n, t_n)$ when both:
 \item[(H2)] no alternative in $\mathcal{A}_i$ other than the
   trade itself is non-degrading on every need dimension; that
   is, for every $a \in \mathcal{A}_i \setminus \{(\text{the
-  trade})\}$, taking action $a$ leaves the agent below $s_k$ on
-  some need dimension.
+  trade})\}$, there exists some need dimension $d_{\ell(a)}$
+  with threshold $s_{\ell(a)}$ such that taking action $a$
+  leaves the agent below $s_{\ell(a)}$ on $d_{\ell(a)}$ (the
+  failing dimension may differ across alternatives, and need
+  not coincide with the $d_k$ from H1).
 \end{enumerate}
 Under (H1) and (H2), no non-degrading alternative-to-the-trade
 exists in $\mathcal{A}_i$, S1's non-degrading-alternative

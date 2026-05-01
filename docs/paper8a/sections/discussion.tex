@@ -3,7 +3,8 @@
 
 \subsection{What this paper establishes}
 
-\paragraph{Global $\volR$ measurement is privacy-incompatible.}
+\paragraph{Global $\volR$ measurement is privacy-incompatible
+under the framework's existing commitments.}
 The framework's commitments
 in~\citep{lasser2026exo,lasser2026phase,lasser2026wamura} rule
 out the panopticon-style observation that direct global
@@ -11,8 +12,11 @@ measurement would require.  Within a consented operational
 perimeter, exact direct measurement remains available
 (Appendix~\ref{app:exercise_indicator}); the privacy-incompatibility
 claim is about out-of-perimeter and global measurement, not about
-all direct measurement.  This is a structural finding, not a
-practical limitation.
+all direct measurement.  This is a stipulation downstream of
+the framework's privacy commitments, not a complexity-theoretic
+impossibility theorem; we have not proved that no
+privacy-respecting direct-measurement scheme exists, only that
+the framework's existing commitments rule the obvious one out.
 
 \paragraph{Revealed sacrifice is a privacy-respecting surrogate
 on the observed subset.}
@@ -33,13 +37,16 @@ operationally.
 \paragraph{The B-to-C gap is partially constrained by trade data.}
 The aggregate lower bound
 (Theorem~\ref{thm:aggregate_bound}) constructs the
-sacrifice-channel ratio $\betaL = \volRlower / \volL$, which is
-itself a lower bound on the true exercised fraction
-$\beta = \volR/\volL$ (since $\volRlower \leq \volR$ by
-construction).  Equivalently, $1 - \betaL \geq 1 - \beta$
-upper-bounds the true B-to-C gap from above.  Both inequalities
-hold on the observed subset under S0--S2, S4(a), and the
-genuine-exchange conditions of
+sacrifice-channel ratio $\betaL$, which (under the
+denominator-and-domain conventions of
+Definition~\ref{def:btoc_ratio}) is a lower bound on the
+true exercised fraction $\beta$ when the same denominator is
+used---$\betaL(U,T) \leq \beta_U$ on the observed subset $U$,
+and $\betaL(P,T) \leq \beta_P$ on the global denominator $P$
+under the zero-extension convention for capabilities outside
+$U$.  Equivalently, $1 - \betaL$ upper-bounds the
+correspondingly-defined B-to-C gap.  Both inequalities hold
+under S0--S2, S4(a), and the genuine-exchange conditions of
 Definition~\ref{def:sacrifice_event}.  $\betaL$ is the object
 the framework computes; $\beta$ is the latent quantity bounded
 indirectly through it.  The
