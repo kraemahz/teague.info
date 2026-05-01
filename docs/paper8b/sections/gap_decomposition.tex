@@ -414,13 +414,22 @@ boundary-crossing instances must be eliminated.
     \volL(B)
   \]
   follows from \emph{literal weight summation over the
-  partitioned capability census} ($\volL(X) = \sum_{c \in X}
-  w(c)$ for each cell~$X$, and the cells partition $P$
-  set-disjointly), \emph{without invoking M4-style
-  poset-independence} between cells.  This is a strictly
+  partitioned capability census}, \emph{without invoking
+  M4-style poset-independence} between cells.  Under
+  strategy~(c) we adopt the atomic-weight accounting convention
+  $\volL(X) := \sum_{c \in X} w(c)$ for each cell~$X$ as an
+  operational definition of cell-level $\volL$ values, distinct
+  from $\volL$'s general M1--M6 poset-measure semantics on
+  poset-independent capability subsets.  Cells partition $P$
+  set-disjointly, so $\volL(P) = \sum_X \volL(X)$ follows by
+  direct rearrangement of the atomic sum.  This is a strictly
   weaker license than~(a)'s M4-licensed identity: strategy
   (c) does not claim cross-cell poset-independence and does
-  not certify M6-superadditivity properties of the partition.
+  not certify M6-superadditivity properties of the partition;
+  the cell-level $\volL$ values it produces are accounting
+  aggregates, sufficient for the $\delta$-decomposition but
+  not interchangeable with the M1--M6 measure on
+  poset-independent components.
   What it provides is the additive identity needed for the
   $\delta$-decomposition, plus the diagnostic interpretation
   of $\delta_{\mathrm{boundary}}$ as ``cross-cell cooperative
@@ -613,9 +622,22 @@ decomposition operates at the category level: each partition
 component $C_j$
 (the category partition~\citep[Revealed~Sacrifice]{lasser2026paper8a}) is classified as
 restricted, covered, dormant, or residual.  Under committed data
-(\citep[Revealed~Sacrifice]{lasser2026paper8a}), S2 is not directly verifiable;
-the committed-mode decomposition therefore \emph{assumes} S2
-holds for committed events.  The per-capability decomposition is
+(\citep[Revealed~Sacrifice]{lasser2026paper8a}), S2 splits into
+two components with different attestation routes: (i)~the
+\emph{objective} side---that $\Delta\volL(X)$ is correctly
+computed from the surrendered benchmarked capability via the
+public benchmark function---is verified by the commitment
+layer's ZK proof on the magnitude commitment; (ii)~the
+\emph{subjective} side---that the agent's valuation $\Ui(X)$
+of the surrendered capability matches $\Delta\volL(X)$
+in the calibration scale---is not ZK-verifiable and must be
+supplied by external attestation
+(see the external-attestation remark in the companion
+paper~\citep[Revealed~Sacrifice]{lasser2026paper8a}).
+The committed-mode decomposition therefore certifies the
+objective S2 component via the commitment layer and assumes the
+subjective S2 component via the attestation layer.  The
+per-capability decomposition is
 the refinement available when Part~B assumptions hold.
 \end{remark}
 

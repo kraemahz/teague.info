@@ -24,6 +24,24 @@ leverage of $C_j$ at time $T$ is:
       & \text{if } \volRlower(P, T) = 0.
   \end{cases}
 \]
+The category-level subset aggregate
+$\volRlower(C_j, T)$ is theorem-certified as a Part-B
+lower bound only when $C_j \cap U$ is internally
+poset-independent
+(\citep[Revealed~Sacrifice]{lasser2026paper8a},
+subset-extension proposition); the cross-category
+poset-independence between distinct $C_j, C_k$ given by
+the category partition's poset-independence
+condition~\citep[Revealed~Sacrifice]{lasser2026paper8a}
+is a separate condition (across categories, not within them)
+and does not by itself certify within-category aggregation.
+Where within-category poset-independence does not hold,
+$\volRlower(C_j, T)$ should be read as an accounting score over
+the per-capability max-attribution sum on $C_j \cap U$ rather
+than a theorem-certified Part-B aggregate; the leverage ratio
+$\lambda_{\mathrm{trade}}$ remains diagnostically meaningful in
+that regime as a relative concentration signal but its
+denominator interpretation weakens accordingly.
 Under healthy trade diversity, leverage is distributed across many
 categories.  Under wireheading, leverage concentrates on the loop
 drivers.  When total observed trade flow is zero (the agent has

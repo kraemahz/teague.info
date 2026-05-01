@@ -25,14 +25,20 @@ the system, independent of any observation mechanism:
   P^{\mathrm{ex}}_t \;=\; \{d \in P : d \text{ is exercised at
   time } t\},
 \]
-where ``exercised at $t$'' is formalized via the
-counterfactual exercise condition of
+where ``exercised at $t$'' is formalized
+\emph{semantically} via the counterfactual exercise condition:
+$d$ is exercised at $t$ iff some realized cooperative output in
+the lookback window $[t - \Delta, t]$ becomes unrealizable when
+$d$ is removed from $P$.  This is the latent structural notion;
+it does not depend on any perimeter or measurement mechanism.
 Appendix~\ref{app:exercise_indicator}
-(Definition~\ref{def:exercise_indicator}): $d$ is exercised at
-$t$ iff some realized cooperative output in the lookback
-window $[t - \Delta, t]$ becomes unrealizable when $d$ is
-removed from $O$.  The lookback width $\Delta$ and the
-exercise indicator's other parameters are specified in
+(Definition~\ref{def:exercise_indicator}) gives the
+\emph{operational} realization of this counterfactual within an
+internal observation perimeter $O \subseteq P$, where the
+indicator is computable; outside~$O$ the counterfactual remains
+the latent definition of $P^{\mathrm{ex}}_t$ but is not
+directly measured by the indicator.  The lookback width
+$\Delta$ and the indicator's other parameters are specified in
 Definition~\ref{def:exercise_indicator}; ``at $t$'' here
 denotes that $t$ is the right endpoint of the lookback,
 not that the exercise happens instantaneously at $t$.  The \emph{instantaneous
