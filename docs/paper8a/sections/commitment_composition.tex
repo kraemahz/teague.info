@@ -223,10 +223,17 @@ by an external mechanism (Remark~\ref{rem:external_attestation}).
 In practice, the non-ZK-verifiable hypotheses are handled at the
 institutional layer in three layers, each with a different
 attestation locus:
-(a)~the trade environment is filtered so only trades satisfying
-S1's non-degradation (events that are not below-sufficiency, per
-the primitive in Section~\ref{sec:assumptions}) are admitted as
-sacrifice events;
+(a)~the trade environment is filtered so only S1-admissible
+trades are admitted as sacrifice events---events for which at
+least one non-degrading alternative to the trade existed in the
+agent's choice set (retention or a third non-trade option),
+per the primitive in Section~\ref{sec:assumptions}; the H1+H2
+below-sufficiency sub-class formalized in the companion
+paper's S1-sufficiency
+definition~\citep[Need~Sufficiency]{lasser2026paper8b} is the
+structurally-diagnosable sub-case of S1 failure, while
+below-sufficiency targeting with an attested third non-degrading
+alternative may still be admitted;
 (b)~\emph{public-poset facts} about the category partition
 $\mathcal{C}$---specifically, the cross-component
 poset-independence between distinct partition components $C_j$
