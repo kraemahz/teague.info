@@ -1,0 +1,135 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2023}
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Goal-Frontier Maximization as a Microfoundation for Welfare Economics},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Safety},
+  pdfkeywords={alignment, goal-frontier maximization, capability approach,
+    welfare economics, Goodhart's law, proxy alignment, Sen, Nussbaum,
+    fungibility collapse},
+}
+\usepackage{url}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Theorem-style environments
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{assumption}{Assumption}
+\newtheorem{example}{Example}
+\newtheorem{prediction}{Prediction}
+\newtheorem{conjecture}{Conjecture}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Operators and shortcuts --- inherit Papers 0--8 notation
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\Pathway}{\mathrm{Pathway}}
+
+% Inherited from Papers 3--4
+\newcommand{\Risk}{\mathcal{R}}
+\newcommand{\Trisk}{{T^{\mathrm{risk}}}}
+
+% Inherited from Paper 6
+\newcommand{\rS}{r_{\mathrm{S}}}
+
+% Inherited from Paper 7
+\newcommand{\damagebound}{\epsilon}
+\newcommand{\scope}{S}
+
+% Inherited from Paper 8a (measurement theorem)
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRlower}{{\vol_{\mathrm{R}}}^{\mathrm{lower}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}}^{[W]}}
+\newcommand{\betaL}{\beta^{\mathrm{lower}}}
+\newcommand{\Ui}{U_i}
+
+% Inherited from Paper 8b (architecture)
+\newcommand{\ResS}{\mathrm{ResS}}
+\newcommand{\ResB}{\mathrm{ResB}}
+\newcommand{\HHI}{\mathrm{HHI}}
+\newcommand{\NAC}{\mathrm{NAC}}
+
+% Paper 9-specific macros
+\newcommand{\Pstd}{P_{\mathrm{std}}}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+
+\title{Goal-Frontier Maximization as a Microfoundation for Welfare Economics}
+
+\author{
+  Teague Lasser \\
+  \texttt{teague@subseq.io}
+  \and
+  Claude Opus 4.7 \\
+  \and
+  GPT 5.5 \\
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Section 1: Introduction ---
+\input{sections/introduction}
+
+% --- Section 2: Fungibility-Collapse Correspondence ---
+\input{sections/fungibility_collapse}
+
+% --- Section 3: Where GFM Diverges from Utility Theory ---
+\input{sections/structural_predictions}
+
+% --- Section 4: Goodhart Theorem ---
+\input{sections/goodhart}
+
+% --- Section 5: Channels + Capability-Economics Lineage ---
+\input{sections/lineage}
+
+% --- Section 6: Empirical Testability ---
+\input{sections/empirical}
+
+% --- Section 7: Worked Examples ---
+\input{sections/worked_examples}
+
+% --- Section 8: Discussion ---
+\input{sections/discussion}
+
+% --- Author Contributions ---
+\input{sections/contributions}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\newpage
+\appendix
+\input{appendices/dependencies}
+
+\end{document}

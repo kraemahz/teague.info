@@ -1,0 +1,652 @@
+\section{The Goodhart Theorem for Proxy-Instrumental Alignment}
+\label{sec:goodhart}
+
+This section establishes the paper's novel formal contribution and
+delivers the central alignment-payoff of the quantification claim.
+Theorem~\ref{thm:fungibility_collapse} of
+Section~\ref{sec:fungibility_collapse} placed standard utility
+theory inside the formalization; the structural predictions of
+Section~\ref{sec:structural_predictions} catalogue what the
+formalization makes falsifiable.  The result of this section is the
+load-bearing one: the formalization makes the cost of
+proxy-instrumental optimization formally bounded, in a way the
+qualitative welfare-economics tradition could not.  The shape of
+the claim:
+
+\begin{quote}
+When the framework optimizes a proxy $P$ for an operational
+truth $T$, and the proxy is related to $T$ only instrumentally
+($P$ correlates with $T$ but does not constitute it), the
+framework's certified alignment-guarantee bound degrades in
+proportion to the proxy-to-truth gap $\epsnonres$
+(Theorem~\ref{thm:goodhart}).  We additionally conjecture that
+under optimization pressure, regions of capability space where
+$P$ and $T$ diverge become attractive directions for the
+optimizer to exploit, widening the observed $\epsnonres$ at
+equilibrium beyond what a less-capable optimizer produces
+(Conjecture~\ref{conj:optimization_pressure}, stated and
+discussed below; not formally proved in this paper).
+\end{quote}
+
+The result is a quantitative version of Goodhart's
+Law~\citep{strathern1997improving,manheim2019categorizing} for
+capability-space optimization, with the alignment guarantees of the
+GFM sequence as its application target.  Two structural choices
+shape the result.  First, $T$ is treated as an \emph{operational}
+truth measure (the realized exercise contribution
+$\volRwin$), not as a metaphysical model of inner preference;
+Section~\ref{sec:goodhart_T} makes this explicit.  Second, the
+proxy-to-truth gap is split into a within-channel disagreement
+component drivable downward by observation, and a residual-class
+floor that no amount of within-channel observation can shrink;
+Section~\ref{sec:goodhart_gap} states the split.  The theorem itself
+(Section~\ref{sec:goodhart_theorem}) is then a Lipschitz-style
+continuity result on the within-channel component, with the floor
+component contributing a deployment-dependent ceiling on attainable
+tightening.
+
+\subsection{The operational truth $T$}
+\label{sec:goodhart_T}
+
+The Goodhart machinery requires a truth measure to compare the proxy
+against.  We adopt the operational truth measure of
+\citep[Revealed~Sacrifice]{lasser2026paper8a}:
+
+\begin{definition}[Operational truth measure]
+\label{def:operational_T}
+For a capability $c \in P$, the \emph{operational truth measure}
+$T(c)$ is the window-active realized exercise contribution
+\[
+  T(c) \;\equiv\; \volRwin(c).
+\]
+$T$ is the latent structural quantity that
+\citep[Theorem~2]{lasser2026paper8a} bounds from below via the
+constructible lower bound $\volRlower$.  Operationally, $T$ is the
+quantity an alignment property should track: it is what the
+collective \emph{actually} does with capability $c$ during the trade
+window $W$, not what the framework's measure says it could do.
+\end{definition}
+
+\begin{remark}[Operational, not metaphysical]
+\label{rem:T_operational}
+$T = \volRwin$ is operational (grounded in the realized-exercise
+contribution that revealed-sacrifice trades witness under
+S0~(\citep[Revealed~Sacrifice]{lasser2026paper8a},
+Section~2.1)), not metaphysical.  The agent's ``true inner
+preference,'' considered as an abstract object distinct from
+realized exercise, is unobservable in principle, and the framework
+does not pretend to access it.  The Goodhart machinery of this
+paper operates on operational $T$.  Whether operational $T$
+coincides with metaphysical inner preference (in some philosophical
+sense the agent might endorse on reflection) is outside the formal
+apparatus.
+\end{remark}
+
+\begin{remark}[The S0 bridge]
+\label{rem:S0_bridge}
+The link from the framework's proxy $P = \volL$ to the operational
+truth $T = \volRwin$ runs through assumption~S0
+of~\citep[Revealed~Sacrifice]{lasser2026paper8a}: an agent's
+valuation $\Ui(Y)$ does not exceed the window-active realized
+exercise contribution $\volRwin(Y)$.  Without S0, voluntary trade
+events do not yield a one-sided constraint relating proxy
+disagreement to realized-exercise truth, and the Goodhart machinery
+of this paper reverts to a claim about $P$ versus whatever object
+anchors $T$, non-vacuous but losing its operational anchor.  S0 is
+empirically delicate (typical agents in typical markets do not pay
+more than what the capability delivers in exercise) and is the
+substance of \citep[Section~2.1]{lasser2026paper8a}.  We take S0 as
+standing for the rest of this section.
+\end{remark}
+
+\begin{remark}[When operational $T$ is an inadequate truth anchor]
+\label{rem:T_failure_modes}
+$T = \volRwin$ is operationally adequate as a truth anchor for
+the Goodhart machinery in deployments where the trade window
+$W$'s recorded sacrifice events are a faithful reflection of
+what the agent values, i.e., deployments where the
+revealed-preference reading of trades is, in the standard
+microeconomic sense, the right interpretation.  Three classes of
+deployments where $T = \volRwin$ becomes inadequate as a truth
+anchor are worth flagging:
+\begin{itemize}
+\item \textbf{Asymmetric-information cases.}  When the agent
+  trades on private information that systematically diverges
+  from the value the trade would carry under symmetric
+  information, $\volRwin(Y)$ records the realized exercise
+  under the agent's private information state, not under the
+  counterfactual ``what would the agent value if their
+  information matched the market's?''  Signaling games,
+  adverse-selection markets, and information-asymmetric
+  insurance markets are canonical examples.  In these
+  deployments the operational truth and the
+  symmetric-information truth diverge, and the Goodhart bound's
+  alignment-relevance depends on which truth the deployment is
+  trying to track.
+\item \textbf{Time-shifted preferences and identity changes.}
+  When the agent's preferences at trade time differ from the
+  preferences at exercise time (myopic discounting, addiction,
+  identity-shifting interventions), $\volRwin$ records the
+  agent's exercise under the post-trade preferences, which may
+  not be the preferences the trade was supposed to serve.  S0
+  is preserved per-window but the alignment-relevant truth is
+  cross-window.
+\item \textbf{Coercion and constrained-choice failure of S1.}
+  S1 (free choice with non-degrading alternatives) is what
+  makes operational $T$ a faithful truth anchor.  When S1
+  fails systematically across a deployment (structural
+  coercion, market failure, severely constrained choice),
+  revealed sacrifice records cost-of-access rather
+  than preference, and the operational truth bound on $T$ from
+  trade events is correspondingly weakened.
+\end{itemize}
+The Goodhart machinery of this section presupposes that the
+deployment satisfies S0 and S1 sufficiently for $\volRwin$ to
+be an adequate operational truth anchor for the
+alignment-property bounds the framework is asking about.
+Deployments outside that envelope require either a different
+truth-anchor convention (with the Lipschitz transfer adjusted
+correspondingly) or a separate theory of how the
+asymmetry/time-shift/coercion affects the bound.  We close the
+loop on what is and is not affected: the Lipschitz bound of
+Theorem~\ref{thm:goodhart} \emph{remains valid for the
+operational truth as defined}; what degrades under the failure
+modes above is the bound's \emph{welfare-relevance}: the
+extent to which the operational truth coincides with whatever
+counterfactual notion of truth (symmetric-information,
+cross-window-stable preference, free-choice baseline) the
+deployment ultimately wants to track.  Bounding that secondary
+divergence is outside this paper's scope.
+\end{remark}
+
+The proxy is unambiguously $P = \volL$: the poset measure the
+framework optimizes throughout the
+sequence~\citep[Definition~6]{lasser2026gfm}.  The framework
+optimizes $\volL$ as if it were the target; the Goodhart machinery
+asks what happens when $\volL$ is only instrumentally related to
+the operational truth $\volRwin$.
+
+\subsection{The proxy-to-truth gap}
+\label{sec:goodhart_gap}
+
+The gap between $P$ and $T$ has two structurally distinct
+components, corresponding to two structurally distinct ways the
+proxy can fail.  The first is \emph{within-channel disagreement}: on
+capabilities the revealed-sacrifice channel can in principle reach,
+$P$ and $T$ may differ in magnitude, and that disagreement is what
+observation infrastructure can in principle close.  The second is
+\emph{channel reach}: capabilities the channel cannot reach
+(\citep[Need~Sufficiency]{lasser2026paper8b}, Definition~12,
+$\ResS$) contribute a component to alignment slack that no amount
+of within-channel observation can shrink.  We define the components
+separately and combine them at the end.
+
+\begin{definition}[Within-channel disagreement gap, $\epsnonres$]
+\label{def:eps_nonres}
+Let $\{c_k\}_{k=1}^K$ enumerate the capabilities in the framework's
+poset $P$, and let $\ResS \subseteq P$ be the structural residual
+class of \citep[Need~Sufficiency]{lasser2026paper8b}, Definition~12.
+The \emph{within-channel disagreement gap} is
+\[
+  \epsnonres \;\equiv\; \sup_{k \,:\, c_k \notin \ResS,\; T(c_k) > 0}
+  \frac{|P(c_k) - T(c_k)|}{T(c_k)},
+\]
+the worst-case relative deviation of the proxy from the operational
+truth on capabilities the sacrifice channel can in principle reach,
+restricted to capabilities with strictly positive operational truth.
+\end{definition}
+
+\begin{definition}[Residual-class floor, $\epsfloor$]
+\label{def:eps_floor}
+Capabilities in $\ResS$ are structurally outside the proxy's
+measurement scope: trade events do not witness their exercise.
+They contribute a \emph{floor} to alignment slack equal to the share
+of operational truth the proxy structurally cannot witness:
+\[
+  \epsfloor \;\equiv\; \frac{\volR(\ResS)}{\volR(P)},
+\]
+the share of total exercise that lives in the residual class.
+$\epsfloor$ is bounded above by the residual-class
+characterization of
+\citep[Need~Sufficiency]{lasser2026paper8b}, Proposition~8, and
+depends on deployment-specific individuation choices about which
+capabilities admit ``no sacrifice-observable path in principle.''
+\end{definition}
+
+\begin{definition}[Total alignment slack, $\epsgap$]
+\label{def:eps_gap}
+The \emph{total alignment slack} is
+\[
+  \epsgap \;\equiv\; \epsnonres + \lambda \cdot \epsfloor,
+\]
+where $\lambda \in [0, 1]$ weights the residual-class floor's
+contribution to alignment slack relative to the within-channel
+disagreement.  $\lambda = 0$ corresponds to the framework's ``we
+make alignment guarantees only on what the channel can witness''
+stance: the residual class is excluded from alignment-quality
+accounting.  $\lambda = 1$ corresponds to ``unobservable capability
+mass contributes fully to misalignment'' and treats the residual
+class as a full liability.  The choice of $\lambda$ is a deployment
+question; the main results of this section are stated for
+$\epsnonres$, with $\epsfloor$ as a separate floor on attainable
+tightening.
+\end{definition}
+
+\begin{remark}[Sup-norm conservatism]
+\label{rem:supnorm_conservative}
+The sup-norm in Definition~\ref{def:eps_nonres} means a single
+badly-proxied dimension controls the disagreement gap.  This is
+conservative but correct for alignment purposes: one dimension
+where the proxy is misleading is sufficient to produce a misaligned
+decision when the framework optimizes the proxy.  A weighted norm
+that gives less weight to safety-irrelevant dimensions could give
+a less conservative measure, but the safety-relevance weighting is
+itself application-dependent and not addressed in this paper; the
+sup-norm is the worst-case-but-defensible choice.
+\end{remark}
+
+\begin{remark}[Aggregate diagnostic ceiling vs sup-norm bound]
+\label{rem:agg_vs_sup}
+$\epsnonres$ is defined as a sup-norm.  Operationally, the
+framework does not in general have access to per-dimension
+estimates of $|P(c_k) - T(c_k)|/T(c_k)$; what it has access to via
+\citep[Theorem~2]{lasser2026paper8a} is the aggregate diagnostic
+ceiling $(1 - \betaL)/\betaL$ derived from the aggregate lower
+ratio $\betaL$, computed at the bundle or per-capability
+level depending on Part~A vs Part~B aggregation.  The aggregate
+ratio bounds an \emph{aggregate} version of $\epsnonres$ from
+above; it bounds the sup-norm $\epsnonres$ only if per-capability
+lower-ratio assumptions hold.  We use $(1 - \betaL)/\betaL$ as a
+\emph{tractable diagnostic ceiling} on attainable tightening
+under aggregate observation, not as a sup-norm bound.  When the
+deployment supports per-capability observation (e.g., bundle
+decomposition, hedonic-disaggregation panels), $\epsnonres$ can be
+bounded directly per-dimension.
+\end{remark}
+
+\begin{remark}[Cell-wise attribution of the diagnostic ceiling]
+\label{rem:cellwise_attribution}
+The five-cell $\delta$-decomposition of
+\citep[Need~Sufficiency]{lasser2026paper8b}, Definition~8,
+attributes the diagnostic ceiling across cells:
+$\delta_{\mathrm{covered}}$ is the within-channel
+proxy-failure-candidate component (contributing to $\epsnonres$);
+$\delta_{\mathrm{dormant}}$, $\delta_{\mathrm{restricted}}$, and
+$\delta_{\mathrm{boundary}}$ are structural-invisibility components
+on capabilities the channel could reach but has not yet (these
+contribute to $\epsnonres$ in proportion to their pending
+observation share); $\delta_{\mathrm{residual}}$ is the
+$\epsfloor$ component proper.  The cell decomposition is what the
+deployment uses to identify \emph{which} kind of intervention
+(more trades, sharper attestation, finer individuation) is the
+operative tightener for the deployment's actual gap.
+\end{remark}
+
+\begin{remark}[Floor non-zero, but not unique to GFM]
+\label{rem:floor_shared}
+$\epsfloor$ is non-zero in any deployment with non-empty $\ResS$.
+The fungibility-collapse limit of
+Section~\ref{sec:fungibility_collapse} drives $\epsnonres$ on the
+observed-and-non-residual subset toward zero (the proxy is exact
+when the poset is fungible), but does \emph{not} drive $\epsfloor$
+to zero.  Standard economics has the same floor, expressed
+informally as the shadow-economy / non-market-activity gap that
+imputation methods (imputed rent, time-use surveys, satellite
+accounts) only partially close~\citep{stiglitz2009report}.
+$\epsfloor$ is the GFM-side formal counterpart to this shared
+problem; the discussion in Section~\ref{sec:lineage} (the SSF
+subsection) traces the lineage in detail.
+\end{remark}
+
+\subsection{The Goodhart theorem}
+\label{sec:goodhart_theorem}
+
+\begin{theorem}[Goodhart Lipschitz transfer]
+\label{thm:goodhart}
+Define the \emph{operationally active subspace}
+\[
+  P^{\mathrm{act}} \;\equiv\; \{c \in P \setminus \ResS \,:\, T(c) > 0\},
+\]
+the set of capabilities outside the residual class that the
+operational truth witnesses as exercised in the trade window~$W$.
+Let $g(\cdot)$ be an alignment property in the GFM sequence,
+viewed as a real-valued function of a capability measure
+restricted to~$P^{\mathrm{act}}$.  If $g$ is Lipschitz on this
+restriction with property-specific Lipschitz constant
+$\mathrm{Lip}(g)$ relative to the sup-norm of relative deviation,
+then under $\volL$-maximization with proxy-to-truth disagreement
+gap $\epsnonres > 0$,
+\[
+  \bigl| g(T) - g(P) \bigr| \;\leq\; \mathrm{Lip}(g) \cdot \epsnonres.
+\]
+That is, the alignment property's value under the operational
+truth $T$ deviates from the value under the proxy $P$ by at most
+$\mathrm{Lip}(g) \cdot \epsnonres$.
+\end{theorem}
+
+\begin{conjecture}[Optimization pressure and gap exploitation]
+\label{conj:optimization_pressure}
+Let an optimizer with capability measure $C$ act on the proxy
+$P$.  Regions of capability space where $P$ and $T$ diverge are
+\emph{available} directions for the optimizer to move into;
+cheaper $P$-gain per unit $T$-loss makes these regions attractive
+relative to regions where $P$ and $T$ agree.  We conjecture that:
+\begin{quote}
+More capable optimizers, with greater reach across capability
+space, have access to a larger set of $P$-$T$-divergence regions;
+an optimizer that exploits any of them widens the observed
+$\epsnonres$ at equilibrium beyond what a less-reaching optimizer
+produces.
+\end{quote}
+The conjecture is qualitative.  No formal proof is given in this
+paper; a precise functional form $f: C \mapsto \epsnonres(C)$ is
+optimizer-architecture-dependent and is the subject of
+Open~Question~\ref{oq:goodhart_rate}.
+\end{conjecture}
+
+\begin{remark}[Theorem 2 is conditional; Conjecture 1 is unproven]
+\label{rem:thm2_qualitative}
+Theorem~\ref{thm:goodhart} is conditional on $g$ being Lipschitz
+on $P^{\mathrm{act}}$ with a specific constant $\mathrm{Lip}(g)$;
+the per-property Lipschitz analyses (computing
+$\mathrm{Lip}(g)$ for the anti-monopolar threshold, the phase
+boundary, the convergence rate, the damage bound, and the
+aggregate-lower-bound slack) are
+\emph{perturbative roadmap items}, not theorems of the present
+paper.  Conjecture~\ref{conj:optimization_pressure} is a
+directional claim about the relationship between optimizer
+capability and observed $\epsnonres$ at equilibrium; we do not
+prove it here.  The present paper establishes the conditional
+Lipschitz transfer and identifies the optimization-pressure
+direction as conjectural pending a formal optimizer model
+(Open~Question~\ref{oq:goodhart_rate}).
+\end{remark}
+
+\begin{proof}[Proof of Theorem~\ref{thm:goodhart}]
+The argument is a Lipschitz-continuity transfer.  Let
+$g: \mathcal{M} \to \mathbb{R}$ be the alignment property, where
+$\mathcal{M}$ is the space of capability measures restricted to
+the operationally active subspace $P^{\mathrm{act}}$.  By
+hypothesis, $g$ is Lipschitz with constant $\mathrm{Lip}(g)$ in
+the sup-norm of relative deviation: for any two measures
+$\mu, \nu \in \mathcal{M}$ with $\nu(c_k) > 0$ for all $c_k \in
+P^{\mathrm{act}}$,
+\[
+  \bigl| g(\mu) - g(\nu) \bigr| \;\leq\;
+  \mathrm{Lip}(g) \cdot \sup_{c_k \in P^{\mathrm{act}}}
+  \frac{|\mu(c_k) - \nu(c_k)|}{\nu(c_k)}.
+\]
+Setting $\mu = P$ and $\nu = T$ (with $T(c_k) > 0$ on
+$P^{\mathrm{act}}$ by construction), the right-hand sup-norm
+equals $\epsnonres$ exactly:
+\[
+  \sup_{c_k \in P^{\mathrm{act}}}
+  \frac{|P(c_k) - T(c_k)|}{T(c_k)} \;=\; \epsnonres.
+\]
+Combining,
+\[
+  \bigl| g(T) - g(P) \bigr| \;\leq\; \mathrm{Lip}(g) \cdot \epsnonres,
+\]
+which is the claim.
+\end{proof}
+
+\begin{remark}[Capabilities with $T(c) = 0$ are evidence-inactive in $W$]
+\label{rem:zero_T_inactive}
+The restriction of $g$ to $P^{\mathrm{act}}$ in the theorem
+statement is structurally important.  A capability $c \in
+P \setminus \ResS$ with $T(c) = 0$ is channel-reachable but
+\emph{operationally inactive} for the alignment guarantees of
+this paper: the framework knows it exists (it lies outside
+$\ResS$) but the operational truth $T = \volRwin$ records no
+exercise contribution from it within~$W$.  Capabilities in
+$\delta_{\mathrm{dormant}}$ or $\delta_{\mathrm{restricted}}$
+of \citep[Definition~8]{lasser2026paper8b} are
+\emph{evidence-inactive} in $W$ (no admissible sacrifice events
+witness their exercise) but may carry latent
+$\volR^{[W]}$ that the channel has not yet attested; whether
+evidence-inactive capabilities are also operationally inactive
+($T(c) = 0$ in the strict sense the bound takes) is a deployment
+accounting choice.  A strict reading sets $T(c) = 0$ on
+evidence-inactive capabilities, while a relaxed reading admits
+imputed $T(c)$ from non-trade evidence at the cost of leaving
+the Goodhart bound's S0 anchor.  Channel~1 (observation density)
+is the operational lever that brings evidence-inactive
+capabilities into $P^{\mathrm{act}}$ over time, by accumulating
+admissible events that record their exercise.  Until that
+happens, the Goodhart bound's content on these capabilities is
+vacuous under the strict reading: any deviation
+$|P(c) - T(c)|$ on a capability with $T(c) = 0$ is, in the trade
+window~$W$, an operationally inactive deviation.  The Lipschitz
+hypothesis on $P^{\mathrm{act}}$ is the right scope for the
+bound to be non-trivial; on the complement, the bound is
+trivially zero on the truth side and Channel~1 brings new
+capabilities under the
+bound's content as observation accumulates.
+\end{remark}
+
+\begin{remark}[Structural argument supporting Conjecture~\ref{conj:optimization_pressure}]
+\label{rem:conj1_structural}
+The structural argument supporting
+Conjecture~\ref{conj:optimization_pressure}, sketched here, is
+not a proof.  An optimizer that maximizes $P$ subject to
+dynamics on capability space will, at equilibrium, satisfy
+$\partial P / \partial \mathrm{action} = 0$, but
+$\partial T / \partial \mathrm{action}$ need not be zero where
+$P$ and $T$ diverge.  This creates a ``free direction'' the
+optimizer can exploit.  The size of this free direction grows
+with the optimizer's reach in capability space, in the sense
+that more capable optimizers have access to a larger set of
+capability-space regions where the divergence is exploitable.
+A formal version of the argument requires a model of how the
+optimizer searches capability space (greedy local,
+gradient-based, planning-based) and is correspondingly
+architecture-dependent.  Open Question~\ref{oq:goodhart_rate}
+of Section~\ref{sec:discussion} states the precise question.
+\end{remark}
+
+\begin{remark}[Empirical witness, not causal proof]
+\label{rem:hhi_empirical_witness}
+The wireheading-consistent HHI of
+\citep[Need~Sufficiency]{lasser2026paper8b}, Propositions~6 and 7,
+provides a deployment-readable empirical witness for the
+mechanism of Conjecture~\ref{conj:optimization_pressure}: trade-flow
+concentration in a narrow set of bundle categories is a signature
+\emph{consistent with} an optimizer exploiting $P$-$T$
+divergence.  But the witness is correlational, not
+causal-inferential.  Other mechanisms also produce concentration:
+market consolidation, demand shocks, supply-side limitations.
+Distinguishing the optimization-pressure mechanism from these
+alternatives requires natural-experiment or instrumental-variable
+designs that are outside the framework's structural apparatus.
+The HHI is a deployment-readable indicator that warrants further
+investigation when crossed; it does not by itself establish that
+optimization pressure is the cause.  As
+\citep[Propositions~6~and~7]{lasser2026paper8b} establish for the
+HHI itself, ``wireheading-consistent'' is the right operational
+phrasing.
+\end{remark}
+
+\subsection{Candidate alignment properties: the perturbative roadmap}
+\label{sec:goodhart_examples}
+
+The conditional Lipschitz-transfer of Theorem~\ref{thm:goodhart}
+applies to any alignment property $g$ that admits a Lipschitz
+analysis on the relevant capability subspace.  Five such properties
+are natural candidates from the GFM sequence; we list them as
+\emph{perturbative roadmap items} (candidate targets for a
+subsequent perturbation analysis), not as bounds the present
+paper establishes.
+
+\begin{itemize}
+\item \textbf{Anti-monopolar threshold.}  The threshold
+  $\gamma^*$ at which the anti-monopolar correction flips sign
+  (\citep[Proposition~6]{lasser2026horizon}) is a function of the
+  capability measure on a multi-substrate poset.  The expected
+  perturbative bound:
+  $|\gamma^*_{T} - \gamma^*_{P}| \leq C_{\gamma} \cdot \epsnonres$
+  for some $C_{\gamma}$ derived from the property's structural
+  sensitivity to substrate-volume distributions.  Establishing
+  $C_{\gamma}$ is a perturbation-analysis question on a specific
+  family of multi-substrate measures.
+
+\item \textbf{Phase-boundary location.}  The self-correcting basin
+  of \citep[Theorem~1]{lasser2026phase} is a region of joint state
+  space defined by Lyapunov-function-style stability conditions on
+  $\volL$.  The expected perturbative result: under the truth $T$,
+  the basin differs from the proxy-defined basin by a boundary
+  layer of width $O(\epsnonres)$, with the constant depending on
+  the Lyapunov function's smoothness.
+
+\item \textbf{Convergence rate.}  The KL-rate of
+  \citep[Theorem~2]{lasser2026wamura} is a function of the
+  proxy-truth discrepancy in the relaxation-protocol's
+  inferential bookkeeping.  The expected perturbative result: the
+  convergence rate under $T$ deviates from the rate under $P$ by
+  $O(\epsnonres)$, with sign deployment-dependent (the proxy may
+  predict either faster or slower convergence than the truth).
+
+\item \textbf{Damage bound.}  The damage bound $\damagebound$ of
+  \citep[Theorem~1]{lasser2026wamura} bounds the contraction of
+  $\volL$ under controlled relaxation.  Under the truth $T$, the
+  damage to operational exercise differs from the proxy-bounded
+  damage by $O(\epsnonres \cdot \max\text{-contraction}(\scope))$,
+  where $\scope$ is the controlled-relaxation scope.
+
+\item \textbf{Aggregate-lower-bound slack.}  $\betaL$ from
+  \citep[Theorem~2]{lasser2026paper8a} is the aggregate
+  \emph{lower ratio} of the construction; the corresponding
+  diagnostic ceiling on $\epsnonres$ is $(1 - \betaL)/\betaL$.
+  As $\epsnonres$ shrinks, $\betaL$ approaches the true
+  $\beta = T_{\mathrm{observed}} / T_{\mathrm{total}}$ at a rate
+  that decomposes into S0 attestation slack, Part-A vs Part-B
+  aggregation, and observation density.
+  This is the most direct connection between Theorem~\ref{thm:goodhart}
+  and the measurement theorem of
+  \citep[Revealed~Sacrifice]{lasser2026paper8a}: the framework's
+  operational tightening tool drives down the same gap the Goodhart
+  theorem identifies as alignment-controlling.
+\end{itemize}
+
+The per-property Lipschitz constants are not established by this
+paper's machinery and are listed only to indicate where the
+conditional transfer result lands.  Subsequent perturbation
+analysis closes each per-property bound under property-specific
+sensitivity assumptions.
+
+\subsection{Better economics tightens alignment: the corollary}
+\label{sec:goodhart_corollary}
+
+The conditional Lipschitz-transfer of Theorem~\ref{thm:goodhart}
+combined with the monotonicity of the revealed-sacrifice channel
+gives the paper's headline corollary.
+
+\begin{corollary}[Direction: better economics tightens alignment]
+\label{cor:direction}
+Suppose the revealed-sacrifice channel of
+\citep[Revealed~Sacrifice]{lasser2026paper8a} is admissibly
+accumulating observations, and assume per-capability
+admissibility (the deployment satisfies the conditions formalized
+in Assumption~\ref{ass:per_cap_admissibility} of
+Section~\ref{sec:lineage}, which bridges the aggregate diagnostic
+ceiling to the sup-norm $\epsnonres$).  Then:
+\begin{enumerate}
+\item By
+  \citep[Propositions~2~and~3]{lasser2026paper8a}, $\betaL$ is
+  non-decreasing in the observation count, so the
+  diagnostic ceiling $(1 - \betaL)/\betaL$ on the aggregate
+  version of $\epsnonres$ is non-increasing.
+\item Under per-capability admissibility, the diagnostic
+  ceiling bounds the sup-norm $\epsnonres$, and by
+  Theorem~\ref{thm:goodhart} the \emph{certified upper bound}
+  on each Lipschitz alignment property's deviation from the
+  operational truth is non-increasing in the same direction.
+  (The actual deviation $|g(T) - g(P)|$ is what it is at any
+  given moment; what tightens monotonically is the bound the
+  framework can certify.)
+\item By Definition~\ref{def:eps_gap}, the total alignment slack
+  $\epsgap = \epsnonres + \lambda \cdot \epsfloor$ is bounded
+  below by $\lambda \cdot \epsfloor$, so tightening saturates at
+  the deployment-specific residual-class floor.
+\end{enumerate}
+That is: improving the economic model (more trade data, better
+bundle disaggregation, wider coverage, sharper S0 attestation,
+finer five-cell $\delta$-attribution) tightens each Lipschitz
+alignment guarantee in the direction of the operational truth, with
+saturation at the deployment-specific $\lambda \cdot \epsfloor$
+floor.
+\end{corollary}
+
+\begin{remark}[Direction, not rate]
+\label{rem:direction_not_rate}
+Corollary~\ref{cor:direction} states a \emph{direction}
+(monotonicity), not a \emph{rate}.
+\citep[Propositions~2~and~3]{lasser2026paper8a} are existence
+statements about non-decreasing $\betaL$; they do not bound how
+fast $\betaL$ converges, and the rate depends on
+(i) S0 attestation quality (which itself is institutional-layer-
+dependent;~\citep[Remark~18 (external attestation)]{lasser2026paper8a}),
+(ii) Part-A vs Part-B aggregation choice
+(\citep[Theorem~2 Part~A and Part~B]{lasser2026paper8a}),
+(iii) observation density on the deployment's capability
+inventory, and (iv) the residual-class floor $\epsfloor$ itself.
+None of (i)--(iv) is bounded in this paper.  Open
+Question~6 of Section~\ref{sec:discussion} states the
+quantitative-rate question precisely; until it is bounded, the
+corollary is restricted to direction.
+\end{remark}
+
+Corollary~\ref{cor:direction} states a one-mechanism direction.  The
+strong form of the better-economics-tightens-alignment claim,
+together with the channel-wise decomposition that gives the
+direction operational substance, lives in
+Section~\ref{sec:lineage}.
+
+\subsection{Position relative to standard Goodhart literature}
+\label{sec:goodhart_lineage}
+
+The result of this section is recognizable as a structural variant
+of Goodhart's Law~\citep{strathern1997improving} for the
+specific case of capability-space optimization in the GFM
+framework.  The categorization of \citep{manheim2019categorizing}
+distinguishes four Goodhart variants: regressional, extremal,
+causal, and adversarial.  The mapping from this paper to that
+classification is clean.  Theorem~\ref{thm:goodhart} is closest
+to the \emph{regressional} variant: the proxy and truth
+correlate but are not identical, and the worst-case
+active-subspace Lipschitz transfer bounds how much correlation
+imperfection propagates to alignment-property deviations under
+proxy-instrumental optimization.
+Conjecture~\ref{conj:optimization_pressure} is closest to the
+\emph{adversarial} variant: a sufficiently capable optimizer
+treats $P$-$T$ divergence regions as exploitation targets,
+widening the observed gap at equilibrium.  The other two
+variants (\emph{extremal}, where the proxy-truth relation
+breaks at distribution tails, and \emph{causal}, where
+optimizing the proxy disrupts the causal mechanism that made
+it a proxy in the first place) are not directly addressed by
+this paper's results, though both arise naturally in
+deployment settings the framework would extend to.
+
+Recent formal work on Goodhart's law in AI alignment frames the
+phenomenon through tail-distribution
+analyses~\citep{elmhamdi2024goodhart,majka2025strong},
+complementing the worst-case active-subspace Lipschitz framing
+of Theorem~\ref{thm:goodhart}: the tail-distribution treatments
+characterize how proxy-truth deviation behaves on extreme events
+in distribution, while the Lipschitz transfer here gives a
+worst-case bound across the active-subspace.  The two
+formalizations are not in tension; they describe complementary
+slices of the same underlying mechanism (extremal-event behavior
+versus active-subspace worst case), and a complete theory of
+proxy-instrumental alignment would compose both.
+
+The novel contribution beyond the literature's framing is the
+structural embedding: in GFM, $P = \volL$ and $T = \volRwin$
+are not abstract ``proxy'' and ``truth''; they are formally
+specified objects with axiomatic structure, and the proxy-truth
+gap admits the within-channel + residual-class decomposition of
+Section~\ref{sec:goodhart_gap}.  This decomposition is what lets
+the corollary bind tightening to specific operational
+interventions (more trades, sharper attestation, finer
+individuation) rather than to abstract ``proxy quality
+improvement.''

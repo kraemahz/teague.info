@@ -1,0 +1,364 @@
+\section{Empirical Testability via Revealed Sacrifice}
+\label{sec:empirical}
+
+The quantification thesis of Section~\ref{sec:lineage} is
+empirically operational because the
+\citep[Revealed~Sacrifice]{lasser2026paper8a} channel maps
+directly onto observable economic ledgers.  Purchase records,
+time-use surveys, labour-supply panels, and public-commitment
+ledgers are revealed-sacrifice data in the GFM sense; the
+\citep[Need~Sufficiency]{lasser2026paper8b} diagnostic
+architecture (gap decomposition, wireheading-consistent HHI,
+need-access cost) is the interpretation layer that turns raw
+observation into testable predictions.  This section catalogues
+the formal instruments and operationalizes the Goodhart theorem
+of Section~\ref{sec:goodhart} as a cross-domain empirical test.
+The worked examples of Section~\ref{sec:worked_examples} then
+illustrate the instruments concretely.
+
+A note on the relationship to existing operational welfare
+indices.  The Human Development
+Index~\citep{anand1994human}, the OECD Better Life Index, the
+UNDP Multidimensional Poverty Index, and similar
+deployment-readable welfare instruments are operational
+measurement tools rather than formal frameworks: they aggregate
+chosen dimensions through chosen weighting schemes to produce
+deployment-readable scalars.  The instruments below are
+\emph{formal analogues} to these operational indices and supply
+an interpretation layer for analogous index choices: deployments
+using the operational indices can read the indices' implicit
+individuation and weighting decisions through the GFM apparatus
+to identify which channel of Section~\ref{sec:lineage} is
+operative when the index moves.  The match between a specific
+operational index and a specific GFM instrument is not exact
+in general (the operational indices were not designed to be
+GFM-compatible), but the structural correspondence is enough
+to position the operational indices and the formal instruments
+as complementary rather than competing.
+
+\subsection{Instruments: GFM machinery as economic-data interpretation}
+\label{sec:instruments}
+
+Six formal instruments interpret revealed-sacrifice data.  Each
+maps a familiar economic data source to a specific component of
+the formalization, and each is what one or more channels of
+Section~\ref{sec:lineage} act on.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.20\linewidth}
+                >{\raggedright\arraybackslash}p{0.27\linewidth}
+                >{\raggedright\arraybackslash}p{0.27\linewidth}
+                >{\raggedright\arraybackslash}p{0.18\linewidth}}
+\toprule
+\textbf{Instrument} & \textbf{Economic data source} &
+\textbf{What it measures} & \textbf{Channel(s)} \\
+\midrule
+Two channels (money + time) &
+Purchase ledgers + time-use surveys &
+Independent observation modalities of revealed sacrifice &
+Channel~1 \\
+\addlinespace
+Aggregate lower bound $\betaL$ &
+Trade-event ledger restricted to admissible events &
+Diagnostic ceiling $(1-\betaL)/\betaL$ on $\epsnonres$ &
+Channels~1, 2 \\
+\addlinespace
+Five-cell $\delta$-decomposition &
+Cell-wise attribution across covered, dormant, restricted, residual, boundary &
+Where the gap lives across structural categories &
+Selector for Channels~1--4 \\
+\addlinespace
+Wireheading-consistent HHI &
+Population-scale trade-flow concentration &
+Concentration consistent with Conjecture~1 &
+Diagnostic for Channel~1 saturation \\
+\addlinespace
+Need-access cost (NAC) &
+Below-sufficiency expenditure ledger &
+Need-side share of revealed sacrifice &
+Channels~3, 4 \\
+\addlinespace
+Per-event $\alpha_{n,c}$ &
+Bundle decomposition extension &
+Per-capability attribution within bundles &
+Channel~4 \\
+\bottomrule
+\end{tabular}
+\caption{The six formal instruments connecting GFM machinery to
+economic data sources.  Each instrument operationalizes one or
+more components of $\epsgap$ and is what at least one channel of
+Section~\ref{sec:lineage} acts on.  The five-cell
+$\delta$-decomposition plays a selector role across all four
+channels, mirroring the diagnostic role the SSF~2009
+decomposition plays in welfare-economics measurement
+methodology.}
+\label{tab:instruments}
+\end{table}
+
+\paragraph{Two channels (money + time).}
+\citep[Section~4]{lasser2026paper8a} establishes two
+substantively distinct observation modalities: money sacrifice
+(priced trade events) and time sacrifice (foregone-wage
+opportunity costs).  The two channels triangulate the same
+underlying realized exercise; cross-channel agreement is a
+robustness check, and divergences flag attestation or
+individuation issues.  Predictions~\ref{pred:bundle_completion}
+through~\ref{pred:saturation} of
+Section~\ref{sec:structural_predictions} are testable through
+either channel, with cross-channel triangulation providing
+independent confirmation.
+
+\paragraph{Aggregate lower bound $\betaL$.}
+\citep[Theorem~2]{lasser2026paper8a} bounds the realized
+exercise volume from below by an aggregate of admissible
+revealed-sacrifice events.  $\betaL$ is the aggregate lower
+ratio; $(1 - \betaL)/\betaL$ is the corresponding
+deployment-readable diagnostic ceiling on the within-channel
+disagreement gap $\epsnonres$
+(Remark~\ref{rem:agg_vs_sup}).  Computing $\betaL$ requires:
+(i)~a defined trade window~$W$, (ii)~classification of events
+as admissible or not under~S0, S1, S4(a), and the
+genuine-exchange conditions, and (iii)~aggregation under
+Part~A (bundle-level) or Part~B (per-capability) modes.
+
+\paragraph{Five-cell $\delta$-decomposition.}
+\citep[Definition~8]{lasser2026paper8b} attributes the gap
+across $\delta_{\mathrm{covered}}$ (channel observed),
+$\delta_{\mathrm{dormant}}$ (channel could reach but hasn't),
+$\delta_{\mathrm{restricted}}$ (deliberately non-exercised),
+$\delta_{\mathrm{residual}}$ ($\ResS$ proper), and
+$\delta_{\mathrm{boundary}}$ (boundary-residual).  The
+attribution is a structure question (``where does the gap
+live?'') and is the deployment instrument that selects which
+channel of Section~\ref{sec:lineage} binds for the given gap
+profile.
+
+\paragraph{Wireheading-consistent HHI.}
+\citep[Propositions~6~and~7]{lasser2026paper8b} construct a
+Schur-convex concentration measure on trade-flow distributions
+across bundle categories.  The HHI is the population-scale
+empirical witness for Conjecture~\ref{conj:optimization_pressure}: high HHI
+indicates concentration consistent with optimization-pressure
+exploitation of $P$-$T$ divergence regions, though as
+Remark~\ref{rem:hhi_empirical_witness} insists, the witness is
+correlational rather than causal.
+
+\paragraph{Need-access cost (NAC).}
+\citep[Definition~9]{lasser2026paper8b} tracks below-sufficiency
+expenditure: revealed sacrifice on capabilities below the
+polarity boundary, where retention is degrading and the agent
+has no non-degrading alternative.  NAC distinguishes need-share
+from want-share contributions to revealed sacrifice and is the
+operational substrate for Prediction~\ref{pred:mixed_polarity}.
+
+\paragraph{Per-event $\alpha_{n,c}$.}
+\citep[Definition~4]{lasser2026paper8a} defines the
+event-local bundle decomposition coefficients $\alpha_{n,c}$
+that partition a bundle's contribution to $\Delta\volL(X_n)$
+across capability components.  Per-event decomposition is the
+substrate for Channel~4 and for
+Predictions~\ref{pred:bundle_completion}
+and~\ref{pred:coop_premium}.
+
+\subsection{Operationalizing the Goodhart bound}
+\label{sec:operationalizing}
+
+The Goodhart theorem of Section~\ref{sec:goodhart} is testable
+cross-domain and longitudinally.  Both tests follow the same
+structural recipe but ask different questions of the data.
+
+\paragraph{Cross-domain test.}
+For a collection of capability domains $\mathcal{D}_1, \dots,
+\mathcal{D}_m$ in which the framework operates, compute the
+diagnostic ceiling $(1 - \betaL)/\betaL$ on each domain's
+$\epsnonres$ and the cell-wise attribution via the
+$\delta$-decomposition.  For a fixed alignment property $g$
+(say, anti-monopolar threshold accuracy), measure $g$'s
+deviation from a domain-specific operational truth.
+Theorem~\ref{thm:goodhart} certifies that domains with
+smaller diagnostic-ceiling values support smaller \emph{certified
+upper bounds} on $|g(T) - g(P)|$; the cross-domain empirical
+test is therefore a directional-consistency check between the
+diagnostic ceiling and observed deviations, with the cell-wise
+attribution telling the deployer which channel intervention
+would produce the within-domain tightening of the certified
+bound.  This test does not require closing the per-property
+Lipschitz constants; it requires only checking the directional
+consistency between cross-domain $\epsnonres$ and cross-domain
+$|g(T) - g(P)|$.  A domain
+violating the directional consistency is either a Lipschitz
+failure (the property's sensitivity to $\epsnonres$ is
+non-Lipschitz on the domain) or an attestation failure (the
+$\betaL$ ceiling is unreliable for the domain).
+
+\paragraph{Longitudinal test.}
+For a single deployment over a window $W = [t_0, t_0 + T]$ in
+which the deployment performs an admissible intervention on one
+of the four channels (more events, sharper attestation,
+re-individuation, bundle decomposition), measure the
+intervention's effect on $\betaL$, on the cell-wise attribution,
+and on $g$'s deviation from the operational truth.
+Theorem~\ref{thm:goodhart} certifies a monotone tightening of
+the \emph{upper bound} on $|g(T) - g(P)|$ with the
+intervention's effect on $\epsnonres$; the empirical test is the
+directional-consistency check on observed deviations.  Failure
+of monotonicity in the certified bound is either a Lipschitz
+violation, an attestation regression, or an unaccounted-for
+counter-channel effect (e.g., re-individuation that increases
+within-channel disagreement at the same time as it decreases
+the floor; cf.\ Remark~\ref{rem:floor_binds}).
+
+\paragraph{Distinguishing test outcomes.}
+Three distinct test outcomes have distinct interpretations:
+\begin{enumerate}
+\item \emph{Tightening as predicted, attribution consistent
+  with intervention.}  The framework's prediction is supported,
+  and the deployment can plan further interventions on the
+  binding channel.
+\item \emph{Tightening as predicted, attribution inconsistent
+  with intervention.}  The intervention worked, but for
+  different reasons than expected.  This is informative: it
+  suggests the cell-wise attribution is mis-specified (the
+  intervention reduced the wrong cell's gap), which is a
+  diagnostic-decomposition issue rather than a Goodhart
+  issue.
+\item \emph{No tightening or anti-tightening.}  The intervention
+  failed.  The most common failure modes are: (a)~Lipschitz
+  violation (the alignment property is not Lipschitz on the
+  relevant capability subspace under the deployment's
+  individuation), (b)~adversarial attestation degradation
+  (Open~Question~8 of Section~\ref{sec:discussion}), and
+  (c)~cross-channel offset (one channel improved while another
+  worsened).  Distinguishing the failure modes requires
+  cell-wise attribution before and after the intervention.
+\end{enumerate}
+
+\paragraph{Sup-norm coarseness and empirical sensitivity.}
+A caveat for the empirical programme that does not affect the
+theory.  The sup-norm definition of $\epsnonres$
+(Definition~\ref{def:eps_nonres}) is conservative
+(Remark~\ref{rem:supnorm_conservative}): a deployment that
+tightens $\epsnonres$ on 99\,\% of capability dimensions while
+slightly worsening it on one shows no improvement under the
+sup-norm.  How this caveat propagates to the diagnostic
+ceiling $(1-\betaL)/\betaL$ depends on how the deployment
+reads the ceiling.  When the deployment allocates per-capability
+ceiling components under
+Assumption~\ref{ass:per_cap_admissibility} part~(i) and then
+takes the worst-case across them as a sup-norm proxy, the
+diagnostic ceiling inherits the worst-dimension conservatism;
+when the deployment reads the ceiling purely as an aggregate
+(without per-capability allocation), the aggregate may still
+register average progress even if a single dimension regresses,
+but the bound on the sup-norm $\epsnonres$ is then no longer
+tight (Remark~\ref{rem:agg_vs_sup}).  In practice the
+cross-domain and longitudinal tests above may therefore be
+\emph{insensitive to genuine progress on most dimensions when a
+single dimension is regressing} (under the sup-norm reading
+that bounds $\epsnonres$ tightly), and a deployment may be
+meaningfully improving without the sup-norm-bounded diagnostic
+registering it.  This is a feature for safety-conservative
+alignment monitoring (one badly-proxied dimension is
+sufficient to produce a misaligned decision), but it is a
+limitation for deployment-progress measurement, where weighted
+norms or per-dimension diagnostics may be operationally more
+informative.  Open~Question~\ref{oq:nonmonotonicity} flags the
+weighted-norm direction as a candidate refinement; the
+empirical operator should interpret a flat sup-norm-bounded
+diagnostic under intervention as ``no progress on the worst
+dimension'' rather than as ``no progress at all,'' and may
+choose to track the aggregate $\betaL$ separately as a
+deployment-progress signal that the sup-norm bound's
+conservatism does not eat.
+
+\subsection{Testing the four channels}
+\label{sec:testing_channels}
+
+Each of the four channels of Section~\ref{sec:lineage} has a
+specific test that the instruments support.
+
+\paragraph{Channel 1 (observation density).}
+The longitudinal trajectory of $\betaL$ under admissible
+accumulation should be non-decreasing
+(\citep[Propositions~2~and~3]{lasser2026paper8a}).  Concretely:
+add a sequence of admissible trade events to a deployment's
+ledger one at a time; $\betaL$ at each step should be at least
+as large as the previous step.  A decrease falsifies either the
+admissibility classification or the framework's
+non-decreasing claim.  In practice, deployment data is added
+in batches; batch-wise non-decreasing is the operational
+version of the test.
+
+\paragraph{Channel 2 (attestation quality).}
+The attested-share of admissible events (events that pass the
+S0, S1, S4(a) checks under the deployment's institutional
+attestation infrastructure) should rise as the attestation
+layer matures.  The diagnostic-ceiling
+$(1 - \betaL)/\betaL$ at fixed observation count should
+tighten as the attested share rises (events previously
+classified as non-admissible become admissible under sharper
+attestation).  Falsification: $\betaL$ does not respond to
+attested-share improvements, indicating that the attestation
+layer's classification is not improving the operational
+admissibility set or that the events being attested are
+non-binding.
+
+\paragraph{Channel 3 (individuation discipline).}
+A re-individuation move (e.g., treating household labour as a
+distinct capability with imputed-time pricing) should reduce
+$\epsfloor$ and add a corresponding contribution to
+$\epsnonres$ from the newly-admitted capability.  The net
+effect on $\epsgap = \epsnonres + \lambda \cdot \epsfloor$
+depends on whether the new capability's attested share is
+high (in which case its $\epsnonres$ contribution is small,
+and the net move is a tightening) or low (in which case the
+move is neutral or even alignment-loosening, with the
+$\lambda$-weighted net $\Delta_3^{\lambda}$ approaching zero
+or going negative; cf.\ Section~\ref{sec:channel3_limitation}).
+Test: pre/post comparison of $\epsfloor$, $\epsnonres$, and
+the alignment property; the move tightens iff the new
+capability's attested share exceeds a deployment-specific
+threshold determined by $\lambda$.
+
+\paragraph{Channel 4 (bundle decomposition).}
+The per-event $\alpha_{n,c}$ decomposition (when the
+deployment's commitment scheme supports it) should produce
+within-bundle component-wise lower bounds that, when
+aggregated, are at least as tight as the bundle-level Part-A
+aggregation of \citep[Theorem~2]{lasser2026paper8a}.
+Operationally: compute $\betaL$ under both Part-A and Part-B
+modes for the same trade-event set; Part-B (per-capability)
+should be at least as informative as Part-A on the
+within-bundle poset-independence subset of events.  If
+Part-B is tighter, Channel~4 is delivering its predicted
+tightening; if not, the bundle-decomposition extension is
+either inactive or applied to events outside its
+admissibility scope.
+
+\subsection{Methodology template and forward}
+\label{sec:methodology_template}
+
+\citep[Section~6]{lasser2026paper8b} works through a four-phase
+end-to-end demonstration of the
+\citep[Need~Sufficiency]{lasser2026paper8b} diagnostic
+architecture on a single domain: capability inventory $\to$
+trade-event ledger $\to$ cell-wise attribution $\to$
+deployment intervention.  That worked example is a methodology
+template.  The four worked examples of
+Section~\ref{sec:worked_examples} below illustrate the full
+machinery of the present paper at four scales: (i)~micro-level
+divergence between a GFM prediction and the utility-theoretic
+account (Section~\ref{sec:wex_boat}), (ii)~the Goodhart
+gradient under variable observation infrastructure
+(Section~\ref{sec:wex_goodhart_gradient}),
+(iii)~fungibility-collapse limit at macro scale
+(Section~\ref{sec:wex_collapse}), and (iv)~mixed-polarity
+bundle-for-bundle trades with deployment misalignment
+consequences (Section~\ref{sec:wex_relocation}).  Each example
+exercises specific instruments from Table~\ref{tab:instruments}
+and demonstrates concrete tightening predictions or failure
+modes; the four examples together cover all six instruments
+and all four channels.

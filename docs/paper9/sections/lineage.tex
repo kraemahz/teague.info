@@ -1,0 +1,1245 @@
+\section{Channels of Economic-Model-Quality Tightening:\\
+GFM as Quantification of Capability Welfare Economics}
+\label{sec:lineage}
+
+Corollary~\ref{cor:direction} states that better economic
+models tighten alignment guarantees in the direction of the
+operational truth.  As stated, the corollary draws on a single
+mechanism (admissible accumulation of revealed-sacrifice
+observations), and the argument lives inside a remark wall in
+Section~\ref{sec:goodhart_corollary}.  This section develops the
+\emph{strong} form of the claim: ``better economic models'' is not
+one knob but four, each corresponding to an operational intervention
+the deployment can perform on top of \citep[Revealed
+Sacrifice]{lasser2026paper8a} and \citep[Need
+Sufficiency]{lasser2026paper8b}, each mapping to a specific
+component of the proxy-truth gap, and each composing through the
+Lipschitz transfer of Theorem~\ref{thm:goodhart} to a
+specific alignment-tightening consequence.
+
+The structural lens that organizes the four channels is the
+quantification thesis we develop in
+Section~\ref{sec:quantification_thesis}: GFM is the
+measure-theoretic formalization of the capability-welfare-economics
+tradition that runs from Sen 1985 through Stiglitz--Sen--Fitoussi
+2009.  The qualitative tradition has been negotiating the same four
+moves informally for forty years; what GFM adds is the formal
+substrate on which the moves admit Lipschitz analysis,
+monotonicity claims, and falsifiable predictions.  The four channels
+are exactly the formalized versions of those qualitative moves, and
+the Goodhart machinery of Section~\ref{sec:goodhart} is the
+alignment-payoff that the quantification makes possible.  Sections
+\ref{sec:channel_observation}--\ref{sec:channel_bundles} develop
+each channel; Section~\ref{sec:channel_composition} states the
+Composition Proposition; Section~\ref{sec:lineage_historical} maps
+the lineage onto the channels as historical confirmation that the
+moves are real.
+
+\subsection{The quantification thesis}
+\label{sec:quantification_thesis}
+
+Welfare economics has been a qualitative discipline.  Sen's
+\emph{Commodities and Capabilities}~\citep{sen1985commodities}
+introduces the capability set as the appropriate object for
+welfare analysis but does not endow it with a measure: the
+``capability set'' is a set of functionings the person could
+achieve, with comparison rules left to subsequent
+work.  Nussbaum's \emph{Women and Human
+Development}~\citep{nussbaum2000women} offers a substantive list
+of central capabilities, but the list is normative rather than
+structural: it does not constrain what counts as a capability or
+how capabilities aggregate.  Becker's household-production
+mathematics~\citep{becker1965theory,becker1981treatise}
+specifies a production function $F(x_1, \dots, x_n)$ for
+utility-yielding combinations of inputs, but $F$ is essentially
+unconstrained, which makes the framework descriptively powerful and
+predictively weak.  The Stiglitz--Sen--Fitoussi commission of
+2009~\citep{stiglitz2009report} catalogues at length
+\emph{what} GDP misses (non-market production, household labour,
+quality-of-life capabilities) but proposes only qualitative
+remedies (better surveys, satellite accounts, multi-dimensional
+indices) without a unified measure-theoretic framework on which the
+remedies compose.
+
+The pattern is recognizable.  Bentham's felicific calculus,
+with its qualitative criteria of \emph{intensity, duration,
+certainty, propinquity, fecundity, purity, extent}, was a
+qualitatively rich descriptive
+apparatus, and it took roughly a century-and-a-half for the
+expected-utility tradition (Bernoulli, Marshall, Edgeworth, von
+Neumann--Morgenstern) to formalize the qualitative claims into a
+measure-theoretic apparatus admitting axiomatization, falsification,
+and quantitative comparison.  GFM stands to capability welfare
+economics in the analogous role:
+
+\begin{quote}
+\textbf{The quantification thesis.}  GFM is a measure-theoretic
+formalization of the capability-welfare-economics tradition: one
+choice of formalization among possible others, not a uniqueness
+claim.  The qualitative content of Sen, Nussbaum, Becker, and the
+SSF commission is preserved; what is added is the formal substrate
+(poset structure, axioms~M1--M6, $\volL$, $\volR$, the
+gap decomposition, the residual-class characterization) on which
+the qualitative content admits Lipschitz analysis, monotonicity
+claims, and falsifiable predictions.  Theorems~\ref{thm:fungibility_collapse}
+and~\ref{thm:goodhart} are the alignment-payoff this
+formalization buys; the four channels of
+Sections~\ref{sec:channel_observation}--\ref{sec:channel_bundles}
+are what the formalization makes operationally tractable.
+\end{quote}
+
+The thesis is positioning, not a formal theorem of this paper.
+What it provides is the interpretive lens through which the
+formal results read as connected: the
+fungibility-collapse correspondence
+(Theorem~\ref{thm:fungibility_collapse}) says where standard utility
+theory sits inside the quantified apparatus; the structural
+predictions (Section~\ref{sec:structural_predictions}) say what
+becomes falsifiable under quantification; the Goodhart theorem
+(Theorem~\ref{thm:goodhart}) says how the quantification's
+proxy-truth gap controls alignment tightness; and the channels of
+Sections~\ref{sec:channel_observation}--\ref{sec:channel_bundles}
+say which operational moves drive the gap downward.
+
+\begin{remark}[The qualitative content is preserved, not replaced]
+\label{rem:not_replacing}
+The quantification thesis does not claim GFM \emph{replaces} the
+capability-welfare-economics tradition.  Sen's distinction between
+basic and higher capabilities, Nussbaum's normative content,
+Becker's household-production reasoning, and SSF's beyond-GDP
+agenda all retain their content; what GFM provides is a
+measure-theoretic substrate on top of which the existing
+content composes.  Specifically, the normative question (which
+capabilities should count as central) remains outside the formal
+apparatus; the framework provides the scaffold, not the loading.
+This is the same relation EU theory has to Bentham's felicific
+calculus: EU theory does not tell you \emph{what} to maximize;
+it provides the formal conditions under which the maximization is
+well-defined.  The present paper inherits the same scope discipline.
+\end{remark}
+
+\begin{remark}[What quantification buys, in one inequality]
+\label{rem:quantification_buys}
+The compact form of what quantification buys is the inequality of
+Theorem~\ref{thm:goodhart}:
+\[
+  | g(T) - g(P) | \leq \mathrm{Lip}(g) \cdot \epsnonres.
+\]
+The qualitative tradition cannot state this inequality, because
+$g$ is not a real-valued function on a measure space and $\epsnonres$
+is not a sup-norm of relative deviation between two measures.  The
+qualitative tradition can say \emph{the proxy and truth diverge},
+\emph{the divergence matters for alignment}, \emph{better measurement
+helps}, and the SSF commission has been saying these qualitatively
+for nearly two decades.  The inequality is the quantification:
+once $g$, $T$, $P$, $\mathrm{Lip}(g)$, and $\epsnonres$ are
+formal objects, the qualitative claims become bounds, and the
+bounds tighten or loosen with operational interventions in ways
+the qualitative tradition could not track.
+\end{remark}
+
+The four channels of
+Sections~\ref{sec:channel_observation}--\ref{sec:channel_bundles}
+are the quantified versions of the qualitative moves the welfare-
+economics tradition has been negotiating.  Each section opens with
+a one-sentence statement of the qualitative-vs-quantitative pair:
+what the tradition implicitly worked with, and what the formal
+version is.
+
+\subsection{Channel 1: Observation density}
+\label{sec:channel_observation}
+
+\paragraph{Qualitative tradition.}
+Welfare economists have long recognized that GDP-style aggregates
+miss content; the SSF commission's central recommendation is
+``measure what matters,'' which in operational terms means
+\emph{collect more data on under-measured dimensions}~\citep{stiglitz2009report}.
+The recommendation is qualitative: more is better, with the
+direction of improvement specified informally (time-use surveys,
+satellite accounts, quality-adjusted indices).  The mathematics
+is implicit.
+
+\paragraph{GFM quantification.}
+The
+\citep[Theorem~2]{lasser2026paper8a} aggregate B-to-C lower bound
+$\volRlower$ is what the qualitative recommendation becomes when
+the welfare-measurement question is formalized.
+\citep[Propositions~2~and~3]{lasser2026paper8a} establish that
+$\volRlower$ is non-decreasing in the observation count under
+admissible accumulation: each additional admissible event tightens
+the lower bound or leaves it unchanged, never weakens it.
+$(1 - \betaL)/\betaL$ is then a deployment-readable diagnostic
+ceiling on $\epsnonres$ derived from the aggregate lower ratio
+$\betaL$, with explicit dependence on the observation count.
+
+\paragraph{Operational intervention.}
+The intervention this channel admits: \emph{more admissible
+revealed-sacrifice events}.  Concretely, this includes
+(i)~increasing the trade-window scope so more events are admissible,
+(ii)~adding cross-channel triangulation by composing money-sacrifice
+and time-sacrifice ledgers
+(\citep[Section~4]{lasser2026paper8a}), (iii)~widening the
+deployment's bundle inventory so a larger fraction of the
+capability space is in $\delta_{\mathrm{covered}}$ rather than
+$\delta_{\mathrm{dormant}}$.
+
+\paragraph{Effect on $\epsgap$.}
+The intervention reduces the observation-incomplete share of
+$\delta_{\mathrm{covered}}$ in the cell decomposition of
+\citep[Definition~8]{lasser2026paper8b}.  Because $\betaL$ is
+non-decreasing under admissible accumulation, the diagnostic
+ceiling derived from $\betaL$ is non-increasing, and (under
+Assumption~\ref{ass:per_cap_admissibility}) $\epsnonres$
+admits a non-increasing aggregate bound.  By
+Theorem~\ref{thm:goodhart}, the certified upper bound on each
+Lipschitz alignment property's deviation from the operational
+truth is non-increasing in the same direction.
+
+\paragraph{Where this lands in the lineage.}
+The qualitative version of this channel is everything from Sen's
+``the capability set should be measured, not just commodities'' to
+SSF's catalogue of GDP omissions.  The quantitative version is
+$\betaL$ as a non-decreasing diagnostic.  The lineage maps to this
+channel through the $\delta_{\mathrm{covered}}$/$\delta_{\mathrm{dormant}}$
+distinction: SSF's qualitative ``GDP misses non-market production''
+is, in the quantified apparatus, the deployment-specific share of
+capability space that has not yet generated admissible trade
+events.  More trade events, more cross-channel triangulation, wider
+bundle inventory: these are the welfare-economics measurement
+moves with explicit alignment-tightening consequences under the
+Goodhart machinery.
+
+\subsection{Channel 2: Attestation quality}
+\label{sec:channel_attestation}
+
+\paragraph{Qualitative tradition.}
+Revealed-preference rigor in the household-production tradition of
+Becker~\citep{becker1965theory,becker1981treatise} assumes
+voluntary trade events satisfy free-choice and additivity
+conditions implicitly: the agent's revealed valuation $\Ui(Y) \geq
+\Ui(X)$ is treated as if directly observable from the trade,
+without an explicit attestation discipline that classifies events
+as voluntary, additively decomposable, and grounded in
+benchmarkable counterparts.  In practice, household-production
+analyses confront this limitation when revealed-preference data
+are mixed with non-voluntary trades (debt-servicing transactions,
+forced moves, below-sufficiency need access), and the analyst's
+classification of events is qualitative.
+
+\paragraph{GFM quantification.}
+\citep[Revealed~Sacrifice]{lasser2026paper8a} states the
+attestation requirements as formal assumptions
+S0~(valuation-bounded-by-exercise),
+S1~(free-choice-with-non-degrading-alternatives), and
+S4(a)~(valuation-additivity-on-the-surrendered-side), with the
+admissibility condition that events reaching the aggregate satisfy
+the named assumptions and the genuine-exchange conditions of
+\citep[Definition~2]{lasser2026paper8a}.  These are formal
+conditions on each event, not informal stipulations on the data.
+\citep[Need~Sufficiency]{lasser2026paper8b} adds the
+S1-sufficiency check (Definition~6) that operationalizes the
+free-choice condition by requiring at least one non-degrading
+alternative in the choice set.  \citep[Remark~18]{lasser2026paper8a}
+on external attestation makes explicit that the assumptions are
+not zero-knowledge-verifiable under the default commitment
+scheme; institutional infrastructure is required to verify them
+per-event.
+
+\paragraph{Operational intervention.}
+The intervention this channel admits: \emph{sharper attestation of
+S0, S1, and S4(a) per admissible event}.  Concretely, this means
+institutional infrastructure (trusted-third-party verification,
+sybil-resistance protocols, dispute-resolution layers, consent
+ledgers) that classifies events with respect to the named
+assumptions and admits only those passing the classification.
+The four-layer attestation discipline (Layers~A--D) of
+\citep[Remark~18]{lasser2026paper8a} catalogues the institutional
+preconditions; degradation in any layer reduces the attested
+share of admissible events.
+
+\paragraph{Effect on $\epsgap$.}
+Sharper attestation reduces the attestation-limited share of
+$\delta_{\mathrm{covered}}$: events that would have been excluded
+or down-weighted under noisy attestation become admissible
+contributions to $\volRlower$ under sharp attestation.  The
+mechanism is distinct from Channel~1: Channel~1 increases the
+\emph{quantity} of admissible events (more trades pass through);
+Channel~2 increases the \emph{certifiable share} of events at any
+given quantity.  Both reduce $\epsnonres$ but through different
+operational moves, and a deployment's binding-channel question
+(``is our gap due to too few events, or to noisy attestation on
+the events we have?'') depends on which sub-share of
+$\delta_{\mathrm{covered}}$ dominates.
+
+\paragraph{Where this lands in the lineage.}
+The qualitative version is Becker's implicit assumption that
+revealed-preference data is interpretable as voluntary
+exchange, an assumption that fails for debt-driven, coerced, or
+below-sufficiency transactions.  The quantitative version is the
+S0/S1/S4(a) discipline plus the attestation infrastructure that
+verifies it.  The institutional-attestation question is itself an
+open one: adversarial degradation of attestation under
+optimization pressure (Open~Question~8 of
+Section~\ref{sec:discussion}) is the natural sequel to
+Conjecture~\ref{conj:optimization_pressure}.
+
+\subsection{Channel 3: Individuation discipline}
+\label{sec:channel_individuation}
+
+\paragraph{Qualitative tradition.}
+Sen's capability approach treats the capability set as a structural
+object whose membership conditions are partly normative and partly
+empirical, and the question ``which capabilities count?'' is
+addressed in Sen 1985 through ad hoc choices about granularity
+and aggregation~\citep{sen1985commodities,sen1979equality}.
+Nussbaum's central-capabilities list~\citep{nussbaum2000women}
+provides a normative answer (ten capabilities considered central
+to a fully human life), but the list is descriptive of important
+capabilities rather than structural about \emph{individuation}, i.e., about
+when two distinct activities should be treated as one capability or
+two.  In welfare-economics practice, the same individuation
+ambiguity appears in the choice of consumption basket categories,
+the time-use survey's activity taxonomy, and the satellite
+accounts' sectoral decomposition.
+
+\paragraph{GFM quantification.}
+\citep[Need~Sufficiency]{lasser2026paper8b}, Definition~12,
+formalizes the residual class $\ResS$ as the structural set of
+capabilities the sacrifice channel cannot in principle reach
+(capabilities exercised without any material or
+time-displacement footprint).  The complement $P \setminus \ResS$
+is the channel-reachable subset on which the framework's
+within-channel disagreement gap $\epsnonres$
+(Definition~\ref{def:eps_nonres}) is defined.  Whether a given
+capability lies in $\ResS$ depends on individuation choices: how
+the deployment carves capability space into distinct units, what
+counts as a meaningful sacrifice trace, what attestation
+infrastructure exists for previously-unsupported activities.
+Definition~\ref{def:eps_floor}'s residual-class floor $\epsfloor$
+is the share of total operational truth that lives in
+$\ResS$ under the deployment's chosen individuation.
+
+\paragraph{Operational intervention.}
+The intervention this channel admits: \emph{re-individuation that
+moves capabilities from $\ResS$ into the channel-reachable
+subset}.  Concretely, this means treating activities that
+previously had no recorded sacrifice trace as distinct capabilities
+with imputed pricing or imputed time cost: household labour gets
+imputed-time pricing via time-use surveys; volunteer activity gets
+imputed-wage pricing; previously-uncounted ecosystem services get
+satellite-account valuation.  Each re-individuation move pulls a
+capability from $\ResS$ into $\delta_{\mathrm{covered}}$ or
+$\delta_{\mathrm{dormant}}$ at the cost of admitting an imputation
+methodology that the deployment must defend.
+
+\paragraph{Effect on $\epsgap$.}
+Re-individuation reduces $\epsfloor$ directly: capabilities that
+leave $\ResS$ stop contributing to the floor and start contributing
+(via Channels~1, 2, or 4) to the within-channel component
+$\epsnonres$.  The total alignment slack $\epsgap = \epsnonres +
+\lambda \cdot \epsfloor$ may not reduce monotonically under
+re-individuation, because moving a capability from $\ResS$ adds
+a new contribution to $\epsnonres$ (the imputation's measurement
+slack) at the same time as it subtracts from $\epsfloor$.
+Whether the net move tightens depends on whether the imputation's
+contribution to $\epsnonres$ is smaller than $\lambda$ times the
+floor reduction.  This is the deployment's individuation calculus,
+and it is exactly the calculus welfare economics has been
+performing implicitly when adopting time-use surveys, satellite
+accounts, and imputed-rent calculations.
+
+\begin{remark}[The floor is the binding constraint, eventually]
+\label{rem:floor_binds}
+For sufficiently mature deployments (those with dense observation
+infrastructure (Channel~1), mature attestation (Channel~2), and
+fine bundle decomposition (Channel~4)), the within-channel
+disagreement $\epsnonres$ may approach the diagnostic-ceiling
+floor at which the $\delta_{\mathrm{covered}}$ contribution is
+exhausted.  Beyond that point, further tightening of $\epsgap$
+requires either (a)~moving capabilities out of $\ResS$ via
+re-individuation (treating household labour as a distinct
+capability with imputed-time pricing, etc.), or (b)~accepting
+the deployment's $\lambda \cdot \epsfloor$ as the operational
+floor.  Move~(a) is the GFM-side analogue of welfare economics'
+imputation methods~\citep{stiglitz2009report,aguiar2007measuring};
+move~(b) is the governance question of which capabilities a
+deployment treats as ``no sacrifice-observable path in
+principle.''  The floor binds when Channels~1, 2, and 4 saturate;
+Channel~3 is what the deployment uses to keep tightening past the
+saturation point.
+\end{remark}
+
+\paragraph{Where this lands in the lineage.}
+The qualitative version is everything from Sen's ad hoc capability
+granularity to Nussbaum's central-capabilities list to SSF's
+satellite-account programme.  The quantitative version is $\ResS$
+as a definable structural class with a deployment-specific
+individuation parameter.  Whether GFM's apparatus delivers
+sharper imputation tools than the standard welfare-economics
+methods is Open~Question~7, a question shared with welfare
+economics rather than unique to the alignment programme.
+
+\subsection{Channel 4: Bundle decomposition}
+\label{sec:channel_bundles}
+
+\paragraph{Qualitative tradition.}
+Becker's household production model~\citep{becker1965theory,becker1981treatise}
+specifies utility as $u = u(z_1, \dots, z_m)$ where $z_j =
+F_j(x_{j,1}, \dots, x_{j,n_j})$ are produced commodities derived
+from inputs.  $F_j$ is essentially unconstrained: the modeller
+specifies the production function based on the application, and
+the resulting utility maximization over $x$ is descriptively
+flexible but predictively soft because $F_j$ admits any
+specification.  The empirical content of the framework is
+correspondingly limited: most observed bundle behaviour can be
+rationalized by the right $F_j$, leaving the framework
+descriptively powerful but unfalsifiable in the strong sense.
+
+\paragraph{GFM quantification.}
+\citep[Definition~4]{lasser2026paper8a} defines the event-local
+bundle decomposition: for each admissible event with bundle $Y_n =
+\{y_{n,1}, \dots, y_{n,k_n}\}$, the per-capability coefficients
+$\alpha_{n,c}$ partition the bundle's contribution to
+$\Delta\volL(X_n)$ across capability components.  The
+coefficients are constrained by the poset's structural
+connectivity (M6 admits cooperative excess only when the
+capabilities are poset-coherent, not arbitrarily so) and by the
+within-bundle poset-independence requirement of
+\citep[Theorem~2 Part~B]{lasser2026paper8a} when per-capability
+aggregation is wanted.  The constraint is what makes Becker's
+flexible $F_j$ predictively sharp under quantification:
+cooperative capabilities have constrained structure, and the
+constraint generates Predictions~\ref{pred:bundle_completion}
+and~\ref{pred:coop_premium} of
+Section~\ref{sec:structural_predictions} as falsifiable claims.
+
+\paragraph{Operational intervention.}
+The intervention this channel admits: \emph{per-component bundle
+attribution at the protocol level}.  Concretely, this means
+extending the default commitment scheme to expose per-capability
+contributions for events whose bundles have non-trivial
+cooperative structure.  The
+\citep[Open~Question~2]{lasser2026paper8a} flags this as the
+bundle-decomposition extension; \citep[Remark~5]{lasser2026paper8a}
+notes the bundle-for-bundle generalization as related future work.
+Per-event subset-membership openings (the Part-B aggregation
+mode of \citep[Theorem~2]{lasser2026paper8a}) and
+hedonic-disaggregation panels are the deployment instruments.
+
+\paragraph{Effect on $\epsgap$.}
+Bundle decomposition reduces the intra-bundle attribution
+mismatch share of $\delta_{\mathrm{covered}}$.  When bundles are
+treated as monolithic, per-capability deviations average out
+within the bundle, and $\epsnonres$ inherits an aggregate-level
+slack that is not separable into per-capability components.
+With bundle decomposition, per-capability lower-ratio assumptions
+become testable, and $\epsnonres$ admits a per-capability
+decomposition that the aggregate-only $\betaL$ cannot deliver.
+This is what makes Theorem~\ref{thm:goodhart}'s Lipschitz
+transfer cleanly per-property: each alignment property cares about
+specific capability components, and the per-component decomposition
+lets the Lipschitz constants land on the appropriate components.
+
+\paragraph{Where this lands in the lineage.}
+The qualitative version is Becker's $F_j$ as an unconstrained
+production function.  The quantitative version is M6's
+poset-coherent cooperative excess, with $\alpha_{n,c}$ as the
+per-component attribution.  The Becker-to-GFM move is the
+constraint-imposition step: by requiring cooperative capabilities
+to be poset-coherent, the framework converts Becker's
+descriptively-flexible mathematics into a structurally-falsifiable
+one.
+
+\subsection{Composition: alignment properties inherit channel sensitivities}
+\label{sec:channel_composition}
+
+The four channels are not independent.  Channel~4 (bundle
+decomposition) requires sufficient observation density (Channel~1)
+and adequate attestation (Channel~2) to be meaningful per-event;
+Channel~3 (individuation) is upstream of all three within-channel
+channels because it determines which capabilities are in
+$\ResS$ versus the channel-reachable subset where the within-channel
+gap is even defined.  But under admissible composition, the four
+channels each contribute a separate reduction to a separate
+component of $\epsgap$; the unclipped aggregate alignment-slack
+reduction is the sum of channel contributions, capped at the
+pre-intervention slack.
+
+The proposition operates on the \emph{aggregate diagnostic
+ceiling} on $\epsnonres$ rather than the sup-norm directly.
+Recall from Remark~\ref{rem:agg_vs_sup} that
+$(1 - \betaL)/\betaL$ is a deployment-readable diagnostic
+ceiling on an aggregate version of $\epsnonres$, additively
+decomposable across the cells of
+\citep[Definition~8]{lasser2026paper8b}.  Denote this aggregate
+diagnostic ceiling by $\hat{\epsilon}^{\mathrm{nonres}}$.  The
+sup-norm $\epsnonres$ is bounded above by
+$\hat{\epsilon}^{\mathrm{nonres}}$ only under an explicit
+admissibility assumption that names how the deployment's
+per-capability lower-ratios and channel sub-share allocations
+relate to the aggregate.
+
+\begin{assumption}[Per-capability admissibility]
+\label{ass:per_cap_admissibility}
+A deployment of the framework is \emph{per-capability admissible}
+when both of the following hold:
+\begin{enumerate}
+\item[(i)] \textbf{Per-capability ceiling allocation.}  For every
+  $c \in P^{\mathrm{act}}$, the relative deviation
+  $|P(c) - T(c)|/T(c)$ is bounded above by a deployment-assigned
+  non-negative ceiling component $\hat{\epsilon}_c \geq 0$, and
+  the assignment satisfies
+  $\sum_{c \in P^{\mathrm{act}}} \hat{\epsilon}_c \leq
+   \hat{\epsilon}^{\mathrm{nonres}}$.  Equivalently, the
+  aggregate ceiling allocates a non-negative budget across
+  per-capability ceilings whose sum bounds the total.
+\item[(ii)] \textbf{Disjoint channel sub-shares.}  The channel
+  sub-share allocations
+  $(\Delta_1, \Delta_2, \Delta_4, \Delta_3^{\mathrm{floor}},
+   \Delta_3^{\mathrm{new}})$ act on mutually non-overlapping
+  subsets of the per-capability ceiling components in (i): the
+  sub-shares have disjoint support across the
+  $\delta_{\mathrm{covered}}$, $\delta_{\mathrm{dormant}}$, and
+  $\delta_{\mathrm{residual}}$ cells of
+  \citep[Definition~8]{lasser2026paper8b}, and within
+  $\delta_{\mathrm{covered}}$ the attestation-limited and
+  intra-bundle-mismatch portions are themselves disjoint.
+\end{enumerate}
+Under per-capability admissibility, $\epsnonres \leq
+\hat{\epsilon}^{\mathrm{nonres}}$ and the additive
+decomposition of channel-wise reductions is well-defined.
+\end{assumption}
+
+\begin{remark}[Per-capability admissibility is a deployment
+condition, not a structural feature]
+\label{rem:per_cap_admissibility_deployment}
+Assumption~\ref{ass:per_cap_admissibility} is not a theorem of
+the apparatus.  Part~(i) requires the deployment to have
+sufficient per-capability ledger granularity to assign
+per-capability ceilings; in the public-ledger-only regime where
+only event-level aggregates are exposed, the assignment is a
+coarse approximation and the sup-norm bound is correspondingly
+loose.  Part~(ii) is structurally guaranteed across cells of the
+$\delta$-decomposition by
+\citep[Definition~8]{lasser2026paper8b}, but the within-cell
+disjointness (attestation-limited versus intra-bundle-mismatch
+portions of $\delta_{\mathrm{covered}}$) requires the
+deployment's classification to separate the two operational
+regimes.  When per-capability admissibility fails, the
+proposition's bound on $\hat{\epsilon}^{\mathrm{nonres}}$ remains
+valid as an aggregate diagnostic but does not bound the sup-norm
+directly, and the per-channel attribution becomes a
+deployment-readable diagnostic rather than an operationally
+tightening claim.
+\end{remark}
+
+\begin{proposition}[Channel composition for alignment-tightening]
+\label{prop:channel_composition}
+Let $g$ be an alignment property satisfying the Lipschitz
+hypothesis of Theorem~\ref{thm:goodhart} on
+$P^{\mathrm{act}}$, with property-specific Lipschitz constant
+$\mathrm{Lip}(g)$.  Assume per-capability admissibility
+(Assumption~\ref{ass:per_cap_admissibility}) so that
+$\epsnonres \leq \hat{\epsilon}^{\mathrm{nonres}}$.  Suppose a
+deployment performs admissible interventions on Channels~1--4
+yielding component-wise reductions $\Delta_1, \Delta_2, \Delta_4
+\geq 0$ in the corresponding non-overlapping sub-shares of
+$\hat{\epsilon}^{\mathrm{nonres}}$ (drawn from
+$\delta_{\mathrm{dormant}}$, the attestation-limited portion of
+$\delta_{\mathrm{covered}}$, and the intra-bundle mismatch
+portion of $\delta_{\mathrm{covered}}$ respectively), with each
+$\Delta_i$ bounded above by its allocated component share so
+that the post-intervention sub-share remains non-negative.
+Channel~3 yields two coupled component-wise quantities:
+$0 \leq \Delta_3^{\mathrm{floor}} \leq \epsfloor$, the mass
+moved out of $\ResS$ by re-individuation, and
+$\Delta_3^{\mathrm{new}} \geq 0$, the new aggregate-ceiling
+contribution from the newly-individuated capabilities.  Channel~3 is \emph{admissible} when its
+$\lambda$-weighted net is non-negative,
+\[
+  \Delta_3^{\lambda}
+  \;\equiv\; \lambda \cdot \Delta_3^{\mathrm{floor}}
+              - \Delta_3^{\mathrm{new}}
+  \;\geq\; 0,
+\]
+which is the condition under which re-individuation tightens the
+alignment slack rather than loosening it (cf.\
+Remark~\ref{rem:floor_binds} and
+Remark~\ref{rem:channel3_net}).  Then the post-intervention
+alignment slack admits the bound
+\begin{align*}
+  \bigl| g(T) - g(P) \bigr|_{\mathrm{post}}
+  \leq\;\;& \mathrm{Lip}(g) \cdot \\
+  & \Bigl(
+    \bigl(\hat{\epsilon}^{\mathrm{nonres}}
+       + \Delta_3^{\mathrm{new}}
+       - (\Delta_1 + \Delta_2 + \Delta_4)\bigr) \\
+  & \;\;{}+ \lambda \cdot (\epsfloor - \Delta_3^{\mathrm{floor}})
+  \Bigr)^+,
+\end{align*}
+where $(\cdot)^+$ denotes the positive part.  The
+\emph{unclipped} pre-to-post slack decreases by exactly
+$(\Delta_1 + \Delta_2 + \Delta_4) + \Delta_3^{\lambda}$;
+the clipped bound's reduction is therefore
+\[
+  \mathrm{Lip}(g) \cdot \min\!\Bigl(
+    \hat{\epsilon}^{\mathrm{nonres}}
+      + \lambda \cdot \epsfloor,\;\;
+    (\Delta_1 + \Delta_2 + \Delta_4) + \Delta_3^{\lambda}
+  \Bigr),
+\]
+i.e., capped at the pre-intervention slack when the
+sum of channel reductions overshoots.  In particular the bound
+is non-increasing whenever
+$\Delta_1, \Delta_2, \Delta_4 \geq 0$ and
+$\Delta_3^{\lambda} \geq 0$.  The composition is exact under
+the \emph{sequential-intervention regime} (deployments that
+fix one channel before performing the next, so that
+Assumption~\ref{ass:per_cap_admissibility}'s disjointness
+condition holds across each per-channel step), and approximate
+otherwise, with cross-channel correction terms appearing under
+simultaneous co-evolution of the channels (see
+Remark~\ref{rem:ch34_interaction}).
+\end{proposition}
+
+\begin{proof}[Sketch]
+Theorem~\ref{thm:goodhart} applied at the post-intervention
+configuration gives a within-channel bound
+$\mathrm{Lip}(g)$ times the post-intervention sup-norm.  Under
+per-capability admissibility, that sup-norm is bounded by the
+post-intervention aggregate ceiling, which decomposes additively
+as
+\[
+  \hat{\epsilon}^{\mathrm{nonres}}
+   + \Delta_3^{\mathrm{new}}
+   - (\Delta_1 + \Delta_2 + \Delta_4),
+\]
+where the additive decomposition follows from the
+non-overlapping sub-share allocation across the cells of
+\citep[Definition~8]{lasser2026paper8b}.  The floor side
+contributes $\lambda \cdot (\epsfloor - \Delta_3^{\mathrm{floor}})$
+under the same per-cell allocation.  Combining and applying the
+positive-part operator (which handles the case where the sum of
+reductions exceeds the pre-intervention components) gives the
+stated bound.
+\end{proof}
+
+\begin{remark}[Channel~3's net contribution to the bound]
+\label{rem:channel3_net}
+The proposition treats Channel~3's contribution as the
+$\lambda$-weighted net $\Delta_3^{\lambda} = \lambda \cdot
+\Delta_3^{\mathrm{floor}} - \Delta_3^{\mathrm{new}}$ rather than
+a pure floor reduction.  This is structurally important:
+re-individuation moves a capability $c$ from $\ResS$ into the
+channel-reachable subset, which does two things simultaneously.
+It reduces $\epsfloor$ by $\vol_R(c)/\vol_R(P)$ (the floor mass
+moves out), and it introduces a new contribution to
+$\hat{\epsilon}^{\mathrm{nonres}}$ equal to the
+aggregate-ceiling share of the newly-individuated capability's
+within-channel proxy-truth disagreement.  The two contributions
+sit on different sides of the
+$\epsgap = \epsnonres + \lambda \cdot \epsfloor$ split: the
+floor reduction enters with weight $\lambda$, while the
+within-channel addition enters with weight one.  Channel~3 is
+non-tightening (the intervention loosens the alignment slack
+rather than tightening it) precisely when
+$\Delta_3^{\mathrm{new}} > \lambda \cdot
+\Delta_3^{\mathrm{floor}}$, equivalently when
+$\Delta_3^{\lambda} < 0$.  This is a deployment-specific
+calculus (the imputation calculus of
+Remark~\ref{rem:floor_binds}), and not a structural feature of
+the apparatus.  In the limit $\Delta_3^{\mathrm{new}} = 0$
+(the newly-individuated capability has zero within-channel
+disagreement on day-one), $\Delta_3^{\lambda} = \lambda \cdot
+\Delta_3^{\mathrm{floor}}$ and the proposition reduces to the
+pure floor-reduction framing.
+\end{remark}
+
+
+\begin{remark}[Two distinct sources of tightening, formalized]
+\label{rem:two_sources}
+Proposition~\ref{prop:channel_composition} formalizes a distinction
+that Corollary~\ref{cor:direction} conflated.  Channels~1 and~2
+deliver \emph{observation-density} and \emph{attestation-quality}
+tightening on existing within-channel cells; Channel~3 delivers
+\emph{individuation} tightening by moving capabilities between
+$\ResS$ and the within-channel subset; Channel~4 delivers
+\emph{bundle-decomposition} tightening by sharpening per-capability
+attribution.  These are operationally distinct interventions.  When
+a deployment reports a tightening, the channel-attribution tells
+the deployer which intervention is operative, which is the
+information needed to plan the next intervention.  The
+five-cell $\delta$-decomposition of
+\citep[Definition~8]{lasser2026paper8b} is the operational
+instrument that supports the attribution: a deployment-readable
+diagnostic that points the deployer toward the binding channel.
+\end{remark}
+
+\begin{remark}[Channel sensitivities are property-specific]
+\label{rem:channel_property_specific}
+Proposition~\ref{prop:channel_composition} states the channel
+contributions as separate $\Delta_i$, but the
+\emph{property-specific} sensitivity of each alignment property to
+each channel is not bounded at this paper's level of analysis.
+The anti-monopolar threshold (\citep[Proposition~6]{lasser2026horizon})
+cares about substrate-volume distributions and is more sensitive
+to Channel~3 (individuation across substrates) than to Channel~4
+(within-bundle attribution).  The convergence rate
+(\citep[Theorem~2]{lasser2026wamura}) cares about per-capability
+exercise dynamics and is more sensitive to Channels~1 and~4 than
+to Channel~3.  The phase-boundary location is sensitive to all
+four through the Lyapunov function's smoothness profile.
+Per-property channel-sensitivity coefficients are perturbative
+roadmap items (Section~\ref{sec:goodhart_examples}); the
+proposition states the channel-wise composition without
+committing to per-property weights.
+\end{remark}
+
+\begin{remark}[Channels 3 and 4 are not independent in practice]
+\label{rem:ch34_interaction}
+Assumption~\ref{ass:per_cap_admissibility} part~(ii) requires the
+channel sub-share allocations to act on disjoint cells of
+\citep[Definition~8]{lasser2026paper8b}'s decomposition.
+Across-cell disjointness (Channels~1, 2 acting on
+$\delta_{\mathrm{covered}}$ vs $\delta_{\mathrm{dormant}}$;
+Channel~3 acting on $\delta_{\mathrm{residual}}$) is structurally
+clean.  But Channels~3 and~4 interact in deployment practice: a
+re-individuation move (Channel~3) changes the granularity at
+which bundles can be decomposed, which shifts what
+$\Delta_4$ is allowed to act on.  Conversely, a sharper bundle
+decomposition (Channel~4) can suggest re-individuation choices
+that would not be visible without the per-component attribution.
+The disjointness condition holds when the deployment fixes its
+individuation discipline before performing bundle decomposition
+(or vice versa) and treats subsequent moves as separate
+interventions; under simultaneous co-evolution of the
+individuation scheme and the bundle decomposition,
+cross-channel interaction terms appear and the additive
+composition of Proposition~\ref{prop:channel_composition} acquires
+correction terms.  Characterizing those correction terms, and
+the deployment conditions under which they vanish or remain
+small, is open (a refinement of
+Open~Question~\ref{oq:rate}'s rate question, with the
+non-disjointness as a separate sensitivity dimension).  In the
+worked examples of Section~\ref{sec:worked_examples} we treat
+the channels as performed sequentially, which is the
+disjointness regime; deployments that co-evolve Channels~3
+and~4 will need the correction-term refinement.
+\end{remark}
+
+\subsection{The capability-economics lineage as historical confirmation}
+\label{sec:lineage_historical}
+
+The four channels have been catalogued, formalized, and tied to
+specific cells of the gap decomposition.  The remaining task is
+historical: showing that the channels are not GFM-internal
+inventions but the formalized versions of moves the
+capability-welfare-economics tradition has been negotiating
+qualitatively for forty years.  This subsection traces the
+correspondences.
+
+\subsubsection{Sen 1985: the capability set, formalized}
+
+Sen's \emph{Commodities and
+Capabilities}~\citep{sen1985commodities} introduces three
+structural objects: the \emph{capability set} (the set of
+functioning vectors a person could achieve), the \emph{functioning
+vector} (what the person actually does or is), and the
+\emph{capability--functioning gap} (the difference between
+freedom-to-do and actual-doing).  None is endowed with a measure;
+the comparison rules between capability sets are addressed
+informally and partially.
+
+GFM provides the measure-theoretic counterparts:
+\begin{itemize}
+\item Sen's \emph{capability set} $\to$ the poset $P$ with measure
+  $\volL$ satisfying axioms~M1--M6
+  (\citep[Proposition~1]{lasser2026poset}).
+\item Sen's \emph{functioning vector} $\to$ the exercised
+  sub-poset $P^{\mathrm{ex}}$ with the window-active realized
+  exercise volume $\volRwin$
+  (\citep[Definition~3]{lasser2026paper8a}).
+\item Sen's \emph{capability--functioning gap} $\to$ the B-to-C
+  gap with the five-cell $\delta$-decomposition
+  (\citep[Definition~8]{lasser2026paper8b}).
+\end{itemize}
+The functionings--capabilities distinction is recovered through
+measurement: $\volL$ measures the option set; $\volR$ measures the
+exercised subset; the polarity boundary
+(\citep[Definition~3]{lasser2026paper8b}) plus the
+S1-attestation layer (\citep[Remark~18]{lasser2026paper8a})
+distinguish ``chooses not to exercise'' from ``cannot exercise.''
+Sen's freedom dimension is preserved, formally rather than
+ontologically: above the polarity boundary, sacrifice reveals
+preference; below, sacrifice reveals cost-of-access.
+
+This is the home of all four channels: Channel~1 (observation
+density on the capability set), Channel~2 (attestation
+infrastructure for the freedom dimension), Channel~3
+(individuation of what counts as a capability), and Channel~4
+(bundle decomposition within the capability set) all live on the
+poset Sen named without a measure.  Sen's later work,
+particularly \emph{The Idea of Justice}~\citep{sen2009idea}, is
+congenial to the GFM stance on operational truth: Sen's shift
+toward a \emph{comparative} rather than transcendental approach
+to justice (emphasizing operational comparison of options over
+identification of an ideal) parallels GFM's commitment to
+operational $T = \volRwin$ rather than metaphysical inner
+preference (Definition~\ref{def:operational_T}).  For current
+state-of-field surveys of the qualitative tradition,
+see~\citep{robeyns2017wellbeing} and~\citep{chiappero2020cambridge}.
+
+\subsubsection{Nussbaum 2000: basic vs higher capabilities, structurally separated}
+
+Nussbaum's \emph{Women and Human
+Development}~\citep{nussbaum2000women} adds the basic-versus-higher
+capability distinction with substantive normative content.  Basic
+capabilities are minimum thresholds for a viable life; higher
+capabilities are freedoms the agent can exercise above the
+thresholds.  The distinction is qualitative, drawn from
+philosophical anthropology rather than structural analysis.
+
+\citep[Need~Sufficiency]{lasser2026paper8b} structurally
+separates the two regimes:
+\begin{itemize}
+\item Below the polarity boundary
+  (\citep[Definition~3]{lasser2026paper8b}): need-side, where
+  retention is degrading and sacrifice reveals cost-of-access
+  (the need-access cost \citep[Definition~9]{lasser2026paper8b}).
+\item Above the polarity boundary: want-side, where the agent has
+  non-degrading alternatives and sacrifice reveals preference
+  (the standard \citep[Revealed~Sacrifice]{lasser2026paper8a}
+  channel).
+\end{itemize}
+The structural separation is what GFM adds beyond Nussbaum:
+not just \emph{the basic capability is met} but \emph{the way it
+is met does not corrupt the downstream capability structure}
+(\citep[Definition~2(b)]{lasser2026paper8b}, the downstream-safety
+condition).  Channel~2 (attestation) is most directly relevant to
+this distinction: the S1-sufficiency check is what verifies the
+above-versus-below polarity classification.  The normative
+loading (\emph{which} capabilities are basic, in Nussbaum's
+sense) remains outside the formal apparatus, consistent with
+Remark~\ref{rem:not_replacing}.
+
+\subsubsection{Becker 1965: household production, constrained}
+
+Becker's \emph{A Theory of the Allocation of
+Time}~\citep{becker1965theory} introduces household production
+functions $z_j = F_j(x_{j,1}, \dots, x_{j,n_j})$ that produce
+utility-yielding commodities from market-good and time inputs.
+The production functions are unconstrained: any specification of
+$F_j$ is admissible, and the framework's empirical content depends
+on what specification the modeller chooses.
+
+GFM's M6 (cooperative capabilities) is the formal counterpart to
+Becker's household production, with one crucial constraint: the
+cooperative excess admitted by M6 is poset-coherent, bounded by
+the structural connectivity of the capability poset rather than
+by an arbitrary $F_j$.  This is what converts Becker's
+descriptively-flexible mathematics into a structurally-falsifiable
+framework.  Predictions~\ref{pred:bundle_completion}
+and~\ref{pred:coop_premium} depend on the constraint: the
+poset-coherence of cooperative excess is what makes the
+predicted variance pattern in Prediction~\ref{pred:coop_premium}
+testable.  Channel~4 (bundle decomposition) is the operational
+expression of the constraint at the per-event level.
+
+\subsubsection{Bernheim--Rangel 2009: behavioral welfare economics' structural neighbor}
+
+\citet{bernheim2009beyond} develop behavioral welfare economics
+on a choice-theoretic foundation that distinguishes
+welfare-relevant from welfare-irrelevant choice domains: when
+agents exhibit dynamically inconsistent or context-dependent
+choices, the framework asks which subset of the agent's
+revealed-choice data carries welfare-relevant information.  The
+construction is a structural neighbor of GFM's polarity
+boundary: both frameworks separate revealed-sacrifice events
+into two operational regimes: one in which the trade reveals
+welfare-relevant content, one in which it does not.  The
+divisions are different in kind: Bernheim--Rangel's split is
+across choice domains (the choice was made under conditions
+that compromise welfare-revelation), while GFM's polarity
+boundary is across capability sufficiency (the trade is on a
+need-side or want-side dimension), but the operational
+discipline (``not all revealed sacrifice reveals
+preference'') is shared.  The closest historical parallel for
+the welfare-revelation distinction is Kahneman's
+experienced-utility-vs-decision-utility
+distinction~\citep{kahneman1997back}: a domain-of-validity
+restriction on revealed-preference inference.
+
+GFM does not adopt the Bernheim--Rangel apparatus directly; the
+polarity boundary of \citep[Need~Sufficiency]{lasser2026paper8b}
+operates on capability sufficiency rather than on choice-domain
+welfare-revelation.  But the structural overlap is real: both
+frameworks recognize that revealed sacrifice is not always a
+preference signal, and both supply an operational discipline
+for separating preference-revealing from preference-obscuring
+trades.  A complete formal comparison (whether the polarity
+boundary plus the S1-attestation layer can be derived as a
+specialization of Bernheim--Rangel's choice-domain restriction,
+or whether the two are structurally distinct) is open and out
+of scope for this paper.
+
+\subsubsection{Stiglitz--Sen--Fitoussi 2009: the gap decomposition, as a measurement instrument}
+
+The 2009 SSF report~\citep{stiglitz2009report} is the most
+direct qualitative precursor.  Its central recommendation
+(``GDP measures poorly capture welfare because they miss
+non-market production, quality-of-life capabilities, and
+distributional equity'') is a qualitative gap-decomposition
+statement: the
+welfare-relevant capability space exceeds the GDP-measured
+subspace, and the difference admits structurally distinct
+components (non-market production, quality of life, distribution).
+The report's recommended remedies (time-use surveys, satellite
+accounts, multi-dimensional well-being indices) are imputation
+moves that re-individuate previously-uncounted activities into the
+measured space.
+
+\citep[Need~Sufficiency]{lasser2026paper8b}'s
+five-cell $\delta$-decomposition (Definition~8) is the
+quantitative formalization.  $\delta_{\mathrm{covered}}$,
+$\delta_{\mathrm{dormant}}$, $\delta_{\mathrm{restricted}}$,
+$\delta_{\mathrm{residual}}$, and $\delta_{\mathrm{boundary}}$
+are the structural cells SSF was identifying qualitatively.
+$\ResS$ is the formal version of ``the parts GDP misses'';
+re-individuation (Channel~3) is the formal version of imputation
+methods.
+
+A measurement-instrument observation worth making here.  In
+welfare-economics practice, the SSF decomposition is itself a
+\emph{measurement instrument}: it tells the analyst which
+imputation method applies to which kind of unobserved activity
+(time-use surveys for household labour, satellite accounts for
+ecosystem services, imputation for owner-occupied housing).  The
+decomposition is not a separate measurement primitive that adds
+to the ledger; it is a deployment-readable diagnostic that
+selects which intervention to apply.  In the GFM apparatus, the
+five-cell $\delta$-decomposition plays the same selector role:
+when a deployment reports a wide $\epsgap$, the cell-wise
+attribution tells the deployer whether the binding channel is
+observation density (large $\delta_{\mathrm{dormant}}$),
+attestation (large attestation-limited share of
+$\delta_{\mathrm{covered}}$), individuation (large
+$\delta_{\mathrm{residual}}$), or bundle decomposition (large
+intra-bundle mismatch share of $\delta_{\mathrm{covered}}$).
+The lineage from SSF's qualitative decomposition to GFM's
+quantified decomposition is therefore not just structural but
+operational: both objects play the same epistemic role in their
+respective measurement traditions, and the GFM version inherits
+the role formally.
+
+\subsubsection{Alkire--Foster 2011: the closest existing quantitative apparatus}
+
+The capability-welfare-economics tradition has produced one
+substantially-quantitative measurement framework that the
+preceding subsections did not engage: the
+\emph{Alkire--Foster} multidimensional-poverty
+methodology~\citep{alkire2011counting}.  Alkire--Foster
+operates on a vector of capability dimensions (each with a
+deprivation threshold), counts deprivations per agent against
+those thresholds, and aggregates into a multidimensional
+headcount or intensity-weighted index.  This is the quantitative
+apparatus closest in operational structure to GFM's combination
+of capability poset, polarity boundary, and gap decomposition.
+
+Two structural differences distinguish GFM from the
+Alkire--Foster framework, both of which the lineage claim
+should make explicit rather than gloss.  First, Alkire--Foster
+aggregates by counting (or weighted counting) of dimension-wise
+deprivations; GFM aggregates by a poset measure $\volL$ that
+admits cooperative excess (M6) and is not in general reducible
+to a sum or weighted sum of dimension-wise contributions.  The
+two aggregations coincide only when cooperative capabilities
+vanish, a fungibility-collapse-adjacent regime in which
+multidimensional deprivation reduces to additive deprivation,
+which Alkire--Foster does not commit to but in practice
+operates within.  Second, Alkire--Foster's deprivation
+thresholds are normatively chosen (per the application) and the
+framework does not formalize the structural distinction between
+``cost-of-access below threshold'' and ``preference above
+threshold''; \citep[Need~Sufficiency]{lasser2026paper8b}'s
+polarity boundary is the GFM-side structural addition that
+Alkire--Foster's apparatus could in principle inherit.
+
+The relationship is therefore: Alkire--Foster is a
+quantitative welfare-measurement framework that GFM contains
+under additional structural commitments (cooperative capabilities,
+polarity discipline, residual-class characterization).  The
+positioning of Alkire--Foster relative to GFM is closer to that
+of standard utility theory under fungibility collapse
+(Theorem~\ref{thm:fungibility_collapse}) than to the qualitative
+tradition of the prior subsections: the Alkire--Foster framework
+is already quantitative, and GFM's contribution is the
+additional structural axiomatization rather than a
+qualitative-to-quantitative formalization.  A complete formal
+comparison, including whether a ``cooperative-coherent
+Alkire--Foster index'' would be a useful intermediate
+methodology, is open; we flag the lineage but do not develop it
+further here.
+
+\subsubsection{Basu--L\'opez-Calva 2011: prior formalization-survey of capability sets}
+
+\citet{basu2011functionings}, in the \emph{Handbook of Social
+Choice and Welfare}, survey prior formal-mathematical
+treatments of capability sets, covering a wide range of
+approaches including Sen/Foster axiomatizations, Herrero/Roemer
+cardinality and indirect-utility constructions, fuzzy-set
+aggregations, Suzumura-Xu extended-alternatives frameworks, and
+operationalizations such as the Human Development Index.  This
+is the canonical reference for the prior formal-mathematical
+landscape on the capability approach, and its placement in the
+Handbook of Social Choice and Welfare establishes the territory
+GFM operates within.
+
+The Basu--L\'opez-Calva survey covers approaches that share with
+GFM a commitment to formal apparatus on the capability set, but
+diverge from GFM in the structural objects used.  Three
+representative branches illustrate the structural distance:
+\begin{itemize}
+\item \emph{Cardinality-based formalizations} rank capability
+  sets by counting elements (with various refinements for
+  weighting).  GFM's poset-with-measure approach reduces to a
+  weighted cardinality only when M6's cooperative excess
+  vanishes; in general the volume measure is not a
+  cardinality.
+\item \emph{Indirect-utility ranking} compares capability sets
+  by the maximal utility achievable on each.  This collapses
+  the capability set to a single utility number, which GFM
+  explicitly avoids: $\volL$ is a measure on the set, not a
+  best-element selector.
+\item \emph{Effective-freedom and extended-alternative
+  relations} rank capability sets by various non-cardinal
+  axiomatic conditions.  These are closer in spirit to GFM
+  than the first two branches but remain non-measure-theoretic:
+  they produce orderings, not measures.
+\end{itemize}
+GFM's measure-theoretic-poset framework is structurally
+distinct from all three approaches Basu--L\'opez-Calva survey:
+the apparatus produces a measure (not a ranking) on a poset
+(not a flat set or chain), with cooperative excess (M6) and a
+polarity boundary as first-class structure that the surveyed
+approaches do not formalize.  The closest comparator within the
+surveyed literature is the effective-freedom relations branch;
+GFM's contribution there is to upgrade the ordering to a
+measure with explicit axiomatic structure.
+
+\subsubsection{Pattanaik--Xu / Sugden: opportunity-set axiomatic neighbors}
+
+A related literature is the axiomatic-opportunity-set tradition,
+which ranks opportunity sets by axiomatic conditions on the
+ranking relation~\citep{pattanaik2000ranking}.  This literature
+is structurally adjacent to the capability approach (capability
+sets are formally a kind of opportunity set), and Sugden's
+``Opportunity as a Space for Individuality: Its Value and the
+Impossibility of Measuring It''~\citep{sugden2003opportunity}
+proves an impossibility result on measuring
+opportunity-as-individuality directly: under reasonable axioms,
+no real-valued measure on opportunity sets can simultaneously
+satisfy the axioms.  This is a prima facie objection to a
+volume-measure-on-capability-poset framework, and the lineage
+should engage with it.
+
+The objection does not automatically apply to GFM, for a
+structural reason worth naming.  Sugden's impossibility is on
+measures of opportunity-as-individuality, i.e., the
+freedom-to-choose dimension treated as the welfare-relevant
+quantity.  GFM's
+volume measure is on \emph{capabilities exercised}
+($\volRwin$) and \emph{capabilities possessed} ($\volL$), with
+the freedom-to-choose dimension recovered through the polarity
+boundary (\citep[Definition~3]{lasser2026paper8b}) and the
+S1-attestation layer (\citep[Remark~18]{lasser2026paper8a})
+rather than through a single welfare-relevant
+opportunity-as-individuality scalar.  GFM measures realized
+exercise plus capability volume; Sugden's impossibility applies
+to opportunity-as-individuality.  The two notions are
+structurally distinct on the exercise side, but $\volL$ remains
+a scalar measure on possessed-capability volume, a slice on
+which Sugden-style concerns may still apply, and the
+sidestep claim is therefore conditional rather than complete.
+A complete proof that GFM sidesteps the relevant Sugden-style
+impossibility result (rather than falling under it on the
+$\volL$-slice or on a different formal slice) is the extension
+of Open~Question~\ref{oq:arrow} to the opportunity-set
+literature.  The qualitative argument is sound on the exercise
+side; the formal version, including the $\volL$-slice, is
+open.
+
+\subsubsection{Arrow 1951: the impossibility GFM appears to sidestep}
+
+Arrow's impossibility theorem~\citep{arrow1951social}
+establishes that no social welfare function aggregating
+individual ordinal preferences into a social ordering can
+simultaneously satisfy all five Arrovian axioms (transitivity,
+unrestricted domain, Pareto, independence of irrelevant
+alternatives, and non-dictatorship).  Subsequent work
+(\citep{sen1970collective} and a substantial literature) explores
+ways out: relaxing IIA, adopting cardinal utility, or restricting
+the domain.  \citet{adler2012wellbeing} develops an axiomatized
+prioritarian social welfare function as a modern formal-aggregation
+route around Arrow, a live alternative to the cardinal-utility
+move of \citep{sen1970collective} and the Sugden-style
+opportunity-set axiomatics
+of~\citep{sugden2003opportunity}.
+
+GFM \emph{appears} to sidestep the impossibility by being a
+different kind of aggregation.  $\volL$ is not a ranking
+function; it is a measure on a poset.  It does not aggregate
+ordinal preferences into a social ordering; it aggregates
+capabilities into a capability volume.  The Arrovian axioms have
+only partial analogs:
+\begin{itemize}
+\item \textbf{Transitivity:} satisfied trivially (real-valued
+  measures are totally ordered on their values).
+\item \textbf{Unrestricted domain:} $\volL$ is defined on any
+  poset satisfying~M1--M6
+  (\citep[Proposition~1]{lasser2026poset}).
+\item \textbf{Pareto:} the monotonicity component of M3 ensures
+  that strictly increasing capability strictly increases $\volL$.
+\item \textbf{Independence of irrelevant alternatives:} does not
+  apply to a volume measure.  IIA is defined via pairwise
+  comparisons in a ranking, and $\volL$'s value at a capability
+  set does not depend on pairwise comparisons with alternative
+  sets.  The axiom is not satisfied or violated; it is
+  inapplicable to the formulation.
+\item \textbf{Non-dictatorship:} $\volL$ aggregates over agents
+  via the shared poset; no single agent's preferences determine
+  the aggregate.  The individuation discipline of M5 is what
+  makes this an aggregation rather than a comparison; the
+  per-agent benchmark calibrations $w_i(\cdot)$ on the shared
+  poset (Remark~\ref{rem:heterogeneity}) are the formal
+  expression.
+\end{itemize}
+GFM's apparent avoidance of Arrow's original theorem is
+therefore structural, not axiomatic: the framework does not
+perform the kind of aggregation Arrow's original theorem
+applies to.  This is an alternative way out from the
+cardinal-utility move of \citep{sen1970collective} and the
+prioritarian-SWF axiomatization
+of~\citep{adler2012wellbeing}; all three are forms of relaxing
+the ordinal-preference-aggregation framing, with each making a
+different structural commitment.  Sen's relaxation adds
+cardinal information to the preferences; Adler's adds priority
+weights to the social welfare function; GFM's switches to a
+measure-theoretic apparatus on a poset that does not aggregate
+preferences at all.  Whether the relaxed setting admits its own
+impossibility analogue remains open; see
+Open~Question~\ref{oq:arrow}.
+
+\paragraph{What this paper does \emph{not} establish.}
+Sidestepping a specific impossibility result is not the same as
+proving no analogous impossibility holds.  Whether the
+measure-on-poset formulation admits its own impossibility-style
+result (some incompatible combination of axioms on volume
+aggregation that the framework's M1--M6 silently violate, or an
+unrestricted-domain analog that produces a contradiction with
+the cooperative-superadditivity axiom~M6) is not addressed in
+this paper.  We have shown that the Arrovian formulation does
+not directly apply (IIA is inapplicable, the other axioms have
+partial analogs that GFM satisfies), not that no Arrow-style
+result applies in the new formal setting.  This is
+Open~Question~\ref{oq:arrow}, and a complete treatment requires
+either a no-impossibility proof on the measure-on-poset class
+or an honest acknowledgment of an analogous limitation.  Sen's
+own work has been congenial to this kind of move (the
+capability approach was already a step away from the
+preference-aggregation framing), but the formal completion is
+open.
+
+\subsubsection{Summary mapping}
+
+Table~\ref{tab:lineage_mapping} consolidates the lineage across
+three categories.  The qualitative-tradition precursors (Sen,
+Nussbaum, Becker, SSF) supply moves the channels formalize.  The
+already-quantitative comparator (Alkire--Foster) supplies the
+nearest existing quantitative apparatus that GFM contains under
+additional structural commitments.  The structural neighbors
+(Bernheim--Rangel on behavioral welfare economics,
+Basu--L\'opez-Calva on prior capability-set formalizations,
+Sugden / Pattanaik--Xu on opportunity-set axiomatics, Arrow /
+Adler on impossibility and prioritarian SWF) situate GFM
+within the broader formal-welfare-economics landscape rather
+than mapping cleanly onto specific channels.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.13\linewidth}
+                >{\raggedright\arraybackslash}p{0.30\linewidth}
+                >{\raggedright\arraybackslash}p{0.32\linewidth}
+                >{\raggedright\arraybackslash}p{0.16\linewidth}}
+\toprule
+\textbf{Precursor} & \textbf{Qualitative content} &
+\textbf{GFM quantification} & \textbf{Channel} \\
+\midrule
+Sen 1985 & Capability set, functioning vector, capability/functioning gap &
+Poset $P$, $\volL$, $\volRwin$, five-cell $\delta$-decomposition &
+All four \\
+\addlinespace
+Nussbaum 2000 & Basic vs higher capabilities (normative) &
+Polarity boundary + downstream-safety condition &
+Channel~2 \\
+\addlinespace
+Becker 1965 & Household production $F_j$ (unconstrained) &
+M6 cooperative caps (poset-coherent) + $\alpha_{n,c}$ &
+Channel~4 \\
+\addlinespace
+Bernheim--Rangel 2009 & Choice-domain welfare-revelation distinction (behavioral) &
+Polarity boundary + S1-attestation as capability-sufficiency split &
+Channel~2 \\
+\addlinespace
+SSF 2009 & GDP-misses-non-market gap (qualitative) &
+$\ResS$ + five-cell $\delta$-decomp (deployment-readable) &
+Channels~2, 3 \\
+\addlinespace
+Alkire--Foster 2011 & Multidimensional poverty index (counting / weighted-sum aggregation) &
+M6 cooperative excess + polarity boundary as additional structure &
+n/a (already quantitative) \\
+\addlinespace
+Basu--L\'opez-Calva 2011 & Survey of capability-set formalizations (cardinality, indirect-utility, effective-freedom) &
+Poset measure with M6 + polarity as structural upgrade beyond surveyed approaches &
+n/a (formalization survey) \\
+\addlinespace
+Sugden 2003 / Pattanaik--Xu 2000 & Opportunity-set ranking axiomatics; Sugden's measurement-impossibility &
+GFM measures realized exercise + capability volume, not opportunity-as-individuality &
+n/a (structural neighbor) \\
+\addlinespace
+Arrow 1951 / Adler 2012 & Ordinal-preference impossibility; prioritarian SWF &
+$\volL$ as measure on poset (appears to sidestep original framing); not a preference aggregator &
+n/a \\
+\bottomrule
+\end{tabular}
+\caption{The capability-economics lineage mapped onto GFM
+quantifications and the four channels of
+Sections~\ref{sec:channel_observation}--\ref{sec:channel_bundles}.
+The SSF~2009 row also flags the diagnostic-decomposition role:
+the five-cell $\delta$-attribution acts as a deployment-readable
+selector for which channel binds, mirroring the role the SSF
+decomposition plays in welfare-economics measurement
+methodology.  The Arrow~1951 row is structural rather than
+channel-bound: GFM appears to sidestep the impossibility by
+being a measure on a poset rather than a ranking aggregator,
+but whether an analogous impossibility result applies to
+measure-aggregation on posets is open
+(Open~Question~\ref{oq:arrow}).}
+\label{tab:lineage_mapping}
+\end{table}
+
+The historical reading the lineage supports: GFM is not a new
+welfare-economics framework competing with Sen, Nussbaum, Becker,
+or SSF.  It is a measure-theoretic formalization of the same
+tradition, and the alignment-tightening channels are exactly the
+operational moves the qualitative tradition has been negotiating.
+The novel contribution this paper adds is the connection between
+the formalization and the alignment programme: the same channels
+the welfare-economics tradition uses to close measurement gaps are
+the channels that, under the Goodhart machinery of
+Section~\ref{sec:goodhart}, tighten alignment guarantees in the
+direction of the operational truth.  Better economic models are
+not just better welfare measurement; they are tighter alignment
+guarantees, and the tightening mechanism is the same one welfare
+economics has been refining since SSF 2009.

@@ -1,0 +1,403 @@
+\section{Discussion and Open Questions}
+\label{sec:discussion}
+
+\subsection{What this paper establishes}
+\label{sec:established}
+
+\begin{enumerate}
+\item \textbf{Quantification of the capability welfare economics
+  tradition.}  The Sen 1985 capability set, the
+  Sen functioning vector, the Becker household production
+  function, and the SSF 2009 gap-decomposition catalogue all
+  admit measure-theoretic counterparts in the GFM apparatus
+  (poset, $\volL$, $\volRwin$, M6 cooperative capabilities,
+  $\ResS$, the five-cell $\delta$-decomposition).  The
+  Alkire--Foster~\citep{alkire2011counting} multidimensional-
+  poverty methodology (the closest existing quantitative
+  apparatus) is contained as a special case under additional
+  structural commitments (cooperative excess via M6, polarity
+  discipline).  Adjacent formal-welfare-economics work
+  (\citet{bernheim2009beyond} on behavioral welfare economics,
+  \citet{basu2011functionings} on prior capability-set
+  formalizations, \citet{sugden2003opportunity} and
+  \citet{pattanaik2000ranking} on opportunity-set axiomatics,
+  \citet{adler2012wellbeing} on prioritarian SWF) is engaged in
+  Section~\ref{sec:lineage_historical} as structural neighbors
+  rather than as channel-bound precursors.  The positioning is analogous to the
+  Bentham-to-expected-utility formalization that the
+  welfare-economics literature spent roughly a
+  century-and-a-half completing for utility theory.
+
+\item \textbf{GFM strictly contains standard utility theory at the
+  linear / risk-neutral case (containment result)}
+  (Theorem~\ref{thm:fungibility_collapse}).  Under fungibility
+  collapse (the structural reduction in which the capability
+  poset degenerates to a single purchasing-power dimension,
+  cooperative capabilities vanish, and individuation becomes
+  irrelevant), an actor maximizing $\volL$ on $\Pstd$ is
+  observationally equivalent to a linear-utility expected-utility
+  maximizer.  Together with the five-features catalog of
+  Section~\ref{sec:fc_features}, this establishes containment
+  (utility theory $\subset$ GFM at $\Pstd$) plus extension (GFM
+  has structural content beyond $\Pstd$ that utility theory
+  lacks).  Concavity, risk-aversion, and heterogeneous utility
+  recover through additional calibrations.
+
+\item \textbf{Falsifiable structural-prediction class}
+  (Section~\ref{sec:structural_predictions}).  Five predictions
+  (bundle-completion magnitude, cooperative premium, saturation
+  transition, population-scale anti-monopolar, mixed-polarity
+  bundle-for-bundle) that utility theory either does not make,
+  or can match only by adding ad hoc unfalsifiable structure.
+  The predictions are what becomes falsifiable when the
+  qualitative tradition is quantified.
+
+\item \textbf{Goodhart theorem for proxy-instrumental alignment}
+  (Theorem~\ref{thm:goodhart}).  Each Lipschitz alignment
+  property in the GFM sequence, viewed as a function of the
+  proxy $\volL$, deviates from its value under the operational
+  truth $T = \volRwin$ (under~\citep[Revealed~Sacrifice]{lasser2026paper8a}'s
+  S0) by at most $\mathrm{Lip}(g) \cdot \epsnonres$.
+  Optimization pressure correlates with gap-exploitation as a
+  qualitative direction; the wireheading-consistent HHI
+  of~\citep[Need~Sufficiency]{lasser2026paper8b} is the
+  deployment-readable empirical witness.
+
+\item \textbf{Better economic models tighten alignment, in four
+  operationally distinct channels}
+  (Corollary~\ref{cor:direction},
+  Proposition~\ref{prop:channel_composition}).  Conditional on
+  per-capability admissibility
+  (Assumption~\ref{ass:per_cap_admissibility}), the four
+  channels (observation density (Channel~1), attestation
+  quality (Channel~2), individuation discipline (Channel~3),
+  and bundle decomposition (Channel~4)) each deliver a
+  reduction to a non-overlapping component of the
+  alignment-slack diagnostic.  Channel~3 contributes through the
+  $\lambda$-weighted net
+  $\Delta_3^{\lambda} = \lambda \cdot \Delta_3^{\mathrm{floor}} -
+  \Delta_3^{\mathrm{new}}$, capturing both the floor reduction
+  from re-individuation and the new within-channel ceiling
+  contribution from the newly-individuated capability.  The
+  channels compose into an aggregate alignment-slack reduction
+  bounded above by the sum
+  $(\Delta_1 + \Delta_2 + \Delta_4) + \Delta_3^{\lambda}$,
+  capped at the pre-intervention slack.  Each channel formalizes
+  a move the qualitative tradition has been negotiating
+  informally.
+
+\item \textbf{Residual-class floor as a shared problem with
+  welfare economics.}  $\epsfloor$ is non-zero in any
+  deployment with non-empty $\ResS$, and it is not unique to
+  GFM: the shadow-economy / non-market-activity gap of standard
+  welfare economics~\citep{stiglitz2009report} is the same
+  structural object viewed from a different side.  Imputation
+  methods (imputed rent, time-use surveys, satellite accounts)
+  are the existing partial answer; in GFM terms these are
+  Channel~3 re-individuation moves.  Alignment-tightening is
+  bounded below by $\lambda \cdot \epsfloor$ regardless of how
+  much within-channel observation infrastructure the deployment
+  invests in.
+\end{enumerate}
+
+\subsection{What this paper defers}
+\label{sec:deferred}
+
+\begin{itemize}
+\item \textbf{Per-property Lipschitz constants and the
+  perturbative roadmap.}
+  Theorem~\ref{thm:goodhart} is conditional on $g$ being
+  Lipschitz on the relevant capability subspace with a
+  property-specific $\mathrm{Lip}(g)$.  The perturbative
+  roadmap of Section~\ref{sec:goodhart_examples} identifies
+  five candidate alignment properties (anti-monopolar
+  threshold, phase-boundary location, convergence rate, damage
+  bound, aggregate-lower-bound slack) whose Lipschitz analyses
+  would close the per-property bounds.  Each requires its own
+  perturbation analysis, which is outside this paper's scope.
+
+\item \textbf{Phase-boundary comparison theorem under variable
+  proxy.}  Showing the self-correcting basin
+  of~\citep[Phase~Redundancy]{lasser2026phase} grows
+  monotonically as $\epsnonres \to 0$ requires a comparison
+  theorem on coupled Lyapunov functions with different
+  reference measures.  This is the hardest single piece in the
+  perturbative roadmap and may require new mathematical
+  machinery; Open~Question~\ref{oq:phase_boundary} states the
+  question precisely.
+
+\item \textbf{Empirical validation of the structural
+  predictions.}
+  The five predictions of Section~\ref{sec:structural_predictions}
+  and the cross-domain Goodhart test of
+  Section~\ref{sec:operationalizing} are testable in principle
+  but not tested in this paper.  The contribution at this stage
+  is to identify the predictions clearly enough that they can be
+  tested and to establish the methodology template through
+  which testing operates.
+
+\item \textbf{Normative content.}  Which capabilities count as
+  central, in Nussbaum's substantive
+  sense~\citep{nussbaum2000women,nussbaum2011creating}, is
+  outside the formal apparatus.  GFM provides the structural
+  scaffold; the choice of normative loading (which
+  capabilities matter, with which weights, in which
+  contexts) is upstream of the formal apparatus and varies
+  across deployments and societies.  The paper takes no
+  position on the normative question.
+\end{itemize}
+
+\subsection{Structural limitation: Channel~3 can worsen the alignment slack}
+\label{sec:channel3_limitation}
+
+This is a first-order limitation worth flagging explicitly, and
+a structural one rather than a deferred-work item.  Channel~3
+(individuation discipline) contributes to the alignment-slack
+reduction through the $\lambda$-weighted net
+$\Delta_3^{\lambda} = \lambda \cdot \Delta_3^{\mathrm{floor}}
+- \Delta_3^{\mathrm{new}}$, which can be \emph{negative} when
+the newly-individuated capability's within-channel ceiling
+contribution exceeds $\lambda$ times the floor reduction
+(Remark~\ref{rem:channel3_net}).  In that regime, a
+re-individuation move that looks like ``progress'' (more of
+$\ResS$ pulled into the observable subset) actually loosens the
+certified alignment bound rather than tightening it.
+
+This is not a corner case; it is a first-order concern for the
+empirical programme.  Re-individuation is the move welfare
+economics has been performing for decades through imputation
+methods, and the current paper does not establish when
+imputation is alignment-tightening versus alignment-loosening.
+Concretely: a deployment that introduces a new
+imputed-time-priced capability for household labour (reducing
+$\delta_{\mathrm{residual}}$ by the imputed share) adds the
+imputation method's measurement noise to the within-channel
+ceiling.  If the imputation is noisy enough, the deployment's
+$\Delta_3^{\lambda}$ is negative and the intervention worsens
+the certified alignment bound.  ``Tighten all four channels''
+is therefore not a blanket recommendation; deployments must
+check the per-channel admissibility, and Channel~3 in
+particular requires a deployment-specific imputation-quality
+assessment that the apparatus does not provide.  Whether GFM's
+machinery (cooperative caps, individuation discipline,
+downstream cone, polarity boundary) gives sharper imputation
+tools than welfare economics' standard methods is the question
+of Open~Question~\ref{oq:floor}; the limitation flagged here is
+that, in the absence of such tools, Channel~3 interventions
+can backfire, and the paper provides no positive structural
+guidance for telling when this happens.
+
+\subsection{Open questions}
+\label{sec:open_questions}
+
+The following eight questions identify directions for
+subsequent work and indicate how each would compose with the
+machinery of this paper.
+
+\paragraph{OQ 1: The phase-boundary perturbation theorem.}
+\label{oq:phase_boundary}
+Showing the self-correcting basin
+of~\citep[Theorem~1]{lasser2026phase} grows monotonically as
+$\epsnonres \to 0$ requires a comparison theorem on coupled
+Lyapunov functions with different reference measures.  The
+question is precise: given Lyapunov functions
+$V_P$ (defined on the proxy measure $P$) and $V_T$ (defined on
+the operational truth $T$), and the basin
+$\mathcal{B}_P = \{x : V_P(x) \leq c\}$ for some threshold $c$,
+how does $\mathcal{B}_T$ relate to $\mathcal{B}_P$ as a
+function of $\epsnonres$?  The expected answer: $\mathcal{B}_T$
+differs from $\mathcal{B}_P$ by a boundary layer of width
+$O(\epsnonres)$ with a constant depending on the Lyapunov
+functions' smoothness profiles.  Establishing the constant is
+the perturbation-analysis work.  This is the hardest single
+piece of the perturbative roadmap.
+
+\paragraph{OQ 2: Non-monotonicity risk under multi-dimensional
+$\epsnonres$.}
+\label{oq:nonmonotonicity}
+Definition~\ref{def:eps_nonres} aggregates relative deviations
+across capability dimensions via a sup-norm.  This is
+conservative but coarse: a deployment might tighten on some
+dimensions while loosening on others, and the sup-norm captures
+only the worst-case dimension.  When does multi-dimensional
+$\epsnonres$ admit non-monotonic alignment-tightening?  A
+weighted norm matching the safety-relevance weights $w_k$ from
+the alignment property's Lyapunov function might give a
+tighter characterization, but the safety-relevance weighting is
+itself application-dependent.  The question is whether a
+deployment-readable safety-relevance weighting can be constructed
+for the channels of Section~\ref{sec:lineage}, and whether such a
+weighting changes the channel composition of
+Proposition~\ref{prop:channel_composition}.
+
+\paragraph{OQ 3: The Goodhart divergence rate $f(C)$.}
+\label{oq:goodhart_rate}
+Conjecture~\ref{conj:optimization_pressure} is qualitative: more capable
+optimizers exploit larger sets of proxy-truth divergence
+regions, widening the observed $\epsnonres$ at equilibrium.  A
+precise functional form $f: C \mapsto \epsnonres(C)$ such that
+$\epsnonres(C) \geq f(C) \cdot \epsnonres(0)$ at equilibrium is
+optimizer-architecture-dependent.  Bounds under specific
+optimizer models (greedy local search, gradient-based methods,
+planning-based search, learned-policy optimization) are
+concrete sub-questions.  Each architecture has its own $f$, and
+the structural common content (more reach $\to$ more
+exploitation) is what Conjecture~\ref{conj:optimization_pressure} captures
+without committing to architecture.  Closing the architecture-
+specific bounds is subsequent perturbative-analysis work.
+
+\paragraph{OQ 4: Completing the Arrow-avoidance comparison.}
+\label{oq:arrow}
+Section~\ref{sec:lineage_historical} argues that GFM
+\emph{appears} to sidestep Arrow's original
+formulation~\citep{arrow1951social} by being a measure on a
+poset rather than an ordinal-preference aggregator, with
+partial analogs of four of the five Arrovian axioms
+(transitivity, unrestricted domain, Pareto via M3,
+non-dictatorship via M5) and IIA inapplicable to a volume
+measure.  Sidestepping the original formulation is not the same
+as proving no analogous impossibility holds.  A complete
+treatment requires (i)~a precise formulation of which
+alternative impossibility results, if any, apply to volume
+measures on posets, (ii)~comparison with Sen's own ways
+out~\citep{sen1970collective}, and (iii)~explicit handling of
+the heterogeneous-agent aggregation question that
+Remark~\ref{rem:heterogeneity} flagged as a separate analytical
+problem.  The lineage subsection states the partial argument;
+the complete version is open.
+
+\paragraph{OQ 5: Normative loading and alignment-target
+sensitivity.}
+\label{oq:normative}
+GFM provides the structural scaffold; normative choices
+(``which capabilities matter'') are loaded externally.  Two
+deployments with different normative loadings get different
+alignment guarantees from the same framework: the economics
+affects the tightness of the guarantees, but the normative
+loading affects the target.  The question is whether the
+Lipschitz transfer of Theorem~\ref{thm:goodhart} is robust
+to normative-loading variation, in the sense that the
+transfer's content does not depend on the specific loading
+within a structural admissibility class.  A negative answer
+would mean alignment-tightening claims need to be qualified
+per-loading; a positive answer would establish that the
+formalization is normative-loading-invariant within an
+admissibility class.
+
+\paragraph{OQ 6: Quantitative rate for $\epsnonres$
+convergence.}
+\label{oq:rate}
+~\citep[Propositions~2~and~3]{lasser2026paper8a} prove
+$\betaL$ is non-decreasing under admissible accumulation but
+do not bound how fast $\betaL$ converges.  The rate depends on
+(i)~S0 attestation quality (which itself is institutional-layer-
+dependent;~\citep[Remark~18]{lasser2026paper8a}),
+(ii)~Part-A vs Part-B aggregation choice,
+(iii)~observation density on the deployment's capability
+inventory, and (iv)~the residual-class floor $\epsfloor$
+itself.  None of (i)--(iv) is bounded in this paper.
+Bounding the rate is the subsequent perturbative-analysis
+question for the better-economics-tightens-alignment
+direction; until it is bounded, Corollary~\ref{cor:direction}
+is restricted to direction (monotonicity) rather than rate.
+This is also \citep[Open~Question~6]{lasser2026paper8b}'s
+territory.
+
+\paragraph{OQ 7: Residual-class floor on tightening, shared with
+welfare economics.}
+\label{oq:floor}
+$\epsfloor$ sets a structural floor below which the
+within-channel gap component cannot be driven by any amount of
+observation.  This floor is \emph{not unique to GFM}; it is
+the formal version of the same structural measurement gap that
+welfare economics has navigated for decades under names like
+``shadow economy,'' ``household production,''
+``non-market activity''~\citep{stiglitz2009report}.  Imputation
+methods (imputed rent, time-use surveys, satellite accounts)
+are the existing partial answer in welfare economics; in GFM
+terms, these are Channel~3 re-individuation moves.
+Characterizing what governs the floor (individuation
+discipline, governance choices about ``no sacrifice-observable
+path in principle''), and whether GFM's apparatus (cooperative
+caps, individuation discipline, downstream cone, polarity
+boundary) gives sharper imputation tools than the standard
+methods, is open.  This question is structurally distinct from
+OQ~6: OQ~6 asks how fast the within-channel gap closes; OQ~7
+asks how low the floor goes.  OQ~7 is shared with welfare
+economics rather than unique to the alignment programme.
+
+\paragraph{OQ 8: Adversarial degradation of attestation under
+optimization pressure.}
+\label{oq:adversarial_attestation}
+\citep[Revealed~Sacrifice]{lasser2026paper8a}'s S0
+(calibration), S1 (free choice), and S4(a) (valuation
+additivity) are not zero-knowledge-verifiable under the default
+commitment scheme~\citep[Remark~18]{lasser2026paper8a}; they
+require institutional attestation.  The
+better-economics-tightens-alignment direction
+(Corollary~\ref{cor:direction}) depends on attestation
+\emph{quality}: the framework can drive $\epsnonres$ downward
+only when the attestation layer reliably classifies events
+under S0, S1, and S4(a).  But the same optimization pressure
+that widens $P$-$T$ divergence regions
+(Conjecture~\ref{conj:optimization_pressure}) also incentivizes adversarial
+degradation of the attestation layer itself: a sufficiently
+capable optimizer that finds proxy-truth divergence cheaper to
+exploit than proxy-truth alignment will \emph{also} find
+attestation manipulation cheaper than honest attestation,
+given any institutional layer that admits adversarial pressure.
+Bounding the attestation layer's adversarial robustness (sybil
+resistance, collusion resistance, dispute-resolution adequacy
+under optimizer-controlled inputs) is essential to the
+operational substance of Corollary~\ref{cor:direction}.  This
+is the natural follow-up to~\citep[Revealed~Sacrifice]{lasser2026paper8a}'s
+external-attestation-protocol scope-and-follow-up note, but
+with the Goodhart-theorem framing: how does attestation
+quality scale under adversarial pressure, and what
+incentive-compatibility properties does the layer need to
+deliver reliable $\epsnonres$ reduction in the optimizer-pressure
+regime?  OQ~8 is the natural counterpart on the attestation side
+to OQ~3 on the optimizer side.
+
+\subsection{Reading the paper across audiences}
+\label{sec:audience}
+
+The paper is written partly for alignment researchers and partly
+for welfare economists, with the through-line connecting both
+audiences: the alignment programme of the GFM sequence is the
+formalization-payoff of the welfare-economics tradition's
+forty-year qualitative negotiation, and progress in either
+discipline drives the same $\epsnonres$ that the other depends
+on.  Some duplication of background is unavoidable, and we have
+tried to keep technical machinery in clearly delimited
+sections (the Goodhart theorem and its proof in
+Section~\ref{sec:goodhart_theorem}, the channel composition in
+Section~\ref{sec:channel_composition}) so each audience can
+navigate to the parts most relevant to their starting context.
+
+For alignment researchers, the load-bearing content is
+Theorem~\ref{thm:goodhart} together with
+Proposition~\ref{prop:channel_composition}: the proxy-truth
+gap is structurally controllable through four operationally
+distinct interventions, each tied to a specific component of
+the gap decomposition, and each composing into a specific
+alignment-tightening consequence.  The capability-economics
+lineage of Section~\ref{sec:lineage_historical} is the
+historical-confirmation evidence that the channels are real
+welfare-economics moves rather than apparatus-internal
+inventions.
+
+For welfare economists, the load-bearing content is the
+quantification thesis of
+Section~\ref{sec:quantification_thesis} together with the
+five-features catalogue of Section~\ref{sec:fc_features}: GFM
+is a measure-theoretic formalization of the Sen--Nussbaum
+tradition, with axiomatic structure that constrains where
+Becker's flexible household-production functions become
+predictively sharp and that gives the SSF~2009 gap a
+deployment-readable cell decomposition.  The Goodhart theorem
+is then a result of independent welfare-economics interest:
+it bounds the cost of optimizing a coarse welfare proxy
+against a finer operational truth, with the cost decomposing
+across the same imputation channels welfare economics already
+uses.

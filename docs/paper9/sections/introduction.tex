@@ -1,0 +1,388 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Capability welfare economics has been a qualitatively rich
+tradition whose measure-theoretic apparatus has remained
+largely informal, even where its quantitative work is mature.
+Sen's \emph{Commodities and Capabilities}~\citep{sen1985commodities}
+introduces the capability set as the appropriate object for
+welfare analysis but does not endow it with a measure; the modern
+state of the qualitative tradition is surveyed
+in~\citep{robeyns2017wellbeing}
+and~\citep{chiappero2020cambridge}.  Nussbaum's
+\emph{Women and Human Development}~\citep{nussbaum2000women} adds
+substantive normative content but no structural axiomatization.
+Becker's household-production
+model~\citep{becker1965theory,becker1981treatise} specifies
+utility-yielding production functions that are descriptively
+flexible but predictively soft because the production functions
+are essentially unconstrained.  The Stiglitz--Sen--Fitoussi
+commission~\citep{stiglitz2009report} catalogues at length what
+GDP-style measurement misses (non-market production, household
+labour, quality-of-life capabilities) but proposes only
+qualitative remedies (better surveys, satellite accounts,
+multi-dimensional indices) without a unified measure-theoretic
+framework on which the remedies compose.  The Alkire--Foster
+multidimensional-poverty
+methodology~\citep{alkire2011counting} supplies a quantitative
+apparatus on capability dimensions with deprivation thresholds
+and counting-based aggregation, but does not formalize
+cooperative excess across capability components or the polarity
+discipline that distinguishes cost-of-access from preference
+revelation.
+
+The pattern is recognizable.  Bentham's felicific
+calculus, with its qualitative criteria of \emph{intensity,
+duration, certainty, propinquity, fecundity, purity, extent},
+was a qualitatively rich descriptive apparatus, and the expected-utility tradition (Bernoulli,
+Marshall, Edgeworth, von Neumann--Morgenstern) formalized the
+qualitative claims into a measure-theoretic apparatus admitting
+axiomatization, falsification, and quantitative comparison.  We
+position the Goal-Frontier Maximization (GFM)
+sequence~\citep{lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase,lasser2026wamura,lasser2026paper8a,lasser2026paper8b}
+as the analogous formalization for capability welfare economics.
+The poset structure formalizes Sen's capability set; the volume
+measures $\volL$ and $\volRwin$ formalize the capability/functioning
+distinction; the residual class $\ResS$ formalizes the
+shadow-economy / non-market-activity gap; the five-cell
+$\delta$-decomposition formalizes the SSF beyond-GDP catalogue.
+The sequence has proved its central alignment results (the
+anti-monopolar property~\citep[Horizon~Aware]{lasser2026horizon},
+the phase boundary~\citep[Phase~Redundancy]{lasser2026phase}, and
+controlled-relaxation
+convergence~\citep[Controlled~Relaxation]{lasser2026wamura}) under
+the standing assumption that $\volL$ is the operational target.
+The B-to-C gap, named in~\citep[Section~7]{lasser2026gfm} and
+addressed at length in~\citep[Revealed~Sacrifice]{lasser2026paper8a}
+and~\citep[Need~Sufficiency]{lasser2026paper8b}, is the divergence
+between $\volL$ (capability \emph{possession}) and $\volR$
+(capability \emph{exercise}).  Every result in the sequence
+inherits this gap as a structural dependency: if the gap is large,
+the guarantees the framework establishes on $\volL$ may fail to
+translate to guarantees on what the collective actually does.
+
+This paper makes the dependency formal, reading the B-to-C gap
+as the central object that the formalization makes computable
+and bounding the cost of the gap to alignment guarantees in the
+sequence.  The formalization yields two formal contributions of
+structurally distinct kinds: a \emph{containment proof}
+establishing GFM as a strict superset of standard utility theory
+at the linear / risk-neutral case, and an \emph{alignment bound}
+formalizing the cost of proxy-instrumental optimization on GFM's
+volume measure.
+
+\begin{enumerate}
+\item A \emph{fungibility-collapse correspondence theorem}
+  (Section~\ref{sec:fungibility_collapse}) showing that GFM
+  strictly contains standard microeconomic utility theory in its
+  linear-utility / risk-neutral form: utility theory emerges as
+  the special case of GFM where the capability poset reduces to a
+  single purchasing-power dimension, cooperative capabilities
+  vanish, and individuation becomes irrelevant.  The result is
+  positioning, not an alignment guarantee: it establishes
+  containment (utility theory $\subset$ GFM at $\Pstd$) plus
+  extension (GFM has five structural features beyond $\Pstd$
+  that utility theory lacks).  Concavity, risk-aversion, and
+  heterogeneous utility require additional calibrations beyond
+  the bare collapse, each a small step beyond the correspondence
+  rather than a new theorem.
+
+\item A \emph{Goodhart theorem for proxy-instrumental alignment}
+  (Section~\ref{sec:goodhart}).  When the framework optimizes a
+  proxy $P = \volL$ for the operational truth $T = \volRwin$, and
+  $P$ is related to $T$ only instrumentally, each alignment
+  property $g(\cdot)$ in the sequence, read as a Lipschitz
+  function of $P$, deviates from its value under $T$ by at most
+  $\mathrm{Lip}(g) \cdot \epsnonres$, where $\epsnonres$ is the
+  within-channel proxy-truth disagreement gap.  This is the
+  paper's load-bearing alignment result.  The property-specific
+  Lipschitz analyses (anti-monopolar threshold, phase-boundary
+  location, convergence rate, damage bound, aggregate-lower-bound
+  slack) are perturbative roadmap items for subsequent work; this
+  paper establishes the conditional transfer and identifies which
+  results live in the roadmap.
+\end{enumerate}
+
+Plus a \emph{strong-form treatment} (Section~\ref{sec:lineage})
+of what ``better economic models'' means structurally.  ``Better
+economics'' is not one knob but four operational-intervention
+channels (observation density, attestation quality, individuation
+discipline, bundle decomposition), each formalizing a move the
+qualitative welfare-economics tradition has been negotiating
+informally, and each composing through the Goodhart machinery into
+a specific alignment-tightening consequence.  The
+capability-economics lineage of Sen, Nussbaum, Becker, and SSF
+maps onto these channels as historical confirmation: each
+qualitative tradition is a precursor whose negotiation GFM
+formalizes.  Section~\ref{sec:lineage_historical} also situates
+GFM relative to the broader formal-welfare-economics landscape,
+including Alkire--Foster's quantitative comparator,
+Bernheim--Rangel's behavioral welfare economics,
+Basu--L\'opez-Calva's prior formalization survey, and the
+Pattanaik--Xu / Sugden / Adler axiomatic-aggregation neighbors.
+Better economic models are tighter alignment guarantees, above
+the deployment-specific residual-class floor where capabilities
+exercised without material or time-displacement footprint
+structurally cannot be witnessed.
+
+\subsection{What was missing from the picture}
+\label{sec:whats_missing}
+
+\citep[Revealed~Sacrifice]{lasser2026paper8a} establishes that
+voluntary trade events disclose $\volR$-content through a
+privacy-respecting channel, and that the constructed lower bound
+$\volRlower$ on the realized exercise volume is non-decreasing in
+admissibly accumulated observations.
+\citep[Need~Sufficiency]{lasser2026paper8b} adds the diagnostic
+architecture: the five-cell decomposition of the gap, the
+wireheading-consistent concentration signal, the residual-class
+characterization, and the polarity discipline that distinguishes
+need-side from want-side trades.  What was missing was the formal
+link between \emph{quality of the economic model} and
+\emph{tightness of the alignment guarantees}.  If the framework
+optimizes $\volL$ but the truth is $T$, and if $\volL$ is only
+instrumentally related to $T$, then any alignment property proved
+on $\volL$ need not transfer to $T$.
+
+The Goodhart theorem of Section~\ref{sec:goodhart} makes this
+transfer-or-failure formal: it gives a Lipschitz-style continuity
+statement showing that alignment properties under the truth
+deviate from those under the proxy in proportion to the
+proxy-to-truth gap.  The B-to-C gap is therefore not a binary
+precondition but a continuous gradient: what looked like a single
+``does the gap close?'' question is, on inspection, a
+\emph{rate-of-closure-vs-residual-floor} question that the
+machinery of \citep[Revealed~Sacrifice]{lasser2026paper8a} and
+\citep[Need~Sufficiency]{lasser2026paper8b} is built to answer.
+The four channels of Section~\ref{sec:lineage} are how the gap
+closes; the floor is what closing saturates against.
+
+\subsection{The operational truth $T$, and the residual-class floor}
+\label{sec:operational_truth}
+
+A clarification before the central machinery.  Under
+\citep[Revealed~Sacrifice]{lasser2026paper8a}'s assumption~S0
+(valuation bounded by exercise: an agent's valuation $\Ui(Y)$
+does not exceed the window-active realized exercise contribution
+$\volRwin(Y)$), trade events provide a one-sided constraint
+relating proxy disagreement to realized-exercise truth.  We adopt
+$T(c) = \volRwin(c)$ as the \emph{operational} truth measure
+throughout this paper.  $T$ is what
+\citep[Theorem~2]{lasser2026paper8a} bounds from below via
+$\volRlower$, and it is what alignment properties operate on in
+practice.  The metaphysical question (``what is the agent's true
+inner preference?'') is unobservable in principle, and the
+framework does not pretend to access it.  S0 is the operational
+bridge.
+
+The proxy-to-truth gap has two structurally distinct components.
+The \emph{within-channel disagreement}~$\epsnonres$ is the
+worst-case relative deviation of the proxy from the truth on
+capabilities the revealed-sacrifice channel can in principle
+reach; this component is drivable downward by observation
+infrastructure.  The \emph{residual-class floor}~$\epsfloor$ is
+the share of operational truth that lives in capabilities
+structurally outside the channel's reach (purely-private exercise
+with no material \emph{and} no time-displacement footprint); this
+component cannot be reduced by within-channel observation alone.
+The total alignment slack is
+\[
+  \epsgap \;=\; \epsnonres + \lambda \cdot \epsfloor,
+\]
+with $\lambda \in [0,1]$ weighting the floor's contribution.
+
+The split is structurally important and ties the alignment
+programme directly to a long-standing welfare-economics problem.
+Standard economics has the same residual-class
+limit~\citep{stiglitz2009report}: GDP misses non-market production,
+household labour, volunteer activity, gift-economy capabilities.
+Imputation methods (imputed rent, time-use surveys, satellite
+accounts) are the existing partial answer.  GFM does not remove
+the limit; it makes the limit formally identifiable as the
+structural residual class~$\ResS$
+of~\citep[Definition~12]{lasser2026paper8b} with a reserved cell
+($\delta_{\mathrm{residual}}$) in the gap decomposition.  The
+fungibility-collapse correspondence of
+Section~\ref{sec:fungibility_collapse} simplifies the poset
+structure but does \emph{not} extend the channel's reach.  The
+shadow-economy gap and GFM's residual class are the same
+structural object viewed from different sides.
+
+\subsection{Scope: what this paper does not do}
+\label{sec:not_do}
+
+\begin{itemize}
+\item
+\textbf{It does not prove the full perturbation analysis.}
+This paper establishes the \emph{conditional} Lipschitz-transfer
+result (Theorem~\ref{thm:goodhart}) and identifies the
+alignment properties (anti-monopolar threshold, phase-boundary
+location, convergence rate, damage bound, aggregate-lower-bound
+slack) as the \emph{perturbative roadmap}: candidates for a
+subsequent perturbation analysis.  Each property's Lipschitz
+constant requires its own analysis, which is outside this
+paper's scope.  We give the qualitative direction, indicate
+where each constant lands, and provide concrete worked examples
+of the tightening behaviour.
+
+\item
+\textbf{It does not characterize the rate of $\epsnonres$
+convergence.}  ~\citep[Propositions~2~and~3]{lasser2026paper8a}
+prove $\betaL$ is non-decreasing under admissible accumulation;
+they do not bound \emph{how fast} $\betaL$ converges.  The rate
+depends on S0 attestation quality, Part-A vs Part-B aggregation
+choice, observation density, and the residual-class floor itself.
+Bounding the rate is~\citep[Need~Sufficiency]{lasser2026paper8b}'s
+Open~Question~6 and is the territory of subsequent perturbative
+analysis; Corollary~\ref{cor:direction} of the present paper is a
+direction (monotonicity), not a rate.
+
+\item
+\textbf{It does not resolve the metaphysical truth question.}
+The Goodhart machinery operates on the operational
+$T = \volRwin$ under S0, not on a metaphysical model of inner
+preference.  Whether the agent's ``true inner preference'' (in
+some philosophical sense) coincides with $\volRwin$ is outside
+the formal apparatus.
+
+\item
+\textbf{It does not provide a normative capability list.}
+GFM provides the structural scaffold on which normative choices
+can be loaded; the choice of \emph{which} capabilities count as
+central is outside the formal apparatus.  This is consistent with
+Sen's stance in the original capability
+approach~\citep{sen1985commodities};
+Nussbaum's substantive list~\citep{nussbaum2000women,nussbaum2011creating}
+is one normative loading, not the only one.
+
+\item
+\textbf{It does not unify the alignment and welfare-economics
+programmes.}  The two programmes share structural content
+(poset, capability measure, residual-class limit), but their
+goals differ (alignment is about constraining optimization;
+welfare economics is about evaluating distributions).  The
+formalization claim is that both programmes have the same
+structural substrate, and progress on either drives down the
+same $\epsnonres$ that the other depends on; this is structural
+co-progress, not unified goals.
+
+\item
+\textbf{It does not directly address Arrow's
+impossibility~\citep{arrow1951social}.}
+GFM measures capability-volume rather than ranking outcomes, so
+the independence-of-irrelevant-alternatives axiom that drives
+Arrow's impossibility does not apply to a volume measure on a
+poset.  A careful argument identifying which Arrovian axioms GFM
+satisfies, which it appears to sidestep at the level of Arrow's
+original formulation, and where this places the framework
+relative to the social-choice
+literature~\citep{sen1970collective} is in
+Section~\ref{sec:lineage_historical}, with the question of
+whether an analogous impossibility applies to the relaxed
+setting deferred to Open~Question~\ref{oq:arrow}.
+\end{itemize}
+
+\subsection{Summary of results}
+\label{sec:results_summary}
+
+\begin{enumerate}
+\item \textbf{Fungibility-collapse correspondence (containment result)}
+  (Section~\ref{sec:fungibility_collapse}).
+  Theorem~\ref{thm:fungibility_collapse}: an actor maximizing
+  $\volL$ on the standard-economics poset $\Pstd$ is
+  observationally equivalent to a linear-utility / risk-neutral
+  expected-utility maximizer with the same discount factor.
+  Together with the five-features catalog (non-fungibility,
+  cooperative capabilities, anti-monopolar reasoning,
+  individuation without interpersonal comparison, and formal
+  recognition of the residual class), this establishes that GFM
+  strictly contains standard utility theory at the linear / risk-
+  neutral case.  Concavity, risk-aversion, and heterogeneous
+  utility recover through additional calibrations.
+
+\item \textbf{Structural-prediction class}
+  (Section~\ref{sec:structural_predictions}).  Five predictions
+  GFM makes that utility theory either does not, or can match
+  only by adding ad hoc unfalsifiable structure: bundle-completion
+  magnitude, cooperative premium, saturation transition,
+  population-scale anti-monopolar (via the
+  wireheading-consistent
+  HHI~\citep[Proposition~6]{lasser2026paper8b}), and
+  mixed-polarity bundle-for-bundle traces (via the
+  bundle-decomposition extension flagged
+  in~\citep[Open~Question~2]{lasser2026paper8a}).  These are what
+  becomes falsifiable when capability welfare economics is
+  quantified into a measure-theoretic apparatus.
+
+\item \textbf{Goodhart theorem for proxy-instrumental alignment}
+  (Section~\ref{sec:goodhart}).
+  Theorem~\ref{thm:goodhart} establishes the conditional
+  Lipschitz-transfer
+  $|g(T) - g(P)| \leq \mathrm{Lip}(g) \cdot \epsnonres$.  This
+  is the paper's novel formal contribution.  A separate
+  qualitative claim (Conjecture~\ref{conj:optimization_pressure})
+  states that more capable optimizers exploit larger sets of
+  proxy-truth divergence regions, widening the observed
+  $\epsnonres$ at equilibrium; we do not prove this conjecture,
+  but the wireheading-consistent HHI is a deployment-readable
+  ``concentration consistent with'' empirical witness for the
+  conjectured mechanism.
+
+\item \textbf{Strong-form direction: better economics tightens
+  alignment} (Section~\ref{sec:lineage}).
+  Corollary~\ref{cor:direction} states the direction
+  (monotonicity); Proposition~\ref{prop:channel_composition},
+  conditional on per-capability admissibility
+  (Assumption~\ref{ass:per_cap_admissibility}), composes four
+  operational-intervention channels into an aggregate
+  alignment-slack reduction.  Channel~3 contributes through the
+  $\lambda$-weighted net $\Delta_3^{\lambda} = \lambda \cdot
+  \Delta_3^{\mathrm{floor}} - \Delta_3^{\mathrm{new}}$,
+  capturing the floor reduction from re-individuation against
+  the new within-channel ceiling contribution from the
+  newly-individuated capability.  The lineage subsection
+  (Section~\ref{sec:lineage_historical}) maps each precursor onto
+  the channels: the qualitative-tradition figures (Sen, Nussbaum,
+  Becker, SSF, Arrow) supply the moves the channels formalize,
+  and the already-quantitative comparator (Alkire--Foster
+  multidimensional poverty measurement,
+  \citep{alkire2011counting}) supplies the closest existing
+  apparatus that GFM extends with cooperative excess and polarity
+  discipline.
+\end{enumerate}
+
+\subsection{Design principle}
+\label{sec:design_principle}
+
+This paper inherits the structural discipline of the preceding
+sequence papers and applies it one level up.
+\citep[Phase~Redundancy]{lasser2026phase}
+and~\citep[Controlled~Relaxation]{lasser2026wamura} gain
+precision through frequency rather than depth (more tests, not
+more-intrusive tests).
+\citep[Revealed~Sacrifice]{lasser2026paper8a} gains
+exercise-volume precision through frequency rather than depth
+(more trade observations, not more-intrusive trader surveillance).
+The present paper inherits a meta-version of the same discipline:
+\emph{the quality of the economic model controls the tightness of
+the alignment guarantees, and the quality of the economic model
+is itself a question of channel reach and observation density},
+not of more-intrusive measurement.  The proxy-to-truth gap is
+closed by observation infrastructure operating within the
+framework's existing privacy commitments, not by relaxing those
+commitments.
+
+\subsection{Dependencies on prior papers}
+\label{sec:dependencies}
+
+A summary of the prior-paper results this paper relies on is
+collected in Appendix~\ref{app:dependencies}.  The companion
+papers~\citep[Revealed~Sacrifice]{lasser2026paper8a}
+and~\citep[Need~Sufficiency]{lasser2026paper8b} and the earlier
+sequence papers~\citep{lasser2026gfm,lasser2026poset,lasser2026horizon,lasser2026scm,lasser2026exo,lasser2026phase,lasser2026wamura}
+are presently distributed as preprints.  The propositions and
+definitions imported here are pinned by their current
+formulations; if the upstream preprints revise their numbering
+or content, downstream references will need refreshing
+correspondingly.  Stable archival identifiers will be added as
+the sequence reaches archival status.

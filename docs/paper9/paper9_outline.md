@@ -968,7 +968,7 @@ produces better alignment.
 8. **Adversarial degradation of attestation under optimization
    pressure.** [Revealed Sacrifice]'s S0 (calibration), S1 (free choice),
    and S4(a) (valuation additivity) are not ZK-verifiable under the
-   default commitment ([Revealed Sacrifice], Remark 17 on external
+   default commitment ([Revealed Sacrifice], Remark 18 on external
    attestation): they require institutional attestation. Paper 9's
    tightening claim (Theorem 2 + Corollary 1) depends on attestation
    *quality* — the framework can drive ε_gap^nonres downward only when

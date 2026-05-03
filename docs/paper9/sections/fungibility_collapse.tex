@@ -1,0 +1,521 @@
+\section{The Fungibility-Collapse Correspondence}
+\label{sec:fungibility_collapse}
+
+The introduction posed GFM as a measure-theoretic formalization
+of capability welfare economics.  This section establishes the
+\emph{containment} half of that positioning: the formal proof
+that standard utility theory sits inside GFM as a strict subset
+at the linear / risk-neutral case.  Standard utility theory, in
+its linear / risk-neutral form, emerges as the special case of
+GFM under what we call \emph{fungibility collapse}: the
+structural reduction in which the capability poset degenerates
+to a single purchasing-power dimension, cooperative capabilities
+vanish, and individuation becomes irrelevant.  The correspondence
+is a containment result rather than an alignment guarantee: it
+tells the reader where standard economics sits inside the
+apparatus, what additional structure GFM brings beyond it, and
+where the two frameworks coincide versus diverge.  The
+load-bearing alignment result, the Goodhart theorem of
+Section~\ref{sec:goodhart}, operates against this established
+containment as backdrop.
+
+The reduction is exact only in the linear / risk-neutral case.
+Recovering broader content of standard utility theory (concave $u$,
+risk-aversion, heterogeneous agents) requires \emph{additional}
+calibrations beyond the bare collapse, each a small step rather than
+a new theorem.  We make these scope conditions explicit in
+Section~\ref{sec:fc_scope}.
+
+A structural caveat carries through the entire section: fungibility
+collapse simplifies the \emph{poset structure} (cooperative
+capabilities, individuation, non-fungibility) but does \emph{not}
+extend the observation channel's reach.  The residual class of
+\citep[Need~Sufficiency]{lasser2026paper8b}, Definition~12, remains
+non-empty under collapse: standard economics has the same
+shadow-economy / non-market-activity gap that
+\citep{stiglitz2009report} documents, and the formal residual class
+is the GFM-side counterpart to that gap.  Section~\ref{sec:fc_residual}
+makes this caveat precise.
+
+\subsection{The standard-economics poset $\Pstd$}
+\label{sec:fc_pstd}
+
+\begin{definition}[Standard-economics poset]
+\label{def:pstd}
+The \emph{standard-economics poset} $\Pstd$ is the totally-ordered
+single-dimension capability space
+\[
+  \Pstd \;=\; \{ d \in \mathbb{R}_{\geq 0} : d
+  \text{ is a unit of purchasing power} \},
+\]
+with the standard real-line ordering $d \leq d'$ iff $d \leq_{\mathbb{R}}
+d'$, weight function $w(d) = d$ (money is its own measure), and the
+following three structural reductions:
+\begin{enumerate}
+\item[(P1)] \textbf{No cooperative capabilities.}  The cooperative-
+  capability term in axiom~M6
+  (\citep[Proposition~1]{lasser2026poset}) vanishes: superadditive
+  combinations of capabilities reduce to additive ones.  The only
+  interaction between capability units is exchange at market prices,
+  which is captured at the macro level by the additivity of the weight
+  function; no $w(\{d_1, d_2\}) > w(d_1) + w(d_2)$ structure is
+  admitted.
+\item[(P2)] \textbf{No individuation.}  Agents are anonymous /
+  representative.  Per-agent benchmark calibrations $w_i(\cdot)$
+  reduce to the common $w(\cdot)$, and questions of interpersonal
+  comparison (which the GFM individuation discipline of M5 keeps
+  separate) are absent at $\Pstd$'s level of structure.
+\item[(P3)] \textbf{Total ordering.}  Any two capability units $d,
+  d' \in \Pstd$ are comparable by the real-line ordering, so the
+  poset's lattice structure degenerates to a chain.  No incomparable
+  capabilities exist; no diversity dimension is preserved.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Fungibility collapse as the conditions producing
+$\Pstd$]
+\label{rem:fc_collapse}
+We use ``fungibility collapse'' throughout to denote the structural
+reduction conditions (P1)--(P3) under which the GFM apparatus operates
+on $\Pstd$.  The collapse is not an operation performed on a specific
+GFM poset $P$; it is a statement about the regime in which the
+non-fungibility, cooperative, and individuation features of $P$ are
+operationally insignificant and the capability space is approximately
+$\Pstd$.  At macro scales with liquid markets, approximately fungible
+goods, and representative-agent reasoning, this regime is a reasonable
+approximation; at micro scales, in non-market sectors, or in domains
+with strong cooperative dynamics, the regime fails and the additional
+GFM structure becomes load-bearing
+(Section~\ref{sec:fc_features}).
+\end{remark}
+
+\subsection{The correspondence theorem}
+\label{sec:fc_correspondence}
+
+\begin{theorem}[Fungibility-Collapse Reduction, linear-utility special case]
+\label{thm:fungibility_collapse}
+Let $\{S_t\}_{t \geq 0}$ be an adapted, measurable
+capability-holding process on a filtered probability space
+$(\Omega, \mathcal{F}, \{\mathcal{F}_t\}, \mathbb{P})$ describing
+the framework's dynamics, and assume the discounted volume sum
+is integrable (an absolute summability condition that holds
+under $\gamma < 1$ and almost-sure boundedness of the period
+volumes).  Then an actor maximizing $\volL$ on $\Pstd$ with
+discount factor $\gamma \in (0,1)$ is observationally
+equivalent, in the sense of producing the same choice sequence
+under the same observable constraints, to an expected-utility
+maximizer with utility $u(x) = x$ (linear utility over wealth,
+equivalently risk-neutral) and discount factor $\gamma$.
+\end{theorem}
+
+\begin{proof}
+We verify the equivalence by computing the actor's objective under
+each interpretation and showing they coincide.
+
+\medskip\noindent\textbf{$\volL$ on $\Pstd$.}
+By Definition~\ref{def:pstd}, the cooperative-capability term in
+axiom~M6 vanishes.  Axiom~M4 (additivity over disjoint subsets of
+capabilities) of \citep[Proposition~1]{lasser2026poset} then gives,
+for any subset $S \subseteq \Pstd$ measurable under the volume
+measure,
+\[
+  \volL(S) \;=\; \int_{S} w(d) \, d\mu(d) \;=\;
+  \int_{S} d \, d\mu(d),
+\]
+where $\mu$ is the underlying counting / Lebesgue measure on
+$\Pstd$.  In the discrete reading (capability units are atomic),
+$\volL(S)$ is the sum of unit values, i.e., the total purchasing power
+held in $S$.  In the continuous reading, $\volL(S)$ is the
+real-valued integral over $S$.  In either case, $\volL$ on $\Pstd$
+reduces to total wealth.
+
+\medskip\noindent\textbf{Discounted maximization.}
+The actor's objective, summed over a horizon $\{0, 1, 2, \dots\}$
+with discount factor $\gamma$, is the expected discounted
+volume
+\[
+  \mathrm{Obj}_{\volL}
+  \;=\; \mathbb{E}\!\left[
+    \sum_{t=0}^{\infty} \gamma^{t} \,\volL\bigl( S_t \bigr)
+  \right],
+\]
+where $\{S_t\}_{t \geq 0}$ is the adapted, measurable
+capability-holding process on a filtered probability space
+$(\Omega, \mathcal{F}, \{\mathcal{F}_t\}, \mathbb{P})$ describing
+the framework's dynamics (deterministic or stochastic).  We
+assume the realized objective is integrable (an absolute
+summability condition that holds under $\gamma < 1$ and
+almost-sure boundedness of the period volumes; the assumption is
+standard for discounted infinite-horizon objectives).  Under
+fungibility collapse the
+volume on $\Pstd$ reduces to the wealth integral and the
+objective rewrites as
+\[
+  \mathrm{Obj}_{\volL}
+  \;=\; \mathbb{E}\!\left[
+    \sum_{t=0}^{\infty} \gamma^{t}
+    \int_{S_t} d \,\mathrm{d}\mu(d)
+  \right]
+  \;=\; \sum_{t=0}^{\infty} \gamma^{t} \,\mathbb{E}\bigl[ W_t \bigr],
+\]
+where $W_t$ is total wealth held at time $t$ and the
+exchange of $\mathbb{E}$ and $\sum$ uses Fubini/Tonelli under
+the integrability assumption.  Under deterministic dynamics the
+expectation is the identity and
+$\mathrm{Obj}_{\volL} = \sum \gamma^t W_t$.
+
+\medskip\noindent\textbf{Expected-utility comparator.}
+A linear-utility / risk-neutral expected-utility maximizer with
+discount factor $\gamma$ has objective
+\[
+  \mathrm{Obj}_{\mathrm{EU}}
+  \;=\; \sum_{t=0}^{\infty} \gamma^{t}
+  \,\mathbb{E}\bigl[ u(W_t) \bigr]
+  \;=\; \sum_{t=0}^{\infty} \gamma^{t}
+  \,\mathbb{E}\bigl[ W_t \bigr].
+\]
+The two objectives coincide:
+$\mathrm{Obj}_{\volL} = \mathrm{Obj}_{\mathrm{EU}}$.  Under
+deterministic dynamics this is the per-realization equality
+$\sum \gamma^t W_t$.  Under stochastic dynamics, both
+objectives reduce to $\sum \gamma^t \mathbb{E}[W_t]$, so the
+agent's optimal choice sequence is determined by the same
+sufficient statistic in either interpretation: total
+expected discounted wealth.
+
+\medskip\noindent\textbf{Anti-monopolar property degenerates.}
+The anti-monopolar property of \citep[Proposition~6]{lasser2026horizon}
+penalizes full domination by a single substrate, and is non-trivial
+when multiple capability dimensions exist.  On $\Pstd$, only one
+dimension is present; ``domination'' has no other dimension to
+contrast against, and the anti-monopolar correction vanishes
+identically.
+
+\medskip\noindent\textbf{Conclusion.}
+The actor's choice sequence under either interpretation is determined
+by the same sufficient statistic (total expected discounted wealth),
+so the two interpretations are observationally equivalent.
+\end{proof}
+
+\begin{remark}[``Observationally equivalent'' is not ``the same theory'']
+\label{rem:obs_equiv}
+Theorem~\ref{thm:fungibility_collapse} says the actor's behavioural
+predictions coincide on $\Pstd$, not that GFM and standard utility
+theory are the same theory.  The frameworks differ in what they
+\emph{say about} the agent: GFM's volume measure has axiomatic
+structure (M1--M6) that survives off $\Pstd$; standard utility
+theory's $u(\cdot)$ does not.  The frameworks coincide on $\Pstd$ at
+the level of \emph{what choices to predict}; they diverge on
+\emph{which apparatus carries the prediction's structure} as soon as
+one steps off $\Pstd$.  We belabour the distinction because the
+positioning claim of this paper rests on it: GFM is the formal
+descendant of standard utility theory at $\Pstd$; it is also a
+strictly stronger structure off $\Pstd$, in the sense that the
+poset, cooperative, individuation, and residual-class machinery
+have content that utility theory does not.
+\end{remark}
+
+\subsection{Scope: what additional structure recovers more of utility theory}
+\label{sec:fc_scope}
+
+Theorem~\ref{thm:fungibility_collapse} covers the linear / risk-neutral
+case.  Standard microeconomic utility theory is broader:
+concave $u$, risk-aversion, and heterogeneous agents are routine.
+The reductions that recover each in the GFM apparatus are small
+steps beyond the bare collapse, each requiring an additional
+calibration on top of $\Pstd$.
+
+\begin{remark}[Concave utility]
+\label{rem:concave}
+A concave $u: \mathbb{R}_{\geq 0} \to \mathbb{R}$, capturing
+diminishing-returns-on-wealth preferences, corresponds in the GFM
+apparatus to a re-weighting $w'(d) = u(d)$ on the single-dimensional
+axis.  This is a recalibration of the benchmark function (moving
+from the identity weight $w(d) = d$ to a concave $w' = u$) rather
+than a new poset structure.  $\volL$ evaluated with $w'$ on $\Pstd$
+is then $\int_S u(d) \, d\mu(d)$, equal to the expected-utility
+objective under $u$.  GFM's individuation discipline (M5) requires
+that this re-weighting be applied consistently across agents at the
+positioning level; a per-agent re-weighting goes to the
+heterogeneity discussion below.  The recovery is structural: any
+calibrated GFM apparatus on $\Pstd$ with weight $w' = u$ matches
+the corresponding expected-utility maximizer.
+\end{remark}
+
+\begin{remark}[Risk-aversion]
+\label{rem:risk_aversion}
+Risk-aversion in the standard sense (preferring a deterministic
+outcome to a lottery with the same expected value) corresponds in
+the GFM apparatus to additional structure on the bundle's
+risk-distribution beyond the deterministic dynamics assumed in the
+proof of Theorem~\ref{thm:fungibility_collapse}.  The
+controlled-relaxation machinery of
+\citep[Controlled~Relaxation]{lasser2026wamura} treats risk
+explicitly via the risk-claim landscape and the convergence dynamics
+that follow from it.  Composing the calibrated $w' = u$ of
+Remark~\ref{rem:concave} with that machinery, and additionally
+imposing the standard expected-utility independence axiom on
+lotteries, reproduces risk-averse expected-utility maximization
+with concave $u$.  No new theorem is required at this paper's level
+of analysis; the composition is mechanical given the calibration
+choices.
+\end{remark}
+
+\begin{remark}[Heterogeneous utility across agents]
+\label{rem:heterogeneity}
+Heterogeneous $u_i(\cdot)$ across agents corresponds in the GFM
+apparatus to per-agent benchmark calibrations $w_i(d)$ on the same
+underlying $\Pstd$.  GFM's individuation-without-interpersonal-
+comparison stance (\citep[Proposition~1]{lasser2026poset},
+axiom~M5) makes this natural: the individuation discipline
+explicitly admits per-agent calibrations without requiring an
+interpersonal-comparison primitive.  What standard utility theory
+calls ``heterogeneous preferences'' GFM calls ``per-agent benchmark
+calibrations.''  The macro-aggregation of $\volL$ over agents under
+heterogeneity (how to combine $\sum_i w_i(\cdot)$ into a
+population-level measure) is its own analytical question and the
+substance of Section~6 of \citep{stiglitz2009report}.  The
+fungibility-collapse correspondence does not by itself answer the
+aggregation question; it establishes the agent-level
+observational equivalence and notes that population-level
+aggregation under heterogeneity is the same problem in both
+frameworks.
+\end{remark}
+
+\begin{remark}[The bracket-name convention for ``standard utility theory'']
+\label{rem:utility_scope}
+Throughout this paper we treat ``standard utility theory'' as the
+linear / risk-neutral / homogeneous case unless otherwise noted.
+Concavity, risk-aversion, and heterogeneity are recoverable through
+the calibrations of Remarks~\ref{rem:concave}--\ref{rem:heterogeneity}
+when needed, and we will say so explicitly in worked examples and
+predictions where the calibration matters.  This narrowing is
+deliberate: the load-bearing claim of the paper, the Goodhart
+theorem of Section~\ref{sec:goodhart}, operates on the proxy-truth
+gap, and that gap exists whether the proxy is linear or concave.
+The richer utility-theoretic content sits on top of the
+correspondence rather than orthogonal to it.
+\end{remark}
+
+\subsection{What GFM adds beyond $\Pstd$: five structural features}
+\label{sec:fc_features}
+
+The correspondence theorem clarifies where GFM and standard
+economics agree.  The interesting question is where they diverge.
+We catalogue five structural features GFM carries off $\Pstd$ that
+have no analog in standard utility theory under fungibility
+collapse.  Each is load-bearing for at least one prior result in the
+sequence; each generates predictions in
+Section~\ref{sec:structural_predictions}.
+
+\subsubsection{Non-fungibility (poset structure with distinct dimensions)}
+
+GFM's capability poset $P$ admits incomparable capabilities: two
+agents may possess capability sets $A$ and $B$ such that neither
+$\volL(A) \leq \volL(B)$ nor $\volL(B) \leq \volL(A)$ in any
+operationally meaningful ordering.  The poset's lattice structure
+encodes this incomparability through the partial order;
+\citep[Proposition~1]{lasser2026poset} states the axioms (M1--M6)
+under which the partial order generates a well-defined volume
+measure.  On $\Pstd$, the partial order degenerates to a total
+order (every pair of capability units is comparable by the
+real-line ordering), and incomparability disappears.
+
+The structural prediction this enables: agents do not in general
+trade incomparable capabilities at any single price.  The bundle-
+completion magnitude prediction (Prediction~1 of
+Section~\ref{sec:structural_predictions}) is one instance; bundle-
+for-bundle trades (Prediction~5) are another.  Standard utility
+theory, lacking incomparability, predicts a single price for any
+two bundles, namely the price at which the agent is indifferent;
+GFM does not, because non-comparability of capability sets is a
+positive structural fact.
+
+\subsubsection{Cooperative capabilities (M6 superadditivity)}
+
+\citep[Proposition~1]{lasser2026poset} axiom~M6 admits cooperative
+capability terms: the volume of a combined capability set $A \cup B$
+may exceed $\volL(A) + \volL(B)$ when the capabilities cooperate
+synergistically.  On $\Pstd$, M6 reduces to ordinary additivity (the
+cooperative excess vanishes); off $\Pstd$, the cooperative term is
+generic.  This is the formal counterpart of Becker's
+household-production insight \citep{becker1965theory,becker1981treatise}
+that utility-producing combinations of time, market goods, and
+capabilities yield outputs not reducible to the sum of inputs at
+their separate prices.
+
+What GFM adds beyond Becker is constraint.  Becker's household
+production functions are almost arbitrarily flexible (any
+$F(x_1, \dots, x_n)$ specification is admissible), and the
+flexibility makes the framework descriptively powerful but
+unfalsifiable: any observed bundle behaviour can be rationalized by
+the right $F$.  GFM's M6 is constrained: cooperative capabilities
+must be poset-coherent (the cooperative excess is bounded by the
+poset's structural connectivity, not arbitrary), and the
+poset structure is itself observable from the agent's capability
+inventory.  This is what makes Prediction~2 of
+Section~\ref{sec:structural_predictions} (variance in
+revealed-sacrifice for bundles with strong cooperative structure
+exceeds variance for bundles without) a falsifiable claim rather
+than a curve-fitting exercise.
+
+\subsubsection{Anti-monopolar reasoning (the $\gamma^*$ threshold)}
+
+\citep[Proposition~6]{lasser2026horizon} establishes that, under
+discounting, a goal-frontier maximizer with multiple substrates is
+strictly worse off in expectation when one substrate dominates the
+others, and characterizes a threshold $\gamma^*$ at which the
+preference flips.  The anti-monopolar property is structurally tied
+to the multi-dimensional poset; it is the formal claim that
+diversity across dimensions has positive shadow value under
+discounting.  On $\Pstd$, with only one dimension, the anti-
+monopolar correction vanishes (as Theorem~\ref{thm:fungibility_collapse}'s
+proof noted).
+
+Standard utility theory has no analog.  An expected-utility maximizer
+on a single-dimensional wealth axis has no diversity dimension to
+protect, so the optimization-trajectory question ``does
+concentrating in one dimension hurt?'' does not arise.  Even on a
+multi-dimensional consumption space (multi-good utility), the
+question is answered by separability assumptions on $u$ rather than
+by a structural property of the dimension structure.  Prediction~4
+of Section~\ref{sec:structural_predictions} (population-scale
+anti-monopolar via revealed-sacrifice dispersion across
+categories) is a GFM-native claim with no utility-theoretic
+counterpart.
+
+\subsubsection{Individuation without interpersonal comparison}
+
+\citep[Proposition~1]{lasser2026poset} axiom~M5 separates
+individuation (per-agent identity in the capability space) from
+interpersonal comparison (a primitive ranking across agents).
+GFM's volume measure is computed over a shared poset but does not
+require an interpersonal-comparison primitive; aggregation across
+agents proceeds through additive composition on the shared poset
+rather than through utility-magnitude comparison.  On $\Pstd$, the
+individuation reduction P2 of Definition~\ref{def:pstd} removes
+this distinction: agents are anonymous and the shared $w(d) = d$
+admits no per-agent variation.
+
+The dollar-denominated-utility problem of standard welfare
+economics (``how do we add Alice's utils to Bob's?'') is dissolved
+on $\Pstd$ by the homogeneity assumption (everyone's $u$ is linear
+identity, so utils are dollars).  Off $\Pstd$, GFM faces a
+related but distinct question: how to aggregate per-agent benchmark
+calibrations $w_i(\cdot)$ on the shared poset.  M5 makes this an
+aggregation question rather than a comparison question, and
+\citep[Proposition~1]{lasser2026poset}'s axiomatization gives
+structural conditions under which the aggregation is well-defined.
+Standard utility theory has no axiomatization of this aggregation
+that does not invoke interpersonal-comparison primitives; this is
+the formal source of the Arrow-impossibility difficulties (cf.
+Section~\ref{sec:lineage}).
+
+\subsubsection{Formal recognition of the residual class}
+\label{sec:fc_residual}
+
+\citep[Need~Sufficiency]{lasser2026paper8b}, Definition~12,
+identifies a structural class $\ResS \subseteq P$ of capabilities
+\emph{outside the sacrifice channel's reach}: capabilities exercised
+without any material or time-displacement footprint that the
+\citep[Revealed~Sacrifice]{lasser2026paper8a} apparatus can witness.
+Examples are purely-private contemplation, baseline interoceptive
+self-awareness, gift-economy capabilities exercised without recorded
+sacrifice, and (depending on individuation discipline) household
+production with no opportunity-cost shadow.  The residual class is
+\emph{not} ``capabilities GFM declines to model''; it is
+``capabilities the framework's observation channel cannot in
+principle reach.''
+
+Standard economics has the same structural limit, expressed
+informally.  GDP and most macro welfare measures observe trade
+events and impute everything else;
+\citep{stiglitz2009report} documents at length the resulting
+``shadow economy / non-market activity / household production''
+gap.  Time-use surveys \citep{aguiar2007measuring} are an
+imputation move addressing one channel of the gap; satellite
+accounts and imputed-rent calculations address others.  These are
+all \emph{partial} answers; none claims to close the gap, because
+no observation channel built around trade events can.
+
+The fungibility-collapse correspondence does \emph{not} empty
+$\ResS$.  $\Pstd$ removes cooperative structure, individuation, and
+non-fungibility, but it does not extend the channel's reach;
+capabilities exercised without sacrifice events remain unobservable
+under either framework.  The residual class is a consequence of the
+observation channel, not of the poset structure.  GFM's
+contribution beyond standard economics on this front is formal
+identification: $\ResS$ is a definable structural object with a
+reserved cell ($\delta_{\mathrm{residual}}$) in the gap
+decomposition (\citep[Need~Sufficiency]{lasser2026paper8b},
+Definition~8) and an explicit governance question (which
+capabilities admit ``no sacrifice-observable path in principle?'').
+Recognizing the residual class as analytically distinct from
+within-channel-but-unwitnessed capabilities (the
+$\delta_{\mathrm{dormant}}$ and attestation-limited contributions
+of \citep[Need~Sufficiency]{lasser2026paper8b},
+Section~5) is an analytical separation that the standard apparatus
+collapses.
+
+\begin{remark}[The five features compose]
+\label{rem:features_compose}
+The five features of this section are not independent: cooperative
+capabilities require non-fungibility (cooperative excess only has
+content when capabilities are distinct); anti-monopolar reasoning
+requires non-fungibility (no dimension to penalize concentration in
+on a chain); individuation interacts with cooperative capabilities
+through agent-specific bundle compositions; the residual class is
+a separate structural object that the other four do not entail.
+The composition matters because the structural-prediction class of
+Section~\ref{sec:structural_predictions} is generated by
+combinations of features rather than by any single feature in
+isolation.  Prediction~5 (mixed-polarity bundle-for-bundle traces)
+is the canonical example: it requires non-fungibility, cooperative
+structure, and individuation simultaneously.
+\end{remark}
+
+\subsection{Where GFM and standard economics agree}
+\label{sec:fc_agreement}
+
+The correspondence theorem identifies the regime of agreement
+precisely.  At the macro scale, with liquid markets, approximately
+fungible goods, representative-agent reasoning, and risk-neutral
+calibration, standard economics' empirical successes are
+inherited by GFM through the correspondence.  At this scale GFM
+adds nothing operationally relevant: the cooperative, individuation,
+non-fungibility, and anti-monopolar features have content that the
+data cannot distinguish from the linear / homogeneous baseline.
+The well-known empirical successes of money-maximization
+models (consumption smoothing under liquidity constraints,
+capital allocation across sectors, intertemporal substitution at
+representative-agent scales) are predictions of $\volL$-maximization
+on $\Pstd$ as well, and the correspondence shows why.
+
+GFM's added structure becomes load-bearing precisely where the
+$\Pstd$ approximation fails:
+\begin{itemize}
+\item \textbf{Micro scale,} where non-fungibility and cooperative
+  structure dominate (consumer bundle decisions, household
+  formation, locational choice).
+\item \textbf{Non-market sectors,} where the residual-class floor is
+  large relative to observed activity (gift economies,
+  household production without time-use shadow, volunteer labour
+  outside formal channels).
+\item \textbf{Multi-substrate domains,} where the anti-monopolar
+  property has bite (cross-cultural welfare comparison,
+  cross-substrate AI capability landscapes, ecological diversity).
+\item \textbf{Heterogeneous-agent populations,} where individuation
+  matters and macro-aggregation of preferences is the operational
+  question (welfare policy under inequality, cross-cohort
+  intertemporal comparison).
+\end{itemize}
+Each of these regimes generates a divergence from utility-theoretic
+predictions that the structural-prediction class of
+Section~\ref{sec:structural_predictions} catalogues.  The
+fungibility-collapse correspondence is what licenses the claim that
+the divergences are GFM-native rather than utility-theoretic
+extensions: standard utility theory under fungibility collapse
+cannot make these predictions without adding ad hoc structure that
+is itself unfalsifiable, while GFM's predictions follow from the
+poset-axiomatic apparatus that the correspondence theorem leaves
+intact off $\Pstd$.
