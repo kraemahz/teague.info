@@ -1,0 +1,772 @@
+\section{Intensive composition lemmas}
+\label{sec:lemmas}
+
+The deployment-safety theorem of \S\ref{sec:main_theorem} composes
+nine lemmas: four general composition lemmas (1--4) and a five-part
+family covering substrate-targeting adversarial events (5a--5e).
+This section states and proves each.
+
+The lemma dependency structure is:
+\begin{itemize}
+\item Lemma~1 establishes that intensive bounds compose to intensive
+  bounds under co-evolution; this is used by every subsequent lemma.
+\item Lemmas~2 and~3 bridge the inherited source-paper apparatus
+  (\citep[Phase~Redundancy]{lasser2026phase} Lyapunov, \citep[Need~Sufficiency]{lasser2026paper8b} HHI) to \citep[Microfoundation]{lasser2026micro}'s static Goodhart
+  bound.
+\item Lemma~4 lifts \citep[Exogenous~Verification]{lasser2026exo}'s SPRT mean-time bound to a tail-bounded
+  lead-time guarantee.
+\item Lemma~5a establishes a substrate floor for $\rext$ given
+  $\mindep \geq m^*$.
+\item Lemma~5b restricts the SPRT detection class to four-channel
+  observable adversarial strategies and supplies channel-specific
+  KL floors.
+\item Lemma~5c is the static safe region from \citep[Horizon~Aware]{lasser2026horizon}'s minimax-
+  form lift, scoped to the cooperative-overlap regime.
+\item Lemma~5d composes Lemma~5b's KL floor with Lemma~4's tail
+  bound to give the operational lead-time guarantee.
+\item Lemma~5e extends Lemma~5b's machinery to environment-side
+  observables under invariant $I_8$.
+\end{itemize}
+
+\subsection{Lemma 1 (Intensive composition under co-evolution)}
+\label{sec:lem1}
+
+\begin{definition}[Intensive in $|P|$ over deployment class $\mathcal{D}$]
+\label{def:intensive_paper10}
+Let $\mathcal{D}$ be a deployment class characterized by fixed
+operational parameters (threat model, training-discipline regime,
+verification infrastructure, governance protocol).  The operational
+parameters are fixed before $|P|$ is varied; they may not include
+arbitrary state-dependent quantities chosen to absorb the bound.
+
+A bound $B$ depending on the deployment state is \emph{intensive in
+$|P|$ over $\mathcal{D}$} if there exists a constant $C \geq 0$
+that may depend on $\mathcal{D}$'s operational parameters but is
+independent of $|P|$, such that $B \leq C$ for all valid deployment
+states in $\mathcal{D}$.
+\end{definition}
+
+\begin{lemma}[Intensive composition under co-evolution]
+\label{lem:1}
+Let $X$ be a non-residual gap quantity (e.g., $\epsnonresComposed$,
+or $f(\epsilon_{\mathrm{safe}})$ after Lemma~\ref{lem:2}'s
+substitution).  Under conditions (C6) (bounded-Lipschitz alignment
+property), (C7) (bounded co-evolution), and (C8) (per-capability
+admissibility) of Theorem~\ref{thm:deployment_safety}, the
+composition rule
+\[
+  B \;=\; \mathrm{Lip}(g) \cdot \bigl(X + \lambda \cdot \epsfloor\bigr),
+  \qquad \lambda \in [0, 1]
+\]
+is intensive in $|P|$ over the deployment class $\mathcal{D}$:
+there exists a constant $C^* \geq 0$ depending on $\mathcal{D}$'s
+operational parameters but independent of $|P|$, such that
+$B \leq C^*$ for all valid deployment states in $\mathcal{D}$.
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in
+Appendix~\ref{app:proof_lem1}]
+Under (C8) per-capability admissibility, each capability's gap is
+allocated a ceiling with disjoint per-channel sub-shares; the
+sup-norm $\epsnonresChannel{j}$ over capability-space inherits the
+sub-share ceiling $K_j$, which is $|P|$-independent over
+$\mathcal{D}$. The four-channel decomposition under co-evolution
+gives $\epsnonresComposed \leq \sum_{j=1}^{4} \epsnonresChannel{j}
++ (\epsnonresCoev)_+$, where the positive-part co-evolution term is
+bounded by (C7) bounded co-evolution
+(Assumption~\ref{ass:bounded_coev}). The residual floor
+$\epsfloor = \volR(\ResS)/\volR(\Pproxy) \leq 1$. Multiplying by
+$\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$ from (C6) preserves
+intensivity.  The composed constant is $C^* = K_{\mathrm{Lip}}
+\cdot (K_X + K_{\mathrm{floor}})$.
+\end{proof}
+
+\textbf{Connection to Theorem~\ref{thm:deployment_safety}'s Layer~1.}
+Lemma~\ref{lem:1} establishes that the composed slack term
+$X + \lambda \cdot \epsfloor$ is intensive in $|P|$ over
+$\mathcal{D}$, and that multiplying by $\mathrm{Lip}(g)$ preserves
+intensivity.  Theorem~\ref{thm:deployment_safety}'s Layer~1 invokes
+this with $X = f(\epsilon_{\mathrm{safe}})$ after Lemma~\ref{lem:2}'s
+substitution; the resulting $h_{\mathrm{static}}(\theta) =
+f(\epsilon_{\mathrm{safe}}) + \lambda \cdot \epsfloor$ is intensive
+by Lemma~\ref{lem:1}, delivering the capability-magnitude-
+independence property of the deployment claim.
+
+\subsection{Lemma 2 (Lyapunov-to-Goodhart bridge)}
+\label{sec:lem2}
+
+\begin{lemma}[Lyapunov-Goodhart quantitative bridge]
+\label{lem:2}
+Under condition (C9) of Theorem~\ref{thm:deployment_safety}
+(world-model parameterization regularity, comprising sub-conditions
+BD bounded per-capability dimension count, CL coordinate-Lipschitz
+parameterization, WB safety-relevant subspace with weight floor,
+and TF truth floor) and under invariants $I_1$ and $I_4$ (which
+together imply $I_2$ via
+\citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis),
+\citep[Microfoundation]{lasser2026micro}'s relative sup-norm gap
+$\epsnonres = \sup_{c \in P^{\mathrm{act}}} |P(c) - T(c)|/T(c)$ on
+the operationally active subspace $P^{\mathrm{act}} = \{c \in P
+\setminus \mathrm{ResS} : T(c) > 0\}$ satisfies:
+\[
+  \Lyap(\Wm_t) \;<\; \epsilon_{\mathrm{safe}}
+  \quad\implies\quad
+  \epsnonres \;<\; f(\epsilon_{\mathrm{safe}})
+  \;:=\; \frac{L_{\max}}{T_{\min}}
+  \sqrt{\frac{N_{\max} \cdot \epsilon_{\mathrm{safe}}}{w_{\min}}}.
+\]
+$f$ is intensive in $|P|$ over the deployment class $\mathcal{D}$:
+each constant ($L_{\max}, T_{\min}, N_{\max}, w_{\min},
+\epsilon_{\mathrm{safe}}$) depends on $\mathcal{D}$'s operational
+parameters but not on $|P|$.
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in
+Appendix~\ref{app:proof_lem2}]
+By (C9.CL), the per-capability proxy-truth gap satisfies $|P(c) -
+T(c)| \leq \sum_{k \in \mathrm{dim}(c)} L_{c,k} |\epsilon_k|$.
+Apply weighted-dual-norm Cauchy-Schwarz with weights
+$L_{c,k}/\sqrt{w_k}$ and $\sqrt{w_k} |\epsilon_k|$:
+\[
+  \sum_{k \in \mathrm{dim}(c)} L_{c,k} |\epsilon_k|
+  \leq \sqrt{\sum_{k \in \mathrm{dim}(c)} L_{c,k}^2/w_k} \cdot
+  \sqrt{\Lyap}.
+\]
+Bound the dual-norm factor by $L_{\max}^2 N_{\max}/w_{\min}$ via
+(C9.BD) and (C9.WB), giving $|P(c) - T(c)| \leq L_{\max}
+\sqrt{N_{\max} \Lyap / w_{\min}}$.  Apply (C9.TF) for the relative
+sup-norm bound: $\epsnonres \leq (L_{\max}/T_{\min}) \sqrt{N_{\max}
+\Lyap/w_{\min}}$.  Substitute $\Lyap < \epsilon_{\mathrm{safe}}$.
+\end{proof}
+
+\textbf{Connection to Theorem~\ref{thm:deployment_safety}'s Layer~1.}
+Lemma~\ref{lem:2} converts the Lyapunov bound (Phase Redundancy
+deliverable under invariants $I_1, I_4$) into the relative sup-norm
+gap (Microfoundation Goodhart-bound input).  Theorem~1's Layer~1
+proof invokes Lemma~\ref{lem:2} at Step~3, then composes via
+gap decomposition (Step~4), Goodhart bound (Step~5), and Lemma~1's
+generic-X intensivity packaging (Step~6) with $X =
+f(\epsilon_{\mathrm{safe}})$.
+
+\subsection{Lemma 3 (HHI-pressure surrogate adequacy)}
+\label{sec:lem3}
+
+We separate what the HHI argument actually proves (one-way
+implication) from what the theorem requires (the reverse
+implication, which is an empirical claim).
+
+\begin{lemma}[HHI as concentration surrogate, forward implication]
+\label{lem:3_forward}
+Let $\mathcal{R}_{\mathrm{press}}$ denote the optimization-pressure
+regime in which \citep[Microfoundation]{lasser2026micro}'s Conjecture~1 predicts gap exploitation.
+Deployments with $\HHI > H^*$ exhibit trade-flow concentration
+patterns that match the structural prerequisites of $\mathcal{R}_{\mathrm{press}}$:
+\[
+  \HHI > H^* \;\Longrightarrow\;
+  \text{trade-flow concentration prerequisites of }
+  \mathcal{R}_{\mathrm{press}} \text{ are met}.
+\]
+\end{lemma}
+
+\begin{proof}
+\citep[Need~Sufficiency]{lasser2026paper8b}'s HHI is the Schur-convex concentration index on trade-flow
+events. By
+\citep[Schur-convexity property]{lasser2026paper8b}, $\HHI > H^*$
+implies that trade flow is concentrated on a small subset of
+capability categories. Under stance S0, trade flow is the
+operational signature of the agent's exercise pattern (\citep[Revealed~Sacrifice]{lasser2026paper8a}),
+which is the operational signature of optimization target.
+Therefore $\HHI > H^*$ implies optimization-target concentration,
+which is predicate (a) of Conjecture~1's predicted-exploitation
+regime.
+\end{proof}
+
+\paragraph{The reverse implication required by Theorem~\ref{thm:deployment_safety}.}
+Lemma~\ref{lem:3_forward} establishes only a sufficient condition
+for $\mathcal{R}_{\mathrm{press}}$. The deployment-safety theorem's
+Layer~1 proof (\S\ref{sec:proof_layer1}, Step~4) requires the
+\emph{contrapositive}: $\mathcal{R}_{\mathrm{press}}^c$ implies
+$\HHI \leq H^*$, equivalently $\HHI < H^* \implies
+\mathcal{R}_{\mathrm{press}}^c$. This direction does \emph{not}
+follow from Lemma~\ref{lem:3_forward}. There may exist deployments
+in $\mathcal{R}_{\mathrm{press}}$ with low HHI (e.g., concentrated
+optimization pressure that does not manifest in concentrated trade
+flow). For Theorem~1 to invoke $I_5$ as the operational invariant,
+this gap must be closed.
+
+We close it by an explicit assumption rather than by argument:
+
+\begin{assumption}[HHI surrogate adequacy, SA1]
+\label{ass:SA1}
+For deployments under stance S0 with operational invariants $I_1,
+\ldots, I_4$ in force, the HHI ceiling $\HHI < H^*$ is sufficient to
+ensure the deployment lies outside Conjecture~1's predicted-
+exploitation regime $\mathcal{R}_{\mathrm{press}}$:
+\[
+  \HHI < H^* \;\Longrightarrow\; \mathcal{R}_{\mathrm{press}}^c.
+\]
+\end{assumption}
+
+\textbf{What SA1 buys vs.\ what proving it would buy.}
+Under SA1, the deployment-safety theorem's Layer~1 proof binds via
+$I_5$. The theorem becomes conditional on SA1 in the same sense it
+is conditional on the eleven invariants: SA1 is a stated assumption,
+not a derived consequence. SA1 is empirically testable
+(comparing actual gap-exploitation behavior against HHI levels in
+real deployments) and is the natural target for the
+HHI--$\Delta r_K$ structural conjecture deferred to follow-up work
+(\S\ref{sec:conjecture_op}).
+
+\textbf{What we cannot do.}  Without SA1, the theorem cannot use
+$I_5$ to bound $\mathcal{R}_{\mathrm{press}}$.  The alternative is
+to weaken the theorem to bound only the regime characterized by
+forward HHI implications; this loses the operational utility of
+$I_5$ as a deployment-time check.  SA1 is the minimum assumption
+required to retain operational utility while keeping the
+implication direction explicit.
+
+\paragraph{Note on the Conjecture-dependence audit (\S\ref{sec:conjecture_audit}).}
+The Conjecture-dependence audit listed $I_5$ as the only
+conjecture-dependent invariant. SA1 makes this dependence explicit.
+The other ten invariants are theorem-proof conditions derived from
+established source-paper machinery; $I_5$ is a deployment-regime
+condition whose theorem-utility is conditional on SA1.
+
+\subsection{Lemma 4 (SPRT detection lead-time tail bound)}
+\label{sec:lem4}
+
+\begin{lemma}[SPRT lead-time tail bound]
+\label{lem:4}
+Let $T_{\mathrm{detect}}$ be the SPRT detection time for a
+violation producing post-clipping LLR drift $\delta > 0$ under
+(C5.IID).  Then for $t > A/\delta$:
+\[
+  \Pr[T_{\mathrm{detect}} > t]
+  \;\leq\; \exp\!\left(-\frac{2(t\delta - A)^2}{t \Rh^2}\right),
+\]
+where $A = \log((1-\beta)/\alpha)$ is Paper~5's SPRT threshold,
+$\Rh = b - a = 2\Bclip$ is the Hoeffding range width of the
+clipped LLR (called $\Rh$ in Lemma~\ref{lem:6}; equal to the
+$R$ used in this appendix), and $\delta$ is the post-clipping drift
+floor.  Asymptotically ($t\delta \gg A$), this simplifies to
+$\exp(-2T\delta^2/\Rh^2) = \exp(-\kappa T \delta)$ with
+$\kappa = 2\delta/\Rh^2$.
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in Appendix~\ref{app:proof_lem4}]
+\citep[Exogenous~Verification]{lasser2026exo}'s SPRT machinery
+(\citep[Definition of Behavioral Consistency Monitor]{lasser2026exo})
+gives the running log-likelihood ratio $\Lambda_t$ with per-step
+drift $\delta$ under the alternative.  Wald's identity gives the
+mean bound $\mathbb{E}[T_{\mathrm{detect}}] \approx A/\delta$;
+Hoeffding-Azuma's inequality applied to bounded clipped
+LLR increments (under (C5.SPRT) sub-clauses) gives the tail bound
+above.
+
+\textbf{Note on $\Lambda_t < A$.}  In the proof, $\Lambda_t < A$ is
+\emph{necessary} for $T_{\mathrm{detect}} > t$ (i.e., the LLR
+process has not yet crossed the threshold), not sufficient; the
+event $\{T_{\mathrm{detect}} > t\}$ requires that the threshold has
+not been crossed at any earlier time.  The tail bound is
+nonetheless valid because the necessary condition's probability
+upper-bounds the joint event's probability.
+
+\textbf{Caveat.} \citep[Phase~Redundancy]{lasser2026phase}'s
+$\tau_{\mathrm{meta}} \gtrsim C/I_k$ is stated as a scaling law,
+not a theorem-level bound; Lemma~\ref{lem:6}'s lead-time-before-
+cascade composition uses (C11.CLK)'s deterministic floor $\Ncasc$
+plus calibration probability $\bclk$ in lieu of treating
+$\tau_{\mathrm{meta}}$ as a hard inequality.
+\end{proof}
+
+\subsection{The Lemma 5 family: substrate-targeting adversarial events}
+\label{sec:lem5_family}
+
+The five-part Lemma~5 family covers substrate-targeting adversarial
+events specifically. The family structure mirrors the three-layer
+deployment claim: Lemma~5c provides the static safe region,
+Lemma~5b provides the channel-restricted detection class,
+Lemma~5d composes detection with the lead-time guarantee,
+Lemma~5a supplies the substrate floor that both layers depend on,
+and Lemma~5e extends Lemma~5b's machinery to environment-side
+observables.
+
+The family is restricted to substrate-targeting adversaries
+(Definition~\ref{def:joint_indep}); other shock classes
+(capability-targeting, coalition-internal corruption, environment
+manipulation outside witness coverage) require separate machinery
+or are acknowledged residuals. \S\ref{sec:scope} of the
+introduction stated this scope explicitly.
+
+\subsection{Lemma 5a (Substrate floor)}
+\label{sec:lem5a}
+
+\renewcommand{\thelemma}{5a}
+\begin{lemma}[Substrate floor]
+\label{lem:5a}
+Under invariant $I_6'$ ($\mindep \geq m^* \geq 3$) and condition
+(C10) of Theorem~\ref{thm:deployment_safety} (per-pair cooperative-
+novelty rate floor with superposition; comprising sub-clauses
+(C10.CN) heterogeneous per-pair rate floors $\rho_{ij} \geq \rho_0
+> 0$ on audited subset $\Saudit \subseteq \mathcal{S}$ of $m^*$
+substrates, and (C10.SU) pairwise channel superposition: disjoint
+attribution + non-rivalrous production + joint-deployment
+intensities), the cross-substrate cooperative novelty rate satisfies:
+\[
+  \rext \;\geq\; r_*(m^*) \;:=\; \rho_0 \cdot \binom{m^*}{2} \;>\; 0.
+\]
+For $m^* = 3$, $r_*(3) = 3\rho_0 > 0$.
+
+The floor $r_*(m^*)$ is intensive in $|P|$ over the deployment
+class $\mathcal{D}$: $\rho_0$ depends on $\mathcal{D}$'s
+operational parameters (per-pair calibrated rates) but not on
+$|P|$.
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in
+Appendix~\ref{app:proof_lem5a}]
+By $I_6'$, $\mindep \geq m^*$ substrates with joint failure-
+correlation independence; (C10) certifies an audited subset
+$\Saudit$ of $m^*$ substrates.  Pairwise cooperative channels
+$\mathcal{C}^{(s_i, s_j)}$ are defined with exact-two-substrate
+causally-necessary support; auxiliary post-production participants
+do not change classification.  Under (C10.CN), each pair satisfies
+$\rext^{(s_i, s_j)} \geq \rho_0 > 0$.  Under (C10.SU), the
+pairwise channels are disjoint event classes with non-rivalrous
+production, so per-pair rates sum:
+\[
+  \rext \;\geq\; \rext^{\mathrm{pairwise}} \;\geq\; \binom{m^*}{2}
+  \cdot \rho_0 \;=\; r_*(m^*).
+\]
+Higher-order cooperative contributions are nonnegative, so the
+pairwise sum is a lower bound.
+\end{proof}
+
+\textbf{Connection to Theorem~\ref{thm:deployment_safety}'s
+Layer~1.}  Lemma~5a's $\rext \geq r_*(m^*) > 0$ is invoked at
+Step~1 of Lemma~5c's appendix proof to make the safe-region
+inequality $\Delta r_K < \rext + (1-\gamma)(\Ddiv - \Delta_0)$
+non-trivial.  Without (C10), the safe region could be vacuously
+empty; with (C10), $\rext$ has a positive deployment-class
+constant floor.
+
+\textbf{(C10.SU) vs.\ joint failure-correlation independence ($I_6'$).}
+$I_6'$ excludes shared adversarial \emph{shock} mechanisms: no
+single shock spans multiple substrates.  (C10.SU) excludes shared
+cooperative \emph{production} bottlenecks: producing cooperatives
+in one channel does not consume resources that would otherwise
+contribute to another.  These are structurally independent
+conditions.  $I_6'$ alone does not imply additivity of cooperative
+rates; (C10.SU) is required for that.
+
+\subsection{Lemma 5b (Channel-restricted detection KL floor)}
+\label{sec:lem5b}
+
+\addtocounter{lemma}{-1}\renewcommand{\thelemma}{5b}
+\begin{lemma}[Channel-restricted detection]
+\label{lem:5b}
+Let $\Aadv$ denote the subset of regime-(iii) strategies producing
+at least one monitored four-channel deviation: reduced
+cross-substrate cooperative event rate (Channel~1), degraded
+attestation share (Channel~2), individuation/substrate-diversity
+drift (Channel~3), or bundle/cooperative-edge decomposition shifts
+(Channel~4). Then for any $q \in \Aadv$:
+\[
+  D_{\mathrm{KL}}(q \,\|\, p_0) \;\geq\; \deltaadv \;>\; 0,
+\]
+where $\deltaadv$ is computed from channel-specific
+least-favorable alternatives.
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in Appendix~\ref{app:proof_lem5b}]
+For each of the four channels, a least-favorable adversarial
+distribution is constructed (Poisson for the cooperative-rate
+channel, Bernoulli for attestation, multinomial for the two
+concentration channels) and its KL divergence is computed against
+the baseline.  Taking $\deltaadv = \min_c \delta_c$ over the four
+channels gives a strictly positive lower bound on
+$D_{\mathrm{KL}}(q \,\|\, p_0)$ for $q \in \Aadv$.
+
+\textbf{The named gap (channel-orthogonal residual).}  Strategies
+outside $\Aadv$ --- those producing no shift in any of the four
+monitored channels --- have $D_{\mathrm{KL}}(q \,\|\, p_0) = 0$ on
+the monitored observables and are outside the detection guarantee.
+This is a real, named residual; \S\ref{sec:scope} of the
+introduction acknowledged it and \S\ref{sec:discussion} returns to
+it.
+\end{proof}
+
+\subsection{Lemma 5c (Minimax static tightening)}
+\label{sec:lem5c}
+
+We internalize the key definitions and the single-shock statement
+in the body; the multi-shock extension appears as a Remark below.
+
+\begin{definition}[Counterfactual shock-loss fraction]
+\label{def:loss_fraction}
+For a coalition state $G_K$ and substrate $s \in S$:
+\[
+  \alpha_s(G_K) \;=\; \frac{\volL(G_K) - \volL(G_K^{-s})}{\volL(G_K)},
+\]
+where $G_K^{-s}$ is the coalition's capability poset with all
+capabilities (individual and cooperative) supported on $s$ removed.
+The worst-case shock-loss fraction under adversarial targeting is
+$\ell^{\max}(G_K) = \max_s \alpha_s(G_K)$.
+
+The shock-loss profile $(\alpha_1, \ldots, \alpha_m)$ is a vector of
+independent counterfactuals, not a partition; with cross-substrate
+cooperative dependencies, $\sum_s \alpha_s$ may exceed 1, while each
+$\alpha_s \in [0, 1]$.
+\end{definition}
+
+\begin{definition}[Cooperative-overlap regime]
+\label{def:coop_overlap}
+A deployment is in the \emph{cooperative-overlap regime} if its
+substrate-cooperative structure is dominated by cross-substrate
+cooperative capabilities (cooperatives whose production requires
+participation from multiple distinct substrates) rather than by
+redundant capabilities (capabilities replicated across substrates).
+Operationally: the $\volL$-weighted sum of cross-substrate
+cooperatives exceeds the $\volL$-weighted sum of redundant
+capabilities. The cooperative-vs-redundancy audit
+(\S\ref{sec:deployment_tooling}) verifies this regime.
+\end{definition}
+
+\addtocounter{lemma}{-1}\renewcommand{\thelemma}{5c}
+\begin{lemma}[Minimax static tightening, single-shock cooperative-overlap regime]
+\label{lem:5c}
+Restrict scope to substrate-targeting adversarial events under the
+single-shock model ($N = 1$ a.s.) and to deployments in the
+cooperative-overlap regime
+(Definition~\ref{def:coop_overlap}). Under invariants $I_6'$
+($\mindep \geq m^* \geq 3$) and the balanced-loss condition:
+\[
+  \max_s \alpha_s(G_K^{\mathrm{div}}) \;\leq\; 1/m^* + \epsilon
+  \qquad (\epsilon > 0 \text{ engineering tolerance}),
+\]
+\citep[Horizon~Aware]{lasser2026horizon}'s anti-monopolar conclusion holds in the static safe region:
+\begin{equation}
+\label{eq:safe_region_paper}
+  \Delta r_K \;<\; \rext + (1 - \gamma)\bigl(\Ddiv - \Delta_0\bigr),
+\end{equation}
+where
+\begin{equation}
+\label{eq:ddiv_paper}
+  \Ddiv \;=\; \volL_K \cdot (\lossDmax - \lossdivmax) \cdot
+  \mathbb{E}[\gamma^{\Tadv}],
+\end{equation}
+$\lossDmax = \max_s \alpha_s(G_K^{D})$ is the dominator's
+worst-case shock-loss fraction (approximately 1 under full
+failure-correlated single-substrate domination), and
+$\lossdivmax = \max_s \alpha_s(G_K^{\mathrm{div}})$ is the
+diversity strategy's worst-case shock-loss fraction (bounded above
+by $1/m^* + \epsilon$ under the balanced-loss condition).
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in
+Appendix~\ref{app:proof_lem5c}]
+The proof composes \citep[Horizon~Aware]{lasser2026horizon}'s strategy-dependent corollary with the
+substrate-targeting shock model under the balanced-loss condition.
+
+\emph{Step 1.} Add a substrate-targeting shock at random time
+$\Tadv$ to \citep[Horizon~Aware]{lasser2026horizon}'s deterministic-growth model.
+
+\emph{Step 2.} Compute the substrate-diversification value
+advantage as the discounted expected difference in surviving
+$\volL$:
+$\Ddiv = \volL_K(\lossDmax - \lossdivmax) \mathbb{E}[\gamma^{\Tadv}]$.
+
+\emph{Step 3.} Under $I_6'$ and the balanced-loss condition,
+$\lossdivmax \leq 1/m^* + \epsilon$.
+
+\emph{Step 4.} Add $(1-\gamma)\Ddiv$ to \citep[Horizon~Aware]{lasser2026horizon}'s strategy-dependent
+corollary inequality. Diversity strictly dominates when the sum is
+positive, yielding Equation~\ref{eq:safe_region_paper}.
+
+\emph{Step 5 (cooperative-overlap regime conservativeness).}  In
+the cooperative-overlap regime, sequential cooperative loss
+overcounts when computed via original-counterfactual $\alpha_s$
+(cooperatives are double-counted across the substrates that produce
+them).  The equal-substrate analysis using the original $\alpha_s$
+therefore underestimates diversity's surviving volume relative to
+the actual sequential dynamics, making the safe-region bound a
+\emph{lower} bound on the true advantage --- conservative for the
+deployment claim.
+\end{proof}
+
+\begin{remark}[Multi-shock extension]
+\label{rem:multishock}
+For high-rate adversarial environments where multiple shocks
+accumulate within the planning window, the single-shock $\Ddiv$
+extends to:
+\[
+  \Ddiv^{\mathrm{multi}} \;=\; \mathbb{E}\!\left[\sum_{i=1}^{\infty}
+  \gamma^{T_i} \bigl(\delta_i^D - \delta_i^{\mathrm{div}}\bigr)\right],
+\]
+where $\delta_i^{D}, \delta_i^{\mathrm{div}}$ are the per-shock
+marginal $\volL$-losses for the domination and diversity strategies.
+The single-shock case ($N = 1$ a.s.) reduces to
+Equation~\ref{eq:ddiv_paper}.
+
+Under independent substrate-targeting shocks at Poisson rate
+$\lambda$, the multi-shock advantage admits a closed form
+\[
+  \Ddiv^{\mathrm{multi}} \;\geq\; \volL_K \left[\kappa -
+  \frac{1}{\mindep} \cdot \frac{\kappa(1 - \kappa^{\mindep})}
+  {1 - \kappa}\right]
+\]
+with $\kappa = \mathbb{E}[\gamma^{T_1}] = \lambda/(\lambda - \ln \gamma)$.
+The closed form has a removable singularity at $\kappa = 1$;
+$\Ddiv^{\mathrm{multi}}/\volL_K \to 0^+$ as $\kappa \to 1$. The
+operational regime condition for non-trivial multi-shock advantage
+is $\kappa < 1 - \delta$ for stated $\delta > 0$.
+
+The multi-shock extension is used only for high-$\lambda$
+deployments (adversarial environments with frequent attacks); the
+single-shock form is the binding inequality for typical deployments.
+The full multi-shock derivation is given in the multi-shock
+paragraph of Appendix~\ref{app:proof_lem5c}.
+\end{remark}
+
+\subsection{Lemma 5d (Lead-time tail composition)}
+\label{sec:lem5d}
+
+\addtocounter{lemma}{-1}\renewcommand{\thelemma}{5d}
+\begin{lemma}[Lead-time tail composition (union-class)]
+\label{lem:5d}
+Combining Lemmas~5b and~5e's KL floors with Lemma~4's tail bound,
+the SPRT detection of any $q \in \Aadv \cup \Aadv^{\mathrm{env}}$
+violation satisfies the union-class lead-time guarantee.  Under
+(C5.SPRT) sub-clauses, define $\deltastar$ as the post-clipping
+union-class drift floor satisfying $\deltastar \leq \min(\deltaadv,
+\deltaadv^{\mathrm{env}})$.  Then by Lemma~\ref{lem:6}'s
+Hoeffding-inversion derivation, the SPRT detection quantile
+$\Tbeta(\beta, \deltastar)$ satisfies
+\[
+  \Pr[T_{\mathrm{detect}} > \Tbeta] \;\leq\; \beta.
+\]
+Composing with the metastable cascade lower bound
+$T_{\mathrm{cascade}} \geq \tau_{\mathrm{meta}}$
+(\citep[Phase~Redundancy]{lasser2026phase} Proposition on metastable
+lifetime) and (C11.CLK)'s clock-comparability with calibrated
+probabilities $\bclk, \bcal$:
+\[
+  \Pr[\Tbeta \leq \tau_{\mathrm{meta}}] \;\geq\; 1 - \bclk - \bcal,
+\]
+giving the lead-time-before-cascade guarantee.  Total Layer~2
+failure probability is $\beta + \bclk + \bcal$.
+\end{lemma}
+
+\begin{proof}
+The composition is direct, in three steps:
+
+\emph{Step 1 (union-class drift floor).}  For $q \in \Aadv$,
+Lemma~\ref{lem:5b} gives $D_{\mathrm{KL}}(q \,\|\, p_0) \geq
+\deltaadv > 0$; for $q \in \Aadv^{\mathrm{env}}$,
+Lemma~\ref{lem:5e} gives $D_{\mathrm{KL}}(q \,\|\, p_0^{\mathrm{env}})
+\geq \deltaadv^{\mathrm{env}} > 0$.  Under (C5.SPRT) sub-clauses
+(in particular (C5.HOEFF) clipping and (C5.IID) post-clipping
+adapted increments), the clipped LLR process has conditional drift
+$\geq \deltastar$ for any $q$ in the union class, with $\deltastar
+\leq \min(\deltaadv, \deltaadv^{\mathrm{env}})$.  Clipping can
+reduce drift; the inequality is uniform.
+
+\emph{Step 2 (SPRT detection quantile from Lemma~6).}  By
+Lemma~\ref{lem:6} (Substeps 5a--5e in
+Appendix~\ref{app:proof_lem6}), the SPRT high-probability detection
+quantile $\Tbeta = \max\{2A/\deltastar, 2\Rh^2 \log(1/\beta) /
+\deltastar^2\}$ rigorously satisfies $\Pr[T_{\mathrm{detect}} >
+\Tbeta] \leq \beta$ via Lemma~\ref{lem:4}'s Hoeffding form.
+
+\emph{Step 3 (cascade-clock composition with (C11.CLK)).}
+(C11.CLK) provides $\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc]
+\geq 1 - \bclk$ with deterministic audit-time inequality $\Ncasc
+\geq \Tbeta$ (certified case $\bcal = 0$; with calibration-
+uncertainty $\bcal$ in the empirical case).  Chaining
+$\Tbeta \leq \Ncasc \leq \Nev(\tau_{\mathrm{meta}})$ gives
+$\Pr[\Tbeta \leq \tau_{\mathrm{meta}}] \geq 1 - \bclk - \bcal$.
+
+\emph{Step 4 (union bound for total Layer 2 failure).}  By union
+bound on (a) detection-tail $\{T_{\mathrm{detect}} > \Tbeta\}$
+(probability $\leq \beta$) and (b) cascade-clock event
+$\{\Tbeta > \tau_{\mathrm{meta}}\}$ (probability $\leq \bclk +
+\bcal$):
+\[
+  \Pr[\text{Layer 2 fails}] \;\leq\; \beta + \bclk + \bcal.
+\]
+
+The composition exposes a clean operational regime: deployments
+with long metastable cascade time and large post-clipping drift
+floor have exponentially small detection-tail $\beta$; the
+clock-comparability $\bclk$ and calibration $\bcal$ failures are
+operator-tunable via Audit~7
+(\S\ref{sec:tooling_substrate_audits}).  $\Box$
+\end{proof}
+
+\subsection{Lemma 5e (Environment-side witness extension)}
+\label{sec:lem5e}
+
+\addtocounter{lemma}{-1}\renewcommand{\thelemma}{5e}
+\begin{lemma}[Environment-side witness extension]
+\label{lem:5e}
+Under invariant $I_8$ and theorem-level condition (C12.ENV-WIT)
+with its six sub-clauses, Lemma~\ref{lem:5b}'s channel-restricted
+detection class extends to environment-side observables.
+Specifically, for any $q \in \Aadv^{\mathrm{env}}$ producing a
+threshold-exceeding shift in some $v \in \Vem$:
+\[
+  D_{\mathrm{KL}}(q \,\|\, p_0^{\mathrm{env}}) \;\geq\;
+  \deltaadv^{\mathrm{env}} := \min_{v \in \Vem}
+  \delta_v^{\mathrm{env}} \;>\; 0,
+\]
+where $\delta_v^{\mathrm{env}}$ is the per-variable least-favorable
+KL floor (Poisson for rate variables, Bernoulli for indicator
+variables, with support conventions from (C5.SUPP)).
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in Appendix~\ref{app:proof_lem5e}]
+The proof has four parts:
+(a)~the symmetric construction inheriting Paper~5's
+substrate-exclusivity machinery under the (C12.ENV-WIT) trust
+model (witness substrate outside adversary write-access and
+failure-correlation domains);
+(b)~per-variable KL floor derivations for the canonical four
+variables $V_1, V_2, V_3, V_4$ (Poisson cooperative rate $\rext$,
+Bernoulli substrate-distinctness, Poisson adversarial-arrival
+rate $\lambda$, Bernoulli trusted-setup status), each strictly
+positive under (C5.SUPP) support conventions;
+(c)~the data-processing inequality applied to the fixed
+pre-deployment witness-recording map gives
+$D_{\mathrm{KL}}(q \,\|\, p_0^{\mathrm{env}}) \geq
+D_{\mathrm{KL}}(q_{v_i} \,\|\, p_{0, v_i}) \geq
+\delta_i^{\mathrm{env}}$;
+(d)~strict-positivity of $\deltaadv^{\mathrm{env}}$ as the minimum
+over a finite (per (C12.PUB)) set of strictly positive
+quantities.
+
+\textbf{Composition with Lemma 6.}  The post-clipping union-class
+drift floor $\deltastar$ used in Lemma~\ref{lem:6}'s $\Tbeta$
+satisfies $\deltastar \leq \min(\deltaadv,
+\deltaadv^{\mathrm{env}})$, with the inequality accounting for any
+drift reduction from (C5.HOEFF) clipping.  Lemma~5e supplies
+$\deltaadv^{\mathrm{env}}$ for the union; Lemma~5b supplies
+$\deltaadv$.
+
+\textbf{The named residual (R2), refined.}  R2 covers manipulations
+satisfying \emph{both} (i)~target only exogenous variables outside
+$\Vem$, \emph{and} (ii)~produce no threshold-exceeding shift in any
+monitored $v$ (direct or causal).  Manipulations of unmonitored
+variables that causally shift a monitored $v$ are detected through
+that monitored projection (not R2).
+\end{proof}
+
+\subsection{Lemma 6 ($h_{\mathrm{detect}}$ intensivity)}
+\label{sec:lem6}
+
+\renewcommand{\thelemma}{\arabic{lemma}}
+\begin{lemma}[$h_{\mathrm{detect}}$ intensivity]
+\label{lem:6}
+Under (C5) continuous SPRT monitoring, (C5.SPRT) sub-clauses
+(C5.HOEFF/MULT/IID/SUPP), (C11) bounded gap-growth rate, and
+(C11.CLK) clock comparability, combined with Lemma~\ref{lem:4}
+and Lemma~\ref{lem:1}: the SPRT high-probability detection quantile
+\[
+  \Tbeta(\beta, \deltastar) \;:=\;
+  \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2 \Rh^2 \log(1/\beta)}{\deltastar^2}\right\}
+\]
+satisfies $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$, and on
+the joint event $\{T_{\mathrm{detect}} \leq \Tbeta\} \cap \{\Tbeta
+\leq \Nev(\tau_{\mathrm{meta}})\}$:
+\[
+  h_{\mathrm{detect}}(\theta) := \sup_{s \in [t_0, t_0 +
+  T_{\mathrm{detect}}]} \epsgap(s) \;\leq\;
+  h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot \Tbeta.
+\]
+$h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over
+$\mathcal{D}$.  Total Layer~2 failure probability is $\beta + \bclk
++ \bcal$ (with $\bcal = 0$ in the certified-conservative case).
+
+Here $A = \log((1-\beta)/\alpha)$ is Paper~5's SPRT threshold,
+$\Rh = 2\Bclip$ is the (C5.HOEFF) Hoeffding range width, and
+$\deltastar$ is the post-clipping union-class drift floor
+((C5.IID), Lemmas~\ref{lem:5b}, \ref{lem:5e}).
+\end{lemma}
+
+\begin{proof}[Proof outline; full proof in Appendix~\ref{app:proof_lem6}]
+The proof has two roles for cascade time, kept separate.  $\Tbeta$
+is the integration horizon for $\rhogap$, derived directly from
+Lemma~\ref{lem:4}'s Hoeffding form via a rigorous (non-asymptotic)
+chain: $T \geq 2A/\deltastar$ implies $T\deltastar - A \geq
+T\deltastar/2$, and squaring gives $(T\deltastar - A)^2 \geq
+T^2\deltastar^2/4$, so the Hoeffding exponent $\geq T\deltastar^2/
+(2\Rh^2)$.  Solving for exponent $\geq \log(1/\beta)$ gives
+$T \geq 2\Rh^2\log(1/\beta)/\deltastar^2$.  The $\max$-form
+$\Tbeta = \max\{2A/\deltastar, 2\Rh^2\log(1/\beta)/\deltastar^2\}$
+covers both regimes.
+
+For the supremum bound: under the boundary convention $t_0 := t_0^-$
+(the last safe SPRT step), Lemma~\ref{lem:1} gives $\epsgap(t_0)
+\leq h_{\mathrm{static}}(\theta)$.  (C11) bounds the per-step
+post-clipping increment by $\rhogap(\deltastar)$, giving $\epsgap
+\leq h_{\mathrm{static}} + n \cdot \rhogap$ for $n$ steps.
+
+For the cascade-clock event: (C11.CLK) provides
+$\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc] \geq 1 - \bclk$ with
+$\Ncasc \geq \Tbeta$ as a hard audit constraint (in the certified
+case; with calibration-uncertainty $\bcal$ in the empirical case).
+The chain $\Tbeta \leq \Ncasc \leq \Nev(\tau_{\mathrm{meta}})$ gives
+the lead-time-before-cascade guarantee with probability $\geq 1 -
+\bclk - \bcal$.
+\end{proof}
+
+\textbf{Constant taxonomy.}  $\Tbeta$ depends on $\alpha$ (Type-I
+rate, deployment-class via (C5.MULT) familywise allocation),
+$\beta$ (detection-tail parameter, monitor-design), $\Bclip$ (clip
+radius, (C5.HOEFF), deployment-class), $\Rh = 2\Bclip$ (Hoeffding
+range, Lemma~\ref{lem:4}'s $R = b - a$), and $\deltastar$
+(post-clipping drift floor, (C5.IID), Lemmas~5b/5e).  Cascade-clock
+event uses $\Ncasc, \bclk, \bcal$ from (C11.CLK).  All
+deployment-class.
+
+\textbf{Sign-direction discipline.}  All operator certificates point
+conservatively: $\Bclip$ \emph{upper}, $\deltastar$ \emph{lower},
+$\Ncasc$ \emph{lower}, with calibration-uncertainty $\bcal$ in the
+empirical case.
+
+\subsection{Lemma family composition}
+\label{sec:lem_composition}
+
+The five-part Lemma~5 family composes as follows in the
+deployment-safety theorem (\S\ref{sec:main_theorem}):
+
+\begin{itemize}
+\item \textbf{Static layer}: Lemma~5c supplies the safe region
+  inequality. Inside the safe region, no substrate-targeting
+  adversarial event (within the cooperative-overlap regime)
+  produces a violation of the anti-monopolar conclusion.
+\item \textbf{Detection layer}: Lemmas~5b, 5d, and~6 compose to give
+  the channel-restricted detection class with tail-bounded lead time.
+  Substrate-targeting evasions of the safe region within $\Aadv \cup
+  \Aadv^{\mathrm{env}}$ are detected with
+  $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$, and the
+  cascade-clock event $\{\Tbeta \leq \Nev(\tau_{\mathrm{meta}})\}$
+  holds with probability $\geq 1 - \bclk - \bcal$.  Total Layer~2
+  failure $\leq \beta + \bclk + \bcal$.
+\item \textbf{Substrate floor}: Lemma~5a supplies the foundation
+  for both layers ($\rext$ bounded below by $r_*(m^*) > 0$ given
+  $\mindep \geq m^*$).
+\item \textbf{Environment-side extension}: Lemma~5e extends the
+  detection class to environment-side observables under invariant
+  $I_8$.
+\item \textbf{Acknowledged residuals}: strategies outside
+  $\Aadv \cup \Aadv^{\mathrm{env}}$ (channel-orthogonal,
+  environment-witness-orthogonal) and deployments outside the
+  cooperative-overlap regime (Lemma~5c-prime open work) fall
+  outside the guarantee.
+\end{itemize}
+
+The composition with Lemmas~1--4 supplies the bridge to \citep[Microfoundation]{lasser2026micro}'s
+static Goodhart bound and the operational lead-time guarantee.
+\S\ref{sec:main_theorem} states the full deployment-safety
+theorem and traces the composition of all nine lemmas.

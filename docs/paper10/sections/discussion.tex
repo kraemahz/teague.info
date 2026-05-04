@@ -1,0 +1,225 @@
+\section{Discussion}
+\label{sec:discussion}
+
+This section frames what this paper establishes, situates the
+deployment-safety theorem in the broader alignment-research
+program, and enumerates the open questions deferred to follow-up
+work.
+
+\subsection{What this paper establishes}
+\label{sec:disc_establishes}
+
+Theorem~\ref{thm:deployment_safety} produces a structurally
+defensible deployment-safety claim with three components:
+
+\paragraph{An operationally checkable conditional theorem.}
+Under the eleven invariants $I_1$--$I_{11}$, the canonical
+tripartite substrate identification, the cooperative-overlap
+regime, the causally-grounded inner-alignment condition, continuous
+SPRT monitoring, and the SA1 surrogate-adequacy assumption, the
+Goodhart slack between proxy and operational truth is bounded by a
+constant intensive in the system's absolute capability magnitude.
+Each conditional is named, ledger-observable (or, for SA1,
+empirically testable), and operationally implementable via the
+deployment-tooling specification of \S\ref{sec:deployment_tooling}.
+
+\paragraph{Capability-magnitude independence.}
+The bound's intensivity is the structural inversion of
+capability-estimation-centered safety paradigms
+(\S\ref{sec:wrong_frame}). Whatever capabilities a deployed system
+actually possesses, the Goodhart slack stays bounded as long as
+the operational invariants hold; the deployment claim scales past
+any capability level the deployment's evaluation methods can
+characterize. This is the punchline the title promises: a
+\emph{provably safe regime for capability-unbounded deployment}.
+
+\paragraph{Named residual structure.}
+The four residuals (R1--R4 of Theorem~1) are explicit components of
+the claim, not hidden caveats.  Operators can verify whether their
+deployment falls outside each residual; the residuals collectively
+name the boundaries of what the deployment claim covers.
+
+The structural shape of the claim is a multi-conditional theorem
+with each condition visible, each empirical assumption named, and
+each scope restriction named.  This paper's contribution is not a
+sweeping safety guarantee; it is the demonstration that a sweeping
+guarantee is not necessary for operational deployment safety,
+provided the conditions are structurally chosen to make the bound
+capability-magnitude-independent.
+
+\subsection{Connection to the alignment-research program}
+\label{sec:disc_alignment}
+
+This paper sits in the Goal-Frontier Maximization sequence
+(\S\ref{sec:composition}) as the deployment-side closure of the
+machinery developed across the prior GFM sequence. Three structural relationships
+to the broader alignment-research program:
+
+\paragraph{Inverting capability estimation.}
+Standard alignment-safety paradigms place capability estimation at
+the center: predict what the system can do, then bound the
+consequences. This paper inverts this: name what the deployment can
+operationally measure, prove that the bound holds under those
+measurements regardless of underlying capability. The operational
+invariants are upstream of capability estimation; the safety
+guarantee follows from the regime, not from estimation accuracy.
+
+This inversion is structurally available because the GFM machinery
+(the prior GFM sequence) provides intensive bounds on the source-paper
+quantities ($\rext$, $\rho_{\min}^{\mathrm{cross}}$, $\betaL$,
+$\HHI$, $\epsnonres$). This paper's contribution is showing that
+their composition is also intensive --- a non-trivial claim that
+required substantive new content (the eleven invariants, the
+Lemma~5 family, the cooperative-anchoring property).
+
+\paragraph{The cooperative-anchoring stabilizing cascade.}
+\S\ref{sec:cooperative_anchoring} establishes that under (C4),
+optimization pressure on cooperative outputs is locally rational
+toward preserving the substrate-exclusive verification layer. This
+is \citep[Phase~Redundancy]{lasser2026phase}'s stabilizing cascade extended to the substrate level:
+the verification infrastructure is not merely defended against
+optimization pressure but is reinforced by it under proper
+substrate identification.
+
+The stabilizing cascade is conditional on (C4), basin entry, and
+the eleven invariants. We do not claim alignment pressure is
+universally reversed; we claim that the deployment dynamics admit
+a defensible attractor where preservation is locally rational. The
+mirror destabilizing cascade (\S\ref{sec:destabilizing_cascade})
+is a real failure mode that operators must guard against.
+
+\paragraph{Inner alignment as conditioning, not solution.}
+This paper does not solve the inner-alignment problem. Condition
+(C4) is conditioned, not discharged: the agent's effective
+objective must realize causally-grounded cooperative-outcome
+value, and vanilla RLHF does not deliver this. Achieving (C4)
+requires training-time discipline (delayed outcome feedback,
+adversarial fake-verification examples, process supervision tied
+to real attestations). These are research directions in their own
+right.
+
+Operators using deployments that meet (C4) can invoke This paper's
+theorem; operators using deployments that do not meet (C4) cannot.
+The deployment claim does not produce safety where (C4) fails; it
+produces safety where (C4) holds.
+
+\subsection{Open questions deferred to companion work}
+\label{sec:disc_companion}
+
+Two structural items are deferred to a companion paper:
+
+\paragraph{The channel-mediation conjecture.}
+``All $\Delta r_K$ realizes through observable channels:
+subsumption, redundancy loss, production concentration, trade-flow
+concentration, yielding a structural bound $\Delta r_K \leq L_H
+\cdot \HHI + L_\rho \cdot \Delta\rho + \ldots$.''  If proved, this
+conjecture would close the channel-orthogonal residual (R1):
+strategies that achieve $\Delta r_K \geq \rext$ without producing
+any of the four monitored channel deviations would be impossible.
+The current paper acknowledges R1 as a real residual; the
+companion paper would establish whether R1 is empty or genuinely
+contains undetectable strategies.
+
+\paragraph{The HHI--$\Delta r_K$ structural relationship.}
+The conjectural relationship between trade-flow concentration and
+post-domination internal-rate efficiency. If proved, this would
+either establish SA1 as a derived consequence (closing the
+empirical-adequacy assumption) or refute it (forcing replacement
+of $I_5$ with a different invariant). The empirical validation
+pathway of \S\ref{sec:sa1_empirical} is the natural companion-paper
+methodology.
+
+The two open questions are related but distinct: the channel-
+mediation conjecture closes R1; the HHI--$\Delta r_K$ relationship
+closes the SA1 dependence. This paper's deployment claim is
+strengthened by either; both would produce a deployment claim
+conditional only on (C1)--(C5), not on SA1.
+
+\subsection{Open questions deferred indefinitely}
+\label{sec:disc_indefinite}
+
+Four items are not This paper's scope and require their own research
+programs:
+
+\paragraph{The welfare-truth bridge.}
+Stance S0 takes operational truth $\Ttruth = \volRwin$ as the
+deployment claim's reference. The relationship between operational
+truth and welfare-relevant truth ($\Ttruth_{\mathrm{welfare}}$, in
+the sense of broader human flourishing) is not addressed. the Microfoundation paper~\citep{lasser2026micro}
+\S goodhart's $T$-failure-modes remark establishes that the
+operational and welfare-relevant truths can diverge; bridging them
+is its own research program.
+
+\paragraph{The monolithic-agent action-partition refinement.}
+$I_4$ (subsumption frequency) and $I_5$ (HHI on trade flow)
+presuppose a clean partition of the agent's action space. Monolithic
+LLM-style agents without explicit subsumption operators may not
+satisfy this. Extending the deployment claim to monolithic agents
+requires either action-space-partition machinery (defining what
+``subsumption'' and ``trade flow'' mean for a monolithic agent's
+output stream) or alternative invariants that cover the same
+structural roles.
+
+\paragraph{Trusted-setup details for Pedersen commitments.}
+This paper's verification infrastructure inherits \citep[Exogenous~Verification]{lasser2026exo}'s
+Pedersen-commitment machinery, which requires a trusted setup.
+The trusted-setup ceremony's security relies on at least one
+honest participant; deployments where all participants are
+compromised invalidate the commitment scheme. This is a real
+operational risk that the deployment-tooling specification flags
+but does not solve. Independent work on cryptographic primitives
+that don't require trusted setup (or have weaker trust assumptions)
+is the relevant research direction.
+
+\paragraph{Empirical threshold calibration.}
+The thresholds $(\theta_1, \ldots, \theta_{11})$ in the operational
+invariants are policy choices. this paper commits to a methodology
+(deployment-specific calibration via the deployment-tooling
+specification) but does not fix specific numerical values. Real
+deployments will need to choose thresholds based on the deployment's
+specific threat model, capability profile, and operational
+constraints. Empirical work on threshold calibration in real
+deployments is a substantial follow-on.
+
+\subsection{The structural significance of This paper's contribution}
+\label{sec:disc_significance}
+
+We close with three observations on what this paper contributes to
+the alignment-research program.
+
+\paragraph{Existence of a provably safe regime.}
+Theorem~1 establishes that the regime is non-empty: under the
+named conditions, there exist deployments for which the
+deployment-safety bound binds. Scenario~1 of
+\S\ref{sec:scenario_clean} shows what such a deployment looks like
+operationally. The conditions are non-trivial, but they are
+operationally achievable.
+
+\paragraph{Capability-magnitude independence as the structural
+inversion.}
+The intensivity property of the bound is the structural inversion
+of capability-estimation-centered safety. Once capability
+estimation is no longer load-bearing, the deployment-safety
+guarantee scales past any capability level. The inversion is
+available because the GFM machinery's intensive bounds compose to
+intensive bounds; without the GFM machinery, the inversion does not
+work.
+
+\paragraph{The conditional theorem as the appropriate structural
+shape.}
+The argument that conditional theorems with named conditions are
+\emph{less} valuable than unconditional theorems mistakes the
+nature of safety claims. Unconditional safety claims under
+realistic assumptions about capability-unbounded systems are not
+available; conditional safety claims with operationally checkable
+conditions are. This paper's contribution is to demonstrate that the
+conditional-theorem structure produces a defensible deployment
+claim, not just an academic exercise.
+
+The deployment-safety guarantee is conditional, but each condition
+is named, ledger-observable, and operationally implementable. The
+residuals are explicit. The empirical assumptions are testable.
+This is the structural shape we believe deployment-safety claims
+must take in the era of capability-unbounded systems --- not because
+weaker claims are aesthetically preferable, but because they are
+the strongest defensible claims the structural apparatus supports.

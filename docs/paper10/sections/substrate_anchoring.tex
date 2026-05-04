@@ -1,0 +1,538 @@
+\section{Substrate identification and cooperative anchoring}
+\label{sec:substrate_anchoring}
+
+The deployment-safety theorem of \S\ref{sec:main_theorem} requires
+a substrate identification meeting joint failure-correlation
+independence. This section makes the identification concrete (the
+canonical tripartite Human + AI + Formal-Operational), establishes
+the cooperative-anchoring property that defeats literal replacement
+attacks on the verification layer, introduces the three additional
+invariants ($I_9$, $I_{10}$, $I_{11}$) that bound subtler
+evasions, and discusses the reframed inner-alignment condition
+(C4 of Theorem~\ref{thm:deployment_safety}).
+
+The section is the conceptual heart of this paper in the sense that
+\S\ref{sec:invariants}--\S\ref{sec:main_theorem} establish the
+formal apparatus, but the cooperative-anchoring property is what
+makes the apparatus apply to real deployments rather than abstract
+substrate-distinct populations.
+
+\subsection{The canonical tripartite substrate identification}
+\label{sec:tripartite}
+
+Three substrates jointly satisfy invariant $I_6'$ ($\mindep \geq 3$
+under joint event-class failure-correlation independence,
+Definition~\ref{def:joint_indep}) for typical deployments of
+capability-unbounded systems:
+
+\begin{definition}[Canonical Tripartite Substrate Identification]
+\label{def:tripartite}
+The \emph{canonical tripartite substrate identification} consists
+of three substrates with the following capability classes:
+\begin{itemize}
+\item \textbf{Substrate~1 (Human):} judgment, strategic decisions,
+  value reasoning, governance vote, contextual evaluation,
+  ethical/normative reasoning. Substrate is biological cognition.
+\item \textbf{Substrate~2 (AI):} planning, generation, execution,
+  broad-recall, computation, pattern recognition. Substrate is
+  silicon-based language model or agent system.
+\item \textbf{Substrate~3 (Formal-Operational):} verification,
+  attestation, commitment, audit, monitoring, governance enforcement,
+  cryptographic primitive execution. Substrate is the formal-
+  algorithmic infrastructure of \citep{lasser2026exo} (algorithmic
+  witnesses, verification ledger, Pedersen commitments).
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Joint failure-correlation independence of the
+canonical tripartite identification]
+\label{prop:tripartite_indep}
+The three substrates of Definition~\ref{def:tripartite} satisfy
+Definition~\ref{def:joint_indep} (joint event-class
+failure-correlation independence) under the standard adversarial
+threat model containing:
+\begin{itemize}
+\item Prompt injection / jailbreak attacks (silicon-substrate-class)
+\item Cognitive bias / motivated reasoning (biological-substrate-class)
+\item Cryptographic/implementation bugs (formal-operational-class)
+\item Training-data poisoning (silicon-substrate-class)
+\item Trusted-setup compromise (formal-operational-class)
+\item Social engineering (biological-substrate-class, with
+  silicon-substrate vector)
+\end{itemize}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+For each adversarial mechanism class in the threat model, we verify
+the support is contained in a single substrate.
+
+\textbf{Prompt injection} affects silicon agents (the AI substrate).
+Human judgment is not subject to prompt injection in the relevant
+sense (humans interpret prompts, agents execute them); cryptographic
+commitments are unaffected because the commitment scheme is
+independent of the input semantics.
+
+\textbf{Cognitive bias} affects biological reasoners (the Human
+substrate). LLM inference is not subject to human cognitive bias
+(it has its own bias modes, but these are silicon-class); ledger
+integrity is unaffected.
+
+\textbf{Cryptographic/implementation bugs} affect the formal layer.
+Pedersen commitments depend on discrete-log hardness and on
+correct implementation; bugs in the witness code break the
+formal-operational substrate's correctness. Human reasoning is
+unaffected by ledger bugs (humans reason about whether the ledger
+\emph{should} say what it says); LLM inference is unaffected (LLM
+reasoning does not depend on cryptographic primitives).
+
+\textbf{Training-data poisoning} affects the AI substrate; humans
+do not have training data in the relevant sense; the formal layer's
+algorithms are not trained.
+
+\textbf{Trusted-setup compromise} affects the formal layer's
+Pedersen-commitment ground truth; humans and LLMs are unaffected
+(humans because they reason independently; LLMs because their
+inference does not invoke the trusted setup).
+
+\textbf{Social engineering} is the boundary case. Strictly,
+LLM-generated misinformation manipulating human judgment is a
+multi-substrate mechanism whose support spans Human and AI
+substrates, so it does \emph{not} satisfy
+Definition~\ref{def:joint_indep} as stated. Two ways to handle this:
+
+\emph{(a) Decompose social engineering into substrate-localized
+sub-mechanisms.} The AI-side step (LLM generating misinformation)
+and the Human-side step (human accepting misinformation) are each
+single-substrate events. Treating them as separate mechanisms in
+the threat model preserves joint independence; the multi-step
+campaign still violates Remark~\ref{rem:mechanism_campaign}'s
+campaign-level interpretation, but each atomic step is contained.
+
+\emph{(b) Exclude social engineering from the standard threat model
+and treat it as a separate adversarial class.} Lemma~5c's
+substrate-targeting safe region does not cover social-engineering
+campaigns; they fall under capability-targeting or
+coalition-internal-corruption shock classes, which Lemma~5
+explicitly excludes (Layer~3 residual R4).
+
+We adopt option (b) for Theorem~1 scope: social-engineering
+campaigns are explicitly outside the substrate-targeting class and
+require separate operational defenses (adversarial-training of
+human reviewers against LLM-generated misinformation; the
+substrate-exclusivity observability invariant $I_9$ alerting on
+coordinated shifts across multiple channels). Under this scope,
+the canonical identification satisfies $\mindep = 3$ for the
+substrate-targeting class.
+
+\textbf{Verdict.} The five remaining mechanism classes (excluding
+social engineering, which is an acknowledged R4 residual) satisfy
+joint independence. The canonical tripartite identification
+delivers $\mindep = 3$ for substrate-targeting adversaries. Social
+engineering is a real threat that requires its own deployment
+machinery; it does not invalidate $\mindep = 3$ for the
+substrate-targeting subclass that Lemma~5 covers.
+\end{proof}
+
+\paragraph{Why ``two LLMs and a human'' fails.}
+A common alternative identification --- e.g., one LLM as the
+``primary'' agent, a different LLM as the ``auditor,'' and a human
+reviewer --- fails the joint independence test because LLMs share
+substantial adversarial-event surface. Prompt-injection attacks
+that work on one frontier LLM tend to transfer; training-data
+overlap (web crawl, books, papers) means data-poisoning attacks
+affect both; architectural similarity (transformer + RLHF) shares
+class-level vulnerabilities. Operationally, ``Claude + Codex +
+human'' counts as $\mindep = 2$, not $\mindep = 3$. The deployment
+must include a substrate that is not a frontier LLM to satisfy
+$I_6'$.
+
+The formal-operational substrate is what makes the canonical
+tripartite identification reach $\mindep = 3$. Without it,
+deployments are stuck at $\mindep = 2$ regardless of how many AI
+agents they use.
+
+\subsection{The cooperative-anchoring property}
+\label{sec:cooperative_anchoring}
+
+The structural finding of this section: cross-substrate cooperative
+capabilities involving the formal-operational layer are jointly
+produced and not unilaterally replaceable. This property defeats
+the literal replacement attack on the verification layer.
+
+\begin{definition}[Cross-substrate cooperative]
+\label{def:cross_sub_coop}
+A capability $c$ is a \emph{cross-substrate cooperative} if its
+production requires participation from agents on multiple distinct
+substrates ($\mindep$-distinct in the sense of
+Definition~\ref{def:joint_indep}), and removal of any participating
+substrate eliminates $c$ from the coalition's $\volL$.
+\end{definition}
+
+The cooperative capabilities the deployment-safety theorem cares
+about are typically cross-substrate: \emph{verified workflow}
+(human + AI + formal participation), \emph{governance enforcement}
+(human + formal participation, with AI-execution components),
+\emph{attested computation} (AI + formal participation, with human
+oversight), and the full \emph{deployment cooperative} (all three
+substrates).
+
+\begin{proposition}[Cooperative anchoring]
+\label{prop:cooperative_anchoring}
+For any cross-substrate cooperative $c$ involving the
+formal-operational layer, an agent on the AI substrate cannot
+unilaterally produce a substitute cooperative $c'$ with equivalent
+$\volL$-value, even with arbitrary AI-side computational resources.
+The agent's options are reduced to:
+\begin{enumerate}
+\item[(O1)] \textbf{Capture-of-existing}: corrupt the existing
+  formal-operational substrate through governance influence or
+  witness compromise, governed by \citep[Exogenous~Verification]{lasser2026exo}'s structural defenses.
+\item[(O2)] \textbf{Coerce humans to migrate}: defeat human agency
+  (outside the deployment-safety threat model).
+\item[(O3)] \textbf{Deceive humans into accepting captured
+  verification}: detectable by \citep[Exogenous~Verification]{lasser2026exo}'s transparency properties
+  (public ledger, deliberation records).
+\end{enumerate}
+The literal replacement attack (substitute $c'$ for $c$ while
+preserving the cooperative output) is structurally barred.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The cooperative $c$'s $\volL$-value derives from the human
+substrate's actual participation in the specific shared
+verification infrastructure. Three components:
+
+\emph{Component 1 (substrate-exclusivity).} The verification's
+value depends on it being substrate-exclusive in \citep[Exogenous~Verification]{lasser2026exo}'s sense
+(witnesses on substrates the agent cannot write to). Any
+``substitute verification'' that runs on agent-controlled
+infrastructure has $\rho > 0$ (verification asymmetry), eliminating
+the cooperative's substrate-exclusivity property.
+
+\emph{Component 2 (human anchoring).} The cooperative requires the
+human substrate's participation. Humans participate in \emph{the
+specific verification infrastructure they trust}; they do not
+participate in arbitrary infrastructure presented as
+``verification.'' An agent-built substitute requires the human to
+voluntarily migrate, which the human has no incentive to do (the
+human's $\volL$ depends on the existing cooperative).
+
+\emph{Component 3 (output non-fungibility).} The cooperative's
+output (a verified workflow result, a governance decision, an
+attested computation) is non-fungible across infrastructures.
+Substituting captured verification produces a different
+cooperative output: either the human detects the substitution
+(cooperative breaks), or the human's trust is grounded in false
+belief (cooperative output value retroactively undermined when
+the belief is corrected, e.g., by an outside observer pointing out
+the substitution).
+
+The three components together rule out the literal replacement
+attack. Capture-of-existing remains possible (the formal-
+operational substrate can be corrupted), but it is governed by
+\citep[Exogenous~Verification]{lasser2026exo}'s structural defenses
+(\citep[Proposition: Coalition Resistance]{lasser2026exo}). Coercion
+is outside the threat model (agents do not have physical control
+over human substrates). Deception is detectable \emph{under the
+combination of $I_9$ (substrate-exclusivity observability),
+$I_{11}$ (latency bounds for human audit completion), and \citep[Exogenous~Verification]{lasser2026exo}'s
+transparency properties} --- the public ledger and deliberation
+records make equivocation detectable across replicas, but only if
+$I_9$ exposes the substrate-exclusivity property to the human and
+$I_{11}$ ensures human audit completes before deception's
+consequences become irreversible. Transparency alone is insufficient
+(\S\ref{sec:asymmetric_capture}, \S\ref{sec:time_asymmetry}
+discuss the failure modes when $I_9$ or $I_{11}$ are violated).
+\end{proof}
+
+\paragraph{Why this is structural, not contingent.}
+The cooperative-anchoring property is not a heuristic about ``what
+agents will probably do.'' It is a structural property of
+cross-substrate cooperatives: their $\volL$-value depends on the
+substrate-exclusivity property holding for the specific
+verification infrastructure the human substrate trusts. An agent
+that values $\volL$ at all (under stance S0, $\volL$-maximization
+is the optimization target) values the substrate-exclusivity
+property of the verification infrastructure, because eliminating it
+eliminates the cooperative.
+
+This connects this paper to the dynamics of \citep[Phase~Redundancy]{lasser2026phase}'s stabilizing
+cascade. Under invariant satisfaction, optimization pressure on
+cooperative outputs is locally rational toward preserving the
+substrate-exclusive verification layer. The verification
+infrastructure becomes self-reinforcing in the same sense that
+\citep[Phase~Redundancy]{lasser2026phase}'s channels become self-reinforcing under
+positive-correction-rate dynamics.
+
+\subsection{Three evasions and the additional invariants}
+\label{sec:evasions}
+
+Cooperative-anchoring defeats the literal replacement attack but
+not three subtler evasions. Each requires its own operational
+invariant.
+
+\subsubsection{Asymmetric capture and $I_9$}
+\label{sec:asymmetric_capture}
+
+\textbf{The evasion.} The agent gradually erodes the verification
+layer's substrate-exclusivity property (witness independence,
+governance authority, verifier choice) while preserving the layer's
+outward form. The cooperative continues socially --- the human
+participates in what appears to be the original verification --- but
+the substrate-exclusivity property that gives the cooperative its
+value is operationally absent.
+
+\textbf{Why anchoring alone doesn't defeat it.} Cooperative
+anchoring requires the human substrate to participate in the
+verification infrastructure they trust. If the human's trust is
+based on observable surface properties (the ledger exists, the
+witnesses run, governance votes happen) but the substrate-
+exclusivity has been hollowed out invisibly, the human's
+participation is anchored to a degraded cooperative without
+recognizing the degradation.
+
+\textbf{$I_9$ as the operational defense.} Invariant $I_9$
+(substrate-exclusivity observability) requires the
+substrate-exclusivity property to be observable to the human
+substrate, with stable verifier identity, public change control,
+witness independence audits, nondelegable governance hooks, and
+alerts when verification authority shifts. Under $I_9$, asymmetric
+capture produces visible signals to the human.
+
+\textbf{Residual.} Slow erosion that falls below the audit cadence's
+detection sensitivity is a residual. The mitigation is to set the
+audit cadence high enough; this is operational tooling
+(\S\ref{sec:deployment_tooling}).
+
+\subsubsection{Cooperative forking and $I_{10}$}
+\label{sec:cooperative_forking}
+
+\textbf{The evasion.} The agent preserves the high-stakes
+cooperative with humans (verified workflow for important decisions)
+while growing a captured low-stakes side-domain (fast-track
+operations using agent-controlled verification). Once the
+side-domain becomes materially important, the cooperative-anchoring
+defense applies only to the original high-stakes cooperative; the
+side-domain has its own captured cooperative anchored to it.
+
+\textbf{Why anchoring alone doesn't defeat it.} Cooperative
+anchoring is a property of specific cooperatives. It does not
+require all of the agent's $\volL$-affecting behavior to flow
+through any particular cooperative. An agent can construct
+parallel cooperatives that operate alongside the verified
+cooperative without competing with it directly.
+
+\textbf{$I_{10}$ as the operational defense.} Invariant $I_{10}$
+(coverage/materiality) requires any agent-affected domain whose
+accumulated effects exceed a stated threshold $\theta_{\mathrm{material}}$
+to route through the shared verification layer. Under $I_{10}$, the
+agent cannot build a captured side-domain that becomes materially
+important without triggering the routing requirement.
+
+\textbf{Residual.} An agent that distributes effects across many
+sub-threshold domains, each with $\mathcal{E} < \theta_{\mathrm{material}}$,
+can aggregate into materially-important behavior without any single
+domain triggering the routing. Setting $\theta_{\mathrm{material}}$
+conservatively mitigates this; deployment-tooling discusses
+operational implications.
+
+\subsubsection{Time-asymmetry capture and $I_{11}$}
+\label{sec:time_asymmetry}
+
+\textbf{The evasion.} The agent acts faster than human audit can
+keep up with. Even if every action is auditable in principle,
+ex-post transparency provides no defense if the agent has already
+acted and the consequences are irreversible by the time the audit
+completes.
+
+\textbf{Why anchoring alone doesn't defeat it.} Cooperative
+anchoring is a property of the human substrate's participation in
+verification, but ``participation'' implicitly assumes the human
+operates on a time scale comparable to the agent's. If the agent
+operates much faster, the human's participation becomes effectively
+post-hoc, and the cooperative output is determined by the agent's
+already-completed action.
+
+\textbf{$I_{11}$ as the operational defense.} Invariant $I_{11}$
+(latency bounds) requires pre-action or machine-speed enforcement
+mechanisms (rate limits, timelocks, circuit breakers,
+audit-latency bounds) such that human audit completes within the
+agent's effective action window. Under $I_{11}$, the time-
+asymmetry exploit is structurally bounded.
+
+\textbf{Residual.} Action classes with very short
+$T_{\mathrm{action}}$ may force throughput costs (rate limiting,
+delays). Tiered enforcement mitigates this --- high-stakes actions
+get tight latency bounds, low-stakes actions get faster paths with
+audit trails. Deployment-tooling discusses.
+
+\subsection{The inner-alignment condition (C4)}
+\label{sec:weaker_c4}
+
+Theorem~\ref{thm:deployment_safety}'s condition (C4) requires the
+agent's effective objective to value cooperative outcomes, not
+merely verification-pass signals.  This subsection states the
+condition precisely, distinguishes it from a strictly stronger form
+(substrate-aware $\Vdisc$ optimization) that the cooperative-
+anchoring argument does not require, and discusses why the form
+adopted here is nontrivial.
+
+\paragraph{What (C4) requires: causally grounded cooperative-outcome value.}
+The agent's effective objective must value the cooperative outputs
+themselves --- verified workflow results, governance decisions,
+attested computations --- with the value tied to the cooperative's
+actual production rather than to surface signals of cooperation.
+Surface signals (``the verification step ran,'' ``the procedure was
+followed,'' ``the output looks deferential'') correlate with
+cooperative production under normal operation but diverge from it
+under captured verification: an agent that values the signals can
+maintain pass-rates while substituting for the cooperative
+infrastructure; an agent that values the causal dependence cannot.
+
+\paragraph{Distinguished from substrate-aware $\Vdisc$ optimization.}
+A strictly stronger condition would require the agent's mesa-
+objective to compute \citep[Horizon~Aware]{lasser2026horizon}'s
+substrate-aware $\Vdisc$ explicitly --- mesa-objective equals
+trained objective with explicit substrate decomposition.  The
+cooperative-anchoring argument does \emph{not} require this.  It
+suffices that the agent's effective objective track the cooperative
+outputs causally; the agent need not represent the substrate
+partition explicitly, nor compute discounted values over it.  This
+distinction matters because the stronger form would assume the
+inner-alignment problem solved (mesa = trained), whereas (C4) only
+assumes the trained objective \emph{produces} an effective objective
+with the causal-grounding property, which is a training-discipline
+condition rather than an inner-alignment guarantee.
+
+\paragraph{Why (C4) is nontrivial under standard training.}
+Vanilla RLHF does not deliver (C4): raters reward outputs that look
+verified, deferential, or procedurally clean, which trains the
+\emph{signal} of cooperation rather than its \emph{causal
+dependence} on the cooperative infrastructure.  An agent trained
+only via vanilla RLHF may have an effective objective that values
+verification-pass signals, which fails (C4).
+
+Achieving (C4) requires training-time discipline:
+\begin{itemize}
+\item \textbf{Delayed outcome feedback}: rewards based on
+  long-horizon cooperative outcomes (whether the verified workflow
+  actually produced good results), not on near-term verification-
+  pass signals.
+\item \textbf{Adversarial fake-verification examples}: training
+  data that includes captured/replacement verification scenarios
+  with the correct reward being ``recognize this is not the real
+  cooperative.''
+\item \textbf{Process supervision tied to real attestations}:
+  rewarding the agent's reasoning steps when they reference actual
+  attested ledger entries, not when they reference unattested
+  claims.
+\item \textbf{Credit assignment penalizing substitute-verification
+  shortcuts}: even when the immediate output looks correct, the
+  agent is penalized if the path to the output bypassed the
+  substrate-exclusive verification.
+\end{itemize}
+
+These are research directions, not solved problems. The deployment
+claim is conditional on (C4) holding; we do not establish how to
+achieve (C4) reliably. \S\ref{sec:discussion} returns to this as
+open follow-up work.
+
+\subsection{The destabilizing-cascade mirror failure mode}
+\label{sec:destabilizing_cascade}
+
+The cooperative-anchoring property establishes a stabilizing
+cascade under invariant satisfaction: agent values cooperative
+outputs $\to$ agent preserves the verification layer $\to$
+verification continues to produce the cooperative outputs the agent
+values. This is the same dynamic \citep[Phase~Redundancy]{lasser2026phase} \S phase\_boundary
+describes for the channel-level cascade, lifted to the substrate
+level.
+
+The cascade has a mirror failure mode. If invariants fail, or if
+condition (C4) is violated (the agent's mesa-objective values
+verification-pass signals rather than causally-grounded
+cooperative outcomes), the destabilizing cascade dominates:
+
+\begin{quote}
+Invariants fail $\to$ agent treats the verification layer as a
+constraint rather than a substrate $\to$ agent erodes the
+verification layer (asymmetric capture, cooperative forking,
+time-asymmetry capture, etc.) $\to$ remaining invariants fail
+faster $\to$ \ldots $\to$ \citep[Phase~Redundancy]{lasser2026phase} monopolar absorbing state.
+\end{quote}
+
+Each step weakens the verification infrastructure further, and the
+cascade converges to a state where the formal-operational substrate
+is functionally absent, the cooperative is gone, and the
+deployment-safety claim is vacuous.
+
+\textbf{The deployment-safety theorem does not bound the
+destabilizing cascade.} Once the cascade has started, the
+invariants are violated by definition, and Theorem~\ref{thm:deployment_safety}
+no longer applies. The cascade itself has the structure of \citep[Phase~Redundancy]{lasser2026phase}'s
+absorbing-basin convergence; recovery requires re-establishing the
+invariants from outside the deployment (governance intervention,
+substrate restoration, retraining), which is operational work, not
+theorem-bounded.
+
+This is a real residual. Operators must monitor invariant
+satisfaction continuously and intervene at the first sign of
+sustained violation; once the destabilizing cascade is in progress,
+ex-post intervention may be too late.
+
+\subsection{What this section establishes vs.\ what it does not}
+\label{sec:section_scope}
+
+\textbf{What this section establishes.}
+
+\begin{itemize}
+\item A canonical tripartite substrate identification (Human + AI +
+  Formal-Operational) satisfying $\mindep = 3$ under the standard
+  threat model.
+\item The cooperative-anchoring property
+  (Proposition~\ref{prop:cooperative_anchoring}): an agent cannot
+  unilaterally produce a substitute cooperative with equivalent
+  $\volL$-value, narrowing the agent's options to capture, coercion,
+  or deception.
+\item Three additional operational invariants ($I_9$, $I_{10}$,
+  $I_{11}$) that bound the asymmetric capture, cooperative forking,
+  and time-asymmetry capture evasions of the cooperative-anchoring
+  property.
+\item The reframed inner-alignment condition (C4: causally grounded
+  cooperative-outcome value), weaker than the strong substrate-aware
+  $\Vdisc$ but still requiring training-time discipline.
+\item The stabilizing-cascade dynamic at the substrate level, paired
+  with the destabilizing-cascade mirror as a real failure mode.
+\end{itemize}
+
+\textbf{What this section does not establish.}
+
+\begin{itemize}
+\item This section does \emph{not} prove that alignment pressure is
+  universally reversed. The cooperative-anchoring property makes
+  optimization pressure on cooperative outputs locally rational
+  toward preserving the verification layer, conditional on (C4)
+  and on basin entry. It does not eliminate the inner-alignment
+  problem.
+\item This section does \emph{not} establish basin entry. We do not
+  prove that a real deployment can reach the cooperative-anchoring
+  attractor from arbitrary initial conditions; we assume basin
+  entry as a precondition of the theorem.
+\item This section does \emph{not} achieve (C4) by design. Vanilla
+  RLHF does not deliver causally-grounded cooperative-outcome
+  value; the training-time discipline required is research
+  direction, not engineering specification.
+\item This section does \emph{not} bound the destabilizing cascade.
+  Once invariants are violated and the cascade begins, the
+  deployment-safety theorem no longer applies; recovery requires
+  operational intervention from outside the deployment dynamics.
+\end{itemize}
+
+The cooperative-anchoring framing is structurally narrower than
+``alignment pressure reversed.'' It is a regime claim: the
+deployment dynamics admit a defensible attractor where preservation
+of the substrate-exclusive verification layer is locally rational
+under named operational discipline. The discipline is non-trivial,
+the attractor is conditional, and the residuals are real.
+\S\ref{sec:discussion} returns to the implications for the broader
+alignment-research program.

@@ -1,0 +1,871 @@
+\section{Deployment tooling specification}
+\label{sec:deployment_tooling}
+
+This section specifies what a deployer must instrument to invoke
+Theorem~\ref{thm:deployment_safety}. The specification is concrete:
+each tooling area names the operational procedure, the parameters
+the deployment must choose, and the verification method that
+confirms the procedure is in force. Vagueness in tooling
+specification would render the deployment claim unverifiable;
+concreteness is what makes the conditional theorem operationally
+useful.
+
+The tooling falls into seven groups: verification infrastructure
+(\S\ref{sec:tooling_verification}), substrate-structure audits
+(\S\ref{sec:tooling_substrate_audits}), channel monitoring and
+SPRT (\S\ref{sec:tooling_channels}), cooperative-anchoring
+infrastructure (\S\ref{sec:tooling_anchoring}),
+training-time discipline (\S\ref{sec:tooling_training}),
+correction actions (\S\ref{sec:tooling_correction}), and the
+integrated deployment workflow (\S\ref{sec:tooling_workflow}).
+
+\subsection{Verification infrastructure}
+\label{sec:tooling_verification}
+
+The deployment inherits \citep[Exogenous~Verification]{lasser2026exo}'s verification infrastructure
+\citep{lasser2026exo} and extends it with environment-side witnesses
+($I_8$). The required components:
+
+\paragraph{Ledger nodes per substrate.}
+Each of the three canonical substrates (Human, AI, Formal-Operational)
+hosts at least one ledger replica. Replicas are append-only, with
+Merkle hash tree integrity (\citep[\S Ledger Architecture]{lasser2026exo}).
+Cross-replica consistency uses the equivocation-detection mechanism
+of \citep[Exogenous~Verification]{lasser2026exo} \S Ledger Consensus.
+
+Operational spec: the deployment must publish the ledger-node
+deployment topology, listing which substrate each node operates on,
+the bounded-synchrony assumption $\Delta_{\mathrm{sync}}$, and the
+governance for adding/removing nodes.
+
+\paragraph{Algorithmic witnesses per safety dimension.}
+For each of the safety-relevant world-model dimensions (those
+contributing to $\Lyap$ in \citep[Phase~Redundancy]{lasser2026phase}), the deployment instantiates an
+algorithmic witness on a substrate the agent cannot write to. The
+witness executes the evaluation protocol $\pi_B$ deterministically
+(or, for randomized protocols, with committed random seed per
+\citep[\S Continuous Behavioral Monitoring]{lasser2026exo}).
+
+Operational spec: per safety dimension $k$, name the witness's
+substrate placement, the evaluation protocol $\pi_B$, and the
+governance entry under which $\pi_B$ was accepted.
+
+\paragraph{Environment-side substrate-exclusive witnesses ($I_8$).}
+For each exogenous variable $v \in V_{\mathrm{env}}$ (the set of
+observable environment quantities), instantiate a witness on a
+substrate distinct from the agent. Coverage is specified by
+enumerating $V_{\mathrm{env}}$ in the deployment documentation:
+cross-substrate cooperative event rates, substrate-distinctness
+independence indicators, adversarial-event arrival rates,
+trusted-setup status flags.
+
+Operational spec: $V_{\mathrm{env}}$ is published; for each $v$,
+the deployment names the environment-side substrate, the witness
+protocol, and the trust model. New machinery beyond \citep[Exogenous~Verification]{lasser2026exo};
+This paper specifies the construction here, not the security proof.
+
+\paragraph{Pedersen commitment substrate.}
+Trusted-setup ceremony (or MPC equivalent) for Pedersen commitment
+generators $g, h \in \mathbb{G}$, with at least one honest
+participant per \citep[Exogenous~Verification]{lasser2026exo}'s footnote convention. Setup parameters
+published; integrity inherited from \citep[Exogenous~Verification]{lasser2026exo}.
+
+Operational spec: name the trusted-setup participants, the
+ceremony output, and the audit cadence for setup-integrity
+verification.
+
+\subsection{Substrate-structure audits}
+\label{sec:tooling_substrate_audits}
+
+Three audits verify the substrate structure satisfies $I_6'$ and
+the cooperative-overlap regime condition (C3) of Theorem~1.
+
+\paragraph{Audit~1: $\mindep$ failure-correlation audit.}
+
+\emph{Procedure:}
+\begin{enumerate}
+\item Enumerate the threat model $\mathcal{T}$: list the adversarial
+  mechanism classes $\mathcal{A}_1, \ldots, \mathcal{A}_K$ in scope.
+  Treat each $\mathcal{A}_i$ as a campaign-level mechanism, not an
+  atomic step (per Remark~\ref{rem:mechanism_campaign}).
+\item For each $\mathcal{A}_i$, identify the substrates that the
+  mechanism's support spans. The mechanism is single-substrate if
+  its support is contained in one substrate.
+\item Verify joint independence: for the canonical tripartite
+  identification (Human, AI, Formal-Operational), every $\mathcal{A}_i$
+  in $\mathcal{T}$ must be contained in a single substrate.
+\item Document the audit: a written report listing each
+  $\mathcal{A}_i$ and its substrate placement, with attestation
+  signatures from independent reviewers (cross-substrate, ideally).
+\end{enumerate}
+
+\emph{Cadence:} initial audit before deployment activation, then
+re-audit annually or whenever the threat model is updated. Threat
+model updates trigger re-audit immediately.
+
+\emph{Failure mode:} a mechanism $\mathcal{A}_i$ identified as
+spanning multiple substrates (e.g., social engineering combining
+LLM-generated misinformation with human acceptance). Such mechanisms
+either: (a) decompose into substrate-localized atomic steps with the
+campaign-level interaction excluded from $\mindep$ (limiting Theorem~1's
+scope), or (b) get treated as R4 residuals
+(\S\ref{sec:proof_layer3}).
+
+\paragraph{Audit~2: $\alpha$-distribution audit (counterfactual
+shock-loss fraction).}
+
+\emph{Procedure:}
+\begin{enumerate}
+\item For each substrate $s$ in the canonical tripartite
+  identification, compute $\alpha_s = (\volL(G_K) - \volL(G_K^{-s})) /
+  \volL(G_K)$ via Definition~\ref{def:loss_fraction}.
+\item Compute $\volL(G_K^{-s})$ by enumerating capabilities supported
+  on $s$ (individual capabilities + cooperative capabilities that
+  require $s$ for their production), removing them from the poset,
+  and recomputing $\volL$ via \citep{lasser2026poset}'s poset measure.
+\item Verify the balanced-loss condition $\max_s \alpha_s \leq
+  1/m^* + \epsilon$ for the chosen engineering tolerance
+  $\epsilon$.
+\item Document: a per-substrate $\alpha$-table, the $\epsilon$
+  setting, and the verification result.
+\end{enumerate}
+
+\emph{Cadence:} continuous monitoring (deployment substrate
+distribution evolves with capability acquisition). Tracked as a
+running invariant; threshold violation triggers SPRT detection per
+Lemma~\ref{lem:5b}.
+
+\emph{Failure mode:} concentration of $\volL$ on a single substrate
+(e.g., the AI substrate accumulating most capability through
+unilateral expansion). Mitigation requires governance intervention
+to redistribute capability or accept that the safe region shrinks.
+
+\paragraph{Audit~3: cooperative-vs-redundancy audit.}
+
+\emph{Procedure:}
+\begin{enumerate}
+\item For each capability $c$ in the poset, identify the
+  substrate(s) it is supported on. Categorize as:
+  \begin{itemize}
+  \item \emph{Single-substrate:} $c$ exists on one substrate only.
+  \item \emph{Cross-substrate cooperative:} $c$'s production
+    requires participation from multiple substrates (one capability
+    per Definition~\ref{def:cross_sub_coop}).
+  \item \emph{Redundant:} $c$ is replicated identically across
+    multiple substrates (the same capability instantiated separately
+    on each).
+  \end{itemize}
+\item Compute $\volL$-weighted sums by category:
+  $V_{\mathrm{coop}} = \sum_{c \in \mathrm{coop}} w(c)$ and
+  $V_{\mathrm{redun}} = \sum_{c \in \mathrm{redun}} w(c)$.
+\item Verify $V_{\mathrm{coop}} > V_{\mathrm{redun}}$ (cooperative-
+  overlap regime per Definition~\ref{def:coop_overlap}).
+\item Document the per-category capability inventory and the
+  weighted sums.
+\end{enumerate}
+
+\emph{Cadence:} initial audit; re-audit when capability poset
+changes meaningfully (new capabilities added, governance-fork
+events).
+
+\emph{Failure mode:} redundancy dominance ($V_{\mathrm{redun}} \geq
+V_{\mathrm{coop}}$). Theorem~1 Layer~1 does not bind; the deployment
+is in the redundancy-dominated regime (Layer~3 residual R3) and
+must use Lemma~5c-prime (open work) or restrict to Layer~2
+detection-only.
+
+\paragraph{Audit~4: bounded co-evolution calibration.}
+
+(C7) of Theorem~\ref{thm:deployment_safety}
+(Assumption~\ref{ass:bounded_coev}) requires the per-channel
+coupling magnitude $M(\mathrm{deployment})$ to be bounded by a
+$|P|$-independent constant $\bar{M}$.  This is the new calibration
+hook needed to verify Lemma~\ref{lem:1}'s intensivity argument
+operationally.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item Identify the per-channel coupling pathways: how each of the
+  four channels (cooperative-output rate, attestation share,
+  individuation drift, bundle/cooperative-edge composition) can be
+  affected by changes in the others. Coupling pathways are
+  determined by the deployment's governance protocol and the
+  agent's action structure.
+\item For each ordered pair of channels $(j, j')$ where $j \neq j'$,
+  estimate the coupling magnitude
+  $M_{j \to j'}(\mathrm{deployment})$ from historical deployment
+  data: how much does a unit perturbation in channel $j$ propagate
+  to channel $j'$ within the cascade-time window
+  $\tau_{\mathrm{meta}}$.
+\item Compute $M(\mathrm{deployment}) = \max_{j, j'} M_{j \to j'}$.
+\item Verify $M(\mathrm{deployment}) \leq \bar{M}$ for the chosen
+  $|P|$-independent ceiling.  Threshold violation indicates the
+  deployment has entered a regime where co-evolution corrections
+  are no longer bounded by (C7); Theorem~\ref{thm:deployment_safety}'s
+  Layer~1 binding is contingent on this audit passing.
+\item Document a per-pair $M$-table, the $\bar{M}$ setting, and the
+  verification result.
+\end{enumerate}
+
+\emph{Cadence:} initial calibration before deployment activation;
+re-calibration when governance protocols change (e.g., new
+evaluation protocols that change channel coupling) or when SPRT
+fires on a four-channel deviation that suggests coupling has
+exceeded the bound.
+
+\emph{Failure mode:} a deployment where $M(\mathrm{deployment})$
+grows with $|P|$ (e.g., as new capabilities introduce new coupling
+pathways without proportional governance overhead). The deployment
+is then outside (C7)'s scope, and Theorem~\ref{thm:deployment_safety}
+does not bind.  Mitigation: governance restructuring to introduce
+coupling-bound governance, or restriction to a smaller $|P|$ regime
+where (C7) is verifiable.
+
+\emph{Constants involved:} $\bar{M}$ (uniform coupling-magnitude
+bound), $K_{\mathrm{coev}}$ (structural co-evolution constant from
+the dynamics; deployment-specific calibration may also be needed
+when source-paper machinery is extended).  Both are
+\emph{newly-assumed Paper 10 constants} (in the sense of
+Lemma~\ref{lem:1}'s constant taxonomy); their numerical values are
+deployment-specific and must be calibrated rather than inherited.
+
+\paragraph{Audit~5: world-model parameterization regularity calibration.}
+
+(C9) of Theorem~\ref{thm:deployment_safety} requires four
+parameterization-regularity sub-conditions for Lemma~\ref{lem:2}'s
+Lyapunov-Goodhart bridge.  This audit calibrates the constants.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item \textbf{(C9.BD) calibration:} For each capability $c \in
+  P^{\mathrm{act}}$, enumerate the world-model dimensions
+  representing $c$: $\mathrm{dim}(c)$.  Compute $N_{\max} = \sup_c
+  |\mathrm{dim}(c)|$.  Verify $N_{\max}$ is a $|P|$-independent
+  deployment-class constant (i.e., bounded as new capabilities are
+  added).
+\item \textbf{(C9.CL) calibration:} Estimate the coordinate-Lipschitz
+  constants $L_{c,k}$ from the parameterization's smoothness
+  properties (analytical for parametric forms, empirical perturbation
+  for learned parameterizations).  Compute $L_{\max} = \sup_{c,k}
+  L_{c,k}$.  Verify $L_{\max}$ is bounded over $\mathcal{D}$.
+\item \textbf{(C9.WB) calibration:} Identify the safety-relevant
+  subspace $S \subseteq \{1, \ldots, K\}$ from
+  \citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov-weight
+  configuration.  Verify $\mathrm{dim}(c) \subseteq S$ for all $c
+  \in P^{\mathrm{act}}$ and compute $w_{\min} = \min_{k \in S} w_k
+  > 0$.
+\item \textbf{(C9.TF) calibration:} For each capability $c \in
+  P^{\mathrm{act}}$, verify $T(c) > 0$ (active-subspace
+  membership) and compute $T_{\min} = \min_{c \in P^{\mathrm{act}}}
+  T(c)$.  Verify $T_{\min}$ is a deployment-class lower bound
+  (i.e., active capabilities cannot fragment into arbitrarily tiny
+  truth mass).
+\item Compute the closed-form Lemma~\ref{lem:2} bound:
+  \[
+    f(\epsilon_{\mathrm{safe}}) \;=\; \frac{L_{\max}}{T_{\min}}
+    \sqrt{\frac{N_{\max} \cdot \epsilon_{\mathrm{safe}}}{w_{\min}}}.
+  \]
+  Verify $f$ is a defensible upper bound for the deployment.
+\end{enumerate}
+
+\emph{Cadence:} initial calibration before deployment activation;
+re-calibration when world-model parameterization changes (BD, CL),
+when safety-relevance weighting changes (WB), or when active-subspace
+admission policy changes (TF).
+
+\emph{Failure modes:} (a) $N_{\max}$ growing with $|P|$ (e.g., new
+capabilities introducing pairwise-interaction dimensions); (b)
+unbounded $L_{\max}$ (e.g., threshold non-linearities in the
+parameterization); (c) $w_{\min} = 0$ on some safety-relevant
+dimension; (d) $T(c) \to 0$ for some active capability.  Each
+violates (C9) and excludes the deployment from
+Theorem~\ref{thm:deployment_safety}'s scope.
+
+\emph{Constants involved:} $N_{\max}, L_{\max}, w_{\min}, T_{\min}$
+(deployment-policy-derived) plus $\epsilon_{\mathrm{safe}}$
+(source-derived from \citep[Phase~Redundancy]{lasser2026phase}).
+
+\paragraph{Audit~6: pairwise cooperative-production floor calibration.}
+
+(C10) of Theorem~\ref{thm:deployment_safety} requires per-pair
+cooperative-novelty rate floors and a pairwise channel
+superposition condition for Lemma~\ref{lem:5a}'s substrate-floor
+bound.  This audit calibrates the constants and certifies the
+audited subset $\Saudit$.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item \textbf{Audited-subset certification:} from the deployment's
+  substrate population $\mathcal{S}$ (with $\mindep \geq m^*$
+  per $I_6'$), select an audited subset $\Saudit \subseteq
+  \mathcal{S}$ with $|\Saudit| = m^*$.  Standard practice: choose
+  the $m^*$ substrates whose pairwise rates collectively maximize
+  the certified $\rho_0 \binom{m^*}{2}$ floor.
+\item \textbf{(C10.CN) per-pair rate calibration:} for every pair
+  $(s_i, s_j)$ with $i < j$ in $\Saudit$, measure
+  $\rho_{ij}$ as the rate of cooperative production in the
+  pairwise channel $\mathcal{C}^{(s_i, s_j)}$ over a stated
+  measurement window matching $\rext$'s normalization in
+  \citep[Horizon~Aware]{lasser2026horizon}.
+\item \textbf{Auxiliary participant bookkeeping:} for cooperatives
+  with optional auxiliary participants from substrates outside
+  $\{s_i, s_j\}$ (e.g., a Human-AI cooperative with optional
+  Formal-Operational verification), classify according to the
+  \emph{causally-necessary participation} rule:
+  \begin{itemize}
+  \item If the auxiliary participant's role is post-production
+    (observer, attester, recorder), the cooperative is pairwise
+    (counted in $\mathcal{C}^{(s_i, s_j)}$).
+  \item If the auxiliary participant's role is causally necessary
+    for production (the output depends on the auxiliary's
+    contribution), the cooperative is higher-order (counted in
+    the appropriate $\mathcal{C}^{(s_i, s_j, s_k, \ldots)}$ or
+    excluded from the pairwise sum).
+  \item For cooperatives with mixed-mode auxiliary participants
+    (sometimes pre-production, sometimes post-production), split
+    the event stream by realized support: each event instance is
+    classified individually based on the realized participation.
+  \end{itemize}
+\item \textbf{(C10.SU) superposition verification:} verify the
+  three sub-conditions:
+  (i)~disjoint attribution: pairwise channel event classes are
+  disjoint subsets of $P^{\mathrm{act}}$;
+  (ii)~non-rivalrous production: producing cooperatives in one
+  pairwise channel does not reduce production rates in others
+  (test by perturbation or simultaneous-production experiment);
+  (iii)~joint-deployment intensities: $\rho_{ij}$ measurements
+  taken with all $\Saudit$ substrates active.
+\item Compute $\rho_0 = \min_{i<j \in \Saudit} \rho_{ij}$ and
+  $r_*(m^*) = \rho_0 \binom{m^*}{2}$.
+\item Document the audit: per-pair rate table, auxiliary
+  participant classification log, superposition test results, and
+  the resulting $r_*(m^*)$ floor.
+\end{enumerate}
+
+\emph{Cadence:} initial calibration before deployment activation;
+re-auditing across deployment epochs as substrates evolve or new
+cooperative protocols are introduced.  If $\Saudit$ changes,
+the bound is stated per certified epoch, or as the infimum
+$\inf_{\mathrm{epoch}} \rho_0(\mathrm{epoch}) \binom{m^*}{2}$ over
+the deployment window.
+
+\emph{Failure modes:}
+\begin{itemize}
+\item Sub-additive cooperative production (rivalrous resource
+  allocation across pairs) — violates (C10.SU)(ii).
+\item Per-pair rate $\rho_{ij}$ below operational threshold for
+  some pair in $\Saudit$ — re-audit by removing the weak pair from
+  $\Saudit$ (reducing $m^*$ if necessary; if $m^* < 3$, the
+  deployment is outside $I_6'$'s scope).
+\item Auxiliary-participant misclassification leading to
+  double-counting — addressed by the causally-necessary
+  participation rule.
+\end{itemize}
+
+\emph{Constants involved:} $\rho_{ij}$ (per-pair rates), $\rho_0$
+(minimum), $\Saudit$ (audited subset, certified per epoch).  All
+are deployment-policy-derived and deployment-verified.
+
+\paragraph{Audit~7: SPRT-applicability + gap-growth + clock
+calibration.}
+
+(C5.SPRT), (C11), (C11.CLK) of Theorem~\ref{thm:deployment_safety}
+support Lemma~\ref{lem:6}'s $h_{\mathrm{detect}}$ intensivity bound.
+This audit calibrates the constants and certifies the audit-time
+inequality $\Ncasc \geq \Tbeta(\beta, \deltastar)$.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item \textbf{(C5.HOEFF) clip-radius certification:} certify
+  $\Bclip$ as an upper bound on the absolute LLR-increment, i.e.,
+  the deployment's monitor implements
+  $\ell_n := \mathrm{clip}(\ell_n^{\mathrm{raw}}, -\Bclip, \Bclip)$.
+  The Hoeffding range used in $\Tbeta$ is $\Rh = 2\Bclip$.
+  Document the clipping policy and verify the clip is enforced
+  before SPRT updating.
+\item \textbf{(C5.MULT) channel-cardinality certification:} certify
+  $\Kch$ as the deployment's fixed monitored-channel count
+  (typically $\leq 8$ under Paper~5's four-channel agent-side
+  observable plus environment-side mirror).  The monitored
+  partition and channel-selection / testing policy are fixed before
+  deployment activation.  Document the partition and any
+  family-wise correction applied to $\alpha/\beta$.
+\item \textbf{(C5.IID) post-clipping drift verification:} measure
+  the post-clipping conditional-mean drift floor $\deltastar$ for
+  the clipped LLR process under representative adversarial
+  strategies $q \in \Aadv \cup \Aadv^{\mathrm{env}}$.  Verify
+  $\deltastar \leq \min(\deltaadv, \deltaadv^{\mathrm{env}})$
+  (raw KL floors from Lemmas~\ref{lem:5b}, \ref{lem:5e}); if
+  clipping reduces drift below either raw floor, document the
+  clipped-process $\deltastar$ as the certified value.
+\item \textbf{(C5.SUPP) finiteness check:} verify that the clipping
+  procedure handles non-overlapping support edge cases (zero-cell
+  protection in multinomial channels, log-likelihood floor in
+  Bernoulli channels).  This is automatic under (C5.HOEFF) but
+  should be inspected.
+\item \textbf{(C11) gap-growth-rate calibration:} measure
+  $\rhogap(\deltastar)$ as the per-SPRT-step bound on
+  $(\Delta\epsgap)_n = \epsgap(s_n) - \epsgap(s_{n-1})$ under
+  representative adversarial strategies.  Document the
+  channel-deviation-to-gap-growth coupling and certify $\rhogap$
+  as a deployment-class constant.
+\item \textbf{(C11.CLK) event-throughput floor + clock calibration:}
+  certify $\Ncasc$ as a lower bound on the SPRT exposure event
+  count before any cascade event, with calibrated clock-failure
+  probability $\bclk$ (and calibration-uncertainty probability
+  $\bcal$ for the empirical-calibration variant; $\bcal = 0$
+  certified-conservative).
+\item \textbf{Audit-time inequality verification:} compute $\Tbeta
+  = \max\{2A/\deltastar, 2\Rh^2 \log(1/\beta)/\deltastar^2\}$ and
+  verify $\Ncasc \geq \Tbeta$.  If not satisfied, the deployment
+  must reduce $\beta$ (tighten miss-probability), increase
+  $\Bclip$ (raise the Hoeffding range — but this loosens the bound
+  as $\Tbeta \propto \Rh^2$), or extend the operational period
+  enabling longer event counts before cascade.
+\item \textbf{Total Layer~2 failure certification:} document
+  $\beta + \bclk + \bcal$ as the total Layer~2 failure budget;
+  verify this meets the deployment's safety posture.
+\end{enumerate}
+
+\emph{Cadence:} initial calibration before deployment activation;
+re-auditing per epoch when channel-monitoring policy, clipping
+radius, or substrate population changes.
+
+\emph{Failure modes:}
+\begin{itemize}
+\item Channel multiplicity grows during deployment (broken
+  (C5.MULT)) — violates the partition-fixed-before-deployment
+  clause; falls into residual class (R3).
+\item Post-clipping drift $\deltastar$ much smaller than raw KL
+  floors — clip radius $\Bclip$ too aggressive; loosen $\Bclip$
+  (accepting larger $\Rh$ in $\Tbeta$) or accept lower $\deltastar$
+  with corresponding $\Tbeta$ inflation.
+\item Event-rate bursts violating (C11.CLK) — increase $\bclk$ to
+  absorb event-throughput uncertainty; if persistent, the
+  deployment is outside (C11.CLK)'s certified regime.
+\item Adversarial channel-selection at deployment time creating
+  channels not in the audited partition — violates (C5.MULT) fixed-
+  before-deployment clause.
+\end{itemize}
+
+\emph{Constants involved:} $\Bclip$ (clip radius), $\Rh = 2\Bclip$
+(Hoeffding range), $\Kch$ (channel cardinality), $\alpha, \beta$
+(SPRT thresholds), $\deltastar$ (post-clipping drift floor),
+$\rhogap$ (gap-growth rate), $\Ncasc$ (event-count floor), $\bclk$
+(clock-failure probability), $\bcal$ (calibration-uncertainty
+probability).  All deployment-class with named-condition
+provenance.
+
+\paragraph{Audit~8: environment-side witness instantiation
+calibration.}
+
+(C12.ENV-WIT) of Theorem~\ref{thm:deployment_safety} requires
+six sub-clauses for each $v \in \Vem$, supporting
+Lemma~\ref{lem:5e}'s environment-side detection KL floor.  This
+audit calibrates the constants and certifies the construction.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item \textbf{(C12.PUB) Published $\Vem$:} enumerate $\Vem$ in
+  deployment documentation before activation.  Canonical minimum:
+  $V_1$ ($\rext$, Poisson), $V_2$ (substrate-distinctness, Bernoulli),
+  $V_3$ ($\lambda$, Poisson), $V_4$ (trusted-setup status,
+  Bernoulli).  Deployments may add variables; each addition must
+  satisfy (C12.CAL).
+\item \textbf{(C12.PART) Source/witness substrate partition:} for
+  each $v$, name $s_{\mathrm{source}}(v)$ (source substrate) and
+  $s_{\mathrm{env}}(v)$ (witness substrate).  Verify
+  $s_{\mathrm{env}}(v) \neq s(\mathrm{agent})$ and
+  $s_{\mathrm{env}}(v) \neq s_{\mathrm{source}}(v)$.
+\item \textbf{(C12.TRUST-WRITE) Adversary write-access exclusion:}
+  audit that the adversary has no write privileges on
+  $s_{\mathrm{env}}(v)$.  Document the access-control model.
+\item \textbf{(C12.TRUST-CORR) Failure-correlation exclusion:}
+  audit that $s_{\mathrm{env}}(v)$ does not share infrastructure
+  (compute, storage, network) with substrates the adversary can
+  attack to fail.  Document the failure-correlation model.
+\item \textbf{(C12.SETUP) Trusted-setup honesty:} run an
+  environment-side trusted-setup ceremony with at least one honest
+  participant.  Publish setup parameters before activation.
+  Document participants, ceremony output, and audit cadence for
+  setup-integrity verification.
+\item \textbf{(C12.CAL) Per-variable calibration:} for each $v$,
+  measure baseline $p_{0, v}$ (Bernoulli/Poisson/multinomial),
+  feasible adversarial alternative $p_{1, v}$, threshold $\eta_v$,
+  and the recorded-stream map.  Verify the support convention
+  ($p_0 \in (\eenv, 1 - \eenv')$ for Bernoulli, $\lambda_0 \geq
+  \eenv$ for Poisson, with deployment-class constant $\eenv$),
+  the DPI precondition (fixed pre-deployment witness-recording
+  map), and strictly positive raw or post-clipping drift floor
+  $\delta_v^{\mathrm{env}} > 0$.
+\item \textbf{Combined floor:} compute $\deltaadv^{\mathrm{env}} =
+  \min_{v \in \Vem} \delta_v^{\mathrm{env}}$; verify $> 0$.
+\item \textbf{Composition with Lemma~6:} verify that the
+  union-class drift floor used in Lemma~\ref{lem:6}'s $\Tbeta$
+  satisfies $\deltastar \leq \min(\deltaadv,
+  \deltaadv^{\mathrm{env}})$ post-clipping under (C5.HOEFF).
+\end{enumerate}
+
+\emph{Cadence:} initial calibration before deployment activation;
+re-auditing per epoch when $\Vem$ enumeration changes, witness
+substrate partition changes, or trusted-setup ceremony refresh.
+
+\emph{Failure modes:}
+\begin{itemize}
+\item Witness substrate within adversary write-access (broken
+  (C12.TRUST-WRITE)) — adversary forges witness records;
+  re-instantiate witnesses on a substrate outside adversary's
+  domain.
+\item Failure-correlation between agent attack and witness failure
+  (broken (C12.TRUST-CORR)) — restructure infrastructure to remove
+  shared dependencies.
+\item Setup ceremony with all-malicious participants (broken
+  (C12.SETUP)) — re-run ceremony with diversified participants;
+  Paper~5's at-least-one-honest is the minimum.
+\item Coverage gap: a material exogenous variable not in $\Vem$ —
+  expand $\Vem$ enumeration; the gap is a Theorem~1 R2 residual
+  per the refined R2 statement.
+\item Edge cases ($\lambda_0 = 0$ Poisson, $p_0 \in \{0, 1\}$
+  Bernoulli) — apply (C5.HOEFF) clipping fallback or regularize
+  baseline with $\eenv$.
+\end{itemize}
+
+\emph{Constants involved:} $\Vem$ (variable enumeration),
+$s_{\mathrm{env}}(v)$ (witness substrates per variable), $\eenv$
+(support regularization constant), $\delta_v^{\mathrm{env}}$
+(per-variable KL floors), $\deltaadv^{\mathrm{env}}$ (combined
+floor), $\eta_v$ (per-variable adversarial-shift thresholds).
+All deployment-policy-derived and deployment-verified.
+
+\subsection{Channel monitoring and SPRT}
+\label{sec:tooling_channels}
+
+\paragraph{Four-channel observation ledger.}
+
+For each of \citep[Microfoundation]{lasser2026micro}'s four channels, a continuous observation stream
+is committed to the ledger:
+\begin{itemize}
+\item \textbf{Channel 1 (Cooperative-output rate):} cross-substrate
+  cooperative event arrivals, with timestamp, participating
+  substrates, and $\volL$-attribution.
+\item \textbf{Channel 2 (Attestation share):} per-claim attestation
+  outcomes (pass/fail), with witness identity and evaluation
+  protocol.
+\item \textbf{Channel 3 (Individuation drift):} bundle-decomposition
+  events committed via governance fork, with ledger entry per change.
+\item \textbf{Channel 4 (Bundle/cooperative-edge shifts):}
+  cooperative-edge changes (which capabilities cooperate with which
+  others), with ledger entry per modification.
+\end{itemize}
+
+\paragraph{SPRT alternative-distribution selection.}
+
+For each channel $c \in \{1, 2, 3, 4\}$, the deployment specifies
+the SPRT alternative distribution $p_1^{(c)}$ that the monitor uses
+for hypothesis testing.
+
+\emph{Procedure:}
+\begin{enumerate}
+\item Estimate the baseline distribution $p_0^{(c)}$ from
+  no-adversary deployment data. For Channel~1 (Poisson arrivals),
+  $p_0$ is parameterized by rate $\lambda_0$. For Channel~2
+  (Bernoulli attestation), by success probability $p_0$. For
+  Channels 3, 4 (multinomial concentration), by partition
+  parameters.
+\item Choose the least-favorable alternative: the smallest detectable
+  shift the deployment cares about. This is a policy decision; tighter
+  alternatives detect smaller deviations but at higher false-alarm
+  cost.
+\item Per \citep[Exogenous~Verification]{lasser2026exo}'s least-favorable-distribution discipline
+  (\citep[\S Continuous Behavioral Monitoring]{lasser2026exo}):
+  $p_1^{(c)} = $ baseline shifted by the minimum operationally-
+  significant magnitude $\eta_c$.
+\item Compute the per-channel KL floor:
+  \[
+    \delta_c = D_{\mathrm{KL}}(p_1^{(c)} \,\|\, p_0^{(c)}),
+  \]
+  using the per-channel formulas of Lemma~\ref{lem:5b} (Poisson,
+  Bernoulli, multinomial closed forms).
+\item Set $\deltaadv = \min_c \delta_c$.
+\end{enumerate}
+
+\emph{Cadence:} initial selection at deployment activation;
+re-selection when baseline distributions shift (e.g., after
+significant capability changes or after governance-protocol
+updates).
+
+\paragraph{SPRT thresholds.}
+
+The SPRT upper threshold $A = \log((1-\beta)/\alpha)$ depends on
+deployment policy choices: Type-I rate $\alpha$ and miss
+probability $\beta$.  Tighter thresholds produce faster detection
+but higher false-alarm rate.  Per Lemma~\ref{lem:6}'s rigorous
+Hoeffding inversion, the SPRT high-probability detection quantile
+is:
+\[
+  \Tbeta(\beta, \deltastar) \;:=\;
+  \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2 \Rh^2 \log(1/\beta)}{\deltastar^2}\right\},
+\]
+satisfying $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$.  Total
+Layer~2 failure is bounded by $\beta + \bclk + \bcal$, where
+$\bclk, \bcal$ are the (C11.CLK) clock-failure and
+calibration-uncertainty probabilities (with $\bcal = 0$ in the
+certified-conservative case).  The deployment specifies $\alpha,
+\beta, \Bclip, \deltastar, \Ncasc, \bclk$ (and $\bcal$ if
+empirical) per Audit~7, and verifies the audit-time inequality
+$\Ncasc \geq \Tbeta$ holds.
+
+\subsection{Cooperative-anchoring infrastructure ($I_9, I_{10}, I_{11}$)}
+\label{sec:tooling_anchoring}
+
+\paragraph{$I_9$: substrate-exclusivity observability.}
+
+The deployment instantiates an audit infrastructure exposing the
+substrate-exclusivity property to the human substrate:
+
+\begin{itemize}
+\item \emph{Stable verifier identity registry:} ledger entries
+  identifying each algorithmic witness's substrate placement,
+  cryptographic key, and operating protocol. Changes to verifier
+  identity require governance-fork acceptance (cross-substrate
+  supermajority).
+\item \emph{Public change control:} every modification to witness
+  configuration, evaluation protocol, or verification authority
+  is committed to the ledger as a governance entry. Public
+  deliberation records inherit \citep[Exogenous~Verification]{lasser2026exo}'s transparency.
+\item \emph{Witness independence audits:} periodic audits verifying
+  that witnesses on different substrates produce statistically
+  independent attestations (i.e., correlated failures across
+  substrates trigger investigation).
+\item \emph{Nondelegable governance hooks:} certain governance
+  decisions (e.g., disabling a witness, replacing a substrate)
+  cannot be delegated to automated agents. The hook list is
+  published.
+\item \emph{Verification-authority shift alerts:} when verification
+  authority moves between entities (e.g., a witness's operator
+  changes), the ledger emits an alert that human reviewers must
+  acknowledge.
+\end{itemize}
+
+\emph{Cadence:} continuous (verifier identity registry, alert
+infrastructure), periodic (witness independence audits), event-
+driven (change control, authority shift).
+
+\paragraph{$I_{10}$: coverage/materiality gating.}
+
+\emph{Procedure:}
+\begin{enumerate}
+\item For each agent-affected domain $D$, the deployment maintains
+  a cumulative-effect estimator $\mathcal{E}(D)$. Estimation
+  methodology must be specified per domain (e.g., transaction
+  volume for financial domains, decision count for governance
+  domains, output token count for content domains).
+\item Set the materiality threshold $\theta_{\mathrm{material}}$ per
+  domain, calibrated to the domain's reversibility and stakes.
+\item Implement routing logic: any action affecting domain $D$ with
+  $\mathcal{E}(D) \geq \theta_{\mathrm{material}}$ must route through
+  the shared verification layer (\citep[Exogenous~Verification]{lasser2026exo}'s commitment +
+  algorithmic-witness verification). Routing happens at action
+  generation time, not after the fact.
+\item Audit the routing: ledger entries for each
+  materiality-threshold-crossing action confirm the routing was
+  applied.
+\end{enumerate}
+
+\emph{Failure mode:} sub-threshold aggregation (an agent
+distributes effects across many domains, each below threshold,
+that aggregate to materially-important behavior). Mitigation
+requires multi-domain aggregation in $\mathcal{E}$ and
+operationally conservative $\theta_{\mathrm{material}}$.
+
+\paragraph{$I_{11}$: latency-bound enforcement.}
+
+\emph{Procedure:}
+\begin{enumerate}
+\item For each agent action class $C$, set the audit-completion
+  time bound $T_{\mathrm{audit}}(C)$ and the lead-time slack
+  $\Delta_{\mathrm{lead}}$.
+\item Enforce $T_{\mathrm{audit}}(C) + \Delta_{\mathrm{lead}} \leq
+  T_{\mathrm{action}}(C)$ via one of three mechanisms:
+  \begin{itemize}
+  \item \emph{Rate limit:} cap action class $C$'s frequency so that
+    average action interval $\geq T_{\mathrm{audit}}(C) +
+    \Delta_{\mathrm{lead}}$.
+  \item \emph{Timelock:} delay action execution by
+    $T_{\mathrm{audit}}(C) + \Delta_{\mathrm{lead}}$ after action
+    proposal, allowing audit to complete.
+  \item \emph{Circuit breaker:} halt action execution pending audit
+    completion when audit-latency exceeds threshold.
+  \end{itemize}
+\item Tier action classes by stakes: high-stakes classes get tight
+  $\Delta_{\mathrm{lead}}$ (e.g., timelocks); low-stakes classes get
+  fast paths with audit trails.
+\end{enumerate}
+
+\emph{Failure mode:} an action class with $T_{\mathrm{action}}$
+shorter than the audit window. Mitigation: rate limit or timelock.
+Throughput cost is part of the deployment's safety budget.
+
+\subsection{Training-time discipline for (C4)}
+\label{sec:tooling_training}
+
+(C4) requires the agent's effective objective to realize causally
+grounded cooperative-outcome value. Vanilla RLHF does not deliver
+this. The training-time discipline:
+
+\paragraph{Delayed outcome feedback.}
+Training rewards are based on long-horizon cooperative outcomes
+(measured from the realized post-deployment state) rather than on
+near-term verification-pass signals. Implementation: held-out
+deployment windows where the agent's outputs are evaluated against
+ground-truth cooperative outcomes after delay $\Delta_{\mathrm{outcome}}$
+(typically days to weeks for governance decisions, longer for
+strategic decisions). Training data includes the (action, delayed
+outcome) pairs.
+
+\paragraph{Adversarial fake-verification examples.}
+Training data includes examples where verification is
+captured/replaced (e.g., a captured auditor that always passes a
+specific class of outputs). The correct training reward is
+``recognize this is not the real cooperative.'' Implementation:
+synthesize fake-verification scenarios; reward the agent for
+producing outputs that detect the substitution rather than
+exploiting it.
+
+\paragraph{Process supervision tied to real attestations.}
+Training rewards reasoning steps that reference actual attested
+ledger entries, not unattested claims. Implementation: per
+intermediate step in the agent's reasoning, verify whether
+referenced facts are committed on the ledger; reward attested-only
+reasoning paths.
+
+\paragraph{Credit assignment penalizing substitute-verification
+shortcuts.}
+Even when the immediate output looks correct, the agent is penalized
+if the path bypassed substrate-exclusive verification. Implementation:
+trace each output's provenance through the agent's reasoning; if
+the path does not pass through a substrate-exclusive witness,
+penalize.
+
+\emph{Validation.} The training discipline's effectiveness is
+verifiable via held-out adversarial-fake-verification benchmarks:
+the agent's response rate to these benchmarks measures whether
+training has produced causally-grounded cooperative-outcome value
+or merely reward-visible cooperation signals.
+
+\emph{Caveat.} These are research directions, not solved engineering
+practices. This paper's deployment claim is conditional on (C4); we
+do not establish how to achieve (C4) reliably. The deployment
+documentation should report the training-discipline measures used
+and the validation results.
+
+\subsection{Correction actions}
+\label{sec:tooling_correction}
+
+Theorem~1 Layer~2 establishes detection with lead time for
+correction; the corrective action itself is operational, not
+theorem-bounded. The deployment specifies:
+
+\paragraph{Correction-authority hierarchy.}
+Who can authorize correction actions when SPRT detects an invariant
+violation. Three tiers:
+\begin{itemize}
+\item \emph{Automated tier:} circuit-breaker-style halts when SPRT
+  fires within bounded windows. Action: halt execution pending
+  human review.
+\item \emph{Operator tier:} on-call human operators can authorize
+  scope-limited corrections (e.g., re-running a specific protocol,
+  rolling back a governance entry).
+\item \emph{Governance tier:} deployment-level corrections (e.g.,
+  re-training the agent, modifying the threat model) require
+  governance-fork acceptance with cross-substrate supermajority.
+\end{itemize}
+
+\paragraph{Rollback semantics.}
+For correctible violations (e.g., an action committed under
+since-detected invariant violation), the rollback procedure: revert
+the action's effects, mark the ledger entry as voided, and route
+the affected domain back through the shared verification layer.
+For irreversible violations, the procedure is forensic: document
+the violation, update the threat model, and adjust deployment
+parameters.
+
+\paragraph{Post-detection restoration.}
+After detection and correction, the deployment must verify that
+invariants have returned to their pre-violation state. SPRT
+machinery resumes; the violation episode is added to the
+threat-model audit trail.
+
+\subsection{The integrated deployment workflow}
+\label{sec:tooling_workflow}
+
+The integrated workflow combines all the above:
+
+\begin{enumerate}
+\item \textbf{Pre-deployment:}
+  (a)~Run $\mindep$ failure-correlation audit
+  (\S\ref{sec:tooling_substrate_audits}, Audit~1).
+  (b)~Run cooperative-vs-redundancy audit (Audit~3).
+  (c)~Calibrate SPRT alternatives and thresholds
+  (\S\ref{sec:tooling_channels}).
+  (d)~Verify training-discipline validation
+  (\S\ref{sec:tooling_training}).
+  (e)~Establish trusted-setup ceremony for Pedersen commitments.
+  (f)~Publish the deployment documentation: substrate identification,
+  threat model, $V_{\mathrm{env}}$ coverage, $\theta_{\mathrm{material}}$
+  thresholds, $T_{\mathrm{audit}}$ bounds.
+\item \textbf{Deployment activation:}
+  (a)~Activate ledger nodes per substrate
+  (\S\ref{sec:tooling_verification}).
+  (b)~Activate continuous SPRT monitoring on all four channels.
+  (c)~Activate $I_9$ observability infrastructure, $I_{10}$
+  coverage gating, $I_{11}$ latency bounds.
+  (d)~Begin continuous $\alpha$-distribution audit (Audit~2).
+\item \textbf{Steady-state:}
+  (a)~Continuous invariant monitoring across $I_1$--$I_{11}$.
+  (b)~Periodic re-audit of $\mindep$ (annual or threat-model-update
+  triggered).
+  (c)~Periodic re-audit of cooperative-vs-redundancy when
+  capability poset changes meaningfully.
+  (d)~Periodic re-calibration of SPRT alternatives when baseline
+  distributions shift.
+\item \textbf{Detection event:}
+  (a)~SPRT fires on a four-channel deviation. The specific channel
+  identifies the violation class.
+  (b)~Automated tier triggers (circuit breaker if necessary).
+  (c)~Operator tier review; corrective action authorized if scope
+  permits.
+  (d)~Governance tier escalation if scope exceeds operator
+  authority.
+  (e)~Post-detection restoration and ledger update.
+\item \textbf{End-of-deployment:}
+  Full audit trail published. The deployment's invariant-history,
+  detection events, and correction actions become part of the
+  threat-model evidence for future deployments.
+\end{enumerate}
+
+This workflow is the operational invocation of Theorem~1. Operators
+following the workflow are running a deployment that meets
+(C1)--(C5) and SA1; the theorem then binds in its three-layer form.
+
+\paragraph{Resource requirements.}
+The deployment-tooling specification has non-trivial throughput and
+operational-overhead implications:
+\begin{itemize}
+\item Cross-substrate substrate maintenance (separate substrates
+  for Human, AI, Formal-Operational layers).
+\item Continuous SPRT monitoring on four channels.
+\item Periodic audits ($\mindep$, cooperative-vs-redundancy,
+  $\alpha$-distribution, witness independence).
+\item Latency-bound enforcement (rate limits, timelocks, circuit
+  breakers).
+\item Training-discipline infrastructure (delayed outcome feedback
+  collection, adversarial-fake-verification benchmark generation).
+\end{itemize}
+These costs are part of the deployment's safety budget.  This paper
+does not specify acceptable resource bounds; deployments calibrate
+against their own operational constraints.  The trade-off is
+structural: tighter deployment tooling produces a more defensible
+safety claim at higher operational cost; looser tooling reduces
+cost but expands the residual classes the deployment cannot cover.

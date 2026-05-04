@@ -1,0 +1,386 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}^{[W]}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\Lyap}{L}
+\newcommand{\Wm}{\hat{W}}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+
+\title{Lemma 2 (Lyapunov-Goodhart bridge): Full Proof Draft}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal of this draft}
+
+Promote Lemma~2 of Paper~10 \S4.3 from inline proof outline to a
+self-contained formal proof, suitable for placement in the
+appendix.
+
+The current outline asserts a Cauchy-Schwarz argument relating the
+Lyapunov function $\Lyap = \sum_k w_k \epsilon_k^2$ from
+\citep[Phase~Redundancy]{lasser2026phase} to the proxy-truth sup-norm
+$\epsnonres = \sup_{c} |T(c) - P(c)|$ from
+\citep[Microfoundation]{lasser2026micro}, but does not fully
+discharge the per-capability dimension structure or address the
+coordinate-Lipschitz parameterization assumption required for the
+per-capability gap bound.
+
+This draft formalizes the proof, names two deployment-class
+conditions explicitly (bounded per-capability dimension count;
+coordinate-Lipschitz parameterization), and walks through the
+Cauchy-Schwarz step-by-step.
+
+\section{Deployment-class conditions}
+
+The proof uses three deployment-class conditions, each
+characterizing the world-model parameterization choice. Each is a
+property of the deployment class $\mathcal{D}$, fixed before $|P|$
+is varied (per Definition~1 of Lemma~1).
+
+\begin{assumption}[BD: Bounded per-capability dimension count]
+\label{ass:BD}
+There exists a constant $N_{\max}$ depending on $\mathcal{D}$ but
+independent of $|P|$ such that, for every capability $c \in
+P^{\mathrm{act}}$ in the operationally active subspace, the world-
+model representation of $c$ involves at most $N_{\max}$ world-model
+dimensions:
+\[
+  |\mathrm{dim}(c)| \;\leq\; N_{\max}, \qquad
+  \mathrm{dim}(c) := \{k \in \{1, \ldots, K\} :
+  \text{dim. } k \text{ enters } P(c) \text{ or } T(c)\}.
+\]
+\end{assumption}
+
+\textbf{Operational interpretation.}  Standard world-model
+parameterizations describe each capability with a finite, bounded
+set of properties (existence indicator, attestation status,
+exercise frequency, leverage estimate, etc.). The number of
+relevant properties per capability does not scale with the total
+number of capabilities. Pathological parameterizations where each
+capability adds $|P|$-many dimensions (e.g., pairwise-interaction
+parameterizations, where $\mathrm{dim}(c)$ scales with $|P|$ via
+all-pairs cross-effects) violate BD and are excluded from
+$\mathcal{D}$.
+
+\begin{assumption}[CL: Coordinate-Lipschitz parameterization]
+\label{ass:CL}
+For every capability $c \in P^{\mathrm{act}}$, the per-capability
+proxy-truth gap is bounded by the sum of per-dimension errors over
+$\mathrm{dim}(c)$:
+\[
+  |T(c) - P(c)| \;\leq\; \sum_{k \in \mathrm{dim}(c)} |\epsilon_k|,
+  \qquad \epsilon_k := \Wm_k - \Wm_k^*.
+\]
+where $\epsilon_k$ is the per-dimension world-model error from
+\citep[Phase~Redundancy]{lasser2026phase}.
+
+Equivalently: the parameterization is coordinate-Lipschitz with
+constant $\leq 1$ in each dimension. (Coordinate-Lipschitz with
+constant $L_k$ in dimension $k$ would replace $|\epsilon_k|$ by
+$L_k \cdot |\epsilon_k|$ in the sum; we set $L_k = 1$ by absorbing
+the $L_k$ factor into the world-model weighting $w_k$ without loss
+of generality.)
+\end{assumption}
+
+\textbf{Operational interpretation.}  CL is a regularity property
+of the world-model parameterization. If the world-model represents
+the proxy and truth values for each capability as a smooth function
+of the parameter vector $\Wm$, with bounded coordinate-wise
+sensitivity, then CL holds. Pathological parameterizations where
+small parameter perturbations produce arbitrary capability-level
+gaps (e.g., bilinear terms, threshold non-linearities) violate
+CL and are excluded from $\mathcal{D}$.
+
+\begin{assumption}[WB: Bounded weight floor]
+\label{ass:WB}
+The per-dimension weights $w_k$ in
+\citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov function
+$\Lyap(\Wm) = \sum_k w_k \epsilon_k(\Wm)^2$ are uniformly bounded
+below by some $w_{\min} > 0$ depending on $\mathcal{D}$ but
+independent of $|P|$:
+\[
+  \forall k \in \{1, \ldots, K\}, \quad w_k \geq w_{\min}.
+\]
+\end{assumption}
+
+\textbf{Operational interpretation.}  The Lyapunov weighting
+encodes safety-relevance per dimension; WB requires every dimension
+to have at least minimal safety-relevance. Dimensions with
+arbitrarily small weight are absorbed into noise; if the deployment
+parameterization includes truly negligible dimensions, those should
+be removed before applying the Lyapunov machinery.
+
+\section{Statement of Lemma 2}
+
+\begin{lemma}[Lyapunov-Goodhart quantitative bridge]
+\label{lem:2}
+Under conditions BD (bounded per-capability dimension count), CL
+(coordinate-Lipschitz parameterization), and WB (bounded weight
+floor) of the deployment class $\mathcal{D}$, and under invariants
+$I_1$ and $I_4$ (which together imply $I_2$:
+$\Lyap < \epsilon_{\mathrm{safe}}$ via
+\citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis),
+the proxy-truth sup-norm gap satisfies:
+\[
+  \Lyap(\Wm_t) \;<\; \epsilon_{\mathrm{safe}}
+  \quad \implies \quad
+  \epsnonres \;<\; f(\epsilon_{\mathrm{safe}})
+  \;:=\; \sqrt{N_{\max} \cdot \epsilon_{\mathrm{safe}} / w_{\min}}.
+\]
+The function $f$ is intensive in $|P|$ over $\mathcal{D}$: $f$
+depends on $\mathcal{D}$'s operational parameters
+($N_{\max}, w_{\min}$) but not on $|P|$.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We work over a deployment class $\mathcal{D}$ satisfying BD, CL,
+and WB throughout.
+
+\emph{Step 1 (per-capability gap bound).}  By Assumption CL, for
+every capability $c \in P^{\mathrm{act}}$:
+\[
+  |T(c) - P(c)| \;\leq\; \sum_{k \in \mathrm{dim}(c)} |\epsilon_k|.
+\]
+This bounds the per-capability proxy-truth gap by the sum of
+per-dimension errors over the dimensions that represent $c$.
+
+\emph{Step 2 (Cauchy-Schwarz on per-capability sum).}  Apply
+Cauchy-Schwarz to the sum $\sum_{k \in \mathrm{dim}(c)} |\epsilon_k|$
+with weights $a_k = \mathbb{1}[k \in \mathrm{dim}(c)]$ and
+$b_k = |\epsilon_k|$:
+\[
+  \sum_{k=1}^{K} a_k b_k \;\leq\; \sqrt{\sum_{k=1}^{K} a_k^2}
+  \cdot \sqrt{\sum_{k=1}^{K} b_k^2}.
+\]
+The first factor:
+\[
+  \sqrt{\sum_{k=1}^{K} a_k^2} \;=\; \sqrt{|\mathrm{dim}(c)|}
+  \;\leq\; \sqrt{N_{\max}}
+\]
+by Assumption BD. The second factor:
+\[
+  \sqrt{\sum_{k=1}^{K} b_k^2} \;=\; \sqrt{\sum_{k=1}^{K} \epsilon_k^2}.
+\]
+Combining:
+\[
+  \sum_{k \in \mathrm{dim}(c)} |\epsilon_k|
+  \;\leq\; \sqrt{N_{\max}} \cdot \sqrt{\sum_{k=1}^{K} \epsilon_k^2}.
+\]
+
+\emph{Step 3 (relate sum-of-squares to Lyapunov).}  By Assumption
+WB, $w_k \geq w_{\min} > 0$ for all $k$. Therefore:
+\[
+  \sum_{k=1}^{K} \epsilon_k^2 \;=\; \sum_{k=1}^{K} \frac{w_k}{w_k} \epsilon_k^2
+  \;\leq\; \sum_{k=1}^{K} \frac{w_k}{w_{\min}} \epsilon_k^2
+  \;=\; \frac{1}{w_{\min}} \sum_{k=1}^{K} w_k \epsilon_k^2
+  \;=\; \frac{\Lyap(\Wm)}{w_{\min}}.
+\]
+
+\emph{Step 4 (combine into per-capability bound).}  Substituting
+Step~3 into Step~2:
+\[
+  \sum_{k \in \mathrm{dim}(c)} |\epsilon_k|
+  \;\leq\; \sqrt{N_{\max}} \cdot \sqrt{\Lyap(\Wm) / w_{\min}}
+  \;=\; \sqrt{N_{\max} \cdot \Lyap(\Wm) / w_{\min}}.
+\]
+Combining with Step~1:
+\[
+  |T(c) - P(c)| \;\leq\; \sqrt{N_{\max} \cdot \Lyap(\Wm) / w_{\min}}.
+\]
+The right-hand side is independent of $c$.
+
+\emph{Step 5 (sup over $P^{\mathrm{act}}$).}  Taking supremum over
+$c \in P^{\mathrm{act}}$:
+\[
+  \epsnonres \;=\; \sup_{c \in P^{\mathrm{act}}} |T(c) - P(c)|
+  \;\leq\; \sqrt{N_{\max} \cdot \Lyap(\Wm) / w_{\min}}.
+\]
+
+\emph{Step 6 (apply Lyapunov bound).}  Under invariants $I_1$ and
+$I_4$, \citep[Phase~Redundancy]{lasser2026phase}'s contraction
+analysis (Theorem~1a of Phase Redundancy) gives
+$\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$ in the self-correcting
+basin. Substituting:
+\[
+  \epsnonres \;<\; \sqrt{N_{\max} \cdot \epsilon_{\mathrm{safe}} / w_{\min}}
+  \;=\; f(\epsilon_{\mathrm{safe}}).
+\]
+
+\emph{Step 7 (intensivity over $\mathcal{D}$).}  The bound
+$f(\epsilon_{\mathrm{safe}}) = \sqrt{N_{\max} \cdot \epsilon_{\mathrm{safe}} /
+w_{\min}}$ depends on:
+\begin{itemize}
+\item $N_{\max}$: deployment-class constant by Assumption BD,
+  independent of $|P|$.
+\item $\epsilon_{\mathrm{safe}}$: deployment-class threshold from
+  \citep[Phase~Redundancy]{lasser2026phase}'s self-correcting
+  basin, depending on the dynamics' constants
+  (correction rate, error-proportional rate, drift rate, subsumption frequency) which are operational rate
+  parameters, not $|P|$-dependent quantities.
+\item $w_{\min}$: deployment-class constant by Assumption WB,
+  independent of $|P|$.
+\end{itemize}
+Therefore $f(\epsilon_{\mathrm{safe}})$ is intensive in $|P|$ over
+$\mathcal{D}$, with bounding constant determined entirely by
+deployment-class parameters. $\Box$
+\end{proof}
+
+\section{Discussion of constants}
+
+The proof produces $f(\epsilon_{\mathrm{safe}}) = \sqrt{N_{\max}
+\cdot \epsilon_{\mathrm{safe}} / w_{\min}}$. The constants:
+\begin{itemize}
+\item $N_{\max}$: bounded per-capability dimension count
+  (\emph{deployment-policy-derived}, BD).  Operationally: a
+  property of the world-model parameterization choice. Calibrated
+  by enumerating the dimensions used per-capability in the
+  deployment's parameter vector.
+\item $\epsilon_{\mathrm{safe}}$: Phase Redundancy's safety
+  threshold (\emph{source-derived}, from
+  \citep[Phase~Redundancy]{lasser2026phase}'s policy-correctness
+  analysis).
+\item $w_{\min}$: minimum per-dimension weight
+  (\emph{deployment-policy-derived}, WB).  Set by the deployment's
+  safety-relevance weighting; calibrated by inspecting the
+  Lyapunov-weight assignment.
+\end{itemize}
+
+The bridge is square-root in $\epsilon_{\mathrm{safe}}$, which
+reflects the underlying $L^2 \to L^\infty$ Cauchy-Schwarz
+relationship between the weighted-Euclidean Lyapunov norm and the
+sup-norm proxy-truth gap. Operators can tighten the bound by
+either reducing $N_{\max}$ (simpler parameterization) or increasing
+$w_{\min}$ (uniform safety-relevance weighting), at deployment-
+engineering cost.
+
+\section{Connection to Theorem 1 Layer 1}
+
+Lemma~2's role in
+Theorem~\ref{thm:deployment_safety}'s Layer~1 proof:
+\begin{itemize}
+\item Steps 2--3 of the Layer~1 proof use Phase Redundancy's
+  contraction to establish $\Lyap < \epsilon_{\mathrm{safe}}$
+  under invariants $I_1, I_4$.
+\item Step~3 invokes Lemma~\ref{lem:2} to convert this Lyapunov
+  bound into a sup-norm gap bound:
+  $\epsnonres < f(\epsilon_{\mathrm{safe}})$.
+\item Step~5 then composes via Microfoundation's Goodhart bound:
+  $|g(T) - g(P)| \leq \mathrm{Lip}(g) \cdot \epsnonres <
+  \mathrm{Lip}(g) \cdot f(\epsilon_{\mathrm{safe}})$.
+\item Step~6 (now via Lemma~\ref{lem:1}'s generic-X form) packages
+  this with the residual floor and Lipschitz multiplication, giving
+  the intensive Layer~1 bound.
+\end{itemize}
+
+Lemma~2 is therefore the bridge that converts world-model accuracy
+(Phase Redundancy's deliverable) into capability-level gap accuracy
+(Microfoundation's input). Without Lemma~2, the Phase Redundancy
+machinery would not connect to the Goodhart bound; without Phase
+Redundancy, the Lyapunov bound on $\epsnonres$ would not have an
+operational invariant $I_2$ supporting it.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal Cauchy-Schwarz derivation bridging
+  \citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov function
+  to \citep[Microfoundation]{lasser2026micro}'s sup-norm gap.
+\item Three deployment-class conditions (BD, CL, WB) sufficient
+  for the bridge to hold, each with operational interpretation.
+\item An explicit intensive-in-$|P|$ bound $f(\epsilon_{\mathrm{safe}})
+  = \sqrt{N_{\max} \cdot \epsilon_{\mathrm{safe}} / w_{\min}}$ in
+  terms of deployment-class constants.
+\item The connection to Theorem 1 Layer 1's intensivity argument,
+  via Lemma 1's generic-X composition.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $f$. The square-root form is the
+  Cauchy-Schwarz upper bound; deployments may achieve sharper
+  bounds with additional structure (e.g., per-capability errors
+  that are not adversarially aligned).
+\item Existence of deployment configurations satisfying BD, CL, WB.
+  These are conditions on the parameterization choice; verification
+  is by inspection of the deployment's world-model design.
+\item Numerical values of $N_{\max}, w_{\min},
+  \epsilon_{\mathrm{safe}}$. These are deployment-policy-derived
+  constants whose calibration is part of the deployment-tooling
+  specification.
+\end{itemize}
+
+\section{Specific verification questions for codex review}
+
+\begin{enumerate}
+\item Is Assumption CL (coordinate-Lipschitz parameterization)
+  correctly stated as the precondition for Step~1's per-capability
+  gap bound? In particular: does $|T(c) - P(c)| \leq \sum_{k \in
+  \mathrm{dim}(c)} |\epsilon_k|$ require the coordinate-Lipschitz
+  constant to equal 1 (as in the absorption argument), or should
+  the lemma admit constants $L_k$ explicitly?
+
+\item Is Assumption WB (bounded weight floor) defensible? In
+  particular: does
+  \citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov machinery
+  require $w_k \geq w_{\min} > 0$, or can it accommodate $w_k = 0$
+  for some dimensions (with corresponding restrictions)?
+
+\item Is the Cauchy-Schwarz step (Step~2) rigorous? In particular,
+  is the indicator-function $a_k = \mathbb{1}[k \in
+  \mathrm{dim}(c)]$ choice the right way to bound the per-capability
+  sum, or is there a tighter bound using the actual coordinate
+  sensitivities?
+
+\item Is Step~3 (sum-of-squares to Lyapunov) rigorous?
+  Specifically, does $\sum \epsilon_k^2 \leq \Lyap / w_{\min}$
+  preserve all the structure we need, or does it lose information
+  that a tighter bound (e.g., using $w_k$ directly) would retain?
+
+\item Is the Layer 1 connection (\S6 of this draft) correct?
+  Specifically, does the sequence
+  $\Lyap < \epsilon_{\mathrm{safe}} \to \epsnonres < f \to
+  |g(T) - g(P)| < \mathrm{Lip}(g) \cdot f$ correctly trace the
+  Step 3, 5, 6 of Theorem 1's Layer 1 proof?
+\end{enumerate}
+
+\end{document}

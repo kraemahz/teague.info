@@ -1,0 +1,453 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}^{[W]}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\Lyap}{L}
+\newcommand{\Wm}{\hat{W}}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+
+\title{Lemma 2 (Lyapunov-Goodhart bridge): Full Proof Draft v2}
+\author{Paper 10 working draft for codex re-review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v1}
+
+V1 proved an absolute-sup-norm bound, but
+\citep[Microfoundation]{lasser2026micro} defines $\epsnonres$ as a
+\emph{relative} sup-norm $\sup_c |P(c) - T(c)| / T(c)$ over the
+operationally active subspace.  V2 fixes this and incorporates
+codex's other refinements.
+
+\textbf{Changes from v1:}
+\begin{itemize}
+\item \textbf{Main fix (relative sup-norm).} V2 adds an explicit
+  \textbf{truth floor} assumption $T(c) \geq T_{\min} > 0$ for $c
+  \in P^{\mathrm{act}}$, then bounds the relative sup-norm via
+  $|P(c)-T(c)|/T(c) \leq |P(c)-T(c)|/T_{\min}$. The factor
+  $1/T_{\min}$ enters $f(\epsilon_{\mathrm{safe}})$.
+\item \textbf{Q1 fix.} Keep coordinate-Lipschitz constants
+  $L_{c,k}$ explicit per (capability, dimension) pair, with simpler
+  $L_{\max}$ corollary.
+\item \textbf{Q2 fix.} Restrict WB to a safety-relevant subspace
+  $S \subseteq \{1, \ldots, K\}$, with $\mathrm{dim}(c) \subseteq S$
+  for all $c \in P^{\mathrm{act}}$ and $w_{\min} = \min_{k \in S}
+  w_k > 0$.
+\item \textbf{Q3, Q4 fix.} Use weighted-dual-norm Cauchy-Schwarz
+  form:
+  \[
+    \sum_{k \in \mathrm{dim}(c)} L_{c,k} |\epsilon_k|
+    \;\leq\;
+    \sqrt{\sum_{k \in \mathrm{dim}(c)} L_{c,k}^2 / w_k}
+    \cdot \sqrt{\Lyap}.
+  \]
+  Sharper than v1's indicator/$w_{\min}$ bound; matches Paper~6's
+  $w^{-1}$-norm appendix style.
+\item \textbf{Q5 fix.} Layer~1 trace section corrected per
+  Theorem~1's actual proof flow:
+  $\epsgap \leq \epsnonres + \lambda \epsfloor \to$ Goodhart bound
+  $\to$ substitute $f \to$ Lemma~1 packages with
+  $\mathrm{Lip}(g)$ multiplication.
+\end{itemize}
+
+\section{Deployment-class conditions}
+
+The proof uses four deployment-class conditions, each
+characterizing the world-model parameterization choice. Each is a
+property of the deployment class $\mathcal{D}$, fixed before $|P|$
+is varied.
+
+\begin{assumption}[BD: Bounded per-capability dimension count]
+\label{ass:BD}
+There exists a constant $N_{\max}$ depending on $\mathcal{D}$ but
+independent of $|P|$ such that, for every capability $c \in
+P^{\mathrm{act}}$:
+\[
+  |\mathrm{dim}(c)| \leq N_{\max}, \qquad
+  \mathrm{dim}(c) := \{k \in S :
+  \text{dim. } k \text{ enters } P(c) \text{ or } T(c)\},
+\]
+where $S \subseteq \{1, \ldots, K\}$ is the safety-relevant subspace
+(Assumption~\ref{ass:WB}).
+\end{assumption}
+
+\begin{assumption}[CL: Coordinate-Lipschitz parameterization with explicit constants]
+\label{ass:CL}
+For every capability $c \in P^{\mathrm{act}}$ and every dimension
+$k \in \mathrm{dim}(c)$, there exists a coordinate-Lipschitz
+constant $L_{c,k} \geq 0$ such that:
+\[
+  |P(c) - T(c)| \leq \sum_{k \in \mathrm{dim}(c)} L_{c,k} \cdot
+  |\epsilon_k|.
+\]
+The constants $L_{c,k}$ may depend on the deployment but not on
+$|P|$. We write $L_{\max} := \sup_{c, k} L_{c,k}$ for the deployment-
+class-uniform bound.
+\end{assumption}
+
+\textbf{Operational interpretation.} CL captures the parameterization
+regularity: small per-dimension errors produce small per-capability
+gaps, with rate $L_{c,k}$.  Standard parameterizations (smooth
+functions of $\Wm$ with bounded coordinate sensitivities) satisfy
+CL with $L_{\max} \leq O(1)$.  Pathological parameterizations
+(threshold non-linearities, bilinear capability-capability
+couplings) violate CL and are excluded from $\mathcal{D}$.
+
+\begin{assumption}[WB: Safety-relevant subspace and bounded weight floor]
+\label{ass:WB}
+There exists a safety-relevant subspace $S \subseteq \{1, \ldots,
+K\}$ such that:
+\begin{enumerate}
+\item $\mathrm{dim}(c) \subseteq S$ for every capability $c \in
+  P^{\mathrm{act}}$ (every dimension entering an active capability's
+  proxy or truth is safety-relevant).
+\item $w_k \geq w_{\min} > 0$ for all $k \in S$, where $w_{\min}$
+  depends on $\mathcal{D}$ but not on $|P|$.
+\end{enumerate}
+Dimensions outside $S$ may have $w_k = 0$ in
+\citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov function;
+they do not enter the Goodhart gap on $P^{\mathrm{act}}$.
+\end{assumption}
+
+\textbf{Operational interpretation.} WB encodes safety-relevance
+weighting: dimensions that cannot affect any active capability's
+gap are weighted zero (or simply excluded from the Lyapunov sum).
+Active capabilities must use only safety-relevant dimensions; the
+Lyapunov machinery on $S$ controls the proxy-truth gap on
+$P^{\mathrm{act}}$.
+
+\begin{assumption}[TF: Truth floor on $P^{\mathrm{act}}$]
+\label{ass:TF}
+There exists $T_{\min} > 0$ depending on $\mathcal{D}$ but
+independent of $|P|$, such that $T(c) \geq T_{\min}$ for every
+capability $c \in P^{\mathrm{act}}$.
+\end{assumption}
+
+\textbf{Operational interpretation.} The relative sup-norm
+$|P(c)-T(c)|/T(c)$ blows up if $T(c) \to 0$. TF ensures every
+operationally active capability has at least minimal realized
+volume.  Capabilities with $T(c) = 0$ should be excluded from
+$P^{\mathrm{act}}$ (they have nothing to compare).  Standard
+deployment configurations satisfy TF by construction: a capability
+that has zero realized volume is not in the operationally active
+subspace.
+
+\section{Statement of Lemma 2}
+
+\begin{lemma}[Lyapunov-Goodhart quantitative bridge, v2]
+\label{lem:2}
+Under conditions BD (bounded per-capability dimension count), CL
+(coordinate-Lipschitz parameterization with constants $L_{c,k}$),
+WB (safety-relevant subspace with weight floor), and TF (truth
+floor) of the deployment class $\mathcal{D}$, and under invariants
+$I_1$ and $I_4$ (which together imply $I_2$:
+$\Lyap < \epsilon_{\mathrm{safe}}$ via
+\citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis),
+the proxy-truth relative sup-norm gap satisfies:
+\[
+  \Lyap(\Wm_t) \;<\; \epsilon_{\mathrm{safe}}
+  \quad \implies \quad
+  \epsnonres \;<\; f(\epsilon_{\mathrm{safe}})
+  \;:=\; \frac{L_{\max} \sqrt{N_{\max} \cdot \epsilon_{\mathrm{safe}}
+  / w_{\min}}}{T_{\min}}.
+\]
+
+The simpler form follows from the tighter weighted-dual-norm bound
+\[
+  \sup_{c \in P^{\mathrm{act}}} |P(c) - T(c)|
+  \;\leq\;
+  \sup_{c \in P^{\mathrm{act}}}
+  \sqrt{\sum_{k \in \mathrm{dim}(c)} L_{c,k}^2 / w_k}
+  \cdot \sqrt{\Lyap},
+\]
+which is sharper when the deployment's per-coordinate sensitivities
+$L_{c,k}$ and weights $w_k$ are heterogeneous.
+
+The function $f$ is intensive in $|P|$ over $\mathcal{D}$: $f$
+depends on $\mathcal{D}$'s operational parameters
+($N_{\max}, L_{\max}, w_{\min}, T_{\min}$) but not on $|P|$.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We work over a deployment class $\mathcal{D}$ satisfying BD, CL,
+WB, and TF throughout.
+
+\emph{Step 1 (per-capability absolute gap).}  By Assumption CL,
+for every capability $c \in P^{\mathrm{act}}$:
+\[
+  |P(c) - T(c)| \leq \sum_{k \in \mathrm{dim}(c)} L_{c,k} \cdot
+  |\epsilon_k|.
+\]
+
+\emph{Step 2 (weighted-dual-norm Cauchy-Schwarz).}  Apply
+Cauchy-Schwarz to the sum on the right with weights $a_k =
+L_{c,k}/\sqrt{w_k}$ and $b_k = \sqrt{w_k} |\epsilon_k|$ (for $k \in
+\mathrm{dim}(c)$):
+\[
+  \sum_{k \in \mathrm{dim}(c)} L_{c,k} |\epsilon_k|
+  \;=\; \sum_{k \in \mathrm{dim}(c)}
+  \frac{L_{c,k}}{\sqrt{w_k}} \cdot \sqrt{w_k} |\epsilon_k|
+  \;\leq\;
+  \sqrt{\sum_{k \in \mathrm{dim}(c)} \frac{L_{c,k}^2}{w_k}}
+  \cdot \sqrt{\sum_{k \in \mathrm{dim}(c)} w_k \epsilon_k^2}.
+\]
+The second factor is bounded by $\sqrt{\Lyap}$ since
+$\mathrm{dim}(c) \subseteq S$ and the Lyapunov sum
+$\Lyap = \sum_{k \in S} w_k \epsilon_k^2$ extends over all of $S$.
+This is the tighter weighted-dual-norm form; the constants
+$L_{c,k}/\sqrt{w_k}$ are the dual-norm sensitivities.
+
+\emph{Step 3 (simpler form via $L_{\max}, w_{\min}, N_{\max}$).}
+For the appendix-friendly closed form, bound the weighted-dual-norm
+factor by deployment-class-uniform constants:
+\[
+  \sum_{k \in \mathrm{dim}(c)} \frac{L_{c,k}^2}{w_k}
+  \;\leq\; \frac{L_{\max}^2}{w_{\min}} \cdot |\mathrm{dim}(c)|
+  \;\leq\; \frac{L_{\max}^2 \cdot N_{\max}}{w_{\min}}.
+\]
+Therefore:
+\[
+  |P(c) - T(c)|
+  \;\leq\; L_{\max} \sqrt{\frac{N_{\max}}{w_{\min}}} \cdot \sqrt{\Lyap}.
+\]
+The right-hand side is independent of $c$.
+
+\emph{Step 4 (sup over $P^{\mathrm{act}}$).}  Taking supremum over
+$c \in P^{\mathrm{act}}$:
+\[
+  \sup_{c \in P^{\mathrm{act}}} |P(c) - T(c)|
+  \;\leq\; L_{\max} \sqrt{\frac{N_{\max} \cdot \Lyap}{w_{\min}}}.
+\]
+
+\emph{Step 5 (apply truth floor for relative sup-norm).}  By
+Assumption TF, $T(c) \geq T_{\min} > 0$ for all $c \in
+P^{\mathrm{act}}$.  Therefore $|P(c) - T(c)| / T(c) \leq |P(c) -
+T(c)| / T_{\min}$, and:
+\[
+  \epsnonres \;=\; \sup_{c \in P^{\mathrm{act}}}
+  \frac{|P(c) - T(c)|}{T(c)}
+  \;\leq\; \frac{1}{T_{\min}} \sup_{c \in P^{\mathrm{act}}}
+  |P(c) - T(c)|
+  \;\leq\; \frac{L_{\max}}{T_{\min}} \sqrt{\frac{N_{\max} \cdot \Lyap}
+  {w_{\min}}}.
+\]
+
+\emph{Step 6 (apply Lyapunov bound).}  Under invariants $I_1$ and
+$I_4$, \citep[Phase~Redundancy]{lasser2026phase}'s contraction
+analysis (Theorem~1a) gives $\Lyap(\Wm_t) <
+\epsilon_{\mathrm{safe}}$ in the self-correcting basin.
+Substituting:
+\[
+  \epsnonres \;<\; \frac{L_{\max}}{T_{\min}}
+  \sqrt{\frac{N_{\max} \cdot \epsilon_{\mathrm{safe}}}{w_{\min}}}
+  \;=\; f(\epsilon_{\mathrm{safe}}).
+\]
+
+\emph{Step 7 (intensivity over $\mathcal{D}$).}  The bound depends
+on:
+\begin{itemize}
+\item $L_{\max}$: deployment-class constant (CL), independent of
+  $|P|$.
+\item $N_{\max}$: deployment-class constant (BD), independent of
+  $|P|$.
+\item $\epsilon_{\mathrm{safe}}$: \citep[Phase~Redundancy]{lasser2026phase}'s
+  safety threshold, deployment-class constant.
+\item $w_{\min}$: deployment-class constant (WB), independent of
+  $|P|$.
+\item $T_{\min}$: deployment-class constant (TF), independent of
+  $|P|$.
+\end{itemize}
+Therefore $f(\epsilon_{\mathrm{safe}})$ is intensive in $|P|$ over
+$\mathcal{D}$.  $\Box$
+\end{proof}
+
+\section{Discussion of constants}
+
+The proof produces $f(\epsilon_{\mathrm{safe}}) = (L_{\max}/T_{\min})
+\sqrt{N_{\max} \epsilon_{\mathrm{safe}}/w_{\min}}$, with constants
+of two kinds:
+
+\textbf{Source-derived constants:}
+\begin{itemize}
+\item $\epsilon_{\mathrm{safe}}$: \citep[Phase~Redundancy]{lasser2026phase}'s
+  policy-correctness threshold.
+\item $w_k$ on $S$: \citep[Phase~Redundancy]{lasser2026phase}'s
+  Lyapunov weights, with $w_{\min}$ inherited.
+\end{itemize}
+
+\textbf{Deployment-policy-derived constants:}
+\begin{itemize}
+\item $N_{\max}$: bounded per-capability dimension count (BD).
+  Property of the world-model parameterization choice.
+\item $L_{\max}$, $L_{c,k}$: coordinate-Lipschitz constants (CL).
+  Property of the parameterization's smoothness.
+\item $T_{\min}$: truth floor (TF).  Property of the operational
+  active-subspace selection ($P^{\mathrm{act}}$).
+\end{itemize}
+
+The square-root form in $\epsilon_{\mathrm{safe}}$ reflects the
+$L^2 \to L^\infty$ Cauchy-Schwarz relationship between the
+weighted-Euclidean Lyapunov norm and the (now relative) sup-norm
+proxy-truth gap.  The factor $L_{\max}/T_{\min}$ captures the
+parameterization's coordinate-sensitivity-to-truth-floor ratio.
+
+\textbf{Tighter form via heterogeneous sensitivities.}  When the
+deployment's $L_{c,k}$ and $w_k$ are heterogeneous, the
+weighted-dual-norm bound
+\[
+  \sup_{c} |P(c) - T(c)|
+  \;\leq\; \sup_{c} \sqrt{\sum_{k \in \mathrm{dim}(c)} L_{c,k}^2 / w_k}
+  \cdot \sqrt{\Lyap}
+\]
+is sharper than the closed-form $L_{\max}\sqrt{N_{\max}/w_{\min}}
+\sqrt{\Lyap}$.  Operators can use the tighter form for deployment-
+specific calibration; the closed form is the conservative
+upper bound for general results.
+
+\section{Connection to Theorem 1 Layer 1 (corrected)}
+
+Per codex's Q5 review, the corrected trace of Lemma~2's role in
+Theorem~1's Layer~1 proof:
+
+\begin{enumerate}
+\item Steps 2--3 of Layer~1 use
+  \citep[Phase~Redundancy]{lasser2026phase}'s contraction to
+  establish $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$ under
+  invariants $I_1, I_4$.
+\item Step~3 of Layer~1 invokes Lemma~\ref{lem:2} to convert this
+  Lyapunov bound into a relative sup-norm gap:
+  $\epsnonres < f(\epsilon_{\mathrm{safe}})$.
+\item Step~4 of Layer~1 invokes the gap decomposition:
+  $\epsgap \leq \epsnonres + \lambda \epsfloor$ (where $\epsgap$ is
+  the total relative gap).
+\item Step~5 of Layer~1 applies
+  \citep[Microfoundation]{lasser2026micro}'s Goodhart bound:
+  $|g(\Ttruth) - g(\Pproxy)| \leq \mathrm{Lip}(g) \cdot \epsgap
+  \leq \mathrm{Lip}(g) \cdot (\epsnonres + \lambda \epsfloor)$.
+\item Step~5 also defines $h_{\mathrm{static}}(\theta) :=
+  f(\epsilon_{\mathrm{safe}}) + \lambda \epsfloor$ (substituting
+  $f$ from Lemma~\ref{lem:2}).
+\item Step~6 invokes Lemma~\ref{lem:1}'s generic-X form with $X =
+  f(\epsilon_{\mathrm{safe}})$ to package
+  $h_{\mathrm{static}}(\theta)$ as intensive, with
+  $\mathrm{Lip}(g)$ multiplication preserving intensivity by
+  condition (C6).
+\end{enumerate}
+
+Lemma~2 is therefore the bridge that converts world-model accuracy
+(\citep[Phase~Redundancy]{lasser2026phase}'s deliverable) into
+capability-level relative-sup-norm gap accuracy
+(\citep[Microfoundation]{lasser2026micro}'s input).  Without
+Lemma~2, the Phase Redundancy machinery would not connect to the
+Goodhart bound; without Phase Redundancy, the Lyapunov bound on
+$\epsnonres$ would not have an operational invariant $I_2$
+supporting it.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal Cauchy-Schwarz derivation in weighted-dual-norm form
+  bridging \citep[Phase~Redundancy]{lasser2026phase}'s Lyapunov
+  function to \citep[Microfoundation]{lasser2026micro}'s relative
+  sup-norm gap.
+\item Four deployment-class conditions (BD, CL, WB, TF) sufficient
+  for the bridge to hold, each with operational interpretation.
+\item An explicit intensive-in-$|P|$ bound
+  $f(\epsilon_{\mathrm{safe}}) = (L_{\max}/T_{\min})
+  \sqrt{N_{\max} \epsilon_{\mathrm{safe}}/w_{\min}}$ in
+  deployment-class constants.
+\item A tighter weighted-dual-norm form for deployment-specific
+  calibration.
+\item Corrected Layer~1 connection per codex Q5.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $f$ in the closed form. The
+  weighted-dual-norm form is tighter; deployments may use it for
+  sharper bounds.
+\item Existence of deployment configurations satisfying BD, CL,
+  WB, TF. These are conditions on the parameterization choice and
+  the operational active-subspace selection; verification by the
+  deployment-tooling specification.
+\item Numerical values of $N_{\max}, L_{\max}, w_{\min}, T_{\min},
+  \epsilon_{\mathrm{safe}}$. These are deployment-policy- and
+  source-paper-derived constants whose calibration is part of the
+  deployment-tooling specification.
+\end{itemize}
+
+\section{Specific verification questions for v2 codex review}
+
+\begin{enumerate}
+\item Is the relative-sup-norm fix (TF assumption + factor
+  $1/T_{\min}$) correctly handled? In particular, does the
+  derivation $|P(c)-T(c)|/T(c) \leq |P(c)-T(c)|/T_{\min}$ followed
+  by Step~4 (sup over absolute) give the right relative-sup-norm
+  bound, or does the sup-of-ratio require a different argument
+  (e.g., bounding the ratio directly per-capability)?
+
+\item Is Assumption CL's explicit-$L_{c,k}$ form correctly stated?
+  The proof uses $L_{\max}$ for the closed form. Should the lemma
+  also explicitly note when the tighter weighted-dual-norm form
+  (Step~2 unbounded) gives materially better results?
+
+\item Is Assumption WB's safety-relevant subspace $S$ formulation
+  correctly aligned with
+  \citep[Phase~Redundancy]{lasser2026phase}'s actual Lyapunov
+  setup? In particular, does PR's Lyapunov function operate on a
+  fixed safety-relevant subspace, or does it sum over all
+  dimensions $k = 1, \ldots, K$?
+
+\item Is the Layer 1 trace (\S"Connection to Theorem 1 Layer 1
+  (corrected)") now correct against the current
+  \texttt{main\_theorem.tex} actual proof? In particular, does
+  Step~5's substitution of $f(\epsilon_{\mathrm{safe}})$
+  for $\epsnonres$ before applying the Goodhart bound match the
+  current flow?
+
+\item Is the constant taxonomy (source-derived vs.\
+  deployment-policy-derived) appropriate? V2 puts $T_{\min}$ in
+  the policy-derived bucket because it depends on the operational
+  active-subspace selection. Is this the right classification?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,870 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\Aadv}{A_{\mathrm{adv}}}
+\newcommand{\deltaadv}{\delta_{\mathrm{adv}}}
+\newcommand{\deltastar}{\delta_{*}}
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+
+\newcommand{\Tbeta}{T_{\beta}}
+\newcommand{\Ncasc}{N_{\mathrm{cascade}}}
+\newcommand{\Nev}{N_{\mathrm{events}}}
+\newcommand{\bclk}{\beta_{\mathrm{clk}}}
+
+\newcommand{\bcal}{\beta_{\mathrm{cal}}}
+
+\title{Lemma 6 ($h_{\mathrm{detect}}$ intensivity): Full Proof Draft v5}
+\author{Paper 10 working draft for codex re-review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v4}
+
+V4 corrected v3's $\kappa$-scaling error and introduced (C5.HOEFF)
++ strengthened (C11.CLK).  Round~D returned ``v5 needed'': the
+$1/\deltastar^2$ scaling is conceptually correct, but v4's
+specific formula
+$\Tbeta = \max\{2A/\deltastar, R^2\log(1/\beta)/(2\deltastar^2)\}$
+is not a rigorous inversion of Lemma~4's exact Hoeffding bound:
+substituting $t = R^2\log(1/\beta)/(2\deltastar^2)$ does not give
+exponent $\geq \log(1/\beta)$ when $A > 0$.
+
+\textbf{Round D significant problem (Q1, factor-of-4 error).}
+For $T \geq 2A/\deltastar$, we have $T\deltastar - A \geq
+T\deltastar/2$, hence $(T\deltastar - A)^2 \geq T^2\deltastar^2/4$.
+Substituting into the Hoeffding bound:
+$2(T\deltastar - A)^2/(TR^2) \geq T\deltastar^2/(2R^2)$.
+For this to exceed $\log(1/\beta)$, we need $T \geq 2R^2\log(1/\beta)/
+\deltastar^2$ — \emph{four times} v4's coefficient.
+
+V5 uses the conservative form
+\[
+  \Tbeta(\beta, \deltastar) \;:=\; \max\!\left\{
+  \frac{2A}{\deltastar},\;
+  \frac{2 R^2 \log(1/\beta)}{\deltastar^2}\right\}
+\]
+which rigorously gives $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq
+\beta$.
+
+\textbf{Round D other issues.}
+\begin{itemize}
+\item Q2: (C5.HOEFF) ``family-wise corrected'' clause too weak —
+  Bonferroni controls error probability, not LLR range. Need
+  fixed-cardinality monitored partitions or LLR clipping.
+\item Q3: (C11.CLK) sound if $\Ncasc \geq \Tbeta$ is hard audit
+  constraint; if empirically estimated, calibration uncertainty
+  needs separate $\bcal$ failure probability.
+\item Q4: V4 internal labels clean; integration must rewrite
+  Lemma~5d and Theorem~1's Layer~2 proof to drop legacy $\beta'$.
+\item Q5: Still missing — $\alpha$ explicit clause if multiplicity
+  varies; channel multiplicity (C5.MULT); martingale-difference /
+  i.i.d. increment structure (Hoeffding requires more than bounded
+  range); LLR finiteness/support overlap.
+\end{itemize}
+
+\textbf{Changes from v4 (Round D fixes):}
+
+\begin{itemize}
+\item \textbf{Q1 fix (rigorous Hoeffding inversion).}  Replaced
+  $R^2\log(1/\beta)/(2\deltastar^2)$ with
+  $2R^2\log(1/\beta)/\deltastar^2$ (factor of~4).  Step~5 of the
+  proof now uses the rigorous chain $T \geq 2A/\deltastar
+  \Rightarrow (T\delta - A)^2 \geq T^2\delta^2/4
+  \Rightarrow$ exponent $\geq T\delta^2/(2R^2)$, eliminating the
+  asymptotic-approximation gap in v4.
+\item \textbf{Q2 fix.  (C5.HOEFF) strengthened, (C5.MULT) added.}
+  Replaced ``family-wise corrected'' with explicit fixed-cardinality
+  monitored partition + uniform LLR clip.  Channel-multiplicity
+  policy promoted to its own clause (C5.MULT) for clarity.
+\item \textbf{Q3 fix.  Calibration-uncertainty clause $\bcal$.}
+  Added explicit treatment: $\Ncasc \geq \Tbeta$ is certified at
+  audit time as a hard constraint; calibration error is folded
+  into a separate $\bcal$ probability if the operator chooses
+  empirical estimation.  Total Layer~2 failure becomes
+  $\beta + \bclk + \bcal$ in the most general form, $\beta + \bclk$
+  if calibration is certified.
+\item \textbf{Q4 fix.  Integration prerequisite list.}  Spelled out
+  the Lemma~5d / main\_theorem.tex / deployment\_tooling.tex
+  rewrites required at integration: drop $\beta'$ everywhere, use
+  $\beta + \bclk + \bcal$ for total Layer~2 failure.
+\item \textbf{Q5 fix.  Additional clauses.}
+  \begin{itemize}
+  \item (C5.IID): SPRT log-likelihood-ratio increments are
+    martingale-differences under $p_1$ (or i.i.d. under fixed
+    distribution), with bounded conditional variance proxy.
+  \item (C5.SUPP): per-channel likelihood ratio satisfies
+    $p_0(x), p_1(x) \geq \epsilon > 0$ for all $x$ in the
+    monitored partition (or LLR is clipped to $[-R, R]$).
+  \item $\alpha$ explicit: monitor Type-I rate, deployment-class
+    if (C5.MULT) bounds multiplicity.
+  \end{itemize}
+\item \textbf{Lemma 4 prose nit.}  Round~D flagged that
+  appendix's prose ``$\Lambda_t < A$ is sufficient'' should read
+  ``necessary''.  This is an integration item for §A.4, not a
+  Lemma~6 issue.
+\end{itemize}
+
+\textbf{Carried forward from v4 (unchanged in v5):}
+\begin{itemize}
+\item Supremum-form $h_{\mathrm{detect}}(\theta) := \sup_s
+  \epsgap(s)$.
+\item Discrete boundary convention $t_0 := t_0^-$.
+\item $\rhogap$ rename + (C11) framing.
+\item Union-class KL floor $\deltastar$.
+\item (C11.CLK) deterministic floor + $\bclk$ structure.
+\end{itemize}
+
+\textbf{Round C other issues.}
+\begin{itemize}
+\item (C11.CLK) too weak: existence of $N_{\min}, q_{\min} > 0$
+  doesn't imply $\Tbeta \leq \tau_{\mathrm{meta}}$ with calibrated
+  probability.
+\item $\beta'$ mislabeled: v3 used $\beta' = \exp(-\kappa
+  \tau_{\mathrm{meta}} \deltastar)$ (the SPRT detection-tail form)
+  for the cascade-clock event $\{\Tbeta \leq \tau_{\mathrm{meta}}\}$,
+  conflating two distinct probabilities.
+\item Constant taxonomy missing: $\alpha$ (Type-I rate), $R$ (LLR
+  range), channel multiplicity policy, separate $\bclk$ for clock
+  failure, separate from SPRT detection failure.
+\item Q2 boundary convention sufficient inside Lemma 6 but must
+  surface into Theorem~1's Layer~2 proof at integration time.
+\end{itemize}
+
+\textbf{Changes from v3 (Round C fixes):}
+
+\begin{itemize}
+\item \textbf{Q1 fix (algebra).}  Define $\Tbeta$ directly from
+  Lemma~4's Hoeffding form:
+  \[
+    \Tbeta(\beta, \deltastar) \;:=\;
+    \max\!\left\{\frac{2A}{\deltastar},\;
+    \frac{R^2 \log(1/\beta)}{2 \deltastar^2}\right\},
+  \]
+  where $A := \log((1-\beta)/\alpha)$ is Paper~5's SPRT threshold
+  and $R$ is the LLR-increment range from (C5.HOEFF).  In the
+  asymptotic regime $\Tbeta \gg A/\deltastar$, the second term
+  dominates and gives $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq
+  \beta$.  Critical: $\Tbeta$ scales as $1/\deltastar^2$, not
+  $1/\deltastar$.
+\item \textbf{(C5.HOEFF) added.}  Bounded LLR-increment range
+  clause: per-step SPRT log-likelihood-ratio increments are bounded
+  in absolute value by $R$, with $R$ deployment-class (not scaling
+  with $|P|$ via channel multiplicity).
+\item \textbf{(C11.CLK) strengthened.}  Replaced existence-only
+  formulation with: there exists deterministic $\Ncasc$ such that
+  $\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc] \geq 1 - \bclk$, and
+  $\Ncasc \geq \Tbeta$ as an audit-time calibration constraint.
+  This makes the bound $\Tbeta \leq \tau_{\mathrm{meta}}$
+  operational with named failure probability $\bclk$.
+\item \textbf{$\beta'$ relabeled.}  V3's use of $\beta' = \exp(-\kappa
+  \tau_{\mathrm{meta}} \deltastar)$ is dropped from this lemma's
+  statement.  The cascade-clock event $\{\Tbeta \leq
+  \tau_{\mathrm{meta}}\}$ now has its own probability bound via
+  $\bclk$ from (C11.CLK).  Total Layer~2 failure probability is
+  $\beta + \bclk$.
+\item \textbf{Constant taxonomy completed.}  $\alpha$ surfaced as
+  monitor-design parameter; $R$ surfaced via (C5.HOEFF); $\bclk$
+  surfaced via (C11.CLK); channel multiplicity flagged as
+  deployment-class via (C5.HOEFF) range constancy.
+\item \textbf{Q2 integration note.}  V3's $t_0 := t_0^-$ convention
+  carried forward; integration must update Theorem~1's Layer~2
+  proof to express the Layer~1$\to$Layer~2 transition in SPRT
+  exposure clock.
+\end{itemize}
+
+\textbf{Carried forward from v3 (unchanged in v4):}
+\begin{itemize}
+\item Supremum-form $h_{\mathrm{detect}}(\theta) := \sup_s
+  \epsgap(s)$ matching Theorem~1's Layer~2 application.
+\item Discrete boundary convention $t_0 := t_0^-$.
+\item $\rhogap$ rename and reinforcement that $\rhogap$ excludes
+  $K_{\mathrm{Lip}}$.
+\item Union-class KL floor $\deltastar = \min(\deltaadv,
+  \delta_{\mathrm{adv}}^{\mathrm{env}})$.
+\item (C11) framed for promotion to theorem-level condition;
+  source-citation correction re Paper~9.
+\end{itemize}
+
+\section{Setup: the monitoring clock and $h_{\mathrm{detect}}$}
+
+Theorem~\ref{thm:deployment_safety}'s Layer~2 covers adversarial
+strategies $q \in \Aadv \cup \Aadv^{\mathrm{env}}$ during the
+detection window
+$[t_0, t_0 + T_{\mathrm{detect}}]$.
+
+\paragraph{Boundary convention.}  We define $t_0$ as the
+\emph{last SPRT exposure step} at which the deployment is still
+within Layer~1's safe region; equivalently, $t_0$ is the SPRT step
+immediately preceding the first crossing event ($t_0 := t_0^-$ in
+the v2 notation).  $T_{\mathrm{detect}}$ is the number of SPRT
+steps from $t_0$ until the SPRT log-likelihood ratio crosses the
+detection threshold (Lemma~\ref{lem:4}); the crossing step itself
+is counted within $T_{\mathrm{detect}}$.
+
+Under this convention, at $s = s_0 = t_0$ the Layer~1 bound applies
+exactly: $\epsgap(t_0) \leq h_{\mathrm{static}}(\theta)$.  The
+single-step jump that first crosses Layer~1 occurs at $s_1$, and is
+bounded by $\rhogap(\deltastar)$ via (C11).  No ``absorbed buffer''
+is required.
+
+\paragraph{Detection-window bound.}
+Layer~2 applies $h_{\mathrm{detect}}$ as a point-in-time bound:
+\[
+  |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; \mathrm{Lip}(g) \cdot
+  h_{\mathrm{detect}}(\theta)
+  \quad \text{for all } s \in [t_0, t_0 + T_{\mathrm{detect}}].
+\]
+Therefore $h_{\mathrm{detect}}$ must bound $\epsgap(s)$ at every
+$s$ in the window:
+\[
+  h_{\mathrm{detect}}(\theta) \;:=\; \sup_{s \in
+  [t_0, t_0 + T_{\mathrm{detect}}]} \epsgap(s).
+\]
+
+\paragraph{The monitoring clock and (C11.CLK) clock comparability.}
+The SPRT machinery (Paper~5) operates on a per-event clock: each
+ledger entry triggers an SPRT update, and the per-step KL divergence
+drives detection.  All times in this lemma — $t_0$,
+$T_{\mathrm{detect}}$, $\Tbeta$, and the cascade-time references
+$\tau_{\mathrm{meta}}$, $T_{\mathrm{cascade}}$ — are expressed in
+this SPRT exposure clock.
+
+\begin{assumption}[(C5.HOEFF): Bounded LLR-increment range with explicit clipping]
+\label{ass:C5HOEFF}
+The per-step SPRT log-likelihood-ratio increments
+$\ell_n := \log(p_1(X_n)/p_0(X_n))$ are bounded in absolute value
+by a deployment-class constant $R$:
+\[
+  |\ell_n| \;\leq\; R \quad \text{almost surely, for all } n,
+\]
+with $R$ independent of $|P|$.  The bound is enforced by uniform
+LLR clipping: $\ell_n^{\mathrm{used}} := \mathrm{clip}(\ell_n, -R, R)$.
+Clipping with deployment-class $R$ ensures the Hoeffding step
+applies regardless of underlying-distribution support tails.
+\end{assumption}
+
+\begin{assumption}[(C5.MULT): Bounded channel multiplicity]
+\label{ass:C5MULT}
+The deployment's channel-monitoring policy uses a fixed-cardinality
+monitored partition: the number of monitored channels $K_{\mathrm{ch}}$
+is a deployment-class constant independent of $|P|$.  In particular,
+the four-channel agent-side observable (Paper~5) plus the
+environment-side mirror (Paper~10 Lemma~5e) gives
+$K_{\mathrm{ch}} \leq 8$; multinomial channel partitions, if used,
+must use bounded-cardinality coarsening.
+\end{assumption}
+
+\begin{assumption}[(C5.IID): Adapted/i.i.d.\ LLR increments]
+\label{ass:C5IID}
+Under the alternative hypothesis $p_1$, the per-step LLR increments
+$\ell_n$ are either (a) i.i.d.\ with finite mean and bounded range
+$R$ ((C5.HOEFF)), or (b) form an adapted martingale-difference
+sequence with bounded increments and conditional drift
+$\mathbb{E}[\ell_n \mid \mathcal{F}_{n-1}] \geq \delta_n \geq
+\deltastar$.  The Hoeffding-Azuma machinery in Lemma~4 applies
+under either form.
+\end{assumption}
+
+\begin{assumption}[(C5.SUPP): LLR finiteness / support overlap]
+\label{ass:C5SUPP}
+Either (a) the channel-likelihood pair $(p_0, p_1)$ has overlapping
+support with $p_0(x), p_1(x) \geq \epsilon > 0$ for all $x$ in the
+monitored partition (with $\epsilon$ a deployment-class constant), or
+(b) (C5.HOEFF)'s clipping handles non-overlap by capping the LLR.
+This ensures $\ell_n$ is almost-surely finite.
+\end{assumption}
+
+\begin{assumption}[(C11.CLK): Clock comparability with calibrated probability]
+\label{ass:C11CLK}
+There exists a deterministic deployment-class constant $\Ncasc$ and
+a calibrated clock-failure probability $\bclk \in (0,1)$ such that:
+\[
+  \Pr\bigl[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc\bigr] \;\geq\;
+  1 - \bclk,
+\]
+where $\Nev(\cdot)$ is the SPRT exposure event count up to wall-clock
+time $\cdot$.  Furthermore, the operator certifies (at audit time, as
+a \emph{hard} constraint) that
+\[
+  \Ncasc \;\geq\; \Tbeta(\beta, \deltastar)
+\]
+holds, where $\Tbeta$ is the SPRT detection quantile defined below.
+
+\textbf{Optional empirical-calibration variant.}  If $\Ncasc$ or
+$\Tbeta$ are estimated empirically rather than certified
+conservatively, the operator must specify a calibration-uncertainty
+failure probability $\bcal \in (0,1)$ such that
+$\Pr[\Ncasc^{\mathrm{est}} \geq \Ncasc^{\mathrm{true}}] \geq 1 - \bcal$,
+and total Layer~2 failure inflates accordingly to $\beta + \bclk +
+\bcal$.  In the certified-conservative case, $\bcal = 0$.
+\end{assumption}
+
+\textbf{Why (C11.CLK) is strengthened in v5.}  V3's existence-only
+form ($N_{\min}, q_{\min}$) did not chain to the
+$\Tbeta \leq \tau_{\mathrm{meta}}$ inequality.  V4's deterministic
+floor with $\bclk$ chains correctly but treated audit calibration
+as implicit.  V5 makes the audit-vs-empirical distinction explicit:
+$\bcal = 0$ in the certified case, $\bcal > 0$ when estimating.
+
+\textbf{Why (C5.HOEFF), (C5.MULT), (C5.IID), (C5.SUPP) are
+required.}  Lemma~4's Hoeffding step requires four ingredients:
+bounded range (C5.HOEFF), constant cardinality (C5.MULT),
+adapted/i.i.d.\ structure (C5.IID), and almost-sure finiteness
+(C5.SUPP).  V4 conflated some of these; v5 separates them so each
+audit hook is targetable.  Channel multiplicity scaling with $|P|$
+(broken (C5.MULT)) would inflate $R$ via per-channel cells; absence
+of clipping or support overlap (broken (C5.HOEFF) or (C5.SUPP))
+would give unbounded LLR increments; non-adapted increments (broken
+(C5.IID)) would invalidate Hoeffding-Azuma.
+
+\section{Bounded gap-growth-rate condition (C11)}
+
+\begin{assumption}[(C11): Bounded gap-growth rate per SPRT step]
+\label{ass:C11}
+For any adversarial strategy $q \in \Aadv \cup
+\Aadv^{\mathrm{env}}$ producing channel deviations bounded by
+$\deltastar = \min(\deltaadv, \delta_{\mathrm{adv}}^{\mathrm{env}})$
+(the Lemmas~5b and~5e KL floors), the per-SPRT-step proxy-truth
+gap growth is bounded:
+\[
+  (\Delta \epsgap)_n \;:=\; \epsgap(s_n) - \epsgap(s_{n-1}) \;\leq\;
+  \rhogap(\deltastar),
+\]
+where $\rhogap(\deltastar)$ is a deployment-class constant
+depending on $\mathcal{D}$'s operational parameters (channel
+sensitivity-to-gap mapping, event-rate normalization) but
+independent of $|P|$.
+
+\textbf{Continuous-time variant.}  Equivalently, in continuous
+SPRT exposure clock $s$:
+\[
+  \frac{d \epsgap}{ds} \;\leq\; \rhogap(\deltastar).
+\]
+The discrete and continuous forms agree under fixed step duration
+or bounded event-rate normalization.
+\end{assumption}
+
+\textbf{Operational interpretation.}  Channel deviations bounded by
+$\deltastar$ (else SPRT fires faster) limit how much $\epsgap$ can
+grow per SPRT step.  The constant $\rhogap$ characterizes the
+deployment's channel-deviation-to-gap-growth coupling.
+
+\textbf{$\rhogap$ is calibrated in the $\epsgap$ metric only.}
+$\rhogap$ is a bound on the per-step proxy-truth gap process
+$\epsgap = $ (Microfoundation's relative sup-norm), \emph{before}
+applying any alignment-property mapping $g$.  In particular,
+$\rhogap$ excludes the Lipschitz constant $K_{\mathrm{Lip}}$ of $g$;
+the Layer~2 operational form multiplies $h_{\mathrm{detect}}$ by
+$K_{\mathrm{Lip}}$ separately via (C6).  This eliminates any
+double-counting between (C11) gap-dynamics and (C6) alignment-side
+smoothness.
+
+\textbf{(C11) is new content.}  \citep[Microfoundation]{lasser2026micro}'s
+``$T$ failure modes'' remark notes adequacy/failure modes of the
+operational truth $T$ but does not establish a formal per-step
+gap-growth-rate bound.  (C11) is a Paper~10 operational assumption,
+analogous to (C7) bounded co-evolution and SA1 HHI surrogate
+adequacy: deployment-class condition with empirical testability,
+not a derived consequence of source-paper machinery.
+
+\section{Statement of Lemma 6 (v5)}
+
+\begin{lemma}[$h_{\mathrm{detect}}$ intensivity]
+\label{lem:6}
+Under Theorem~\ref{thm:deployment_safety}'s conditions (C5)
+continuous SPRT monitoring, (C5.HOEFF) bounded LLR-increment range,
+(C5.MULT) bounded channel multiplicity, (C5.IID) adapted/i.i.d.\
+LLR increments, (C5.SUPP) LLR finiteness, (C11) bounded gap-growth
+rate, and (C11.CLK) clock comparability with calibrated
+probability, combined with Lemma~\ref{lem:4} (SPRT Wald--Hoeffding
+tail bound) and Lemma~\ref{lem:1} (Layer~1 intensivity):
+
+\textbf{Detection quantile.}  Define the SPRT high-probability
+detection quantile via the conservative inversion of Lemma~4's
+Hoeffding bound:
+\[
+  \Tbeta(\beta, \deltastar) \;:=\;
+  \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2 R^2 \log(1/\beta)}{\deltastar^2}\right\},
+\]
+where $A := \log((1-\beta)/\alpha)$ is Paper~5's SPRT threshold,
+$\alpha$ is the Type-I error rate (deployment-class monitor
+parameter under (C5.MULT)), $R$ is the LLR-increment range bound
+under (C5.HOEFF), $\beta$ is the target detection-tail failure
+probability, and $\deltastar = \min(\deltaadv,
+\delta_{\mathrm{adv}}^{\mathrm{env}})$ is the union-class KL floor
+(Lemmas~\ref{lem:5b}, \ref{lem:5e}).
+
+(i) [Tail bound on $T_{\mathrm{detect}}$.]  $\Tbeta$ rigorously
+satisfies $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$ via
+Lemma~\ref{lem:4}'s Hoeffding form (proved in Step~5).
+
+(ii) [Detection-window supremum.]  On the event
+$\{T_{\mathrm{detect}} \leq \Tbeta\}$ (probability at least
+$1-\beta$):
+\[
+  h_{\mathrm{detect}}(\theta) \;:=\;
+  \sup_{s \in [t_0, t_0 + T_{\mathrm{detect}}]} \epsgap(s)
+  \;\leq\; h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
+  \Tbeta.
+\]
+
+(iii) [Lead-time-before-cascade.]  By (C11.CLK)'s deterministic
+floor $\Ncasc \geq \Tbeta$ and clock-failure probability $\bclk$
+(plus calibration-uncertainty $\bcal$ if applicable):
+\[
+  \Pr\bigl[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})\bigr] \;\geq\; 1 -
+  \bclk - \bcal,
+\]
+i.e., $\Tbeta \leq \tau_{\mathrm{meta}}$ in SPRT exposure clock
+with probability at least $1 - \bclk - \bcal$.  In the certified
+case ($\bcal = 0$), this reduces to $1 - \bclk$.
+
+(iv) [Layer~2 total failure bound.]  Total Layer~2 failure
+probability (detection failure or cascade-clock miscalibration):
+\[
+  \Pr[\text{Layer~2 fails}] \;\leq\; \beta + \bclk + \bcal.
+\]
+
+\textbf{Intensivity.}  $h_{\mathrm{detect}}(\theta)$ is intensive
+in $|P|$ over the deployment class $\mathcal{D}$:
+\begin{itemize}
+\item $h_{\mathrm{static}}(\theta)$: intensive by Lemma~\ref{lem:1}.
+\item $\rhogap(\deltastar)$: intensive by (C11).
+\item $\Tbeta = \max\{2A/\deltastar, 2R^2\log(1/\beta)/\deltastar^2\}$:
+  intensive because $A$ depends on $\alpha, \beta$ (monitor-design
+  parameters; $\alpha$ deployment-class via (C5.MULT)), $R$ is
+  deployment-class via (C5.HOEFF), and $\deltastar$ is deployment-
+  class via Lemmas~5b/5e.
+\item Total bound $h_{\mathrm{static}} + \rhogap \cdot \Tbeta$ is
+  a sum of intensive quantities.
+\end{itemize}
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We bound $h_{\mathrm{detect}}$ as the supremum of $\epsgap$ over
+the detection window, derive $\Tbeta$ directly from Lemma~4's
+Hoeffding form, and apply (C11.CLK) to bound the cascade-clock
+event.
+
+\emph{Step 1 (per-step decomposition).}  Under the boundary
+convention from §2, set $s_0 := t_0$ (the last safe SPRT step) and
+$s_n := t_0 + n$ in SPRT exposure clock.  For any
+$0 \leq n \leq T_{\mathrm{detect}}$:
+\[
+  \epsgap(s_n) \;=\; \epsgap(s_0) + \sum_{i=1}^{n}
+  (\Delta \epsgap)_i.
+\]
+
+\emph{Step 2 (apply (C11)).}  By Assumption~\ref{ass:C11}, each
+per-step increment satisfies $(\Delta \epsgap)_n \leq
+\rhogap(\deltastar)$.  Therefore:
+\[
+  \epsgap(s_n) \;\leq\; \epsgap(s_0) + n \cdot
+  \rhogap(\deltastar).
+\]
+
+\emph{Step 3 (boundary condition).}  By the boundary convention,
+$s_0 = t_0$ is the last SPRT step at which the deployment is still
+within Layer~1's safe region.  Layer~1's intensivity result
+(Lemma~\ref{lem:1}) gives:
+\[
+  \epsgap(s_0) \;=\; \epsgap(t_0) \;\leq\;
+  h_{\mathrm{static}}(\theta).
+\]
+The first crossing event occurs at $s_1$, where (C11) bounds the
+single-step jump by $\rhogap(\deltastar)$.
+
+\emph{Step 4 (supremum over window).}  Combining Steps~1--3:
+\[
+  h_{\mathrm{detect}}(\theta) \;=\;
+  \sup_{0 \leq n \leq T_{\mathrm{detect}}} \epsgap(s_n)
+  \;\leq\; h_{\mathrm{static}}(\theta) +
+  T_{\mathrm{detect}} \cdot \rhogap(\deltastar).
+\]
+
+\emph{Step 5 (rigorous Hoeffding inversion to derive $\Tbeta$).}
+By Lemma~\ref{lem:4} (\texttt{appendices/proofs.tex} §A.4), the
+SPRT detection time satisfies the Hoeffding form:
+\[
+  \Pr[T_{\mathrm{detect}} > t] \;\leq\;
+  \exp\!\left(-\frac{2(t \deltastar - A)^2}{t R^2}\right)
+  \quad \text{for } t > A/\deltastar.
+\]
+We derive $\Tbeta$ such that this bound is $\leq \beta$, using a
+rigorous (not asymptotic) chain.
+
+\emph{Substep 5a (regime condition).}  Suppose
+$T \geq 2A/\deltastar$.  Then $T\deltastar - A \geq T\deltastar/2$,
+so $T\deltastar - A > 0$ and the Hoeffding bound applies.
+
+\emph{Substep 5b (squared lower bound).}  Squaring the inequality
+from~5a:
+\[
+  (T\deltastar - A)^2 \;\geq\; \frac{T^2 \deltastar^2}{4}.
+\]
+
+\emph{Substep 5c (exponent lower bound).}  Substituting into the
+Hoeffding exponent:
+\[
+  \frac{2(T\deltastar - A)^2}{T R^2} \;\geq\;
+  \frac{2 \cdot T^2 \deltastar^2 / 4}{T R^2} \;=\;
+  \frac{T \deltastar^2}{2 R^2}.
+\]
+
+\emph{Substep 5d (solve for $T$ such that exponent $\geq \log(1/\beta)$).}
+We want
+$\frac{T \deltastar^2}{2 R^2} \;\geq\; \log(1/\beta)$,
+which gives
+\[
+  T \;\geq\; \frac{2 R^2 \log(1/\beta)}{\deltastar^2}.
+\]
+
+\emph{Substep 5e (conservative $\Tbeta$).}  Combining the regime
+condition (Substep~5a) and the tail condition (Substep~5d):
+\[
+  \Tbeta \;:=\; \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2R^2 \log(1/\beta)}{\deltastar^2}\right\}.
+\]
+For any $T \geq \Tbeta$, both the regime condition and the
+exponent-magnitude condition hold, so $\Pr[T_{\mathrm{detect}} > T]
+\leq \exp(-T\deltastar^2/(2R^2)) \leq \beta$.  In particular,
+$\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$.
+
+\emph{Critical: factor of 4 vs.\ v4.}  V4 used $R^2\log(1/\beta)/
+(2\deltastar^2)$ from a non-rigorous asymptotic approximation that
+implicitly set $A = 0$.  The rigorous chain (Substeps 5a--5d) shows
+the correct conservative coefficient is $2R^2/\deltastar^2$, four
+times larger.  This is the v5 fix.
+
+\emph{Step 6 (detection-window supremum bound).}  On the event
+$\{T_{\mathrm{detect}} \leq \Tbeta\}$ (probability at least
+$1-\beta$):
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\;
+  h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
+  \Tbeta.
+\]
+This proves part~(ii) of the lemma.
+
+\emph{Step 7 (cascade-clock event via (C11.CLK)).}  Separately
+from the SPRT tail, (C11.CLK) provides:
+$\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc] \geq 1 - \bclk$, with
+hard audit constraint $\Ncasc \geq \Tbeta$ (certified case
+$\bcal = 0$) or empirical $\Pr[\Ncasc^{\mathrm{est}} \geq
+\Ncasc^{\mathrm{true}}] \geq 1 - \bcal$ (estimated case).
+Therefore:
+\[
+  \Pr[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})] \;\geq\;
+  \Pr[\Tbeta \leq \Ncasc \leq \Nev(\tau_{\mathrm{meta}})]
+  \;\geq\; 1 - \bclk - \bcal.
+\]
+In the certified case ($\bcal = 0$), this reduces to $1 - \bclk$.
+This proves part~(iii).
+
+\emph{Step 8 (Layer 2 total failure bound).}  By union bound on
+the failure modes:
+\begin{itemize}
+\item Detection-tail $\{T_{\mathrm{detect}} > \Tbeta\}$:
+  probability $\leq \beta$ (Step~5).
+\item Clock-failure $\{\Tbeta > \Nev(\tau_{\mathrm{meta}})\}$:
+  probability $\leq \bclk + \bcal$ (Step~7).
+\end{itemize}
+\[
+  \Pr[\text{Layer~2 fails}] \;\leq\; \beta + \bclk + \bcal.
+\]
+This proves part~(iv).
+
+\emph{Step 9 (intensivity).}  Each constant is deployment-class
+independent of $|P|$:
+\begin{itemize}
+\item $h_{\mathrm{static}}(\theta)$: intensive by Lemma~\ref{lem:1}
+  (under (C6)--(C10)).
+\item $\rhogap(\deltastar)$: deployment-class by (C11).
+\item $\Tbeta = \max\{2A/\deltastar, 2R^2\log(1/\beta)/\deltastar^2\}$:
+  $A = \log((1-\beta)/\alpha)$ depends on $\alpha$ (deployment-class
+  via (C5.MULT) bounding multiplicity-correction overhead) and
+  $\beta$ (monitor-design parameter); $R$ is deployment-class via
+  (C5.HOEFF) clipping; $\deltastar$ is deployment-class via
+  Lemmas~5b/5e.  All inputs intensive, so $\Tbeta$ intensive.
+\item $\Ncasc, \bclk, \bcal$: deployment-class by (C11.CLK)
+  (operator audit-time calibration).
+\end{itemize}
+Therefore $h_{\mathrm{detect}}(\theta) = h_{\mathrm{static}} +
+\rhogap \cdot \Tbeta$ is intensive in $|P|$ over $\mathcal{D}$.
+$\Box$
+\end{proof}
+
+\section{Discussion}
+
+\paragraph{The two roles of cascade time (carried from v3).}
+\begin{itemize}
+\item \emph{Integration horizon for $\rhogap$:} $\Tbeta$, the SPRT
+  high-probability detection quantile, gives a legitimate
+  \emph{upper} bound on $T_{\mathrm{detect}}$ derived from
+  Lemma~4's Hoeffding form.
+\item \emph{Lead-time-before-cascade guarantee:}
+  $\tau_{\mathrm{meta}} \leq T_{\mathrm{cascade}}$ (a \emph{lower}
+  bound on cascade time, from
+  \citep[Phase~Redundancy]{lasser2026phase}).  In v4, this is
+  composed with $\Tbeta$ via (C11.CLK)'s deterministic floor
+  $\Ncasc \geq \Tbeta$ and clock-failure probability $\bclk$ —
+  \emph{not} via the SPRT detection-tail form (which was v3's
+  mistake).
+\end{itemize}
+
+\paragraph{Why v3's $\beta'$ labeling was wrong.}
+V3 labeled $\beta' = \exp(-\kappa \tau_{\mathrm{meta}} \deltastar)$
+as the failure probability for the cascade-clock event $\{\Tbeta
+\leq \tau_{\mathrm{meta}}\}$.  But this expression is the SPRT
+\emph{detection-tail} form (probability that detection takes longer
+than time $\tau_{\mathrm{meta}}$), not a cascade-clock
+miscalibration probability.  V4 separates them: $\beta$ is the
+detection-tail parameter; $\bclk$ is the clock-calibration failure
+parameter (named in (C11.CLK)); their union bound gives total
+Layer~2 failure $\leq \beta + \bclk$.
+
+\paragraph{Why v3 and v4 had successive $\Tbeta$ errors.}
+\emph{V3 error.}  V3 used $\Tbeta = \log(1/\beta)/(\kappa \delta)$
+treating $\kappa$ as $\delta$-independent.  But Lemma~4's
+$\kappa = 2\delta/R^2$ contains a factor of $\delta$, so the exponent
+$\kappa T \delta = 2T\delta^2/R^2$ scales as $\delta^2$, not
+$\delta$.  V4 corrected the scaling.
+
+\emph{V4 error.}  V4 used $\Tbeta = R^2\log(1/\beta)/(2\deltastar^2)$
+from a non-rigorous asymptotic approximation.  Substituting this
+$T$ into the exact Hoeffding bound gives exponent $\log(1/\beta)
+\cdot (1 - A\deltastar/c)^2$ with $c = R^2\log(1/\beta)/2$, strictly
+\emph{less than} $\log(1/\beta)$ when $A > 0$.  V5 corrects this by
+the rigorous chain in Step~5: $T \geq 2A/\deltastar \Rightarrow
+(T\deltastar - A)^2 \geq T^2\deltastar^2/4 \Rightarrow$ exponent
+$\geq T\deltastar^2/(2R^2)$.  Solving for exponent $\geq
+\log(1/\beta)$ gives $T \geq 2R^2\log(1/\beta)/\deltastar^2$ — four
+times v4's coefficient.
+
+\paragraph{Lemma 5d integration item (Round B Q3 follow-up,
+carried).}
+At integration time, §4.10's Lemma~5d should be restated using the
+union-class floor $\deltastar$.  This is a small amendment to §4.10
+and §A.4 that should accompany Lemma~6 integration.
+
+\paragraph{Constant taxonomy (v5 complete).}
+\begin{itemize}
+\item $h_{\mathrm{static}}(\theta)$: intensive composition
+  (Lemma~\ref{lem:1}).
+\item $\rhogap(\deltastar)$: \emph{Paper 10 operational constant}
+  via (C11); calibrated by per-channel sensitivity-to-gap
+  measurement (Audit~7).
+\item $\Tbeta = \max\{2A/\deltastar, 2R^2\log(1/\beta)/\deltastar^2\}$:
+  rigorous SPRT-derived detection quantile.
+\item $A = \log((1-\beta)/\alpha)$: Paper~5 SPRT threshold.
+\item $\alpha$: Type-I error rate, monitor-design parameter
+  (deployment-class via (C5.MULT) bounding multiplicity-correction
+  overhead).
+\item $\beta$: Type-II error rate / detection-tail parameter,
+  monitor-design parameter (deployment-class).
+\item $R$: per-step LLR-increment range, surfaced via (C5.HOEFF);
+  enforced by clipping $\ell_n \to \mathrm{clip}(\ell_n, -R, R)$.
+\item $K_{\mathrm{ch}}$: monitored-channel cardinality, surfaced via
+  (C5.MULT) (deployment-class).
+\item $\Ncasc$: deterministic event-count floor, surfaced via
+  (C11.CLK) (audit-calibrated to satisfy $\Ncasc \geq \Tbeta$).
+\item $\bclk$: clock-calibration failure probability ((C11.CLK)).
+\item $\bcal$: calibration-uncertainty failure probability
+  ((C11.CLK) optional empirical variant); $\bcal = 0$ in certified
+  case.
+\item $\tau_{\mathrm{meta}}, T_{\mathrm{cascade}}$: source-derived
+  cascade-time references from
+  \citep[Phase~Redundancy]{lasser2026phase} (lower bound only;
+  with the (C7) bounded co-evolution caveat).
+\end{itemize}
+
+\paragraph{Layer 2 operational form.}
+Combining Lemma~6 with $\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$ from
+(C6):
+\[
+  |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; K_{\mathrm{Lip}} \cdot
+  \bigl(h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
+  \Tbeta\bigr)
+\]
+with probability at least $1 - (\beta + \bclk + \bcal)$ over the
+joint event $\{T_{\mathrm{detect}} \leq \Tbeta\} \cap \{\Tbeta \leq
+\Nev(\tau_{\mathrm{meta}})\}$.  The right-hand side is the sum of
+intensive constants times $K_{\mathrm{Lip}}$, all $|P|$-independent.
+
+\paragraph{Integration prerequisites (Round D Q4 follow-up).}
+At appendix integration, the following must accompany the v5 proof:
+\begin{itemize}
+\item Drop legacy $\beta'$ from §4.10 Lemma~5d statement;
+  replace with v5's $\beta + \bclk + \bcal$ structure or restate
+  Lemma~5d as a union-class quantile composition.
+\item Update Theorem~1 Layer~2 proof in §5
+  (\texttt{main\_theorem.tex}) to use $\Tbeta$ instead of
+  $T_{\mathrm{cascade}}$ in Step~6, adopt the $t_0 := t_0^-$
+  convention, and cite Lemma~6's parts~(ii)--(iv).
+\item Drop the v1 source-citation overstatement in
+  \texttt{main\_theorem.tex} line~365 (Paper~9's ``$T$ failure
+  modes'' remark).
+\item Update §A.4 Lemma~4 prose nit: ``$\Lambda_t < A$'' is
+  necessary for $T_{\mathrm{detect}} > t$, not sufficient.
+\item Add (C5.HOEFF), (C5.MULT), (C5.IID), (C5.SUPP) to
+  Theorem~1's condition list (alongside or as sub-clauses of (C5)).
+\item Add (C11) bounded gap-growth rate + (C11.CLK) clock
+  comparability.
+\item Add Audit~7 to §8 deployment tooling: calibrate $\rhogap$,
+  $R$, $\Ncasc$, $\bclk$.
+\end{itemize}
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item Algebraically correct $\Tbeta$ derivation from Lemma~4's
+  Hoeffding form, with explicit $1/\deltastar^2$ scaling.
+\item (C5.HOEFF) bounded LLR-increment range as a deployment-class
+  condition, ensuring $R$ does not scale with $|P|$ via channel
+  multiplicity.
+\item (C11.CLK) strengthened with deterministic floor $\Ncasc \geq
+  \Tbeta$ and named clock-failure probability $\bclk$, separating
+  cascade-clock event from SPRT detection-tail event.
+\item Supremum-form $h_{\mathrm{detect}}$ definition matching
+  Theorem 1's Layer 2 application.
+\item Rigorous discrete-time boundary condition under the
+  $t_0 := t_0^-$ convention.
+\item Union-class KL floor $\deltastar$ for Layer 2's full
+  detection class.
+\item Intensive bound on $h_{\mathrm{detect}}$ as $h_{\mathrm{static}}
+  + \rhogap \Tbeta$ with high probability $1-\beta$.
+\item Layer~2 total failure probability $\leq \beta + \bclk$ via
+  union bound.
+\item Constant taxonomy with all $|P|$-dependent constants surfaced
+  ($\alpha, \beta, R, \Ncasc, \bclk$ all deployment-class via
+  named conditions).
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $\rhogap(\deltastar), R, \Ncasc$.  Operators
+  may calibrate tighter bounds for restricted threat models.
+\item Existence of deployment configurations satisfying (C5.HOEFF),
+  (C11), and (C11.CLK).  Verified empirically (Audit~7).
+\item Structural derivation of (C11) from finer source-paper
+  machinery.  Currently a Paper 10 operational assumption.
+\item Layer~2 proof updates in Theorem~1 (must adopt $t_0 := t_0^-$
+  convention and use $\Tbeta$ instead of $T_{\mathrm{cascade}}$ in
+  Step~6 of the Layer~2 proof).  This is an integration task.
+\end{itemize}
+
+\section{Specific verification questions for v5 codex review}
+
+\begin{enumerate}
+\item \textbf{(Q1 rigorous Hoeffding inversion.)}  Step~5
+  Substeps~5a--5e gives the rigorous chain $T \geq 2A/\deltastar
+  \Rightarrow (T\deltastar - A)^2 \geq T^2\deltastar^2/4 \Rightarrow$
+  exponent $\geq T\deltastar^2/(2R^2)$, leading to $\Tbeta =
+  \max\{2A/\deltastar, 2R^2\log(1/\beta)/\deltastar^2\}$.  Is this
+  chain correct and tight?  In particular:
+  \begin{itemize}
+  \item Is the squared lower bound $(T\deltastar - A)^2 \geq
+    T^2\deltastar^2/4$ from $T \geq 2A/\deltastar$ rigorous (no
+    sign issues)?
+  \item Is the conservative $\Tbeta$ tight enough operationally,
+    or should we use the exact root form
+    $\Tbeta = (2A\deltastar + c + \sqrt{c^2 + 4A\deltastar c}) /
+    (2\deltastar^2)$ with $c = R^2\log(1/\beta)/2$?
+  \item Does the factor of~4 vs.\ v4 affect any downstream bounds
+    in unexpected ways?
+  \end{itemize}
+
+\item \textbf{((C5.HOEFF), (C5.MULT) split.)}  V5 splits range
+  bound from multiplicity policy:
+  \begin{itemize}
+  \item (C5.HOEFF): $|\ell_n| \leq R$ via clipping, $R$
+    deployment-class.
+  \item (C5.MULT): $K_{\mathrm{ch}}$ deployment-class with
+    fixed-cardinality partition.
+  \end{itemize}
+  Is the split clean and necessary, or could (C5.MULT) be absorbed
+  into (C5.HOEFF) (since clipping handles unbounded LLR even with
+  large multiplicity)?  Conversely, do we need additional clauses
+  to handle adversarial channel selection (the adversary picking
+  which channel to push hardest)?
+
+\item \textbf{((C5.IID), (C5.SUPP) sufficiency.)}  V5 adds:
+  \begin{itemize}
+  \item (C5.IID): adapted/i.i.d.\ LLR with conditional drift
+    $\geq \deltastar$.
+  \item (C5.SUPP): $p_0(x), p_1(x) \geq \epsilon > 0$ or LLR
+    clipped.
+  \end{itemize}
+  Are these the right structural assumptions for Hoeffding to
+  apply?  In particular, does (C5.IID) need to specify
+  conditional-variance proxy bounds (sub-Gaussian or
+  sub-exponential)?  Does (C5.SUPP) need an explicit value of
+  $\epsilon$ or is the existence sufficient?
+
+\item \textbf{((C11.CLK) certified vs.\ empirical split.)}  V5
+  introduces $\bcal$ for the empirical-calibration variant, with
+  $\bcal = 0$ in the certified case.  Total Layer~2 failure
+  becomes $\beta + \bclk + \bcal$.
+
+  Is the split clean?  In the certified case, the operator audits
+  $\Ncasc \geq \Tbeta$ as a hard inequality at calibration time;
+  $\Tbeta$ is computed from $\alpha, \beta, R, \deltastar$, all of
+  which are deployment-class.  Is this enough, or do we need the
+  operator to certify each input constant independently (e.g.,
+  certify $\deltastar$ via Lemma~5b/5e empirical floor)?
+
+\item \textbf{(Integration-prerequisite completeness.)}  V5's
+  ``Integration prerequisites'' paragraph lists the §4.10
+  Lemma~5d, Theorem~1 Layer~2 proof, §A.4 prose nit, condition-list
+  amendments, and Audit~7 additions.  Are there other integration
+  items we've missed?  In particular:
+  \begin{itemize}
+  \item Does the §2 notation table need $\Tbeta, \Ncasc, \bclk,
+    \bcal, R, K_{\mathrm{ch}}$ surfaced?
+  \item Does §3 invariants need updating to reflect (C11.CLK)'s
+    event-throughput floor?
+  \item Are there §6 cooperative-anchoring implications of the
+    Layer~2 failure decomposition?
+  \end{itemize}
+\end{enumerate}
+
+\end{document}

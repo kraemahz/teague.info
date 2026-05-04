@@ -1,0 +1,355 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Horizon~Aware}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+
+\title{Lemma 5a (Substrate floor): Full Proof Draft}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal of this draft}
+
+Promote Lemma~5a of Paper~10 \S4.7 from inline outline to a
+self-contained formal proof for the appendix.
+
+The current outline asserts that $\rext \geq r_*(m^*) > 0$ under
+$I_6'$ ($\mindep \geq m^* \geq 3$) and substrate-distinctness, with
+$r_*(m^*) \sim \rho_0 \binom{m^*}{2}$ for pairwise-cooperative-
+dominated structures.  The outline references a ``coercivity-style
+assumption'' that needs to be made explicit and a combinatorial
+scaling argument that needs formal proof.
+
+This draft formalizes the coercivity assumption (CN: cooperative
+novelty rate floor), proves the pairwise-channel scaling under
+independence, and discusses the sub-additive correlated-channel
+caveat.
+
+\section{Source-paper grounding}
+
+\citep[Horizon~Aware]{lasser2026horizon}'s anti-monopolar property
+establishes that under a discounted objective with $\rext > 0$,
+domination is anti-maximizing.  $\rext$ is defined as the
+cross-substrate cooperative novelty rate: the rate at which
+cooperative capabilities form across distinct substrates that no
+single substrate could produce alone.
+
+\citep[Horizon~Aware]{lasser2026horizon} grounds $\rext > 0$ in
+substrate physics (cross-substrate cooperatives are produced by
+distinct-substrate participants whose joint output cannot be
+replicated by any single substrate) but does not give a quantitative
+floor.  Lemma~5a's contribution is to derive an explicit lower
+bound on $\rext$ given the substrate count $\mindep$.
+
+The bound is derived from two ingredients:
+\begin{itemize}
+\item A \emph{per-channel} coercivity assumption: each pair of
+  distinct substrates contributes at least rate $\rho_0$ of
+  cooperative novelty.
+\item A \emph{combinatorial} structure: $\mindep$ pairwise-distinct
+  substrates produce $\binom{\mindep}{2}$ pairwise cooperative
+  channels.
+\end{itemize}
+
+Under joint failure-correlation independence (the substrate-
+distinctness condition of $I_6'$, Definition~\ref{def:joint_indep}),
+the rates add, giving the closed-form floor.
+
+\section{Coercivity assumption}
+
+\begin{assumption}[CN: Per-pair cooperative-novelty rate floor]
+\label{ass:CN}
+For every pair of distinct substrates $(s_i, s_j)$ in the
+deployment's substrate population, the cross-substrate cooperative
+novelty rate contributed by the pair $(s_i, s_j)$ alone is bounded
+below by a positive constant $\rho_0 > 0$ depending on the
+deployment class $\mathcal{D}$ but independent of $|P|$:
+\[
+  \rext^{(s_i, s_j)} \;\geq\; \rho_0 \;>\; 0.
+\]
+\end{assumption}
+
+\textbf{Operational interpretation.}  $\rho_0$ measures the
+\emph{baseline} per-pair cooperative-novelty rate: the rate at
+which any pair of failure-correlation-independent substrates
+generates cooperatives that neither substrate alone could produce.
+$\rho_0$ depends on:
+\begin{itemize}
+\item Substrate-difference magnitude: substrates with more
+  qualitatively different capability profiles produce more novelty
+  per pair (e.g., human + AI cooperatives produce more novelty
+  than two-similar-AI cooperatives, even if both pairs are formally
+  $\mindep$-independent).
+\item Cooperation infrastructure: deployments with
+  governance-fork-supported cooperative protocols (\citep[Exogenous~Verification]{lasser2026exo})
+  produce more cooperatives per substrate-pair than ad-hoc
+  arrangements.
+\item Capability-poset density: deployments with rich poset
+  structure on $P^{\mathrm{act}}$ admit more cooperative
+  combinations per substrate-pair than thin posets.
+\end{itemize}
+
+CN is structurally analogous to
+\citep[Phase~Redundancy]{lasser2026phase}'s coercivity assumptions
+(C1, C2), which assert positive correction and degradation rates
+without deriving them from finer machinery.  Like those assumptions,
+CN is taken as a deployment-class condition; deployments where
+$\rho_0 \to 0$ for some substrate pair fall outside Lemma~5a's
+scope.
+
+\section{Statement of Lemma 5a}
+
+\begin{lemma}[Substrate floor]
+\label{lem:5a}
+Under invariant $I_6'$ ($\mindep \geq m^* \geq 3$), the joint
+failure-correlation independence condition
+(Definition~\ref{def:joint_indep}, the substrate-distinctness
+condition of (C2) of Theorem~\ref{thm:deployment_safety}), and
+Assumption~\ref{ass:CN} (per-pair cooperative-novelty rate floor):
+\[
+  \rext \;\geq\; r_*(m^*) \;:=\; \rho_0 \cdot \binom{m^*}{2} \;>\; 0.
+\]
+For $m^* = 3$, $r_*(3) = 3\rho_0 > 0$.  For general $m^*$,
+$r_*(m^*) \sim \rho_0 m^{*\,2}/2$ as $m^* \to \infty$.
+
+The floor $r_*(m^*)$ is intensive in $|P|$ over the deployment
+class $\mathcal{D}$: $\rho_0$ depends on $\mathcal{D}$'s operational
+parameters but not on $|P|$.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We work over a deployment class $\mathcal{D}$ satisfying $I_6'$,
+joint failure-correlation independence, and CN.
+
+\emph{Step 1 (substrate counting).}  By $I_6'$, the deployment has
+$\mindep \geq m^* \geq 3$ pairwise-distinct substrates in the joint
+event-class failure-correlation-independence sense
+(Definition~\ref{def:joint_indep}).  Let $\mathcal{S} = \{s_1,
+\ldots, s_{\mindep}\}$ denote the maximal independent substrate set.
+
+\emph{Step 2 (combinatorial pairwise channels).}  The number of
+unordered pairs of distinct substrates in $\mathcal{S}$ is:
+\[
+  \binom{\mindep}{2} \;=\; \frac{\mindep \cdot (\mindep - 1)}{2}
+  \;\geq\; \binom{m^*}{2}
+  \;=\; \frac{m^* (m^* - 1)}{2}.
+\]
+Each pair $(s_i, s_j)$ with $i < j$ defines a pairwise cooperative
+channel: the set of cooperative capabilities whose participants
+include at least one agent from $s_i$ and at least one agent from
+$s_j$.
+
+\emph{Step 3 (per-pair rate).}  By Assumption~CN, each pair
+$(s_i, s_j)$ contributes a rate $\rext^{(s_i, s_j)} \geq \rho_0 >
+0$ of cooperative novelty.
+
+\emph{Step 4 (rate additivity under joint independence).}  Under
+joint failure-correlation independence
+(Definition~\ref{def:joint_indep}), the per-pair rates are
+\emph{additive}: the cross-substrate cooperative novelty rate
+across the substrate population satisfies:
+\[
+  \rext \;\geq\; \sum_{1 \leq i < j \leq \mindep}
+  \rext^{(s_i, s_j)}.
+\]
+The additivity follows from the fact that joint independence
+implies the per-pair cooperative outputs are statistically
+independent: a cooperative produced by pair $(s_i, s_j)$ is not
+counted in the rate of pair $(s_k, s_l)$ unless $\{i, j\} \cap \{k,
+l\} \neq \emptyset$, in which case it is a higher-order cooperative
+not in the pairwise count.  Higher-order cooperatives contribute
+\emph{additionally} to $\rext$, so the pairwise sum is a lower
+bound.
+
+\emph{Step 5 (closed-form floor).}  Combining Steps 1--4:
+\[
+  \rext \;\geq\; \sum_{1 \leq i < j \leq \mindep} \rext^{(s_i, s_j)}
+  \;\geq\; \rho_0 \cdot \binom{\mindep}{2}
+  \;\geq\; \rho_0 \cdot \binom{m^*}{2}
+  \;=:\; r_*(m^*).
+\]
+For $m^* = 3$:
+\[
+  r_*(3) \;=\; \rho_0 \cdot \binom{3}{2} \;=\; 3 \rho_0 \;>\; 0.
+\]
+
+\emph{Step 6 (intensivity).}  $\rho_0$ is a deployment-class
+constant (CN), independent of $|P|$.  $m^*$ is the threshold from
+$I_6'$, also a deployment-class constant.  Therefore $r_*(m^*) =
+\rho_0 \binom{m^*}{2}$ is independent of $|P|$ over $\mathcal{D}$.
+$\Box$
+\end{proof}
+
+\section{Caveats}
+
+\paragraph{Sub-additive correlated channels.}
+The proof's Step~4 uses joint failure-correlation independence to
+derive rate additivity.  When pairs of substrates have
+\emph{correlated} cooperative-channel structure (e.g., two
+substrates contribute redundant cooperatives that one of them
+already supplied), the per-pair rates are sub-additive:
+\[
+  \rext \;<\; \sum \rext^{(s_i, s_j)} \quad \text{(correlated case)}.
+\]
+The lemma's bound $r_*(m^*) = \rho_0 \binom{m^*}{2}$ is then
+\emph{anti-conservative} (over-estimates $\rext$).  Under joint
+failure-correlation independence (which is precisely the (C2)
+requirement of Theorem~\ref{thm:deployment_safety} and the
+$\mindep$ formulation of $I_6'$), correlated-channel sub-additivity
+is excluded.
+
+The lemma is therefore strictly conditional on joint independence;
+deployments where the substrate-distinctness audit (Audit~1 of
+\S\ref{sec:tooling_substrate_audits}) fails to verify joint
+independence cannot invoke Lemma~5a directly.
+
+\paragraph{Higher-order cooperatives.}
+The proof bounds $\rext$ from below using only \emph{pairwise}
+cooperative channels.  Higher-order cooperatives (those requiring
+participants from three or more distinct substrates) contribute
+additional rate, increasing $\rext$ above $r_*(m^*)$.  For canonical
+tripartite deployments (Human + AI + Formal-Operational), the
+three-way cooperative ``verified workflow'' adds an additional
+$\rho_0^{(3)}$ rate (the three-way coercivity constant), yielding
+$\rext \geq 3 \rho_0 + \rho_0^{(3)} > 3\rho_0$.
+
+The lemma's pairwise floor is therefore a conservative lower bound;
+deployments may calibrate higher floors using their specific
+cooperative structure.  The pairwise scaling $\binom{m^*}{2}$ is
+the universal lower bound applicable to any deployment satisfying
+$I_6'$.
+
+\paragraph{Per-pair heterogeneity.}
+CN states a uniform floor $\rho_0$ across pairs.  In practice,
+different substrate pairs produce different cooperative-novelty
+rates: e.g., Human-AI pair may produce $\rho_{\mathrm{HA}}$,
+Human-Formal pair $\rho_{\mathrm{HF}}$, AI-Formal pair
+$\rho_{\mathrm{AF}}$, with $\rho_0 = \min\{\rho_{\mathrm{HA}},
+\rho_{\mathrm{HF}}, \rho_{\mathrm{AF}}\}$.  The proof uses the
+minimum, giving the conservative bound; deployments may use
+heterogeneous per-pair rates for tighter floors.
+
+\section{Connection to Theorem 1 Layer 1}
+
+Lemma~5a's role: provide the substrate-floor input that makes
+Lemma~5c's safe-region inequality non-trivial.
+
+Lemma~5c asserts:
+\[
+  \Delta r_K \;<\; \rext + (1 - \gamma)(\Ddiv - \Delta_0)
+\]
+implies diversity dominates.  For this safe region to be
+non-trivial, $\rext$ must be bounded below by a deployment-
+verifiable constant.  Lemma~5a provides:
+\[
+  \rext \;\geq\; \rho_0 \binom{m^*}{2} \;>\; 0,
+\]
+making the safe region non-trivial whenever $\rho_0$ is
+operationally calibrated.
+
+The connection is direct: Lemma~5c invokes Lemma~5a in its proof
+(Step~1 of the Lemma~5c appendix proof) to assert $\rext \geq
+r_*(m^*) > 0$ before applying the strategy-comparison machinery.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal coercivity assumption (CN: per-pair cooperative-
+  novelty rate floor $\rho_0 > 0$) consistent with the structural
+  pattern of \citep[Phase~Redundancy]{lasser2026phase}'s C1, C2.
+\item A combinatorial-additivity proof of the pairwise scaling
+  $\binom{m^*}{2}$ under joint failure-correlation independence.
+\item An explicit closed-form floor $r_*(m^*) = \rho_0 \binom{m^*}{2}$
+  intensive in $|P|$.
+\item Three caveats: sub-additive correlated-channel case,
+  higher-order cooperatives, per-pair heterogeneity.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $r_*(m^*)$.  The pairwise-only floor is
+  conservative; higher-order cooperatives contribute additional
+  rate.
+\item Existence of deployment configurations satisfying CN with
+  large $\rho_0$.  CN is a condition on the deployment's substrate
+  structure; verification is empirical (calibration via the
+  deployment-tooling specification).
+\item Numerical value of $\rho_0$.  Calibrated deployment-by-
+  deployment via the per-pair cooperative-novelty rate-estimation
+  procedure.
+\end{itemize}
+
+\section{Specific verification questions for codex review}
+
+\begin{enumerate}
+\item Is Assumption CN (per-pair cooperative-novelty rate floor)
+  the right formalization?  The assumption asserts a uniform $\rho_0$
+  across pairs.  Should it admit per-pair heterogeneity by default,
+  with $\rho_0 = \min_{i,j} \rho^{(s_i, s_j)}$ derived rather than
+  asserted?
+
+\item Is Step~4 (rate additivity under joint independence) rigorous?
+  The proof argues per-pair cooperatives are statistically
+  independent under
+  Definition~\ref{def:joint_indep}.  Is this argument
+  watertight, or does it require additional structural conditions
+  (e.g., that cooperative production from one pair does not
+  consume capabilities that would otherwise contribute to another
+  pair's cooperatives)?
+
+\item Is the higher-order cooperative caveat correctly handled?
+  The proof bounds $\rext$ using only pairwise channels, with
+  higher-order channels contributing additionally.  Is this the
+  right way to handle them, or should they be incorporated into
+  CN directly (e.g., $\rho_0^{(k)}$ for each $k$-way cooperative
+  with $\rext \geq \sum_k \rho_0^{(k)} \binom{m^*}{k}$)?
+
+\item Is the $r_*(m^*) = \rho_0 \binom{m^*}{2}$ formula consistent
+  with \citep[Horizon~Aware]{lasser2026horizon}'s anti-monopolar
+  framework?  In particular, does Paper~3 give any quantitative
+  bound on $\rext$ that this lemma is in tension with, or is the
+  lemma a strict refinement?
+
+\item Should CN be promoted to a theorem-level condition (e.g.,
+  (C10)) of Theorem~\ref{thm:deployment_safety}, analogous to
+  the (C6)-(C9) conditions added in Lemma~1 and Lemma~2's
+  integration?  Or can it remain a Lemma~5a deployment-class
+  assumption without theorem-level surfacing?
+\end{enumerate}
+
+\end{document}

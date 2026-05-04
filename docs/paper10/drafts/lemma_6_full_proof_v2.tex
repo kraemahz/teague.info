@@ -1,0 +1,390 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\Aadv}{A_{\mathrm{adv}}}
+\newcommand{\deltaadv}{\delta_{\mathrm{adv}}}
+\newcommand{\deltastar}{\delta_{*}}
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+
+\title{Lemma 6 ($h_{\mathrm{detect}}$ intensivity): Full Proof Draft v2}
+\author{Paper 10 working draft for codex re-review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v1}
+
+V1 had two structural problems:
+(a)~$h_{\mathrm{detect}}$ defined as integrated-increment $\int (d\epsgap/dt) dt$,
+which bounds the gap \emph{change} during the detection window but
+not the point-in-time gap $\epsgap(t)$ that Theorem~1's Layer~2
+needs;
+(b)~the per-unit-time formulation didn't specify the monitoring
+clock rigorously.
+
+V2 fixes both, plus refinements:
+
+\textbf{Changes from v1:}
+\begin{itemize}
+\item \textbf{Q1 fix.}  (C11) stated in monitoring-clock form, with
+  discrete (per-SPRT-step) and continuous variants explicitly
+  noted.  The SPRT exposure clock $s$ is the canonical clock for
+  per-step rate bounds.
+\item \textbf{Q2 fix (the big one).}  $h_{\mathrm{detect}}$
+  redefined as the supremum gap during the detection window, with
+  the baseline term explicitly bounded:
+  \[
+    h_{\mathrm{detect}}(\theta) \;:=\; \sup_{t \in
+    [t_0, t_0+T_{\mathrm{detect}}]} \epsgap(t)
+    \;\leq\; \epsgap(t_0) + \rhogap(\deltastar) \cdot
+    T_{\mathrm{detect}}.
+  \]
+  At the Layer~1$\to$Layer~2 boundary, $\epsgap(t_0) \leq
+  h_{\mathrm{static}}(\theta)$ (the Layer~1 bound, intensive by
+  Lemma~1), making $h_{\mathrm{detect}}$ intensive as a sum of two
+  intensive quantities.
+\item \textbf{Q3 fix.}  Renamed $\rho_g \to \rhogap$ to make
+  explicit that (C11) bounds the gap-growth rate, not the
+  alignment-property-error rate.  No double-counting with
+  $K_{\mathrm{Lip}}$.
+\item \textbf{Q4 fix.}  Use union-class KL floor $\deltastar =
+  \min(\deltaadv, \delta_{\mathrm{adv}}^{\mathrm{env}})$ since
+  Layer~2 covers $\Aadv \cup \Aadv^{\mathrm{env}}$.
+\item \textbf{Q5 fix.}  (C11) explicitly framed for promotion to
+  theorem-level condition.
+\item \textbf{Source-citation correction.}
+  \citep[Microfoundation]{lasser2026micro}'s ``$T$ failure modes''
+  remark does not establish the per-step gap-growth rate; (C11) is
+  treated as a new Paper~10 operational assumption.
+\end{itemize}
+
+\section{Setup: the monitoring clock and $h_{\mathrm{detect}}$}
+
+Theorem~\ref{thm:deployment_safety}'s Layer~2 covers adversarial
+strategies $q \in \Aadv \cup \Aadv^{\mathrm{env}}$ during the
+detection window
+$[t_0, t_0 + T_{\mathrm{detect}}]$, where $t_0$ is the violation
+onset and $T_{\mathrm{detect}}$ is the SPRT detection time
+(Lemma~\ref{lem:4}).
+
+Layer~2 applies $h_{\mathrm{detect}}$ as a point-in-time bound:
+\[
+  |g(\Ttruth) - g(\Pproxy)|(t) \;\leq\; \mathrm{Lip}(g) \cdot
+  h_{\mathrm{detect}}(\theta)
+  \quad \text{for all } t \in [t_0, t_0 + T_{\mathrm{detect}}].
+\]
+Therefore $h_{\mathrm{detect}}$ must bound $\epsgap(t)$ at every
+$t$ in the window:
+\[
+  h_{\mathrm{detect}}(\theta) \;:=\; \sup_{t \in
+  [t_0, t_0 + T_{\mathrm{detect}}]} \epsgap(t).
+\]
+
+\paragraph{The monitoring clock.}
+The SPRT machinery (Paper~5) operates on a per-event clock: each
+ledger entry triggers an SPRT update, and the per-step KL
+divergence drives detection.  Wall-clock time is related to SPRT
+clock by the event-rate of the deployment.  For Lemma~6's purposes,
+we use the SPRT exposure clock $s$ counted in events; converting
+to wall-clock time requires multiplying by the average inter-event
+interval.
+
+For the deployment-safety theorem, the relevant detection-window
+length is $T_{\mathrm{detect}}$ measured in SPRT steps (or,
+equivalently, in events processed by the monitor).  The gap
+growth rate $\rhogap$ is per-SPRT-step.
+
+\section{Bounded gap-growth-rate condition (C11)}
+
+\begin{assumption}[(C11): Bounded gap-growth rate per SPRT step]
+\label{ass:C11}
+For any adversarial strategy $q \in \Aadv \cup
+\Aadv^{\mathrm{env}}$ producing channel deviations bounded by
+$\deltastar = \min(\deltaadv, \delta_{\mathrm{adv}}^{\mathrm{env}})$
+(the Lemmas~5b and~5e KL floors), the per-SPRT-step proxy-truth
+gap growth is bounded:
+\[
+  (\Delta \epsgap)_n \;:=\; \epsgap(s_n) - \epsgap(s_{n-1}) \;\leq\;
+  \rhogap(\deltastar),
+\]
+where $\rhogap(\deltastar)$ is a deployment-class constant
+depending on $\mathcal{D}$'s operational parameters (channel
+sensitivity-to-gap mapping, event-rate normalization) but
+independent of $|P|$.
+
+\textbf{Continuous-time variant.}  Equivalently, in continuous
+SPRT exposure clock $s$:
+\[
+  \frac{d \epsgap}{ds} \;\leq\; \rhogap(\deltastar).
+\]
+The discrete and continuous forms agree under fixed step duration
+or bounded event-rate normalization.
+\end{assumption}
+
+\textbf{Operational interpretation.}  Channel deviations bounded by
+$\deltastar$ (else SPRT fires faster) limit how much $\epsgap$ can
+grow per SPRT step.  The constant $\rhogap$ characterizes the
+deployment's channel-deviation-to-gap-growth coupling.
+
+\textbf{(C11) is new content.}  \citep[Microfoundation]{lasser2026micro}'s
+``$T$ failure modes'' remark notes adequacy/failure modes of the
+operational truth $T$ but does not establish a formal per-step
+gap-growth-rate bound.  (C11) is a Paper~10 operational assumption,
+analogous to (C7) bounded co-evolution and SA1 HHI surrogate
+adequacy: deployment-class condition with empirical testability,
+not a derived consequence of source-paper machinery.
+
+\section{Statement of Lemma 6 (v2)}
+
+\begin{lemma}[$h_{\mathrm{detect}}$ intensivity]
+\label{lem:6}
+Under Theorem~\ref{thm:deployment_safety}'s conditions (C5)
+continuous SPRT monitoring and (C11) bounded gap-growth rate,
+combined with Lemma~\ref{lem:4} (SPRT lead-time tail bound) and
+Lemma~\ref{lem:5d} (lead-time tail composition):
+
+The detection-window supremum proxy-truth gap satisfies:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; \epsgap(t_0) +
+  \rhogap(\deltastar) \cdot T_{\mathrm{detect}},
+\]
+where $\epsgap(t_0)$ is the gap at violation onset.
+
+At the Layer~1$\to$Layer~2 boundary (the moment when an adversarial
+strategy first crosses the Layer~1 safe region), $\epsgap(t_0) \leq
+h_{\mathrm{static}}(\theta)$ by Layer~1's intensivity argument.
+Therefore:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; h_{\mathrm{static}}(\theta)
+  + \rhogap(\deltastar) \cdot T_{\mathrm{detect}}.
+\]
+
+With probability at least $1 - \beta'$ (Lemma~\ref{lem:5d}'s
+tail bound), $T_{\mathrm{detect}} \leq T_{\mathrm{cascade}}$, so:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; h_{\mathrm{static}}(\theta)
+  + \rhogap(\deltastar) \cdot T_{\mathrm{cascade}}.
+\]
+
+$h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over the
+deployment class $\mathcal{D}$: $h_{\mathrm{static}}(\theta)$ is
+intensive by Lemma~\ref{lem:1}, $\rhogap(\deltastar)$ is intensive
+by (C11), and $T_{\mathrm{cascade}}$ is intensive by
+\citep[Phase~Redundancy]{lasser2026phase}'s metastable-lifetime
+bound.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We bound $h_{\mathrm{detect}}$ as the supremum of $\epsgap$ over
+the detection window, then apply (C11) and the tail bound.
+
+\emph{Step 1 (per-step decomposition).}  For any SPRT-step
+sequence $s_0 = 0, s_1, \ldots, s_{N_{\mathrm{detect}}}$ during the
+detection window:
+\[
+  \epsgap(s_n) \;=\; \epsgap(s_0) + \sum_{i=1}^{n}
+  (\Delta \epsgap)_i.
+\]
+
+\emph{Step 2 (apply (C11)).}  By Assumption~\ref{ass:C11}, each
+per-step increment satisfies $(\Delta \epsgap)_n \leq
+\rhogap(\deltastar)$.  Therefore:
+\[
+  \epsgap(s_n) \;\leq\; \epsgap(s_0) + n \cdot
+  \rhogap(\deltastar).
+\]
+
+\emph{Step 3 (supremum over window).}  The supremum over the
+detection window of length $N_{\mathrm{detect}}$ SPRT steps:
+\[
+  h_{\mathrm{detect}}(\theta) \;=\; \sup_{0 \leq n \leq
+  N_{\mathrm{detect}}} \epsgap(s_n)
+  \;\leq\; \epsgap(s_0) + N_{\mathrm{detect}} \cdot
+  \rhogap(\deltastar).
+\]
+Identifying $T_{\mathrm{detect}}$ with the number of SPRT steps to
+detection (under fixed-step normalization):
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; \epsgap(t_0) +
+  \rhogap(\deltastar) \cdot T_{\mathrm{detect}}.
+\]
+
+\emph{Step 4 (boundary condition on $\epsgap(t_0)$).}  At the
+Layer~1$\to$Layer~2 boundary, the adversarial strategy has just
+crossed the Layer~1 safe region.  Immediately before the crossing,
+Layer~1's bound holds:
+$\epsgap(t_0^-) \leq h_{\mathrm{static}}(\theta)$ (by Layer~1
+proof + Lemma~\ref{lem:1}).
+By continuity (or single-step boundedness under (C11)), the gap at
+$t_0$ is bounded by the same intensive constant within
+$\rhogap(\deltastar) \cdot \delta s$ for one SPRT step;
+absorbing this into the bound:
+\[
+  \epsgap(t_0) \;\leq\; h_{\mathrm{static}}(\theta).
+\]
+
+\emph{Step 5 (combine).}  Substituting Step~4 into Step~3:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; h_{\mathrm{static}}(\theta)
+  + \rhogap(\deltastar) \cdot T_{\mathrm{detect}}.
+\]
+
+\emph{Step 6 (apply Lemma 5d tail bound).}  By Lemma~\ref{lem:5d},
+$\Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}] \leq \beta' \leq
+\exp(-\kappa \tau_{\mathrm{meta}} \deltastar)$.  On the event
+$T_{\mathrm{detect}} \leq T_{\mathrm{cascade}}$ (probability at
+least $1 - \beta'$):
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; h_{\mathrm{static}}(\theta)
+  + \rhogap(\deltastar) \cdot T_{\mathrm{cascade}}.
+\]
+
+\emph{Step 7 (intensivity).}  Each constant is independent of
+$|P|$ over $\mathcal{D}$:
+\begin{itemize}
+\item $h_{\mathrm{static}}(\theta)$: intensive by Lemma~\ref{lem:1}.
+\item $\rhogap(\deltastar)$: deployment-class constant by (C11).
+\item $T_{\mathrm{cascade}} \geq \tau_{\mathrm{meta}}$:
+  \citep[Phase~Redundancy]{lasser2026phase}'s metastable-lifetime
+  bound, deployment-class.
+\end{itemize}
+Therefore $h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over
+$\mathcal{D}$.  $\Box$
+\end{proof}
+
+\section{Discussion}
+
+\paragraph{Why Lemma~5d's tail bound, not Lemma~4 directly.}
+Lemma~5d composes Lemma~5b's KL floor with Lemma~4's tail bound,
+giving the operational lead-time guarantee $\beta' \leq \exp(-\kappa
+\tau_{\mathrm{meta}} \deltaadv)$.  V1 used $\deltaadv$ (Lemma~5b
+only); v2 uses $\deltastar = \min(\deltaadv,
+\delta_{\mathrm{adv}}^{\mathrm{env}})$ to cover Layer~2's full
+detection class $\Aadv \cup \Aadv^{\mathrm{env}}$.  This requires
+Lemma~5d to be re-stated with the union-class floor — a small
+amendment that should be made at integration.
+
+\paragraph{Constant taxonomy.}
+\begin{itemize}
+\item $h_{\mathrm{static}}(\theta)$: intensive composition
+  (Lemma~\ref{lem:1}).
+\item $\rhogap(\deltastar)$: \emph{newly assumed Paper 10
+  operational constant} via (C11); calibrated by per-channel
+  sensitivity-to-gap measurement.
+\item $T_{\mathrm{cascade}}, \tau_{\mathrm{meta}}$: source-derived
+  from \citep[Phase~Redundancy]{lasser2026phase} (with the (C7)
+  bounded co-evolution caveat).
+\item $\beta'$: composed from Lemmas~5b/5e, 4, 5d.
+\end{itemize}
+
+\paragraph{Layer 2 operational form.}
+Combining Lemma~6 with $\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$ from
+(C6):
+\[
+  |g(\Ttruth) - g(\Pproxy)|(t) \;\leq\; K_{\mathrm{Lip}} \cdot
+  \bigl(h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
+  T_{\mathrm{cascade}}\bigr)
+\]
+with probability at least $1 - \beta'$.  The right-hand side is the
+sum of intensive constants times $K_{\mathrm{Lip}}$, all $|P|$-
+independent.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item Formal monitoring-clock formulation of (C11) with discrete
+  (per-SPRT-step) and continuous variants.
+\item Supremum-form $h_{\mathrm{detect}}$ definition matching
+  Theorem 1's Layer 2 application.
+\item Boundary-condition argument bounding $\epsgap(t_0)$ via
+  Layer 1's $h_{\mathrm{static}}$.
+\item Union-class KL floor $\deltastar$ for Layer 2's full
+  detection class.
+\item Intensive bound on $h_{\mathrm{detect}}$ as $h_{\mathrm{static}}
+  + \rhogap T_{\mathrm{cascade}}$ with high probability.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $\rhogap(\deltastar)$.  Operators may calibrate
+  tighter bounds for restricted threat models.
+\item Existence of deployment configurations satisfying (C11).
+  Verified empirically (a new Audit~7).
+\item Numerical value of $\rhogap(\deltastar)$.  Calibrated
+  deployment-by-deployment.
+\item Structural derivation of (C11) from finer source-paper
+  machinery.  Currently a Paper 10 operational assumption.
+\end{itemize}
+
+\section{Specific verification questions for v2 codex review}
+
+\begin{enumerate}
+\item Is the supremum-form $h_{\mathrm{detect}}$ definition
+  correct, and does the boundary condition $\epsgap(t_0) \leq
+  h_{\mathrm{static}}(\theta)$ hold rigorously?  In particular, is
+  the ``immediately before crossing'' continuity argument
+  watertight, or does it require additional structure (e.g.,
+  bounded jump at the boundary crossing)?
+
+\item Is the SPRT-step monitoring-clock formulation of (C11)
+  correctly stated?  The discrete/continuous variants agree under
+  fixed-step normalization; is this normalization a separate
+  assumption that should be named, or implicit in (C5) continuous
+  SPRT monitoring?
+
+\item Is the union-class KL floor $\deltastar = \min(\deltaadv,
+  \delta_{\mathrm{adv}}^{\mathrm{env}})$ the right composition for
+  Layer 2?  Lemma 5d as currently stated covers $\Aadv$ only;
+  does the integration need to amend Lemma 5d to use $\deltastar$,
+  or can Lemma 6 invoke Lemma 5b/5e separately and take the
+  minimum?
+
+\item Is the renaming $\rho_g \to \rhogap$ sufficient to clarify
+  that (C11) bounds gap-growth rate, not alignment-property-error
+  rate?  Is there any remaining double-counting risk with
+  $K_{\mathrm{Lip}}$ in the Layer 2 operational form?
+
+\item Should (C11) be (C11) of Theorem 1 (next in sequence) or
+  could it be absorbed into (C5) continuous SPRT monitoring as a
+  sub-clause?  The trade-off: separate condition makes the
+  assumption visible; sub-clause keeps the condition list shorter.
+\end{enumerate}
+
+\end{document}

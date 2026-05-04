@@ -1,0 +1,398 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Horizon~Aware}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026paper8a\endcsname{Revealed~Sacrifice}
+\expandafter\def\csname bibkey@lasser2026paper8b\endcsname{Need~Sufficiency}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}^{[W]}}}
+\newcommand{\volRlower}{{\vol_{\mathrm{R}}^{\mathrm{lower}}}}
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\rsub}{r_{\mathrm{sub}}}
+\newcommand{\rS}{r_{\mathrm{S}}}
+\newcommand{\rW}{r_{\mathrm{W}}}
+\newcommand{\rhomincross}{\rho_{\min}^{\mathrm{cross}}}
+\newcommand{\betaL}{\beta^{\mathrm{lower}}}
+\newcommand{\HHI}{\mathrm{HHI}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+\newcommand{\epsnonresComposed}{\varepsilon_{\mathrm{gap},\mathrm{composed}}^{\mathrm{nonres}}}
+\newcommand{\epsnonresChannel}[1]{\varepsilon_{\mathrm{gap},(#1)}^{\mathrm{nonres}}}
+\newcommand{\epsnonresCoev}{\varepsilon_{\mathrm{gap},\mathrm{coev}}^{\mathrm{nonres}}}
+
+\title{Lemma 1 (Intensive composition under co-evolution): Full Proof Draft}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal of this draft}
+
+Promote Lemma~1 of Paper~10 \S4.2 from inline proof outline to a
+self-contained formal proof, suitable for placement in the
+appendix. The current outline references source-paper machinery but
+does not formalize the ``intensive in $|P|$'' property nor
+explicitly verify that the composition rule preserves it through
+the co-evolution error terms.
+
+This draft is for codex review before integration into Paper~10's
+appendix.
+
+\section{Formal definition of intensivity}
+
+\begin{definition}[Intensive in $|P|$]
+\label{def:intensive}
+A bound $B$ depending on the deployment state is \emph{intensive in
+$|P|$} if there exists a constant $C \geq 0$, independent of the
+capability poset size $|P|$, such that $B \leq C$ for all valid
+deployment states.
+
+A bound is \emph{extensive in $|P|$} if no such $|P|$-independent
+constant exists; equivalently, $B$ admits states where $B \to
+\infty$ as $|P| \to \infty$.
+\end{definition}
+
+\paragraph{Note.} Definition~\ref{def:intensive} treats intensivity
+uniformly: the bounding constant $C$ may depend on the deployment's
+threat model, training discipline, or other operational parameters,
+but must not depend on $|P|$. This is the property the deployment
+claim's capability-magnitude-independence requires.
+
+\section{Source-paper intensivity assumptions}
+
+We assume the following intensivity properties of the source-paper
+quantities used in Paper~10's composition. Each is established in
+its source paper or follows from the source-paper machinery; we
+state them as named assumptions for clarity.
+
+\begin{assumption}[A1: Per-channel non-residual gap intensivity]
+\label{ass:A1}
+For each channel $c \in \{1, 2, 3, 4\}$ in
+\citep[Microfoundation]{lasser2026micro}'s four-channel decomposition,
+the per-channel non-residual gap contribution $\epsnonresChannel{c}$
+is intensive in $|P|$: there exists $K_c \geq 0$ independent of
+$|P|$ such that $\epsnonresChannel{c} \leq K_c$ for all valid
+deployment states.
+\end{assumption}
+
+\textbf{Justification.} \citep[Microfoundation]{lasser2026micro}
+defines each channel's contribution per capability, with bounds
+derived from per-capability quantities (observation density,
+attestation quality, etc.). Each is bounded by the channel's
+operational threshold, which depends on the deployment's
+verification infrastructure (Paper 5's witness density, attestation
+protocols), not on $|P|$.
+
+\begin{assumption}[A2: Residual floor intensivity]
+\label{ass:A2}
+The residual floor $\epsfloor$ from
+\citep[Microfoundation]{lasser2026micro}'s gap decomposition is
+intensive in $|P|$: there exists $K_{\mathrm{floor}} \geq 0$
+independent of $|P|$ such that $\epsfloor \leq K_{\mathrm{floor}}$
+for all valid deployment states.
+\end{assumption}
+
+\textbf{Justification.}
+\citep[Microfoundation]{lasser2026micro}'s residual class is the
+structurally-unobservable subset of capability-space; its floor is
+bounded by the operational unobservability rate (a per-capability
+quantity bounded by the deployment's privacy and attestation
+discipline), not by the absolute capability count.
+
+\begin{assumption}[A3: Bounded Lipschitz alignment property]
+\label{ass:A3}
+The alignment property $g$ has Lipschitz constant
+$\mathrm{Lip}(g)$ that is bounded by some $K_{\mathrm{Lip}} \geq 0$
+independent of $|P|$. Equivalently, $g$ is in the class of
+welfare functionals whose sensitivity to single-capability
+perturbations is uniformly bounded.
+\end{assumption}
+
+\textbf{Justification.} The intensivity of the deployment claim
+requires a class restriction on $g$. Standard welfare functionals
+(e.g., scalarizations of per-capability metrics, weighted sums with
+bounded weights) satisfy A3 by construction. Pathological
+functionals where $\mathrm{Lip}(g)$ grows with $|P|$ would produce
+extensive Goodhart bounds; A3 excludes such functionals from the
+deployment claim's scope. In Paper~10, A3 is promoted to explicit
+condition (C6) of Theorem~\ref{thm:deployment_safety}.
+
+\begin{assumption}[A4: Co-evolution error bound]
+\label{ass:A4}
+By
+\citep[Microfoundation]{lasser2026micro}'s Composition Proposition 1,
+the co-evolution positive-part error term $(\epsnonresCoev)_+$ admits
+the bound:
+\[
+  (\epsnonresCoev)_+ \;\leq\; K_{\mathrm{coev}} \cdot M(\text{deployment}),
+\]
+where $K_{\mathrm{coev}}$ is a structural constant from
+\citep[Microfoundation]{lasser2026micro}'s proposition and
+$M(\text{deployment})$ is the maximum per-channel coupling
+magnitude (a per-channel rate quantity bounded by the deployment's
+operational discipline, not by $|P|$).
+\end{assumption}
+
+\textbf{Justification.}
+\citep[Microfoundation]{lasser2026micro}'s Composition Proposition 1
+establishes that the co-evolution regime introduces approximate
+composition with positive-part error terms whose magnitude depends
+on inter-channel coupling rates. Coupling rates are per-channel
+quantities (how rapidly Channel-3 individuation events affect
+Channel-2 attestation, etc.), bounded by the deployment's
+governance and discipline structure. They do not scale with $|P|$.
+
+\section{Statement of Lemma 1}
+
+\begin{lemma}[Intensive composition under co-evolution]
+\label{lem:1}
+Let the composition rule $B$ be the static Goodhart bound:
+\begin{equation}
+\label{eq:composition_rule}
+  B \;=\; \mathrm{Lip}(g) \cdot \bigl(\epsnonresComposed + \lambda \cdot \epsfloor\bigr),
+\end{equation}
+where $\epsnonresComposed$ is the composed non-residual gap under
+co-evolution, $\epsfloor$ is the residual floor, $\lambda \in [0,1]$
+is the residual weight, and $\mathrm{Lip}(g)$ is the Lipschitz
+constant of the alignment property $g$.
+
+Under Assumptions~\ref{ass:A1}--\ref{ass:A4}, $B$ is intensive in
+$|P|$: there exists a constant $C^* \geq 0$ independent of $|P|$
+such that $B \leq C^*$ for all valid deployment states.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We compose Assumptions~\ref{ass:A1}--\ref{ass:A4} into a uniform
+bound on $B$.
+
+\emph{Step 1: Bound the composed non-residual gap via four-channel
+decomposition.}
+By
+\citep[Microfoundation]{lasser2026micro}'s Composition Proposition 1
+under the co-evolution regime:
+\begin{equation}
+\label{eq:eps_decomp}
+  \epsnonresComposed \;\leq\; \sum_{c \in \{1,2,3,4\}}
+  \epsnonresChannel{c} + (\epsnonresCoev)_+.
+\end{equation}
+This is the explicit four-channel decomposition with positive-part
+co-evolution error.
+
+\emph{Step 2: Apply A1 to bound the channel sum.}
+By Assumption~\ref{ass:A1}, each $\epsnonresChannel{c} \leq K_c$
+with $K_c$ independent of $|P|$. Therefore:
+\begin{equation}
+\label{eq:channel_sum_bound}
+  \sum_{c \in \{1,2,3,4\}} \epsnonresChannel{c}
+  \;\leq\; \sum_{c \in \{1,2,3,4\}} K_c
+  \;=:\; K_{\mathrm{ch}}.
+\end{equation}
+$K_{\mathrm{ch}}$ is finite and independent of $|P|$.
+
+\emph{Step 3: Apply A4 to bound the co-evolution error.}
+By Assumption~\ref{ass:A4}, $(\epsnonresCoev)_+ \leq K_{\mathrm{coev}}
+\cdot M(\text{deployment})$ with both $K_{\mathrm{coev}}$ and
+$M(\text{deployment})$ independent of $|P|$. Therefore:
+\begin{equation}
+\label{eq:coev_bound}
+  (\epsnonresCoev)_+ \;\leq\; K_{\mathrm{coev}} \cdot M
+  \;=:\; K_{\mathrm{coev}}',
+\end{equation}
+where we absorbed $M(\text{deployment})$ into the constant.
+
+\emph{Step 4: Combine Steps 2 and 3 into a bound on $\epsnonresComposed$.}
+Substituting Equations~\ref{eq:channel_sum_bound}
+and~\ref{eq:coev_bound} into Equation~\ref{eq:eps_decomp}:
+\begin{equation}
+\label{eq:eps_total_bound}
+  \epsnonresComposed \;\leq\; K_{\mathrm{ch}} + K_{\mathrm{coev}}'
+  \;=:\; K_{\mathrm{nonres}}.
+\end{equation}
+$K_{\mathrm{nonres}}$ is the sum of $|P|$-independent constants and
+is therefore $|P|$-independent.
+
+\emph{Step 5: Apply A2 to bound the residual floor.}
+By Assumption~\ref{ass:A2}, $\epsfloor \leq K_{\mathrm{floor}}$
+with $K_{\mathrm{floor}}$ independent of $|P|$.
+
+\emph{Step 6: Bound $\epsgap$ via the gap decomposition.}
+The total gap is bounded by the non-residual plus the residual:
+\begin{equation}
+\label{eq:eps_gap_total}
+  \epsgap \;\leq\; \epsnonresComposed + \lambda \cdot \epsfloor
+  \;\leq\; K_{\mathrm{nonres}} + \lambda \cdot K_{\mathrm{floor}}
+  \;\leq\; K_{\mathrm{nonres}} + K_{\mathrm{floor}}
+\end{equation}
+(using $\lambda \in [0,1]$ in the last inequality). Define
+$K_{\mathrm{gap}} := K_{\mathrm{nonres}} + K_{\mathrm{floor}}$;
+$K_{\mathrm{gap}}$ is independent of $|P|$.
+
+\emph{Step 7: Apply A3 to bound the Lipschitz constant.}
+By Assumption~\ref{ass:A3}, $\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$
+with $K_{\mathrm{Lip}}$ independent of $|P|$.
+
+\emph{Step 8: Compose into a uniform bound on $B$.}
+Combining Equations~\ref{eq:composition_rule} with the bounds from
+Steps 6 and 7:
+\begin{equation}
+\label{eq:final_bound}
+  B \;=\; \mathrm{Lip}(g) \cdot \bigl(\epsnonresComposed + \lambda
+  \cdot \epsfloor\bigr)
+  \;\leq\; K_{\mathrm{Lip}} \cdot K_{\mathrm{gap}}
+  \;=:\; C^*.
+\end{equation}
+$C^*$ is the product of $|P|$-independent constants and is therefore
+$|P|$-independent.
+
+By Definition~\ref{def:intensive}, $B$ is intensive in $|P|$. $\Box$
+\end{proof}
+
+\section{Discussion of the constants}
+
+The proof produces an explicit constant $C^* = K_{\mathrm{Lip}}
+\cdot (K_{\mathrm{ch}} + K_{\mathrm{coev}}' + K_{\mathrm{floor}})$,
+each component of which depends only on operationally-determined
+quantities:
+
+\begin{itemize}
+\item $K_{\mathrm{Lip}}$: bounded sensitivity of the alignment
+  property $g$ (deployment-class restriction; (C6) of Theorem~1).
+\item $K_c$ for $c \in \{1,2,3,4\}$: per-channel observation
+  thresholds (set by the deployment's verification infrastructure).
+\item $K_{\mathrm{coev}}$: structural constant from
+  \citep[Microfoundation]{lasser2026micro}'s Composition Proposition 1.
+\item $M$: maximum per-channel coupling magnitude (set by the
+  deployment's governance discipline).
+\item $K_{\mathrm{floor}}$: residual unobservability rate (set by
+  the deployment's privacy and attestation discipline).
+\end{itemize}
+
+None of these scale with $|P|$. The constant $C^*$ is therefore a
+deployment-time parameter, fully determined by operational
+choices, and the deployment claim's capability-magnitude-
+independence property follows.
+
+\section{Connection to the deployment claim}
+
+Lemma~\ref{lem:1}'s intensivity property is the foundational input
+to Theorem~1's Layer~1 bound. Specifically:
+\begin{itemize}
+\item Layer~1 statement: $|g(\Ttruth) - g(\Pproxy)| \leq
+  \mathrm{Lip}(g) \cdot h_{\mathrm{static}}(\theta)$.
+\item By the Lipschitz transfer of
+  \citep[Microfoundation]{lasser2026micro}, $|g(\Ttruth) -
+  g(\Pproxy)| \leq \mathrm{Lip}(g) \cdot \epsgap$.
+\item By Lemma~\ref{lem:1}, $\mathrm{Lip}(g) \cdot \epsgap \leq
+  C^*$ uniformly.
+\item Therefore $h_{\mathrm{static}}(\theta) \leq C^* /
+  \mathrm{Lip}(g) = K_{\mathrm{gap}}$, intensive in $|P|$.
+\end{itemize}
+
+Layer~1's intensive bound is established through Lemma~\ref{lem:1}.
+Subsequent lemmas (Lemma~2 Lyapunov-Goodhart bridge, Lemma~3 HHI
+surrogate adequacy) refine the operational meaning of $\epsgap$
+without changing its intensivity.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal definition of intensivity in $|P|$.
+\item Four named assumptions (A1--A4) sufficient for the
+  composition's intensivity, with each grounded in source-paper
+  machinery.
+\item An explicit constant $C^*$ in terms of operational
+  parameters, with no $|P|$-dependence.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of the constant $C^*$. The proof gives a uniform
+  upper bound, not the tightest possible bound. Deployments may
+  achieve smaller bounds through tighter operational discipline;
+  this is operational engineering, not theorem content.
+\item Existence of deployment configurations satisfying A1--A4.
+  The assumptions are conditions on the deployment; whether they
+  hold for any particular deployment is verified by the
+  deployment-tooling specification (\S8 of Paper~10).
+\item The explicit form of the constants $K_c$, $K_{\mathrm{coev}}$,
+  $M$, $K_{\mathrm{floor}}$, $K_{\mathrm{Lip}}$. These are determined
+  by the deployment's operational choices and source-paper
+  parameters; the proof asserts their existence and independence
+  from $|P|$ but does not derive their numerical values.
+\end{itemize}
+
+\section{Specific verification questions for codex review}
+
+\begin{enumerate}
+\item Is Definition~\ref{def:intensive} (intensive in $|P|$) the
+  right formalization? In particular, is the uniform-constant
+  formulation appropriate, or should we use a different convention
+  (e.g., $|P|$-asymptotic rather than $|P|$-uniform)?
+
+\item Are Assumptions A1--A4 stated correctly? In particular:
+  (a) Does A1's per-channel intensivity actually follow from
+  \citep[Microfoundation]{lasser2026micro}, or does it require
+  additional content not in the source paper?
+  (b) Is A2 (residual-floor intensivity) defensible, or could the
+  residual class grow with $|P|$ in some deployment regimes?
+  (c) Is A4's bound on $(\epsnonresCoev)_+$ actually established
+  by \citep[Microfoundation]{lasser2026micro}'s Composition
+  Proposition~1, or does that proposition give a different
+  (potentially weaker) bound?
+
+\item Is the proof step-by-step rigorous? In particular,
+  (a) Does the absorption $K_{\mathrm{coev}} \cdot M(\text{deployment})
+  =: K_{\mathrm{coev}}'$ in Step 3 hide any $|P|$-dependence?
+  (b) Is the use of $\lambda \in [0,1]$ in Step 6 legitimate, or
+  could $\lambda$ depend on $|P|$ in some deployment regimes?
+
+\item The proof asserts the constants exist but does not derive
+  their numerical values. Is that acceptable for the deployment
+  claim's purposes, or does Paper~10 need to specify computational
+  procedures for each constant?
+
+\item Is the Layer~1 connection (\S6 of this draft) correctly
+  stated? Specifically, does $h_{\mathrm{static}}(\theta) \leq
+  K_{\mathrm{gap}}$ correctly capture the role of
+  Lemma~\ref{lem:1} in Theorem~1's Layer~1 proof?
+\end{enumerate}
+
+\end{document}

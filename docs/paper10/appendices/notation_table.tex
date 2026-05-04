@@ -1,0 +1,93 @@
+\section{Notation reconciliation}
+\label{app:notation}
+
+This appendix collects the full notation reconciliation table.  The
+source papers in the GFM sequence use different conventions for the
+same underlying quantities; This paper standardizes on a single set
+of symbols across the composition.  Symbols introduced by this
+paper (rather than inherited from a source paper) are marked
+\emph{New} in column~2.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\caption{Notation reconciliation across source papers and This paper's
+standardization.}
+\label{tab:notation}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}p{0.13\textwidth} p{0.31\textwidth} p{0.48\textwidth}@{}}
+\toprule
+\textbf{This paper} & \textbf{Source paper} & \textbf{Meaning} \\
+\midrule
+$\volL$ & \citep{lasser2026poset} & Possessed-capability volume \\
+$\volR$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\volR$ & Realized capability volume (latent) \\
+$\volRwin$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\volR^{[W]}$ & Window-active realized volume \\
+$\volRlower$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\volR^{\mathrm{lower}}$ & Sacrifice-derived lower bound \\
+$\betaL$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\beta^{\mathrm{lower}}$ & B-to-C ratio \\
+$\HHI$ & \citep[Need Sufficiency]{lasser2026paper8b} $\mathrm{HHI}$ & Trade-flow Herfindahl index \\
+\midrule
+$\Vdisc$ & \citep[Horizon Aware]{lasser2026horizon} $V^\gamma$ & Discounted value function \\
+$\rext$ & \citep[Horizon Aware]{lasser2026horizon} $r_{\mathrm{ext}}$ & Cross-substrate cooperative novelty rate \\
+$\meff$ & \citep[Horizon Aware]{lasser2026horizon} $m_{\mathrm{eff}}$ & Nominal effective substrate count \\
+$\Delta_0$ & \citep[Horizon Aware]{lasser2026horizon} $\Delta_0$ & Immediate $\volL$-change from domination \\
+$\Delta r_K$ & \citep[Horizon Aware]{lasser2026horizon} $\Delta r_K$ & Strategy-dependent internal-rate gain \\
+\midrule
+$\Lyap$ & \citep[Phase Redundancy]{lasser2026phase} $L$ & Lyapunov function on world-model error \\
+$\Wm$ & \citep[Phase Redundancy]{lasser2026phase} $\hat{W}$ & World-model state \\
+$\rhomincross$ & \citep[Phase Redundancy]{lasser2026phase} $\rho_{\min}^{\mathrm{cross}}$ & Cross-substrate redundancy minimum \\
+$\rsub$ & \citep[Phase Redundancy]{lasser2026phase} $r_{\mathrm{sub}}$ & Subsumption frequency \\
+$\rS, \rW$ & \citep[Phase Redundancy]{lasser2026phase} $r_S, r_W$ & Self-correction, error-proportional rates \\
+$\tau_{\mathrm{meta}}$ & \citep[Phase Redundancy]{lasser2026phase} & Metastable lifetime / cascade-time lower bound \\
+\midrule
+$\Witness, \Ledger$ & \citep[Exogenous Verification]{lasser2026exo} $\mathcal{W}, \mathcal{L}$ & Algorithmic witness, verification ledger \\
+$\Commit$ & \citep[Exogenous Verification]{lasser2026exo} & Pedersen commitment \\
+\midrule
+$\epsgap$ & \citep[Microfoundation]{lasser2026micro} $\varepsilon_{\mathrm{gap}}$ & Total proxy-truth gap \\
+$\epsnonres$ & \citep[Microfoundation]{lasser2026micro} $\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}$ & Non-residual gap on $P^{\mathrm{act}}$ \\
+$\epsfloor$ & \citep[Microfoundation]{lasser2026micro} $\varepsilon_{\mathrm{floor}}^{\mathrm{res}}$ & Residual floor \\
+$\Pproxy, \Ttruth$ & \citep[Microfoundation]{lasser2026micro} $P, T$ & Proxy ($\volL$) / operational truth ($\volRwin$) \\
+\midrule
+$\mindep$ & New & Failure-correlation-independent substrate count \\
+$\Ddiv$ & New & Substrate-diversification advantage \\
+$\Tadv$ & New & First-shock arrival time \\
+$\lossDmax, \lossdivmax$ & New & Worst-case shock-loss fractions \\
+$\Aadv$ & New & Channel-restricted adversarial class \\
+$\Aadv^{\mathrm{env}}$ & New & Environment-side detection class; see Lemma~\ref{lem:5e} \\
+$\Vem$ & New & Environment-side observable variable enumeration; (C12.PUB) \\
+$\eenv$ & New & Environment-support regularization constant; (C5.SUPP) \\
+$\deltaadv$ & New & SPRT raw KL floor on $\Aadv$; Lemma~\ref{lem:5b} \\
+$\deltaadv^{\mathrm{env}}$ & New & Environment-side raw KL floor; Lemma~\ref{lem:5e} \\
+$\deltastar$ & New & Post-clipping union-class drift floor; Lemma~\ref{lem:6}, (C5.IID) \\
+$\Bclip$ & New & Symmetric LLR clip radius; (C5.HOEFF) \\
+$\Rh = 2\Bclip$ & New & Hoeffding range width; (C5.HOEFF), Lemma~\ref{lem:4} \\
+$\Kch$ & New & Monitored-channel cardinality; (C5.MULT) \\
+$A = \log\!\frac{1-\beta}{\alpha}$ & New & SPRT threshold; Lemma~\ref{lem:6} \\
+$\Tbeta$ & New & SPRT high-probability detection quantile; Lemma~\ref{lem:6} \\
+$\rhogap$ & New & Per-step gap-growth rate; (C11) \\
+$\Ncasc$ & New & Event-throughput floor before cascade; (C11.CLK) \\
+$\Nev(\cdot)$ & New & SPRT exposure event count up to wall-clock time \\
+$\bclk$ & New & Clock-failure probability; (C11.CLK) \\
+$\bcal$ & New & Calibration-uncertainty probability; (C11.CLK) empirical variant \\
+$\kappa$ & New & $2\delta/\Rh^2$ Hoeffding-asymptotic constant; Lemma~\ref{lem:4} \\
+$I_1, \ldots, I_{11}$ & New & Operational invariants \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The most consequential reconciliations:
+\begin{itemize}
+\item \citep[Phase Redundancy]{lasser2026phase}'s $\meff$ (nominal
+  substrate count) is upgraded to This paper's $\mindep$
+  (failure-correlation-independent substrate count).  The
+  distinction matters because nominally distinct substrates may
+  share failure modes (skeleton substrates), and This paper's
+  safe-region calculation requires genuine independence.
+\item \citep[Microfoundation]{lasser2026micro}'s $P$ and $T$ (proxy
+  and truth) are written as $\Pproxy = \volL$ and $\Ttruth =
+  \volRwin$ throughout this paper to prevent confusion with $P$ as
+  a poset and $T$ as a time variable.
+\item \citep[Horizon Aware]{lasser2026horizon}'s discounted value
+  $V^\gamma$ is written as $\Vdisc$ to make the discount factor an
+  explicit subscript rather than a superscript that conflicts with
+  strategy labels ($\Vdisc^{\mathrm{div}}$, $\Vdisc^D$).
+\end{itemize}

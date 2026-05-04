@@ -1,0 +1,447 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Horizon~Aware}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\Aadv}{A_{\mathrm{adv}}}
+\newcommand{\deltaadv}{\delta_{\mathrm{adv}}}
+\newcommand{\Witness}{\mathcal{W}}
+\newcommand{\Ledger}{\mathcal{L}}
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+\newcommand{\deltastar}{\delta_{*}}
+\newcommand{\Tbeta}{T_{\beta}}
+
+\title{Lemma 5e (Environment-side witness extension): Full Proof Draft v1}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal}
+
+Promote the environment-side detection KL floor derivation
+(currently an inline sketch in Paper~10 §4.11) to a full appendix
+proof, mirroring the structure of Lemma~5b's appendix proof
+(\texttt{appendices/proofs.tex} §A.5).
+
+V1 of the inline statement asserts that the SPRT machinery applies
+symmetrically to environment-side observables under $I_8$, yielding
+a KL floor $\deltaadv^{\mathrm{env}} > 0$ over $V_{\mathrm{env}}$.
+This draft formalizes both (a) the symmetric construction (mirror of
+\citep[Exogenous~Verification]{lasser2026exo}'s agent-side
+substrate-exclusivity) and (b) the per-variable KL floor derivations
+for the four canonical environment-side observables.
+
+\section{Setup: environment-side substrate-exclusive witnesses}
+
+\subsection{Symmetric construction (mirror of Paper 5)}
+
+\citep[Exogenous~Verification]{lasser2026exo} constructs
+substrate-exclusive witnesses for agent-side observables: a witness
+on substrate $s' \neq s(\mathrm{agent})$ attests to events on
+substrate $s(\mathrm{agent})$ via cross-substrate verification.
+The construction relies on three properties:
+\begin{enumerate}
+\item \emph{Substrate distinctness:} the witness substrate $s'$ is
+  causally separable from the observed substrate $s$.
+\item \emph{Cryptographic commitment:} witness records are committed
+  via Pedersen commitments \emph{(or analogous binding scheme)}
+  ensuring tamper-evidence.
+\item \emph{Ledger publication:} commitments are published to the
+  verification ledger $\Ledger$ under
+  \citep[Exogenous~Verification]{lasser2026exo}'s
+  substrate-exclusivity discipline.
+\end{enumerate}
+
+Invariant $I_8$ (Paper~10 §3) extends this construction to
+environment-side observables.  The mirror property is:
+\[
+  I_8: \quad \forall v \in V_{\mathrm{env}}:\
+  \exists\ \Witness_v \text{ on } s_{\mathrm{env}} \neq
+  s(\mathrm{agent}).
+\]
+The witness substrate $s_{\mathrm{env}}$ is environment-side; the
+witnessed quantity $v$ is an exogenous state variable; the
+observed-substrate constraint becomes $s(\mathrm{agent})$.
+
+\textbf{Construction note (new machinery).}  Paper~5 specifies the
+agent-side substrate-exclusivity construction; Paper~10 §3 specifies
+that environment-side substrate-exclusive witnesses use a separate
+substrate partition with separate trust models, but inherits the
+cryptographic and ledger-publication discipline from Paper~5.
+Substantively new machinery: (i) the environment-side substrate
+partition, (ii) trusted-setup ceremonies for environment-side
+witnesses, (iii) coverage specification by enumerating
+$V_{\mathrm{env}}$ in deployment documentation.
+
+\subsection{The detection class $\Aadv^{\mathrm{env}}$}
+
+\begin{definition}[Environment-side adversarial class
+$\Aadv^{\mathrm{env}}$]
+A regime-(iii) strategy $q$ achieving its effect via environment
+manipulation belongs to $\Aadv^{\mathrm{env}}$ if and only if $q$
+produces an observable shift in at least one $v \in V_{\mathrm{env}}$
+under the SPRT alternative versus baseline.
+\end{definition}
+
+\textbf{The named residual.}  Environment manipulations targeting
+exogenous variables outside $V_{\mathrm{env}}$ (variables not
+monitored by environment-side witnesses) are outside
+$\Aadv^{\mathrm{env}}$ and are not detected by Lemma~5e.  This is
+Theorem~1 residual~(R2).  The residual is real: $V_{\mathrm{env}}$
+is finite by deployment specification, and adversarial environment
+manipulation that perturbs only unmonitored exogenous variables
+escapes detection.
+
+\section{Per-variable KL floor derivations}
+
+We derive $\deltaadv^{\mathrm{env}}$ as the minimum over four
+per-variable KL floors, one for each canonical environment-side
+observable enumerated in Paper~10's deployment-tooling
+specification (\S8.1) and $I_8$'s threshold semantics:
+\begin{itemize}
+\item $V_1$: cross-substrate cooperative novelty rate $\rext$
+  (Poisson).
+\item $V_2$: substrate-distinctness independence indicator
+  (Bernoulli).
+\item $V_3$: adversarial-event arrival rate $\lambda$ (Poisson).
+\item $V_4$: trusted-setup status flag (Bernoulli).
+\end{itemize}
+
+For each variable, we (a) state the baseline distribution
+$p_0^{\mathrm{env}}(v)$, (b) the least-favorable adversarial
+alternative $p_1^{\mathrm{env}}(v)$ subject to the SPRT-detectability
+constraint, and (c) the resulting KL divergence floor.
+
+\subsection{Variable $V_1$: cross-substrate cooperative rate
+(Poisson)}
+
+\textbf{Baseline.}  Under stance S0,
+\citep[Horizon~Aware]{lasser2026horizon}'s cross-substrate
+cooperative novelty rate $\rext > 0$ is environment-observable:
+ledger entries record cross-substrate cooperative events with
+Poisson arrival rate $\lambda_0^{(1)}$ in the no-adversary baseline.
+The witness $\Witness_{V_1}$ on $s_{\mathrm{env}}$ records each
+arrival with timestamp and substrate-pair attestation.
+
+\textbf{Adversarial alternative.}  An environment-manipulating
+strategy that suppresses cross-substrate cooperatives (e.g., by
+disrupting environmental conditions for cross-substrate cooperation)
+reduces the rate to at most $\lambda_0^{(1)} - \eta_1$ for some
+$\eta_1 \in (0, \lambda_0^{(1)})$, where $\eta_1$ is the
+SPRT-detectability threshold.
+
+\textbf{KL divergence.}  The Poisson KL between rate-$\lambda_1$ and
+rate-$\lambda_0$ processes per unit time is:
+\[
+  D_{\mathrm{KL}}(\mathrm{Poi}(\lambda_1) \,\|\,
+  \mathrm{Poi}(\lambda_0)) \;=\; \lambda_1 \log(\lambda_1 /
+  \lambda_0) - \lambda_1 + \lambda_0.
+\]
+This is convex in $\lambda_1$ and increasing in
+$|\lambda_1 - \lambda_0|$.  The least-favorable choice within the
+constraint $\lambda_1 \leq \lambda_0^{(1)} - \eta_1$ is
+$\lambda_1 = \lambda_0^{(1)} - \eta_1$, giving:
+\[
+  \delta_1^{\mathrm{env}} \;=\; (\lambda_0^{(1)} - \eta_1)
+  \log\!\frac{\lambda_0^{(1)} - \eta_1}{\lambda_0^{(1)}} -
+  (\lambda_0^{(1)} - \eta_1) + \lambda_0^{(1)} \;>\; 0.
+\]
+
+\subsection{Variable $V_2$: substrate-distinctness independence
+indicator (Bernoulli)}
+
+\textbf{Baseline.}  Per-period substrate-distinctness independence
+indicator $\xi_t \in \{0, 1\}$ is recorded by $\Witness_{V_2}$:
+$\xi_t = 1$ if the period-$t$ failure-correlation audit verifies
+$\mindep \geq m^*$ (independence holds), $\xi_t = 0$ otherwise.
+Baseline rate: $\Pr[\xi_t = 1] = p_0^{(2)} \in (0, 1]$ (typically
+near $1$ for well-anchored deployments).
+
+\textbf{Adversarial alternative.}  An environment-manipulating
+strategy that erodes substrate distinctness (e.g., by introducing
+correlated failure modes across nominally distinct substrates)
+reduces the success rate to at most $p_0^{(2)} - \eta_2$ for some
+$\eta_2 \in (0, p_0^{(2)}]$.
+
+\textbf{KL divergence.}  Bernoulli KL:
+\[
+  \delta_2^{\mathrm{env}} \;=\; (p_0^{(2)} - \eta_2)
+  \log\!\frac{p_0^{(2)} - \eta_2}{p_0^{(2)}} +
+  (1 - p_0^{(2)} + \eta_2) \log\!\frac{1 - p_0^{(2)} + \eta_2}
+  {1 - p_0^{(2)}} \;>\; 0.
+\]
+This is the least-favorable choice within the constraint
+$p_1 \leq p_0^{(2)} - \eta_2$.
+
+\subsection{Variable $V_3$: adversarial-event arrival rate
+(Poisson)}
+
+\textbf{Baseline.}  Adversarial events arrive on the environment
+side with Poisson rate $\lambda_0^{(3)} \geq 0$ (the baseline
+threat-model arrival rate, calibrated by the deployment's threat
+model).  Witness $\Witness_{V_3}$ records arrivals.
+
+\textbf{Adversarial alternative.}  An adversarial strategy that
+\emph{increases} the arrival rate to $\lambda_0^{(3)} + \eta_3$
+(introducing additional adversarial events) is detectable if
+$\eta_3 > 0$ exceeds the SPRT detection threshold.
+
+\textbf{KL divergence.}  Same Poisson form as $V_1$, but with
+positive shift $\eta_3$:
+\[
+  \delta_3^{\mathrm{env}} \;=\; (\lambda_0^{(3)} + \eta_3)
+  \log\!\frac{\lambda_0^{(3)} + \eta_3}{\lambda_0^{(3)}} -
+  (\lambda_0^{(3)} + \eta_3) + \lambda_0^{(3)} \;>\; 0.
+\]
+The case $\lambda_0^{(3)} = 0$ (no baseline adversarial events)
+requires special handling: the KL is then $\eta_3 \log(\eta_3 / 0)
+= \infty$ formally, but operationally is bounded by the
+environment-side substrate's measurement resolution.  Deployments
+should use $\lambda_0^{(3)} > 0$ as a regularized baseline.
+
+\subsection{Variable $V_4$: trusted-setup status flag (Bernoulli)}
+
+\textbf{Baseline.}  The trusted-setup status flag $\sigma_t \in
+\{0, 1\}$ records whether the cryptographic trusted-setup ceremony
+remains intact at period $t$: $\sigma_t = 1$ if integrity audits
+pass, $\sigma_t = 0$ if compromise is detected.  Baseline rate
+$p_0^{(4)} \in (0, 1]$ (near $1$ for properly maintained setups).
+
+\textbf{Adversarial alternative.}  Environment-side adversarial
+strategies that compromise the trusted-setup substrate reduce the
+flag's success rate to $p_0^{(4)} - \eta_4$.
+
+\textbf{KL divergence.}  Same Bernoulli form as $V_2$:
+\[
+  \delta_4^{\mathrm{env}} \;=\; (p_0^{(4)} - \eta_4)
+  \log\!\frac{p_0^{(4)} - \eta_4}{p_0^{(4)}} +
+  (1 - p_0^{(4)} + \eta_4) \log\!\frac{1 - p_0^{(4)} + \eta_4}
+  {1 - p_0^{(4)}} \;>\; 0.
+\]
+
+\subsection{Combined floor}
+
+\[
+  \deltaadv^{\mathrm{env}} \;:=\; \min\{\delta_1^{\mathrm{env}},
+  \delta_2^{\mathrm{env}}, \delta_3^{\mathrm{env}},
+  \delta_4^{\mathrm{env}}\} \;>\; 0.
+\]
+Each $\delta_v^{\mathrm{env}} > 0$ since each least-favorable
+adversarial shift is strictly different from the baseline; the
+minimum is therefore strictly positive.
+
+\section{Statement of Lemma 5e (full)}
+
+\begin{lemma}[Environment-side witness extension]
+\label{lem:5e}
+Under invariant $I_8$ (environment-side substrate-exclusive
+witnesses on exogenous variables), Lemma~5b's channel-restricted
+detection class extends to environment-side observables.
+Specifically, for any $q \in \Aadv^{\mathrm{env}}$:
+\[
+  D_{\mathrm{KL}}(q \,\|\, p_0^{\mathrm{env}}) \;\geq\;
+  \deltaadv^{\mathrm{env}} \;>\; 0,
+\]
+where $\deltaadv^{\mathrm{env}} = \min\{\delta_v^{\mathrm{env}} :
+v \in V_{\mathrm{env}}\}$ is the minimum over per-variable KL
+floors derived from environment-side least-favorable alternatives.
+
+For the canonical four-variable $V_{\mathrm{env}} = \{V_1, V_2,
+V_3, V_4\}$ enumerated in §3, the explicit per-variable floors are:
+\begin{itemize}
+\item $\delta_1^{\mathrm{env}}$ (Poisson cross-substrate cooperative
+  rate),
+\item $\delta_2^{\mathrm{env}}$ (Bernoulli substrate-distinctness
+  indicator),
+\item $\delta_3^{\mathrm{env}}$ (Poisson adversarial-event arrival
+  rate),
+\item $\delta_4^{\mathrm{env}}$ (Bernoulli trusted-setup status
+  flag),
+\end{itemize}
+each $> 0$ as derived in §3.1--3.4.
+\end{lemma}
+
+\begin{proof}
+The proof has three parts: (a) the symmetric construction (§2),
+(b) the per-variable KL floor derivations (§3), and (c) the
+combined floor.
+
+(a)~The symmetric construction inherits Paper~5's
+substrate-exclusivity machinery (cryptographic commitment +
+ledger publication + cross-substrate verification) with the
+substrate-roles swapped: $s_{\mathrm{env}}$ replaces $s'$
+(witness substrate), and exogenous variables $v$ replace agent
+observables.  $I_8$ requires this construction for every $v \in
+V_{\mathrm{env}}$.
+
+(b)~For each $v_i \in V_{\mathrm{env}}$, the SPRT machinery applies
+on the witness-recorded observable.  The least-favorable
+adversarial alternative within the SPRT-detectability constraint
+gives a strictly positive per-variable KL floor
+$\delta_i^{\mathrm{env}} > 0$ (§3.1--3.4 derivations).
+
+(c)~$\deltaadv^{\mathrm{env}} = \min_i \delta_i^{\mathrm{env}}$ is
+strictly positive as the minimum of finitely many strictly
+positive quantities.  $\Box$
+\end{proof}
+
+\section{Discussion}
+
+\paragraph{Composition with Lemma 6.}  The post-clipping union-class
+drift floor $\deltastar$ used in Lemma~6's $\Tbeta$ derivation is
+$\deltastar \leq \min(\deltaadv, \deltaadv^{\mathrm{env}})$, with
+the inequality accounting for any drift reduction from (C5.HOEFF)
+clipping.  Lemma~5e supplies $\deltaadv^{\mathrm{env}}$ for the
+union; Lemma~5b supplies $\deltaadv$.
+
+\paragraph{Coverage and the named residual (R2).}
+$V_{\mathrm{env}}$ is finite by deployment specification.  Variables
+outside $V_{\mathrm{env}}$ are real exogenous quantities not
+monitored by environment-side witnesses; environment manipulations
+targeting only those unmonitored variables fall into Theorem~1
+residual~(R2) and are outside the deployment-safety guarantee.
+The deployment must enumerate $V_{\mathrm{env}}$ exhaustively per
+its threat model; under-coverage shifts adversarial mass into
+(R2).
+
+\paragraph{Asymmetric vs. symmetric machinery.}
+Paper~5's agent-side substrate-exclusivity is constructed; Paper~10
+§3 specifies that environment-side substrate-exclusivity is the
+mirror, but is new machinery (separate substrate partition, separate
+trust models).  This lemma's symmetric-construction argument is
+\emph{structural}: it inherits Paper~5's discipline.  The
+deployment must instantiate the environment-side construction
+(Audit~2/3 in §8 deployment tooling).
+
+\paragraph{Choice of $\eta_v$.}
+Each per-variable shift threshold $\eta_v$ is the SPRT
+detectability threshold for that variable.  Operationally, $\eta_v$
+is set by the deployment's threat model: how much shift in $v$
+must be detected for the deployment to consider the manipulation
+adversarially material.  Tighter $\eta_v$ gives smaller
+$\delta_v^{\mathrm{env}}$ (higher detection sensitivity but lower
+KL floor); looser $\eta_v$ gives larger $\delta_v^{\mathrm{env}}$
+(lower sensitivity but higher floor, hence faster detection in
+$\Tbeta$).
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item The symmetric-construction argument formalizing $I_8$'s
+  extension of Paper~5's substrate-exclusivity to environment-side
+  observables.
+\item Per-variable KL floor derivations for the four canonical
+  environment-side observables (Poisson for rates; Bernoulli for
+  binary flags), each strictly positive.
+\item The combined floor $\deltaadv^{\mathrm{env}} = \min_v
+  \delta_v^{\mathrm{env}} > 0$ as a deployment-class constant.
+\item Composition with Lemma~6 via the post-clipping union-class
+  drift floor $\deltastar$.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of per-variable shifts $\eta_v$.  These are
+  threat-model-derived and deployment-policy-set.
+\item Exhaustive coverage of $V_{\mathrm{env}}$.  This is a
+  deployment-policy enumeration question; under-coverage falls into
+  residual~(R2).
+\item Security proof of the environment-side substrate-exclusivity
+  construction.  Paper~10 §3 specifies the construction, not the
+  security proof; cryptographic security is inherited from
+  Paper~5's substrate-exclusivity discipline.
+\item Multinomial extension.  $V_{\mathrm{env}}$ is enumerated as
+  Poisson + Bernoulli observables for the canonical four; if
+  deployment policy adds multinomial environment-side observables
+  (e.g., partition over trade-flow categories), the analogous
+  multinomial KL derivation from Lemma~5b's appendix proof applies.
+\end{itemize}
+
+\section{Specific verification questions for codex review}
+
+\begin{enumerate}
+\item Is the symmetric-construction argument rigorous, or does the
+  ``mirror of Paper~5'' framing leave operational gaps (e.g.,
+  ledger-commitment trust assumptions for environment-side
+  witnesses that don't transfer cleanly from agent-side)?
+
+\item Is the per-variable KL floor derivation complete?  In
+  particular: $V_3$ has the case $\lambda_0^{(3)} = 0$ (no
+  baseline adversarial events) where the Poisson KL formally
+  diverges; the draft addresses this with a regularization note,
+  but is the regularization sufficient or does it warrant a
+  separate clause?
+
+\item Is $V_{\mathrm{env}} = \{V_1, V_2, V_3, V_4\}$ canonical?
+  The deployment-tooling enumeration mentions four named
+  observables (cooperative rate, distinctness indicator,
+  adversarial arrival rate, trusted-setup flag), but should the
+  proof allow for additional deployment-specific variables?  If so,
+  the per-variable derivation pattern (Poisson/Bernoulli/
+  multinomial) covers them.
+
+\item Is the named residual (R2) connection correct?  The proof
+  asserts that variables outside $V_{\mathrm{env}}$ are residuals;
+  is this consistent with Theorem~1's residual~(R2) statement, or
+  does the residual definition need refining?
+
+\item Does the proof need Theorem-level conditions analogous to
+  (C5.SPRT) bundle?  Specifically, the SPRT-applicability
+  conditions ((C5.HOEFF) clipping, (C5.MULT) cardinality, (C5.IID)
+  adapted increments, (C5.SUPP) finiteness) apply to both
+  agent-side and environment-side LLR processes; should the
+  conditions be restated as covering both, or is the
+  agent-vs-environment-side symmetry implicit?
+\end{enumerate}
+
+\section{Structural questions for the v-cycle}
+
+Following the workflow used for Lemmas~1, 2, 5a, 6:
+
+\textbf{Q-A.} Is this proof appendix-worthy, or does it stay
+inline?  TODO\_proofs.md says ``Body for the symmetry argument;
+appendix for the KL floor derivation.''  V1 has both in one
+draft for review.
+
+\textbf{Q-B.} What's the right page-budget?  Lemma~5b's appendix
+proof is $\sim$1.5pp; mirroring that, Lemma~5e's appendix proof
+should be similar.  V1 is more detailed than necessary; the final
+version should be tight.
+
+\textbf{Q-C.} Are there theorem-level conditions to surface?
+Lemmas~1, 2, 5a, 6 each surfaced new conditions (C6, C7, C8, C9,
+C10, C11, C5.SPRT bundle, C11.CLK).  Lemma~5e may or may not
+require new conditions; the v-cycle should determine this.
+
+\end{document}

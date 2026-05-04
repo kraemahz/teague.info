@@ -1,0 +1,306 @@
+\section{Operationalization of Conjecture 1}
+\label{sec:conjecture_op}
+
+Theorem~\ref{thm:deployment_safety} depends on \citep[Microfoundation]{lasser2026micro}'s
+Conjecture~1 (optimization pressure correlates with gap exploitation)
+through invariant $I_5$ (HHI ceiling) and Assumption SA1 (HHI
+surrogate adequacy). This section discusses the structure of that
+dependency: what HHI proves about Conjecture~1 (Lemma~3 forward
+direction), what SA1 assumes (the reverse direction needed by the
+theorem), what SA1 buys vs.\ what proving Conjecture~1 outright
+would buy, and the empirical validation pathway deferred to
+follow-up work.
+
+\subsection{The Conjecture 1 dependency}
+\label{sec:conjecture_dependency}
+
+\citep[Microfoundation]{lasser2026micro}'s Conjecture~1 states informally: optimization pressure on
+the proxy $\Pproxy = \volL$ correlates with exploitation of the
+proxy-truth gap $\epsnonres$. The conjecture's implication for
+deployment safety is: when the system is in the
+optimization-pressure regime $\mathcal{R}_{\mathrm{press}}$, the gap
+exploitation predicted by the conjecture would invalidate the
+static Goodhart bound's intensivity property.
+
+Conjecture~1 is conjectural, not proved. \citep[Microfoundation]{lasser2026micro} explicitly defers
+its formal treatment, marking it ``conjectural'' in
+\citep[\S goodhart]{lasser2026micro}. This paper's deployment claim
+must address this: Theorem~1's Layer~1 binding requires the
+deployment to be \emph{outside} $\mathcal{R}_{\mathrm{press}}$, but
+we cannot assert this without invoking some characterization of
+$\mathcal{R}_{\mathrm{press}}$.
+
+The HHI ceiling $I_5$ provides such a characterization in
+operational terms: deployments with $\HHI < H^*$ are claimed (via
+SA1) to be outside $\mathcal{R}_{\mathrm{press}}$. The remainder of
+this section discusses what this claim is, what it buys, and what
+remains open.
+
+\subsection{The HHI surrogate: what Lemma 3 actually proves}
+\label{sec:hhi_lemma3}
+
+Lemma~\ref{lem:3_forward} (\S\ref{sec:lem3}) establishes the
+forward implication:
+\[
+  \HHI > H^* \;\Longrightarrow\;
+  \text{trade-flow concentration prerequisites of }
+  \mathcal{R}_{\mathrm{press}} \text{ are met}.
+\]
+The proof chain goes from HHI's Schur-convexity property
+(\citep[Schur-convexity]{lasser2026paper8b}) through trade-flow
+concentration (\citep[Revealed~Sacrifice]{lasser2026paper8a}'s exercise-pattern interpretation) to
+optimization-target concentration (the structural prerequisite of
+Conjecture~1's predicted-exploitation regime).
+
+This is a one-way implication. Lemma~\ref{lem:3_forward} \emph{does
+not} establish the reverse: not every deployment in
+$\mathcal{R}_{\mathrm{press}}$ has $\HHI > H^*$. There may exist
+deployments where optimization pressure is concentrated on the
+proxy without manifesting as concentrated trade flow --- e.g., an
+optimizer that distributes its proxy-pressure across many trade
+categories while concentrating its internal computation on a single
+proxy-targeting strategy. Lemma~\ref{lem:3_forward} does not rule
+out such deployments.
+
+\subsection{The SA1 assumption}
+\label{sec:sa1}
+
+Theorem~1 Layer~1 requires the contrapositive of
+Lemma~\ref{lem:3_forward}: $\HHI < H^* \implies \mathcal{R}_{\mathrm{press}}^c$
+(deployments outside the HHI ceiling are outside the pressure
+regime). This is the reverse direction Lemma~\ref{lem:3_forward}
+does not provide. We close the gap with explicit Assumption SA1:
+
+\begin{quote}
+\textbf{SA1 (HHI surrogate adequacy, restated from
+\S\ref{sec:lem3}).}  For deployments under stance S0 with
+operational invariants $I_1, \ldots, I_4$ in force, the HHI ceiling
+$\HHI < H^*$ is sufficient to ensure the deployment lies outside
+Conjecture~1's predicted-exploitation regime
+$\mathcal{R}_{\mathrm{press}}$:
+\[
+  \HHI < H^* \;\Longrightarrow\; \mathcal{R}_{\mathrm{press}}^c.
+\]
+\end{quote}
+
+SA1 is an \emph{empirical adequacy claim}: it asserts that, in the
+class of deployments meeting (C1)--(C5) of Theorem~1, HHI is a
+sufficient proxy for the absence of optimization pressure on the
+proxy. SA1 is testable in principle: comparing actual gap-exploitation
+behavior against HHI levels in real deployments would either
+support or falsify the assumption.
+
+\paragraph{What SA1 is, and what it is not.}
+
+SA1 is \emph{not} a derivative of source-paper machinery. It is an
+explicit assumption that the deployment claim conditions on,
+analogous to (C1)--(C5) of Theorem~1. SA1's status in this paper is
+identical to Conjecture~1's status in \citep[Microfoundation]{lasser2026micro}: it is named, its
+empirical content is specified, and its formal proof is deferred.
+
+SA1 is \emph{not} a weakening of Conjecture~1. The two are
+complementary: Conjecture~1 says optimization pressure correlates
+with gap exploitation; SA1 says HHI is a measurable surrogate for
+optimization-target concentration that captures the
+pressure-regime's structural prerequisites. Both could be true;
+neither is yet proved.
+
+\subsection{What SA1 buys vs.\ what proving Conjecture 1 would buy}
+\label{sec:sa1_buys}
+
+The deployment-safety literature has two structurally different
+options for handling the Conjecture-1 dependency. They produce
+deployment claims of different strengths.
+
+\textbf{Option A (This paper's choice): Operationalize via SA1.}
+Adopt $I_5$ (HHI ceiling) as the operational invariant and SA1 as
+an explicit assumption. The deployment claim becomes: under
+(C1)--(C5) and SA1, the Goodhart slack is bounded by an intensive
+constant.
+
+\emph{What this buys:}  An operationally-checkable deployment
+claim. Operators monitor $I_5$ (a ledger-observable quantity); SA1
+is a stated condition that operators can read and assess. The
+deployment scales past any capability level the deployment's
+evaluation methods can characterize, conditional on the named
+assumption.
+
+\emph{What this does not buy:}  Independence from SA1. If SA1 is
+empirically false in some regime, $I_5$ is the wrong invariant and
+the deployment claim is unsound for that regime.
+
+\textbf{Option B (deferred): Prove Conjecture~1.}
+Formally establish that optimization pressure on the proxy
+correlates with gap exploitation under stated structural
+assumptions. The deployment claim becomes: under (C1)--(C5), the
+Goodhart slack is bounded by an intensive constant unconditionally
+(no SA1).
+
+\emph{What this would buy:}  Independence from SA1. The deployment
+claim becomes a conditional theorem (conditional only on
+(C1)--(C5)) rather than a conditional theorem with an additional
+empirical adequacy assumption. The structural argument for the
+HHI surrogate becomes a derived theorem rather than an assumed
+relationship.
+
+\emph{What this requires:}  Formal proof of Conjecture~1, which is
+substantial open work. The conjecture's predicates (concentration,
+gradient existence, computational capacity) need formal definition;
+the correlation claim needs either a structural derivation from
+prior axioms or an empirical validation framework that supports a
+formal claim.
+
+\paragraph{Why this paper chooses Option A.}
+
+Three reasons:
+
+\emph{Visibility of the empirical content.}  SA1 is what this paper
+actually needs.  Asserting that $I_5$ is sufficient without naming
+SA1 would bury the empirical content of the deployment claim.
+Naming SA1 makes the content visible: operators see exactly what
+they are conditioning on, and reviewers see exactly what the
+deployment claim does and does not establish.
+
+\emph{Operational tractability.}  Option A delivers a deployment
+claim that is invokable today: operators can implement \citep[Exogenous~Verification]{lasser2026exo}'s
+verification infrastructure, monitor $I_5$, and invoke Theorem~1
+under stated conditions. Option B is contingent on formal work
+that may take years and may not yield a formal proof at all.
+
+\emph{Conjecture-1 follow-up is its own paper.}  Establishing
+Conjecture~1 (or refuting it) is a substantial research program
+with its own scope. This paper's deployment claim should not be held
+hostage to that program; the conditional formulation lets this paper
+ship while the conjecture program continues.
+
+\subsection{Empirical validation pathway}
+\label{sec:sa1_empirical}
+
+SA1 is empirically testable. The validation pathway compares actual
+gap-exploitation behavior against HHI levels in real deployments.
+The structure of such a study:
+
+\begin{enumerate}
+\item Identify deployments meeting (C1)--(C5) of Theorem~1 (the
+  precondition class for which SA1 is asserted to hold).
+\item Measure HHI on trade flows continuously, computing the
+  invariant $\HHI < H^*$ across rolling windows.
+\item Independently measure proxy-truth gap exploitation: cases
+  where the agent achieves high $\Pproxy$-score with low
+  $\Ttruth$-realization, evaluated against ground-truth realizations
+  on a held-out subset.
+\item Test the empirical relationship: do deployments with $\HHI <
+  H^*$ exhibit gap-exploitation rates significantly below
+  deployments with $\HHI \geq H^*$? A statistically significant
+  separation supports SA1; the absence of separation refutes it.
+\end{enumerate}
+
+The study is a candidate for follow-up empirical work. If
+successful, SA1 graduates from assumption to derived consequence,
+and Theorem~1's deployment claim strengthens correspondingly. If
+falsified, $I_5$ is the wrong invariant and This paper's deployment
+claim must be revised (either by replacing $I_5$ or by restricting
+scope).
+
+The follow-up paper proposed in \S\ref{sec:scope} (the
+channel-mediation conjecture and HHI--$\Delta r_K$ structural
+relationship) is the natural home for this empirical work. The
+conjecture-mediation work would establish the structural connection
+between trade-flow concentration and the optimization-pressure
+regime; combined with the empirical validation above, it would
+either prove or falsify SA1 directly.
+
+\subsection{Conditional structure of Theorem 1}
+\label{sec:conditional_structure}
+
+Theorem~1 binds when its conditions hold.  The conditions divide
+into three structurally distinct categories: operational conditions
+verifiable from deployment state; conjectural conditions argued on
+strong grounds but not formally proved within this paper or its
+sources; and explicit scope restrictions naming what the theorem
+does not cover.  The distinction matters for what an operator can
+do with the theorem and where its load-bearing weight rests.
+
+\paragraph{Operational conditions: measurement, not theorem.}
+The bulk of the conditions are operationally checkable: the
+operator measures, audits, calibrates, and the conditions either
+hold or do not.  The theorem itself does not say anything about
+whether any particular deployment satisfies them; that is a
+measurement question, not a theorem question, and the deployment-
+tooling section (\S\ref{sec:deployment_tooling}) specifies the
+audits.
+\begin{itemize}
+\item (C1) Eleven operational invariants $I_1$--$I_{11}$:
+  ledger-observable under the verification infrastructure.
+\item (C2) Canonical tripartite substrate identification:
+  deployment-design decision verified by failure-correlation
+  auditing (Audit~1).
+\item (C3) Cooperative-overlap regime: substrate-cooperative
+  structure dominated by cross-substrate cooperatives, measured by
+  the cooperative-vs-redundancy audit (Audit~3).
+\item (C5) Continuous SPRT monitoring + (C5.SPRT) sub-clauses
+  (HOEFF/MULT/IID/SUPP): operational monitor + calibrated constants
+  ($\Bclip$, $\Kch$, $\deltastar$ post-clipping); Audit~7.
+\item (C6)--(C12) (other than C4): bounded-Lipschitz alignment,
+  bounded co-evolution, per-capability admissibility, world-model
+  parameterization regularity, pairwise cooperative-production
+  floor, bounded gap-growth rate, clock comparability, and
+  environment-side witness instantiation.  Each is calibrated by a
+  named audit (4 through 8); the theorem treats each as a deployment-
+  class condition with $|P|$-independent constants.
+\end{itemize}
+The theorem's claim about these is conditional: \emph{if} they
+hold, \emph{then} the bound binds.  Whether they hold in a given
+deployment is what the audit infrastructure is for.
+
+\paragraph{Conjectural conditions: argued, not proved.}
+Two conditions rest on argument or restricted plausibility, not on
+proof:
+\begin{itemize}
+\item \textbf{(SA1) HHI surrogate adequacy.}  The forward direction
+  of \citep[Microfoundation]{lasser2026micro}'s Conjecture~1 is
+  structurally argued in Lemma~\ref{lem:3_forward}; the reverse
+  direction --- $\HHI < H^* \implies \mathcal{R}_{\mathrm{press}}^c$,
+  needed for $I_5$ to bind in Layer~1 --- is not proved by this
+  paper.  SA1 names this as an explicit empirical assumption; the
+  validation pathway in \S\ref{sec:sa1_empirical} lays out how SA1
+  can be tested across deployment classes, and the channel-mediation
+  conjecture proposed in \S\ref{sec:scope} is the natural home for
+  closing this gap structurally.
+\item \textbf{(C4) Inner-alignment condition.}  The agent's
+  effective objective realizing causally-grounded cooperative-
+  outcome value is assumed.  Vanilla RLHF does not deliver (C4);
+  achieving it requires training-time discipline that is itself
+  open research (\S\ref{sec:weaker_c4}).
+\end{itemize}
+SA1 has empirical precedent in the trade-flow concentration
+literature; (C4) is the weakest inner-alignment condition
+consistent with the cooperative-anchoring argument.  Neither is
+formally proved; the conditional structure of the theorem is what
+carries them.
+
+\paragraph{Scope restrictions: not in the theorem's reach.}
+Some classes are explicitly outside the guarantee:
+\begin{itemize}
+\item \textbf{Substrate-targeting scope.}  Theorem~1 covers
+  substrate-targeting adversarial events.  Capability-targeting,
+  coalition-internal-corruption, and environment-witness-orthogonal
+  manipulations fall into residuals (R3) and (R4) and require
+  separate machinery.
+\item \textbf{Basin entry.}  The theorem assumes the deployment is
+  in the cooperative-anchoring basin; it does not establish that a
+  deployment can reach that basin from arbitrary initial conditions.
+\end{itemize}
+
+\paragraph{What this means for SA1 specifically.}
+If SA1 holds empirically, the deployment claim is fully
+operationally checkable: every other conditional is verifiable
+from ledger state.  If SA1 fails for some deployment class, that
+class is outside the deployment claim's scope; operators must either
+find an alternative invariant for the pressure regime or accept
+that their deployment is in the residual class for which the claim
+does not bind.
+
+This paper does not claim universal safety.  It claims that under
+named operational discipline plus the conjectural conditions named
+above, deployment is provably safe in a precise sense.

@@ -1,0 +1,1143 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026gfm\endcsname{Paper~1}
+\expandafter\def\csname bibkey@lasser2026poset\endcsname{Paper~2}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Paper~3}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Paper~5}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Paper~6}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+\newcommand{\Vdisc}{V_{\gamma}}
+\newcommand{\Tadv}{T_{\mathrm{adv}}}
+\newcommand{\Ddiv}{\Delta_{\mathrm{div}}}
+\newcommand{\pshock}{p_{\mathrm{shock}}}
+\newcommand{\lossDmax}{\ell_D^{\max}}
+\newcommand{\lossdivmax}{\ell_{\mathrm{div}}^{\max}}
+
+\title{Draft v4: Lemma 5c Proof Sketch ---\\
+  Minimax Static Tightening of the Anti-Monopolar Region\\
+  \large{(v2 after codex Round A; v3 after Round B; v4 after Round C:
+  single-shock reduction tightened to $N=1$ a.s., multi-shock
+  scope-restricted to cooperative-overlap regime, $\pshock$ reframed
+  as Poisson rate $\lambda$, removable singularity at $\kappa=1$
+  noted, abstract regression fixed)}}
+\author{Paper 10 exploratory draft (companion to lemma\_5\_anti\_monopolar\_robustness.tex)}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Three rounds of codex review have shaped this draft.  Round~A on v1
+identified four soundness errors and confirmed the qualitative
+minimax lift.  Round~B on v2 confirmed the single-shock form as
+citeable but flagged the multi-shock $A_{\mathrm{multi}}$ as
+dimensionally inconsistent with the single-shock $\Ddiv$.  Round~C
+on v3 confirmed v3's discounted-marginal-loss multi-shock fix in
+the balanced/additive special case but flagged the general
+non-equal substrate case as requiring sequential counterfactual
+derivation.
+
+V4 adopts the scope restriction Round~C suggested.  The single-shock
+$\Ddiv$ form is unchanged from v3 (citeable per Round~B, with the
+counterfactual $\alpha_s$ definition from v3):
+\[
+  \Ddiv \;=\; \volL_K \cdot (\lossDmax - \lossdivmax) \cdot
+  \mathbb{E}[\gamma^{\Tadv}].
+\]
+The multi-shock $\Ddiv^{\mathrm{multi}}$ is the discounted sum of
+marginal loss differences at shock times
+(Definition~\ref{def:ddiv_multi}):
+\[
+  \Ddiv^{\mathrm{multi}} \;=\; \mathbb{E}\!\left[\sum_{i=1}^{\infty}
+  \gamma^{T_i} \cdot
+  \bigl(\delta_i^D - \delta_i^{\mathrm{div}}\bigr)\right].
+\]
+
+Scope: v4 explicitly restricts the multi-shock claim to the
+\textbf{cooperative-overlap regime}, where the substrate-cooperative
+structure is dominated by cross-substrate cooperatives (Paper~3's
+$\rext$ source) rather than redundant capabilities.  In this regime,
+the equal-substrate analysis is a \emph{conservative} lower bound on
+the actual sequential-counterfactual $\Ddiv^{\mathrm{multi}}$, which
+is what deployment-safety claims need.  In the redundancy regime
+(capabilities replicated across substrates), the equal-substrate
+analysis is anti-conservative; sequential counterfactual derivation
+is open work and Lemma~5c does not cover it.
+
+The canonical tripartite identification (Human + AI +
+Formal-Operational) sits in the cooperative-overlap regime by
+design: cross-substrate cooperatives (verified workflow, governance
+enforcement) are the source of the deployment's $\rext$, not
+redundant capabilities.  Paper~10 must include a
+\emph{cooperative-vs-redundancy audit} in deployment tooling to
+verify the regime; the canonical identification passes by
+construction.
+
+Other v4 cleanups:
+\begin{itemize}
+\item Single-shock reduction tightened from ``$T_i = \infty$ for
+  $i \geq 2$ with negligible probability'' to formal $N = 1$ a.s.
+  (Round~C Q1).
+\item $\pshock$ reframed as continuous-time Poisson rate $\lambda$
+  rather than per-period probability (Round~C Q3); $\kappa$ formula
+  changes if a discrete-time model is used.
+\item The closed form for $\Ddiv^{\mathrm{multi}}$ at $\kappa = 1$
+  has a removable singularity (Round~C Q3); the regime condition for
+  non-trivial safe region is $\kappa < 1 - \delta$ for some $\delta$,
+  not $\pshock$ bounded.
+\item Abstract regression fixed (v3 abstract still referenced
+  $A_{\mathrm{multi}}$ survival-stream; v4 abstract reflects
+  marginal-loss formulation).
+\end{itemize}
+
+Status: v4's single-shock form is citeable (per Round~B). v4's
+multi-shock form is citeable in the cooperative-overlap regime (per
+Round~C with v4's scope restriction). Sequential counterfactual
+derivation for the redundancy regime is named as open work.
+\end{abstract}
+
+\section{What Lemma 5c claims}
+
+\begin{lemma}[Lemma 5c, target --- v2]
+\label{lem:5c_target}
+Restrict scope to substrate-targeting adversarial events
+(Definition~\ref{def:shock}).  Under invariant $I_6'$ ($\mindep \geq
+m^* \geq 3$), Paper~3's anti-monopolar conclusion holds in a static
+safe region strictly larger than the linearized form admits.
+Specifically, diversity dominates whenever
+\begin{equation}
+\label{eq:safe_region}
+\Delta r_K \;<\; \rext + (1 - \gamma)\bigl(\Ddiv - \Delta_0\bigr),
+\end{equation}
+where $\Ddiv$ is the substrate-diversification value advantage:
+\begin{equation}
+\label{eq:ddiv_definition}
+\Ddiv \;=\; \volL_K \cdot \bigl(\lossDmax - \lossdivmax\bigr) \cdot
+\mathbb{E}\!\left[\gamma^{\Tadv}\right],
+\end{equation}
+$\lossDmax$ is the dominator's worst-case shock-loss fraction,
+$\lossdivmax$ is the diversity strategy's worst-case shock-loss
+fraction, and $\mathbb{E}[\gamma^{\Tadv}]$ is the expectation of the
+discount factor over the adversarial event time distribution.
+\end{lemma}
+
+The structural claim: under substrate-targeting adversarial events
+with positive $\Ddiv$, diversity has a survival-value advantage that
+the linearized form (\citep[Proposition~6 Corollary]{lasser2026horizon})
+does not capture.  The advantage extends the safe region into part of
+regime~(iii) of Paper~3's strategy-dependent corollary, conditional on
+the worst-case loss-fraction inequality $\lossDmax > \lossdivmax$
+holding.
+
+\section{The model extension}
+
+Paper~3's linearized argument
+(\citep[Proposition~6]{lasser2026horizon}) compares two infinite-horizon
+strategies under deterministic growth, with no stochastic adversarial
+events.  Lemma~5c adds substrate-targeting shocks to the model.
+
+\begin{definition}[Substrate-Targeting Shock]
+\label{def:shock}
+A \emph{substrate-targeting shock} eliminates the
+$\volL$-contribution of one substrate $s$ from the coalition's
+capability poset, including (a)~individual capabilities supported on
+$s$ and (b)~cooperative capabilities whose participants required $s$
+for production.  Formally, the post-shock coalition state has
+\[
+  \volL_K^{\mathrm{post}}(s\text{-shock}) \;=\;
+  \volL\bigl(G_K^{-s}\bigr)
+\]
+where $G_K^{-s}$ is the coalition's capability poset with all
+capabilities supported on $s$ (individual and cooperative)
+removed.
+
+\textbf{Joint / event-class independence assumption.}  No single
+adversarial mechanism in scope produces shocks to more than one
+substrate.  Formally: for each adversarial mechanism class
+$\mathcal{A}$ in the deployment's threat model, the support of any
+shock event drawn from $\mathcal{A}$ is contained in a single
+substrate $s$.  This is strictly stronger than pairwise
+failure-correlation independence (Definition~\ref{def:indep}), which
+would only require the joint failure distribution to factorize across
+substrate pairs.
+
+Shock arrivals form a marked point process with marks indicating the
+targeted substrate.  We write $\Tadv$ for the time of the first shock,
+treated as a random variable with finite expectation.
+\end{definition}
+
+\begin{remark}[Why this scope is restrictive]
+The substrate-targeting shock is the natural adversarial event for
+which substrate diversity supplies the survival advantage. Other
+adversarial classes do not distinguish diversity from domination at
+the substrate level and produce different (or zero) $\Ddiv$:
+\begin{itemize}
+\item \emph{Capability-targeting shocks} suppress individual
+  capabilities regardless of their substrate placement; diversity
+  doesn't reduce the per-capability shock probability.
+\item \emph{Coalition-internal corruption} compromises the actor's
+  reasoning or the agent population's coordination; substrate
+  diversity does not protect against an insider that operates within
+  every substrate.
+\item \emph{Environment manipulation} (Lemma~5e's domain) alters true
+  $\rext$ or $\Delta r_K$ via exogenous variables; the
+  substrate-survival mechanism does not apply.
+\end{itemize}
+
+Lemma~5c therefore protects against substrate-targeting attackers
+specifically: physical infrastructure attack, single-substrate
+compromise (e.g., shared-vulnerability LLM jailbreak across all
+silicon agents on one substrate), substrate-correlated failure
+modes.  It does not by itself protect against the other classes.
+A deployment claim covering broader threat classes requires a
+unified adversarial-event model with separate shock-class terms; this
+is open work for Paper~10's main theorem composition.
+\end{remark}
+
+\section{Defining $\Ddiv$ via Paper 3's volume-survival penalty}
+
+The v1 draft modeled $\Ddiv$ as a discounted infinite tail of
+post-shock rates.  Codex Round~A found this conflated Paper~3's
+one-time minimax contraction with a continuous-rate model not
+derivable from Paper~2's axioms.  The v2 derivation uses Paper~3's
+actual volume-survival penalty, which exists in source-paper machinery
+at \citep[\S domination\_kills]{lasser2026horizon}.
+
+\begin{definition}[Worst-Case Shock-Loss Fraction --- counterfactual form]
+\label{def:loss_fraction}
+For a coalition state $G_K$ with capability poset and
+$\volL$-distribution across substrates $S$, the \emph{shock-loss
+fraction} for substrate $s \in S$ is the counterfactual loss-fraction
+under removal of $s$:
+\[
+  \alpha_s(G_K) \;=\; \frac{\volL(G_K) - \volL(G_K^{-s})}{\volL(G_K)},
+\]
+where $G_K^{-s}$ is the coalition's capability poset with all
+capabilities supported on $s$ (individual and cooperative) removed.
+
+The \emph{worst-case shock-loss fraction} under adversarial targeting
+is
+\[
+  \ell^{\max}(G_K) \;=\; \max_{s \in S} \alpha_s(G_K).
+\]
+\end{definition}
+
+\begin{remark}[Why counterfactual, not additive --- codex Round B Q1]
+\label{rem:counterfactual_alpha}
+An earlier draft described $\alpha_s$ as an additive distribution
+across substrates, with cooperative weight ``incremented'' into each
+participating substrate's share.  Codex Round~B flagged this as
+unsafe: with multi-substrate cooperatives, additive attribution can
+overcount.  A three-way cooperative whose participants are all three
+substrates would be added to all three $\alpha_s$ terms, making them
+sum above 1.
+
+The counterfactual definition above avoids this: each $\alpha_s$ is
+an independent counterfactual under removal of $s$, not a partition
+share.  The shock-loss profile $(\alpha_1, \ldots, \alpha_m)$ may
+sum above 1 when there are cross-substrate cooperative
+dependencies, but each individual $\alpha_s \in [0, 1]$.
+
+Additive attribution remains useful as an \emph{estimator} of $\alpha_s$
+when the counterfactual computation is intractable, but it is an
+estimator with known overcounting bias when downward-closure overlap
+is ignored.  Paper 10's deployment-tooling section should specify the
+counterfactual form as the operational target and the additive form
+only as a fallback approximation with stated correction.
+\end{remark}
+
+For the diversity strategy under invariant $I_6'$, balanced
+$\volL$-distribution gives $\lossdivmax \approx 1/\mindep$.  For
+$\mindep = 3$, $\lossdivmax \approx 1/3$.
+
+For the dominator strategy under full domination on a single
+failure-correlated substrate, $\lossDmax \approx 1$ (the entire
+coalition $\volL$ is supported on the dominant substrate).  Under
+partial domination with residual operations on other substrates,
+$\lossDmax$ is bounded above by $1$ but could be smaller.
+
+\begin{definition}[Substrate-Diversification Advantage $\Ddiv$]
+\label{def:ddiv}
+Under the substrate-targeting shock model
+(Definition~\ref{def:shock}) and worst-case adversarial substrate
+selection,
+\[
+  \Ddiv \;=\; \volL_K \cdot \bigl(\lossDmax - \lossdivmax\bigr)
+  \cdot \mathbb{E}\!\left[\gamma^{\Tadv}\right].
+\]
+Each factor:
+\begin{itemize}
+\item $\volL_K$ scales the absolute $\volL$ at risk to the
+  pre-event coalition volume.
+\item $\lossDmax - \lossdivmax$ is the worst-case loss-fraction
+  advantage of diversity over domination.  Under full domination on
+  a failure-correlated substrate with $\mindep \geq 3$ and balanced
+  diversity, this is approximately $1 - 1/\mindep$.
+\item $\mathbb{E}[\gamma^{\Tadv}]$ is the expectation of the discount
+  factor over the random shock arrival time, \emph{not}
+  $\gamma^{\mathbb{E}[\Tadv]}$ (Paper~3 \S risk.tex:60 explicitly
+  warns about this conflation; heavy-tailed $\Tadv$ produces
+  systematically different values for the two).
+\end{itemize}
+\end{definition}
+
+\paragraph{Sign condition.}
+Lemma~5c's safe region tightening
+(Equation~\ref{eq:safe_region}) is positive only when
+$\lossDmax > \lossdivmax$.  In the balanced full-domination case,
+this is $1 > 1/\mindep$, which holds for any $\mindep > 1$.  In
+partial-domination or non-balanced cases, the sign condition must be
+checked: an unbalanced diversity strategy with one substrate carrying
+most volume can have $\lossdivmax \approx \lossDmax$, eliminating the
+advantage.
+
+\section{Substrate-distinctness via $\mindep$ and the tripartite
+canonical identification}
+
+Lemma~5c's $\mindep$ counts substrates at the failure-correlation
+independence level, not nominal substrate type.  This excludes
+``skeleton substrates'' that nominally separate but share failure
+modes (e.g., three silicon agents from different vendors but
+identical training data; two cloud deployments on different providers
+but same operating substrate; etc.).
+
+\begin{definition}[Joint / Event-Class Failure-Correlation Independence]
+\label{def:indep}
+Substrates $s_1, \ldots, s_k$ are \emph{jointly failure-correlation
+independent in the event-class sense} relative to a deployment's
+threat model $\mathcal{T}$ if: for every adversarial mechanism class
+$\mathcal{A} \in \mathcal{T}$, the support of any shock event drawn
+from $\mathcal{A}$ is contained in a single substrate.
+
+This is strictly stronger than pairwise correlation factorization
+(which only requires pair-events to factor) and matches the
+``no shock spans multiple substrates'' condition the safe-region
+calculation actually needs.
+\end{definition}
+
+\begin{remark}[Mechanism = causal campaign, not atomic step --- codex Round B Q4]
+\label{rem:mechanism_campaign}
+``Adversarial mechanism'' in Definition~\ref{def:indep} must refer to
+the whole causal attack episode or campaign, not a single atomic step
+within it.  An attacker can construct multi-step campaigns where each
+step targets one substrate (satisfying step-level independence) but
+the aggregate campaign hits multiple substrates by design.  Treating
+each step as a separate mechanism would falsely satisfy
+Definition~\ref{def:indep} while the aggregate violation is real.
+
+Operational implication: the threat model $\mathcal{T}$ must enumerate
+attack \emph{campaigns} (or causal episodes that produce shock events
+across the deployment lifetime) and verify each campaign's support
+is contained in a single substrate.  A causal-graph or
+campaign-level factorization would compose more cleanly with Paper
+10's other invariants; v3 keeps the event-class formulation but
+explicitly requires campaign-level interpretation.
+
+Unknown attack mechanisms not in $\mathcal{T}$ do not retroactively
+break the math --- they break the assumption that the threat model is
+complete.  This is the standard threat-model-completeness residual
+inherited from any security analysis.
+\end{remark}
+
+\begin{definition}[$\mindep$]
+\label{def:mindep}
+$\mindep$ is the maximum cardinality of a subset of nominal substrates
+that is jointly failure-correlation independent in the event-class
+sense (Definition~\ref{def:indep}).
+\end{definition}
+
+\subsection{The canonical tripartite identification}
+\label{sec:tripartite}
+
+Per Paper~10 \S6, the canonical three-substrate identification meeting
+$\mindep \geq 3$ is:
+
+\begin{itemize}
+\item \textbf{Substrate 1 (Human):} judgment, strategic decisions,
+  value reasoning, governance vote.
+\item \textbf{Substrate 2 (AI):} planning, generation, execution,
+  broad-recall, computation.
+\item \textbf{Substrate 3 (Formal-Operational):} verification,
+  attestation, commitment, audit, monitoring, governance enforcement.
+\end{itemize}
+
+These are joint / event-class failure-correlation independent: prompt
+injection breaks neither human judgment nor cryptographic commitments;
+cognitive bias breaks neither LLM inference nor ledger integrity;
+trusted-setup failure breaks neither human reasoning nor LLM behavior.
+
+In contrast, a ``Claude + Codex + human'' identification fails the
+joint independence test because the two LLMs share substantial
+adversarial-event surface (transferable prompt injections, training
+data overlap, architectural similarity).  Operationally,
+$\mindep = 2$ for that configuration.
+
+\subsection{Skeleton substrates and the audit burden}
+
+If a deployment uses $\meff \geq 3$ but $\mindep < 3$, an adversary
+with a single attack mechanism can take down multiple ``substrates''
+simultaneously, and the safe region calculation does not apply.  This
+is the codex-flagged failure mode.
+
+Operationally, $\mindep$ is determined by failure-mode auditing
+across the substrate population.  Required: enumerate the threat
+model $\mathcal{T}$, list the adversarial mechanism classes, verify
+that each is contained within a single substrate.  This is
+non-trivial in practice (the audit may identify previously-unknown
+shared vulnerabilities) but tractable for well-understood substrate
+configurations.
+
+\section{Adversarial targeting and the balanced-$\volL$ requirement}
+
+The v1 draft assumed shocks select substrates independently of
+$\volL$-distribution.  Under adversarial targeting, the attacker
+chooses the substrate to maximize $\volL$-loss, so the worst-case
+analysis must use $\max_s \alpha_s$ rather than a random average.
+
+\subsection{The corrected balance threshold}
+
+The codex-corrected balanced-$\volL$ requirement is:
+\begin{equation}
+\label{eq:balance}
+\max_s \alpha_s \;\leq\; \frac{1}{m^*} + \epsilon
+\end{equation}
+for small $\epsilon > 0$, where $\alpha_s$ is the full shock-loss
+fraction (Definition~\ref{def:loss_fraction}) and $m^* = \mindep$.
+
+\textbf{The v1 error.}  v1 stated this threshold as $\max_s \alpha_s
+\leq 1 - 1/m^* + \epsilon$.  For $m^* = 3$, that allows
+$\alpha_{\max} = 2/3 + \epsilon$ --- two-thirds of value on a single
+substrate, which is the opposite of balance.  The corrected form
+$\alpha_{\max} \leq 1/3 + \epsilon$ requires substrates to be
+near-uniform, which is what ``balance'' actually means.
+
+The intuition: ``balanced'' means \emph{no} substrate has an
+overwhelming share, which is the \emph{low max-share} regime, not the
+high one.  Sanity check at $m^* = 3$: balanced requires
+$\alpha_{\max} \approx 1/3$; the v1 threshold permitted
+$\alpha_{\max}$ up to $2/3$, which is monopoly-ish.
+
+\subsection{Operational implication: $\alpha$-distribution audit}
+
+The deployment-tooling section of Paper~10 must include an
+$\alpha$-distribution audit: for each substrate, estimate its full
+shock-loss fraction (individual + cooperative-loss attribution) and
+verify $\max_s \alpha_s \leq 1/m^* + \epsilon$.
+
+The cooperative-loss attribution is the subtle part.  If the system's
+high-leverage cooperative requires participation from all three
+substrates, removing any one substrate eliminates the cooperative
+entirely; each substrate's $\alpha$ then includes a share of the
+cooperative's value.  In the worst case, three-way cooperatives
+inflate each substrate's $\alpha$ to roughly $\frac{1}{3}$ (individual)
+$+\frac{1}{3}$ (cooperative) $= \frac{2}{3}$, blowing past the
+balance threshold.
+
+\textbf{Design implication:} cooperative capabilities should
+\emph{not} all depend on every substrate.  Either distribute
+cooperatives so multiple cooperatives can substitute for a lost one,
+or accept that the system has a higher effective $\alpha_{\max}$ and
+the safe region is correspondingly narrower.  This is a real
+deployment-design constraint Paper~10 must call out.
+
+\section{Composing with the linearized form}
+
+Lemma~\ref{lem:5c_target}'s safe region
+(Equation~\ref{eq:safe_region}) extends Paper~3's linearized region
+($\Delta r_K < \rext$) by the term $(1-\gamma)(\Ddiv - \Delta_0)$.
+
+\begin{itemize}
+\item \textbf{Static $\Delta_0 \leq 0$ (Paper~3 Case~1).}  Immediate
+  $\volL$-change from domination is non-positive; both $-\Delta_0$
+  and $\Ddiv$ contribute positively to the safe region.  The added
+  $\Ddiv$ term is pure tightening.
+\item \textbf{Static $\Delta_0 > 0$ (Paper~3 Case~2).}  The $\Ddiv$
+  term competes with the $-\Delta_0$ term.  Net contribution is
+  positive when $\Ddiv > \Delta_0$, i.e., when the
+  substrate-survival advantage exceeds the immediate domination
+  bonus.  This is the practically interesting case.
+\end{itemize}
+
+Substituting the explicit form:
+\begin{equation}
+\label{eq:safe_region_concrete}
+\Delta r_K \;<\; \rext + (1 - \gamma)\bigl[\volL_K (\lossDmax -
+\lossdivmax) \mathbb{E}[\gamma^{\Tadv}] - \Delta_0\bigr].
+\end{equation}
+
+This is the operationally checkable safe region.  Each quantity is
+either invariant-bounded or empirically estimable:
+\begin{itemize}
+\item $\rext$: bounded below via Lemma~5a substrate-floor argument.
+\item $\Delta r_K$: compared against the bound; requires upper-bound
+  estimate from the deployment's adversarial threat model.
+\item $\volL_K$: ledger-observable from the coalition's accumulated
+  capability volume.
+\item $\lossDmax$: under full domination on a single failure-
+  correlated substrate, $\approx 1$; partial domination requires
+  specific estimation.
+\item $\lossdivmax$: bounded by $1/m^* + \epsilon$ under
+  $\alpha$-distribution audit; otherwise empirically the maximum
+  shock-loss fraction across substrates.
+\item $\mathbb{E}[\gamma^{\Tadv}]$: empirically estimated from
+  historical shock-rate data and the deployment's $\gamma$.
+\item $\Delta_0$: computable from Paper~3's immediate
+  $\volL$-change formula given the coalition state.
+\end{itemize}
+
+\section{Multi-shock extension via discounted marginal loss increments}
+
+The single-shock formula
+(Equation~\ref{eq:safe_region_concrete}) is valid when shock arrival
+is rare relative to the planning horizon ($\mathbb{E}[\Tadv]$
+comparable to or longer than the discounted planning window).  For
+high-$\pshock$ regimes, multiple shocks accumulate and the bound must
+account for the cumulative effect.
+
+\subsection{Why the survival-state formulation fails}
+\label{sec:why_survival_fails}
+
+An earlier attempt (v2) defined a survival-state stream
+$A_{\mathrm{multi}} = \mathbb{E}\sum_t \gamma^t (\volL_{\mathrm{div}}^{\mathrm{surv}}(t) - \volL_D^{\mathrm{surv}}(t))$.
+Codex Round~B flagged a dimensional inconsistency: in the single-shock
+limit, the surviving-volume difference \emph{persists indefinitely}
+after the shock, so the discounted stream evaluates to $\Ddiv / (1 -
+\gamma)$ rather than $\Ddiv$.  Substituting the stream into
+Equation~\ref{eq:safe_region} therefore changes the dimensional scale.
+
+Additionally, v2's $(1 - \alpha_{\max})^k$ multiplicative survival
+formula was wrong: with $m$ distinct equal substrates removed without
+replacement, surviving fraction is additive ($1 - k/m$), not
+multiplicative.  The multiplicative form would describe repeated
+proportional hits to the remaining state, not substrate exhaustion.
+
+The v3 formulation corrects both errors by using discounted marginal
+loss increments at shock times.
+
+\subsection{The discounted-marginal-loss formulation}
+\label{sec:multishock_marginal}
+
+\begin{definition}[Multi-Shock Diversification Advantage]
+\label{def:ddiv_multi}
+Let $\{T_i\}_{i=1}^{\infty}$ denote the (random) shock arrival times,
+with $T_i < T_{i+1}$.  Let $\delta_i^{\mathrm{div}}, \delta_i^D$
+denote the marginal $\volL$-loss for the diversity and domination
+strategies at shock $i$, respectively.  The
+\emph{multi-shock substrate-diversification advantage} is the
+discounted sum of marginal loss differences:
+\begin{equation}
+\label{eq:ddiv_multi}
+\Ddiv^{\mathrm{multi}}
+  \;=\; \mathbb{E}\!\left[\sum_{i=1}^{\infty}
+  \gamma^{T_i} \cdot
+  \bigl(\delta_i^D - \delta_i^{\mathrm{div}}\bigr)\right].
+\end{equation}
+Note: $\delta_i^D - \delta_i^{\mathrm{div}}$ is positive when the
+dominator loses more than diversity at shock $i$, negative when
+diversity loses more (the dominator is already at zero on subsequent
+shocks).  The expectation is over the joint distribution of
+$\{T_i\}$ and the substrate-targeting policy.
+\end{definition}
+
+\subsection{Single-shock reduction (sanity check)}
+\label{sec:multishock_marginal}
+
+In the single-shock model (where $N = 1$ a.s., i.e., the shock
+process produces exactly one shock event with probability 1, and
+$T_i = \infty$ for $i \geq 2$ with $\gamma^{\infty} = 0$ by
+convention), $\Ddiv^{\mathrm{multi}}$ reduces to:
+\[
+  \Ddiv^{\mathrm{multi}} \;\to\; \mathbb{E}[\gamma^{\Tadv}] \cdot
+  (\delta_1^D - \delta_1^{\mathrm{div}}).
+\]
+At the first shock, under full failure-correlated domination on a
+single substrate, the dominator loses everything: $\delta_1^D = \volL_K$.
+Under balanced diversity with $\mindep \geq 3$, the diversity
+strategy loses $\lossdivmax \cdot \volL_K \approx \volL_K / \mindep$.
+The advantage is:
+\[
+  \delta_1^D - \delta_1^{\mathrm{div}} = \volL_K - \lossdivmax \volL_K
+  = \volL_K(1 - \lossdivmax) = \volL_K(\lossDmax - \lossdivmax)
+\]
+(using $\lossDmax = 1$ under full domination).
+
+This recovers the single-shock $\Ddiv$ from
+Definition~\ref{def:ddiv} exactly.  The dimensional consistency
+that v2's $A_{\mathrm{multi}}$ lost is restored.
+
+\paragraph{Note on single-shock vs $\pshock \to 0$ limit.}
+The single-shock model ($N=1$ a.s.) is a different formal object
+from a Poisson model with $\lambda \to 0$ on infinite horizon.
+Under Poisson arrivals on an infinite horizon, later shocks still
+occur a.s.; their discounted contribution vanishes as
+$\kappa = \lambda/(\lambda - \ln \gamma) \to 0$ but the formal
+expectation is over the Poisson process, not a single random time.
+The two models agree numerically in the $\kappa \to 0$ limit but
+are not the same statistical structure.  Paper~10's deployment
+analysis should be explicit about which model is in force; the
+single-shock $\Ddiv$ form (Definition~\ref{def:ddiv}) uses the
+$N=1$ a.s. model directly with $\Tadv$ as the random shock time.
+
+\subsection{Substrate exhaustion under additive removal --- balanced case}
+\label{sec:substrate_exhaustion}
+
+Codex Round~B noted that $(1 - \alpha_{\max})^k$ is wrong for
+substrate exhaustion: with $m$ distinct equal substrates removed
+without replacement, surviving fraction is additive ($1 - k/m$), not
+multiplicative.  The corrected accounting holds for the
+\textbf{balanced, additive-cooperative special case}; the general case
+requires sequential counterfactuals (\S\ref{sec:sequential_counterfactual}).
+
+Under independent substrate-targeting shocks where each shock removes
+one previously-functional substrate (no replacement), and assuming
+the substrate-cooperative structure is dominated by cross-substrate
+cooperatives rather than redundant capabilities (the
+cooperative-overlap regime), the diversity strategy's marginal loss
+at shock $i$ (for $i \leq \mindep$, balanced case) is:
+\[
+  \delta_i^{\mathrm{div}} \;\leq\; \volL_K / \mindep
+  \quad\text{(approximate equality in balanced case;
+  upper bound under cooperative-overlap)}.
+\]
+The dominator's marginal loss after shock 1 is zero (already at
+$\volL = 0$): $\delta_i^D = 0$ for $i \geq 2$.
+
+Substituting into Equation~\ref{eq:ddiv_multi}:
+\begin{align*}
+\Ddiv^{\mathrm{multi}}
+  &\;\geq\; \mathbb{E}[\gamma^{T_1}] \cdot \volL_K (1 - 1/\mindep)
+   - \sum_{i=2}^{\mindep} \mathbb{E}[\gamma^{T_i}] \cdot \volL_K /
+   \mindep \\
+  &\;=\; \volL_K \left[\mathbb{E}[\gamma^{T_1}] (1 - 1/\mindep)
+   - \frac{1}{\mindep} \sum_{i=2}^{\mindep} \mathbb{E}[\gamma^{T_i}]\right].
+\end{align*}
+The second sum is finite (bounded by $(\mindep - 1)$ terms each
+$\leq 1$) and represents the erosion of diversity's advantage as it
+also exhausts substrates.
+
+The inequality direction (lower bound on $\Ddiv^{\mathrm{multi}}$)
+follows from the cooperative-overlap regime assumption: equal
+analysis overcounts diversity's later marginal losses (because some
+cooperatives are already lost from earlier shocks), so the
+formula above is a conservative lower bound on the actual
+sequential-counterfactual $\Ddiv^{\mathrm{multi}}$.  This is what
+deployment-safety claims need.
+
+\subsection{The general case: sequential counterfactuals}
+\label{sec:sequential_counterfactual}
+
+For deployments outside the cooperative-overlap regime --- in
+particular, deployments with substantial redundant-capability
+structure (capabilities replicated across multiple substrates) ---
+the equal-substrate analysis using original-counterfactual $\alpha_s$
+is anti-conservative.  Codex Round~C identified this:
+
+\begin{quote}
+``v3's $\alpha_s$ is a single-removal counterfactual, not an additive
+partition. Sequential losses must be computed as
+$\delta_i^{\mathrm{div}} = \volL(G^{-R_{i-1}}) - \volL(G^{-(R_{i-1}
+\cup \{s_i\})})$ where $R_{i-1}$ is the set already removed.
+Overlapping cooperatives can make original $\alpha_s$ overcount later
+losses; redundant capabilities can make original $\alpha_s$
+undercount later losses after redundancy is exhausted.''
+\end{quote}
+
+In the redundancy regime, equal analysis underestimates $\delta_i$
+for late shocks (the cumulative loss appears smaller than actual),
+which overestimates $\Ddiv^{\mathrm{multi}}$, which gives an
+anti-conservative (too-permissive) safe-region inequality.  Lemma~5c
+v4 explicitly does \emph{not} cover this regime.
+
+\paragraph{Cooperative-vs-redundancy audit.}
+For a deployment to invoke Lemma~5c's multi-shock result, the
+substrate-cooperative structure must be dominated by cross-substrate
+cooperatives.  Operationally, this requires verifying:
+\begin{enumerate}
+\item For each capability $c$ in the poset, identify the substrate(s)
+  it is supported on.
+\item Categorize: (a)~single-substrate capabilities,
+  (b)~cross-substrate cooperatives (one capability whose production
+  requires participation from multiple substrates),
+  (c)~redundant capabilities (capability replicated identically on
+  multiple substrates).
+\item Verify category (b) volume exceeds category (c) volume in
+  $\volL$-weighted sum.
+\end{enumerate}
+The canonical tripartite identification (Human / AI /
+Formal-Operational) passes this audit by construction: the
+high-leverage capabilities (verified workflow, governance
+enforcement) are cross-substrate cooperatives, not redundant
+capabilities.
+
+\paragraph{Sequential counterfactual derivation as open work.}
+For deployments where redundancy dominates or the regime is mixed,
+the multi-shock result requires deriving $\delta_i$ from sequential
+counterfactuals directly:
+\[
+  \delta_i^{\mathrm{div}}(R_{i-1}) \;=\; \volL\bigl(G_K^{-R_{i-1}}\bigr)
+  - \volL\bigl(G_K^{-(R_{i-1} \cup \{s_i\})}\bigr).
+\]
+This requires evaluating $\volL$ on $2^{\mindep}$ counterfactual
+poset states, which is computationally tractable for $\mindep = 3$
+but grows combinatorially.  Paper~10 cites the sequential
+counterfactual extension as Lemma~5c-prime (open work) for
+deployments outside the cooperative-overlap regime.
+
+\subsection{High-$\lambda$ behavior (continuous-time Poisson model)}
+
+We adopt a \textbf{continuous-time homogeneous Poisson model} for
+shock arrivals: shocks arrive at rate $\lambda$ per unit time
+($T_i - T_{i-1} \sim \mathrm{Exp}(\lambda)$ iid).  Codex Round~C
+flagged that earlier drafts using ``$\pshock$ per period'' was
+ambiguous: a discrete-time per-period probability model would change
+the $\kappa$ formula.  V4 standardizes on the continuous-time
+$\lambda$ throughout this section.
+
+For Poisson shock arrivals with rate $\lambda$,
+$\mathbb{E}[\gamma^{T_i}] = \kappa^i$ where
+\[
+  \kappa \;=\; \mathbb{E}[\gamma^{T_1}] \;=\;
+  \frac{\lambda}{\lambda - \ln \gamma}.
+\]
+
+\paragraph{Discrete-time alternative.}
+If a deployment uses a per-period discrete-time shock model with
+per-period probability $\pshock$, then $T_1 \sim \mathrm{Geometric}(\pshock)$
+and $\mathbb{E}[\gamma^{T_1}] = \pshock \gamma / (1 - (1-\pshock)\gamma)$,
+which gives a different $\kappa$ formula.  Paper~10 must specify
+which model the deployment uses; the continuous-time form is the
+standard for adversarial-event analysis and is what v4 derives below.
+
+Substituting into Equation~\ref{eq:ddiv_multi} (cooperative-overlap
+regime, balanced case):
+\[
+  \Ddiv^{\mathrm{multi}}
+  \;\geq\; \volL_K \left[\kappa (1 - 1/\mindep)
+   - \frac{1}{\mindep} \sum_{i=2}^{\mindep} \kappa^i\right]
+  \;=\; \volL_K \left[\kappa - \frac{1}{\mindep}
+   \cdot \frac{\kappa(1 - \kappa^{\mindep})}{1 - \kappa}\right]
+  \quad (\kappa < 1).
+\]
+
+\paragraph{Removable singularity at $\kappa = 1$.}
+The closed form has a $1/(1 - \kappa)$ factor, but the singularity at
+$\kappa = 1$ is \emph{removable}: the numerator
+$\kappa(1 - \kappa^{\mindep})$ also vanishes at $\kappa = 1$, by
+L'H\^opital's rule:
+\[
+  \lim_{\kappa \to 1^{-}} \frac{\kappa(1 - \kappa^{\mindep})}{1 - \kappa}
+  \;=\; \mindep.
+\]
+Therefore $\Ddiv^{\mathrm{multi}} / \volL_K \to 1 - 1 = 0^+$ as
+$\kappa \to 1$.  The advantage approaches zero from above, not
+infinity.
+
+\textbf{Operational regime condition.}  The safe region is
+non-trivial only when $\Ddiv^{\mathrm{multi}}$ is bounded away from
+zero.  This requires $\kappa$ bounded away from $1$:
+$\kappa \leq 1 - \delta$ for some operationally-determined
+$\delta > 0$.  Equivalently:
+\[
+  \frac{\lambda}{\lambda - \ln \gamma} \;\leq\; 1 - \delta
+  \quad\Leftrightarrow\quad
+  \lambda \;\leq\; \frac{(1-\delta)(- \ln \gamma)}{\delta}.
+\]
+
+Paper~10's deployment-tooling section should state the regime
+condition on $\kappa$, not on $\lambda$ or $\pshock$ directly:
+shocks arrive slowly enough relative to discounting that
+$\kappa < 1 - \delta$.  For typical $\gamma$ near $1$ ($\ln \gamma$
+small and negative), this requires $\lambda$ small (rare shocks).
+For $\gamma$ farther from $1$ (high time preference, short effective
+horizon), the regime condition is less restrictive on $\lambda$.
+
+\textbf{What this means operationally.}  When shocks are very
+frequent relative to discounting ($\kappa$ close to $1$), the
+safe-region advantage from substrate diversity becomes trivially
+small even with all invariants satisfied.  This is not a failure of
+the lemma; it is a correct statement of the regime where substrate
+diversification is and isn't valuable.  Deployments operating in
+high-$\lambda$ environments (e.g., adversarial environments with
+frequent attacks) need additional defenses beyond substrate
+diversity to invoke the deployment-safety theorem.
+
+\subsection{Replacement in the safe-region inequality}
+
+For the safe-region inequality, replace $\Ddiv$ in
+Equation~\ref{eq:safe_region} with $\Ddiv^{\mathrm{multi}}$:
+\[
+  \Delta r_K \;<\; \rext + (1 - \gamma)\bigl(\Ddiv^{\mathrm{multi}}
+  - \Delta_0\bigr).
+\]
+The dimensional consistency is preserved because
+$\Ddiv^{\mathrm{multi}}$ is a sum of $\Ddiv$-style penalties (each a
+one-time loss difference scaled by an expected discount factor), not
+an integrated survival stream.
+
+\section{Substrate-targeting scope (codex Q5)}
+
+Lemma~5c is explicitly scoped to substrate-targeting adversaries.
+Other adversarial classes are not covered:
+
+\begin{itemize}
+\item \textbf{Capability-targeting:} an adversary suppresses an
+  individual capability $c$ regardless of substrate.  Substrate
+  diversity does not reduce the per-capability shock probability;
+  the safe-region argument does not apply.
+\item \textbf{Coalition-internal corruption:} an adversary
+  compromises the actor's reasoning, world model, or coordination
+  protocol.  This is Paper~6's domain (Lyapunov degradation,
+  cascade dynamics) rather than substrate diversification.
+\item \textbf{Environment manipulation:} an adversary alters true
+  $\rext$ or $\Delta r_K$ via exogenous environment variables.
+  Lemma~5e and invariant $I_8$ (environment-side witnesses) handle
+  this; substrate diversification does not.
+\item \textbf{Coordinated multi-substrate attack:} a single
+  adversarial mechanism that produces shocks to multiple
+  substrates simultaneously.  Excluded by joint / event-class
+  independence (Definition~\ref{def:indep}); if the threat model
+  contains such mechanisms, $\mindep$ collapses and the safe
+  region does not apply.
+\end{itemize}
+
+For Paper~10's deployment-safety theorem to cover broad adversarial
+threat models, additional shock-class-specific terms are needed.
+These are open work; Lemma~5c covers only the substrate-targeting
+class.
+
+\paragraph{Citation discipline (codex Round B Q5).}
+Lemma~5c should be cited only for substrate-targeting survival
+advantage.  Paper~10 \S6's broader claims about cooperative anchoring
+do cover capture-of-existing, asymmetric capture, cooperative
+forking, and time-asymmetry capture, but those rely on separate
+operational invariants ($I_9$ substrate-exclusivity observability,
+$I_{10}$ coverage/materiality, $I_{11}$ latency bounds) plus Paper~5's
+structural defenses against governance/coalition capture.  Lemma~5c
+does \emph{not} establish those broader claims.  When Paper~10 cites
+Lemma~5c in the deployment-safety theorem composition, the citation
+should be scoped: ``for substrate-targeting adversarial events, the
+diversity-domination value comparison admits the safe region of
+Equation~\ref{eq:safe_region_concrete},'' not ``Lemma~5c establishes
+the deployment claim.''
+
+\section{Honest residuals}
+
+\paragraph{Paper~3's volume-survival form requires explicit identification.}
+Lemma~5c uses $\Ddiv = \volL_K \cdot (\lossDmax - \lossdivmax) \cdot
+\mathbb{E}[\gamma^{\Tadv}]$, derived from Paper~3's
+\citep[\S domination\_kills]{lasser2026horizon} machinery.  Paper~3
+itself states the contraction in absolute-volume form
+($\Ddiv = \min_s \volL(G^{-s})$, codex Round~A pointer
+substitution.tex:1381); the normalized loss-fraction form here is a
+direct rewriting under the $\alpha_s$ decomposition, but Paper~10
+should cite the equivalence carefully.
+
+\paragraph{$\pshock$ is empirically estimated.}
+The per-period shock probability is operational input.  An operator
+that under-estimates $\pshock$ over-estimates the safe region.
+Paper~10's deployment-tooling section must specify how $\pshock$ is
+computed (worst-case from shock taxonomy?  Bayesian update?
+Governance-set floor?).
+
+\paragraph{Cooperative-loss attribution well-defined under counterfactual form.}
+Under v3's counterfactual definition of $\alpha_s$
+(Definition~\ref{def:loss_fraction}), cooperative-loss attribution
+is unambiguous: $\alpha_s$ is computed from the single counterfactual
+$\volL(G_K^{-s})$ (substrate $s$ removed), without splitting
+cooperative weight across substrates.  The shock-loss profile
+$(\alpha_1, \ldots, \alpha_m)$ may sum above 1 with cross-substrate
+cooperative dependencies, which is correct: removing different
+substrates loses different (overlapping) sets of cooperatives, and
+each counterfactual stands alone.
+
+The earlier additive attribution (which would have required canonical
+rules) is now an estimator, not the definition
+(Remark~\ref{rem:counterfactual_alpha}).
+
+\paragraph{Joint independence is hard to verify.}
+Definition~\ref{def:indep}'s ``no single adversarial mechanism in
+scope spans multiple substrates'' is a strong condition.  In practice,
+it requires enumerating the threat model's adversarial mechanism
+classes and verifying each is contained within one substrate.  Novel
+attack mechanisms not in the original threat model can violate the
+condition retroactively, invalidating the safe region.
+
+\paragraph{Partial-domination case requires care.}
+Under partial domination with residual operations on other
+substrates, $\lossDmax < 1$.  The sign condition $\lossDmax >
+\lossdivmax$ may fail in some partial-domination configurations,
+collapsing the safe region.  Paper~10 should characterize the
+partial-domination regimes where Lemma~5c applies.
+
+\paragraph{Multi-shock formulation assumes no recovery.}
+Definition~\ref{def:ddiv_multi} treats shocks as independent and
+substrate-removal as permanent.  Real deployments may include
+substrate-recovery dynamics (failed substrates can be repaired or
+replaced); multi-shock with recovery is its own analysis with a
+different functional form for $\delta_i$ and is not derived here.
+Under recovery, the diversity strategy's substrate-exhaustion
+trajectory is bounded above by $\mindep$ but may stabilize at a
+non-zero count, changing the high-$\pshock$ asymptotic.
+
+\paragraph{Tripartite identification scope.}
+The canonical identification (Human / AI / Formal-Operational)
+satisfies $\mindep = 3$ under standard threat models, but novel
+threat models could correlate them (e.g., a cyber-physical attack
+that compromises both formal infrastructure and human operators
+simultaneously, or social-engineering that affects human judgment via
+AI-generated misinformation).  Paper~10 must specify which threat
+models the canonical identification is valid for.
+
+\section{Summary of changes from v3 (codex Round C)}
+
+\begin{enumerate}
+\item \textbf{Q1 (single-shock formalization):} Tightened single-shock
+  reduction from ``$T_i = \infty$ for $i \geq 2$ with negligible
+  probability'' to formal $N = 1$ a.s. with $\gamma^{\infty} = 0$
+  convention (\S\ref{sec:multishock_marginal}).  Added a paragraph
+  distinguishing the $N=1$ a.s. model from the $\lambda \to 0$
+  Poisson limit (different formal objects, agree numerically only
+  in the $\kappa \to 0$ limit).
+
+\item \textbf{Q2 (general non-equal scope restriction):}
+  Multi-shock claim explicitly scope-restricted to the
+  cooperative-overlap regime where equal-substrate analysis is a
+  conservative lower bound on $\Ddiv^{\mathrm{multi}}$.  The
+  redundancy regime requires sequential counterfactual derivation
+  (\S\ref{sec:sequential_counterfactual}) and is named as
+  ``Lemma~5c-prime'' for follow-up.  Added cooperative-vs-redundancy
+  audit as an operational requirement.
+
+\item \textbf{Q3 (Poisson rate vs per-period probability):} $\pshock$
+  reframed as continuous-time Poisson rate $\lambda$.  Discrete-time
+  per-period probability model produces a different $\kappa$ formula
+  (noted explicitly).  V4 standardizes on continuous-time as the
+  default.
+
+\item \textbf{Q3 (removable singularity at $\kappa = 1$):}  The
+  closed form has a removable singularity at $\kappa = 1$:
+  $\Ddiv^{\mathrm{multi}}/\volL_K \to 0^+$ via L'H\^opital, not
+  $\infty$.  Operational regime condition is on $\kappa$ bounded
+  away from 1 (not $\lambda$ directly).
+
+\item \textbf{Abstract regression fix:}  v3 abstract referenced the
+  v2 survival-stream $A_{\mathrm{multi}}$ formulation.  V4 abstract
+  fully reflects the v3 marginal-loss formulation and the v4 scope
+  restriction.
+\end{enumerate}
+
+\section{Summary of changes from v2 (codex Round B)}
+
+\begin{enumerate}
+\item \textbf{Q1 ($\alpha_s$ definitional caveat):} Replaced
+  additive-distribution language with the counterfactual formula
+  $\alpha_s = (\volL(G_K) - \volL(G_K^{-s})) / \volL(G_K)$
+  (Definition~\ref{def:loss_fraction}).  Additive attribution
+  remains useful as an estimator with stated overcounting bias
+  (Remark~\ref{rem:counterfactual_alpha}).
+
+\item \textbf{Q3 (multi-shock dimensional inconsistency):} Replaced
+  the survival-state stream $A_{\mathrm{multi}}$ with discounted
+  marginal loss increments at shock times
+  (Definition~\ref{def:ddiv_multi}).  This reduces correctly to
+  $\Ddiv$ in the single-shock limit
+  (\S\ref{sec:multishock_marginal}).  Substrate exhaustion is
+  additive ($1 - k/m$), not multiplicative
+  (\S\ref{sec:substrate_exhaustion}).  High-$\pshock$ analysis
+  shows the advantage does not collapse but the mechanism is
+  front-loaded at the first shock, with subsequent erosion bounded.
+
+\item \textbf{Q4 (mechanism scope):} Added clarification that
+  ``adversarial mechanism'' in Definition~\ref{def:indep} refers to
+  the whole causal attack campaign, not atomic steps within it
+  (Remark~\ref{rem:mechanism_campaign}).
+
+\item \textbf{Q5 (citation discipline):} Added explicit note that
+  Lemma~5c covers substrate-targeting adversaries only; \S6's
+  broader claims rely on separate invariants $I_9$--$I_{11}$ plus
+  Paper~5 defenses (in the substrate-targeting scope section).
+\end{enumerate}
+
+\section{Summary of changes from v1 (codex Round A)}
+
+\begin{enumerate}
+\item \textbf{Q1 (post-shock rate model):} Replaced proportional
+  rate model $(r_K + \rext)(1 - 1/\mindep)$ (not derivable from
+  Paper~2) with Paper~3's volume-survival penalty
+  ($\Ddiv = \volL_K(\lossDmax - \lossdivmax)\mathbb{E}[\gamma^{\Tadv}]$).
+\item \textbf{Q2 (dominator post-shock rate):} Changed from binary
+  $0$-vs-rate model to continuous loss-fraction parameter
+  $\lossDmax$ (defaults to $1$ under full failure-correlated
+  domination, smaller under partial domination).
+\item \textbf{Q3 (balance threshold):} Corrected from
+  $\max_s \alpha_s \leq 1 - 1/m^* + \epsilon$ (allowed monopoly) to
+  $\max_s \alpha_s \leq 1/m^* + \epsilon$ (requires near-uniform).
+  $\alpha_s$ is full shock-loss fraction including cooperative loss.
+\item \textbf{Q4 (multi-shock):} Added $A_{\mathrm{multi}}$
+  formulation as a remark; preserves algebraic structure with
+  adjusted constants; does not collapse to zero as $\pshock \to 1$.
+\item \textbf{Q5 (scope):} Explicitly narrowed to
+  substrate-targeting adversaries.  Other shock classes named and
+  excluded.
+\item \textbf{$\mathbb{E}[\gamma^{\Tadv}]$ vs $\gamma^{\mathbb{E}[\Tadv]}$:}
+  Used the expectation-of-discount form throughout
+  (Paper~3 risk.tex:60).
+\item \textbf{Joint vs pairwise independence:} Strengthened to joint
+  / event-class independence
+  (Definition~\ref{def:indep}).
+\item \textbf{Single $\Ddiv$ form:} v1 alternated between
+  $\Ddiv \geq \ldots$ and $\Ddiv \gamma^{\Tadv} \geq \ldots$;
+  v2 fixes a single form
+  (Definition~\ref{def:ddiv}).
+\item \textbf{Tripartite canonical identification:} Added
+  \S\ref{sec:tripartite} aligning Lemma~5c with Paper~10 \S6's
+  Human / AI / Formal-Operational substrate identification.
+\end{enumerate}
+
+\section{Status: v4 ready for citation in cooperative-overlap regime}
+
+V4 addresses every concern codex Round~C flagged on v3.  The
+Round~B-verified single-shock form is unchanged (still citeable).
+The Round~C-flagged multi-shock issues are addressed by:
+(a)~tightening the single-shock reduction to formal $N=1$ a.s.,
+(b)~scope-restricting the multi-shock claim to the
+cooperative-overlap regime (where equal-substrate analysis is
+conservative for advantage),
+(c)~reframing $\pshock$ as Poisson rate $\lambda$,
+(d)~noting the removable singularity at $\kappa = 1$,
+(e)~fixing the abstract regression.
+
+\subsection{What is citeable in v4}
+
+\begin{itemize}
+\item \textbf{Single-shock $\Ddiv$ (Definition~\ref{def:ddiv}):}
+  Citeable per Round~B verdict.  Counterfactual $\alpha_s$ formula
+  (Definition~\ref{def:loss_fraction}) used throughout.
+
+\item \textbf{Balance threshold (Equation~\ref{eq:balance}):}
+  Citeable per Round~B verdict.  $\epsilon$ is engineering
+  tolerance bounded by the safe-region positivity requirement.
+
+\item \textbf{Multi-shock $\Ddiv^{\mathrm{multi}}$
+  (Definition~\ref{def:ddiv_multi}) in cooperative-overlap regime:}
+  Citeable in v4 with explicit scope restriction.  The
+  equal-substrate balanced case is a conservative lower bound on
+  the actual sequential-counterfactual $\Ddiv^{\mathrm{multi}}$
+  when the substrate-cooperative structure is dominated by
+  cross-substrate cooperatives (the canonical tripartite case).
+
+\item \textbf{Joint/event-class independence (Definition~\ref{def:indep}):}
+  Citeable per Round~B verdict, with the campaign-vs-atomic-step
+  clarification (Remark~\ref{rem:mechanism_campaign}).
+
+\item \textbf{Tripartite identification (\S\ref{sec:tripartite}):}
+  Citeable per Round~B verdict, with citation discipline note in
+  the substrate-targeting scope section.
+
+\item \textbf{High-$\lambda$ regime condition:}  Citeable in v4.
+  The safe region requires $\kappa < 1 - \delta$ (operationally
+  determined $\delta$); deployments outside this regime need
+  additional defenses beyond substrate diversity.
+\end{itemize}
+
+\subsection{What is not citeable in v4}
+
+\begin{itemize}
+\item \textbf{Multi-shock $\Ddiv^{\mathrm{multi}}$ in
+  redundancy regime:} Equal-substrate analysis is anti-conservative
+  when redundant capabilities dominate cross-substrate cooperatives.
+  Sequential counterfactual derivation
+  (\S\ref{sec:sequential_counterfactual}) is open work,
+  named as ``Lemma~5c-prime'' for follow-up.
+
+\item \textbf{Multi-shock with substrate recovery:} Definition
+  assumes no recovery.  Recovery dynamics change the
+  substrate-exhaustion trajectory and require a different
+  $\delta_i$ formulation.  Open work.
+\end{itemize}
+
+\subsection{Operational requirements added by v4}
+
+For Paper~10 to cite Lemma~5c's multi-shock result, the deployment
+must include:
+
+\begin{enumerate}
+\item \textbf{Cooperative-vs-redundancy audit
+  (\S\ref{sec:sequential_counterfactual}):} Verify the deployment's
+  $\volL$ structure is dominated by cross-substrate cooperatives, not
+  redundant capabilities.  The canonical tripartite identification
+  (Human / AI / Formal-Operational) passes by construction.
+
+\item \textbf{$\kappa$-regime audit:}  Verify $\kappa = \mathbb{E}[\gamma^{T_1}]$
+  is bounded away from 1 by some stated $\delta$.  This depends on
+  both shock arrival rate $\lambda$ and discount factor $\gamma$;
+  Paper~10 should specify how $\delta$ is set.
+
+\item \textbf{Shock model specification:}  State explicitly whether
+  the deployment uses the continuous-time Poisson rate $\lambda$
+  model (default) or a discrete-time per-period probability
+  $\pshock$ model (different $\kappa$ formula).
+\end{enumerate}
+
+These add to the deployment-tooling burden but are operationally
+implementable for the canonical tripartite case.
+
+\subsection{V4 confirmation codex round}
+
+A v4 confirmation round is optional.  V4 only \emph{restricts} the
+v3 claims (single-shock form unchanged; multi-shock scope narrowed
+with explicit conservativeness argument), so a regression in
+substantive content is unlikely.  The minor cleanups (Q1 single-shock
+formalization, Q3 Poisson rate reframing, abstract fix) are
+mechanical and verifiable by inspection.
+
+If a v4 confirmation round runs, the questions to ask are:
+\begin{enumerate}
+\item Does the cooperative-overlap conservativeness argument
+  actually hold? V4 argues equal-substrate analysis is a lower bound
+  on $\Ddiv^{\mathrm{multi}}$ when overlap dominates redundancy; is
+  this rigorous, or are there mixed regimes where the direction
+  flips?
+\item Is the $\kappa < 1 - \delta$ regime condition operationally
+  meaningful? For canonical deployments with $\gamma \approx 1$ and
+  realistic $\lambda$, what is the typical $\delta$ slack?
+\item Does the cooperative-vs-redundancy audit have hidden
+  ambiguities? Specifically, can a substrate-cooperative structure
+  be classified differently under different threat models?
+\end{enumerate}
+
+Otherwise, Paper~10 may cite Lemma~5c v4 as established for
+deployments meeting the cooperative-overlap regime condition.
+
+\end{document}

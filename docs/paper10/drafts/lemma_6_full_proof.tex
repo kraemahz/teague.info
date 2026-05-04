@@ -1,0 +1,350 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\Aadv}{A_{\mathrm{adv}}}
+\newcommand{\deltaadv}{\delta_{\mathrm{adv}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+
+\title{Lemma 6 ($h_{\mathrm{detect}}$ intensivity): Full Proof Draft}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal of this draft}
+
+Theorem~\ref{thm:deployment_safety}'s Layer~2 (detection with lead
+time for correction) asserts a bound during the detection window:
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot
+  h_{\mathrm{detect}}(\theta),
+\]
+with $h_{\mathrm{detect}}$ ``also intensive in $|P|$.''  V1 of the
+theorem proof (Step~6 of Layer~2) referenced
+\citep[Microfoundation]{lasser2026micro}'s ``$T$ failure modes''
+remark for the per-step gap-growth rate, but did not formalize
+either the rate's intensivity or the integrated-window bound
+$h_{\mathrm{detect}}$.
+
+This draft promotes the assertion to a formal Lemma~6, with an
+explicit (C11) bounded-gap-growth-rate condition added to
+Theorem~\ref{thm:deployment_safety}.
+
+\section{Setup}
+
+During the detection window $[t_{\mathrm{violation}},
+t_{\mathrm{violation}} + T_{\mathrm{detect}}]$, an adversarial
+strategy in $\Aadv \cup \Aadv^{\mathrm{env}}$ produces channel
+deviations bounded by Lemma~5b's KL floor $\deltaadv$ (else SPRT
+would have already detected).  The proxy-truth gap may grow during
+this window before SPRT detects and operators correct.
+
+The integrated gap during the window:
+\[
+  h_{\mathrm{detect}}(\theta) \;:=\;
+  \int_{t_{\mathrm{violation}}}^{t_{\mathrm{violation}} +
+  T_{\mathrm{detect}}}
+  \frac{d \epsgap}{dt} \, dt
+  \;\leq\;
+  T_{\mathrm{detect}} \cdot \sup_{t \in
+  [t_{\mathrm{violation}}, t_{\mathrm{violation}} +
+  T_{\mathrm{detect}}]}
+  \frac{d \epsgap}{dt}.
+\]
+For Layer~2's intensivity claim, both factors must be intensive in
+$|P|$ over deployment class $\mathcal{D}$.
+
+By Lemma~4 (SPRT lead-time tail bound), $T_{\mathrm{detect}}$ has
+exponentially-decaying tail with constants intensive in $|P|$;
+specifically, $\mathbb{E}[T_{\mathrm{detect}}] \leq A/\deltaadv$
+and $\Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}] \leq \beta'$
+for a $|P|$-independent bound.  We treat $T_{\mathrm{detect}}$ as
+intensive over $\mathcal{D}$ in the sense that operators set $A$
+and $\deltaadv$ as deployment-class constants.
+
+The remaining piece is the per-step (or per-unit-time) gap-growth
+rate $d\epsgap/dt$.  This is what (C11) bounds.
+
+\section{Bounded-gap-growth-rate condition}
+
+\begin{assumption}[(C11): Bounded per-unit-time gap-growth rate during detection window]
+\label{ass:C11}
+For any adversarial strategy $q \in \Aadv \cup
+\Aadv^{\mathrm{env}}$ producing channel deviations bounded by
+$\deltaadv$ (the Lemma~5b KL floor), the per-unit-time growth rate
+of the proxy-truth gap is bounded:
+\[
+  \frac{d \epsgap}{dt} \;\leq\; \rho_g(\deltaadv) \;<\; \infty,
+\]
+where $\rho_g(\deltaadv)$ is a deployment-class constant depending
+on $\mathcal{D}$'s operational parameters (channel-deviation
+magnitudes, alignment-property smoothness in channel parameters)
+but independent of $|P|$.
+\end{assumption}
+
+\textbf{Operational interpretation.}  The condition asserts that
+during the detection window, the gap cannot grow arbitrarily fast.
+Concretely: if channel deviations are bounded (else SPRT fires
+faster), then the rate at which channel deviations translate into
+proxy-truth gap is bounded.  This is structurally analogous to
+Lemma~2's coordinate-Lipschitz condition (CL), but at the channel-
+to-gap layer rather than the dimension-to-gap layer.
+
+(C11) is new content; \citep[Microfoundation]{lasser2026micro}'s
+``$T$ failure modes'' remark notes the bounded-Lipschitz-in-channel
+property informally, but does not promote it to a theorem-level
+condition.  Paper~10 surfaces it explicitly so the deployment
+claim's Layer~2 intensivity is auditable.
+
+\section{Statement of Lemma 6}
+
+\begin{lemma}[$h_{\mathrm{detect}}$ intensivity]
+\label{lem:6}
+Under conditions (C5) continuous SPRT monitoring, (C7) bounded
+co-evolution, and (C11) bounded per-unit-time gap-growth rate of
+Theorem~\ref{thm:deployment_safety}, plus Lemma~\ref{lem:4}'s
+SPRT lead-time tail bound:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; \rho_g(\deltaadv) \cdot
+  T_{\mathrm{detect}}.
+\]
+With probability at least $1 - \beta'$ (Lemma~\ref{lem:5d}):
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; \rho_g(\deltaadv) \cdot
+  T_{\mathrm{cascade}}.
+\]
+$h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over the
+deployment class $\mathcal{D}$: $\rho_g(\deltaadv)$,
+$T_{\mathrm{cascade}}$, and $\beta'$ are deployment-class constants.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We compose (C11) with Lemma~\ref{lem:4} to bound
+$h_{\mathrm{detect}}$.
+
+\emph{Step 1 (per-unit-time bound from C11).}  By
+Assumption~\ref{ass:C11}, for any $q \in \Aadv \cup
+\Aadv^{\mathrm{env}}$:
+\[
+  \frac{d \epsgap}{dt} \;\leq\; \rho_g(\deltaadv).
+\]
+$\rho_g(\deltaadv)$ is a deployment-class constant by (C11),
+independent of $|P|$.
+
+\emph{Step 2 (integrated bound over detection window).}  The gap
+accumulated during the detection window:
+\[
+  h_{\mathrm{detect}}(\theta) \;=\;
+  \int_{t_{\mathrm{violation}}}^{t_{\mathrm{violation}} +
+  T_{\mathrm{detect}}} \frac{d \epsgap}{dt} \, dt
+  \;\leq\; \rho_g(\deltaadv) \cdot T_{\mathrm{detect}}.
+\]
+
+\emph{Step 3 (apply Lemma 4 / Lemma 5d for tail bound).}
+Lemma~\ref{lem:4} establishes the SPRT detection-time tail bound:
+\[
+  \Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}] \;\leq\;
+  \exp(-\kappa \cdot T_{\mathrm{cascade}} \cdot \deltaadv) \;=:\;
+  \beta'.
+\]
+Therefore, with probability at least $1 - \beta'$,
+$T_{\mathrm{detect}} \leq T_{\mathrm{cascade}}$, and:
+\[
+  h_{\mathrm{detect}}(\theta) \;\leq\; \rho_g(\deltaadv) \cdot
+  T_{\mathrm{cascade}}.
+\]
+
+\emph{Step 4 (intensivity).}  Each constant is independent of
+$|P|$ over $\mathcal{D}$:
+\begin{itemize}
+\item $\rho_g(\deltaadv)$: deployment-class constant by (C11).
+\item $T_{\mathrm{cascade}} \geq \tau_{\mathrm{meta}}$:
+  \citep[Phase~Redundancy]{lasser2026phase}'s metastable-lifetime
+  lower bound (deployment-class constant per the (C7) bounded
+  co-evolution caveat in Lemma~\ref{lem:4}'s appendix proof).
+\item $\beta'$: deployment-class tail-bound constant from
+  Lemma~\ref{lem:5d}'s composition.
+\end{itemize}
+Therefore $h_{\mathrm{detect}}(\theta) \leq \rho_g(\deltaadv) \cdot
+T_{\mathrm{cascade}}$ is intensive in $|P|$ over $\mathcal{D}$.
+$\Box$
+\end{proof}
+
+\section{Discussion}
+
+\paragraph{Constant taxonomy.}
+\begin{itemize}
+\item $\rho_g(\deltaadv)$: \emph{deployment-policy-derived} (C11);
+  measured by per-channel sensitivity-to-gap calibration.
+\item $T_{\mathrm{cascade}}, \tau_{\mathrm{meta}}$: \emph{source-
+  derived} from \citep[Phase~Redundancy]{lasser2026phase}'s
+  metastable-lifetime scaling (with the (C7) bounded co-evolution
+  qualification).
+\item $\beta'$: \emph{composed constant} from Lemmas~5b, 4, 5d
+  applied to the deployment's calibrated $\deltaadv$ and
+  $\tau_{\mathrm{meta}}$.
+\end{itemize}
+
+\paragraph{Trade-off: tighter $\rho_g$ vs.\ wider regime.}
+Deployments can tighten $\rho_g$ by:
+\begin{itemize}
+\item Restricting $g$'s class to alignment properties with low
+  per-channel sensitivity (which also tightens (C6) Lipschitz).
+\item Restricting $\Aadv$ to adversarial strategies whose per-step
+  channel deviations have low gap-growth rate (effectively
+  narrowing the detection class).
+\end{itemize}
+Each tightening produces a smaller $h_{\mathrm{detect}}$ but
+potentially excludes some deployment configurations.  The
+deployment-tooling specification calibrates $\rho_g$ in line with
+the deployment's threat model.
+
+\paragraph{Connection to (C11) versus per-step versus per-unit-time.}
+(C11) is stated in continuous-time form $d\epsgap/dt$.  For
+discrete-time deployments (per-step SPRT updates), the
+corresponding form is $\rho_g^{\mathrm{step}}$, with
+$h_{\mathrm{detect}} \leq \rho_g^{\mathrm{step}} \cdot
+N_{\mathrm{detect}}$ where $N_{\mathrm{detect}}$ is the number of
+SPRT steps to detection.  The continuous-time and discrete-time
+forms are equivalent under standard step-time normalization.
+Operators choose the formulation matching their deployment's SPRT
+implementation.
+
+\paragraph{Why (C11) is needed beyond (C6) Lipschitz alignment.}
+(C6) bounds the Lipschitz constant of $g$ in the gap quantity
+$\epsgap$.  (C11) bounds the rate at which $\epsgap$ itself can
+grow under adversarial strategies in the detection class.  These
+are different bounds: (C6) is alignment-property-side; (C11) is
+gap-dynamics-side.  Both are needed for $h_{\mathrm{detect}}$
+intensivity.
+
+\section{Connection to Theorem 1 Layer 2}
+
+Lemma~6 supplies the intensivity argument that
+Theorem~\ref{thm:deployment_safety}'s Layer~2 statement asserts:
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot
+  h_{\mathrm{detect}}(\theta).
+\]
+
+After applying Lemma~6:
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; K_{\mathrm{Lip}} \cdot
+  \rho_g(\deltaadv) \cdot T_{\mathrm{cascade}}.
+\]
+The right-hand side is the product of $|P|$-independent constants
+over $\mathcal{D}$, with confidence at least $1 - \beta'$
+(from Lemma~5d's tail composition).
+
+This gives the explicit Layer~2 capability-magnitude-independent
+bound:
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; C^{\mathrm{detect}}_*
+  \quad \text{w.p. at least } 1 - \beta',
+\]
+where $C^{\mathrm{detect}}_* = K_{\mathrm{Lip}} \cdot
+\rho_g(\deltaadv) \cdot T_{\mathrm{cascade}}$ is a deployment-class
+constant.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal continuous-time per-unit-time gap-growth-rate bound
+  (C11) as a deployment-class assumption.
+\item Integrated $h_{\mathrm{detect}}$ bound combining (C11) with
+  Lemma~4's tail bound and Lemma~5d's composition.
+\item Explicit constant $C^{\mathrm{detect}}_*$ in deployment-class
+  terms.
+\item Connection to Theorem~1 Layer~2's intensivity claim.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $\rho_g(\deltaadv)$.  Operators may calibrate
+  tighter bounds for restricted threat models or tighter alignment
+  properties.
+\item Existence of deployment configurations satisfying (C11).
+  Verified empirically by the deployment-tooling specification
+  (a new audit, possibly Audit~7).
+\item Numerical value of $\rho_g(\deltaadv)$.  Calibrated
+  deployment-by-deployment.
+\item Structural derivation of (C11) from finer source-paper
+  machinery.  Currently asserted as a deployment-class condition,
+  analogous to (C7) bounded co-evolution and SA1 HHI surrogate
+  adequacy.
+\end{itemize}
+
+\section{Specific verification questions for codex review}
+
+\begin{enumerate}
+\item Is the continuous-time formulation of (C11) ($d\epsgap/dt$)
+  the right formalization for Theorem~1's Layer~2?  Or should it
+  be discrete-time (per-SPRT-step)?  The proof notes equivalence
+  under step-time normalization, but Theorem~1's actual
+  application context (continuous monitoring vs.\ discrete event
+  ledger) might prefer one or the other.
+
+\item Is $h_{\mathrm{detect}}$'s definition as the time-integrated
+  gap growth correct?  Specifically, should it be:
+  (a) $\int (d\epsgap/dt) dt$ (gap accumulated during detection
+  window), or
+  (b) $\sup_t \epsgap(t)$ (worst-case instantaneous gap)?
+  The proof uses (a) but Theorem~1's application might prefer (b).
+
+\item Is the (C11) condition correctly distinguished from (C6)
+  bounded-Lipschitz alignment?  The discussion notes (C6) is
+  alignment-property-side and (C11) is gap-dynamics-side.  Is
+  this distinction watertight, or does (C11) reduce to a
+  consequence of (C6) under some structural assumptions?
+
+\item Is the connection to Lemma~5d's tail bound rigorous?
+  Specifically, the argument is that with probability $1 - \beta'$,
+  $T_{\mathrm{detect}} \leq T_{\mathrm{cascade}}$, so
+  $h_{\mathrm{detect}} \leq \rho_g \cdot T_{\mathrm{cascade}}$.
+  Is this the right way to translate the tail bound into the
+  integrated gap bound, or does it lose information about the
+  per-trajectory gap evolution?
+
+\item Should (C11) be promoted to a theorem-level condition (C11)
+  of Theorem~1, analogous to the (C6)-(C10) conditions added in
+  earlier integrations?  Or can it remain a Lemma~6-internal
+  assumption without theorem-level surfacing?
+\end{enumerate}
+
+\end{document}

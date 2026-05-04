@@ -1,0 +1,244 @@
+\section{Composition setup}
+\label{sec:composition_setup}
+
+The deployment-safety theorem of \S\ref{sec:main_theorem} composes
+results from six papers in the Goal-Frontier Maximization sequence.
+This section sets up the composition: what each source paper
+contributes, the intensive-vs-extensive distinction that makes the
+composition tractable, the notation reconciliation across source
+papers, and the composition challenges this paper must address.
+
+\subsection{Source-paper contributions as building blocks}
+\label{sec:source_blocks}
+
+The composition uses six load-bearing source-paper results. Each is
+intensive: stated in per-capability, per-channel, or per-event terms
+rather than in terms of absolute capability magnitude. This intensity
+is what makes the composition's capability-magnitude-independent
+bound possible.
+
+\textbf{The Horizon-Aware paper~\citep{lasser2026horizon}: The anti-monopolar property.}
+\citep[Proposition~6]{lasser2026horizon} establishes that under a
+discounted objective with positive cross-substrate cooperative novelty
+$\rext > 0$, full capability domination is anti-maximizing:
+\[
+  \Vdisc^{\mathrm{div}} - \Vdisc^{D} \;=\;
+  \frac{\rext}{1 - \gamma} - \Delta_0,
+\]
+where $\Vdisc^{\mathrm{div}}$ and $\Vdisc^{D}$ are the discounted
+values of the diversity-maintaining and domination strategies, and
+$\Delta_0$ is the immediate $\volL$-change from domination.
+Diversity strictly dominates for $\gamma > \gamma^* = 1 -
+\rext/\Delta_0$ (when $\Delta_0 > 0$) or for all $\gamma \in (0,1)$
+(when $\Delta_0 \leq 0$). The corollary on strategy-dependent
+internal rate identifies the breakdown regime $\Delta r_K \geq
+\rext$, which This paper's safe-region analysis must constrain.
+
+\textbf{The Exogenous-Verification paper~\citep{lasser2026exo}: Verification infrastructure.}
+\citep{lasser2026exo} supplies the operational substrate for ledger-
+observable invariants: substrate-exclusive algorithmic witnesses
+(Definition of Algorithmic Witness), Pedersen commitments
+(computationally binding, perfectly hiding under discrete-log
+assumption), an append-only verification ledger replicated across
+substrate-exclusive nodes, and a governance fork protocol requiring
+cross-substrate supermajority for evaluation-protocol acceptance.
+The behavioral consistency monitor
+(\citep[Proposition~6]{lasser2026exo}) provides SPRT detection with
+expected detection time $\mathbb{E}[T_{\mathrm{detect}}] \leq A/\delta$
+where $A$ is the SPRT upper threshold and $\delta$ is the KL
+divergence between baseline and alternative behavioral distributions.
+
+\textbf{The Phase-Redundancy paper~\citep{lasser2026phase}: Phase boundary dynamics.}
+\citep{lasser2026phase} provides a Lyapunov function $\Lyap(\Wm_t) =
+\sum_k w_k \epsilon_k(t)^2$ on world-model error and a phase boundary
+theorem characterizing when the coupled $(P, \Wm)$ system stays in
+the self-correcting basin versus enters the monopolar absorbing
+state. The critical surface
+(\citep[Equation 7 (critical surface)]{lasser2026phase}) is
+expressed in intensive quantities:
+\[
+  \rS \cdot \rhomincross + \alpha_{\min} c_V \underline{\nu}
+  \;>\; \rW \cdot \rsub + \dmax \cdot
+  \frac{\Delta\rho_{\mathrm{avg}}}{\Lyap_{\mathrm{avg}}}
+\]
+where $\rhomincross$ is the cross-substrate redundancy minimum,
+$\rsub$ is the subsumption frequency, and $\rS, \rW, \dmax$ are
+intensive rate constants. The metastable lifetime
+$\tau_{\mathrm{meta}} \gtrsim C/I_k$ under partial endogenous
+correction (B1$'$) provides a lower bound on the cascade time
+that This paper's lead-time guarantee uses.
+
+\textbf{The Revealed-Sacrifice paper~\citep{lasser2026paper8a}: B-to-C lower bound.}
+\citep{lasser2026paper8a} establishes the aggregate B-to-C lower
+bound theorem: $\volRwin(Y_n) \geq \Delta\volL(X_n)$ per
+revealed-sacrifice event, with monotone accumulation
+($\volRlower(E') \geq \volRlower(E)$ for $E \subseteq E'$). The
+B-to-C ratio $\betaL = \volRlower / \volL \in [0, 1]$ is the
+ledger-derived measure of how much realized exercise has been
+witnessed against possessed capability volume.
+
+\textbf{The Need-Sufficiency paper~\citep{lasser2026paper8b}: HHI and gap decomposition.}
+\citep{lasser2026paper8b} establishes the trade-flow Herfindahl-Hirschman
+Index $\HHI$ as a wireheading-consistent concentration signal,
+Schur-convex in the majorization order, with the Part-A category-flow
+variant third-party observable from public committed events plus
+public S1-admissibility labelling. The gap decomposition partitions
+the B-to-C gap into five cells (restricted, covered, dormant,
+residual, boundary-residual) with classification computable in
+near-linear $\widetilde{O}(|P|+E+M)$ time.
+
+\textbf{The Microfoundation paper~\citep{lasser2026micro}: Static Goodhart bound.}
+\citep{lasser2026micro} establishes the Lipschitz transfer Goodhart
+bound: for $\Pproxy = \volL$ as proxy and $\Ttruth = \volRwin$ as
+operational truth (under stance S0), and Lipschitz alignment
+property $g$:
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot \epsnonres,
+\]
+where $\epsnonres$ is the non-residual proxy-truth gap on the
+operationally active subspace $P^{\mathrm{act}}$. The four-channel
+decomposition (observation density, attestation quality,
+individuation discipline, bundle decomposition) governs the gap's
+evolution. \citep[Microfoundation]{lasser2026micro}'s Conjecture~1 (optimization pressure correlates
+with gap exploitation) is acknowledged as conjectural; This paper's
+$I_5$ (HHI ceiling) operationalizes the conjecture as a measurable
+invariant rather than discharging it.
+
+\subsection{The intensive-vs-extensive distinction}
+\label{sec:intensive_extensive}
+
+A bound is \emph{intensive} if it is stated in terms of per-element
+quantities (per-capability, per-channel, per-event) whose magnitude
+does not grow with the size of the underlying capability poset $P$ or
+agent population. A bound is \emph{extensive} if it scales with
+$|P|$ or with capability count.
+
+The capability-magnitude-independent property of This paper's main
+theorem requires the bound on Goodhart slack to be intensive in $|P|$.
+If any source-paper bound were extensive --- for example, if
+$\epsnonres$ grew as a sum over capabilities rather than as a per-
+capability supremum --- the composed bound would inherit that
+extensive scaling, and the deployment claim would weaken with
+capability magnitude.
+
+Each source-paper result above is intensive by construction:
+\begin{itemize}
+\item \citep[Horizon~Aware]{lasser2026horizon}'s $\rext$ and $\Delta r_K$ are growth rates, not
+  capability counts.
+\item \citep[Exogenous~Verification]{lasser2026exo}'s SPRT detection rate $A/\delta$ depends on KL
+  divergence and threshold, not on capability count.
+\item \citep[Phase~Redundancy]{lasser2026phase}'s critical surface uses minima and averages
+  ($\rhomincross$, $\Delta\rho_{\mathrm{avg}}$), not sums.
+\item \citep[Revealed~Sacrifice]{lasser2026paper8a}'s $\betaL$ is a ratio in $[0,1]$.
+\item \citep[Need~Sufficiency]{lasser2026paper8b}'s $\HHI$ is a concentration index in $[1/n, 1]$ where
+  $n$ is the number of categories.
+\item \citep[Microfoundation]{lasser2026micro}'s $\epsnonres$ is a sup-norm on $P^{\mathrm{act}}$, not
+  an average over capability count.
+\end{itemize}
+
+The composition challenge is to show that the \emph{combination} of
+these intensive bounds remains intensive. Section~\ref{sec:lemmas}
+addresses this via Lemma~\ref{lem:1} (intensive composition under
+co-evolution); the proof handles \citep[Microfoundation]{lasser2026micro}'s
+Composition~Proposition~1 positive-part error terms explicitly.
+
+\subsection{Notation reconciliation}
+\label{sec:notation}
+
+The source papers use different conventions for the same underlying
+quantities; This paper standardizes on a single set of symbols
+across the composition.  The full notation reconciliation
+(source-paper symbol $\to$ This paper's symbol $\to$ meaning) is
+collected in Appendix~\ref{app:notation}, Table~\ref{tab:notation}.
+
+The most consequential reconciliations are:
+\begin{itemize}
+\item \citep[Phase Redundancy]{lasser2026phase}'s $\meff$ (nominal
+  substrate count) is upgraded to This paper's $\mindep$
+  (failure-correlation-independent substrate count).  Nominally
+  distinct substrates may share failure modes (skeleton substrates);
+  This paper's safe-region calculation requires genuine independence.
+\item \citep[Microfoundation]{lasser2026micro}'s $P$ and $T$ are
+  written as $\Pproxy = \volL$ and $\Ttruth = \volRwin$ throughout
+  this paper to prevent confusion with $P$ as a poset and $T$ as a
+  time variable.
+\item \citep[Horizon Aware]{lasser2026horizon}'s discounted value
+  $V^\gamma$ is written as $\Vdisc$ to make the discount factor an
+  explicit subscript rather than a superscript that conflicts with
+  strategy labels ($\Vdisc^{\mathrm{div}}$, $\Vdisc^D$).
+\end{itemize}
+
+\subsection{Composition challenges}
+\label{sec:composition_challenges}
+
+The source-paper results do not compose mechanically. Three
+challenges drive the technical content of \S\ref{sec:lemmas} and
+\S\ref{sec:main_theorem}.
+
+\textbf{Challenge 1: Co-evolution of channels.}  \citep[Microfoundation]{lasser2026micro}'s
+Composition~Proposition~1 establishes that the four-channel
+decomposition composes \emph{exactly} in the sequential-intervention
+regime but only \emph{approximately} under co-evolution, with
+positive-part error terms. This paper's intensive composition lemma
+(Lemma~\ref{lem:1}) propagates these error terms through the
+deployment-safety bound. The error terms are bounded but non-zero;
+the deployment claim must accommodate them.
+
+\textbf{Challenge 2: Lyapunov-to-Goodhart bridge.}  \citep[Phase~Redundancy]{lasser2026phase}'s
+Lyapunov function tracks world-model error, and \citep[Microfoundation]{lasser2026micro}'s $\epsnonres$
+tracks proxy-truth gap on the active subspace. These quantities are
+distinct: $\Lyap$ is per-dimension squared error in $\Wm$, while
+$\epsnonres$ is sup-norm gap in the proxy-truth comparison.
+Lemma~\ref{lem:2} establishes the quantitative bridge:
+$\Lyap < \epsilon_{\mathrm{safe}}$ implies $\epsnonres < f(\epsilon_{\mathrm{safe}})$
+with $f$ explicit and intensive in capability magnitude.
+
+\textbf{Challenge 3: HHI-to-pressure operationalization.}  \citep[Microfoundation]{lasser2026micro}'s
+Conjecture~1 (optimization pressure correlates with gap exploitation)
+is unproved. This paper does not prove it; instead, this paper
+\emph{operationalizes} the conjecture by showing that the HHI ceiling
+$I_5$ implies the conditions under which Conjecture~1 would predict
+gap exploitation. Lemma~\ref{lem:3_forward} formalizes this.
+The operationalization moves Conjecture~1 from ``load-bearing
+analytical premise'' to ``definition of a measurable conditioning
+invariant,'' which is what the deployment claim actually needs.
+
+\subsection{What this paper supplies on top of source-paper machinery}
+\label{sec:paper10_new}
+
+This paper's substantive new content (beyond composition of
+inherited results):
+\begin{enumerate}
+\item \textbf{The eleven operational invariants}
+  ($I_1$--$I_{11}$, \S\ref{sec:invariants}), with definitions,
+  threshold semantics, and ledger-observable measurement procedures.
+\item \textbf{The five-part Lemma~5 family} (\S\ref{sec:lemmas}):
+  substrate floor, channel-restricted detection, minimax static
+  tightening, lead-time tail bound, environment-side witness
+  extension.
+\item \textbf{The three-layer deployment-safety theorem}
+  (\S\ref{sec:main_theorem}): static safe region, detection-and-
+  correction, named residuals.
+\item \textbf{The canonical tripartite substrate identification}
+  (\S\ref{sec:substrate_anchoring}): Human + AI +
+  Formal-Operational, with the cooperative-anchoring property.
+\item \textbf{Three additional invariants for cooperative-anchoring
+  evasions} ($I_9$, $I_{10}$, $I_{11}$): substrate-exclusivity
+  observability, coverage/materiality, latency bounds.
+\item \textbf{The deployment-tooling specification}
+  (\S\ref{sec:deployment_tooling}): what an operator must
+  instrument to invoke the theorem.
+\end{enumerate}
+
+The composition is non-trivial: the five-part Lemma~5 family
+carries internal asymmetries (Lemma~5a's substrate floor relies on
+pairwise-additivity assumptions distinct from the failure-
+correlation independence used elsewhere; Lemma~5c's safe region is
+binding only in the cooperative-overlap regime), and the
+cooperative-anchoring property of \S\ref{sec:substrate_anchoring}
+holds in a deliberately narrow form rather than as a general
+inner-alignment guarantee.  The result is a bounded but defensible
+structural claim, not a sweeping safety guarantee.
+\S\ref{sec:scope} of the introduction stated the explicit residuals;
+\S\ref{sec:discussion} returns to them after the formal apparatus
+is in place.

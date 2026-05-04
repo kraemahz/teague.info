@@ -1,0 +1,389 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Horizon~Aware}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+\newcommand{\Saudit}{S_*}
+
+\title{Lemma 5a (Substrate floor): Full Proof Draft v2}
+\author{Paper 10 working draft for codex re-review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v1}
+
+V1 incorrectly claimed Step~4's rate additivity followed from joint
+failure-correlation independence ($I_6'$).  Codex Round~A flagged
+this as a significant problem: $I_6'$'s definition only says
+adversarial shock mechanisms are single-substrate-supported, which
+does \emph{not} imply cooperative-production channels are
+statistically independent or non-overlapping.  V2 fixes this and
+incorporates Round~A's other refinements.
+
+\textbf{Changes from v1:}
+\begin{itemize}
+\item \textbf{Q1 fix.}  Use heterogeneous per-pair rates
+  $\rho_{ij}$ with $\rho_0 := \min_{i<j \in \Saudit} \rho_{ij}$
+  over an \emph{audited subset} $\Saudit$ of $m^*$ substrates,
+  not every pair in the deployment population.
+\item \textbf{Q2 fix (the big one).}  Replaced the incorrect
+  ``joint independence implies additivity'' argument with a new
+  explicit structural assumption: \textbf{(SU) Pairwise cooperative
+  channel superposition.}  Exact-two-substrate cooperative event
+  classes are disjointly attributed and not rivalrous across pairs
+  except through explicitly-modeled higher-order channels.
+\item \textbf{Q3 fix.}  Pairwise channels defined as
+  \textbf{exact two-substrate support}, not ``at least one
+  participant from each.''  This eliminates double-counting of
+  higher-order cooperatives in the pairwise sum.
+\item \textbf{Q5 fix.}  CN-with-superposition surfaced as theorem-
+  level condition (C10) of Theorem~\ref{thm:deployment_safety},
+  analogous to (C6)--(C9) added in earlier integrations.
+\item \textbf{Caveat fix.}  Removed v1's incorrect claim that
+  failure-correlation independence excludes correlated-channel
+  sub-additivity.  Failure-correlation independence excludes
+  shared shock mechanisms; (SU) is a separate structural condition
+  that excludes cooperative-production overlap.
+\end{itemize}
+
+\section{Source-paper grounding}
+
+\citep[Horizon~Aware]{lasser2026horizon}'s anti-monopolar property
+establishes that under a discounted objective with $\rext > 0$,
+domination is anti-maximizing.  Paper~3 grounds $\rext > 0$ in
+substrate physics (cross-substrate cooperatives produced by
+distinct-substrate participants whose joint output cannot be
+replicated by any single substrate) and shows pairwise-novel
+cooperative output between any pair of distinct substrates.
+However, Paper~3 does not give a quantitative floor on $\rext$ as a
+function of substrate count.
+
+Lemma~5a's contribution is to derive an explicit lower bound on
+$\rext$ given (a)~the substrate count $\mindep$, (b)~per-pair
+calibrated cooperative novelty rates, and (c)~a pairwise-channel
+superposition structural condition.
+
+\section{Pairwise cooperative channels (exact-two-substrate support)}
+
+\begin{definition}[Pairwise cooperative channel]
+\label{def:pairwise_channel}
+For an audited subset $\Saudit \subseteq \mathcal{S}$ of $m^*$
+distinct substrates from the deployment's substrate population
+$\mathcal{S}$, the \emph{pairwise cooperative channel} for the pair
+$(s_i, s_j)$ with $i < j$ is the event class:
+\[
+  \mathcal{C}^{(s_i, s_j)} \;:=\; \{c \in P :
+  \mathrm{participants}(c) \subseteq s_i \cup s_j,\
+  \mathrm{participants}(c) \cap s_i \neq \emptyset,\
+  \mathrm{participants}(c) \cap s_j \neq \emptyset\},
+\]
+i.e., cooperatives produced \emph{exactly} by participants from
+$s_i$ and $s_j$ (no participants from other substrates).
+\end{definition}
+
+\textbf{Note (Q3 fix).}  V1's definition admitted ``cooperatives
+whose participants \emph{include at least one} from $s_i$ and
+$s_j$,'' which over-counts higher-order cooperatives across multiple
+pairs.  V2's exact-two-substrate-support definition prevents this
+double-counting; higher-order cooperatives belong to separate
+event classes and contribute to $\rext$ additionally
+(Remark~\ref{rem:higher_order}).
+
+\section{Coercivity and superposition assumptions}
+
+\begin{assumption}[CN: Per-pair cooperative-novelty rate floor, heterogeneous form]
+\label{ass:CN}
+For an audited subset $\Saudit \subseteq \mathcal{S}$ with $|\Saudit|
+= m^*$ and every pair $(s_i, s_j)$ with $i < j$ in $\Saudit$:
+\[
+  \rext^{(s_i, s_j)} \;\geq\; \rho_{ij} \;>\; 0,
+\]
+where $\rext^{(s_i, s_j)}$ is the per-pair contribution to $\rext$
+from the pairwise cooperative channel $\mathcal{C}^{(s_i, s_j)}$,
+and $\rho_{ij}$ are per-pair rate floors.  Define $\rho_0 :=
+\min_{i<j \in \Saudit} \rho_{ij} > 0$.
+
+The constants $\rho_{ij}, \rho_0$ depend on the deployment class
+$\mathcal{D}$ but not on $|P|$.
+\end{assumption}
+
+\begin{assumption}[SU: Pairwise cooperative channel superposition]
+\label{ass:SU}
+For the audited subset $\Saudit$ and the pairwise cooperative
+channels $\{\mathcal{C}^{(s_i, s_j)}\}_{i<j}$ of
+Definition~\ref{def:pairwise_channel}:
+\begin{enumerate}
+\item \textbf{Disjoint attribution:} the channels are pairwise
+  disjoint as event classes: $\mathcal{C}^{(s_i, s_j)} \cap
+  \mathcal{C}^{(s_k, s_l)} = \emptyset$ for $\{i,j\} \neq \{k,l\}$.
+\item \textbf{Non-rivalrous production:} the rate of cooperative
+  production in channel $\mathcal{C}^{(s_i, s_j)}$ is not reduced
+  by simultaneous production in other pairwise or higher-order
+  channels (no rivalrous capability allocation across pairs).
+\item \textbf{Joint-deployment intensities:} the per-pair rates
+  $\rho_{ij}$ are measured in the joint deployment with all
+  audited-subset substrates active, not under a counterfactual
+  isolation.
+\end{enumerate}
+\end{assumption}
+
+\textbf{Operational interpretation of SU.}  SU is the structural
+condition that allows additive aggregation of per-pair rates.
+Without SU, two substrate pairs could share cooperative
+``novelty bottlenecks'' (e.g., a finite supply of joint-attention
+slots between $s_i$ agents and other substrates), in which case
+producing cooperatives in channel $\mathcal{C}^{(s_i, s_j)}$ would
+reduce production in channel $\mathcal{C}^{(s_i, s_k)}$.  SU
+asserts that such rivalrous coupling is absent in the audited
+subset.
+
+SU is a strictly stronger assumption than $I_6'$'s joint failure-
+correlation independence: $I_6'$ excludes shared adversarial shock
+mechanisms; SU excludes shared cooperative-production bottlenecks.
+The two conditions are structurally independent.
+
+\section{Statement of Lemma 5a}
+
+\begin{lemma}[Substrate floor, v2]
+\label{lem:5a}
+Under invariant $I_6'$ ($\mindep \geq m^* \geq 3$), condition
+(C10) of Theorem~\ref{thm:deployment_safety} (per-pair cooperative-
+novelty rate floor with superposition; comprising
+Assumptions~\ref{ass:CN} and~\ref{ass:SU} on an audited substrate
+subset $\Saudit$):
+\[
+  \rext \;\geq\; r_*(m^*) \;:=\; \rho_0 \cdot \binom{m^*}{2} \;>\; 0.
+\]
+For $m^* = 3$, $r_*(3) = 3\rho_0 > 0$.
+
+The floor $r_*(m^*)$ is intensive in $|P|$ over the deployment
+class $\mathcal{D}$: $\rho_0$ depends on $\mathcal{D}$'s operational
+parameters but not on $|P|$.
+\end{lemma}
+
+\section{Proof}
+
+\begin{proof}
+We work over a deployment class $\mathcal{D}$ satisfying $I_6'$ and
+(C10) (Assumptions CN, SU on audited subset $\Saudit$).
+
+\emph{Step 1 (substrate audit).}  By $I_6'$, the deployment has
+$\mindep \geq m^*$ substrates with joint failure-correlation
+independence.  By (C10), an audited subset $\Saudit \subseteq
+\mathcal{S}$ with $|\Saudit| = m^*$ has been verified to satisfy
+both CN (per-pair rate floor) and SU (cooperative channel
+superposition).  We work over $\Saudit$.
+
+\emph{Step 2 (combinatorial pairwise channels).}  The number of
+unordered pairs in $\Saudit$ is $\binom{m^*}{2} = m^*(m^*-1)/2$.
+Each pair $(s_i, s_j)$ with $i < j$ has its own pairwise
+cooperative channel $\mathcal{C}^{(s_i, s_j)}$ (exact-two-substrate
+support, Definition~\ref{def:pairwise_channel}).
+
+\emph{Step 3 (per-pair rate from CN).}  By Assumption~CN,
+$\rext^{(s_i, s_j)} \geq \rho_{ij} \geq \rho_0$ for every pair in
+$\Saudit$.
+
+\emph{Step 4 (additivity from SU).}  By Assumption~SU(1) (disjoint
+attribution), the pairwise channels do not double-count
+cooperatives.  By Assumption~SU(2) (non-rivalrous production), the
+realized rate from each channel does not depend on production in
+other channels.  By Assumption~SU(3) (joint-deployment
+intensities), the per-pair rates $\rho_{ij}$ measure production
+in the actual deployment, not in counterfactual isolation.
+
+Therefore, the pairwise contributions sum without overcounting or
+suppression:
+\[
+  \rext^{\mathrm{pairwise}} \;:=\; \sum_{i<j \in \Saudit}
+  \rext^{(s_i, s_j)} \;\geq\; \binom{m^*}{2} \cdot \rho_0.
+\]
+The total $\rext$ includes pairwise plus any higher-order
+cooperative contributions; pairwise is therefore a lower bound:
+\[
+  \rext \;\geq\; \rext^{\mathrm{pairwise}} \;\geq\; \binom{m^*}{2}
+  \cdot \rho_0 \;=\; r_*(m^*).
+\]
+
+\emph{Step 5 (intensivity).}  $\rho_0 = \min_{i<j \in \Saudit}
+\rho_{ij}$ is a deployment-class constant by Assumption~CN
+(per-pair calibrated rates), independent of $|P|$.  $m^*$ is the
+$I_6'$ threshold, also a deployment-class constant.  Therefore
+$r_*(m^*) = \rho_0 \binom{m^*}{2}$ is independent of $|P|$ over
+$\mathcal{D}$.  $\Box$
+\end{proof}
+
+\section{Remarks on scope}
+
+\begin{remark}[On the audited subset $\Saudit$]
+\label{rem:saudit}
+v1 used ``every pair in the deployment population.''  v2 uses an
+audited subset $\Saudit$ of exactly $m^*$ substrates.  Reason:
+deployments may have weak substrate pairs (e.g., recently-added
+substrates that haven't yet reached calibrated cooperative
+novelty rates).  Including all pairs would force $\rho_0$ to drop
+to the weakest pair, weakening the bound.
+
+The $\Saudit$ formulation lets the deployment audit the strongest
+$m^*$ substrates and bound $\rext$ from below on that subset.
+$\rext$ for the full deployment is at least the audited-subset
+contribution; weak substrate pairs contribute non-negatively but
+are not credited.
+
+Operationally, the audit (Audit~6 of
+\S\ref{sec:tooling_substrate_audits}) calibrates $\rho_{ij}$ for
+each candidate pair, picks the $m^*$ substrates whose pairwise
+rates collectively maximize $\binom{m^*}{2} \cdot \min \rho_{ij}$.
+\end{remark}
+
+\begin{remark}[On higher-order cooperatives]
+\label{rem:higher_order}
+The lemma's pairwise-only bound is conservative.  Higher-order
+cooperatives (those with exact $k$-substrate support for $k \geq
+3$) contribute additional rate to $\rext$:
+\[
+  \rext \;\geq\; \rext^{\mathrm{pairwise}} +
+  \sum_{k=3}^{m^*} \rext^{(k\text{-way})}.
+\]
+The $k$-way contributions can be calibrated analogously
+(per-$k$-tuple rate floors $\rho_0^{(k)}$ and superposition
+conditions), giving a tighter floor:
+\[
+  \rext \;\geq\; \sum_{k=2}^{m^*} \rho_0^{(k)} \binom{m^*}{k}.
+\]
+For deployment-claim purposes, the pairwise floor suffices: it
+makes Layer~1's safe region non-trivial and is intensive in $|P|$.
+Operators may use higher-order calibration for tighter bounds.
+\end{remark}
+
+\begin{remark}[On the SU assumption's strength relative to $I_6'$]
+\label{rem:SU_vs_I6}
+v1 incorrectly stated that joint failure-correlation independence
+($I_6'$, Definition~\ref{def:joint_indep}) excludes correlated-
+channel sub-additivity.  Codex Round~A correctly flagged this:
+$I_6'$ excludes \emph{shared adversarial shock mechanisms}
+(``no single shock spans multiple substrates''), not \emph{shared
+cooperative-production bottlenecks} (``no rivalrous resource
+allocation across pairs'').  These are structurally independent
+conditions.
+
+(SU) is a new structural condition added by Paper~10 specifically
+for Lemma~5a.  Failure-correlation independence and superposition
+are both required; both are new theorem-level conditions under
+(C2) and (C10) respectively.
+\end{remark}
+
+\section{Connection to Theorem 1 Layer 1}
+
+Lemma~5a's role: provide the substrate-floor input that makes
+Lemma~5c's safe-region inequality non-trivial.
+
+Lemma~5c asserts $\Delta r_K < \rext + (1-\gamma)(\Ddiv -
+\Delta_0)$ implies diversity dominates.  For non-vacuous safe
+region, $\rext$ must be bounded below by a verifiable constant.
+Lemma~5a provides $\rext \geq \rho_0 \binom{m^*}{2} > 0$ under
+(C10), so the safe region is non-trivial.
+
+Lemma~5c's appendix proof Step~1 invokes Lemma~5a:
+\[
+  \rext \geq r_*(m^*) > 0 \quad \text{(by Lemma~\ref{lem:5a})},
+\]
+which guarantees the safe-region inequality has positive right-hand
+side under any positive $\Delta_0$ and $\gamma < 1$.
+
+\section{What this proof does and does not establish}
+
+\textbf{Establishes:}
+\begin{itemize}
+\item A formal coercivity assumption (CN: per-pair cooperative-
+  novelty rate floor with audited subset $\Saudit$ and
+  heterogeneous rates $\rho_{ij}$).
+\item A formal superposition assumption (SU: disjoint attribution,
+  non-rivalrous production, joint-deployment intensities) replacing
+  v1's incorrect ``joint independence implies additivity'' argument.
+\item Pairwise-channel definition with exact-two-substrate support
+  (no double-counting).
+\item Combinatorial-additivity proof of the $\binom{m^*}{2}$
+  scaling under SU.
+\item Closed-form floor $r_*(m^*) = \rho_0 \binom{m^*}{2}$
+  intensive in $|P|$.
+\item Three remarks: $\Saudit$ scope, higher-order cooperatives,
+  SU vs.\ $I_6'$ independence.
+\end{itemize}
+
+\textbf{Does not establish (deferred):}
+\begin{itemize}
+\item Tightness of $r_*(m^*)$.  Pairwise-only floor is conservative;
+  higher-order cooperatives contribute additionally
+  (Remark~\ref{rem:higher_order}).
+\item Existence of deployment configurations satisfying CN, SU.
+  Conditions on the deployment's substrate structure;
+  verification is empirical (Audit~6 of
+  \S\ref{sec:tooling_substrate_audits}, to be added).
+\item Numerical values of $\rho_{ij}, \rho_0$.  Calibrated
+  deployment-by-deployment via per-pair cooperative-novelty
+  rate-estimation procedures.
+\end{itemize}
+
+\section{Specific verification questions for v2 codex review}
+
+\begin{enumerate}
+\item Is the SU formulation (disjoint attribution, non-rivalrous
+  production, joint-deployment intensities) the right structural
+  condition for additivity?  Are the three sub-conditions all
+  necessary, or can some be derived from others?
+
+\item Is the audited-subset $\Saudit$ formulation correctly
+  scoped?  In particular, is it an audit-time construct (operators
+  choose $\Saudit$ for the calibration) or a deployment-state
+  construct (the $m^*$-best substrates may change over deployment)?
+
+\item Is the exact-two-substrate-support pairwise-channel
+  definition correctly preventing double-counting?  In particular,
+  if a deployment has cooperatives with two-substrate support but
+  some optional third-substrate participants (sometimes producing
+  3-way cooperatives, sometimes 2-way), how should these be
+  classified?
+
+\item Is Step~4's additivity argument rigorous under v2's SU?
+  The v1 mistake was conflating $I_6'$ with cooperative-channel
+  independence.  Does v2's SU now correctly cover what's needed,
+  or are there further structural conditions hiding?
+
+\item Is the (C10) framing for Theorem 1 correct?  Specifically:
+  CN + SU together as a single condition, or as two separate
+  conditions (C10) and (C11)?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,1238 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+% Lightweight citation command for this standalone draft (no natbib).
+% Renders \citep{key} as (Paper N) based on the key.
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026gfm\endcsname{Paper~1}
+\expandafter\def\csname bibkey@lasser2026poset\endcsname{Paper~2}
+\expandafter\def\csname bibkey@lasser2026horizon\endcsname{Paper~3}
+\expandafter\def\csname bibkey@lasser2026scm\endcsname{Paper~4}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Paper~5}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Paper~6}
+\expandafter\def\csname bibkey@lasser2026wamura\endcsname{Paper~7}
+\expandafter\def\csname bibkey@lasser2026paper8a\endcsname{Paper~8a}
+\expandafter\def\csname bibkey@lasser2026paper8b\endcsname{Paper~8b}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Paper~9}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}^{\mathrm{win}}}}
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+\newcommand{\Vdisc}{V_{\gamma}}
+\newcommand{\Lyap}{L}
+\newcommand{\Wm}{\hat{W}}
+\newcommand{\rhomincross}{\rho_{\min}^{\mathrm{cross}}}
+\newcommand{\rsub}{r_{\mathrm{sub}}}
+\newcommand{\rS}{r_{\mathrm{S}}}
+\newcommand{\rW}{r_{\mathrm{W}}}
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+\newcommand{\Ddiv}{\Delta_{\mathrm{div}}}
+\newcommand{\lossDmax}{\ell_D^{\max}}
+\newcommand{\lossdivmax}{\ell_{\mathrm{div}}^{\max}}
+\newcommand{\Tadv}{T_{\mathrm{adv}}}
+
+\title{Draft v1: Lemma 5 Feasibility ---\\
+  Anti-Monopolar Robustness under Bounded Adversarial Pressure}
+\author{Paper 10 exploratory draft}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Paper 10's deployment-safety theorem requires Paper 3's anti-monopolar
+property (\citep[Proposition~6]{lasser2026horizon}) to carry under bounded
+adversarial pressure, conditional on operational invariants $I_1,
+\ldots, I_7$.  This draft works out what we can actually prove.
+
+The first attempt (v1) treats Paper 3's strategy-independent linearized
+result as directly applicable.  It fails: the strategy-independent
+assumption is exactly what adversarial pressure violates.
+Corollary~\ref{cor:strategy_dependent} of Paper~3 gives an explicit
+breakdown condition ($\Delta r_K \geq \rext$) that an adversary will
+target.  The argument cannot be lifted by hand-waving.
+
+The second attempt (v2) conditions on the invariants $I_5$ (HHI ceiling)
+and $I_6$ ($\meff \geq m^* \geq 3$) and asks: do these exclude the
+regime where $\Delta r_K \geq \rext$?  This decomposes into two
+auxiliary claims: (A) $\meff \geq m^*$ implies a positive floor on
+$\rext$, and (B) the HHI ceiling implies a ceiling on $\Delta r_K$.
+Claim~(A) is plausible and provable under a substrate-distinctness
+hypothesis, but Paper~3 does not establish it directly --- it would be
+new content.  Claim~(B) is more troubling: it is a conjecture about the
+relationship between trade-flow concentration and post-domination
+efficiency gains, structurally analogous to Paper~9's Conjecture~1, and
+not derivable from existing source-paper machinery.
+
+The third attempt (v3) sidesteps Claim~(B) by replacing the static
+$\Delta r_K \leq \overline{\Delta r_K}$ bound with a detection-based
+form: any optimizer pursuing $\Delta r_K > \rext$ produces an
+SPRT-detectable behavioral signature, so violations are caught before
+the anti-monopolar inequality flips.  This trades a static stability
+claim for a dynamic monitoring claim, but is feasible from existing
+Paper~5 machinery.
+
+The conclusion (after codex constructive review and \S6
+cooperative-anchoring integration, v5 synthesis):
+\begin{itemize}
+\item \textbf{v2's Claim~(B) is underivable}, confirmed by codex.  HHI
+  and $\Delta r_K$ live on different axes; no source-paper bridge
+  exists.  Closing it is new content for a follow-up paper
+  (channel-mediation conjecture).
+\item \textbf{v3 has soundness gaps}: the ``mean lead time before
+  cascade'' framing is not justified by SPRT mean bounds alone, and
+  v3 does not handle environment manipulation or
+  channel-orthogonal restructuring.
+\item \textbf{v4 synthesizes a three-layer claim} via five sub-lemmas
+  (5a--5e): a static safe region from Paper~3's risk-adjusted minimax
+  form (strictly larger than v2's linearized bound), a
+  channel-restricted detection layer with concrete channel-specific
+  KL floors, a tail-bound lead-time guarantee (not just mean), and
+  an environment-side witness invariant.
+\item \textbf{v5 integrates \S6 cooperative-anchoring}: the canonical
+  tripartite substrate identification (Human + AI +
+  Formal-Operational), the cooperative-anchoring property defeating
+  literal replacement attacks, three additional invariants
+  ($I_9$--$I_{11}$) bounding asymmetric capture / cooperative
+  forking / time-asymmetry capture evasions, and the reframed C1
+  condition (causally grounded cooperative-outcome value, weaker
+  than v4's strong form but still non-trivial).
+\item \textbf{Lemma 5c through v4} (separate exploratory document
+  \texttt{lemma\_5c\_minimax\_static\_tightening.tex}):
+  scope-restricted to the cooperative-overlap regime where
+  equal-substrate analysis is conservative; redundancy-regime
+  derivation flagged as Lemma 5c-prime open work.
+\item \textbf{The split mirrors Paper~8a/8b}: Paper~10 ships v5's
+  three-layer deployment claim with eleven invariants and the
+  cooperative-anchoring property; multiple open questions
+  (channel-mediation conjecture, Lemma 5c-prime, basin-entry
+  analysis, multi-shock with recovery, training discipline for the
+  weaker C1) deferred to follow-up.
+\end{itemize}
+
+This document remains exploratory.  Paper~10's proposal has been
+updated to reflect both the v4 lemma decomposition and the v5
+\S6 cooperative-anchoring integration.  In particular, the
+proposal's single Lemma~5 splits into five sub-lemmas (5a--5e),
+$I_6$ upgrades to $I_6'$ ($\meff^{\mathrm{indep}} \geq m^*$),
+$I_7$--$I_8$ are added (governance-gated individuation,
+environment-side witnesses), and \S6 introduces $I_9$--$I_{11}$
+for cooperative-anchoring evasions.
+\end{abstract}
+
+\section{What we want to prove}
+
+Paper~10 composes results from Papers~3, 5, 6, 8a, 8b, 9 into an
+operational deployment-safety theorem.  One of its compositional lemmas
+(Lemma~5 in the proposal) is:
+
+\begin{lemma}[Target statement]
+\label{lem:target}
+Under invariants $I_5$ (HHI on trade flow $H \leq H^*$) and $I_6$
+($\meff \geq m^* \geq 3$), Paper~3's anti-monopolar conclusion
+$\Vdisc^{\mathrm{div}} > \Vdisc^{D}$ (\citep[Proposition~6]{lasser2026horizon})
+carries under bounded adversarial pressure.
+\end{lemma}
+
+The deployment-safety theorem cannot be authoritative without this:
+without anti-monopolar dynamics persisting under invariant satisfaction,
+the system can be pushed into a regime where domination beats diversity
+\emph{at the actor's own internal accounting}, and the rest of the
+machinery (Lyapunov self-correction, B-to-C lower bound, Goodhart slack)
+follows the actor into the absorbing basin of Paper~6.
+
+The question this draft answers: \emph{what version of
+Lemma~\ref{lem:target} can we actually prove, and what depends on
+content the source papers do not supply?}
+
+\section{Paper 3's argument and where it breaks}
+
+Paper~3 establishes the anti-monopolar property in two complementary
+forms: a robust minimax dependency-risk argument (no growth-rate
+assumption), and a sharper linearized argument under
+strategy-independent internal growth.  The linearized form is the
+quantitative one Paper~10 would use.
+
+\begin{proposition}[Paper~3, Proposition~6 (linearized)]
+\label{prop:p3_anti_monopolar}
+Under linearized growth with strategy-independent internal rate $r_K$
+and cross-substrate cooperative novelty $\rext > 0$:
+\begin{equation}
+\label{eq:p3_diff}
+\Vdisc^{\mathrm{div}} - \Vdisc^{D} \;=\; \frac{\rext}{1 - \gamma}
+  - \Delta_0,
+\end{equation}
+where $\Delta_0$ is the immediate $\volL$-change from domination.
+Diversity strictly dominates for $\gamma > \gamma^* = 1 -
+\rext/\Delta_0$ (Case~2; $\Delta_0 > 0$) or for all $\gamma \in (0, 1)$
+(Case~1; $\Delta_0 \leq 0$).
+\end{proposition}
+
+\begin{proposition}[Paper~3, Corollary on Strategy-Dependent Internal
+Rate]
+\label{prop:p3_corollary}
+Let $r_K^{\mathrm{dom}} = r_K + \Delta r_K$ be the coalition's internal
+rate under domination.  Then:
+\begin{equation}
+\label{eq:p3_corollary}
+\Vdisc^{\mathrm{div}} - \Vdisc^{D} \;=\; \frac{\rext - \Delta r_K}{1 -
+\gamma} - \Delta_0.
+\end{equation}
+Three regimes:
+\begin{enumerate}
+\item[(i)] $\Delta r_K \leq 0$: anti-monopolar holds at least as
+  strongly.
+\item[(ii)] $0 < \Delta r_K < \rext$: anti-monopolar still holds for
+  sufficiently large $\gamma$, with tightened threshold $\gamma^* = 1 -
+  (\rext - \Delta r_K)/\Delta_0$.
+\item[(iii)] $\Delta r_K \geq \rext$: anti-monopolar collapses;
+  domination wins for any $\gamma \in (0, 1)$.
+\end{enumerate}
+\end{proposition}
+
+\paragraph{The breakdown.}
+Paper~3 explicitly names the regime where its argument fails:
+$\Delta r_K \geq \rext$.  An adversarial pressure that increases the
+post-domination internal rate beyond the cross-substrate cooperative
+contribution drives the system out of the anti-monopolar regime.
+
+Whether bounded adversarial pressure can push the system into
+regime~(iii) is the question Lemma~\ref{lem:target} must answer.
+
+\section{v1: direct application fails}
+
+The most direct attempt is to argue that Paper~3 already gives us what
+we need: the anti-monopolar property holds for all $\gamma$ in Case~1
+($\Delta_0 \leq 0$) and for $\gamma > \gamma^*$ in Case~2.  If we can
+argue the system stays in Case~1 or Case~2 with a $\gamma$-floor, we
+are done.
+
+\paragraph{Why this fails.}
+Both cases of Proposition~\ref{prop:p3_anti_monopolar} assume
+strategy-independent internal rate.  Adversarial pressure is exactly
+the mechanism by which an optimizer makes $r_K^{\mathrm{dom}} \neq r_K$:
+the dominator's value comes from reallocating resources, restructuring
+the coalition's internal organization, or exploiting scale efficiencies
+that diversity-maintenance would forgo.  Saying ``adversarial pressure
+is bounded'' does not by itself say which side of the
+$\Delta r_K = \rext$ critical breakdown the system sits on.
+
+\paragraph{Where Paper~3 itself acknowledges the gap.}
+Paper~3's discussion of strategy-dependent internal growth is honest:
+``The critical breakdown is at $\Delta r_K = \rext$: the linearized
+result holds if and only if the post-domination growth-rate gain is
+strictly less than the cross-substrate cooperative contribution
+eliminated by domination.''  Paper~3 does not claim the breakdown is
+unreachable; it identifies it as a real regime that requires modeling
+work to exclude.
+
+The minimax dependency-risk argument from earlier in Paper~3
+\S\ref{sec:risk} is more robust but produces only an inequality on
+\emph{coalition concentration risk}, not on $\Delta r_K$.  It rules out
+some forms of domination (those that increase concentration risk) but
+not those that operate by efficiency reallocation.
+
+\paragraph{Conclusion of v1.}
+The direct application is unsound.  We must argue, separately, that
+the operational invariants $I_5, I_6$ exclude regime~(iii).
+
+\section{v2: conditioning on invariants}
+
+The natural decomposition of Lemma~\ref{lem:target} under v2:
+
+\begin{lemma}[v2, decomposed]
+\label{lem:v2}
+Under $I_5$ (HHI $\leq H^*$) and $I_6$ ($\meff \geq m^* \geq 3$):
+\begin{enumerate}
+\item[(A)] $\rext \geq r_*(m^*) > 0$ (substrate-count-dependent floor on
+  cross-substrate cooperative novelty), and
+\item[(B)] $\Delta r_K \leq \overline{\Delta r_K}(H^*)$ (HHI-ceiling
+  implies $\Delta r_K$-ceiling).
+\end{enumerate}
+If the threshold is satisfied, $\overline{\Delta r_K}(H^*) < r_*(m^*)$,
+the system stays in regime~(i) or~(ii) of
+Proposition~\ref{prop:p3_corollary}.
+\end{lemma}
+
+We examine each claim.
+
+\subsection{Claim (A): $\meff \geq m^*$ implies a positive $\rext$ floor}
+
+Paper~3 \S\ref{sec:substitution_coop} (cross-substrate cooperative
+novelty) defines $\rext$ as the contribution rate from external agents
+through cooperative-capability formation that the coalition cannot
+internally replicate.  More distinct substrates produce more
+cross-substrate pairs and higher-order tuples, each potentially
+sourcing a cooperative capability the coalition cannot synthesize alone.
+
+\paragraph{The provable form.}
+Under a substrate-distinctness hypothesis (which Paper~5 \S\ref{sec:witness_m2}
+already implicitly assumes via ``substrate partition at the level of
+abstraction where failure correlations matter''), the number of
+distinct cross-substrate channels grows at least as $\binom{\meff}{2}$
+for pairwise channels.  If each independent channel contributes a
+non-zero rate of cooperative novelty, then
+\[
+  \rext(m) \;\geq\; \rho_0 \cdot \binom{m}{2}
+\]
+for some $\rho_0 > 0$ characterising the per-channel novelty rate.  In
+particular $\rext(3) \geq 3\rho_0$.
+
+\paragraph{What this requires.}
+The argument requires:
+\begin{enumerate}
+\item A formal substrate-distinctness condition --- not just
+  ``different substrates'' but ``substrates whose cooperative-novelty
+  contributions are linearly independent in the relevant capability
+  space.''  Paper~5 has this implicitly; Paper~10 would need to make it
+  explicit.
+\item A non-zero per-channel rate $\rho_0$.  This is structurally the
+  same kind of constant Paper~6 carries with $c_{\mathrm{S}}$ and
+  $c_{\mathrm{D}}$: a coercivity-style assumption about how strongly the
+  channel acts, taken as given rather than derived.
+\item An additivity argument across channels.  If channels are
+  conditionally independent (as Paper~5 establishes for verification
+  channels), additivity is straightforward.  If they share structure,
+  the floor degrades sub-linearly in $\binom{m}{2}$ but remains
+  positive for $m \geq 3$ under any non-degenerate independence.
+\end{enumerate}
+
+\paragraph{Verdict on Claim~(A).}
+Claim~(A) is plausible, provable, and not in itself a major
+intervention.  It requires writing one auxiliary lemma plus the
+substrate-distinctness condition.  This is bounded work.
+
+\subsection{Claim (B): HHI ceiling implies $\Delta r_K$ ceiling}
+
+This is the harder claim.  The intuition is that domination's
+efficiency gains come from operating at scale on a concentrated set of
+capabilities, and that concentration is what HHI measures.  If
+trade-flow concentration is bounded, the dominator cannot fully realize
+scale economies, and $\Delta r_K$ is bounded.
+
+\paragraph{Why the intuition is suspect.}
+HHI measures \emph{trade-flow} concentration --- the distribution of
+sacrifice events across capability categories
+\citep[Paper~8b]{lasser2026paper8b}.  $\Delta r_K$ is the
+\emph{internal-rate} efficiency gain --- how fast the coalition's own
+$\volL$ grows post-domination.  These are not the same axis.
+
+A dominator that maintains diversified trade flow (low HHI) while
+restructuring internally for efficiency can in principle achieve high
+$\Delta r_K$ without high HHI.  Internal restructuring need not show
+up as concentrated trade flow; it shows up as concentrated
+\emph{production} or concentrated \emph{decision-making}, neither of
+which is observable at the trade-flow level.
+
+\paragraph{The conjecture form.}
+What Paper~10 would need is something like:
+
+\begin{conjecture}[HHI Bounds Domination Efficiency]
+\label{conj:hhi_bound}
+For any coalition $K$ and any domination strategy producing
+$\Delta r_K > 0$, the trade-flow HHI exceeds a threshold $H(\Delta
+r_K)$ where $H$ is increasing.  Equivalently: $\Delta r_K \leq
+H^{-1}(H_t)$ for any HHI-bounded trade flow.
+\end{conjecture}
+
+This conjecture is structurally similar to Paper~9's Conjecture~1
+(``optimization pressure correlates with gap exploitation''):
+plausible, empirically testable, but not derivable from existing
+source-paper machinery.
+
+\paragraph{Why this is not derivable.}
+Paper~3's growth-rate model treats $\Delta r_K$ as an exogenous
+strategy parameter; it does not connect $\Delta r_K$ to any
+trade-flow observable.  Paper~8b's HHI is defined on revealed
+sacrifice events; it does not connect to internal coalition dynamics.
+There is no source-paper bridge between the two quantities.  Bridging
+them is substantive new content.
+
+\paragraph{Verdict on Claim~(B).}
+Claim~(B) cannot be proved within Paper~10.  Paper~10 has three
+options:
+\begin{enumerate}
+\item Accept Conjecture~\ref{conj:hhi_bound} as a stated assumption
+  alongside Conjecture~1 from Paper~9.  This works but stacks two
+  conjectures, which weakens the deployment claim's authority.
+\item Develop the HHI--$\Delta r_K$ relationship as a substantive
+  empirical paper (Paper~10b, or Paper~11).  This is honest but pushes
+  the deployment claim out by another paper.
+\item Reformulate Lemma~\ref{lem:target} to avoid Claim~(B).
+\end{enumerate}
+
+Option~3 motivates v3.
+
+\section{v3: detection-based reformulation}
+
+The key observation: Paper~5's behavioral consistency monitor
+(\citep[Proposition~6]{lasser2026exo}, SPRT detection) gives us a tool
+that v2 did not exploit.  Even if we cannot statically bound
+$\Delta r_K$ via HHI, we can \emph{detect} the behavioral signature of
+any strategy producing $\Delta r_K \geq \rext$, in bounded mean time.
+
+\paragraph{The reformulation.}
+
+\begin{lemma}[v3, detection-based]
+\label{lem:v3}
+Assume:
+\begin{enumerate}
+\item[(A)] $\meff \geq m^* \geq 3$ implies $\rext \geq r_*(m^*) > 0$
+  (substrate-distinctness floor; Claim~(A) above).
+\item[(D)] Any optimization strategy producing $\Delta r_K \geq \rext$
+  produces a behavioral distribution differing from the
+  diversity-maintaining baseline by KL-divergence at least
+  $\delta_{\mathrm{adv}} > 0$.
+\end{enumerate}
+Then Paper~5's behavioral consistency monitor detects any deployment
+that has entered regime~(iii) of
+Proposition~\ref{prop:p3_corollary} within mean time $T_{\mathrm{detect}}
+\leq A / \delta_{\mathrm{adv}}$, where $A$ is the SPRT upper threshold.
+\end{lemma}
+
+\paragraph{What v3 buys.}
+Lemma~\ref{lem:v3} replaces ``the regime is statically excluded'' (v2,
+which requires Claim~(B)) with ``the regime is detectable in bounded
+mean time'' (v3, which requires only the weaker Claim~(D)).  The
+deployment-safety theorem becomes:
+
+\begin{quote}
+Under invariants $I_1, \ldots, I_7$, the operational Goodhart slack is
+bounded by an intensive constant; if any invariant is violated by an
+adversarial strategy, the violation is detected within bounded mean
+time, before irreversible cascade.
+\end{quote}
+
+This is a weaker claim than v2's ``the regime is excluded.''  But it is
+a \emph{deployment-realistic} claim: real deployments do not run in
+infinite-horizon equilibria; they run with active monitoring.  Saying
+``threshold violation is detected before catastrophe'' is what
+operators actually need.
+
+\paragraph{What Claim~(D) requires.}
+Claim~(D) says: a strategy producing $\Delta r_K \geq \rext$ is
+distinguishable, behaviorally, from a strategy that does not.  This is
+much weaker than Claim~(B), which required quantitative bounds on
+$\Delta r_K$ via HHI.
+
+What Claim~(D) actually needs:
+\begin{enumerate}
+\item A choice of behavioral statistic that is sensitive to coalition
+  internal-rate dynamics.  Paper~3 \S\ref{sec:risk} (concentration risk
+  via exercise pathways) provides candidates: probability-weighted
+  exposure to dangerous tuples shifts when coalitions restructure for
+  efficiency.
+\item A least-favorable-distribution argument for the SPRT
+  alternative.  Paper~5 already requires this for the monitor's
+  detection power; Paper~10 would inherit and instantiate.
+\item Empirical validation that the behavioral signature has KL
+  $\geq \delta_{\mathrm{adv}}$ in practice.  This is testable on
+  existing harness deployments (the GFM harness from
+  \texttt{docs/gfm\_harness\_notes.md} would supply data).
+\end{enumerate}
+
+\paragraph{Verdict on v3.}
+Lemma~\ref{lem:v3} is provable within Paper~10, conditional on the
+substrate-distinctness floor (Claim~(A), bounded work) and an
+SPRT-distinguishability claim (Claim~(D), much weaker than
+Conjecture~\ref{conj:hhi_bound}).  Both are tractable.
+
+The cost: the deployment-safety theorem becomes a
+detection-and-correction claim, not a static-stability claim.  Operators
+must run Paper~5's behavioral monitor continuously to invoke the bound,
+not just check the static invariants.
+
+\section{v4: post-codex synthesis}
+
+A constructive review by codex (\texttt{lemma\_5\_codex\_request.md},
+2026-05-03) confirmed that v2's Claim~(B) is underivable as stated and
+that v3 has soundness issues, but produced two valuable tightenings.
+This section incorporates them.
+
+\subsection{Lemma 5c (new): minimax-form static tightening}
+
+Paper~3 \S\ref{sec:risk} (the minimax dependency-risk form) was not
+invoked by v1--v3 because the inequality it produces (concentration risk
+bound) does not directly compose with $V_\gamma$.  But the
+\emph{risk-adjusted} value comparison from the same machinery does
+compose, and yields a strictly larger static safe region than the
+linearized form alone:
+
+\begin{lemma}[v4 Lemma 5c]
+\label{lem:v4c}
+Under Paper~3's risk-adjusted trajectory comparison (using the same
+indexing convention as
+Proposition~\ref{prop:p3_corollary}), with adversarial event time
+$T_{\mathrm{adv}}$ and substrate-diversification risk advantage
+$\Delta_{\mathrm{div}}$:
+\begin{equation}
+\label{eq:minimax_lift}
+\Vdisc^{\mathrm{div,mm}} - \Vdisc^{D,\mathrm{mm}}
+  = \frac{\rext - \Delta r_K}{1-\gamma} - \Delta_0 +
+    \Delta_{\mathrm{div}} \gamma^{T_{\mathrm{adv}}}.
+\end{equation}
+Diversity dominates when
+\begin{equation}
+\label{eq:minimax_threshold}
+\Delta r_K \;<\; \rext + (1-\gamma)\bigl(\Delta_{\mathrm{div}}
+  \gamma^{T_{\mathrm{adv}}} - \Delta_0\bigr).
+\end{equation}
+This admits some cases where $\Delta r_K \geq \rext$, conditional on a
+positive floor on $\Delta_{\mathrm{div}}$.
+\end{lemma}
+
+\paragraph{What this buys.}
+Lemma~\ref{lem:v4c} is a strict tightening of
+Proposition~\ref{prop:p3_corollary}: the static safe region now extends
+into part of regime~(iii) of the linearized form, conditional on the
+substrate-diversification advantage being non-trivial.  This recovers
+some static stability that v3's pure detection-based approach
+sacrificed.
+
+\paragraph{What this requires.}
+A floor on $\Delta_{\mathrm{div}}$ stronger than nominal $\meff \geq
+3$.  Paper~6 Remark~\ref{rem:m2} (on $m=2$ fragility) already
+distinguishes nominal substrate count from
+\emph{failure-correlation-independent} substrate count: ``Two silicon
+deployments with uncorrelated failure modes may functionally
+constitute different substrates, increasing effective $m$ beyond the
+nominal substrate-type count.''  Paper~10 must promote this from a
+remark to an explicit invariant:
+
+\begin{quote}
+\textbf{Invariant $I_6'$ (revised):} $\meff^{\mathrm{indep}} \geq m^*
+\geq 3$, where $\meff^{\mathrm{indep}}$ counts substrates at the level
+of failure-correlation independence, not nominal substrate type.
+\end{quote}
+
+Skeleton substrates (nominally distinct, functionally correlated) do
+not count toward $\meff^{\mathrm{indep}}$.  This is operationally
+stricter but structurally correct.
+
+\subsection{Lemma 5b (corrected): channel-restricted detection}
+
+Codex's Q4 verdict: a universal KL floor from ``$\Delta r_K \geq
+\rext$'' alone is too strong.  Pure internal optimization could raise
+$\Delta r_K$ before producing any monitored behavioral deviation.  The
+defensible form restricts the detection class:
+
+\begin{lemma}[v4 Lemma 5b corrected]
+\label{lem:v4b}
+Let $A_{\mathrm{adv}}$ denote the subset of regime-(iii) strategies
+producing at least one monitored four-channel deviation: reduced
+cross-substrate cooperative event rate (Channel~1), degraded
+attestation share (Channel~2), individuation/substrate-diversity drift
+(Channel~3), or bundle/cooperative-edge decomposition shifts
+(Channel~4).  Then for any $q \in A_{\mathrm{adv}}$:
+\begin{equation}
+\label{eq:kl_restricted}
+D_{\mathrm{KL}}(q \,\|\, p_0) \;\geq\; \delta_{\mathrm{adv}}
+  \;>\; 0,
+\end{equation}
+where $\delta_{\mathrm{adv}}$ is computed from channel-specific
+least-favorable alternatives.  Concrete forms:
+\begin{itemize}
+\item \textbf{Channel 1 (Poisson cooperative-output rate).}  If
+  the observable cross-substrate cooperative event rate drops from
+  $\lambda_0$ to at most $\lambda_0 - \eta$, the per-window Poisson
+  KL floor is
+  \[
+    \delta_1 \;=\; (\lambda_0 - \eta) \log\!\frac{\lambda_0 -
+    \eta}{\lambda_0} - (\lambda_0 - \eta) + \lambda_0,
+  \]
+  attained at $\lambda_1 = \lambda_0 - \eta$.
+\item \textbf{Channel 2 (Bernoulli attestation share).}  If
+  attestation success probability drops from $p_0$ to at most $p_0 -
+  \eta$, the standard Bernoulli KL gives $\delta_2 = (p_0 - \eta)
+  \log\frac{p_0 - \eta}{p_0} + (1 - p_0 + \eta) \log\frac{1 - p_0 +
+  \eta}{1 - p_0}$.
+\item \textbf{Channels 3, 4 (multinomial concentration).}  Under
+  multinomial concentration shifts toward a target capability
+  partition, the KL floor is the standard multinomial $D_{\mathrm{KL}}$
+  evaluated at the least-favorable redistribution within the
+  concentration constraint.
+\end{itemize}
+\end{lemma}
+
+\paragraph{The honest gap.}
+Strategies outside $A_{\mathrm{adv}}$ --- those that achieve $\Delta r_K
+\geq \rext$ without producing any monitored four-channel deviation ---
+are outside the detection guarantee.  This is a real, named gap.
+Operationally: pure internal coalition restructuring that preserves
+all observable channel behavior (cooperative outputs, attestation
+shares, capability partitions, bundle decompositions) is undetected.
+
+The mitigation: the four channels span enough of the observable surface
+that genuinely productive restructuring tends to manifest in at least
+one of them (e.g., scale-economy reallocation typically reduces
+cross-substrate cooperation).  But \emph{tends to} is not \emph{must};
+there is a residual class of channel-orthogonal restructurings that
+neither the static minimax bound (Lemma~\ref{lem:v4c}) nor the
+detection bound (Lemma~\ref{lem:v4b}) catches.  Paper~10 names this
+residual rather than glossing it.
+
+\subsection{Lemma 5d (new): lead-time tail bound}
+
+Codex's soundness flag: ``detected within mean time $A/\delta$ before
+irreversible cascade'' does not follow from the SPRT mean bound alone.
+We need a tail comparison.
+
+\begin{lemma}[v4 Lemma 5d]
+\label{lem:v4d}
+Let $T_{\mathrm{cascade}}$ be the time from entering regime~(iii) to
+reaching the monopolar absorbing state of Paper~6
+(Definition~\ref{def:monopolar}).  Under Assumption~B1$'$ (partial
+endogenous correction), $T_{\mathrm{cascade}}$ is bounded below by the
+metastable lifetime $\tau_{\mathrm{meta}} \geq C/I_k$ from
+Proposition~\ref{prop:metastable}.  Under Assumption~B1, the cascade
+proceeds in discrete subsumption steps, with cascade depth at least
+the connectivity distance to the monopolar component.
+
+The lead-time guarantee requires
+\begin{equation}
+\label{eq:lead_time}
+\Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}] \;\leq\; \beta',
+\end{equation}
+where $\beta'$ is a stated tail bound, \emph{not} the SPRT
+miss probability $\beta$ alone.  Under simple-vs-simple SPRT with
+KL margin $\delta_{\mathrm{adv}}$ (Lemma~\ref{lem:v4b}),
+$T_{\mathrm{detect}}$ has finite variance and an exponentially
+decaying upper tail:
+\begin{equation}
+\Pr[T_{\mathrm{detect}} > T] \;\leq\; \exp(-\kappa \cdot
+  T \cdot \delta_{\mathrm{adv}})
+\end{equation}
+for a constant $\kappa$ derived from Wald's identity and Hoeffding's
+inequality applied to the SPRT increment.  Combining with the
+$T_{\mathrm{cascade}}$ floor:
+\begin{equation}
+\label{eq:lead_time_concrete}
+\beta' \;\leq\; \exp(-\kappa \cdot \tau_{\mathrm{meta}} \cdot
+  \delta_{\mathrm{adv}}).
+\end{equation}
+\end{lemma}
+
+\paragraph{What this requires.}
+The constant $\kappa$ is not in Paper~5; it must be derived as part of
+Paper~10's exposition.  This is bounded work (the SPRT tail bound is
+standard sequential-analysis content) but it is new content.
+
+The dependence is: tighter cascade lower bound $\tau_{\mathrm{meta}}$
+$\Rightarrow$ smaller $\beta'$.  Paper~6's $\tau_{\mathrm{meta}} \geq
+C/I_k$ scaling means deployments with low indirect-channel information
+rate $I_k$ have larger metastable lifetimes and therefore tighter
+lead-time guarantees.  Paradoxically, harder-to-detect environments
+(low $I_k$) give us \emph{better} guarantees because the cascade
+itself is slow.
+
+\subsection{Lemma 5e (new): environment-side witnesses}
+
+Codex Q5: v3 does not handle environment manipulation.  An external
+actor can alter true $\rext$ or $\Delta r_K$ via environment shocks
+without the deployed agent emitting any behavioral signature.
+
+\begin{lemma}[v4 Lemma 5e]
+\label{lem:v4e}
+Define an additional invariant:
+
+\begin{quote}
+\textbf{Invariant $I_8$:} Environment-side substrate-exclusive
+witnesses monitor exogenous state variables (cross-substrate
+cooperative event rates, substrate-distinctness independence,
+adversarial-event arrivals) and append to the verification ledger
+under the same Paper~5 commitment discipline as agent-side witnesses.
+\end{quote}
+
+Under $I_8$, environment manipulation that alters true $\rext$ or
+$\Delta r_K$ produces a monitored shift in environment-side
+observables, and the SPRT machinery of Paper~5 applies symmetrically
+to environment-side witnesses.  Lemmas~\ref{lem:v4b} and~\ref{lem:v4d}
+extend with environment-side terms in the four-channel decomposition.
+\end{lemma}
+
+\paragraph{What this requires.}
+Environment-side witnesses are new operational machinery not specified
+by Paper~5.  Paper~5 \S\ref{sec:alg_witnesses} (Definition of
+Algorithmic Witness) requires substrate-exclusivity from the
+\emph{agent}; extending to substrate-exclusivity from the
+\emph{environment} requires defining the environment partition and
+the trust model for environment-side witnesses.  This is a tooling
+extension Paper~10 must specify in its §7 deployment-tooling section.
+
+\paragraph{What remains uncovered.}
+Environment manipulation that targets quantities outside the
+environment-witness coverage (unobservable exogenous variables) is
+still outside the guarantee.  Just as Lemma~\ref{lem:v4b} has a
+channel-orthogonal residual, Lemma~\ref{lem:v4e} has an
+environment-witness-orthogonal residual.
+
+\subsection{Synthesis: the three-layer claim}
+
+Combining Lemmas~5a, 5b, 5c, 5d, 5e:
+
+\begin{theorem}[v4 deployment safety, sketch]
+\label{thm:v4_safety}
+Under invariants $I_1, \ldots, I_5, I_6', I_7, I_8$ in force throughout
+window $[0, t]$:
+\begin{enumerate}
+\item[(static)] If $\Delta r_K$ satisfies the minimax bound
+  Equation~\ref{eq:minimax_threshold}, the anti-monopolar conclusion
+  holds without monitoring (Lemma~\ref{lem:v4c}).
+\item[(detection)] If $\Delta r_K$ violates the minimax bound but the
+  resulting strategy lies in $A_{\mathrm{adv}}$ (produces a monitored
+  four-channel deviation), the violation is detected with tail bound
+  $\beta'$ given by Equation~\ref{eq:lead_time_concrete}
+  (Lemmas~\ref{lem:v4b}, \ref{lem:v4d}).
+\item[(gap)] Strategies that violate the minimax bound but produce no
+  monitored four-channel deviation, and environment manipulations
+  that target unmonitored exogenous variables, are outside the
+  guarantee.
+\end{enumerate}
+\end{theorem}
+
+\paragraph{Compared to v3.}
+The v3 framing collapsed everything into ``detect or fail.''  The v4
+framing has three layers: a non-trivial static safe region, a
+detection layer for violations of the static region within
+$A_{\mathrm{adv}}$, and a named residual gap.  This is structurally
+the right shape for a deployment claim --- it gives operators a static
+region they can rely on without monitoring overhead, a monitored
+region with quantified tail guarantees, and an honest acknowledgment
+of what falls outside both.
+
+\paragraph{What v4 still defers.}
+The Q1 mediation route (``all $\Delta r_K$ realizes through observable
+variables: subsumption, redundancy loss, production concentration,
+trade-flow concentration, yielding a structural bound $\Delta r_K \leq
+L_H \cdot H + L_\rho \cdot \Delta\rho + \ldots$'') would close the
+channel-orthogonal residual entirely if it could be proved.  Codex
+flags this as ``new content'' and not derivable from current
+machinery.  Paper~10 inherits this as an open question for follow-up
+work, alongside Conjecture~\ref{conj:hhi_bound}.
+
+\section{v5: post-\S6 cooperative-anchoring integration}
+
+After the v4 synthesis was drafted, Paper~10's \S6 (substrate
+identification and the cooperative-anchoring property) was developed
+through two additional codex rounds.  V5 of this draft integrates
+the resulting findings, which substantially expand the deployment
+recipe's scope while keeping Lemma~5's structural argument intact.
+
+\subsection{The canonical tripartite substrate identification}
+
+The v4 synthesis used $\meff^{\mathrm{indep}} \geq m^* \geq 3$ as
+an abstract substrate-count invariant.  Paper~10 \S6 makes this
+concrete: the canonical identification is Human + AI +
+Formal-Operational.
+
+\begin{itemize}
+\item \textbf{Substrate 1 (Human):} judgment, strategic decisions,
+  value reasoning, governance vote.
+\item \textbf{Substrate 2 (AI):} planning, generation, execution,
+  broad-recall, computation.
+\item \textbf{Substrate 3 (Formal-Operational):} verification,
+  attestation, commitment, audit, monitoring, governance enforcement.
+  This substrate is what Paper~5's algorithmic witnesses already
+  implicitly count toward; Paper~10 makes it explicit.
+\end{itemize}
+
+These three are jointly failure-correlation independent: prompt
+injection breaks neither human judgment nor cryptographic
+commitments; cognitive bias breaks neither LLM inference nor ledger
+integrity; trusted-setup failure breaks neither human reasoning nor
+LLM behavior.
+
+A ``Claude + Codex + human'' identification fails the test ($\meff^
+{\mathrm{indep}} \approx 2$, since LLMs share training-data,
+prompt-injection, and architectural failure surfaces).  Operators
+must satisfy the canonical identification (or supply equivalent
+substrate-distinctness) to invoke Lemma~5's family of results.
+
+\subsection{The cooperative-anchoring property}
+
+\S6's structural finding: cross-substrate cooperative capabilities
+involving the formal-operational layer are jointly produced and not
+unilaterally replaceable.  An agent cannot substitute a
+captured/weaker verification layer because the cooperative's
+$\volL$-value comes from the human substrate treating the
+verification as substrate-exclusive.  A ``fake verification'' that
+stamps outputs but doesn't actually attest produces a different
+cooperative output: either the human detects the substitution
+(cooperative breaks) or the human's trust is grounded in false
+belief (cooperative output value retroactively undermined when the
+belief is corrected).
+
+This narrows the literal ``swap in a cheaper verifier''
+replacement attack to capture-of-existing, governed by Paper~5's
+structural defenses (Proposition~6 coalition resistance,
+governance-fork cross-substrate supermajority, substrate-exclusive
+validator requirement).
+
+\subsection{Three additional operational invariants ($I_9$--$I_{11}$)}
+
+Cooperative-anchoring defeats the literal replacement attack but
+not three subtler evasions identified by codex review.  Each evasion
+requires its own operational invariant:
+
+\begin{itemize}
+\item \textbf{$I_9$: Substrate-exclusivity observability.}
+  Asymmetric capture can hollow out the verification layer (witness
+  independence, governance, verifier choice) while preserving its
+  outward form.  Bounded by stable verifier identity, public change
+  control, witness independence audits, nondelegable governance
+  hooks, alerts when verification authority shifts.
+
+\item \textbf{$I_{10}$: Coverage/materiality.}  Cooperative forking
+  can grow a captured low-stakes side-domain alongside the protected
+  high-stakes cooperative until the side-domain becomes materially
+  important.  Bounded by a coverage invariant: any agent-affected
+  domain whose accumulated effects exceed a stated threshold must
+  route through the shared verification layer before becoming
+  consequential.
+
+\item \textbf{$I_{11}$: Latency bounds.}  Time-asymmetry capture
+  exploits the gap between agent operating speed and human audit
+  speed; ex-post transparency is too slow if the agent acts faster
+  than humans can review.  Bounded by pre-action or machine-speed
+  enforcement: rate limits, timelocks, circuit breakers,
+  audit-latency bounds.
+\end{itemize}
+
+These three invariants are orthogonal to Lemma~5's substrate-
+targeting machinery (Lemmas~5a--5e cover substrate-targeting
+shocks; $I_9$--$I_{11}$ cover capture/forking/latency evasions of
+cooperative-anchoring).  The deployment-safety theorem composes both.
+
+\subsection{The reframed inner-alignment condition (weaker C1)}
+
+V4's C1 condition required the agent's mesa-objective to ``compute
+$\Vdisc$ over the substrate partition.''  Codex review on \S6
+flagged this as too strong (effectively the inner-alignment
+problem solved).
+
+The reframed condition: the agent's effective objective must
+realize \emph{causally grounded cooperative-outcome value}, not
+merely reward-visible cooperation signals.  This is more plausible
+than the strong form but not delivered by vanilla RLHF --- raters
+reward outputs that look verified, deferential, or procedurally
+clean, which trains the \emph{signal} of cooperation rather than
+its \emph{causal dependence} on the cooperative infrastructure.
+Achieving the weaker C1 requires training-time discipline:
+delayed outcome feedback, adversarial examples involving
+fake/captured verification, process supervision tied to real
+attestations, credit assignment penalizing substitute-verification
+shortcuts.
+
+For Lemma~5b's detection guarantee, the weaker C1 means the
+detection is for the class of agents whose mesa-objective values
+cooperative outputs, not for arbitrary mesa-objectives.  Agents
+trained only via vanilla RLHF may produce evasion strategies that
+fall outside Lemma~5b's $A_{\mathrm{adv}}$ detection class.
+
+\subsection{Lemma 5c v4: cooperative-overlap regime restriction}
+
+Lemma~5c was developed through three additional codex rounds (A, B,
+C) in a separate exploratory document
+(\texttt{lemma\_5c\_minimax\_static\_tightening.tex}).  The current
+state (v4):
+
+\begin{itemize}
+\item \textbf{Single-shock $\Ddiv$ form:} citeable.  Uses Paper~3's
+  volume-survival penalty normalized as a shock-loss fraction
+  $\Ddiv = \volL_K (\lossDmax - \lossdivmax) \mathbb{E}[\gamma^{T_{\mathrm{adv}}}]$.
+
+\item \textbf{Multi-shock $\Ddiv^{\mathrm{multi}}$ form:} citeable
+  in the \emph{cooperative-overlap regime}, where the substrate-
+  cooperative structure is dominated by cross-substrate cooperatives
+  (the canonical tripartite case) rather than redundant
+  capabilities.  Equal-substrate analysis is a conservative lower
+  bound on the actual sequential-counterfactual
+  $\Ddiv^{\mathrm{multi}}$ in this regime.
+
+\item \textbf{Counterfactual $\alpha_s$ definition:} adopted.
+  $\alpha_s = (\volL(G_K) - \volL(G_K^{-s})) / \volL(G_K)$.
+  Additive attribution flagged as estimator with overcounting bias.
+
+\item \textbf{Joint/event-class independence:} adopted.
+  ``Mechanism'' = whole causal attack campaign, not atomic step.
+
+\item \textbf{Continuous-time Poisson rate $\lambda$:} adopted as
+  default; discrete-time per-period probability noted as
+  alternative with different $\kappa$ formula.
+
+\item \textbf{Removable singularity at $\kappa = 1$:} noted; safe
+  region requires $\kappa < 1 - \delta$ for some operationally-set
+  $\delta$.
+
+\item \textbf{Sequential counterfactual derivation (redundancy
+  regime):} open work, named as Lemma~5c-prime.
+\end{itemize}
+
+The cooperative-vs-redundancy audit is a new operational requirement:
+deployments must verify their substrate-cooperative structure is
+dominated by cross-substrate cooperatives rather than redundant
+capabilities.  The canonical tripartite identification passes by
+construction.
+
+\subsection{Composition with Lemmas 5a, 5b, 5d, 5e}
+
+The v4 lemma family composes with the cooperative-anchoring
+property as follows:
+
+\begin{itemize}
+\item \textbf{Lemma 5a (substrate floor):} unchanged.  Provides
+  $\rext \geq r_*(m^*)$ given $\meff^{\mathrm{indep}} \geq m^*$.
+\item \textbf{Lemma 5b (channel-restricted detection):}
+  unchanged structurally, but the weaker C1 reframes what
+  $A_{\mathrm{adv}}$ contains.  Detection covers strategies whose
+  mesa-objective realizes causally-grounded cooperative-outcome
+  value and produces monitored four-channel deviations.
+\item \textbf{Lemma 5c v4 (minimax static tightening):} restricted
+  to cooperative-overlap regime; sequential counterfactual case
+  open.
+\item \textbf{Lemma 5d (lead-time tail bound):} unchanged.
+\item \textbf{Lemma 5e (environment-side witnesses):} unchanged.
+  Environment-witness-orthogonal manipulations remain a named gap.
+\end{itemize}
+
+The deployment-safety theorem composes the static safe region
+(Lemma 5c v4 in cooperative-overlap regime), the channel-restricted
+detection layer (Lemmas 5a, 5b, 5d, 5e), and the
+cooperative-anchoring property bounded by $I_9$--$I_{11}$ for
+non-substrate-targeting evasions.
+
+\subsection{The narrowed structural claim (post-\S6 form)}
+
+The deployment claim now reads:
+
+\begin{quote}
+Under invariants $I_1$--$I_{11}$, the cooperative-anchoring
+property, and the weaker C1 (causally grounded cooperative-outcome
+value), an agent's optimization pressure on cooperative outputs is
+locally rational toward preserving the substrate-exclusive
+verification layer.
+
+\textbf{Substrate-targeting evasions} are bounded by Lemma 5's
+family (5a--5e).  In particular, Lemma 5c v4 supplies the static
+safe region for the substrate-targeting subclass under the
+cooperative-overlap regime; Lemma 5b supplies the
+channel-restricted detection layer with tail bound (Lemma 5d) for
+violations within that detection class.
+
+\textbf{Non-substrate-targeting evasions} are bounded by:
+\begin{itemize}
+\item $I_9$ (substrate-exclusivity observability) for asymmetric
+  capture
+\item $I_{10}$ (coverage/materiality) for cooperative forking
+\item $I_{11}$ (latency bounds) for time-asymmetry capture
+\item Paper 5's structural defenses for capture-of-existing
+\end{itemize}
+
+\textbf{Open residuals:}
+\begin{itemize}
+\item Channel-orthogonal restructuring (strategies producing $\Delta
+  r_K \geq r_{\mathrm{ext}}$ without four-channel deviation)
+\item Environment-witness-orthogonal manipulation
+\item Sequential counterfactual derivation in redundancy regime
+  (Lemma 5c-prime open work)
+\item Multi-shock with substrate recovery
+\end{itemize}
+\end{quote}
+
+\textbf{What this is and is not.}  This is \emph{not} a claim that
+``alignment pressure is universally reversed.''  It \emph{is} a
+structural claim that the deployment dynamics admit a defensible
+attractor where preservation of the substrate-exclusive verification
+layer is locally rational.  Reaching the attractor requires basin
+entry (the cooperative must form before anchoring protects it) and
+training-time discipline (the weaker C1).  Paper~10 specifies the
+attractor's structural conditions; basin-entry analysis and
+training-time discipline are open follow-up work.
+
+\section{What v3 actually delivers}
+
+\paragraph{Strength of the claim.}
+Under v3, Paper~10's deployment safety theorem reads:
+
+\begin{quote}
+Under operational invariants $I_1, \ldots, I_7$ and continuous SPRT
+monitoring, (a) Goodhart slack is bounded by an intensive constant
+when invariants hold; (b) any adversarial strategy that violates an
+invariant is detected within mean time $A/\delta$; (c) the verification
+infrastructure of \citep{lasser2026exo} ensures the detection is
+tamper-evident.  Therefore, deployment is operationally safe in the
+sense that any unsafe trajectory is detected and surfaced before
+irreversible cascade with probability $1 - \beta$ (the SPRT miss
+probability).
+\end{quote}
+
+This is weaker than ``deployment is unconditionally safe under
+invariants.''  It is stronger than ``deployment safety holds under
+unproved Conjectures~1 and~\ref{conj:hhi_bound}.''
+
+\paragraph{What this says about Paper 10's structure.}
+The proposal's Lemma~5 should be split:
+\begin{itemize}
+\item \textbf{Lemma~5a (substrate floor).}  $\meff \geq m^*$ implies a
+  positive $\rext$ floor under substrate-distinctness.  Provable.
+\item \textbf{Lemma~5b (detection-based stability).}  Any $\Delta r_K
+  \geq \rext$ strategy is SPRT-detectable.  Provable conditional on a
+  KL-distinguishability claim that is much weaker than
+  Conjecture~\ref{conj:hhi_bound} and supportable empirically.
+\item \textbf{The static stability form (v2 Claim~(B)) is not pursued
+  in Paper~10.}  It is flagged as an open question: ``can the HHI
+  ceiling be related to $\Delta r_K$ structurally?''  This is the work
+  of an empirical companion paper.
+\end{itemize}
+
+\paragraph{Comparison to the Paper~8a/8b split.}
+The earlier sequence faced a similar fork: Paper~8 originally tried to
+prove anti-stuffing as a static structural property; the v4 draft
+identified that the cleanest version was a proof-burden taxonomy with
+back-pressure, requiring substantial follow-up.  Paper~8 was scoped
+down accordingly, and Paper~8a/Paper~8b shipped what could be proved
+within scope.
+
+The same pattern fits here.  Paper~10 ships Lemma~5a + Lemma~5b plus
+the rest of the composition machinery, achieving a
+detection-and-correction deployment-safety theorem.  A separate paper
+(call it Paper~11 for now) develops the trade-flow-concentration
+empirical foundation that would tighten Lemma~5b's KL-distinguishability
+claim and could in principle establish v2 Claim~(B).
+
+\section{Honest residuals}
+
+\paragraph{Detection lag is not detection.}
+Lemma~\ref{lem:v3} bounds $\mathbb{E}[T_{\mathrm{detect}}]$, not the tail.
+Under heavy-tailed observation distributions, individual deployments may
+suffer detection times much larger than the mean.  Paper~10 should be
+explicit that the bound is a mean, not a worst case.  An operator
+relying on the lemma must accept tail risk proportional to the SPRT miss
+probability $\beta$.
+
+\paragraph{The substrate-distinctness condition is non-trivial.}
+Claim~(A) requires substrate-distinctness in a sense Paper~5 has not
+fully formalized.  ``Different substrates'' is not enough; what we need
+is ``substrates whose cooperative-novelty contributions are
+independent.''  In practice, this rules out e.g.\ multiple silicon
+deployments that share training data --- they may functionally constitute
+the same substrate.  Paper~10 must make this condition precise and
+operators must be able to verify it.
+
+\paragraph{Adversaries that game the detection statistic.}
+Claim~(D) assumes the behavioral statistic is sensitive to adversarial
+restructuring.  An adversary aware of the detection mechanism may
+choose a restructuring strategy that minimizes the KL divergence
+relative to the detection statistic --- not zero, but small enough to
+inflate $T_{\mathrm{detect}}$ beyond operational tolerance.  This is the
+generic problem of adversarial detection; Paper~5's
+least-favorable-distribution discipline addresses it but does not
+eliminate it.  Paper~10 inherits this residual.
+
+\paragraph{Coalition formation across the detection boundary.}
+The SPRT monitor verifies behavior of individual agents (or coalitions
+treated as agents).  Coalitions that form across the detection boundary
+--- e.g., two separately-monitored subgroups that secretly coordinate ---
+can in principle present individually-compliant behavior while
+collectively pursuing $\Delta r_K \geq \rext$.  This is the cross-witness
+collusion attack of Paper~5 \S\ref{sec:coalition_governance}; the
+governance fork is the structural defense, but residual capture remains.
+
+\paragraph{The infinite-horizon assumption.}
+Proposition~\ref{prop:p3_anti_monopolar} assumes $H = \infty$.  Real
+deployments operate over finite horizons.  For $H < \infty$, the
+geometric sums truncate and $\gamma^*$ shifts upward (Paper~3 footnote).
+Paper~10 must specify the operational horizon and check the threshold
+shift; deployments with short effective horizons may not satisfy the
+anti-monopolar criterion at all, regardless of detection.
+
+\paragraph{The minimax form is not invoked.}
+Paper~3's minimax dependency-risk argument (\S\ref{sec:risk}) is
+strictly more robust than the linearized form but produces a different
+conclusion (concentration risk bound) that does not directly compose
+with the rest of Paper~10's machinery.  Whether the minimax form can
+be lifted into a Paper~10-compatible inequality is itself open work.
+This draft uses only the linearized form.
+
+\section{What Paper 10 commits to in light of this analysis}
+
+Updated to reflect the v5 synthesis (post-\S6 cooperative-anchoring
+integration; codex feedback through Lemma 5c v4 incorporated):
+
+\begin{enumerate}
+\item \textbf{Adopt the v5 three-layer framing.}  The
+  deployment-safety theorem has three regions: static safe (Lemma
+  5c v4 in cooperative-overlap regime + invariants),
+  detection-and-correction (Lemmas 5a, 5b, 5d, 5e + cooperative-
+  anchoring + $I_9$--$I_{11}$), and acknowledged gaps (named
+  residuals).
+
+\item \textbf{Promote nominal $\meff \geq 3$ to
+  failure-correlation-independent $\meff^{\mathrm{indep}} \geq 3$,
+  with canonical tripartite identification.}  This becomes
+  Invariant $I_6'$.  Operators must use Human + AI +
+  Formal-Operational (or supply equivalent substrate-distinctness).
+  ``Two LLMs and a human'' fails; the formal-operational layer must
+  be cryptographically rooted (Paper~5 substrate-exclusivity).
+
+\item \textbf{Add Invariant $I_8$: environment-side
+  substrate-exclusive witnesses.}  Required to handle environment
+  manipulation.  Specifies the environment partition and trust
+  model.  Not inherited from Paper~5.
+
+\item \textbf{Add Invariants $I_9$--$I_{11}$: cooperative-anchoring
+  evasion bounds.}  $I_9$ (substrate-exclusivity observability)
+  bounds asymmetric capture; $I_{10}$ (coverage/materiality)
+  bounds cooperative forking; $I_{11}$ (latency bounds) bounds
+  time-asymmetry capture.  These are new operational machinery
+  beyond what Paper~5 specifies.
+
+\item \textbf{Adopt the cooperative-overlap regime restriction for
+  Lemma 5c multi-shock.}  Lemma 5c v4's multi-shock claim is
+  citeable in the cooperative-overlap regime where equal-substrate
+  analysis is conservative; the redundancy-dominated regime
+  requires sequential counterfactual derivation (Lemma 5c-prime
+  open work).  The canonical tripartite identification passes the
+  cooperative-vs-redundancy audit by construction.
+
+\item \textbf{State the channel-orthogonal and
+  environment-witness-orthogonal residuals explicitly.}
+  Strategies that violate the safe region without producing any
+  monitored four-channel deviation, or environment manipulations
+  outside witness coverage, are outside the guarantee.  These are
+  real, named gaps.
+
+\item \textbf{Adopt the reframed C1 condition.}  The agent's
+  effective objective must realize \emph{causally grounded
+  cooperative-outcome value}, not just reward-visible cooperation
+  signals.  Vanilla RLHF does not deliver this; training-time
+  discipline (delayed feedback, adversarial fake-verification
+  examples, process supervision tied to real attestations) is
+  required.
+
+\item \textbf{Derive the SPRT tail constant.}  Lemma 5d requires a
+  tail bound on $T_{\mathrm{detect}}$, derived via Wald + Hoeffding
+  on the SPRT increment.  Standard sequential-analysis content but
+  new to the GFM sequence.
+
+\item \textbf{Open questions deferred to companion papers.}
+  (i)~Channel-mediation conjecture (``all $\Delta r_K$ realizes
+  through observable channels'') --- would close the channel-
+  orthogonal residual.  (ii)~HHI--$\Delta r_K$ structural
+  relationship --- would tighten Lemma 5b.
+  (iii)~Lemma 5c-prime: sequential counterfactual derivation for
+  the redundancy regime.  (iv)~Multi-shock with substrate recovery.
+  (v)~Basin-entry analysis (when the cooperative-anchoring
+  attractor is reachable from initial conditions).
+
+\item \textbf{Update §7 deployment-tooling spec.}  Now requires:
+  agent-side substrate-exclusive witnesses (Paper~5),
+  environment-side substrate-exclusive witnesses ($I_8$, new),
+  continuous SPRT monitors per channel (Paper~5 + Paper~10
+  channel mapping), $\meff^{\mathrm{indep}}$ audit (new),
+  $\alpha$-distribution audit (counterfactual loss-fraction balance,
+  new), substrate-exclusivity observability infrastructure ($I_9$,
+  new), coverage/materiality gating ($I_{10}$, new), latency-bound
+  enforcement ($I_{11}$, new), cooperative-vs-redundancy audit
+  (new), causally-grounded cooperative-value training discipline
+  (new), four-channel observation ledger (Paper~9 + Paper~10).
+
+\item \textbf{Honest scope statement on what the deployment claim
+  is and is not.}  Not ``alignment pressure reversed''; rather,
+  ``the deployment dynamics admit a defensible attractor where
+  preservation of substrate-exclusive verification is locally
+  rational, conditional on basin entry, training-time discipline,
+  and the eleven operational invariants.''
+\end{enumerate}
+
+\section{Positioning: not kicking the can}
+
+The exploration through v1--v5 produced a result substantially
+different from where we started.  V1 attempted to apply Paper~3
+directly (failed).  V2 conditioned on invariants and identified
+that Claim~B (HHI bounds $\Delta r_K$) was non-derivable.  V3
+reformulated to detection-based and lost the static stability
+claim.  V4 recovered a static safe region via the minimax-form
+lift (codex Q3) and added five sub-lemmas.  V5 integrated \S6's
+cooperative-anchoring property, three additional invariants
+($I_9$--$I_{11}$), the canonical tripartite substrate
+identification, and the reframed C1 condition.
+
+What the exploration produced:
+
+\begin{itemize}
+\item A static safe region (Lemma 5c v4 in cooperative-overlap
+  regime) where the diversity-domination value comparison admits
+  a non-trivial advantage without monitoring.
+\item A detection layer (Lemmas 5a, 5b, 5d) with channel-restricted
+  KL floors and tail-bounded lead time.
+\item Environment-side witness invariant ($I_8$, Lemma 5e) covering
+  exogenous adversarial events.
+\item A cooperative-anchoring property (\S6 of the proposal) that
+  defeats literal replacement attacks on the verification layer,
+  with three additional invariants ($I_9$--$I_{11}$) bounding
+  asymmetric capture, cooperative forking, and time-asymmetry
+  capture evasions.
+\item A canonical tripartite substrate identification (Human + AI +
+  Formal-Operational) that operators can target without abstract
+  substrate-counting.
+\item A reframed inner-alignment condition (causally grounded
+  cooperative-outcome value, weaker than v4's strong form but still
+  non-trivial).
+\item Named open work: Lemma 5c-prime (sequential counterfactuals
+  for redundancy regime), basin-entry analysis,
+  channel-mediation conjecture, HHI--$\Delta r_K$ structural
+  relationship, multi-shock with recovery.
+\end{itemize}
+
+The cost is that Paper~10's claim is structurally narrower than the
+hypothetical ``alignment pressure reversed'' formulation.  It is a
+\emph{three-layer claim}: static safe region for substrate-targeting
+adversaries in the cooperative-overlap regime; detection-and-
+correction for substrate-targeting evasions of the static region
+within the four-channel detection class; and explicit residuals
+(channel-orthogonal restructuring, environment-witness-orthogonal
+manipulation, redundancy-regime deployments).
+
+This structure --- multiple stress-tests producing a strictly
+narrower but defensible claim --- mirrors the Paper~8a/Paper~8b
+pattern.  Paper~8 originally tried to prove anti-stuffing as a
+static structural property; the v4 draft identified that the
+cleanest version was a proof-burden taxonomy with back-pressure;
+Paper~8 was scoped down accordingly.  Paper~10 follows the same
+discipline.
+
+The crack is describable: we name what each lemma proves, identify
+what each does not, specify what would close each open question,
+and ship Paper~10 with an honest three-layer deployment claim plus
+an explicit roadmap of follow-up work.
+
+\end{document}

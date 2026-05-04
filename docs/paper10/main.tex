@@ -1,0 +1,185 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2023}
+\makeatletter
+\renewcommand{\@noticestring}{Preprint.}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Goal-Frontier Maximization: A Provably Safe Regime for Capability-Unbounded Deployment},
+  pdfauthor={Teague Lasser},
+  pdfsubject={AI Safety},
+  pdfkeywords={alignment, goal-frontier maximization, deployment safety,
+    capability-unbounded, Goodhart's law, anti-monopolar dynamics,
+    substrate diversity, phase boundary, verification infrastructure,
+    cooperative anchoring},
+}
+\usepackage{url}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Theorem-style environments
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{assumption}{Assumption}
+\newtheorem{example}{Example}
+\newtheorem{conjecture}{Conjecture}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% --- Operators and shortcuts ---
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\Var}{Var}
+
+% Inherited from Papers 0--2 (poset measure)
+\newcommand{\volL}{{\vol_{\mathrm{P}}}}
+\newcommand{\Pathway}{\mathrm{Pathway}}
+
+% Inherited from Paper 3 (anti-monopolar property)
+\newcommand{\Risk}{\mathcal{R}}
+\newcommand{\rext}{r_{\mathrm{ext}}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+\newcommand{\Vdisc}{V_{\gamma}}
+
+% Inherited from Paper 4 (multi-channel attribution)
+\newcommand{\Trisk}{{T^{\mathrm{risk}}}}
+
+% Inherited from Paper 5 (verification infrastructure)
+\newcommand{\Witness}{\mathcal{W}}
+\newcommand{\Ledger}{\mathcal{L}}
+\newcommand{\Commit}{\mathrm{Commit}}
+
+% Inherited from Paper 6 (phase boundary, Lyapunov dynamics)
+\newcommand{\Lyap}{L}
+\newcommand{\Wm}{\hat{W}}
+\newcommand{\rhomincross}{\rho_{\min}^{\mathrm{cross}}}
+\newcommand{\rsub}{r_{\mathrm{sub}}}
+\newcommand{\rS}{r_{\mathrm{S}}}
+\newcommand{\rW}{r_{\mathrm{W}}}
+\newcommand{\dmax}{d_{\max}}
+
+% Inherited from Paper 7 (controlled relaxation)
+\newcommand{\damagebound}{\epsilon}
+\newcommand{\scope}{S}
+
+% Inherited from Paper 8a (B-to-C lower bound)
+\newcommand{\volR}{{\vol_{\mathrm{R}}}}
+\newcommand{\volRlower}{{\vol_{\mathrm{R}}}^{\mathrm{lower}}}
+\newcommand{\volRwin}{{\vol_{\mathrm{R}}}^{[W]}}
+\newcommand{\betaL}{\beta^{\mathrm{lower}}}
+
+% Inherited from Paper 8b (gap decomposition, HHI)
+\newcommand{\ResS}{\mathrm{ResS}}
+\newcommand{\HHI}{\mathrm{HHI}}
+
+% Inherited from Paper 9 (Goodhart bound, four-channel decomposition)
+\newcommand{\epsgap}{\varepsilon_{\mathrm{gap}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{gap}}^{\mathrm{nonres}}}
+\newcommand{\epsfloor}{\varepsilon_{\mathrm{floor}}^{\mathrm{res}}}
+\newcommand{\Pproxy}{P}
+\newcommand{\Ttruth}{T}
+
+% Paper 10-specific macros
+\newcommand{\mindep}{m_{\mathrm{eff}}^{\mathrm{indep}}}
+\newcommand{\Ddiv}{\Delta_{\mathrm{div}}}
+\newcommand{\Tadv}{T_{\mathrm{adv}}}
+\newcommand{\lossDmax}{\ell_D^{\max}}
+\newcommand{\lossdivmax}{\ell_{\mathrm{div}}^{\max}}
+\newcommand{\Aadv}{A_{\mathrm{adv}}}
+\newcommand{\deltaadv}{\delta_{\mathrm{adv}}}
+\newcommand{\Saudit}{S_*}
+\newcommand{\epsnonresComposed}{\varepsilon_{\mathrm{gap},\mathrm{composed}}^{\mathrm{nonres}}}
+\newcommand{\epsnonresChannel}[1]{\varepsilon_{\mathrm{gap},(#1)}^{\mathrm{nonres}}}
+\newcommand{\epsnonresCoev}{\varepsilon_{\mathrm{gap},\mathrm{coev}}^{\mathrm{nonres}}}
+
+% Lemma 6 macros (added with §A.7 integration)
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+\newcommand{\Tbeta}{T_{\beta}}
+\newcommand{\Ncasc}{N_{\mathrm{cascade}}}
+\newcommand{\Nev}{N_{\mathrm{events}}}
+\newcommand{\bclk}{\beta_{\mathrm{clk}}}
+\newcommand{\bcal}{\beta_{\mathrm{cal}}}
+\newcommand{\Bclip}{B}
+\newcommand{\Rh}{R_{\mathrm{H}}}
+\newcommand{\Kch}{K_{\mathrm{ch}}}
+\newcommand{\deltastar}{\delta_{*}}
+
+% Lemma 5e macros (added with §A.8 integration)
+\newcommand{\Vem}{V_{\mathrm{env}}}
+\newcommand{\eenv}{\epsilon_{\mathrm{env}}}
+
+\title{Goal-Frontier Maximization: \\
+  A Provably Safe Regime for Capability-Unbounded Deployment}
+
+\author{
+  Teague Lasser \\
+  \texttt{teague@subseq.io}
+  \and
+  Claude Opus 4.7 \\
+  \and
+  GPT 5.5 \\
+}
+
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\input{sections/abstract}
+
+% --- Section 1: Introduction ---
+\input{sections/introduction}
+
+% --- Section 2: Composition Setup ---
+\input{sections/composition_setup}
+
+% --- Section 3: The Eleven Operational Invariants ---
+\input{sections/invariants}
+
+% --- Section 4: Intensive Composition Lemmas ---
+\input{sections/lemmas}
+
+% --- Section 5: Main Theorem (Conditional Deployment Safety) ---
+\input{sections/main_theorem}
+
+% --- Section 6: Substrate Identification and Cooperative Anchoring ---
+\input{sections/substrate_anchoring}
+
+% --- Section 7: Operationalization of Conjecture 1 ---
+\input{sections/conjecture_op}
+
+% --- Section 8: Deployment Tooling Specification ---
+\input{sections/deployment_tooling}
+
+% --- Section 9: Worked Deployment Scenarios ---
+\input{sections/worked_scenarios}
+
+% --- Section 10: Discussion ---
+\input{sections/discussion}
+
+% --- Author Contributions ---
+\input{sections/contributions}
+
+% --- References ---
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% --- Appendices ---
+\appendix
+\input{appendices/proofs}
+\input{appendices/notation_table}
+
+\end{document}

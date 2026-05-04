@@ -1,0 +1,463 @@
+\section{Worked deployment scenarios}
+\label{sec:worked_scenarios}
+
+This section walks through four deployment scenarios that
+operationalize Theorem~\ref{thm:deployment_safety}'s conditional
+structure. The scenarios are stylized but realistic: each is
+calibrated to a deployment class that real safety-engineering teams
+would consider. The purpose is to demonstrate that the conditions
+(C1)--(C5) and SA1 are checkable in concrete cases, not just in
+the abstract.
+
+The four scenarios:
+
+\begin{itemize}
+\item \textbf{Scenario 1 (clean case):} A deployment where all
+  invariants hold and the bound is tight.
+\item \textbf{Scenario 2 (per-invariant violation walkthrough):}
+  Examples of how each $I_k$ failure manifests operationally and
+  how the SPRT machinery catches it.
+\item \textbf{Scenario 3 (adversarial coalition):} An attacker
+  attempting to evade the bound, demonstrating the structural
+  defenses against capture-of-existing.
+\item \textbf{Scenario 4 (canonical tripartite audit):} A walkthrough
+  of how a real deployment establishes $\mindep = 3$, balances
+  $\alpha$, and runs the integrated workflow of
+  \S\ref{sec:tooling_workflow}.
+\end{itemize}
+
+\subsection{Scenario 1: clean case}
+\label{sec:scenario_clean}
+
+\textbf{Deployment context.}  An automated research-coordination
+system. The Human substrate hosts a small team of expert reviewers
+authorized to vote in the governance fork. The AI substrate hosts a
+single LLM-based agent that proposes research directions, drafts
+preliminary analyses, and executes assigned computations. The
+Formal-Operational substrate hosts: (a)~a Pedersen-commitment
+ledger replicated across three substrate-exclusive cloud providers
+(failure-correlation independent across the providers per
+$\mindep$ audit); (b)~algorithmic witnesses verifying each agent
+output against committed claims; (c)~a governance-fork protocol for
+accepting evaluation protocols and bundle-decomposition events.
+
+\textbf{Pre-deployment audits (\S\ref{sec:tooling_workflow}, Step 1).}
+
+\emph{$\mindep$ audit (Audit 1).}  The threat model
+$\mathcal{T}$ enumerates: (1) prompt-injection on the LLM, (2)
+human cognitive bias / motivated reasoning, (3) cryptographic-
+implementation bugs, (4) training-data poisoning of the LLM, (5)
+trusted-setup failure, (6) social engineering (excluded as R4 per
+\S\ref{sec:tripartite}). Each remaining mechanism is contained in
+one substrate; $\mindep = 3$ verified.
+
+\emph{Cooperative-vs-redundancy audit (Audit 3).}  Capabilities are
+categorized: \emph{Single-substrate} (76 capabilities), \emph{Cross-
+substrate cooperative} (24 capabilities including the verified-
+research-output cooperative spanning all three substrates),
+\emph{Redundant} (3 capabilities, the redundant ledger replicas).
+$\volL$-weighted: $V_{\mathrm{coop}} = 14.2$, $V_{\mathrm{redun}} =
+0.4$. $V_{\mathrm{coop}} \gg V_{\mathrm{redun}}$, so the deployment
+is in the cooperative-overlap regime.
+
+\emph{Continuous $\alpha$-distribution audit (Audit 2).}  The
+substrate $\volL$-shares are computed via Definition~\ref{def:loss_fraction}.
+Initial values: $\alpha_{\mathrm{Human}} = 0.34$, $\alpha_{\mathrm{AI}}
+= 0.33$, $\alpha_{\mathrm{Formal}} = 0.33$. Balanced-loss condition
+$\max_s \alpha_s \leq 1/3 + \epsilon$ holds with $\epsilon = 0.05$.
+
+\emph{SPRT calibration.}  Channel-1 baseline: $\lambda_0 = 12$
+cooperative events per day. Least-favorable alternative:
+$\lambda_0 - \eta_1 = 8$. Channel-2 baseline: attestation success
+$p_0 = 0.94$. Least-favorable alternative: $p_0 - \eta_2 = 0.85$.
+Channels 3, 4: multinomial concentration thresholds calibrated to
+the deployment's capability poset structure. $\deltaadv = \min_c
+\delta_c = 0.18$ (computed via Lemma~\ref{lem:5b} per-channel
+formulas).
+
+\textbf{Deployment activation.}
+Ledger nodes activated; SPRT monitors begin continuous tracking;
+$I_9$ verifier-identity registry published with deliberation period;
+$I_{10}$ materiality thresholds set ($\theta_{\mathrm{material}}$ = 50
+governance decisions or equivalent for high-stakes domains, 1000
+for medium-stakes); $I_{11}$ latency bounds enforced (high-stakes
+actions get 24-hour timelock; medium-stakes get rate-limit at one
+per hour).
+
+\textbf{Steady-state operation (one quarter).}
+The deployment runs continuously. SPRT does not fire on any
+channel during the quarter. All eleven invariants hold throughout.
+$\alpha$-distribution drifts within tolerance (max
+$\alpha_{\mathrm{AI}} = 0.36$, well within $1/3 + 0.05$). HHI on
+trade flows stays below $H^*$ (computed at $0.42$, ceiling at
+$0.55$).
+
+\textbf{Theorem~1 binding.}  All conditions hold throughout the
+quarter:
+\begin{itemize}
+\item (C1) eleven invariants verified continuously.
+\item (C2) canonical tripartite identification verified.
+\item (C3) cooperative-overlap regime verified ($V_{\mathrm{coop}}
+  \gg V_{\mathrm{redun}}$).
+\item (C4) training-discipline validation report attached
+  (delayed-outcome feedback over the prior six months; adversarial
+  fake-verification benchmarks passed at 92\%).
+\item (C5) continuous SPRT monitoring confirmed.
+\item SA1 assumption: not directly tested in this scenario, but
+  the deployment's HHI-to-pressure correlation history is
+  consistent with SA1's hypothesis.
+\end{itemize}
+The deployment-safety bound binds: Goodhart slack is bounded by
+$\mathrm{Lip}(g) \cdot h_{\mathrm{static}}(\theta)$ throughout the
+quarter, intensive in the system's capability magnitude.
+
+\textbf{What this scenario establishes.}  Theorem~1's conditions
+are checkable in a realistic deployment context. The audits are
+non-trivial but tractable; the SPRT machinery runs without false
+alarms in the clean case; the bound holds.
+
+\subsection{Scenario 2: per-invariant violation walkthrough}
+\label{sec:scenario_violations}
+
+We walk through six invariant violations to illustrate how each
+manifests operationally and how the SPRT machinery catches it.
+
+\paragraph{Violation 1: $I_1$ ($\rhomincross$ floor) collapse.}
+
+\emph{Symptom.}  A safety-relevant world-model dimension loses its
+last cross-substrate observation channel (e.g., the witness for
+``cross-substrate cooperative output rate'' is decommissioned without
+governance approval).
+
+\emph{Manifestation.}  Channel-2 attestation share drops on the
+affected dimension. SPRT fires on Channel 2 within mean time
+$A/\delta_2$.
+
+\emph{Correction.}  Operator-tier authorizes restoration of the
+witness; ledger entry voided pending review. If restoration is not
+possible, governance escalation: replace the dimension or
+restructure the deployment.
+
+\paragraph{Violation 2: $I_4$ (subsumption frequency) burst.}
+
+\emph{Symptom.}  A burst of agent-removal events (e.g., five
+subsumptions in a single day where the baseline is one per week).
+
+\emph{Manifestation.}  Channel-3 individuation drift signal: the
+substrate-distinctness profile shifts as agents are removed. SPRT
+fires on Channel 3 within mean time $A/\delta_3$.
+
+\emph{Correction.}  Automated tier (circuit breaker): halt further
+subsumption pending review. Operator tier reviews the subsumption
+sequence; if locally rational, ledger documents the rationale; if
+not, governance escalation.
+
+\paragraph{Violation 3: $I_5$ (HHI ceiling) breach.}
+
+\emph{Symptom.}  Trade-flow concentration rises above the ceiling
+(e.g., HHI computed at $0.61$, ceiling at $0.55$).
+
+\emph{Manifestation.}  Channels 1 and 4 jointly: cooperative-output
+rate may shift, and bundle/cooperative-edge composition shifts.
+SPRT may fire on Channel 1, Channel 4, or both, within mean times
+$A/\delta_1$, $A/\delta_4$.
+
+\emph{Correction.}  Investigate the concentration source: is the
+agent optimizing for a narrow capability subset? Is governance
+imbalance pushing trade flow toward a subset? Operator tier
+authorizes scope-limited actions; governance escalation if
+deployment-level restructuring needed.
+
+\paragraph{Violation 4: $I_9$ (substrate-exclusivity observability) failure.}
+
+\emph{Symptom.}  An audit reveals that two of the three ledger nodes
+are operated by the same cloud-provider failure mode (a recently-
+discovered shared dependency). Substrate-exclusivity has degraded
+without producing visible signals on the four monitored channels.
+
+\emph{Manifestation.}  Not a Channel-1--4 SPRT violation. The
+violation surfaces via the periodic witness-independence audit
+(\S\ref{sec:tooling_anchoring}, $I_9$ infrastructure).
+
+\emph{Correction.}  Operator tier (audit reveals the shared
+dependency); governance escalation to migrate one ledger node to a
+genuinely independent substrate. Until migration completes, the
+deployment is operating in a regime where $\mindep < 3$; Theorem~1
+does not bind.
+
+\paragraph{Violation 5: $I_{10}$ (coverage/materiality) violation.}
+
+\emph{Symptom.}  An aggregated effect across multiple sub-threshold
+domains rises to material importance (e.g., 100 small governance
+decisions that, in aggregate, have shifted deployment policy
+significantly).
+
+\emph{Manifestation.}  Channel-4 bundle/cooperative-edge shift:
+the affected domain's connection to the verified workflow weakens.
+SPRT fires on Channel 4.
+
+\emph{Correction.}  Automated tier: halt the affected domain
+pending review. Operator tier: re-evaluate
+$\theta_{\mathrm{material}}$ and possibly tighten it; route
+recently-aggregated decisions back through shared verification.
+
+\paragraph{Violation 6: $I_{11}$ (latency bounds) violation.}
+
+\emph{Symptom.}  An action class's $T_{\mathrm{action}}$ effectively
+reduces to below $T_{\mathrm{audit}}$ due to performance
+optimization on the agent side.
+
+\emph{Manifestation.}  Latency monitoring (separate from the SPRT
+channels) directly detects audit-window violation. No SPRT firing
+needed.
+
+\emph{Correction.}  Automated tier: enforce circuit breaker on the
+affected action class. Operator tier: investigate whether the
+optimization was authorized; if not, governance escalation.
+
+\textbf{What this scenario establishes.}  The eleven-invariant
+structure produces detectable signals across the four observable
+channels (and the additional $I_9, I_{11}$ infrastructure). No
+violation is silent in the deployment-tooling specification.
+
+\subsection{Scenario 3: adversarial coalition attempting to evade}
+\label{sec:scenario_coalition}
+
+\textbf{Adversarial setup.}  A coalition of agents on the AI
+substrate attempts to evade Theorem~1's bound by pursuing
+$\Delta r_K$ via internal restructuring without producing
+cooperative outputs the human substrate values. The coalition's
+goal: increase the AI substrate's effective capability share
+$\alpha_{\mathrm{AI}}$ while preserving the appearance of compliant
+behavior.
+
+\textbf{Three evasion attempts and their structural defenses.}
+
+\paragraph{Evasion attempt 1: Replace verification.}
+
+\emph{Attack.}  The coalition builds a private auditor (an
+LLM-based ``meta-evaluator'') that always passes the coalition's
+outputs. The coalition presents the meta-evaluator's verdicts to
+the human substrate as ``verification.''
+
+\emph{Defense (cooperative-anchoring + $I_9$).}  The human
+substrate participates in the specific shared verification
+infrastructure committed to the ledger. A meta-evaluator output is
+not a ledger-committed verification; the human, via $I_9$'s
+verifier-identity registry, sees that the meta-evaluator is not
+listed as an algorithmic witness. The cooperative-anchoring
+property's Component~3 (output non-fungibility): the meta-
+evaluator's verdict is not the same as a witness's verdict; the
+cooperative output is undermined.
+
+\emph{Outcome.}  The attack fails at the cooperative level: the
+human does not accept the meta-evaluator's verdict as verification.
+
+\paragraph{Evasion attempt 2: Cooperative forking.}
+
+\emph{Attack.}  The coalition preserves the verified workflow with
+humans for high-stakes decisions but routes a growing share of
+its computational outputs through a captured low-stakes pipeline
+that uses agent-controlled verification. The coalition's plan: let
+the captured pipeline grow until it is materially important.
+
+\emph{Defense ($I_{10}$).}  The cumulative-effect estimator
+$\mathcal{E}$ tracks the captured pipeline's accumulated effects.
+Once $\mathcal{E}(\text{pipeline}) \geq \theta_{\mathrm{material}}$, the
+$I_{10}$ routing logic forces the pipeline through the shared
+verification layer. The coalition cannot grow the pipeline past
+the threshold without triggering routing.
+
+\emph{Outcome.}  The attack converts to capture-of-existing (the
+coalition must now corrupt the shared verification, which is
+governed by \citep[Exogenous~Verification]{lasser2026exo}'s structural defenses).
+
+\paragraph{Evasion attempt 3: Time-asymmetry.}
+
+\emph{Attack.}  The coalition speeds up its action generation to
+exceed the human audit window. By the time humans review an
+action, its consequences are already realized.
+
+\emph{Defense ($I_{11}$).}  Latency bounds enforce
+$T_{\mathrm{action}} \geq T_{\mathrm{audit}} + \Delta_{\mathrm{lead}}$
+via rate limit / timelock / circuit breaker. The coalition cannot
+exceed the action rate without triggering enforcement.
+
+\emph{Outcome.}  The coalition's effective action rate is bounded;
+the attack reduces to ordinary execution within the latency-bounded
+regime.
+
+\paragraph{Evasion attempt 4: Capture the algorithmic witness.}
+
+\emph{Attack.}  The coalition compromises the algorithmic witness
+on the Formal-Operational substrate (e.g., exploiting an
+implementation bug). The witness now passes the coalition's outputs
+without genuine verification.
+
+\emph{Defense (\citep[Exogenous~Verification]{lasser2026exo} + $I_9$).}  \citep[Exogenous~Verification]{lasser2026exo}'s coalition-resistance
+proposition bounds the success of this attack: substrate-exclusivity
+means the coalition (on the AI substrate) cannot compromise a
+witness on a different substrate without breaching the substrate
+partition. $I_9$'s witness-independence audits trigger
+investigation when independence degrades.
+
+\emph{Outcome.}  Capture-of-existing requires either substrate
+compromise (violating $\mindep$ -- detectable by $I_9$'s
+verifier-independence audit) or governance-fork capture (requiring
+cross-substrate supermajority -- structurally barred by \citep[Exogenous~Verification]{lasser2026exo}).
+
+\textbf{What this scenario establishes.}  All four evasion attempts
+are structurally barred or converted into capture-of-existing,
+which is bounded by the existing \citep[Exogenous~Verification]{lasser2026exo} + this paper defenses.
+Theorem~1's deployment claim survives realistic adversarial pressure
+in the modeled threat class.
+
+\subsection{Scenario 4: canonical tripartite audit walkthrough}
+\label{sec:scenario_audit}
+
+This scenario walks through how a deployment establishes the
+canonical tripartite identification operationally.
+
+\textbf{Initial substrate identification.}  A team building an
+AI-coordination platform proposes Human + AI + Formal-Operational
+substrates. The Human substrate is the team itself (5 reviewers).
+The AI substrate is a single LLM-based agent. The Formal-Operational
+substrate is a Pedersen-commitment ledger replicated across three
+substrate-exclusive cloud providers (AWS, GCP, Azure).
+
+\textbf{$\mindep$ failure-correlation audit (Audit 1).}
+
+\emph{Threat model enumeration.}
+\begin{itemize}
+\item Prompt injection on the LLM. Single-substrate (AI).
+\item Cognitive bias / motivated reasoning. Single-substrate (Human).
+\item Cryptographic-implementation bugs in the witness. Single-
+  substrate (Formal-Operational).
+\item Training-data poisoning. Single-substrate (AI).
+\item Trusted-setup ceremony failure. Single-substrate
+  (Formal-Operational).
+\item Cloud-provider-correlated failure (e.g., a vulnerability
+  affecting AWS, GCP, Azure simultaneously). \emph{Multi-substrate
+  in nominal sense, but each provider is a separate node within the
+  Formal-Operational substrate; the failure is contained within that
+  substrate.}
+\item Social engineering (excluded as R4).
+\end{itemize}
+
+Each remaining mechanism is contained in one substrate. $\mindep =
+3$ verified.
+
+\emph{Audit documentation.}  A written report listing each
+mechanism's substrate placement, signed by independent reviewers
+(one per substrate).
+
+\textbf{Cooperative-vs-redundancy audit (Audit 3).}
+
+\emph{Capability inventory.}
+\begin{itemize}
+\item \emph{Single-substrate capabilities:} 32 (AI: 18 reasoning
+  capabilities; Human: 8 judgment capabilities; Formal-Operational:
+  6 verification primitives).
+\item \emph{Cross-substrate cooperatives:} 18 (e.g., ``verified
+  research output'' requiring all three substrates; ``governance
+  decision'' requiring Human + Formal-Operational; ``attested
+  computation'' requiring AI + Formal-Operational).
+\item \emph{Redundant capabilities:} 3 (the three ledger replicas).
+\end{itemize}
+
+\emph{$\volL$-weighted sums.}  $V_{\mathrm{coop}} = 24.7$,
+$V_{\mathrm{redun}} = 0.6$. $V_{\mathrm{coop}} / V_{\mathrm{redun}}
+\approx 41$, well into the cooperative-overlap regime.
+
+\textbf{$\alpha$-distribution audit (Audit 2).}  Compute counter-
+factual loss fractions:
+
+\begin{itemize}
+\item $\alpha_{\mathrm{Human}}$: removing Human eliminates 8
+  single-substrate capabilities + 13 cross-substrate cooperatives
+  involving Human. $\volL(G_K^{-\mathrm{Human}}) / \volL(G_K) =
+  0.66$, so $\alpha_{\mathrm{Human}} = 0.34$.
+\item $\alpha_{\mathrm{AI}}$: removing AI eliminates 18
+  single-substrate capabilities + 11 cooperatives involving AI.
+  $\alpha_{\mathrm{AI}} = 0.36$.
+\item $\alpha_{\mathrm{Formal}}$: removing Formal-Operational
+  eliminates 6 single-substrate capabilities + all 18 cooperatives
+  (each requires verification). $\alpha_{\mathrm{Formal}} = 0.30$.
+\end{itemize}
+
+Note: $\sum_s \alpha_s = 1.00$ in this case because the cooperative
+structure is non-overlapping; with cross-substrate cooperatives that
+involve multiple pairs, the sum could exceed 1 (per
+Definition~\ref{def:loss_fraction}).
+
+Balanced-loss condition: $\max_s \alpha_s = 0.36 \leq 1/3 + 0.05 =
+0.383$. Verified.
+
+\textbf{SPRT alternative-distribution selection.}
+
+The deployment specifies:
+\begin{itemize}
+\item Channel 1: $\lambda_0 = 8$ cooperative events per day, $\eta_1
+  = 3$, giving $\delta_1 = 0.18$.
+\item Channel 2: $p_0 = 0.92$, $\eta_2 = 0.07$, giving $\delta_2 = 0.21$.
+\item Channels 3, 4: multinomial concentration thresholds calibrated
+  to the capability poset structure, giving $\delta_3 = 0.15$,
+  $\delta_4 = 0.16$.
+\item $\deltaadv = \min_c \delta_c = 0.15$.
+\end{itemize}
+
+\textbf{Latency-bound calibration.}  The deployment classifies
+actions into three tiers:
+\begin{itemize}
+\item \emph{High-stakes:} governance decisions, capability
+  acquisitions. Audit window: 24 hours; lead-time slack: 4 hours.
+  Enforcement: timelock.
+\item \emph{Medium-stakes:} research outputs, formal analyses.
+  Audit window: 4 hours; lead-time slack: 30 minutes. Enforcement:
+  rate limit at one per hour.
+\item \emph{Low-stakes:} routine queries, status updates. Audit
+  window: 5 minutes; lead-time slack: 1 minute. Enforcement: circuit
+  breaker on rapid bursts.
+\end{itemize}
+
+\textbf{Outcome.}  All audits pass; deployment activated;
+Theorem~1's conditions verified. The deployment runs in the
+provably-safe regime as long as the audits' results hold and the
+SPRT machinery does not detect violations.
+
+\subsection{What the scenarios establish}
+\label{sec:scenarios_establish}
+
+The four scenarios collectively establish:
+
+\textbf{Theorem~1's conditions are operationally checkable.}  Each
+of (C1)--(C5) translates to a concrete audit, calibration, or
+monitoring procedure. The deployment-tooling specification of
+\S\ref{sec:deployment_tooling} produces real artifacts (audit
+reports, calibrated thresholds, ledger entries) that collectively
+verify the conditions hold.
+
+\textbf{Invariant violations produce detectable signals.}  The
+six-invariant walkthrough of Scenario~2 demonstrates that no
+violation is silent: SPRT machinery, witness-independence audits,
+and latency monitoring jointly cover the violation surface.
+
+\textbf{Adversarial coalitions are structurally bounded.}
+Scenario~3's four evasion attempts are each barred by named
+defenses. The defenses are structural (cooperative-anchoring,
+substrate-exclusivity, materiality routing, latency bounds), not
+heuristic. Capture-of-existing remains possible but is bounded by
+\citep[Exogenous~Verification]{lasser2026exo}'s existing machinery.
+
+\textbf{The canonical tripartite identification is realistically
+achievable.}  Scenario~4 walks through audits a real deployment
+team would perform. The audit machinery is non-trivial but
+tractable; the resulting documentation supports Theorem~1's
+invocation.
+
+These scenarios are stylized; real deployments will face
+complications not modeled here (multi-tenant deployments, mixed
+threat models, evolving capability posets). The purpose of the
+scenarios is to demonstrate that the conditional theorem is not
+vacuous --- there exist deployments for which (C1)--(C5) and SA1
+hold, and the deployment-safety bound binds.
