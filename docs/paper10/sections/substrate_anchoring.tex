@@ -134,22 +134,21 @@ substrate-targeting subclass that Lemma~5 covers.
 \end{proof}
 
 \paragraph{Why ``two LLMs and a human'' fails.}
-A common alternative identification --- e.g., one LLM as the
-``primary'' agent, a different LLM as the ``auditor,'' and a human
-reviewer --- fails the joint independence test because LLMs share
-substantial adversarial-event surface. Prompt-injection attacks
-that work on one frontier LLM tend to transfer; training-data
-overlap (web crawl, books, papers) means data-poisoning attacks
-affect both; architectural similarity (transformer + RLHF) shares
-class-level vulnerabilities. Operationally, ``Claude + Codex +
-human'' counts as $\mindep = 2$, not $\mindep = 3$. The deployment
-must include a substrate that is not a frontier LLM to satisfy
-$I_6$.
+A common alternative identification proposes one LLM as the ``primary'' agent,
+a different LLM as the ``auditor,'' and a human reviewer. This fails the joint
+independence test because LLMs share substantial adversarial-event surface.
+Prompt-injection attacks that work on one frontier LLM tend to transfer;
+training-data overlap (web crawl, books, papers) means data-poisoning attacks
+affect both; architectural similarity (transformer + RLHF) shares class-level
+vulnerabilities. Operationally, ``LLM Actor + LLM Auditor + Human Reviewer''
+counts as $\mindep = 2$, not $\mindep = 3$. The deployment must include a
+substrate that is not a frontier LLM to satisfy $I_6$.
 
-The formal-operational substrate is what makes the canonical
-tripartite identification reach $\mindep = 3$. Without it,
-deployments are stuck at $\mindep = 2$ regardless of how many AI
-agents they use.
+The formal-operational substrate is what makes the canonical tripartite
+identification reach $\mindep = 3$. Without it, deployments are stuck at
+$\mindep = 2$. This is a fragile minimum that can degrade out of the attractor
+basin in a single large capability step regardless of how many AI agents are
+used.
 
 \subsection{The cooperative-anchoring property}
 \label{sec:cooperative_anchoring}

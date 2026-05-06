@@ -44,6 +44,14 @@ const ArticlePreview: React.FC = () => {
             <p className="subtitle">Engineer, Philosopher, Dreamer</p>
 
             <h3 className="section-title">Papers</h3>
+            <a href="/papers/safety-foundations/" className="paper-link">
+                <p className="paper-title">Structural Foundations for Goal-Frontier Maximization Deployment Safety</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.7, GPT 5.5</p>
+            </a>
+            <a href="/papers/provably-safe/" className="paper-link">
+                <p className="paper-title">A Provably Safe Regime for Capability-Unbounded Deployment</p>
+                <p className="paper-meta">2026 · Lasser, Claude Opus 4.7, GPT 5.5</p>
+            </a>
             <a href="/papers/microfoundation/" className="paper-link">
                 <p className="paper-title">Goal-Frontier Maximization as a Microfoundation for Welfare Economics</p>
                 <p className="paper-meta">2026 · Lasser, Claude Opus 4.7, GPT 5.5</p>

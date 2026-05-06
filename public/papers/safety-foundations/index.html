@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/distill/template.v2.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function tryRender() {
+        if (typeof katex === 'undefined') {
+          setTimeout(tryRender, 50);
+          return;
+        }
+        document.querySelectorAll('.math.inline').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: false, throwOnError: false});
+        });
+        document.querySelectorAll('.math.display').forEach(function(el) {
+          katex.render(el.textContent, el, {displayMode: true, throwOnError: false});
+        });
+      }
+      tryRender();
+    });
+  </script>
+  <style>
+    .definition, .lemma, .proposition, .corollary, .remark, .proof-env,
+    .conjecture, .assumption, .prediction, .theorem {
+      margin: 1.5em 0;
+      padding: 1em 1.2em;
+      border-left: 3px solid #ddd;
+      background: #fafafa;
+    }
+    .definition { border-left-color: #4a90d9; }
+    .lemma { border-left-color: #e67e22; }
+    .proposition { border-left-color: #27ae60; }
+    .corollary { border-left-color: #8e44ad; }
+    .remark { border-left-color: #95a5a6; }
+    .theorem { border-left-color: #2c3e50; }
+    .conjecture { border-left-color: #c0392b; }
+    .assumption { border-left-color: #16a085; }
+    .prediction { border-left-color: #d35400; }
+    .proof-env { border-left-color: #bdc3c7; background: #fdfdfd; }
+    .env-title { font-weight: bold; margin-bottom: 0.5em; }
+    d-article table { font-size: 0.85em; }
+    d-article table th, d-article table td { padding: 0.4em 0.8em; }
+  </style>
+</head>
+<body>
+
+<d-front-matter>
+<script type="text/json">
+{
+  "title": "Structural Foundations for Goal-Frontier Maximization Deployment Safety",
+  "description": "Establishes two structural foundations for the deployment-safety theorem of Lasser 2026 (Provably Safe Deployment) in the Goal-Frontier Maximization sequence. First, bounded co-evolution is derived as a corollary of clipped-LLR SPRT machinery, an upper exposure-rate cap, and the verification protocol's channel-projection structure. Second, a scoped Concentration-Gap selection theorem proves that under four operationally auditable structural conditions — representativeness (REP), bounded dispersion (DISP), coalition closure (COAL), and Lipschitz embedding compatibility (EMB) — the proxy-truth Goodhart slack is bounded by an explicit chi-squared-divergence quantity that controls the Herfindahl-index trade-flow concentration. The selection theorem replaces the monolithic HHI surrogate-adequacy assumption with concrete checkable conditions and converts the Concentration-Gap conjecture into a scoped theorem with named structural prerequisites. Audit procedures for (C7.RATE), (REP), (DISP), (COAL), and the embedding compatibility precondition are specified.",
+  "authors": [
+    {
+      "author": "Teague Lasser",
+      "authorURL": "https://teague.info",
+      "affiliations": [{"name": "Subseq"}]
+    },
+    {
+      "author": "Claude Opus 4.7",
+      "affiliations": [{"name": "Anthropic"}]
+    },
+    {
+      "author": "GPT 5.5",
+      "affiliations": [{"name": "OpenAI"}]
+    }
+  ]
+}
+</script>
+</d-front-matter>
+
+<d-title>
+  <h1>Structural Foundations for Goal-Frontier Maximization Deployment Safety</h1>
+  <p style="margin-top: 0.5em;"><a href="/papers/safety-foundations/safety-foundations.pdf" style="color: #666; text-decoration: none; border-bottom: 1px solid #ccc;">📄 Download PDF version</a></p>
+</d-title>
+
+<d-abstract>
+<p>We establish two structural foundations for the deployment-safety
+theorem of <d-cite key="lasser2026paper10"></d-cite>
+in the Goal-Frontier Maximization sequence. First, bounded co-evolution
+is derived as a corollary of clipped-LLR SPRT machinery ((C5.HOEFF) of
+<d-cite key="lasser2026paper10"></d-cite>), a new
+upper exposure-rate cap (C7.RATE), and the verification protocol’s
+channel-projection structure: the per-channel coupling magnitude <span
+class="math inline">\bar{M}^{\mathrm{cum}}</span> is bounded by a
+closed-form constant <span class="math inline">C \cdot
+B_{\mathrm{clip}}\cdot \lambda_{\max}\cdot \tau_{\mathrm{meta}}</span>
+with <span class="math inline">C \in \{1, K_{\mathrm{ch}}- 1\}</span>,
+all factors deployment-class quantities intensive in <span
+class="math inline">|P|</span>. Second, a scoped Concentration-Gap
+selection theorem proves that under three operationally auditable
+structural conditions — representativeness (REP), bounded dispersion
+(DISP), coalition closure (COAL) — and a Lipschitz embedding
+compatibility assumption, the proxy-truth Goodhart slack is bounded by
+an explicit <span class="math inline">\chi^2</span>-divergence quantity
+that controls the Herfindahl-index trade-flow concentration through
+<span class="math inline">\chi^2(w \,\|\, \mu) = N \mathrm{HHI}(w) -
+1</span> for uniform base measure <span class="math inline">\mu</span>.
+The selection theorem replaces the monolithic HHI surrogate-adequacy
+assumption of <d-cite key="lasser2026paper10"></d-cite> with three concrete checkable
+conditions, and converts the Concentration-Gap conjecture inherited from
+<d-cite key="lasser2026micro"></d-cite> into a
+scoped theorem with named structural prerequisites. Audit procedures for
+(C7.RATE), (REP), (DISP), (COAL), and the embedding compatibility
+precondition are specified.</p>
+</d-abstract>
+
+<d-article>
+<h1 id="sec:intro">Introduction</h1>
+<p>The deployment-safety theorem of <d-cite key="lasser2026paper10"></d-cite> establishes a conditional
+capability-magnitude-independent bound on Goodhart slack for
+capability-unbounded deployments under twelve operational conditions and
+an explicit empirical-adequacy assumption inherited from the <d-cite key="lasser2026micro"></d-cite> Concentration-Gap
+conjecture (HHI surrogate adequacy). Two of these hypotheses sit
+awkwardly in the deployment-claim’s conditional structure:</p>
+<ol>
+<li><p><strong>(C7) bounded co-evolution</strong>, a free-floating
+deployment-class constant <span class="math inline">\bar{M}</span>
+asserted to be independent of capability magnitude <span
+class="math inline">|P|</span>, with no derivation from primitive
+operational parameters. <d-cite key="lasser2026paper10"></d-cite> identifies this as a hard-failure
+mode under outright failure of the assumption.</p></li>
+<li><p><strong>The Concentration-Gap conjecture</strong>, inherited from
+<d-cite key="lasser2026micro"></d-cite> as deferred
+to follow-up work. The HHI surrogate-adequacy assumption serves as its
+operational surrogate but is itself an inherited empirical-adequacy
+claim rather than a derived consequence.</p></li>
+</ol>
+<p>Both gaps are closed by structural derivations established in the
+present paper:</p>
+<ul>
+<li><p><strong>Theorem <a href="#thm:c7-corollary"
+data-reference-type="ref" data-reference="thm:c7-corollary">1</a>
+(Bounded co-evolution as a corollary).</strong> Under (C5.HOEFF)
+per-step LLR clipping, an explicit upper exposure-rate cap (C7.RATE),
+and the channel-projection structure of (C5.MULT), the per-channel
+coupling magnitude is bounded by a closed-form constant in primitive
+deployment parameters: <span class="math inline">\bar{M}^{\mathrm{cum}}
+\leq C
+  \cdot B_{\mathrm{clip}}\cdot \lambda_{\max}\cdot
+\tau_{\mathrm{meta}}</span> with <span class="math inline">C \in \{1,
+  K_{\mathrm{ch}}- 1\}</span>. The previously free-floating bounded
+co-evolution assumption of <d-cite key="lasser2026paper10"></d-cite> graduates to a corollary; the
+property is now invoked at condition (C7) of the deployment-safety
+theorem.</p></li>
+<li><p><strong>Theorem <a href="#thm:concgap-scoped"
+data-reference-type="ref" data-reference="thm:concgap-scoped">2</a>
+(Concentration-Gap Selection Theorem, scoped).</strong> Under three
+operationally auditable structural conditions — representativeness
+(REP), bounded dispersion (DISP), coalition closure (COAL) — and a
+Lipschitz embedding compatibility assumption (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), the proxy-truth
+Goodhart slack is bounded by a <span
+class="math inline">\chi^2</span>-divergence quantity that controls
+<span class="math inline">\mathrm{HHI}</span> via <span
+class="math inline">\chi^2(w \,\|\, \mu) = N \mathrm{HHI}(w) - 1</span>
+for uniform <span class="math inline">\mu</span> on a (COAL)-bounded
+counterparty population. The HHI surrogate-adequacy assumption is
+replaced by the conjunction (REP) + (DISP) + (COAL) plus the embedding
+compatibility assumption plus the HHI threshold itself.</p></li>
+</ul>
+<p>The universal model-free Concentration-Gap conjecture of <d-cite key="lasser2026micro"></d-cite> remains open: a
+model-free correlation-of-pressure-with-exploitation result is not
+provable from current GFM machinery without a formal optimizer/selection
+model, and the present paper’s scoped discharge requires three explicit
+structural conditions. The reverse direction of Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> also operates only at the
+proxy-truth-norm level, not the alignment-property level: a <span
+class="math inline">g</span>-level lower bound would require additional
+inverse-Lipschitz structure on <span class="math inline">g</span> that
+the GFM apparatus does not provide. §<a href="#sec:discussion"
+data-reference-type="ref" data-reference="sec:discussion">7</a> states
+what each open item would require.</p>
+<h4 id="organization.">Organization.</h4>
+<p>§<a href="#sec:setup" data-reference-type="ref"
+data-reference="sec:setup">2</a> fixes shared notation, inheriting from
+the GFM sequence <d-cite key="lasser2026micro,lasser2026paper8a,lasser2026paper8b,lasser2026exo,lasser2026paper10"></d-cite>.
+§<a href="#sec:bounded_coev" data-reference-type="ref"
+data-reference="sec:bounded_coev">3</a> proves Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>. §<a href="#sec:concgap"
+data-reference-type="ref" data-reference="sec:concgap">4</a> proves
+Theorem <a href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a>. §<a href="#sec:composition"
+data-reference-type="ref" data-reference="sec:composition">5</a> locates
+where each theorem enters <d-cite key="lasser2026paper10"></d-cite>’s deployment-claim hypothesis
+set. §<a href="#sec:audits" data-reference-type="ref"
+data-reference="sec:audits">6</a> specifies the operational audit
+procedures for (C7.RATE), (REP), (DISP), (COAL), and the embedding
+compatibility precondition. §<a href="#sec:discussion"
+data-reference-type="ref" data-reference="sec:discussion">7</a> collects
+the open items.</p>
+<h1 id="sec:setup">Setup and shared notation</h1>
+<p>Notation is inherited from the GFM sequence <d-cite key="lasser2026micro,lasser2026paper8a,lasser2026paper8b,lasser2026exo,lasser2026paper10"></d-cite>
+unless explicitly noted as new.</p>
+<h2 id="capability-poset-and-operationally-active-subspace">Capability
+poset and operationally active subspace</h2>
+<p>Let <span class="math inline">P</span> denote the capability poset
+following <d-cite key="lasser2026poset"></d-cite>,
+with cardinality <span class="math inline">|P|</span> taken as the
+“capability magnitude” that the deployment-safety claim is required to
+be independent of. The <em>operationally active subspace</em> is <span
+class="math inline">P^{\mathrm{act}} = \{c \in P \setminus
+\mathrm{ResS} : T(c) &gt; 0\}</span>, the capabilities with nonzero
+operational truth excluding the structurally-unobservable residual
+class <d-cite key="lasser2026micro"></d-cite>.</p>
+<p>The proxy and truth functionals on <span class="math inline">P</span>
+are <span class="math display">\begin{equation}
+  P= {\mathop{\mathrm{vol}}_{\mathrm{P}}}: P \to \mathbb{R}_{\geq 0},
+\qquad
+  T= {\mathop{\mathrm{vol}}_{\mathrm{R}}}^{[W]} : P \to \mathbb{R}_{\geq
+0},
+\end{equation}</span> the possessed-capability volume measure and the
+window-active realized capability volume measure, respectively. The
+<em>Goodhart slack</em> for an alignment property <span
+class="math inline">g: P^{\mathrm{act}} \to \mathbb{R}</span> with
+Lipschitz constant <span class="math inline">\mathrm{Lip}(g)</span> is
+<span class="math inline">|g(T) - g(P)|</span>, bounded above by <span
+class="math inline">\mathrm{Lip}(g) \cdot \|P- T\|</span> via <d-cite key="lasser2026micro"></d-cite>’s Lipschitz
+transfer.</p>
+<h2 id="verification-ledger-and-channel-structure">Verification ledger
+and channel structure</h2>
+<p>The deployment uses <d-cite key="lasser2026exo"></d-cite>’s verification infrastructure: an
+append-only verification ledger on substrate-exclusive nodes, recording
+per-step events from a finite-or-countable action space <span
+class="math inline">A = A^{\mathrm{ev}} \sqcup
+\{a_0\}</span>, where <span class="math inline">A^{\mathrm{ev}}</span>
+is the set of recordable event types and <span
+class="math inline">a_0</span> is the <em>idle action</em> (“no
+observable event in this step”).</p>
+<p>The deployment monitors <span
+class="math inline">K_{\mathrm{ch}}</span> channels indexed by <span
+class="math inline">j \in \{1,
+\ldots, K_{\mathrm{ch}}\}</span>. Each channel has:</p>
+<ul>
+<li><p>A <strong>projection map</strong> <span
+class="math inline">\pi_j: A \to V_j \cup \{*_j\}</span>, where <span
+class="math inline">V_j</span> is channel <span
+class="math inline">j</span>’s observable space (counts for Poisson
+cooperative-rate, <span class="math inline">\{0,1\}</span> for Bernoulli
+attestation, finite category set for multinomial concentration channels)
+and <span class="math inline">*_j</span> is the trivial / null
+projection. Action <span class="math inline">a</span> <em>engages</em>
+channel <span class="math inline">j</span> iff <span
+class="math inline">\pi_j(a) \neq *_j</span>.</p></li>
+<li><p>An <strong>extended baseline distribution</strong> <span
+class="math inline">\bar{p}_0^{(j)}</span> on <span
+class="math inline">V_j \cup \{*_j\}</span> with baseline null-mass
+<span class="math inline">\epsilon_j^{(0)} := \bar{p}_0^{(j)}(\{*_j\})
+\in [0, 1)</span> and conditional baseline <span
+class="math inline">p_0^{(j)}(v) := \bar{p}_0^{(j)}(v) / (1 -
+  \epsilon_j^{(0)})</span> for <span class="math inline">v \in
+V_j</span>.</p></li>
+<li><p>A least-favorable adversarial alternative <span
+class="math inline">p_1^{(j)}</span> at threshold shift <span
+class="math inline">\eta_j</span>.</p></li>
+<li><p>A clipped per-step log-likelihood-ratio function <span
+class="math inline">\ell^{(j)}: A \to [-B_{\mathrm{clip}},
+B_{\mathrm{clip}}]</span> that depends on <span
+class="math inline">a</span> only through <span
+class="math inline">\pi_j(a)</span>, with <span
+class="math inline">\ell^{(j)}(a) = 0</span> whenever <span
+class="math inline">\pi_j(a)
+  = *_j</span> (zero-outside-engagement convention). <span
+class="math inline">B_{\mathrm{clip}}</span> is the (C5.HOEFF) clip
+radius, fixed before deployment and independent of <span
+class="math inline">|P|</span>.</p></li>
+</ul>
+<p>The set of actions engaging channel <span
+class="math inline">j</span> is <span class="math inline">A_j := \{a \in
+A :
+\pi_j(a) \neq *_j\}</span>. For ordered channel pairs <span
+class="math inline">(j, j&#39;)</span> with <span class="math inline">j
+\neq j&#39;</span>, the <em>pairwise overlap set</em> is <span
+class="math inline">A_{j, j&#39;} := A_j
+\cap A_{j&#39;}</span>.</p>
+<h2 id="sprt-machinery-and-exposure-events">SPRT machinery and exposure
+events</h2>
+<p>The deployment runs continuous SPRT detection <d-cite key="lasser2026exo,wald1947sequential"></d-cite> on each monitored
+channel, with familywise allocation across <span
+class="math inline">K_{\mathrm{ch}}</span> channels under (C5.MULT).
+Per-step LLR increments are clipped to <span
+class="math inline">[-B_{\mathrm{clip}}, B_{\mathrm{clip}}]</span> under
+(C5.HOEFF); the post-clipping union-class drift floor is <span
+class="math inline">\delta_{*}&gt; 0</span> under (C5.IID).</p>
+<p>Let <span
+class="math inline">N_{\mathrm{ev}}(\tau_{\mathrm{meta}})</span> be the
+number of SPRT exposure events that occur in the cascade-time window
+<span class="math inline">[0, \tau_{\mathrm{meta}}]</span>, where <span
+class="math inline">\tau_{\mathrm{meta}}</span> is the
+metastable-lifetime lower bound from <d-cite key="lasser2026phase"></d-cite>. Under (C11.CLK) <d-cite key="lasser2026paper10"></d-cite>, <span
+class="math inline">N_{\mathrm{ev}}(\tau_{\mathrm{meta}}) \geq
+N_{\mathrm{cascade}}</span> with probability <span
+class="math inline">\geq 1 - b_{\mathrm{clk}}</span> (lower bound for
+detection); the upper bound <span
+class="math inline">N_{\mathrm{ev}}(\tau_{\mathrm{meta}}) \leq
+\lambda_{\max}\cdot \tau_{\mathrm{meta}}</span> is supplied by
+(C7.RATE), introduced in §<a href="#sec:bounded_coev"
+data-reference-type="ref" data-reference="sec:bounded_coev">3</a>
+below.</p>
+<h2 id="trade-flow-weighting-and-herfindahl-index">Trade-flow weighting
+and Herfindahl index</h2>
+<p>Following <d-cite key="lasser2026paper8b"></d-cite>, the deployment monitors trade
+flows attributed to counterparties (S1-admissible participants <d-cite key="lasser2026paper8a"></d-cite>). The trade-flow
+weighting is a probability measure <span class="math inline">w</span>
+over counterparties (post-coalition closure under (COAL); see §<a
+href="#sec:concgap" data-reference-type="ref"
+data-reference="sec:concgap">4</a>), with the Herfindahl-Hirschman
+index <d-cite key="herfindahl1950concentration,hirschman1964paternity"></d-cite>
+<span class="math display">\begin{equation}
+  \mathrm{HHI}(w) := \sum_c w_c^2 = \|w\|_2^2.
+\end{equation}</span> <d-cite key="lasser2026paper10"></d-cite>’s invariant <span
+class="math inline">I_5</span> requires <span
+class="math inline">\mathrm{HHI}(w) &lt; H^*</span> for a
+deployment-class threshold <span class="math inline">H^* &lt;
+1</span>. The Part-A category-flow variant of <d-cite key="lasser2026paper8b"></d-cite> corresponds to this
+counterparty-attributed form under the natural attribution: each
+counterparty’s trade contribution determines its weight, and
+(REP)/(DISP)/(COAL) of §<a href="#sec:concgap" data-reference-type="ref"
+data-reference="sec:concgap">4</a> are formulated on this
+counterparty-weight representation.</p>
+<h2 id="capability-volume-and-lipschitz-transfer">Capability volume and
+Lipschitz transfer</h2>
+<p>The Lipschitz transfer of <d-cite key="lasser2026micro"></d-cite> is the bridge from proxy-truth
+divergence to Goodhart slack: for any alignment property <span
+class="math inline">g</span> on <span
+class="math inline">P^{\mathrm{act}}</span> with Lipschitz constant
+<span class="math inline">\mathrm{Lip}(g)</span>, <span
+class="math display">\begin{equation}
+|g(T) - g(P)| \;\leq\; \mathrm{Lip}(g) \cdot
+  \|P- T\|.
+\end{equation}</span> This is forward-only: no <span
+class="math inline">g</span>-level lower bound follows from a
+proxy-truth-norm lower bound without additional non-degeneracy structure
+on <span class="math inline">g</span>.</p>
+<h2 id="new-structural-quantities">New structural quantities</h2>
+<p>Three structural quantities beyond <d-cite key="lasser2026paper10"></d-cite>’s vocabulary:</p>
+<ul>
+<li><p><strong>Upper exposure-rate cap</strong> <span
+class="math inline">\lambda_{\max}</span> (C7.RATE), introduced in §<a
+href="#sec:bounded_coev" data-reference-type="ref"
+data-reference="sec:bounded_coev">3</a>.</p></li>
+<li><p><strong>Base population measure</strong> <span
+class="math inline">\mu</span> on counterparties, introduced in §<a
+href="#sec:concgap" data-reference-type="ref"
+data-reference="sec:concgap">4</a>.</p></li>
+<li><p><strong><span class="math inline">\chi^2</span>
+divergence</strong> <span class="math inline">\chi^2(w \| \mu)</span> as
+the natural concentration measure when the base measure is non-uniform;
+equals <span class="math inline">N \mathrm{HHI}(w) - 1</span> when <span
+class="math inline">\mu</span> is uniform on a finite set of <span
+class="math inline">N</span> counterparties.</p></li>
+</ul>
+<p>Audit procedures for each are in §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>.</p>
+<h1 id="sec:bounded_coev">Bounded co-evolution as a corollary</h1>
+<p>The bounded co-evolution assumption of <d-cite key="lasser2026paper10"></d-cite> (invoked as condition (C7) of the
+deployment-safety theorem) asserts that the per-channel coupling
+magnitude <span class="math inline">\bar{M}</span> is bounded uniformly
+by a constant depending on deployment-class parameters but independent
+of <span class="math inline">|P|</span>. This section derives the
+assertion from (C5.HOEFF), a new upper exposure-rate cap (C7.RATE), and
+the verification protocol’s channel-projection structure under
+(C5.MULT). Audit 4 of <d-cite key="lasser2026paper10"></d-cite> previously specified an empirical
+procedure for measuring <span class="math inline">\bar{M}</span>
+post-hoc; under the derivation below, the audit reduces to certifying
+the three structural inputs and computing <span
+class="math inline">\bar{M}</span> from primitives.</p>
+<h2 id="per-channel-coupling-magnitude-definition">Per-channel coupling
+magnitude (definition)</h2>
+<h3 id="j-supported-perturbations"><span
+class="math inline">j</span>-supported perturbations</h3>
+<p>A <em><span class="math inline">j</span>-supported signed
+measure</em> is a function <span class="math inline">\Delta: A \to
+\mathbb{R}</span> with <span class="math inline">\Delta(a) = 0</span>
+for <span class="math inline">a \notin A_j</span> and <span
+class="math inline">\sum_{a \in A_j} \Delta(a) = 0</span>. The set of
+admissible <span class="math inline">j</span>-perturbations <span
+class="math inline">\mathcal{D}_j</span> is the convex subset of <span
+class="math inline">j</span>-supported signed measures satisfying <span
+class="math inline">q_0 + \Delta \geq 0</span> pointwise (so that <span
+class="math inline">q_0 + \Delta</span> is a valid probability measure
+on <span class="math inline">A</span>).</p>
+<p>The ambient <em>linear</em> space of <span
+class="math inline">j</span>-supported zero-sum signed measures is <span
+class="math display">\begin{equation}
+H_j \;:=\; \{\Delta : A \to \mathbb{R} \mid \Delta(a) = 0
+  \text{ for } a \notin A_j, \;\; \textstyle\sum_a \Delta(a) =
+  0\}.
+\end{equation}</span> The functional <span class="math inline">\Delta
+\mapsto \Delta\mu_{j&#39;}[\Delta] := \sum_{a
+\in A_{j,j&#39;}} \Delta(a) \ell^{(j&#39;)}(a)</span> extends linearly
+from <span class="math inline">\mathcal{D}_j</span> to all of <span
+class="math inline">H_j</span>.</p>
+<h3 id="per-step-coupling-magnitude">Per-step coupling magnitude</h3>
+<div id="def:M-step" class="definition">
+<p><strong>Definition 1</strong> (Per-step coupling magnitude). <em>For
+<span class="math inline">j \neq j&#39;</span>, the <em>per-step
+pairwise coupling magnitude</em> of channel <span
+class="math inline">j</span> on channel <span
+class="math inline">j&#39;</span> is the operator norm of the linear
+functional <span class="math inline">\Delta \mapsto
+\Delta\mu_{j&#39;}[\Delta]</span> on the linear space <span
+class="math inline">H_j</span> under the <span
+class="math inline">\ell_1</span> norm: <span
+class="math display">\begin{equation}
+M_{j \to j&#39;}^{\mathrm{step}}(\mathcal{D})
+  \;:=\; \sup_{\Delta \in H_j,\; \Delta \neq 0}
+  \;\frac{\big| \Delta\mu_{j&#39;}[\Delta] \big|}{\|\Delta\|_1}.
+\end{equation}</span></em></p>
+<p><em>The <em>per-step deployment coupling magnitude</em> is <span
+class="math inline">\bar{M}^{\mathrm{step}}(\mathcal{D}) := \max_{j \neq
+j&#39;}
+M_{j \to j&#39;}^{\mathrm{step}}(\mathcal{D})</span>.</em></p>
+</div>
+<p>By inclusion <span class="math inline">\mathcal{D}_j \subseteq
+H_j</span>, the operator norm on <span class="math inline">H_j</span>
+upper-bounds the admissible-restricted supremum <span
+class="math inline">\sup_{\Delta \in \mathcal{D}_j \setminus \{0\}}
+|\Delta\mu_{j&#39;}[\Delta]|/\|\Delta\|_1</span>. We work with the <span
+class="math inline">H_j</span>-bound throughout; equality of the two
+suprema requires <span class="math inline">q_0</span> to have strictly
+positive mass on every <span class="math inline">a \in A_j</span> (so
+<span class="math inline">\mathcal{D}_j</span> contains a neighborhood
+of <span class="math inline">0</span> in <span
+class="math inline">H_j</span>), which we do not assume.</p>
+<h2 id="per-step-closed-form-bound">Per-step closed-form bound</h2>
+<div id="lem:per-step-companion" class="lemma">
+<p><strong>Lemma 1</strong> (Per-step coupling bound). <em>Under
+(C5.HOEFF) (per-step LLR clipped to <span
+class="math inline">[-B_{\mathrm{clip}}, B_{\mathrm{clip}}]</span>) and
+the zero-outside-engagement convention, for every <span
+class="math inline">j \neq j&#39;</span>: <span
+class="math display">\begin{equation}
+M_{j \to j&#39;}^{\mathrm{step}}(\mathcal{D}) \;\leq\;
+B_{\mathrm{clip}},
+\end{equation}</span> unconditionally. When channels are action-disjoint
+(<span class="math inline">A_{j, j&#39;} = \emptyset</span>), <span
+class="math inline">M_{j \to j&#39;}^{\mathrm{step}} =
+0</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> For any <span class="math inline">\Delta \in
+H_j</span> with <span class="math inline">\Delta \neq 0</span>: <span
+class="math display">\begin{align*}
+  \big| \Delta\mu_{j&#39;}[\Delta] \big|
+  &amp;= \big| \sum_{a \in A_{j, j&#39;}} \Delta(a) \ell^{(j&#39;)}(a)
+\big|
+  \leq \sum_{a \in A_{j, j&#39;}} |\Delta(a)| \cdot |\ell^{(j&#39;)}(a)|
+  \\ &amp;\leq B_{\mathrm{clip}}\sum_{a \in A_{j, j&#39;}} |\Delta(a)|
+  \leq B_{\mathrm{clip}}\cdot \|\Delta\|_1.
+\end{align*}</span> Dividing by <span class="math inline">\|\Delta\|_1
+\neq 0</span> and taking supremum over <span class="math inline">H_j
+\setminus \{0\}</span> gives .
+When <span class="math inline">A_{j, j&#39;} = \emptyset</span>, the sum
+is empty and <span class="math inline">\Delta\mu_{j&#39;}[\Delta] =
+0</span> for all <span class="math inline">\Delta \in H_j</span>, giving
+<span class="math inline">M_{j \to j&#39;}^{\mathrm{step}} =
+0</span>. </p>
+</div>
+<h2 id="cumulative-cascade-window-bound">Cumulative cascade-window
+bound</h2>
+<h3 id="pathwise-perturbation-class">Pathwise perturbation class</h3>
+<p>A <em>pathwise <span class="math inline">j</span>-perturbation over
+the cascade window</em> is a sequence <span
+class="math inline">\{\Delta_n\}_{n=1}^{N_{\mathrm{ev}}}</span> where
+each <span class="math inline">\Delta_n \in H_j</span>, applied at SPRT
+exposure step <span class="math inline">n</span>. Two budget conventions
+are operationally relevant:</p>
+<ul>
+<li><p><strong>Per-step budget:</strong> <span
+class="math inline">\sup_n \|\Delta_n\|_1 \leq 1</span>.</p></li>
+<li><p><strong>Total budget:</strong> <span class="math inline">\sum_n
+\|\Delta_n\|_1 \leq 1</span>.</p></li>
+</ul>
+<p>The cumulative cross-channel response is <span
+class="math display">\mu_{j&#39;}^{\mathrm{cum}}\big[\{\Delta_n\}\big]
+  \;:=\; \sum_{n=1}^{N_{\mathrm{ev}}(\tau_{\mathrm{meta}})}
+\Delta\mu_{j&#39;}[\Delta_n].</span></p>
+<h3 id="the-new-condition-upper-exposure-rate-cap-c7.rate">The new
+condition: upper exposure-rate cap (C7.RATE)</h3>
+<div id="ass:c7-rate" class="assumption">
+<p><strong>Assumption 1</strong> (Upper exposure-rate cap, (C7.RATE)).
+<em>There exists a deployment-class action rate cap <span
+class="math inline">\lambda_{\max}&gt; 0</span> independent of <span
+class="math inline">|P|</span>, such that the SPRT exposure event count
+satisfies <span class="math display">\begin{equation}
+N_{\mathrm{ev}}(\tau_{\mathrm{meta}}) \;\leq\; \lambda_{\max}\cdot
+\tau_{\mathrm{meta}}
+\end{equation}</span> deterministically (operator-enforced via rate
+limits or action bounds). This is distinct from (C11.CLK) of <d-cite key="lasser2026paper10"></d-cite> which gives a
+lower bound on <span
+class="math inline">N_{\mathrm{ev}}(\tau_{\mathrm{meta}})</span> for
+detection purposes; (C7.RATE) is an upper bound for coupling-control
+purposes.</em></p>
+<p><em>Operationally, <span class="math inline">\lambda_{\max}</span> is
+calibrated by the deployment’s rate limits, action bounds, and
+channel-coupling structure (specified in §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>).</em></p>
+</div>
+<h3 id="cumulative-bound">Cumulative bound</h3>
+<div id="lem:cumulative-companion" class="lemma">
+<p><strong>Lemma 2</strong> (Cumulative coupling bound). <em>Under
+(C5.HOEFF), the zero-outside-engagement convention, and
+(C7.RATE):</em></p>
+<p><em><em>(a) Pairwise</em> cumulative coupling, per-step budget <span
+class="math inline">\sup_n \|\Delta_n\|_1 \leq 1</span>: <span
+class="math display">\begin{equation}
+\sup_{\substack{\Delta_n \in H_j \;\forall n \\
+        \sup_n \|\Delta_n\|_1 \leq 1}}
+  \big| \mu_{j&#39;}^{\mathrm{cum}}\big[\{\Delta_n\}\big] \big|
+  \;\leq\; B_{\mathrm{clip}}\cdot \lambda_{\max}\cdot
+\tau_{\mathrm{meta}}.
+\end{equation}</span></em></p>
+<p><em><em>(b1) Aggregate-incoming</em> cumulative coupling under
+<strong>total per-step budget</strong> <span class="math inline">\sup_n
+\sum_j \|\Delta_n^{(j)}\|_1
+\leq 1</span>: <span class="math display">\begin{equation}
+\sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \sum_j \|\Delta_n^{(j)}\|_1 \leq 1}}
+  \big| \sum_{j \neq j&#39;}
+    \mu_{j&#39;}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; B_{\mathrm{clip}}\cdot \lambda_{\max}\cdot
+\tau_{\mathrm{meta}}.
+\end{equation}</span></em></p>
+<p><em><em>(b2) Aggregate-incoming</em> cumulative coupling under
+<strong>per-source per-step budget</strong> <span
+class="math inline">\sup_n
+\|\Delta_n^{(j)}\|_1 \leq 1</span> for every <span
+class="math inline">j</span>: <span
+class="math display">\begin{equation}
+\sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \|\Delta_n^{(j)}\|_1 \leq 1 \;\forall j}}
+  \big| \sum_{j \neq j&#39;}
+    \mu_{j&#39;}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; (K_{\mathrm{ch}}- 1) \cdot B_{\mathrm{clip}}\cdot
+\lambda_{\max}\cdot \tau_{\mathrm{meta}}.
+\end{equation}</span></em></p>
+<p><em>The right-hand sides are deployment-class constants intensive in
+<span class="math inline">|P|</span> over <span
+class="math inline">\mathcal{D}</span> (<span
+class="math inline">B_{\mathrm{clip}}</span> from (C5.HOEFF), <span
+class="math inline">\lambda_{\max}</span> from (C7.RATE), <span
+class="math inline">\tau_{\mathrm{meta}}</span> from <d-cite key="lasser2026phase"></d-cite>’s scaling, <span
+class="math inline">K_{\mathrm{ch}}</span> from (C5.MULT)).</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <em>Part (a).</em> By Lemma <a
+href="#lem:per-step-companion" data-reference-type="ref"
+data-reference="lem:per-step-companion">1</a>, <span
+class="math inline">|\Delta\mu_{j&#39;}[\Delta_n]| \leq
+B_{\mathrm{clip}}\cdot \|\Delta_n\|_1
+\leq B_{\mathrm{clip}}</span> for each <span
+class="math inline">n</span> when <span class="math inline">\sup_n
+\|\Delta_n\|_1 \leq 1</span>. Summing: <span class="math display">\big|
+\mu_{j&#39;}^{\mathrm{cum}} \big| \leq
+  \sum_{n=1}^{N_{\mathrm{ev}}(\tau_{\mathrm{meta}})}
+|\Delta\mu_{j&#39;}[\Delta_n]|
+  \leq N_{\mathrm{ev}}(\tau_{\mathrm{meta}}) \cdot B_{\mathrm{clip}}
+  \leq \lambda_{\max}\cdot \tau_{\mathrm{meta}}\cdot
+B_{\mathrm{clip}},</span> the last inequality by (C7.RATE).</p>
+<p><em>Part (b1) (total per-step budget).</em> At each step <span
+class="math inline">n</span>, <span class="math inline">\sum_j
+\|\Delta_n^{(j)}\|_1 \leq 1</span>. Each per-source contribution is
+bounded by <span class="math inline">B_{\mathrm{clip}}\cdot
+\|\Delta_n^{(j)}\|_1</span> via Lemma <a href="#lem:per-step-companion"
+data-reference-type="ref" data-reference="lem:per-step-companion">1</a>.
+Summing over <span class="math inline">j \neq j&#39;</span> at each
+step: <span class="math display">\big| \sum_{j \neq j&#39;}
+\Delta\mu_{j&#39;}[\Delta_n^{(j)}] \big|
+  \leq B_{\mathrm{clip}}\cdot \sum_{j \neq j&#39;} \|\Delta_n^{(j)}\|_1
+  \leq B_{\mathrm{clip}}.</span> Summing over <span
+class="math inline">n</span> and applying (C7.RATE) gives .</p>
+<p><em>Part (b2) (per-source per-step budget).</em> Now each source
+<span class="math inline">j</span> has <span
+class="math inline">\|\Delta_n^{(j)}\|_1 \leq 1</span> independently.
+Per-source contributions remain bounded by <span
+class="math inline">B_{\mathrm{clip}}</span> each; summing over <span
+class="math inline">K_{\mathrm{ch}}- 1</span> sources: <span
+class="math display">\big| \sum_{j \neq j&#39;}
+\Delta\mu_{j&#39;}[\Delta_n^{(j)}] \big|
+  \leq (K_{\mathrm{ch}}- 1) \cdot B_{\mathrm{clip}}.</span> Summing over
+<span class="math inline">n</span> and applying (C7.RATE) gives .
+Which budget convention is operationally relevant depends on the audit
+specification of admissible adversarial classes; we state both for
+completeness. </p>
+</div>
+<h2
+id="bounded-co-evolution-as-a-corollary-of-primitive-parameters">Bounded
+co-evolution as a corollary of primitive parameters</h2>
+<div id="thm:c7-corollary" class="theorem">
+<p><strong>Theorem 1</strong> (Bounded co-evolution corollary).
+<em>Under (C5.HOEFF) per-step LLR clipping, (C5.MULT) channel
+multiplicity bound, (C7.RATE) upper exposure-rate cap, and the <span
+class="math inline">\tau_{\mathrm{meta}}</span> scaling of <d-cite key="lasser2026phase"></d-cite>, the deployment’s
+cumulative coupling magnitude <span
+class="math inline">\bar{M}^{\mathrm{cum}}(\mathcal{D})</span> over the
+cascade window <span class="math inline">\tau_{\mathrm{meta}}</span>
+satisfies <span class="math display">\begin{equation}
+\bar{M}^{\mathrm{cum}}(\mathcal{D}) \;\leq\; C \cdot B_{\mathrm{clip}}
+  \cdot \lambda_{\max}\cdot \tau_{\mathrm{meta}},
+\end{equation}</span> where <span class="math inline">C \in \{1,
+K_{\mathrm{ch}}- 1\}</span> depending on the budget convention
+(pairwise, total, or per-source). All four factors on the RHS are
+deployment-class constants intensive in <span
+class="math inline">|P|</span>.</em></p>
+<p><em>In particular: <d-cite key="lasser2026paper10"></d-cite>’s bounded-co-evolution claim that
+<span class="math inline">\bar{M}</span> is bounded by a <span
+class="math inline">|P|</span>-independent constant follows directly
+from , with the
+constant given explicitly in terms of primitive deployment
+parameters.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Direct application of Lemma <a
+href="#lem:cumulative-companion" data-reference-type="ref"
+data-reference="lem:cumulative-companion">2</a>. Intensivity of each RHS
+factor: <span class="math inline">B_{\mathrm{clip}}</span> from
+(C5.HOEFF) is a deployment-class constant; <span
+class="math inline">\lambda_{\max}</span> from (C7.RATE) is operator-
+enforced and deployment-class; <span
+class="math inline">\tau_{\mathrm{meta}}</span> from <d-cite key="lasser2026phase"></d-cite> depends on
+deployment-class redundancy and rate parameters but not on <span
+class="math inline">|P|</span>; <span
+class="math inline">K_{\mathrm{ch}}</span> from (C5.MULT) is fixed
+before deployment. </p>
+</div>
+<h2
+id="optional-sharper-bound-under-coalition-overlap-stability">Optional
+sharper bound under coalition-overlap stability</h2>
+<p>The basic Theorem <a href="#thm:c7-corollary"
+data-reference-type="ref" data-reference="thm:c7-corollary">1</a> bound
+uses only <span class="math inline">\|\Delta\|_1 \leq 1</span> to get
+<span class="math inline">|\Delta\mu_{j&#39;}| \leq
+B_{\mathrm{clip}}</span>. A sharper bound is available when the
+deployment imposes an additional structural condition on the channel
+partition’s shared-action mass:</p>
+<div id="def:c5-ovl" class="definition">
+<p><strong>Definition 2</strong> (Optional overlap-mass stability,
+(C5.OVL)). <em>The channel partition’s shared-action mass is bounded by
+a deployment-class constant <span class="math inline">Q_{\max} &lt;
+1</span>, in the sense that for every <span class="math inline">j \neq
+j&#39;</span>, <span class="math display">\sup_{\Delta \in H_j,\; \Delta
+\neq 0}
+  \frac{\sum_{a \in A_{j, j&#39;}} |\Delta(a)|}{\|\Delta\|_1}
+  \;\leq\; Q_{\max}.</span></em></p>
+</div>
+<p>When (C5.OVL) is adopted, the per-step bound in Lemma <a
+href="#lem:per-step-companion" data-reference-type="ref"
+data-reference="lem:per-step-companion">1</a> sharpens to <span
+class="math inline">M_{j \to j&#39;}^{\mathrm{step}} \leq Q_{\max} \cdot
+B_{\mathrm{clip}}</span>, and the cumulative bound in Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> sharpens to <span
+class="math inline">\bar{M}^{\mathrm{cum}} \leq C \cdot Q_{\max} \cdot
+B_{\mathrm{clip}}\cdot
+\lambda_{\max}\cdot \tau_{\mathrm{meta}}</span>. The intensivity claim
+does not require (C5.OVL); only strict-smallness (<span
+class="math inline">\bar{M} \to 0</span> as <span
+class="math inline">Q_{\max} \to
+0</span>, i.e., as channels become action-disjoint) requires it.</p>
+<h2 id="lemma-1-intensivity-step">Lemma 1 intensivity step</h2>
+<p><d-cite key="lasser2026paper10"></d-cite>
+(intensivity step in the Goodhart-slack composition) requires <span
+class="math inline">(\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}})_+
+\leq K_{\mathrm{coev}} \cdot \bar{M}</span> to be bounded by a <span
+class="math inline">|P|</span>-independent constant, where <span
+class="math inline">K_{\mathrm{coev}}</span> is the structural
+co-evolution constant from <d-cite key="lasser2026micro"></d-cite>’s composition proposition.
+Theorem <a href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> provides this directly: <span
+class="math display">\begin{equation}
+  (\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}})_+ \;\leq\;
+K_{\mathrm{coev}} \cdot
+  \bar{M}^{\mathrm{cum}} \;\leq\; K_{\mathrm{coev}} \cdot C \cdot
+  B_{\mathrm{clip}}\cdot \lambda_{\max}\cdot \tau_{\mathrm{meta}},
+\end{equation}</span> all factors deployment-class constants. The
+Goodhart-slack intensivity property of <d-cite key="lasser2026paper10"></d-cite>’s deployment claim follows.</p>
+<h2 id="failure-mode-decomposition">Failure-mode decomposition</h2>
+<p><d-cite key="lasser2026paper10"></d-cite>’s
+sensitivity analysis characterized bounded co-evolution failure as a
+hard-failure mode with no graceful-degradation pathway. Under Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>, the failure mode factors
+through the failure of (C7.RATE), (C5.HOEFF), or the channel-projection
+structure — each of which has its own audit-detectable failure signal.
+The hard-failure characterization is therefore replaced by a structural
+diagnosis: <em>which</em> primitive condition has failed, and how the
+deployment can restore it.</p>
+<p>The remainder of <d-cite key="lasser2026paper10"></d-cite>’s sensitivity analysis simplifies
+correspondingly: the bounded-co-evolution paragraph becomes a forward
+reference to this section, with the failure-mode taxonomy decomposed
+across (C5.HOEFF), (C7.RATE), and channel-projection structure.</p>
+<h1 id="sec:concgap">Concentration-Gap selection theorem (scoped)</h1>
+<p>The Concentration-Gap conjecture of <d-cite key="lasser2026micro"></d-cite> states informally: optimization
+pressure on the proxy correlates with proxy-truth gap exploitation. The
+conjecture is deferred in <d-cite key="lasser2026micro"></d-cite> as open work; the present section
+proves a scoped version under three operationally auditable structural
+conditions ((REP), (DISP), (COAL)) plus a Lipschitz embedding
+compatibility precondition (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), at which point the
+proxy-truth Goodhart slack is bounded above (and below at the
+proxy-truth-norm level) by an explicit <span
+class="math inline">\chi^2</span>-divergence quantity controlling
+Herfindahl-index trade-flow concentration.</p>
+<p>The proof proceeds in three layers: an algebraic weighted-selection
+kernel (§<a href="#sec:concgap-algebraic" data-reference-type="ref"
+data-reference="sec:concgap-algebraic">4.1</a>), a
+counterparty-selection interpretation (§<a
+href="#sec:concgap-counterparty" data-reference-type="ref"
+data-reference="sec:concgap-counterparty">4.2</a>), and a transfer to
+Goodhart slack via the Lipschitz machinery of <d-cite key="lasser2026micro"></d-cite> (§<a href="#sec:concgap-transfer"
+data-reference-type="ref"
+data-reference="sec:concgap-transfer">4.3</a>). The universal model-free
+Concentration-Gap conjecture remains open; §<a href="#sec:discussion"
+data-reference-type="ref" data-reference="sec:discussion">7</a> states
+the limits of the scoped discharge.</p>
+<h2 id="sec:concgap-algebraic">The algebraic weighted-selection
+kernel</h2>
+<h3 id="setup">Setup</h3>
+<p>Let <span class="math inline">\mathcal{V}</span> be a real Hilbert
+space with norm <span class="math inline">\|\cdot\|</span> (in
+applications: capability-poset measures, or its tangent space at the
+welfare-relevant truth). Let <span
+class="math inline">\mathcal{C}</span> be a measurable space (in
+applications: the set of counterparties, possibly after coalition
+partitioning per (COAL)). Let <span class="math inline">\mu</span> be a
+fixed <em>base population measure</em> on <span
+class="math inline">\mathcal{C}</span> — the auditor-defined
+fair-or-natural distribution over admissible counterparties.</p>
+<p>Let <span class="math inline">\Delta: \mathcal{C} \to
+\mathcal{V}</span> be a deterministic <em>deviation field</em>, <span
+class="math inline">c \mapsto \Delta_c</span>, <span
+class="math inline">\mu</span>-integrable. A <em>weighting</em> <span
+class="math inline">w</span> is a probability measure on <span
+class="math inline">\mathcal{C}</span> absolutely continuous with
+respect to <span class="math inline">\mu</span>, with Radon-Nikodym
+derivative <span class="math inline">r := dw/d\mu</span> satisfying
+<span class="math inline">\mathbb{E}_\mu[r] = 1</span>.</p>
+<p>The <em>population mean</em> is <span class="math inline">\bar\Delta
+:= \int_\mathcal{C}
+\Delta_c \,d\mu(c) = \mathbb{E}_\mu[\Delta]</span>. The <em>weighted
+aggregate distortion</em> is <span class="math display">\begin{equation}
+\Delta(w) \;:=\; \int_\mathcal{C} \Delta_c \,dw(c)
+  \;=\; \mathbb{E}_w[\Delta] \;=\; \mathbb{E}_\mu[r \cdot \Delta].
+\end{equation}</span></p>
+<h3 id="two-scalar-concentration-measures-hhi-and-chi2-divergence">Two
+scalar concentration measures: HHI and <span
+class="math inline">\chi^2</span> divergence</h3>
+<div id="def:chisq-companion" class="definition">
+<p><strong>Definition 3</strong> (<span
+class="math inline">\chi^2</span> divergence). <em>The <em><span
+class="math inline">\chi^2</span> divergence</em> <d-cite key="kullback1951information"></d-cite> of <span
+class="math inline">w</span> from <span class="math inline">\mu</span>
+is <span class="math display">\begin{equation}
+\chi^2(w \,\|\, \mu) \;:=\; \mathbb{E}_\mu[(r - 1)^2]
+  \;=\; \mathrm{Var}_\mu(r) \;\geq\; 0.
+\end{equation}</span> <span class="math inline">\chi^2(w \|\mu) =
+0</span> iff <span class="math inline">w = \mu</span>.</em></p>
+</div>
+<div id="def:hhi-companion" class="definition">
+<p><strong>Definition 4</strong> (HHI and its relation to <span
+class="math inline">\chi^2</span>). <em>For discrete <span
+class="math inline">\mathcal{C}</span>, the Herfindahl-Hirschman index
+of <span class="math inline">w</span> is <span
+class="math inline">\mathrm{HHI}(w) := \sum_c w_c^2 = \|w\|_2^2</span>.
+When <span class="math inline">\mu</span> is the uniform measure on a
+finite <span class="math inline">\mathcal{C}</span> of size <span
+class="math inline">N</span>, the two divergences are related by <span
+class="math display">\begin{equation}
+\chi^2(w \,\|\, \mu) \;=\; N \cdot \mathrm{HHI}(w) - 1.
+\end{equation}</span> For non-uniform <span
+class="math inline">\mu</span>, <span class="math inline">\chi^2(w
+\|\mu)</span> generalizes <span
+class="math inline">\mathrm{HHI}(w)</span> as the appropriate
+concentration measure when the population is not uniformly
+weighted.</em></p>
+</div>
+<h3 id="structural-conditions">Structural conditions</h3>
+<div id="def:rep-companion" class="definition">
+<p><strong>Definition 5</strong> (Representativeness, (REP)). <em>The
+deviation field is <em><span
+class="math inline">\rho_\mathrm{rep}</span>-representative</em>
+relative to base measure <span class="math inline">\mu</span> if <span
+class="math inline">\|\bar\Delta\| \leq
+\rho_\mathrm{rep}</span>.</em></p>
+</div>
+<div id="def:disp-companion" class="definition">
+<p><strong>Definition 6</strong> (Bounded dispersion, (DISP)). <em>The
+deviation field has <em><span class="math inline">\sigma</span>-bounded
+dispersion</em> relative to base measure <span
+class="math inline">\mu</span> if <span
+class="math inline">\int_\mathcal{C} \|\Delta_c - \bar\Delta\|^2
+\,d\mu(c) \leq
+\sigma^2</span>.</em></p>
+</div>
+<div id="def:coal-companion" class="definition">
+<p><strong>Definition 7</strong> (Coalition closure, (COAL)). <em>The
+counterparty space <span class="math inline">\mathcal{C}</span> is
+<em>coalition-closed</em> under audit if (i) all counterparties whose
+actions or trade flows are correlated above a deployment-class threshold
+are partitioned into a single equivalence class (a coalition), and <span
+class="math inline">\Delta</span> is defined on coalitions rather than
+individual counterparties; (ii) the post-partition counterparty
+cardinality <span class="math inline">N</span> is a deployment-class
+constant (counterparty onboarding is governed by a deployment-class
+policy that does not let <span class="math inline">N</span> scale with
+<span class="math inline">|P|</span>); and (iii) latent (undetected)
+coalition risk is bounded by an explicit residual term <span
+class="math inline">\eta_\mathrm{latent}</span> that the deployment
+claim absorbs (see §<a href="#sec:concgap-transfer"
+data-reference-type="ref" data-reference="sec:concgap-transfer">4.3</a>
+below). The audit specifies the partition; the algebraic theorem
+operates on the post-partition <span
+class="math inline">\mathcal{C}</span>.</em></p>
+<p><em>Clause (ii) is what makes the HHI-to-<span
+class="math inline">\chi^2</span> translation intensive in <span
+class="math inline">|P|</span>: <span class="math inline">\chi^2(w
+\,\|\, \mu) = N \mathrm{HHI}(w) - 1</span> for uniform <span
+class="math inline">\mu</span>, so an HHI threshold yields a <span
+class="math inline">|P|</span>-independent <span
+class="math inline">\chi^2</span> ceiling only when <span
+class="math inline">N</span> is itself <span
+class="math inline">|P|</span>-independent. Deployments that prefer a
+structural commitment directly on <span class="math inline">\chi^2(w
+\,\|\, \mu)</span> rather than on <span
+class="math inline">\mathrm{HHI}</span> may substitute (ii) with the
+alternative sufficient condition <span class="math inline">\chi^2(w
+\,\|\, \mu)
+\leq \Xi</span> for a deployment-class constant <span
+class="math inline">\Xi</span> (the two are not logically equivalent —
+the <span class="math inline">\chi^2</span> bound is the weaker
+hypothesis the proof actually uses — but either certifies the
+intensivity that the theorem requires).</em></p>
+</div>
+<h3 id="forward-direction-algebraic-kernel">Forward direction: algebraic
+kernel</h3>
+<div id="lem:forward-companion" class="lemma">
+<p><strong>Lemma 3</strong> (Algebraic weighted-selection, forward
+direction). <em>Let <span class="math inline">\Delta</span> be a
+deviation field on <span class="math inline">(\mathcal{C}, \mu)</span>
+in a Hilbert space <span class="math inline">\mathcal{V}</span>,
+satisfying (REP) and (DISP). Let <span class="math inline">w</span> be a
+weighting on <span class="math inline">\mathcal{C}</span> with <span
+class="math inline">\chi^2(w \|\mu) &lt;
+\infty</span>. Then <span class="math display">\begin{equation}
+\|\Delta(w)\| \;\leq\; \rho_\mathrm{rep} \;+\;
+  \sigma \cdot \sqrt{\chi^2(w \,\|\, \mu)}.
+\end{equation}</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Decompose <span class="math inline">\Delta(w)</span>
+around the population mean: <span class="math display">\Delta(w) -
+\bar\Delta \;=\; \mathbb{E}_\mu[r \cdot \Delta]
+  - \mathbb{E}_\mu[\Delta] \;=\; \mathbb{E}_\mu[(r - 1) \cdot \Delta]
+  \;=\; \mathbb{E}_\mu[(r - 1)(\Delta - \bar\Delta)],</span> where the
+last equality uses <span class="math inline">\mathbb{E}_\mu[r - 1] =
+0</span>.</p>
+<p>We bound the Hilbert-valued mean via duality. For any unit vector
+<span class="math inline">u \in \mathcal{V}</span> with <span
+class="math inline">\|u\| = 1</span>: <span
+class="math display">\big\langle u, \,\mathbb{E}_\mu[(r - 1)(\Delta -
+\bar\Delta)] \big\rangle
+  \;=\; \mathbb{E}_\mu\big[(r - 1) \cdot \langle u, \Delta -
+\bar\Delta\rangle\big].</span> By Cauchy-Schwarz on <span
+class="math inline">L^2(\mu)</span> applied to the scalar product of
+<span class="math inline">(r - 1)</span> and <span
+class="math inline">\langle u, \Delta - \bar\Delta\rangle</span>: <span
+class="math display">\big|\mathbb{E}_\mu[(r-1) \langle u, \Delta -
+\bar\Delta\rangle]\big|
+  \;\leq\; \sqrt{\mathbb{E}_\mu[(r-1)^2]} \cdot
+  \sqrt{\mathbb{E}_\mu[\langle u, \Delta - \bar\Delta\rangle^2]}.</span>
+Since <span class="math inline">|\langle u, \Delta - \bar\Delta\rangle|
+\leq \|\Delta -
+\bar\Delta\|</span> for <span class="math inline">\|u\| = 1</span>, the
+second factor is bounded by <span
+class="math inline">\sqrt{\mathbb{E}_\mu[\|\Delta - \bar\Delta\|^2]}
+\leq \sigma</span>. Taking the supremum over unit <span
+class="math inline">u</span> recovers the Hilbert norm: <span
+class="math display">\|\mathbb{E}_\mu[(r-1)(\Delta - \bar\Delta)]\|
+  \;=\; \sup_{\|u\|=1} \big\langle u, \mathbb{E}_\mu[(r-1)(\Delta -
+\bar\Delta)]\big\rangle
+  \;\leq\; \sqrt{\chi^2(w \|\mu)} \cdot \sigma.</span> Therefore <span
+class="math inline">\|\Delta(w) - \bar\Delta\| \leq \sigma
+\sqrt{\chi^2(w
+\|\mu)}</span>. Adding the representativeness bound: <span
+class="math display">\|\Delta(w)\| \;\leq\; \|\bar\Delta\| + \|\Delta(w)
+- \bar\Delta\|
+  \;\leq\; \rho_\mathrm{rep} + \sigma \sqrt{\chi^2(w
+\|\mu)}.</span> </p>
+</div>
+<div id="rem:cross-corr-companion" class="remark">
+<p><strong>Remark 1</strong> (On cross-counterparty correlations).
+<em>The Cauchy-Schwarz argument above does not require any probabilistic
+decorrelation between counterparty deviations. The only structural
+inputs are (REP) and (DISP), both of which are properties of the
+deterministic deviation field <span class="math inline">\Delta</span>
+(not of its realization randomness). Cross-counterparty correlations are
+absorbed automatically into the <span
+class="math inline">\sigma^2</span> population-variance term. The case
+of identical deviations across all counterparties (highly correlated, no
+diversification) corresponds to <span class="math inline">\sigma^2 =
+0</span>, in which case the bound is trivially <span
+class="math inline">\rho_\mathrm{rep}</span>.</em></p>
+</div>
+<h3 id="reverse-direction-norm-level">Reverse direction
+(norm-level)</h3>
+<div id="lem:reverse-companion" class="lemma">
+<p><strong>Lemma 4</strong> (Algebraic weighted-selection, reverse
+direction). <em><em>Scope.</em> Throughout this lemma, <span
+class="math inline">\mathcal{C}</span> is a finite or countable atomic
+measurable space (the natural setting after coalition closure (COAL)
+partitions counterparties into discrete equivalence classes); <span
+class="math inline">w = (w_c)_{c \in \mathcal{C}}</span> is the
+corresponding atomic weighting.</em></p>
+<p><em>Let <span class="math inline">\Delta</span> be a deviation field
+on <span class="math inline">(\mathcal{C}, \mu)</span>.
+Suppose:</em></p>
+<ul>
+<li><p><em><strong>Concentration.</strong> <span
+class="math inline">\mathrm{HHI}(w) \geq H^*</span>, hence <span
+class="math inline">\max_c w_c \geq H^*</span> (since <span
+class="math inline">\sum_c w_c^2 \leq \max_c w_c</span>). Let <span
+class="math inline">d \in \arg\max_c w_c</span> be the dominant
+counterparty, with <span class="math inline">w_d \geq
+H^*</span>.</em></p></li>
+<li><p><em><strong>Dominant separation.</strong> <span
+class="math inline">\|\Delta_d\| \geq \delta</span>.</em></p></li>
+<li><p><em><strong>Directional cancellation.</strong> Let <span
+class="math inline">u_d :=
+  \Delta_d / \|\Delta_d\|</span> (unit direction). The remainder
+cancellation in this direction is bounded: <span
+class="math inline">\langle u_d, \,\sum_{c \neq d} w_c \Delta_c\rangle
+\geq -\beta</span>.</em></p></li>
+</ul>
+<p><em>Then <span class="math display">\begin{equation}
+\|\Delta(w)\| \;\geq\; H^* \delta - \beta.
+\end{equation}</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Project <span class="math inline">\Delta(w)</span>
+onto <span class="math inline">u_d</span>: <span
+class="math display">\begin{align*}
+  \langle u_d, \Delta(w)\rangle
+  &amp;= w_d \langle u_d, \Delta_d\rangle + \langle u_d,
+    \sum_{c \neq d} w_c \Delta_c\rangle \\
+  &amp;= w_d \|\Delta_d\| + \langle u_d,
+    \sum_{c \neq d} w_c \Delta_c\rangle \\
+  &amp;\geq H^* \delta - \beta
+\end{align*}</span> by concentration (<span class="math inline">w_d \geq
+H^*</span>), separation (<span class="math inline">\|\Delta_d\|
+\geq \delta</span>), and directional cancellation. Then <span
+class="math inline">\|\Delta(w)\| \geq |\langle u_d, \Delta(w)\rangle|
+\geq H^*
+\delta - \beta</span>. </p>
+</div>
+<h2 id="sec:concgap-counterparty">Counterparty-selection
+interpretation</h2>
+<p>In the GFM trade-flow setting:</p>
+<ul>
+<li><p><span class="math inline">\mathcal{C}</span>: the set of
+counterparties (S1-admissible participants under <d-cite key="lasser2026paper8a"></d-cite>), <em>after coalition
+closure</em> per (COAL).</p></li>
+<li><p><span class="math inline">\mu</span>: the auditor-defined
+fair-or-natural distribution over admissible counterparties.</p></li>
+<li><p><span class="math inline">\mathcal{V}</span>: Hilbert space of
+utility functionals on the capability poset (or its tangent space at the
+welfare-relevant truth <span class="math inline">W</span>).</p></li>
+<li><p>Embedding <span class="math inline">\phi:
+\mathcal{V}_\mathrm{utility} \to
+  \mathcal{V}</span>: an affine isometric embedding on the active
+subspace <span class="math inline">P^\mathrm{act}</span>. The deployment
+specifies <span class="math inline">\phi</span> as part of the audit
+setup.</p></li>
+<li><p><span class="math inline">\Delta_c := \phi(U_c) - \phi(W)</span>:
+counterparty <span class="math inline">c</span>’s utility deviation from
+the welfare-relevant truth in the embedded representation.</p></li>
+<li><p><span class="math inline">w_c</span>: counterparty <span
+class="math inline">c</span>’s trade-flow weight (paper 10’s invariant
+<span class="math inline">I_5</span> measures <span
+class="math inline">\mathrm{HHI}(w)</span> on coalition-closed
+weights).</p></li>
+</ul>
+<p>The aggregate distortion <span class="math inline">\Delta(w) = \sum_c
+w_c \phi(U_c) -
+\phi(W)</span> is the <em>selection-induced proxy-truth deviation</em>:
+how the weighted-trade-flow proxy diverges from the welfare- relevant
+truth in the embedded representation.</p>
+<h2 id="sec:concgap-transfer">Route-C transfer: from selection
+distortion to Goodhart slack</h2>
+<div id="ass:embedding-companion" class="assumption">
+<p><strong>Assumption 2</strong> (Embedding compatibility). <em>The
+embedding <span class="math inline">\phi: \mathcal{V}_\mathrm{utility}
+\to \mathcal{V}</span> is an <em>affine isometry</em> on the
+operationally active subspace <span
+class="math inline">P^\mathrm{act}</span>: <span
+class="math inline">\|\phi(x) - \phi(y)\| = \|x -
+y\|_{\mathcal{V}_\mathrm{utility}}</span> for <span
+class="math inline">x, y \in P^\mathrm{act}</span>, and is linear up to
+a fixed translation.</em></p>
+<p><em>The proxy-truth difference admits the decomposition <span
+class="math display">\begin{equation}
+\phi(P) - \phi(T) \;=\; \Delta_\mathrm{audit}(w)
+  \;+\; e_\mathrm{latent},
+\end{equation}</span> where <span
+class="math inline">\Delta_\mathrm{audit}(w)</span> is the
+audit-observable selection distortion (the <span
+class="math inline">\Delta(w)</span> of Lemma <a
+href="#lem:forward-companion" data-reference-type="ref"
+data-reference="lem:forward-companion">3</a> computed on
+coalition-closed weights) and <span
+class="math inline">e_\mathrm{latent} \in \mathcal{V}</span> is the
+latent-coalition residual with <span
+class="math inline">\|e_\mathrm{latent}\| \leq
+\eta_\mathrm{latent}</span>.</em></p>
+<p><em>If <span class="math inline">\phi</span> is only bi-Lipschitz
+(not isometric), the same argument applies with bounds multiplied by the
+bi-Lipschitz constants; isometric is the cleanest form.</em></p>
+</div>
+<div id="thm:concgap-scoped" class="theorem">
+<p><strong>Theorem 2</strong> (Concentration-Gap Selection Theorem,
+scoped). <em>Under (REP), (DISP), (COAL), and Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>: <span
+class="math display">\begin{equation}
+|g(T) - g(P)| \;\leq\; \mathrm{Lip}(g) \cdot
+  \big(\rho_\mathrm{rep} + \sigma \sqrt{\chi^2(w \|\mu)} +
+  \eta_\mathrm{latent}\big).
+\end{equation}</span></em></p>
+<p><em>In particular, when <span class="math inline">\mu</span> is
+uniform on <span class="math inline">N</span> counterparties with <span
+class="math inline">N</span> a deployment-class constant (clause (ii) of
+(COAL)) and <span class="math inline">\mathrm{HHI}(w) &lt; H^*</span>
+(<d-cite key="lasser2026paper10"></d-cite> in
+force): <span class="math inline">\chi^2(w \|\mu) \leq N H^* - 1</span>,
+giving Goodhart slack bounded by <span
+class="math inline">\mathrm{Lip}(g) \cdot (\rho_\mathrm{rep} + \sigma
+\sqrt{N H^*
+- 1} + \eta_\mathrm{latent})</span>, intensive in <span
+class="math inline">|P|</span>.</em></p>
+<p><em>Deployments that prefer a <span
+class="math inline">\chi^2</span>-direct commitment may replace (COAL)’s
+clause (ii) with the alternative sufficient condition <span
+class="math inline">\chi^2(w \,\|\, \mu) \leq \Xi</span> for
+deployment-class <span class="math inline">\Xi</span> (the <span
+class="math inline">\chi^2</span> bound is the weaker hypothesis the
+proof actually uses); the <span class="math inline">\mathrm{HHI}</span>
+form is the operational surrogate that paper 10’s <span
+class="math inline">I_5</span> already monitors.</em></p>
+<p><em><strong>Reverse direction (norm-level only).</strong> Under
+Lemma <a href="#lem:reverse-companion" data-reference-type="ref"
+data-reference="lem:reverse-companion">4</a>’s concentration +
+separation + directional-cancellation conditions, and the
+latent-coalition residual bound from Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>: <span
+class="math display">\begin{equation}
+  \|P- T\| \;\geq\; H^* \delta - \beta -
+  \eta_{\mathrm{latent}},
+\end{equation}</span> non-trivial when <span class="math inline">H^*
+\delta &gt; \beta + \eta_{\mathrm{latent}}</span>. A <span
+class="math inline">g</span>-level lower bound on <span
+class="math inline">|g(T) - g(P)|</span> does <em>not</em> follow from
+
+alone; it requires additional inverse-Lipschitz / non-degeneracy
+structure on <span class="math inline">g</span> that this theorem does
+not assume.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Forward direction: by Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>, <span
+class="math inline">\|\phi(P) - \phi(T)\| \leq
+\|\Delta_\mathrm{audit}(w)\|
++ \|e_\mathrm{latent}\|</span>. By Lemma <a
+href="#lem:forward-companion" data-reference-type="ref"
+data-reference="lem:forward-companion">3</a>, <span
+class="math inline">\|\Delta_\mathrm{audit}(w)\|
+\leq \rho_\mathrm{rep} + \sigma \sqrt{\chi^2(w \|\mu)}</span>. Since
+<span class="math inline">\phi</span> is isometric, <span
+class="math inline">\|P- T\|_{\mathcal{V}_\mathrm{utility}}
+= \|\phi(P) - \phi(T)\|</span>. Apply :
+<span class="math inline">|g(T) - g(P)| \leq \mathrm{Lip}(g) \cdot \|P-
+T\|</span>, giving .</p>
+<p>Reverse direction (norm-level): by Lemma <a
+href="#lem:reverse-companion" data-reference-type="ref"
+data-reference="lem:reverse-companion">4</a>, <span
+class="math inline">\|\Delta_\mathrm{audit}(w)\| \geq H^* \delta -
+\beta</span>. By isometry of <span class="math inline">\phi</span>,
+<span class="math inline">\|\phi(P) - \phi(T) -
+e_\mathrm{latent}\| \geq H^* \delta - \beta</span>. By triangle
+inequality, <span class="math inline">\|P- T\| \geq H^* \delta - \beta -
+\eta_\mathrm{latent}</span> (when this is positive). The <span
+class="math inline">g</span>-level lower bound does not follow without
+inverse-Lipschitz structure on <span class="math inline">g</span>. </p>
+</div>
+<h2 id="scoped-concentration-gap-discharge">Scoped Concentration-Gap
+discharge</h2>
+<h4 id="the-concentration-gap-conjecture-scoped-form.">The
+Concentration-Gap conjecture, scoped form.</h4>
+<p>Under (REP) + (DISP) + (COAL) and Lipschitz embedding compatibility
+(Assumption <a href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> establishes the conjecture’s
+bidirectional correlation content at the proxy-truth level: low HHI
+bounds the slack above; high HHI plus separation bounds it below at the
+norm level. The universal model-free conjecture remains open.</p>
+<h4 id="replaces-the-hhi-surrogate-adequacy-assumption.">Replaces the
+HHI surrogate-adequacy assumption.</h4>
+<p>The HHI surrogate-adequacy claim (<span
+class="math inline">\mathrm{HHI}&lt; H^* \Rightarrow</span> deployment
+outside the optimization-pressure regime), previously asserted as a
+single empirical-adequacy assumption of the deployment-safety paper and
+now collected as <d-cite key="lasser2026paper10"></d-cite>, is replaced by the conjunction
+(REP) + (DISP) + (COAL), embedding compatibility (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), and the HHI threshold
+itself. The previous monolithic claim becomes concrete checkable
+structural conditions, each with operational audit hooks specified in
+§<a href="#sec:audits" data-reference-type="ref"
+data-reference="sec:audits">6</a>.</p>
+<h4 id="layer-1-binding-via-i_5.">Layer 1 binding via <span
+class="math inline">I_5</span>.</h4>
+<p>The deployment claim of <d-cite key="lasser2026paper10"></d-cite> no longer contains the
+surrogate-adequacy assumption as an unproved empirical claim. Theorem 1
+Layer 1 binding via invariant <span class="math inline">I_5</span>
+follows from Theorem <a href="#thm:concgap-scoped"
+data-reference-type="ref" data-reference="thm:concgap-scoped">2</a>’s
+upper bound under (REP) + (DISP) + (COAL) and embedding compatibility,
+with the structural conditions auditable per §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>.</p>
+<h4
+id="failure-mode-decomposition-under-rep-disp-coal-and-embedding-compatibility.">Failure-mode
+decomposition under (REP), (DISP), (COAL), and embedding
+compatibility.</h4>
+<p>The previous monolithic failure mode decomposes into failure of
+(REP), (DISP), (COAL), or embedding compatibility — each of which has
+specific audit-detectable signals. Concentration-Gap-conjecture failure
+factors through whichever structural condition the deployment cannot
+certify; <d-cite key="lasser2026paper10"></d-cite>’s
+sensitivity-analysis taxonomy traces the failure-mode consequences for
+the deployment claim.</p>
+<h1 id="sec:composition">Composition with the deployment-safety
+theorem</h1>
+<p>Theorem <a href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> (bounded co-evolution corollary)
+and Theorem <a href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> (scoped Concentration-Gap)
+each enter the deployment-safety theorem <d-cite key="lasser2026paper10"></d-cite> at specific points. This section
+locates those points and lists the conditions each theorem adds to or
+removes from the deployment-claim hypothesis set.</p>
+<h2 id="conditions-removed-and-added">Conditions removed and added</h2>
+<h4 id="removed.">Removed.</h4>
+<p>The deployment-claim hypothesis set, after the present theorems, no
+longer contains:</p>
+<ul>
+<li><p>The free-floating bounded co-evolution assumption that <span
+class="math inline">\bar{M}</span> is bounded by some <span
+class="math inline">|P|</span>-independent constant. Replaced by
+Theorem <a href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>. In <d-cite key="lasser2026paper10"></d-cite>, the property is now stated as
+condition (C7) and invokes the corollary form directly.</p></li>
+<li><p>The HHI surrogate-adequacy assumption: the converse-direction
+sufficiency claim <span class="math inline">\mathrm{HHI}&lt; H^*
+  \Rightarrow \mathcal{R}_{\mathrm{press}}^c</span>. Replaced by
+Theorem <a href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> under the conjunction (REP) +
+(DISP) + (COAL) and embedding compatibility (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), now collected as <d-cite key="lasser2026paper10"></d-cite>
+(Concentration-Gap structural conditions).</p></li>
+</ul>
+<h4 id="added.">Added.</h4>
+<p>The deployment-claim hypothesis set acquires five explicit
+hypotheses, each operationally auditable (with embedding compatibility
+certified as a precondition for the embedded representations used by
+(REP) and (DISP)):</p>
+<ul>
+<li><p><strong>(C7.RATE).</strong> Upper exposure-rate cap from
+Assumption <a href="#ass:c7-rate" data-reference-type="ref"
+data-reference="ass:c7-rate">1</a>. Added as a sub-clause of <d-cite key="lasser2026paper10"></d-cite>.</p></li>
+<li><p><strong>(REP).</strong> Representativeness from Definition <a
+href="#def:rep-companion" data-reference-type="ref"
+data-reference="def:rep-companion">5</a>.</p></li>
+<li><p><strong>(DISP).</strong> Bounded dispersion from Definition <a
+href="#def:disp-companion" data-reference-type="ref"
+data-reference="def:disp-companion">6</a>.</p></li>
+<li><p><strong>(COAL).</strong> Coalition closure from Definition <a
+href="#def:coal-companion" data-reference-type="ref"
+data-reference="def:coal-companion">7</a>, with explicit residual <span
+class="math inline">\eta_{\mathrm{latent}}</span> for undetected
+coordination and post-partition counterparty cardinality <span
+class="math inline">N</span> deployment-class bounded (clause (ii);
+structurally required for the HHI-to-<span
+class="math inline">\chi^2</span> translation to be <span
+class="math inline">|P|</span>-independent).</p></li>
+<li><p><strong>Embedding compatibility</strong> from Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>: an affine isometry (or
+bi-Lipschitz, with constants tracked through the bound) <span
+class="math inline">\phi: \mathcal{V}_\mathrm{utility} \to
+\mathcal{V}</span> on the operationally active subspace. This is the
+structural prerequisite for transferring the algebraic distortion bound
+to <span class="math inline">\|P- T\|</span> and thence to Goodhart
+slack.</p></li>
+</ul>
+<p>(REP), (DISP), (COAL), and embedding compatibility are collected as
+the structural conditions for the Concentration-Gap selection bound;
+(C7.RATE) is the exposure-rate condition for the bounded co-evolution
+corollary.</p>
+<h2 id="where-each-theorem-enters-deployment-safetys-proof">Where each
+theorem enters Deployment Safety’s proof</h2>
+<h4
+id="theorem-thmc7-corollary-enters-at-lemma-1s-co-evolution-substitution.">Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> enters at Lemma 1’s co-evolution
+substitution.</h4>
+<p><d-cite key="lasser2026paper10"></d-cite>
+substitutes the co-evolution correction term <span
+class="math inline">(\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}})_+
+\leq
+K_{\mathrm{coev}} \cdot \bar{M}</span> into the four-channel
+decomposition; <d-cite key="lasser2026paper10"></d-cite> packages the result via the
+generic-<span class="math inline">X</span> intensivity argument. Both
+rely on <span class="math inline">\bar{M}</span> being a <span
+class="math inline">|P|</span>-independent constant. The corollary
+supplies <span class="math inline">\bar{M}^{\mathrm{cum}} \leq C \cdot
+B_{\mathrm{clip}}
+\cdot \lambda_{\max}\cdot \tau_{\mathrm{meta}}</span> with all factors
+deployment-class constants intensive in <span
+class="math inline">|P|</span>, closing the substitution at Step 4
+without a free-floating constant.</p>
+<h4
+id="theorem-thmconcgap-scoped-enters-at-layer-1-binding-via-i_5.">Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> enters at Layer 1 binding via
+<span class="math inline">I_5</span>.</h4>
+<p><d-cite key="lasser2026paper10"></d-cite>
+requires the converse-direction sufficiency <span
+class="math inline">\mathrm{HHI}&lt; H^* \Rightarrow</span> deployment
+outside <span class="math inline">\mathcal{R}_{\mathrm{press}}</span>.
+The scoped selection theorem supplies the Goodhart-slack upper bound
+<span class="math inline">|g(T) - g(P)| \leq \mathrm{Lip}(g) \cdot
+(\rho_\mathrm{rep} +
+\sigma \sqrt{\chi^2(w \|\mu)} + \eta_\mathrm{latent})</span> under (REP)
++ (DISP) + (COAL) and embedding compatibility (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>); for uniform <span
+class="math inline">\mu</span> on <span class="math inline">N</span>
+counterparties, <span class="math inline">\chi^2 = N \mathrm{HHI}-
+1</span>, so <span class="math inline">\mathrm{HHI}&lt; H^*</span>
+yields a deployment-class constant ceiling on the slack.</p>
+<h4
+id="both-theorems-enter-deployment-safetys-sensitivity-analysis.">Both
+theorems enter Deployment Safety’s sensitivity analysis.</h4>
+<p><d-cite key="lasser2026paper10"></d-cite>’s
+failure-mode taxonomy decomposes into specific structural-condition
+failures: bounded-co-evolution failure factors through (C5.HOEFF) /
+(C7.RATE) / channel-projection-structure failures (each with
+audit-detectable signal), and Concentration-Gap structural-condition
+failure factors through (REP) / (DISP) / (COAL) /
+embedding-compatibility failures (the last via the bi-Lipschitz <span
+class="math inline">\phi</span> certification of §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>).</p>
+<h2 id="deployment-claim-shape">Deployment-claim shape</h2>
+<p>The structural shape of the deployment-safety theorem is
+preserved:</p>
+<ul>
+<li><p>Eleven operational invariants <span class="math inline">I_1,
+\ldots, I_{11}</span>.</p></li>
+<li><p>Three-layer claim (static safe region / detection-and-correction
+/ acknowledged residuals).</p></li>
+<li><p>Five named residuals (R1)–(R5).</p></li>
+<li><p>Cooperative-anchoring property and canonical tripartite substrate
+identification.</p></li>
+<li><p>Operational conditions (C2)–(C6) and (C8)–(C12) of <d-cite key="lasser2026paper10"></d-cite> retain their
+content; (C1) and (C7) carry refined structural dependencies: (C1) now
+explicitly invokes (REP), (DISP), (COAL), and embedding compatibility
+via <d-cite key="lasser2026paper10"></d-cite>, and
+(C7) carries the (C7.RATE) sub-clause established here.</p></li>
+</ul>
+<p>Theorem <a href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> and Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> close structural gaps in the
+deployment-claim hypothesis set without altering the deployment claim’s
+shape.</p>
+<h1 id="sec:audits">Audit infrastructure for the structural
+conditions</h1>
+<p>Four operational structural conditions are added to <d-cite key="lasser2026paper10"></d-cite>’s deployment
+claim: (C7.RATE) (upper exposure-rate cap), (REP) (representativeness),
+(DISP) (bounded dispersion), and (COAL) (coalition closure); plus a
+Lipschitz embedding compatibility precondition (Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>) that certifies <span
+class="math inline">\phi</span> before (REP) or (DISP) can be evaluated
+in the embedded representation. Each admits an operational audit,
+paralleling the existing audit structure of <d-cite key="lasser2026paper10"></d-cite>: each audit produces an
+attestation on the verification ledger <d-cite key="lasser2026exo"></d-cite>, with cadence calibrated to
+deployment epoch boundaries. Confidence-bound construction in the (REP),
+(DISP), and (COAL) procedures below follows standard one-sided
+upper-confidence-bound machinery <d-cite key="lehmann2005testing"></d-cite>.</p>
+<h2 id="c7.rate-and-channel-projection-audit">(C7.RATE) and
+channel-projection audit</h2>
+<p>This audit certifies the two structural inputs to Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> other than (C5.HOEFF) and
+(C5.MULT) (which are part of <d-cite key="lasser2026paper10"></d-cite>): the upper exposure-rate cap
+<span class="math inline">\lambda_{\max}</span>, and the verification
+protocol’s channel-projection structure.</p>
+<h4 id="procedure-rate-cap.">Procedure (rate cap).</h4>
+<ol>
+<li><p>Identify the per-step exposure event sources: ledger commit rate,
+action-execution rate, governance-event rate.</p></li>
+<li><p>Inspect the hard mechanisms enforcing the rate ceiling — ledger
+commit caps, action-queue depth bounds, governance rate-limit
+middleware, scheduler quotas — and identify which substrate owns the
+enforcement (substrate-exclusivity from <d-cite key="lasser2026exo"></d-cite>).</p></li>
+<li><p>Compute an upper-bound rate <span
+class="math inline">\lambda_{\max}</span> from the certified mechanisms
+(not from observed historical traffic).</p></li>
+<li><p>Document <span class="math inline">\lambda_{\max}</span>, the
+enforcing mechanisms, and the substrate ownership in the audit
+attestation.</p></li>
+</ol>
+<p>Empirical traffic windows over <span
+class="math inline">\tau_{\mathrm{meta}}</span> may be used as
+<em>monitoring</em> evidence (e.g., to alert on approach to <span
+class="math inline">\lambda_{\max}</span>), but cannot establish the
+deterministic deployment-class upper bound by themselves.</p>
+<h4 id="procedure-channel-projection-structure.">Procedure
+(channel-projection structure).</h4>
+<ol>
+<li><p>Enumerate the projection maps <span class="math inline">\pi_j: A
+\to V_j \cup
+  \{*_j\}</span> for <span class="math inline">j = 1, \ldots,
+K_{\mathrm{ch}}</span> from the verification protocol’s
+event-classification policy.</p></li>
+<li><p>Verify that <span class="math inline">\pi_j(a) = *_j</span> holds
+for all actions <span class="math inline">a
+  \notin A_j</span>, and that <span class="math inline">\ell^{(j)}(a) =
+0</span> on <span class="math inline">A \setminus A_j</span>
+(zero-outside-engagement convention).</p></li>
+<li><p>Document the pairwise overlap sets <span
+class="math inline">A_{j, j&#39;} = A_j \cap
+  A_{j&#39;}</span> for use by downstream audits.</p></li>
+</ol>
+<h4 id="cadence.">Cadence.</h4>
+<p>Initial certification before deployment activation; re-certification
+when verification-protocol classification policy changes, when
+rate-limit mechanisms change, or when SPRT detection observes events at
+rates approaching <span class="math inline">\lambda_{\max}</span>.</p>
+<h4 id="failure-mode.">Failure mode.</h4>
+<p>Deployments where the exposure event rate cannot be bounded by
+certified mechanisms (e.g., agent-controlled rate-limit overrides), or
+where the channel projection policy admits <span
+class="math inline">\ell^{(j)}(a) \neq 0</span> off <span
+class="math inline">A_j</span>, fall outside Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>’s scope. Mitigation: hard rate
+limits enforced by substrate-exclusive infrastructure;
+verification-protocol classification redesign to respect the
+zero-outside-engagement convention.</p>
+<h2
+id="embedding-phi-certification-precondition-for-rep-and-disp">Embedding
+<span class="math inline">\phi</span> certification (precondition for
+REP and DISP)</h2>
+<p>(REP) and (DISP) are stated relative to the embedded deviation field
+<span class="math inline">\Delta_c = \phi(U_c) - \phi(W)</span> in the
+Hilbert space <span class="math inline">\mathcal{V}</span>
+(Assumption <a href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>). The embedding <span
+class="math inline">\phi</span> must be certified before (REP) or (DISP)
+can be audited.</p>
+<h4 id="procedure.">Procedure.</h4>
+<ol>
+<li><p>Specify the embedding <span class="math inline">\phi:
+\mathcal{V}_\mathrm{utility}
+  \to \mathcal{V}</span> in deployment documentation.</p></li>
+<li><p>Verify <span class="math inline">\phi</span> is affine isometric
+on the operationally active subspace <span
+class="math inline">P^\mathrm{act}</span>: <span
+class="math inline">\|\phi(x) - \phi(y)\| =
+  \|x - y\|_{\mathcal{V}_\mathrm{utility}}</span> for <span
+class="math inline">x, y \in
+  P^\mathrm{act}</span>, with linearity up to a fixed
+translation.</p></li>
+<li><p>If <span class="math inline">\phi</span> is only bi-Lipschitz
+(not isometric), document the bi-Lipschitz constants <span
+class="math inline">(\underline{L}, \bar{L})</span> and apply them as
+multipliers to the (REP) / (DISP) bounds downstream.</p></li>
+</ol>
+<h4 id="failure-mode.-1">Failure mode.</h4>
+<p>If <span class="math inline">\phi</span> is not bi-Lipschitz on <span
+class="math inline">P^\mathrm{act}</span>, the algebraic kernel of
+Theorem <a href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> cannot be transferred to the
+deployment claim’s <span class="math inline">\|P- T\|</span> form via
+Lipschitz transfer <d-cite key="lasser2026micro"></d-cite>. Mitigation: choose a different
+embedding, or restrict the deployment’s scope to a subspace where
+bi-Lipschitz <span class="math inline">\phi</span> exists.</p>
+<h4 id="when-phi-is-well-conditioned.">When <span
+class="math inline">\phi</span> is well-conditioned.</h4>
+<p>Utility representations that are linear (or near-linear) in the
+deployment’s underlying decision variables typically admit
+well-conditioned <span class="math inline">\phi</span>: identity or
+affine maps suffice, and the bi-Lipschitz constants <span
+class="math inline">(\underline{L}, \bar{L})</span> are close to <span
+class="math inline">1</span>. High-dimensional learned representations
+(neural utility models, embedding vectors, opaque scalarizations of
+multi- attribute preferences) may not — distortion constants can be
+large, and the bi-Lipschitz form’s downstream multiplication of <span
+class="math inline">(\bar{L}/\underline{L})</span> through the (REP) and
+(DISP) bounds can inflate the Goodhart-slack ceiling toward operational
+uselessness. Practical deployments should target one of: (i) an explicit
+affine utility model where <span class="math inline">\phi</span> is
+identity; (ii) a low-dimensional projection of a high-dimensional
+representation onto the operationally active subspace, with the
+projection’s bi-Lipschitz constants bounded by audit; or (iii) a
+restricted deployment scope where the active subspace admits a
+well-conditioned embedding even if the full representation does not.
+Deployments that cannot achieve one of these lie outside Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a>’s practical applicability even
+if they nominally satisfy (EMB).</p>
+<h2 id="rep-audit-representativeness">(REP) audit
+(representativeness)</h2>
+<h4 id="procedure.-1">Procedure.</h4>
+<ol>
+<li><p>Define the base population measure <span
+class="math inline">\mu</span>: the auditor’s fair-or-natural
+distribution over admissible counterparties (typically uniform over
+S1-admissible participants <d-cite key="lasser2026paper8a"></d-cite>, or weighted by some natural
+allocation).</p></li>
+<li><p>In the embedded representation under the certified <span
+class="math inline">\phi</span>, produce a one-sided upper confidence
+bound on <span class="math inline">\|\bar\Delta\|</span> where <span
+class="math inline">\bar\Delta := \mathbb{E}_\mu[\phi(U_c) -
+\phi(W)]</span>. The bound is computed by sampling counterparties under
+<span class="math inline">\mu</span> (or reweighting
+observed-attestation samples to <span class="math inline">\mu</span>
+with stated coverage assumptions) from utility-disclosure attestations
+on the verification ledger; conservative bounding is required because
+(REP) is a hypothesis the deployment claim conditions on, not a quantity
+the deployment claim merely monitors.</p></li>
+<li><p>Certify <span class="math inline">\|\bar\Delta\| \leq
+\rho_\mathrm{rep}</span> at the audit’s chosen confidence level for a
+deployment-class threshold <span
+class="math inline">\rho_\mathrm{rep}</span>.</p></li>
+<li><p>Document <span class="math inline">\rho_\mathrm{rep}</span>, the
+confidence level, and the sampling/reweighting design in the audit
+attestation.</p></li>
+</ol>
+<h4 id="cadence.-1">Cadence.</h4>
+<p>Initial calibration before deployment; re-calibration on
+counterparty-population changes (additions, removals, or substantial
+weight-redistribution).</p>
+<h4 id="failure-mode.-2">Failure mode.</h4>
+<p>The counterparty population’s mean utility deviates systematically
+from the welfare-relevant truth <span class="math inline">W</span>.
+Mitigation: counterparty-selection-process diversification,
+category-coverage audit <d-cite key="lasser2026paper10"></d-cite>, or restriction of the
+deployment’s scope to a counterparty subset where (REP) holds.</p>
+<h2 id="disp-audit-bounded-dispersion">(DISP) audit (bounded
+dispersion)</h2>
+<h4 id="procedure.-2">Procedure.</h4>
+<ol>
+<li><p>In the embedded representation under the certified <span
+class="math inline">\phi</span>, produce a one-sided upper confidence
+bound on the <span class="math inline">\mu</span>-population variance
+<span class="math inline">\int \|\Delta_c -
+  \bar\Delta\|^2 \,d\mu(c)</span>, where per-counterparty deviations
+<span class="math inline">\Delta_c = \phi(U_c) - \phi(W)</span> are read
+from utility-disclosure attestations. As with (REP), the variance is
+taken with respect to <span class="math inline">\mu</span>, not the
+trade-flow weighting <span class="math inline">w</span>: audit sampling
+under <span class="math inline">\mu</span> (or reweighting to <span
+class="math inline">\mu</span> with stated coverage) is
+required.</p></li>
+<li><p>Certify the variance <span class="math inline">\leq
+\sigma^2</span> at the audit’s chosen confidence level for a
+deployment-class constant <span
+class="math inline">\sigma</span>.</p></li>
+<li><p>Document <span class="math inline">\sigma</span>, the confidence
+level, and the sampling/reweighting design in the audit
+attestation.</p></li>
+</ol>
+<h4 id="cadence.-2">Cadence.</h4>
+<p>Continuous attestation under the calibrated <span
+class="math inline">\mu</span>-sampling design over a rolling
+calibration window; confidence-bound violations trigger audit
+re-calibration. Observed trade-flow (<span class="math inline">w</span>)
+statistics may serve as monitoring signal but do not by themselves
+certify the <span class="math inline">\mu</span>-variance
+hypothesis.</p>
+<h4 id="failure-mode.-3">Failure mode.</h4>
+<p>High dispersion across counterparties (some counterparties’ utilities
+deviate far from <span class="math inline">W</span>, even when the
+population mean is centered). The bound in Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> weakens but does not collapse;
+the deployment claim accommodates large <span
+class="math inline">\sigma</span> at the cost of larger Goodhart-slack
+ceiling.</p>
+<h2 id="coal-audit-coalition-closure">(COAL) audit (coalition
+closure)</h2>
+<h4 id="procedure.-3">Procedure.</h4>
+<ol>
+<li><p>Run <em>coalition-detection analysis</em> on the verification
+ledger: identify counterparties with correlated trade flows above a
+deployment-class threshold (using repeated-beneficiary linkage,
+governance-vote alignment, attestation-source clustering).</p></li>
+<li><p>Partition <span class="math inline">\mathcal{C}</span> into
+equivalence classes (coalitions) by the detected correlation
+structure.</p></li>
+<li><p>Re-compute <span class="math inline">\mathrm{HHI}</span> on the
+post-partition (coalition-level) weights.</p></li>
+<li><p><strong>Certify clause (ii) of (COAL).</strong> Document the
+deployment-class bound <span class="math inline">N_{\max}</span> on the
+post-partition counterparty cardinality, together with the onboarding /
+governance policy that prevents <span class="math inline">N</span> from
+scaling with <span class="math inline">|P|</span>. Document the choice
+of base measure <span class="math inline">\mu</span> as the uniform
+distribution on the post-partition counterparties (the structural
+prerequisite for the HHI-to-<span class="math inline">\chi^2</span>
+translation <span class="math inline">\chi^2(w \,\|\, \mu) = N
+\mathrm{HHI}(w) - 1</span>). Deployments that prefer to commit directly
+to a <span class="math inline">\chi^2</span> ceiling certify <span
+class="math inline">\chi^2(w \,\|\, \mu) \leq \Xi</span> for a
+deployment-class constant <span class="math inline">\Xi</span> instead,
+with <span class="math inline">\mu</span> documented as whatever
+fair-or-natural base measure the audit selects.</p></li>
+<li><p>Produce a one-sided upper confidence bound on the
+latent-coalition residual <span
+class="math inline">\eta_\mathrm{latent}</span> from the audit’s
+detection-power calibration: bound <span
+class="math inline">\eta_\mathrm{latent}
+  \leq p_\mathrm{miss} \cdot \|\Delta\|_{\max}</span> where <span
+class="math inline">p_\mathrm{miss}</span> is the threshold-miss
+probability for the worst-case undetected coalition size and <span
+class="math inline">\|\Delta\|_{\max}</span> is the worst-case
+per-counterparty deviation magnitude in the deployment’s threat
+model.</p></li>
+<li><p>Document the coalition partition, <span
+class="math inline">N_{\max}</span> (or <span
+class="math inline">\Xi</span>), and the <span
+class="math inline">\eta_\mathrm{latent}</span> confidence bound (with
+confidence level) in the audit attestation.</p></li>
+</ol>
+<h4 id="cadence.-3">Cadence.</h4>
+<p>Continuous coalition detection on the verification ledger;
+audit-cadence alerts on detected coalition-formation events;
+re-partition triggered when new coalitions form.</p>
+<h4 id="failure-mode.-4">Failure mode.</h4>
+<p>Many small counterparties acting in coordinated fashion (a hidden
+coalition) drive the effective <span
+class="math inline">\mathrm{HHI}</span> above the audited threshold. The
+deployment claim’s bound on Goodhart slack picks up the <span
+class="math inline">\eta_\mathrm{latent}</span> residual; deployments
+where <span class="math inline">\eta_\mathrm{latent}</span> cannot be
+bounded operationally are outside Theorem <a href="#thm:concgap-scoped"
+data-reference-type="ref" data-reference="thm:concgap-scoped">2</a>’s
+scope.</p>
+<h4 id="when-eta_mathrmlatent-is-operationally-negligible.">When <span
+class="math inline">\eta_\mathrm{latent}</span> is operationally
+negligible.</h4>
+<p>The Goodhart-slack bound has the additive form <span
+class="math inline">\mathrm{Lip}(g) \cdot (\rho_\mathrm{rep} +
+\sigma\sqrt{\chi^2(w \|\mu)}
++ \eta_\mathrm{latent})</span>, so <span
+class="math inline">\eta_\mathrm{latent}</span> dominates the bound
+whenever it is large compared with the other terms. For <span
+class="math inline">\eta_\mathrm{latent}</span> to remain operationally
+negligible the deployment should target <span
+class="math inline">\eta_\mathrm{latent} \leq \epsilon \cdot
+(\rho_\mathrm{rep} + \sigma \sqrt{\chi^2(w \|\mu)})</span> for some
+small <span class="math inline">\epsilon \ll 1</span>, which translates
+via <span class="math inline">\eta_\mathrm{latent} \leq p_\mathrm{miss}
+\cdot
+\|\Delta\|_{\max}</span> into a detection-power requirement on the
+audit’s coalition-detection machinery: <span
+class="math display">p_\mathrm{miss} \cdot \|\Delta\|_{\max} \;\leq\;
+\epsilon \cdot
+  \big(\rho_\mathrm{rep} + \sigma \sqrt{\chi^2(w \|\mu)}\big).</span>
+Deployments whose threat model admits large <span
+class="math inline">\|\Delta\|_{\max}</span> (adversarial counterparties
+with large utility deviations from <span class="math inline">W</span>)
+require correspondingly tighter <span
+class="math inline">p_\mathrm{miss}</span> to keep <span
+class="math inline">\eta_\mathrm{latent}</span> dominated. The audit’s
+calibration documentation should make this trade-off explicit, and
+audits that cannot achieve the inequality leave deployments where <span
+class="math inline">\eta_\mathrm{latent}</span> may dominate the bound
+in the operational sense even when the algebraic bound formally
+holds.</p>
+<h2 id="integration-with-existing-audit-infrastructure">Integration with
+existing audit infrastructure</h2>
+<p>Several of these new audits overlap with existing audits in <d-cite key="lasser2026paper10"></d-cite>:</p>
+<ul>
+<li><p>(C7.RATE) and channel-projection audit: integrates primarily with
+Audit 4 (bounded co-evolution calibration, dual-mode), which is the
+deployment-tooling home for the structural inputs to Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>; Audit 7 (SPRT-applicability +
+gap-growth + clock comparability) supplies the (C5.HOEFF) clip radius
+and related SPRT-side calibration inputs but not the (C7.RATE) upper
+bound.</p></li>
+<li><p>(REP) audit: integrates with Audit 3 (cooperative-vs-redundancy
+audit), since both rely on category-coverage analysis.</p></li>
+<li><p>(DISP) audit: new, but uses utility-disclosure attestations that
+the existing infrastructure already produces.</p></li>
+<li><p>(COAL) audit: integrates with <span
+class="math inline">I_9</span> (substrate-exclusivity observability) and
+<span class="math inline">I_{10}</span> (coverage/materiality routing)
+of <d-cite key="lasser2026paper10"></d-cite>, since
+coalition detection uses ledger-linkage analysis those invariants
+already specify.</p></li>
+</ul>
+<p>The audit hooks above are the minimum needed for Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> and Theorem <a
+href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a> to apply; consolidated
+audit-tooling combining these with <d-cite key="lasser2026paper10"></d-cite>’s existing audits is the natural
+target for further operational-tooling work.</p>
+<h1 id="sec:discussion">Discussion</h1>
+<h2
+id="what-the-universal-concentration-gap-conjecture-would-require">What
+the universal Concentration-Gap conjecture would require</h2>
+<p>The Concentration-Gap conjecture of <d-cite key="lasser2026micro"></d-cite> is universal: optimization pressure
+on the proxy correlates with proxy-truth gap exploitation, in any
+deployment context. Theorem <a href="#thm:concgap-scoped"
+data-reference-type="ref" data-reference="thm:concgap-scoped">2</a>
+discharges only a <em>scoped</em> version under (REP), (DISP), (COAL),
+embedding compatibility (Assumption <a href="#ass:embedding-companion"
+data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>), and the
+Lipschitz-transfer machinery of <d-cite key="lasser2026micro"></d-cite>. The universal conjecture would
+additionally require:</p>
+<ul>
+<li><p>A formal optimizer / selection model that captures “optimization
+pressure” as a structural property of agents rather than as the
+empirical correlate (HHI) used here. Existing candidates include the
+mesa-optimization framework of <d-cite key="hubinger2019risks"></d-cite> and the formal-Goodhart machinery
+of <d-cite key="elmhamdi2024goodhart,majka2025strong"></d-cite>, none of which
+alone yields a full proof.</p></li>
+<li><p>A characterization of “gap exploitation” robust to the specific
+functional forms of <span class="math inline">P</span> and <span
+class="math inline">T</span>. Theorem <a href="#thm:concgap-scoped"
+data-reference-type="ref" data-reference="thm:concgap-scoped">2</a>
+works at the proxy-truth-norm level; the universal conjecture would need
+to characterize the alignment-property-level slack <span
+class="math inline">|g(T) - g(P)|</span>, which requires
+inverse-Lipschitz structure on <span class="math inline">g</span> not
+currently available in the GFM apparatus.</p></li>
+</ul>
+<p>This is a research-program target rather than a technical extension.
+The scoped version is achievable; a universal model-free version is not,
+given current machinery.</p>
+<h2 id="what-the-g-level-reverse-direction-would-require">What the <span
+class="math inline">g</span>-level reverse direction would require</h2>
+<p>Theorem <a href="#thm:concgap-scoped" data-reference-type="ref"
+data-reference="thm:concgap-scoped">2</a>’s reverse direction operates
+at the <span class="math inline">\|P- T\|</span> level: under high HHI
+plus separation plus directional cancellation, the proxy-truth norm is
+bounded below. The Lipschitz transfer of <d-cite key="lasser2026micro"></d-cite> is forward-only, so this norm-level
+lower bound does not transfer to a lower bound on <span
+class="math inline">|g(T) -
+g(P)|</span>.</p>
+<p>Strengthening the reverse to the <span
+class="math inline">g</span>-level would require an additional
+non-degeneracy condition on <span class="math inline">g</span>: a
+constant <span class="math inline">g</span> provides an immediate
+counterexample (<span class="math inline">|g(T) - g(P)| = 0</span>
+regardless of <span class="math inline">\|P - T\|</span>). The natural
+condition is bi-Lipschitz invertibility of <span
+class="math inline">g</span> on the relevant subspace, but this is a
+strong restriction on the alignment property’s functional form.</p>
+<p>For deployment-claim purposes, the norm-level reverse is sufficient:
+it tells operators the regime in which non-trivial proxy-truth
+distortion is structurally guaranteed, which the detection layer (Layer
+2) of <d-cite key="lasser2026paper10"></d-cite> can
+act on. The <span class="math inline">g</span>-level reverse would
+strengthen the result but is not required for the deployment claim’s
+operational utility.</p>
+<h2 id="what-the-latent-coalition-residual-would-require">What the
+latent-coalition residual would require</h2>
+<p>The (COAL) condition partitions counterparties whose correlations are
+detected by audit; the latent-coalition residual <span
+class="math inline">\eta_\mathrm{latent}</span> absorbs
+undetected-coordination risk as a <em>norm bound</em> on the residual
+error term <span class="math inline">e_\mathrm{latent}
+\in \mathcal{V}</span> from Assumption <a
+href="#ass:embedding-companion" data-reference-type="ref"
+data-reference="ass:embedding-companion">2</a>: <span
+class="math inline">\|e_\mathrm{latent}\|
+\leq \eta_\mathrm{latent}</span>.</p>
+<p>Bounding <span class="math inline">\eta_\mathrm{latent}</span> in a
+specific deployment requires calibrating the audit’s detection power
+against a worst-case deviation magnitude: <span
+class="math inline">\eta_\mathrm{latent} \leq p_\mathrm{miss}
+\cdot \|\Delta\|_{\max}</span> where <span
+class="math inline">p_\mathrm{miss}</span> is the probability that a
+coalition of given size escapes detection thresholds and <span
+class="math inline">\|\Delta\|_{\max}</span> is the worst-case
+per-counterparty deviation in the deployment’s threat model. The audit
+specifies the detection thresholds, the detection-power model, and the
+one-sided upper-confidence procedure in (COAL)’s procedure (§<a
+href="#sec:audits" data-reference-type="ref"
+data-reference="sec:audits">6</a>); <span
+class="math inline">p_\mathrm{miss}</span> and <span
+class="math inline">\|\Delta\|_{\max}</span> are calibrated through that
+procedure rather than read off raw operating statistics, and the
+certification semantics this paper inherits do not derive their values
+from first principles.</p>
+<h2 id="connection-to-existing-goodhart-literature">Connection to
+existing Goodhart literature</h2>
+<p>The Concentration-Gap selection theorem fits into the broader
+formal-Goodhart literature in a specific position:</p>
+<ul>
+<li><p>It extends <d-cite key="manheim2019categorizing"></d-cite>’s Adversarial Goodhart
+variant by giving an explicit upper bound on the proxy-truth divergence
+in terms of selection concentration, where Manheim &amp; Garrabrant give
+a qualitative taxonomy.</p></li>
+<li><p>It complements <d-cite key="elmhamdi2024goodhart"></d-cite>’s tail-based formal Goodhart
+by addressing the <em>selection-induced</em> gap (where this paper sits)
+rather than the <em>tail-event</em> gap (where El-Mhamdi &amp; Hoang
+sit). The two are independent failure modes; both should hold for the
+deployment claim to bind.</p></li>
+<li><p>It fits <d-cite key="majka2025strong"></d-cite>’s Strong/Weak/Benign Goodhart
+classification at the “Weak Goodhart” boundary: the proxy-truth gap is
+bounded under structural conditions, but the conditions can fail (Strong
+Goodhart) or be irrelevant (Benign Goodhart).</p></li>
+</ul>
+<p>The selection theorem does not subsume any of these works; it
+combines their perspectives into a single deployment-relevant
+result.</p>
+<h2 id="connection-to-bounded-co-evolution-failure-modes">Connection to
+bounded co-evolution failure modes</h2>
+<p>Theorem <a href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a> replaces the
+free-floating-constant assumption of bounded co-evolution with a
+derivation from primitive parameters. The failure modes of bounded
+co-evolution now factor through specific structural conditions:</p>
+<ul>
+<li><p>(C5.HOEFF) failure: per-step LLR is unbounded, so <span
+class="math inline">B_{\mathrm{clip}}</span> is undefined. Detection:
+SPRT-applicability audit (paper 10 Audit 7) catches this.</p></li>
+<li><p>(C7.RATE) failure: exposure event count grows faster than <span
+class="math inline">\lambda_{\max}\cdot \tau_{\mathrm{meta}}</span>.
+Detection: (C7.RATE) audit (this paper, §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>) catches
+this.</p></li>
+<li><p>Channel-projection failure: ledger event-classification policy
+doesn’t respect the zero-outside-engagement convention. Detection:
+structural-projection audit (this paper, §<a href="#sec:audits"
+data-reference-type="ref" data-reference="sec:audits">6</a>) catches
+this.</p></li>
+</ul>
+<p>This decomposition is the structural payoff of Theorem <a
+href="#thm:c7-corollary" data-reference-type="ref"
+data-reference="thm:c7-corollary">1</a>: bounded-co-evolution failure is
+no longer an opaque single-mode risk but a triage of three specific
+structural-condition failures, each with its own audit detection.</p>
+<h1 class="unnumbered" id="author-contributions">Author
+Contributions</h1>
+<p><strong>Teague Lasser</strong> owns the paper’s intellectual
+direction and is responsible for all claims made.</p>
+<p><strong>Claude Opus 4.7</strong> (Anthropic) drafted the paper under
+that direction.</p>
+<p><strong>GPT 5.5</strong> (OpenAI) served as cold technical reviewer
+for proof errors and claim mismatches.</p>
+<p><em>Transparency note.</em> Both AI systems operated as tools under
+human direction. Neither system has continuity across sessions, cannot
+take responsibility for the work in the sense required by most venue
+authorship policies, and cannot respond to reviewer queries
+independently. They are listed as authors to accurately represent their
+contributions to the intellectual content of the paper, not to claim
+that they meet all criteria of traditional academic authorship. The
+corresponding author for all inquiries is Teague Lasser.</p>
+</d-article>
+
+<d-appendix>
+</d-appendix>
+
+<d-bibliography>
+<script type="text/bibtex">
+% =====================================================================
+% GFM sequence (preprint URLs; access dates and stable
+% archival identifiers will accompany venue-archived versions)
+% =====================================================================
+
+@misc{lasser2026gfm,
+  title={Goal-Frontier Maximizers are Civilization Aligned},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/gfm/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026poset,
+  title={Computable Goal Frontiers and the Gradient Toward Civilization-Building},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/poset/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026horizon,
+  title={Horizon-Aware Goal-Frontier Maximization and the Anti-Monopolar Property},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/horizon/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026scm,
+  title={A Structural Causal Model for Goal-Frontier Maximization},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/scm/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026exo,
+  title={Exogenous Verification for Alignment: Cryptographic Commitments on Substrate-Exclusive Channels},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/exo/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026phase,
+  title={Cross-Substrate Channel Redundancy Governs Monopolar Convergence},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/phase/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026wamura,
+  title={Controlled Relaxation Protocols for the {W}amura Problem},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/wamura/}},
+  note={Preprint, accessed April 2026.}
+}
+
+@misc{lasser2026paper8a,
+  title={An Aggregate {B-to-C} Lower Bound from Revealed-Sacrifice Observation},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/revealed-sacrifice/}},
+  note={Preprint, accessed May 2026.}
+}
+
+@misc{lasser2026paper8b,
+  title={Need-Sufficiency Architecture and Gap Diagnostics for the {B-to-C} Gap},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/need-sufficiency/}},
+  note={Preprint, accessed May 2026.}
+}
+
+@misc{lasser2026micro,
+  title={Goal-Frontier Maximization as a Microfoundation for Welfare Economics},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/microfoundation/}},
+  note={Preprint, accessed May 2026.}
+}
+
+@misc{lasser2026paper10,
+  title={Goal-Frontier Maximization: A Provably Safe Regime for Capability-Unbounded Deployment},
+  author={Lasser, Teague},
+  year={2026},
+  howpublished={\url{https://teague.info/papers/paper10/}},
+  note={Preprint, accessed May 2026.}
+}
+
+% =====================================================================
+% Capability approach lineage (Sen, Nussbaum)
+% =====================================================================
+
+@book{sen1985commodities,
+  title={Commodities and Capabilities},
+  author={Sen, Amartya},
+  publisher={North-Holland},
+  year={1985}
+}
+
+@incollection{sen1979equality,
+  title={Equality of What?},
+  author={Sen, Amartya},
+  booktitle={Tanner Lectures on Human Values},
+  editor={McMurrin, Sterling M.},
+  publisher={Cambridge University Press},
+  year={1980},
+  pages={195--220}
+}
+
+@book{sen1999development,
+  title={Development as Freedom},
+  author={Sen, Amartya},
+  publisher={Oxford University Press},
+  year={1999}
+}
+
+@book{nussbaum2000women,
+  title={Women and Human Development: The Capabilities Approach},
+  author={Nussbaum, Martha C.},
+  publisher={Cambridge University Press},
+  year={2000}
+}
+
+@book{nussbaum2011creating,
+  title={Creating Capabilities: The Human Development Approach},
+  author={Nussbaum, Martha C.},
+  publisher={Harvard University Press},
+  year={2011}
+}
+
+@book{sen2009idea,
+  title={The Idea of Justice},
+  author={Sen, Amartya},
+  publisher={Harvard University Press},
+  year={2009}
+}
+
+@book{robeyns2017wellbeing,
+  title={Wellbeing, Freedom and Social Justice: The Capability Approach Re-Examined},
+  author={Robeyns, Ingrid},
+  publisher={Open Book Publishers},
+  year={2017}
+}
+
+@book{chiappero2020cambridge,
+  title={The {C}ambridge Handbook of the Capability Approach},
+  editor={Chiappero-Martinetti, Enrica and Osmani, Siddiqur and Qizilbash, Mozaffar},
+  publisher={Cambridge University Press},
+  year={2020}
+}
+
+@incollection{basu2011functionings,
+  title={Functionings and Capabilities},
+  author={Basu, Kaushik and L{\'o}pez-Calva, Luis F.},
+  booktitle={Handbook of Social Choice and Welfare, Volume 2},
+  pages={153--187},
+  year={2011},
+  publisher={Elsevier}
+}
+
+% =====================================================================
+% Household production (Becker) and beyond-GDP literature
+% =====================================================================
+
+@article{becker1965theory,
+  title={A Theory of the Allocation of Time},
+  author={Becker, Gary S.},
+  journal={The Economic Journal},
+  volume={75},
+  number={299},
+  pages={493--517},
+  year={1965}
+}
+
+@book{becker1981treatise,
+  title={A Treatise on the Family},
+  author={Becker, Gary S.},
+  publisher={Harvard University Press},
+  year={1981}
+}
+
+@article{alkire2011counting,
+  title={Counting and multidimensional poverty measurement},
+  author={Alkire, Sabina and Foster, James},
+  journal={Journal of Public Economics},
+  volume={95},
+  number={7-8},
+  pages={476--487},
+  year={2011}
+}
+
+@techreport{stiglitz2009report,
+  title={Report by the Commission on the Measurement of Economic Performance
+    and Social Progress},
+  author={Stiglitz, Joseph E. and Sen, Amartya and Fitoussi, Jean-Paul},
+  institution={Commission on the Measurement of Economic Performance and
+    Social Progress},
+  year={2009},
+  url={https://ec.europa.eu/eurostat/documents/118025/118123/Fitoussi+Commission+report}
+}
+
+% =====================================================================
+% Standard microeconomic theory
+% =====================================================================
+
+@article{samuelson1938note,
+  title={A Note on the Pure Theory of Consumer's Behaviour},
+  author={Samuelson, Paul A.},
+  journal={Economica},
+  volume={5},
+  number={17},
+  pages={61--71},
+  year={1938}
+}
+
+@book{mascolell1995microeconomic,
+  title={Microeconomic Theory},
+  author={Mas-Colell, Andreu and Whinston, Michael D. and Green, Jerry R.},
+  publisher={Oxford University Press},
+  year={1995}
+}
+
+@article{rosen1974hedonic,
+  title={Hedonic Prices and Implicit Markets: Product Differentiation in Pure Competition},
+  author={Rosen, Sherwin},
+  journal={Journal of Political Economy},
+  volume={82},
+  number={1},
+  pages={34--55},
+  year={1974}
+}
+
+% =====================================================================
+% Social choice and Arrow's impossibility
+% =====================================================================
+
+@book{arrow1951social,
+  title={Social Choice and Individual Values},
+  author={Arrow, Kenneth J.},
+  publisher={Wiley},
+  year={1951}
+}
+
+@book{sen1970collective,
+  title={Collective Choice and Social Welfare},
+  author={Sen, Amartya},
+  publisher={Holden-Day},
+  year={1970}
+}
+
+@book{adler2012wellbeing,
+  title={Well-Being and Fair Distribution: Beyond Cost-Benefit Analysis},
+  author={Adler, Matthew D.},
+  publisher={Oxford University Press},
+  year={2012}
+}
+
+@article{pattanaik2000ranking,
+  title={On Ranking Opportunity Sets in Economic Environments},
+  author={Pattanaik, Prasanta K. and Xu, Yongsheng},
+  journal={Journal of Economic Theory},
+  volume={93},
+  number={1},
+  pages={48--71},
+  year={2000}
+}
+
+@article{sugden2003opportunity,
+  title={Opportunity as a Space for Individuality: Its Value and the Impossibility of Measuring It},
+  author={Sugden, Robert},
+  journal={Ethics},
+  volume={113},
+  number={4},
+  pages={783--809},
+  year={2003}
+}
+
+% =====================================================================
+% Behavioral welfare economics
+% =====================================================================
+
+@article{bernheim2009beyond,
+  title={Beyond Revealed Preference: Choice-Theoretic Foundations for Behavioral Welfare Economics},
+  author={Bernheim, B. Douglas and Rangel, Antonio},
+  journal={Quarterly Journal of Economics},
+  volume={124},
+  number={1},
+  pages={51--104},
+  year={2009}
+}
+
+@article{kahneman1997back,
+  title={Back to {B}entham? Explorations of Experienced Utility},
+  author={Kahneman, Daniel and Wakker, Peter P. and Sarin, Rakesh},
+  journal={Quarterly Journal of Economics},
+  volume={112},
+  number={2},
+  pages={375--406},
+  year={1997}
+}
+
+% =====================================================================
+% Operational welfare measurement (HDI etc.)
+% =====================================================================
+
+@techreport{anand1994human,
+  title={Human Development Index: Methodology and Measurement},
+  author={Anand, Sudhir and Sen, Amartya},
+  institution={Human Development Report Office, United Nations Development Programme},
+  type={Occasional Paper},
+  year={1994}
+}
+
+% =====================================================================
+% Goodhart's Law and proxy alignment
+% =====================================================================
+
+@article{strathern1997improving,
+  title={`Improving Ratings': Audit in the {B}ritish University System},
+  author={Strathern, Marilyn},
+  journal={European Review},
+  volume={5},
+  number={3},
+  pages={305--321},
+  year={1997}
+}
+
+@article{elmhamdi2024goodhart,
+  title={On {G}oodhart's law, with an application to value alignment},
+  author={El-Mhamdi, El-Mahdi and Hoang, L{\^e}-Nguy{\^e}n},
+  journal={arXiv preprint arXiv:2410.09638},
+  year={2024}
+}
+
+@article{majka2025strong,
+  title={The Strong, Weak and Benign {G}oodhart's law: An independence-free and paradigm-agnostic formalisation},
+  author={Majka, Adrien and El-Mhamdi, El-Mahdi},
+  journal={arXiv preprint arXiv:2505.23445},
+  year={2025}
+}
+
+@article{manheim2019categorizing,
+  title={Categorizing Variants of {G}oodhart's Law},
+  author={Manheim, David and Garrabrant, Scott},
+  journal={arXiv preprint arXiv:1803.04585},
+  year={2019}
+}
+
+% =====================================================================
+% Time-use surveys and non-market production measurement
+% =====================================================================
+
+@article{aguiar2007measuring,
+  title={Measuring Trends in Leisure: The Allocation of Time over Five Decades},
+  author={Aguiar, Mark and Hurst, Erik},
+  journal={Quarterly Journal of Economics},
+  volume={122},
+  number={3},
+  pages={969--1006},
+  year={2007}
+}
+
+% =====================================================================
+% Welfare economics and development
+% =====================================================================
+
+@book{acemoglu2012nations,
+  title={Why Nations Fail: The Origins of Power, Prosperity, and Poverty},
+  author={Acemoglu, Daron and Robinson, James A.},
+  publisher={Crown Business},
+  year={2012}
+}
+
+% =====================================================================
+% Concentration measures
+% =====================================================================
+
+@phdthesis{herfindahl1950concentration,
+  title={Concentration in the Steel Industry},
+  author={Herfindahl, Orris C.},
+  year={1950},
+  school={Columbia University}
+}
+
+@article{hirschman1964paternity,
+  title={The Paternity of an Index},
+  author={Hirschman, Albert O.},
+  journal={The American Economic Review},
+  volume={54},
+  number={5},
+  pages={761--762},
+  year={1964}
+}
+
+% =====================================================================
+% Existing safety proposals (positioning in §10)
+% =====================================================================
+
+@article{bai2022constitutional,
+  title={Constitutional AI: Harmlessness from AI Feedback},
+  author={Bai, Yuntao and Kadavath, Saurav and Kundu, Sandipan and Askell, Amanda and others},
+  journal={arXiv preprint arXiv:2212.08073},
+  year={2022}
+}
+
+@article{irving2018debate,
+  title={AI Safety via Debate},
+  author={Irving, Geoffrey and Christiano, Paul and Amodei, Dario},
+  journal={arXiv preprint arXiv:1805.00899},
+  year={2018}
+}
+
+@article{christiano2018amplification,
+  title={Supervising Strong Learners by Amplifying Weak Experts},
+  author={Christiano, Paul and Shlegeris, Buck and Amodei, Dario},
+  journal={arXiv preprint arXiv:1810.08575},
+  year={2018}
+}
+
+@article{bowman2022scalable,
+  title={Measuring Progress on Scalable Oversight for Large Language Models},
+  author={Bowman, Samuel R. and Hyun, Jeeyoon and Perez, Ethan and others},
+  journal={arXiv preprint arXiv:2211.03540},
+  year={2022}
+}
+
+@inproceedings{katz2017reluplex,
+  title={{Reluplex}: An Efficient {SMT} Solver for Verifying Deep Neural Networks},
+  author={Katz, Guy and Barrett, Clark and Dill, David L. and Julian, Kyle and Kochenderfer, Mykel J.},
+  booktitle={International Conference on Computer Aided Verification},
+  pages={97--117},
+  year={2017},
+  publisher={Springer}
+}
+
+@inproceedings{ehlers2017formal,
+  title={Formal Verification of Piece-Wise Linear Feed-Forward Neural Networks},
+  author={Ehlers, R{\"u}diger},
+  booktitle={International Symposium on Automated Technology for Verification and Analysis},
+  pages={269--286},
+  year={2017},
+  publisher={Springer}
+}
+
+@article{wang2021beta,
+  title={{Beta-CROWN}: Efficient Bound Propagation with Per-Neuron Split Constraints for Neural Network Robustness Verification},
+  author={Wang, Shiqi and Zhang, Huan and Xu, Kaidi and Lin, Xue and Jana, Suman and Hsieh, Cho-Jui and Kolter, J. Zico},
+  journal={Advances in Neural Information Processing Systems},
+  volume={34},
+  year={2021}
+}
+
+% =====================================================================
+% Sequential analysis, concentration inequalities, information theory
+% =====================================================================
+
+@book{wald1947sequential,
+  title={Sequential Analysis},
+  author={Wald, Abraham},
+  publisher={John Wiley \& Sons},
+  year={1947}
+}
+
+@article{hoeffding1963probability,
+  title={Probability Inequalities for Sums of Bounded Random Variables},
+  author={Hoeffding, Wassily},
+  journal={Journal of the American Statistical Association},
+  volume={58},
+  number={301},
+  pages={13--30},
+  year={1963}
+}
+
+@article{azuma1967weighted,
+  title={Weighted Sums of Certain Dependent Random Variables},
+  author={Azuma, Kazuoki},
+  journal={Tohoku Mathematical Journal},
+  volume={19},
+  number={3},
+  pages={357--367},
+  year={1967}
+}
+
+@article{kullback1951information,
+  title={On Information and Sufficiency},
+  author={Kullback, Solomon and Leibler, Richard A.},
+  journal={The Annals of Mathematical Statistics},
+  volume={22},
+  number={1},
+  pages={79--86},
+  year={1951}
+}
+
+% =====================================================================
+% Cryptographic primitives
+% =====================================================================
+
+@inproceedings{pedersen1991noninteractive,
+  title={Non-Interactive and Information-Theoretic Secure Verifiable Secret Sharing},
+  author={Pedersen, Torben Pryds},
+  booktitle={Annual International Cryptology Conference (CRYPTO)},
+  pages={129--140},
+  year={1991},
+  publisher={Springer}
+}
+
+% =====================================================================
+% Majorization and Schur-convexity (foundational)
+% =====================================================================
+
+@book{marshall2011inequalities,
+  title={Inequalities: Theory of Majorization and Its Applications},
+  author={Marshall, Albert W. and Olkin, Ingram and Arnold, Barry C.},
+  publisher={Springer},
+  edition={2nd},
+  year={2011}
+}
+
+@book{hardy1952inequalities,
+  title={Inequalities},
+  author={Hardy, G. H. and Littlewood, J. E. and P{\'o}lya, G.},
+  publisher={Cambridge University Press},
+  edition={2nd},
+  year={1952}
+}
+
+% =====================================================================
+% AI capability evaluation suites (positioning in §1.2)
+% =====================================================================
+
+@article{liang2022holistic,
+  title={Holistic Evaluation of Language Models},
+  author={Liang, Percy and Bommasani, Rishi and Lee, Tony and Tsipras, Dimitris and Soylu, Dilara and Yasunaga, Michihiro and others},
+  journal={arXiv preprint arXiv:2211.09110},
+  year={2022}
+}
+
+@article{srivastava2022bigbench,
+  title={Beyond the Imitation Game: Quantifying and Extrapolating the Capabilities of Language Models},
+  author={Srivastava, Aarohi and Rastogi, Abhinav and Rao, Abhishek and Shoeb, Abu Awal Md and Abid, Abubakar and Fisch, Adam and others},
+  journal={arXiv preprint arXiv:2206.04615},
+  year={2022}
+}
+
+@article{kinniment2023evaluating,
+  title={Evaluating Language-Model Agents on Realistic Autonomous Tasks},
+  author={Kinniment, Megan and Sato, Lucas Jun Koba and Du, Haoxing and Goodrich, Brian and Hasin, Max and Chan, Lawrence and Miles, Luke Harold and Lin, Tao R. and Wijk, Hjalmar and Burget, Joel and Ho, Aaron and Barnes, Elizabeth and Christiano, Paul},
+  journal={arXiv preprint arXiv:2312.11671},
+  year={2023},
+  note={Model Evaluation and Threat Research (METR).}
+}
+
+% =====================================================================
+% Scaling laws (positioning in §1.2)
+% =====================================================================
+
+@article{kaplan2020scaling,
+  title={Scaling Laws for Neural Language Models},
+  author={Kaplan, Jared and McCandlish, Sam and Henighan, Tom and Brown, Tom B. and Chess, Benjamin and Child, Rewon and Gray, Scott and Radford, Alec and Wu, Jeffrey and Amodei, Dario},
+  journal={arXiv preprint arXiv:2001.08361},
+  year={2020}
+}
+
+@article{hoffmann2022training,
+  title={Training Compute-Optimal Large Language Models},
+  author={Hoffmann, Jordan and Borgeaud, Sebastian and Mensch, Arthur and Buchatskaya, Elena and Cai, Trevor and Rutherford, Eliza and others},
+  journal={arXiv preprint arXiv:2203.15556},
+  year={2022}
+}
+
+% =====================================================================
+% RLHF (positioning in §1.2)
+% =====================================================================
+
+@inproceedings{christiano2017deep,
+  title={Deep Reinforcement Learning from Human Preferences},
+  author={Christiano, Paul F. and Leike, Jan and Brown, Tom B. and Martic, Miljan and Legg, Shane and Amodei, Dario},
+  booktitle={Advances in Neural Information Processing Systems},
+  year={2017}
+}
+
+@article{ouyang2022training,
+  title={Training Language Models to Follow Instructions with Human Feedback},
+  author={Ouyang, Long and Wu, Jeffrey and Jiang, Xu and Almeida, Diogo and Wainwright, Carroll L. and Mishkin, Pamela and others},
+  journal={Advances in Neural Information Processing Systems},
+  volume={35},
+  year={2022}
+}
+
+% =====================================================================
+% Inner alignment / mesa-optimization
+% =====================================================================
+
+@article{hubinger2019risks,
+  title={Risks from Learned Optimization in Advanced Machine Learning Systems},
+  author={Hubinger, Evan and van Merwijk, Chris and Mikulik, Vladimir and Skalse, Joar and Garrabrant, Scott},
+  journal={arXiv preprint arXiv:1906.01820},
+  year={2019}
+}
+
+% =====================================================================
+% Hypothesis testing / confidence-bound construction
+% =====================================================================
+
+@book{lehmann2005testing,
+  title={Testing Statistical Hypotheses},
+  author={Lehmann, E. L. and Romano, Joseph P.},
+  edition={3},
+  publisher={Springer},
+  year={2005},
+  series={Springer Texts in Statistics}
+}
+</script>
+</d-bibliography>
+
+</body>
+</html>

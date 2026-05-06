@@ -58,16 +58,6 @@ via invariant $I_5$; readers seeking the formal derivation are
 directed to \citep[\S 4]{lasser2026foundations}.
 \end{assumption}
 
-Bounded co-evolution does not require its own assumption block:
-\citep[Theorem~1]{lasser2026foundations} derives the property as
-a corollary of (C5.HOEFF), the upper exposure-rate cap (C7.RATE)
-introduced as a sub-clause of (C7) below, and the verification
-protocol's channel-projection structure under (C5.MULT). The
-companion paper establishes the explicit closed form $\bar{M}
-\leq C \cdot \Bclip \cdot \lambda_{\max} \cdot \tau_{\mathrm{meta}}$
-with $C \in \{1, \Kch - 1\}$, all factors deployment-class
-constants intensive in $|P|$.
-
 \begin{theorem}[Conditional Deployment Safety]
 \label{thm:deployment_safety}
 Let $\Pproxy = \volL$ be the possessed-capability volume (the proxy)
@@ -493,8 +483,8 @@ trade-flow concentration terms ($\HHI > H^*$ implies the
 prerequisites of $\mathcal{R}_{\mathrm{press}}$); the
 operationally-relevant reverse direction (low HHI bounding the
 gap) follows from the companion paper's structural derivation
-rather than from a separate empirical-adequacy assumption.
-Concretely, \citep[Theorem~2]{lasser2026foundations} gives
+under Assumption~\ref{ass:concgap_conditions}. Concretely,
+\citep[Theorem~2]{lasser2026foundations} gives
 \[
   |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot
   h_{\mathrm{CG}}, \qquad
@@ -758,12 +748,12 @@ reach.
 The deployment claim conditions on (REP), (DISP), (COAL), and
 Lipschitz embedding compatibility
 (Assumption~\ref{ass:concgap_conditions}), each operationally
-auditable per \citep[\S 6]{lasser2026foundations}.  These replace
-the previous monolithic HHI surrogate-adequacy assumption; the
-proof of the bound under (REP) + (DISP) + (COAL) plus embedding
-compatibility is in \citep[Theorem~2]{lasser2026foundations}.
-The universal model-free Concentration-Gap conjecture remains
-open, but the deployment claim no longer depends on it directly.
+auditable per \citep[\S 6]{lasser2026foundations}; the proof of
+the bound under these four conditions is in
+\citep[Theorem~2]{lasser2026foundations}. The universal
+model-free Concentration-Gap conjecture remains open as a
+research-program target; the deployment claim does not depend on
+it directly.
 
 The theorem does \emph{not} solve the inner-alignment problem.
 Condition (C4) is assumed, not discharged.  Vanilla RLHF does not

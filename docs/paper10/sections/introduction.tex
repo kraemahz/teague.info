@@ -1,31 +1,60 @@
 \section{Introduction}
 \label{sec:introduction}
 
-\subsection{The result}
-\label{sec:problem}
-
 This paper identifies a regime under which deployment of capability-unbounded
 systems is provably safe within the Goal-Frontier Maximization (GFM) framework.
 Such a regime is needed for the future safe development of AI systems which
 operate as independent agents capable of recursive self-improvement (RSI) and
-able to reach a classification of artificial superintelligence (ASI) within
+are able to reach a classification of artificial superintelligence (ASI) within
 their operational lifetime.
 
-The regime is conditional on eleven operational invariants on the deployment
-substrate structure plus an explicit set of operational conditions
+\subsection{Setting}
+\label{sec:setting}
+
+GFM is not a normative framework. The objective specification treats
+capabilities as an abstract metric volume. A ``capability'' has its definition
+inherited from welfare-economic definitions --- something an agent can do or
+be~\citep{sen1985commodities,nussbaum2000women}. Normative claims enter at the
+capability definition layer, where deployments define which capabilities are
+observable and socially valuable by specifying which capability claims are
+admissible (the S1-admissibility framework
+of~\citep[Revealed Sacrifice]{lasser2026paper8a}). This entails that GFM is
+functional over a wide range of existing and future social structures. The
+caveat: capability definitions must track exercised capabilities in the
+deployment's society for the Goodhart-slack bound to model the actual
+proxy-truth divergence rather than a definitional artifact.
+
+For readers landing on this paper without prior exposure to the Goal-Frontier
+Maximization sequence, the conceptual entry point is the foundation
+paper~\citep{lasser2026gfm}, which lays out the sequence's frame and overall
+direction. For the capabilities-approach background,
+see~\citep{sen1985commodities,nussbaum2000women,robeyns2017wellbeing}; the
+operational machinery for capability admissibility is
+in~\citep[Revealed Sacrifice]{lasser2026paper8a}; the Goodhart-slack framing
+follows~\citep{manheim2019categorizing,elmhamdi2024goodhart} and is composed
+with the GFM machinery via~\citep[Microfoundation]{lasser2026micro}'s static
+Goodhart bound. \S\ref{sec:composition} unpacks each source paper's
+contribution to the present composition in turn.
+
+\subsection{The result}
+\label{sec:problem}
+
+The safe regime is conditional on eleven operational invariants on the
+deployment substrate structure plus an explicit set of operational conditions
 $(C1)$--$(C12)$ and four Concentration-Gap structural conditions
 (Assumption~\ref{ass:concgap_conditions}: representativeness, bounded
 dispersion, coalition closure, embedding compatibility); under these
 conditions, the Goodhart slack between proxy and operational truth is bounded
-by a constant independent of the system's absolute capability magnitude. The bound holds for substrate-targeting
-adversarial events in a static safe region without active monitoring, and is
-preserved under detection-and-correction with a tail-bounded lead-time
-guarantee for substrate-targeting evasions of the static region within a
-four-channel observable class.  Five named residuals fall outside the
-guarantee: channel-orthogonal restructuring, environment-witness-orthogonal
-manipulation, redundancy-dominated regime, capability-targeting and
-coalition-internal shocks, and calibration-exceeded gap-growth (Layer~3,
-(R1)--(R5); we name these residuals explicitly rather than gloss them).
+by a constant independent of the system's absolute capability magnitude. The
+bound holds for substrate-targeting adversarial events in a static safe region
+without active monitoring, and is preserved under detection-and-correction with
+a tail-bounded lead-time guarantee for substrate-targeting evasions of the
+static region within a four-channel observable class.  Five named residuals
+fall outside the guarantee: channel-orthogonal restructuring,
+environment-witness-orthogonal manipulation, redundancy-dominated regime,
+capability-targeting and coalition-internal shocks, and calibration-exceeded
+gap-growth (Layer~3, (R1)--(R5); we name these residuals explicitly rather than
+gloss them).
 
 The result inverts the standard alignment-safety frame. Rather than asking
 \emph{what can the system do?} and conditioning safety on accurate capability
@@ -259,14 +288,11 @@ examples, process supervision tied to real attestations).
 binding via invariant $I_5$ requires four operationally auditable structural
 conditions: representativeness (REP), bounded dispersion (DISP), coalition
 closure (COAL), and Lipschitz embedding compatibility (EMB), collected as
-Assumption~\ref{ass:concgap_conditions}. The conjunction of these four
-conditions plays the role previously assigned to a monolithic
-``HHI surrogate adequacy'' assumption; the companion
+Assumption~\ref{ass:concgap_conditions}. The companion
 paper~\citep{lasser2026foundations} derives the Goodhart-slack bound under
-these structural conditions, replacing what was previously an inherited
-empirical-adequacy claim with four explicit auditable conditions plus the
-HHI threshold itself. \S\ref{sec:conjecture_op} summarizes the structural
-content; \citep[\S 4]{lasser2026foundations} contains the formal derivation.
+these four structural conditions plus the HHI threshold itself.
+\S\ref{sec:conjecture_op} summarizes the structural content;
+\citep[\S 4]{lasser2026foundations} contains the formal derivation.
 
 \textbf{What we explicitly do not claim.}  This paper does not prove that
 alignment pressure is universally reversed under substrate identification.  It

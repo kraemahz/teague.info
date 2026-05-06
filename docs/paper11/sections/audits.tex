@@ -9,7 +9,7 @@ plus a Lipschitz embedding compatibility precondition
 (Assumption~\ref{ass:embedding-companion}) that certifies $\phi$
 before (REP) or (DISP) can be evaluated in the embedded
 representation. Each admits an operational audit, paralleling the
-existing audit structure of \citep[\S 7]{lasser2026paper10}: each
+existing audit structure of \citep[\S 8]{lasser2026paper10}: each
 audit produces an attestation on the verification
 ledger~\citep{lasser2026exo}, with cadence calibrated to
 deployment epoch boundaries. Confidence-bound construction in the
@@ -99,6 +99,28 @@ deployment claim's $\|\Pproxy - \Ttruth\|$ form via
 Lipschitz transfer~\citep[Theorem~2]{lasser2026micro}. Mitigation:
 choose a different embedding, or restrict the deployment's scope
 to a subspace where bi-Lipschitz $\phi$ exists.
+
+\paragraph{When $\phi$ is well-conditioned.}
+Utility representations that are linear (or near-linear) in the
+deployment's underlying decision variables typically admit
+well-conditioned $\phi$: identity or affine maps suffice, and the
+bi-Lipschitz constants $(\underline{L}, \bar{L})$ are close to
+$1$. High-dimensional learned representations (neural utility
+models, embedding vectors, opaque scalarizations of multi-
+attribute preferences) may not --- distortion constants can be
+large, and the bi-Lipschitz form's downstream multiplication of
+$(\bar{L}/\underline{L})$ through the (REP) and (DISP) bounds
+can inflate the Goodhart-slack ceiling toward operational
+uselessness. Practical deployments should target one of: (i) an
+explicit affine utility model where $\phi$ is identity; (ii) a
+low-dimensional projection of a high-dimensional representation
+onto the operationally active subspace, with the projection's
+bi-Lipschitz constants bounded by audit; or (iii) a restricted
+deployment scope where the active subspace admits a
+well-conditioned embedding even if the full representation does
+not. Deployments that cannot achieve one of these lie outside
+Theorem~\ref{thm:concgap-scoped}'s practical applicability even
+if they nominally satisfy (EMB).
 
 \subsection{(REP) audit (representativeness)}
 
@@ -219,10 +241,35 @@ residual; deployments where $\eta_\mathrm{latent}$ cannot be
 bounded operationally are outside
 Theorem~\ref{thm:concgap-scoped}'s scope.
 
+\paragraph{When $\eta_\mathrm{latent}$ is operationally negligible.}
+The Goodhart-slack bound has the additive form
+$\Lip(g) \cdot (\rho_\mathrm{rep} + \sigma\sqrt{\chisq(w \|\mu)}
++ \eta_\mathrm{latent})$, so $\eta_\mathrm{latent}$ dominates
+the bound whenever it is large compared with the other terms.
+For $\eta_\mathrm{latent}$ to remain operationally negligible the
+deployment should target $\eta_\mathrm{latent} \leq \epsilon \cdot
+(\rho_\mathrm{rep} + \sigma \sqrt{\chisq(w \|\mu)})$ for some
+small $\epsilon \ll 1$, which translates via
+$\eta_\mathrm{latent} \leq p_\mathrm{miss} \cdot
+\|\Delta\|_{\max}$ into a detection-power requirement on the
+audit's coalition-detection machinery:
+\[
+  p_\mathrm{miss} \cdot \|\Delta\|_{\max} \;\leq\; \epsilon \cdot
+  \big(\rho_\mathrm{rep} + \sigma \sqrt{\chisq(w \|\mu)}\big).
+\]
+Deployments whose threat model admits large $\|\Delta\|_{\max}$
+(adversarial counterparties with large utility deviations from
+$W$) require correspondingly tighter $p_\mathrm{miss}$ to keep
+$\eta_\mathrm{latent}$ dominated. The audit's calibration
+documentation should make this trade-off explicit, and audits
+that cannot achieve the inequality leave deployments where
+$\eta_\mathrm{latent}$ may dominate the bound in the operational
+sense even when the algebraic bound formally holds.
+
 \subsection{Integration with existing audit infrastructure}
 
 Several of these new audits overlap with existing audits
-in~\citep[\S 7]{lasser2026paper10}:
+in~\citep[\S 8]{lasser2026paper10}:
 \begin{itemize}
 \item (C7.RATE) and channel-projection audit: integrates
   primarily with Audit~4 (bounded co-evolution
@@ -247,5 +294,5 @@ in~\citep[\S 7]{lasser2026paper10}:
 The audit hooks above are the minimum needed for
 Theorem~\ref{thm:c7-corollary} and Theorem~\ref{thm:concgap-scoped}
 to apply; consolidated audit-tooling combining these with
-\citep[\S 7]{lasser2026paper10}'s existing audits is the natural
+\citep[\S 8]{lasser2026paper10}'s existing audits is the natural
 target for further operational-tooling work.

@@ -56,16 +56,14 @@ capability-magnitude-independent.
 \label{sec:disc_sensitivity}
 
 Theorem~\ref{thm:deployment_safety}'s three-layer claim is not
-unconditional.  After the companion-paper integration, the
-deployment claim conditions on the twelve operational conditions
-(C1)--(C12) plus the structural conditions of
-Assumption~\ref{ass:concgap_conditions} (representativeness,
+unconditional. The deployment claim conditions on the twelve
+operational conditions (C1)--(C12) plus the structural conditions
+of Assumption~\ref{ass:concgap_conditions} (representativeness,
 bounded dispersion, coalition closure, and Lipschitz embedding
 compatibility) and the (C7.RATE) sub-clause introduced as part
-of (C7).  Failure of any structural condition triggers a
-specific audit-detectable signal rather than a monolithic
-hard-failure; this subsection traces the failure-mode taxonomy
-under the structural decomposition.
+of (C7). Failure of any structural condition triggers a specific
+audit-detectable signal; this subsection traces the failure-mode
+taxonomy under the structural decomposition.
 
 \paragraph{Bounded co-evolution failure factors through three primitive conditions.}
 \citep[Theorem~1]{lasser2026foundations} derives bounded
@@ -90,16 +88,15 @@ verification protocol's channel-projection structure.  Failure of
   redesign verification-protocol classification policy.
 \end{itemize}
 
-The previous characterization of bounded-co-evolution failure as
-``hard-failure with no graceful-degradation pathway'' is replaced
-by this decomposition: each primitive failure mode has its own
-audit signal and mitigation pathway.
+Bounded-co-evolution failure thus decomposes into primitive
+failure modes, each with its own audit signal and mitigation
+pathway.
 
 \paragraph{Concentration-Gap structural-condition failure factors through (REP), (DISP), (COAL), (EMB).}
 \citep[Theorem~2]{lasser2026foundations} establishes the scoped
 Concentration-Gap result under (REP) + (DISP) + (COAL) and
-Lipschitz embedding compatibility.  The previous monolithic
-HHI surrogate-adequacy failure mode decomposes:
+Lipschitz embedding compatibility. Concentration-Gap
+structural-condition failure decomposes into:
 
 \begin{itemize}
 \item \textbf{(REP) failure.}  The counterparty population's mean
@@ -136,13 +133,10 @@ HHI surrogate-adequacy failure mode decomposes:
   scope to a subspace where bi-Lipschitz $\phi$ exists.
 \end{itemize}
 
-The previous characterization of HHI surrogate-adequacy failure
-as ``Layer~1 collapses, Layer~2 binds without modification'' is
-partially preserved (the layers are still independent in their
-formal structure) but with structural specificity: Layer~1
-binding requires (REP) + (DISP) + (COAL) and embedding
-compatibility all to hold, and the deployment can localize which
-condition has failed.
+Layer~1 binding requires (REP) + (DISP) + (COAL) and embedding
+compatibility all to hold; Layer~2 binds via SPRT detection
+independently of Layer~1's status, and the deployment can
+localize which structural condition has failed.
 
 \paragraph{The universal Concentration-Gap conjecture.}
 \citep[Microfoundation]{lasser2026micro}'s universal model-free
@@ -158,19 +152,130 @@ characterize where the deployment claim does bind.  See
 \S\ref{sec:disc_indefinite} for the conjecture's status as a
 deferred-indefinitely research-program target.
 
-\paragraph{Asymmetric failure profiles, after integration.}
-The companion-paper integration eliminates the previous
-asymmetry between bounded co-evolution (load-bearing,
-hard-failure) and the HHI surrogate-adequacy assumption
-(empirical-adequacy, graceful-degradation): both now decompose
-into specific structural-condition failures with audit-detectable
-signals.  The remaining empirical-adequacy
+\paragraph{Symmetric failure-mode profiles.}
+Bounded co-evolution and the Concentration-Gap structural
+conditions both decompose into specific structural-condition
+failures with audit-detectable signals; the deployment claim
+treats them on the same footing rather than as a load-bearing
+hard-failure paired with an empirical-adequacy
+graceful-degradation. The remaining empirical-adequacy
 question --- whether the universal Concentration-Gap conjecture
 holds outside the (REP) + (DISP) + (COAL) + (EMB) regime --- is a
 research-program question rather than a deployment-claim
 question.  The deployment claim binds within the audit-certifiable
 structural regime; failure modes outside that regime are scope
 restrictions, not deployment-claim failures.
+
+\paragraph{Closing the deployment-class constants under capability scaling.}
+Several theorem-level constants are stated as deployment-class
+intensive but are certified empirically per epoch rather than
+derived structurally: the gap-growth rate $\rho_{\mathrm{gap}}$
+((C11), Audit~7), the post-partition counterparty cardinality
+$N$ ((COAL)), the exposure-rate cap $\lambda_{\max}$
+((C7.RATE), Audit~4), the channel-multiplicity bound $\Kch$
+((C5.MULT)), and the embedding bi-Lipschitz constants
+$(\underline{L}, \bar{L})$ for non-isometric $\phi$ ((EMB)).
+Each closes the proof under re-certification at the deployment's
+current $|P|$, but each also admits a \emph{structural} formulation
+that converts the per-epoch obligation into a design-time policy
+commitment with auditable structural content. We give the
+formal commitment for each below; the substance is
+deployment-discipline machinery, not new theorem proof.
+
+\emph{Capability-scaled rate-limit policy (CSRL).}  Fix a
+deployment-class envelope of capability magnitudes
+$[|P|_0, |P|_1]$ and a deployment-class threat model. A CSRL is
+a rate-limit infrastructure designed against that threat model
+such that the induced gap-growth rate
+$\rho_{\mathrm{gap}}(|P|)$ remains bounded by a deployment-class
+constant $\rho_{\max}$ for all $|P|$ in the envelope, and the
+infrastructure's deterministic action-rate cap satisfies
+$\lambda_{\max}(|P|) \leq \lambda_{\max}^*$ for a deployment-class
+constant $\lambda_{\max}^*$. CSRL is a \emph{design commitment},
+not an algebraic identity: rate-limit infrastructure is the
+mechanism, $\rho_{\max}$ and $\lambda_{\max}^*$ are the
+deployment-class envelopes, and the relationship between them is
+mediated by the deployment's threat model rather than by a
+closed-form formula. (C11) and (C7.RATE) hold structurally under
+CSRL because $\rho_{\mathrm{gap}} \leq \rho_{\max}$ and
+$\lambda_{\max} \leq \lambda_{\max}^*$ are deployment-class
+constants by the policy's design. Trade-off: tighter rate limits
+(lower $\lambda_{\max}^*$) buy a smaller induced $\rho_{\max}$ but
+constrain throughput; the deployment chooses the loosest
+$(\rho_{\max}, \lambda_{\max}^*)$ pair its threat model permits.
+The audit shifts from ``re-certify
+$\rho_{\mathrm{gap}}, \lambda_{\max}$ each epoch'' to ``confirm the
+rate-limit infrastructure remains within design envelope and the
+induced $\rho_{\mathrm{gap}}$ stays below $\rho_{\max}$.''
+
+\emph{Channel-cardinality discipline.}  (C5.MULT) fixes the
+channel-multiplicity bound $\Kch$ and the per-channel multinomial
+cardinality $\Kchmulti$ before deployment. The channel-cardinality
+discipline is the corresponding design commitment: $\Kch$ and
+$\Kchmulti$ are chosen at design time and are not modified during
+deployment. New capabilities introduced as $|P|$ grows are
+absorbed into the existing $\Kch$ channels --- typically via the
+multinomial concentration channels admitting new fine-grained
+event categories within the existing $\Kchmulti$ budget, with the
+projection-map structure preserved per
+\citep[\S 6]{lasser2026foundations}'s structural-projection audit.
+The discipline therefore preserves (C5.MULT) literally: no
+adaptive channel creation, no per-$|P|$ growth in the cardinality
+bound, no SPRT family-wise re-allocation. The audit verifies the
+new-capability $\to$ existing-channel routing is in force and the
+projection-map structure is preserved.
+
+\emph{Counterparty-onboarding policy.}  (COAL)'s clause~(ii)
+fixes a post-partition cardinality bound $N \leq N_{\max}$. The
+counterparty-onboarding policy makes this a durable commitment:
+the deployment's governance refuses onboarding that would push
+the post-partition $N$ above $N_{\max}$ (forcing further
+coalition partitioning under (COAL) audit, or refusing the new
+counterparty, or restricting the deployment's scope). Audit
+cadence shifts from ``re-discover $N$'' to ``confirm
+onboarding-policy compliance.'' This is the simplest of the
+four: no formal-statement gap, only a deployment-policy template
+that turns a per-epoch quantity into a long-running invariant.
+
+\emph{Embedding-class restriction.}  Let $\mathcal{C}_\phi$ be a
+deployment-class family of utility representations such that for
+every $U \in \mathcal{C}_\phi$ there exists an embedding $\phi:
+\mathcal{V}_{\mathrm{utility}} \to \mathcal{V}$ bi-Lipschitz on
+$P^{\mathrm{act}}$ with $\bar{L}/\underline{L} \leq L_{\max}^\phi$
+for a deployment-class constant; here
+$\mathcal{V}_{\mathrm{utility}}$ is the already-scalarized
+utility codomain, not the original multi-coordinate decision
+space. Concrete admissible classes include: (i) \emph{linear
+scalarizations} $U(c) = \sum_i w_i c_i$ with bounded weight
+ratios, where $\phi$ is the identity on
+$\mathcal{V}_{\mathrm{utility}}$ and $L_{\max}^\phi = 1$; (ii)
+\emph{monotone piecewise-linear utilities} on bounded-cardinality
+breakpoint sets, with $L_{\max}^\phi$ bounded by the maximum
+slope ratio across pieces; (iii) \emph{compositional forms} $U =
+f(g_1, \ldots, g_k)$ where each $g_i$ is a named decision-variable
+functional and $f$ is bi-Lipschitz with audit-bounded constants.
+The deployment commits at design time to $U \in \mathcal{C}_\phi$;
+the audit verifies (a) the chosen $\mathcal{C}_\phi$ admits the
+bi-Lipschitz $\phi$ structurally, (b) the deployment's $U$ is in
+$\mathcal{C}_\phi$, and (c) the bi-Lipschitz constants for the
+chosen $(U, \phi)$ pair are within $L_{\max}^\phi$. Deployments
+using opaque or learned utility representations outside
+$\mathcal{C}_\phi$ fall outside Theorem~1's scope by design
+rather than by audit finding.
+
+The four commitments above are formal: each names the
+deployment-class object the policy commits to, the constraint
+the policy enforces, and the audit content that verifies
+ongoing compliance. None of the four introduces $|P|$-dependent
+variation in $\rho_{\mathrm{gap}}, \lambda_{\max}, \Kch$, or
+$L_{\max}^\phi$: each commitment binds these to deployment-class
+constants by design. Adopting them therefore shifts the
+deployment discipline from per-epoch re-discovery to design-time
+structural commitment without enlarging the proof of the main
+theorem; the audit reduces to compliance verification rather
+than re-certification of values that might have shifted. The
+intensivity property of the bound becomes a structural property
+of the deployment-side machinery.
 
 \subsection{Connection to the alignment-research program}
 \label{sec:disc_alignment}
@@ -313,8 +418,8 @@ capability-estimation properties.
 \subsection{Open questions deferred to follow-up work}
 \label{sec:disc_companion}
 
-After the companion-paper integration~\citep{lasser2026foundations},
-one structural item remains as a natural follow-up target:
+One structural item remains as a natural follow-up target beyond
+the scope discharged by~\citep{lasser2026foundations}:
 
 \paragraph{The channel-mediation conjecture.}
 ``All $\Delta r_K$ realizes through observable channels:
@@ -344,7 +449,8 @@ research programs:
 \citep[Microfoundation]{lasser2026micro}'s universal model-free
 Concentration-Gap conjecture (optimization pressure correlates
 with proxy-truth gap exploitation in any deployment context)
-remains open after the companion paper's scoped discharge.
+remains open beyond the scoped discharge of
+\citep{lasser2026foundations}.
 \citep[Theorem~2]{lasser2026foundations} proves the conjecture
 under (REP) + (DISP) + (COAL) + (EMB) plus the embedded-Lipschitz
 machinery of \citep[Microfoundation]{lasser2026micro}; a

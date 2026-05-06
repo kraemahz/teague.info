@@ -211,12 +211,12 @@ optimization pressure that does not manifest in concentrated trade
 flow).  For Theorem~1 to invoke $I_5$ as the operational invariant,
 this gap must be closed.
 
-We close the gap structurally rather than by a single empirical
-assumption.  The companion paper~\citep{lasser2026foundations}
-establishes that under four operationally auditable structural
-conditions --- representativeness (REP), bounded dispersion (DISP),
-coalition closure (COAL), and Lipschitz embedding compatibility
-(EMB) (collected as Assumption~\ref{ass:concgap_conditions} of
+The gap is closed structurally. The companion
+paper~\citep{lasser2026foundations} establishes that under four
+operationally auditable structural conditions ---
+representativeness (REP), bounded dispersion (DISP), coalition
+closure (COAL), and Lipschitz embedding compatibility (EMB)
+(collected as Assumption~\ref{ass:concgap_conditions} of
 \S\ref{sec:theorem_statement}) --- the proxy-truth Goodhart
 slack is bounded by a $\chi^2$-divergence quantity that controls
 $\HHI$ via $\chi^2(w \,\|\, \mu) = N \cdot \HHI(w) - 1$ for
@@ -224,9 +224,8 @@ uniform base measure $\mu$ on a (COAL)-bounded post-partition
 counterparty population.
 
 \textbf{What the structural conditions deliver.}  Layer~1 of the
-deployment theorem now binds via
-\citep[Theorem~2]{lasser2026foundations}'s upper bound rather
-than via a separate empirical-adequacy claim.  Each of (REP),
+deployment theorem binds via
+\citep[Theorem~2]{lasser2026foundations}'s upper bound.  Each of (REP),
 (DISP), (COAL), (EMB) is auditable from operational deployment
 state~\citep[\S 6]{lasser2026foundations}; the deployment claim's
 load-bearing content is visible in four concrete checkable
@@ -240,13 +239,14 @@ cannot be audited fall outside the deployment claim's scope.
 This is discussed in \S\ref{sec:conjecture_op}.
 
 \paragraph{Note on the Conjecture-dependence audit (\S\ref{sec:conjecture_audit}).}
-The Conjecture-dependence audit listed $I_5$ as the only
-conjecture-dependent invariant.  After the companion-paper
-integration, the dependence on the universal Concentration-Gap
-conjecture is replaced by dependence on the four structural
-conditions of Assumption~\ref{ass:concgap_conditions}, each
-operationally auditable.  The other ten invariants remain theorem-proof
-conditions derived from established source-paper machinery.
+$I_5$ depends on Assumption~\ref{ass:concgap_conditions}'s four
+operationally auditable structural conditions; the universal
+Concentration-Gap conjecture is not part of the deployment
+claim's dependency chain. The other ten invariants are
+theorem-proof conditions derived from established source-paper
+machinery. See \S\ref{sec:conjecture_audit} for the dependency
+structure and \S\ref{sec:disc_indefinite} for the universal
+conjecture's status as a deferred-indefinitely target.
 
 \subsection{Lemma 4 (SPRT detection lead-time tail bound)}
 \label{sec:lem4}
