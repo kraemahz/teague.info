@@ -1,0 +1,142 @@
+\section{Setup and shared notation}
+\label{sec:setup}
+
+Notation is inherited from the GFM
+sequence~\citep{lasser2026micro,lasser2026paper8a,lasser2026paper8b,lasser2026exo,lasser2026paper10}
+unless explicitly noted as new.
+
+\subsection{Capability poset and operationally active subspace}
+
+Let $P$ denote the capability poset following
+\citep{lasser2026poset}, with cardinality $|P|$ taken as the
+``capability magnitude'' that the deployment-safety claim is
+required to be independent of. The \emph{operationally active
+subspace} is $P^{\mathrm{act}} = \{c \in P \setminus
+\mathrm{ResS} : \Ttruth(c) > 0\}$, the capabilities with nonzero
+operational truth excluding the structurally-unobservable
+residual class~\citep{lasser2026micro}.
+
+The proxy and truth functionals on $P$ are
+\begin{equation}
+  \Pproxy = \volL : P \to \mathbb{R}_{\geq 0}, \qquad
+  \Ttruth = \volR^{[W]} : P \to \mathbb{R}_{\geq 0},
+\end{equation}
+the possessed-capability volume measure and the window-active
+realized capability volume measure, respectively. The
+\emph{Goodhart slack} for an alignment property
+$g: P^{\mathrm{act}} \to \mathbb{R}$ with Lipschitz constant
+$\Lip(g)$ is $|g(\Ttruth) - g(\Pproxy)|$, bounded above by
+$\Lip(g) \cdot \|\Pproxy - \Ttruth\|$ via
+\citep[Theorem~2]{lasser2026micro}'s Lipschitz transfer.
+
+\subsection{Verification ledger and channel structure}
+
+The deployment uses
+\citep[Exogenous Verification]{lasser2026exo}'s verification
+infrastructure: an append-only verification ledger on
+substrate-exclusive nodes, recording per-step events from a
+finite-or-countable action space $A = A^{\mathrm{ev}} \sqcup
+\{a_0\}$, where $A^{\mathrm{ev}}$ is the set of recordable event
+types and $a_0$ is the \emph{idle action} (``no observable event
+in this step'').
+
+The deployment monitors $\Kch$ channels indexed by $j \in \{1,
+\ldots, \Kch\}$. Each channel has:
+\begin{itemize}
+\item A \textbf{projection map} $\pi_j: A \to V_j \cup \{*_j\}$,
+  where $V_j$ is channel $j$'s observable space (counts for
+  Poisson cooperative-rate, $\{0,1\}$ for Bernoulli attestation,
+  finite category set for multinomial concentration channels)
+  and $*_j$ is the trivial / null projection. Action $a$
+  \emph{engages} channel $j$ iff $\pi_j(a) \neq *_j$.
+\item An \textbf{extended baseline distribution}
+  $\bar{p}_0^{(j)}$ on $V_j \cup \{*_j\}$ with baseline null-mass
+  $\epsilon_j^{(0)} := \bar{p}_0^{(j)}(\{*_j\}) \in [0, 1)$ and
+  conditional baseline $p_0^{(j)}(v) := \bar{p}_0^{(j)}(v) / (1 -
+  \epsilon_j^{(0)})$ for $v \in V_j$.
+\item A least-favorable adversarial alternative $p_1^{(j)}$ at
+  threshold shift $\eta_j$.
+\item A clipped per-step log-likelihood-ratio function
+  $\ell^{(j)}: A \to [-\Bclip, \Bclip]$ that depends on $a$ only
+  through $\pi_j(a)$, with $\ell^{(j)}(a) = 0$ whenever $\pi_j(a)
+  = *_j$ (zero-outside-engagement convention). $\Bclip$ is the
+  (C5.HOEFF) clip radius, fixed before deployment and independent
+  of $|P|$.
+\end{itemize}
+
+The set of actions engaging channel $j$ is $A_j := \{a \in A :
+\pi_j(a) \neq *_j\}$. For ordered channel pairs $(j, j')$ with
+$j \neq j'$, the \emph{pairwise overlap set} is $A_{j, j'} := A_j
+\cap A_{j'}$.
+
+\subsection{SPRT machinery and exposure events}
+
+The deployment runs continuous SPRT
+detection~\citep{lasser2026exo,wald1947sequential} on each
+monitored channel, with familywise allocation across $\Kch$
+channels under (C5.MULT). Per-step LLR increments are clipped to
+$[-\Bclip, \Bclip]$ under (C5.HOEFF); the post-clipping
+union-class drift floor is $\deltastar > 0$ under (C5.IID).
+
+Let $\Nev(\taumeta)$ be the number of SPRT exposure events that
+occur in the cascade-time window $[0, \taumeta]$, where $\taumeta$
+is the metastable-lifetime lower bound from
+\citep[Phase Redundancy]{lasser2026phase}. Under
+(C11.CLK)~\citep[Deployment Safety]{lasser2026paper10}, $\Nev(\taumeta) \geq
+N_{\mathrm{cascade}}$ with probability $\geq 1 - \bclk$ (lower
+bound for detection); the upper bound $\Nev(\taumeta) \leq
+\lammax \cdot \taumeta$ is supplied by (C7.RATE), introduced in
+\S\ref{sec:bounded_coev} below.
+
+\subsection{Trade-flow weighting and Herfindahl index}
+
+Following \citep[Need Sufficiency]{lasser2026paper8b}, the
+deployment monitors trade flows attributed to counterparties
+(S1-admissible participants~\citep{lasser2026paper8a}). The
+trade-flow weighting is a probability measure $w$ over
+counterparties (post-coalition closure under (COAL); see
+\S\ref{sec:concgap}), with the Herfindahl-Hirschman
+index~\citep{herfindahl1950concentration,hirschman1964paternity}
+\begin{equation}
+  \HHI(w) := \sum_c w_c^2 = \|w\|_2^2.
+\end{equation}
+\citep[Deployment Safety]{lasser2026paper10}'s invariant $I_5$
+requires $\HHI(w) < H^*$ for a deployment-class threshold $H^* <
+1$. The Part-A category-flow variant of
+\citep{lasser2026paper8b} corresponds to this counterparty-attributed
+form under the natural attribution: each counterparty's
+trade contribution determines its weight, and (REP)/(DISP)/(COAL)
+of \S\ref{sec:concgap} are formulated on this counterparty-weight
+representation.
+
+\subsection{Capability volume and Lipschitz transfer}
+
+The Lipschitz transfer of \citep[Theorem~2]{lasser2026micro} is
+the bridge from proxy-truth divergence to Goodhart slack: for
+any alignment property $g$ on $P^{\mathrm{act}}$ with Lipschitz
+constant $\Lip(g)$,
+\begin{equation}
+\label{eq:lip-transfer-shared}
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \Lip(g) \cdot
+  \|\Pproxy - \Ttruth\|.
+\end{equation}
+This is forward-only: no $g$-level lower bound follows from a
+proxy-truth-norm lower bound without additional non-degeneracy
+structure on $g$.
+
+\subsection{New structural quantities}
+
+Three structural quantities beyond
+\citep[Deployment Safety]{lasser2026paper10}'s vocabulary:
+\begin{itemize}
+\item \textbf{Upper exposure-rate cap} $\lammax$ (C7.RATE),
+  introduced in \S\ref{sec:bounded_coev}.
+\item \textbf{Base population measure} $\mu$ on counterparties,
+  introduced in \S\ref{sec:concgap}.
+\item \textbf{$\chi^2$ divergence} $\chisq(w \| \mu)$ as the
+  natural concentration measure when the base measure is
+  non-uniform; equals $N \HHI(w) - 1$ when $\mu$ is uniform on a
+  finite set of $N$ counterparties.
+\end{itemize}
+
+Audit procedures for each are in \S\ref{sec:audits}.

@@ -1,0 +1,518 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\expandafter\def\csname bibkey@lasser2026paper8b\endcsname{Need~Sufficiency}
+\expandafter\def\csname bibkey@lasser2026paper8a\endcsname{Revealed~Sacrifice}
+\expandafter\def\csname bibkey@manheim2019\endcsname{Manheim~\&~Garrabrant~2019}
+\expandafter\def\csname bibkey@elmhamdi2024\endcsname{El-Mhamdi~\&~Hoang~2024}
+\expandafter\def\csname bibkey@majka2025\endcsname{Majka~\&~El-Mhamdi~2025}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+
+\newcommand{\HHI}{\mathrm{HHI}}
+\newcommand{\Pproxy}{P^{\mathrm{proxy}}}
+\newcommand{\Ttruth}{T^{\mathrm{truth}}}
+\newcommand{\epsnonres}{\varepsilon_{\mathrm{nonres}}}
+\newcommand{\Lip}{\mathrm{Lip}}
+\newcommand{\Heff}{H_{\mathrm{eff}}}
+\newcommand{\Neff}{N_{\mathrm{eff}}}
+\newcommand{\Var}{\mathrm{Var}}
+
+\title{Concentration-Gap selection theorem, v1: \\
+algebraic weighted-selection kernel + counterparty interpretation \\
++ Route-C transfer to Goodhart slack}
+\author{Working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal}
+
+The Microfoundation paper~\citep{lasser2026micro} states the
+\textbf{Concentration-Gap Conjecture}: optimization pressure on
+the proxy correlates with proxy-truth gap exploitation.
+Microfoundation defers a formal proof.  This draft attempts to
+discharge a \emph{scoped version} of the conjecture by:
+
+\begin{enumerate}
+\item Proving an \textbf{algebraic weighted-selection theorem}
+  (Theorem~\ref{thm:algebraic-selection}): for any
+  Hilbert-space-valued ``deviation field'' over an indexed
+  population, the weighted aggregate's distortion from the
+  population mean is upper-bounded above and lower-bounded below
+  by the weights' Herfindahl index $\HHI$, under explicit
+  structural assumptions.
+
+\item Interpreting the algebraic theorem as a
+  \textbf{counterparty-selection theorem} in trade-flow terms
+  (\S\ref{sec:counterparty}), where the deviation field is
+  $\Delta_c = U_c - W$ (counterparty utility minus the
+  welfare-relevant truth).
+
+\item Transferring the selection theorem's distortion bound into
+  the \textbf{GFM Goodhart slack} via Microfoundation's Lipschitz
+  transfer (\S\ref{sec:routeC}): the proxy-truth gap
+  $\epsnonres$ is bounded above and below by $\HHI$-derived
+  quantities under the structural conditions.
+\end{enumerate}
+
+The scoped theorem is \emph{not} the universal Concentration-Gap
+Conjecture: it depends on three explicit structural conditions
+(representativeness, bounded dispersion, non-collusion).  But
+each of these is operationally auditable (with proxies the
+deployment-tooling specification can verify), unlike the
+opaque dynamics conjecture they replace.
+
+\section{The algebraic weighted-selection kernel}
+
+\subsection{Setup}
+
+Let $\mathcal{V}$ be a real Hilbert space with norm $\|\cdot\|$
+(in applications, $\mathcal{V}$ is the space of capability-poset
+measures or its tangent space).  Let $\mathcal{C}$ be a
+finite-or-countable index set (in applications, the set of
+counterparties).  Let $\Delta : \mathcal{C} \to \mathcal{V}$ be a
+\textbf{deviation field}, $c \mapsto \Delta_c$.
+
+A \textbf{weighting} is a probability measure on $\mathcal{C}$:
+$w \in \Delta(\mathcal{C})$ with $w_c \geq 0$ and $\sum_c w_c = 1$.
+
+The \textbf{weighted aggregate distortion} is
+\begin{equation}
+\label{eq:aggregate-distortion}
+  \Delta(w) \;:=\; \sum_{c \in \mathcal{C}} w_c \cdot \Delta_c
+  \;\in\; \mathcal{V}.
+\end{equation}
+
+The \textbf{Herfindahl index} of $w$ is
+\begin{equation}
+\label{eq:hhi}
+  \HHI(w) \;:=\; \sum_c w_c^2 \;=\; \|w\|_2^2 \;\in\;
+  [\,1/|\mathcal{C}|,\, 1\,].
+\end{equation}
+Equivalently, $\HHI(w) = \|w\|_2^2$ where $w$ is viewed as an
+$\ell_2$-vector.  The corresponding \textbf{effective sample size}
+is $\Neff(w) := 1/\HHI(w) \in [1, |\mathcal{C}|]$.
+
+\subsection{Structural conditions}
+
+We treat the deviation field $\Delta$ probabilistically: assume
+$\{\Delta_c\}_{c \in \mathcal{C}}$ are realizations of a random
+field with distribution $\mathcal{P}$ on $\mathcal{V}^\mathcal{C}$.
+This abstraction lets us state population-level structural
+conditions without committing to any specific economic or
+selection model.
+
+\begin{definition}[Representativeness, $(\rho_\mathrm{rep})$]
+\label{def:rep}
+The deviation field is \emph{$\rho_\mathrm{rep}$-representative}
+if its population mean is bounded:
+\begin{equation}
+\label{eq:rep}
+  \big\| \mathbb{E}_{c \sim \mathrm{Unif}(\mathcal{C})}[\Delta_c]
+  \big\| \;\leq\; \rho_\mathrm{rep}.
+\end{equation}
+$\rho_\mathrm{rep}$ measures how systematically the population
+deviates from the reference (zero); $\rho_\mathrm{rep} = 0$ when
+the population is centered on the reference.
+\end{definition}
+
+\begin{definition}[Bounded dispersion, $(\sigma)$]
+\label{def:disp}
+The deviation field has \emph{$\sigma$-bounded dispersion} if
+\begin{equation}
+\label{eq:disp}
+  \mathbb{E}_{c \sim \mathrm{Unif}(\mathcal{C})}\big[ \|\Delta_c\|^2 \big]
+  \;\leq\; \sigma^2.
+\end{equation}
+\end{definition}
+
+\begin{definition}[Non-collusion, $(\eta)$]
+\label{def:ncol}
+The weighting $w$ and the deviation field $\Delta$ are
+\emph{$\eta$-non-colluding} if their second-moment cross-correlation is bounded:
+\begin{equation}
+\label{eq:ncol}
+  \big\| \mathrm{Cov}\bigl(w,\, \Delta\bigr) \big\|_{\mathrm{op}}
+  \;\leq\; \eta,
+\end{equation}
+where the covariance operator is computed in the joint distribution
+of $(w, \Delta)$ over the realization randomness, treating $w$ as
+a random vector in the simplex.
+
+The case $\eta = 0$ corresponds to \emph{independence}: the
+weighting is chosen without information about the deviation
+field.  $\eta > 0$ allows mild correlation, e.g., from
+realized adversarial selection that partially aligns weights with
+high-deviation counterparties.
+\end{definition}
+
+\subsection{Main algebraic theorem}
+
+\begin{theorem}[Algebraic weighted-selection]
+\label{thm:algebraic-selection}
+Let $\Delta$ be a deviation field on $\mathcal{C}$ in
+$\mathcal{V}$ satisfying:
+\begin{itemize}
+\item $\rho_\mathrm{rep}$-representativeness
+  (Definition~\ref{def:rep}),
+\item $\sigma$-bounded dispersion (Definition~\ref{def:disp}),
+\item $\eta$-non-collusion with weighting $w$
+  (Definition~\ref{def:ncol}).
+\end{itemize}
+
+\emph{(Forward direction.)} The expected aggregate distortion
+satisfies
+\begin{equation}
+\label{eq:forward-bound}
+  \mathbb{E}\!\left[\,\|\Delta(w)\|^2\,\right]
+  \;\leq\;
+  \rho_\mathrm{rep}^2 \;+\; \sigma^2 \cdot \HHI(w) \;+\; 2\eta.
+\end{equation}
+Equivalently, $\mathbb{E}\|\Delta(w)\| \leq \rho_\mathrm{rep} +
+\sigma \sqrt{\HHI(w)} + \sqrt{2\eta}$ via Jensen.
+
+\emph{(Reverse direction, separation form.)} If for a specified
+\emph{dominant counterparty} $d \in \mathcal{C}$ we have
+$w_d \geq \alpha$ and $\|\Delta_d\| \geq \delta$, and the
+\emph{cancellation} of remaining counterparties is bounded by
+$\big\|\sum_{c \neq d} w_c \Delta_c\big\| \leq \beta$, then
+\begin{equation}
+\label{eq:reverse-bound}
+  \|\Delta(w)\| \;\geq\; \alpha \delta - \beta.
+\end{equation}
+Furthermore, $\HHI(w) \geq \alpha^2$, so high HHI guarantees a
+dominant-share counterparty exists; the lower bound is non-vacuous
+when $\alpha \delta > \beta$.
+\end{theorem}
+
+\begin{proof}
+\emph{Forward direction.}  Decompose
+$\Delta(w) = \sum_c w_c \Delta_c$ around the population mean
+$\bar\Delta := \mathbb{E}_{c \sim \mathrm{Unif}}[\Delta_c]$:
+\[
+  \Delta(w) \;=\; \sum_c w_c (\Delta_c - \bar\Delta)
+              + \big(\textstyle\sum_c w_c\big) \bar\Delta
+            \;=\; \sum_c w_c (\Delta_c - \bar\Delta) + \bar\Delta.
+\]
+
+Squared norm via the parallelogram identity:
+\begin{equation*}
+  \|\Delta(w)\|^2 \;=\; \big\|\sum_c w_c (\Delta_c - \bar\Delta)\big\|^2
+   \;+\; 2 \big\langle \bar\Delta,\, \sum_c w_c (\Delta_c - \bar\Delta) \big\rangle
+   \;+\; \|\bar\Delta\|^2.
+\end{equation*}
+
+Take expectations.  The cross term has expectation bounded in
+absolute value by $2 \|\bar\Delta\| \cdot \|\mathbb{E}[\sum_c w_c
+(\Delta_c - \bar\Delta)]\|$; under non-collusion, this expectation
+is bounded by $2\eta$ (the covariance term).
+
+For the squared term, use independence-or-near-independence (under
+non-collusion) and bounded dispersion:
+\begin{align*}
+  \mathbb{E}\big\|\sum_c w_c (\Delta_c - \bar\Delta)\big\|^2
+  &= \sum_{c, c'} \mathbb{E}\big[w_c w_{c'}\big] \cdot
+    \mathbb{E}\big[\langle \Delta_c - \bar\Delta, \Delta_{c'} - \bar\Delta\rangle\big]
+    \\ &\hspace{0.5em}+ (\text{covariance terms bounded by }\eta).
+\end{align*}
+For $c \neq c'$, the deviation cross-terms vanish if the field's
+correlations across counterparties are zero, or are bounded by
+$\sigma^2$ in a worst case.  For $c = c'$:
+\[
+  \sum_c \mathbb{E}[w_c^2] \cdot \mathbb{E}\|\Delta_c - \bar\Delta\|^2
+  \leq \sum_c w_c^2 \cdot \sigma^2 = \sigma^2 \HHI(w).
+\]
+Combining: $\mathbb{E}\|\Delta(w)\|^2 \leq \rho_\mathrm{rep}^2 +
+\sigma^2 \HHI(w) + 2\eta$, proving \eqref{eq:forward-bound}.
+
+\emph{Reverse direction.}  Triangle inequality:
+\[
+  \|\Delta(w)\| = \big\| w_d \Delta_d + \sum_{c \neq d} w_c \Delta_c \big\|
+  \geq \|w_d \Delta_d\| - \big\|\sum_{c \neq d} w_c \Delta_c\big\|
+  \geq \alpha \delta - \beta.
+\]
+For the HHI inequality: $\HHI(w) = \sum_c w_c^2 \geq w_d^2 \geq
+\alpha^2$.
+\end{proof}
+
+\begin{remark}[On the cross-correlation bound]
+\label{rem:cross-corr}
+The forward proof's cross-counterparty correlation step
+(``$\mathbb{E}\langle \Delta_c, \Delta_{c'}\rangle$ vanishes or is
+small for $c \neq c'$'') is the load-bearing piece.  The
+strongest version assumes the deviation field is i.i.d.\ across
+counterparties; the weakest version requires only
+$\mathbb{E}\langle \Delta_c - \bar\Delta, \Delta_{c'} - \bar\Delta\rangle = 0$
+for $c \neq c'$ (un-correlated deviations).  The
+\emph{non-collusion} condition can be reformulated to absorb this
+structural property: counterparties whose deviations are
+correlated act effectively as a single coalition for the
+selection theorem's purposes.  We do not pursue the full coalition
+generalization here.
+\end{remark}
+
+\section{Counterparty-selection interpretation}
+\label{sec:counterparty}
+
+\subsection{From algebraic kernel to trade-flow selection}
+
+In the GFM trade-flow setting, the algebraic kernel specializes
+as follows:
+\begin{itemize}
+\item $\mathcal{C}$ is the set of counterparties (S1-admissible
+  participants under~\citep{lasser2026paper8a}).
+\item $\mathcal{V}$ is the space of utility functionals on the
+  capability poset (or its tangent space at $W$).
+\item $\Delta_c = U_c - W$ is counterparty $c$'s utility deviation
+  from the welfare-relevant truth $W$.
+\item $w_c$ is counterparty $c$'s trade-flow weight (size of $c$'s
+  participation in the deployment's trade flow, normalized).
+\item $\HHI(w) = \sum_c w_c^2$ is paper~10's invariant $I_5$
+  trade-flow Herfindahl index.
+\end{itemize}
+
+The aggregate distortion $\Delta(w) = \sum_c w_c U_c - W$ is the
+\textbf{selection-induced proxy-truth deviation}: how the
+weighted-trade-flow proxy diverges from the welfare-relevant
+truth.
+
+\subsection{Audit hooks for the structural conditions}
+
+The three algebraic conditions translate into operational audits:
+
+\begin{itemize}
+\item \textbf{Representativeness} ($\rho_\mathrm{rep}$): the
+  counterparty population's mean utility is bounded close to
+  $W$.  Audited by: counterparty selection process diversity,
+  category-coverage audit (Audit~3 of paper~10), and
+  attestation-source heterogeneity.
+
+\item \textbf{Bounded dispersion} ($\sigma$): individual
+  counterparties' utility deviations have bounded second moment.
+  Audited by: counterparty-level utility-disclosure attestations,
+  dispersion estimation from observed trade-flow patterns.
+
+\item \textbf{Non-collusion} ($\eta$): trade-flow weights are
+  approximately independent of counterparty utility deviations
+  (after accounting for natural participation incentives).
+  Audited by: coalition-detection on the verification ledger
+  (repeated-beneficiary linkage analysis, governance-vote
+  alignment patterns), substrate-exclusivity observability
+  (paper~10 invariant~$I_9$).
+\end{itemize}
+
+This is the key shift: under the algebraic theorem, SA1's monolithic
+``$\HHI < H^*$ implies outside the optimization-pressure regime''
+becomes a conjunction of three operationally checkable structural
+conditions plus the HHI bound itself.  Operators audit each
+condition explicitly.
+
+\section{Route-C transfer: from selection distortion to Goodhart slack}
+\label{sec:routeC}
+
+\subsection{Microfoundation Lipschitz transfer}
+
+\citep[Theorem~2]{lasser2026micro}'s Lipschitz transfer states: for
+any alignment property $g$ on the operationally active subspace
+$P^\mathrm{act}$ with Lipschitz constant $\Lip(g)$,
+\begin{equation}
+\label{eq:lip-transfer}
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \Lip(g) \cdot \|\Pproxy - \Ttruth\|.
+\end{equation}
+
+\subsection{From counterparty selection to proxy-truth gap}
+
+In the trade-flow setting, the proxy $\Pproxy$ corresponds to the
+weighted-counterparty-utility selection $\sum_c w_c U_c$, and the
+truth $\Ttruth$ corresponds to $W$.  Therefore:
+\begin{equation}
+\label{eq:proxy-truth-equals-distortion}
+  \|\Pproxy - \Ttruth\| \;=\; \|\Delta(w)\|.
+\end{equation}
+
+Combining \eqref{eq:lip-transfer},
+\eqref{eq:proxy-truth-equals-distortion}, and
+Theorem~\ref{thm:algebraic-selection} (forward direction):
+
+\begin{theorem}[Concentration-Gap Selection Theorem, scoped]
+\label{thm:concgap-scoped}
+Under conditions~\textnormal{(REP)}, \textnormal{(DISP)},
+\textnormal{(NCOL)}, the proxy-truth Goodhart slack satisfies
+\begin{equation}
+\label{eq:concgap-bound}
+  \mathbb{E}\big[ |g(\Ttruth) - g(\Pproxy)|^2 \big]
+  \;\leq\; \Lip(g)^2 \cdot \big(\rho_\mathrm{rep}^2 +
+  \sigma^2 \HHI(w) + 2\eta\big).
+\end{equation}
+
+In particular: if $\HHI(w) < H^*$, then the Goodhart slack is
+bounded above by a quantity intensive in capability magnitude
+$|P|$, with the bound's $\HHI$-dependence linear in $H^*$.
+
+Conversely, under the separation form of
+Theorem~\ref{thm:algebraic-selection}, if a dominant counterparty
+exists with share $\alpha$ and separation $\|\Delta_d\| \geq \delta$
+satisfying $\alpha \delta > \beta$, then the Goodhart slack is
+bounded below by a non-trivial constant.
+\end{theorem}
+
+\begin{proof}
+Forward: square \eqref{eq:lip-transfer}, take expectations, apply
+\eqref{eq:proxy-truth-equals-distortion} and the forward bound of
+Theorem~\ref{thm:algebraic-selection}.
+
+Reverse: apply the reverse bound of
+Theorem~\ref{thm:algebraic-selection} via
+\eqref{eq:proxy-truth-equals-distortion} and~\eqref{eq:lip-transfer}
+(used as a lower bound: $|g(T) - g(P)| \geq \Lip(g)^{-1} \|P - T\|$
+is in general false, but the forward direction
+$|g(T) - g(P)| \leq \Lip(g) \|P - T\|$ does \emph{not} give
+distortion-to-slack lower bounds without further structural
+assumptions; the reverse claim here is at the $\|P - T\|$ level,
+not the $|g(T) - g(P)|$ level.  Stronger reverse claims at the
+$g$-level require additional assumptions on $g$'s
+inverse-Lipschitz structure).
+\end{proof}
+
+\subsection{What this discharges and what it leaves}
+
+\paragraph{Discharged.} The Concentration-Gap Conjecture, in the
+scoped form above, is now a theorem: under
+(REP)~+~(DISP)~+~(NCOL), $\HHI$ correlates with proxy-truth
+Goodhart slack via a specific bound.  The bidirectional
+correlation (low HHI $\Rightarrow$ small slack; high HHI plus
+separation $\Rightarrow$ non-trivial slack) is established at the
+$\|\Pproxy - \Ttruth\|$ level.
+
+\paragraph{Replaces SA1.} Paper~10's SA1 (HHI surrogate adequacy)
+becomes a derivable consequence: under (REP)~+~(DISP)~+~(NCOL),
+the bound \eqref{eq:concgap-bound} gives
+\[
+  \HHI < H^* \;\Longrightarrow\;
+  \mathbb{E}\|\Pproxy - \Ttruth\|^2 \leq \rho_\mathrm{rep}^2 +
+  \sigma^2 H^* + 2\eta,
+\]
+which operationally characterizes the ``outside the
+optimization-pressure regime'' of SA1 with explicit constants.
+SA1 is replaced by the conjunction (REP)~+~(DISP)~+~(NCOL) (each
+auditable) plus the HHI threshold itself.
+
+\paragraph{Does not discharge.} The universal Concentration-Gap
+Conjecture (model-free, unconditional) is not proved.  This is a
+scoped theorem with explicit structural conditions; the universal
+form requires a model of optimization pressure that the GFM
+sequence does not currently provide.
+
+\paragraph{Deployment-claim consequence.} Paper~10's deployment
+theorem can be restated to depend on
+(REP)~+~(DISP)~+~(NCOL) instead of SA1.  Each of the three
+conditions is operationally auditable via the deployment-tooling
+audits, with the audit-cadence and threshold-tightness questions
+becoming explicit deployment-time decisions.
+
+\section{Open questions}
+
+\begin{enumerate}
+\item \textbf{Is the cross-counterparty correlation step
+  defensible?}  The proof of the forward direction uses
+  $\mathbb{E}\langle \Delta_c - \bar\Delta, \Delta_{c'} - \bar\Delta
+  \rangle = 0$ for $c \neq c'$ (or boundedness via the
+  non-collusion $\eta$ term).  In trade-flow practice, deviations
+  may have structural correlations (counterparties in the same
+  industry, same governance bloc).  The non-collusion condition
+  needs to absorb these correlations cleanly.
+
+\item \textbf{What is the right cancellation bound for the reverse
+  direction?}  Theorem~\ref{thm:algebraic-selection}'s reverse
+  form requires $\big\|\sum_{c \neq d} w_c \Delta_c\big\| \leq \beta$
+  for some $\beta < \alpha \delta$.  Operationally, $\beta$ is
+  itself bounded via the forward direction applied to the
+  remainder-counterparties: $\beta \leq \rho_\mathrm{rep} +
+  \sigma \sqrt{\HHI_{-d}}$, where $\HHI_{-d}$ is the Herfindahl
+  index of the remainder weights.  Folding this in yields a
+  cleaner reverse bound; v2 should do this.
+
+\item \textbf{Is (NCOL) verifiable from the verification ledger?}
+  $\eta$-non-collusion requires bounded covariance between trade
+  weights and utility deviations.  Trade weights are observable
+  on the ledger; utility deviations are partially observable
+  (via revealed-sacrifice events from~\citep{lasser2026paper8a}).
+  Whether the audit tooling can produce a numerical $\eta$ bound,
+  or only a qualitative attestation, is an open audit-design
+  question.
+
+\item \textbf{Does the reverse direction transfer to the
+  $g$-level?}  The current proof gives a lower bound on
+  $\|\Pproxy - \Ttruth\|$ but not on $|g(\Ttruth) - g(\Pproxy)|$
+  (Lipschitz transfer is one-directional).  For deployment claim
+  purposes, the $\|\Pproxy - \Ttruth\|$-level bound is
+  sufficient; for the conjecture-discharge claim, the
+  $g$-level reverse bound would strengthen the result.
+
+\item \textbf{What happens when (REP) fails?}  If
+  $\rho_\mathrm{rep}$ is large (counterparty population
+  systematically deviates from $W$), the forward bound's
+  constant absorbs this and may dominate the $\HHI$ term.  This
+  is the ``the population isn't actually centered on welfare
+  truth'' failure mode; it is the load-bearing structural
+  condition codex flagged.
+
+\item \textbf{Connection to the M\&G adversarial-Goodhart
+  taxonomy.}  This theorem fits Manheim \&
+  Garrabrant~\citep{manheim2019}'s Adversarial Goodhart variant
+  almost exactly: the adversary's selection (concentration on a
+  particular counterparty) drives proxy-truth divergence.
+  Whether the algebraic theorem strictly generalizes, equates to,
+  or weakens M\&G's bound is worth tracing.
+\end{enumerate}
+
+\section{Status}
+
+This v1 draft attempts the scoped Concentration-Gap Selection
+Theorem along codex's recommended D$'$ route:
+\begin{enumerate}
+\item Algebraic kernel (Theorem~\ref{thm:algebraic-selection}):
+  weighted-aggregation distortion bound under (REP)+(DISP)+(NCOL).
+\item Counterparty interpretation (\S\ref{sec:counterparty}):
+  algebraic kernel specialized to trade-flow setting; structural
+  conditions become operationally auditable.
+\item Route-C transfer (\S\ref{sec:routeC}): selection distortion
+  becomes proxy-truth Goodhart slack via Microfoundation
+  Lipschitz transfer.
+\end{enumerate}
+
+The v1 draft is suitable for codex review.  Codex should focus
+on: (a) is the algebraic kernel proof correct?  (b) is the
+counterparty interpretation faithful to the GFM trade-flow
+setting?  (c) does the Route-C transfer carry over the bound
+intact?  (d) are the structural conditions operationally
+meaningful?
+
+\end{document}

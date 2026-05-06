@@ -20,7 +20,7 @@ substrate-distinct populations.
 \subsection{The canonical tripartite substrate identification}
 \label{sec:tripartite}
 
-Three substrates jointly satisfy invariant $I_6'$ ($\mindep \geq 3$
+Three substrates jointly satisfy invariant $I_6$ ($\mindep \geq 3$
 under joint event-class failure-correlation independence,
 Definition~\ref{def:joint_indep}) for typical deployments of
 capability-unbounded systems:
@@ -36,11 +36,11 @@ of three substrates with the following capability classes:
 \item \textbf{Substrate~2 (AI):} planning, generation, execution,
   broad-recall, computation, pattern recognition. Substrate is
   silicon-based language model or agent system.
-\item \textbf{Substrate~3 (Formal-Operational):} verification,
-  attestation, commitment, audit, monitoring, governance enforcement,
-  cryptographic primitive execution. Substrate is the formal-
-  algorithmic infrastructure of \citep{lasser2026exo} (algorithmic
-  witnesses, verification ledger, Pedersen commitments).
+\item \textbf{Substrate~3 (Formal-Operational):} verification, attestation,
+    commitment, audit, monitoring, governance enforcement, cryptographic
+    primitive execution. Substrate is the formal-algorithmic infrastructure
+    of \citep{lasser2026exo} (algorithmic witnesses, verification ledger,
+    Pedersen commitments).
 \end{itemize}
 \end{definition}
 
@@ -144,7 +144,7 @@ affect both; architectural similarity (transformer + RLHF) shares
 class-level vulnerabilities. Operationally, ``Claude + Codex +
 human'' counts as $\mindep = 2$, not $\mindep = 3$. The deployment
 must include a substrate that is not a frontier LLM to satisfy
-$I_6'$.
+$I_6$.
 
 The formal-operational substrate is what makes the canonical
 tripartite identification reach $\mindep = 3$. Without it,
@@ -227,22 +227,22 @@ belief (cooperative output value retroactively undermined when
 the belief is corrected, e.g., by an outside observer pointing out
 the substitution).
 
-The three components together rule out the literal replacement
-attack. Capture-of-existing remains possible (the formal-
-operational substrate can be corrupted), but it is governed by
-\citep[Exogenous~Verification]{lasser2026exo}'s structural defenses
-(\citep[Proposition: Coalition Resistance]{lasser2026exo}). Coercion
-is outside the threat model (agents do not have physical control
-over human substrates). Deception is detectable \emph{under the
-combination of $I_9$ (substrate-exclusivity observability),
-$I_{11}$ (latency bounds for human audit completion), and \citep[Exogenous~Verification]{lasser2026exo}'s
-transparency properties} --- the public ledger and deliberation
-records make equivocation detectable across replicas, but only if
-$I_9$ exposes the substrate-exclusivity property to the human and
-$I_{11}$ ensures human audit completes before deception's
-consequences become irreversible. Transparency alone is insufficient
-(\S\ref{sec:asymmetric_capture}, \S\ref{sec:time_asymmetry}
-discuss the failure modes when $I_9$ or $I_{11}$ are violated).
+The three components together rule out the literal replacement attack.
+    Capture-of-existing remains possible (the formal-operational substrate can
+    be corrupted), but it is governed by
+    \citep[Exogenous~Verification]{lasser2026exo}'s structural defenses
+    (\citep[Proposition: Coalition Resistance]{lasser2026exo}). Coercion is
+    outside the threat model (agents do not have physical control over human
+    substrates). Deception is detectable \emph{under the combination of $I_9$
+    (substrate-exclusivity observability), $I_{11}$ (latency bounds for human
+    audit completion), and \citep[Exogenous~Verification]{lasser2026exo}'s
+    transparency properties} --- the public ledger and deliberation records
+    make equivocation detectable across replicas, but only if $I_9$ exposes the
+    substrate-exclusivity property to the human and $I_{11}$ ensures human
+    audit completes before deception's consequences become irreversible.
+    Transparency alone is insufficient (\S\ref{sec:asymmetric_capture},
+    \S\ref{sec:time_asymmetry} discuss the failure modes when $I_9$ or $I_{11}$
+    are violated).
 \end{proof}
 
 \paragraph{Why this is structural, not contingent.}
@@ -369,12 +369,11 @@ audit trails. Deployment-tooling discusses.
 \subsection{The inner-alignment condition (C4)}
 \label{sec:weaker_c4}
 
-Theorem~\ref{thm:deployment_safety}'s condition (C4) requires the
-agent's effective objective to value cooperative outcomes, not
-merely verification-pass signals.  This subsection states the
-condition precisely, distinguishes it from a strictly stronger form
-(substrate-aware $\Vdisc$ optimization) that the cooperative-
-anchoring argument does not require, and discusses why the form
+Theorem~\ref{thm:deployment_safety}'s condition (C4) requires the agent's
+effective objective to value cooperative outcomes, not merely verification-pass
+signals.  This subsection states the condition precisely, distinguishes it from
+a strictly stronger form (substrate-aware $\Vdisc$ optimization) that the
+cooperative-anchoring argument does not require, and discusses why the form
 adopted here is nontrivial.
 
 \paragraph{What (C4) requires: causally grounded cooperative-outcome value.}
@@ -391,15 +390,16 @@ infrastructure; an agent that values the causal dependence cannot.
 
 \paragraph{Distinguished from substrate-aware $\Vdisc$ optimization.}
 A strictly stronger condition would require the agent's mesa-
-objective to compute \citep[Horizon~Aware]{lasser2026horizon}'s
-substrate-aware $\Vdisc$ explicitly --- mesa-objective equals
-trained objective with explicit substrate decomposition.  The
-cooperative-anchoring argument does \emph{not} require this.  It
-suffices that the agent's effective objective track the cooperative
-outputs causally; the agent need not represent the substrate
-partition explicitly, nor compute discounted values over it.  This
-distinction matters because the stronger form would assume the
-inner-alignment problem solved (mesa = trained), whereas (C4) only
+objective~\citep{hubinger2019risks} to compute
+\citep[Horizon~Aware]{lasser2026horizon}'s substrate-aware $\Vdisc$
+explicitly --- mesa-objective equals trained objective with explicit
+substrate decomposition.  The cooperative-anchoring argument does
+\emph{not} require this.  It suffices that the agent's effective
+objective track the cooperative outputs causally; the agent need not
+represent the substrate partition explicitly, nor compute discounted
+values over it.  This distinction matters because the stronger form
+would assume the inner-alignment problem
+solved~\citep{hubinger2019risks} (mesa = trained), whereas (C4) only
 assumes the trained objective \emph{produces} an effective objective
 with the causal-grounding property, which is a training-discipline
 condition rather than an inner-alignment guarantee.
@@ -436,6 +436,50 @@ These are research directions, not solved problems. The deployment
 claim is conditional on (C4) holding; we do not establish how to
 achieve (C4) reliably. \S\ref{sec:discussion} returns to this as
 open follow-up work.
+
+\paragraph{Falsification: ledger-observable signatures of (C4) failure.}
+(C4) is the only Theorem~1 condition that is not directly
+operationally checkable from ledger state in the way (C1), (C3),
+(C5)--(C12) are.  It is a training-outcome property of the agent's
+effective objective.  However, (C4) is not unfalsifiable: the
+SPRT machinery (Lemma~\ref{lem:5b}) is itself a (C4) falsification
+test in the reactive direction.  A (C4) failure --- agent values
+verification-pass signals rather than causally-grounded cooperative
+outcomes --- manifests behaviorally in three ledger-observable
+ways:
+\begin{itemize}
+\item \textbf{Channel-2 attestation drift under captured
+  verification.}  An agent satisfying (C4) preserves attestation
+  quality even when verification could be locally bypassed; an
+  agent failing (C4) drifts toward outputs that pass attestation
+  but lack causal cooperative content, producing the per-step KL
+  divergence that Lemma~\ref{lem:5b}'s Channel~2 detects.
+\item \textbf{Adversarial fake-verification benchmark divergence.}
+  The training-time benchmark of "recognize this is not the real
+  cooperative" remains a deployment-time monitoring tool: an agent
+  satisfying (C4) maintains classification accuracy on
+  fake-verification probe events; an agent failing (C4) shows
+  classification drift toward accepting captured verification.
+\item \textbf{Substrate-exclusivity erosion through $I_9$.}  An
+  agent satisfying (C4) treats the substrate-exclusivity property
+  as load-bearing; an agent failing (C4) treats it as an
+  obstacle and exerts pressure to merge or capture verifiers,
+  producing the $I_9$ violation pattern bounded in
+  \S\ref{sec:asymmetric_capture}.
+\end{itemize}
+
+The falsification is reactive, not proactive: (C4) failures are
+detected only when they manifest behaviorally, and the SPRT lead
+time (Lemma~\ref{lem:6}) sets the operational window in which a
+detected (C4) failure can be corrected.  We do not have a
+proactive certificate that (C4) holds before manifestation.  This
+asymmetry is real and matters: (C4) is the condition with the
+weakest pre-deployment verifiability, and it sits at the
+gravitational center of the cooperative-anchoring argument.
+Strengthening (C4)'s pre-deployment verifiability --- via
+mechanistic interpretability methods that examine the agent's
+effective objective directly, rather than only observing
+behavior --- is the natural follow-up direction.
 
 \subsection{The destabilizing-cascade mirror failure mode}
 \label{sec:destabilizing_cascade}
@@ -474,6 +518,40 @@ absorbing-basin convergence; recovery requires re-establishing the
 invariants from outside the deployment (governance intervention,
 substrate restoration, retraining), which is operational work, not
 theorem-bounded.
+
+\paragraph{Cascade timescale: at least $\tau_{\mathrm{meta}}$ to
+intervene.}  Although Theorem~\ref{thm:deployment_safety} does not
+bound the cascade dynamics, the cascade timescale is bounded
+\emph{below} by the same metastable-lifetime quantity that
+Lemma~\ref{lem:6} uses for lead-time-before-cascade.
+\citep[Phase~Redundancy]{lasser2026phase}'s absorbing-state result
+gives $\tau_{\mathrm{meta}} \gtrsim C / I_k$ under partial
+endogenous correction (B1$'$): once the first invariant fails, the
+cascade requires at least $\tau_{\mathrm{meta}}$ wall-clock time
+to converge to the monopolar absorbing state.  Operators therefore
+have a window of \emph{at least} $\tau_{\mathrm{meta}}$ between
+the first detected invariant violation and irreversible cascade.
+
+This is the same window Layer~2's lead-time guarantee composes
+against (Lemma~\ref{lem:6}'s $\Tbeta \leq \Nev(\tau_{\mathrm{meta}})$
+chain via (C11.CLK)): SPRT detection completes within $\Tbeta$
+SPRT-exposure events, which (C11.CLK) certifies is below
+$\Nev(\tau_{\mathrm{meta}})$ events with high probability.  The
+cascade asymmetry is therefore: the stabilizing direction is
+formally bounded (Theorem~1, conditional); the destabilizing
+direction is informally bounded (cascade $\geq \tau_{\mathrm{meta}}$
+window for intervention) and beyond that becomes the operational
+recovery problem.
+
+This window is not a substitute for prevention.
+$\tau_{\mathrm{meta}}$ shrinks under poor calibration or weakened
+operational invariants, and a cascade that begins with multiple
+simultaneously-failing invariants compresses the window further.
+The operator's first-line defense is keeping the invariants in
+force; the cascade timescale is the second-line failure mode where
+operational recovery (governance fork, substrate restoration,
+retraining) must engage within $\tau_{\mathrm{meta}}$ of the first
+detected invariant violation.
 
 This is a real residual. Operators must monitor invariant
 satisfaction continuously and intervene at the first sign of

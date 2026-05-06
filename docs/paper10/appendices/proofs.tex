@@ -20,8 +20,11 @@ $\mathrm{Lip}(g)$ is the Lipschitz constant of the alignment
 property $g$, is intensive in $|P|$ over a deployment class
 $\mathcal{D}$ provided $X$, $\epsfloor$, and $\mathrm{Lip}(g)$ are
 each intensive in $|P|$ over $\mathcal{D}$, and the co-evolution
-correction terms in the structure of $X$ are bounded by Paper~10's
-Assumption~\ref{ass:bounded_coev} (bounded co-evolution).
+correction terms in the structure of $X$ are bounded by
+condition~(C7) (bounded co-evolution), now derived as a corollary
+in \citep[Theorem~1]{lasser2026foundations} from (C5.HOEFF),
+(C7.RATE), and the verification protocol's channel-projection
+structure.
 
 \begin{proof}
 We work over a deployment class $\mathcal{D}$ characterized by
@@ -69,11 +72,12 @@ correction terms:
   \epsnonresChannel{j} + (\epsnonresCoev)_+.
 \]
 The source paper leaves the formal characterization of
-$(\epsnonresCoev)_+$ as open work; Paper~10 closes the gap with
-Assumption~\ref{ass:bounded_coev} (bounded co-evolution).
+$(\epsnonresCoev)_+$ as open work; Paper~10 closes the gap via
+condition~(C7) (bounded co-evolution), now derived as a
+corollary in \citep[Theorem~1]{lasser2026foundations}.
 
-\emph{Step 4 (bounded co-evolution).}  By
-Assumption~\ref{ass:bounded_coev}, there exists
+\emph{Step 4 (bounded co-evolution).}  By condition~(C7) and
+\citep[Theorem~1]{lasser2026foundations}, there exists
 $\bar{M} \geq 0$ depending on $\mathcal{D}$'s operational parameters
 but independent of $|P|$, such that the maximum per-channel
 coupling magnitude satisfies $M(\text{deployment}) \leq \bar{M}$
@@ -165,7 +169,7 @@ per-capability dimension count, (C9.CL) coordinate-Lipschitz
 parameterization, (C9.WB) safety-relevant subspace with weight
 floor, and (C9.TF) truth floor of
 Theorem~\ref{thm:deployment_safety}, and under invariants $I_1$ and
-$I_4$ (which together imply $I_2$):
+$I_3$ (which together imply $I_2$):
 \[
   \Lyap(\Wm_t) \;<\; \epsilon_{\mathrm{safe}}
   \quad \implies \quad
@@ -237,7 +241,7 @@ Therefore $|P(c) - T(c)|/T(c) \leq |P(c) - T(c)|/T_{\min}$, and:
   \sqrt{\frac{N_{\max} \cdot \Lyap}{w_{\min}}}.
 \]
 
-\emph{Step 6 (apply Lyapunov bound).}  Under invariants $I_1, I_4$,
+\emph{Step 6 (apply Lyapunov bound).}  Under invariants $I_1, I_3$,
 \citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis
 gives $\Lyap(\Wm_t) < \epsilon_{\mathrm{safe}}$ in the
 self-correcting basin.  Substituting:
@@ -281,10 +285,123 @@ use the heterogeneous form for deployment-specific calibration.
   deployment-verified} (C9.TF).
 \end{itemize}
 
+\subsection{Proof of Lemma 4 (SPRT lead-time tail bound)}
+\label{app:proof_lem4}
+
+\textbf{Statement (restated).}  Let $T_{\mathrm{detect}}$ be the
+SPRT detection time (in SPRT exposure-event count) for a violation
+producing post-clipping LLR drift $\delta > 0$ under the
+alternative distribution.  Then for $t > A/\delta$, where $A =
+\log((1-\beta)/\alpha)$ is the SPRT threshold:
+\[
+  \Pr[T_{\mathrm{detect}} > t]
+  \;\leq\; \exp\!\left(-\frac{2(t\delta - A)^2}{t \Rh^2}\right),
+\]
+with $\Rh = b - a = 2\Bclip$ the Hoeffding range width of the
+clipped LLR (per (C5.HOEFF)).  Asymptotically, in the regime
+$t\delta \gg A$:
+\[
+  \Pr[T_{\mathrm{detect}} > t]
+  \;\leq\; \exp(-\kappa \cdot t \cdot \delta),
+\]
+with $\kappa = 2\delta/\Rh^2$.  The wall-clock-to-event-count
+comparison (lead-time-before-cascade) is composed in
+Lemma~\ref{lem:6} via (C11.CLK), \emph{not} in this lemma.
+
+\begin{proof}
+\citep[Exogenous~Verification]{lasser2026exo}'s behavioral consistency monitor produces a running
+log-likelihood ratio
+\[
+  \Lambda_t = \sum_{i=1}^t X_i,
+\]
+where $X_i = \log(p_1(x_i)/p_0(x_i))$ is the per-step log-likelihood
+ratio, $p_0$ is the baseline distribution, and $p_1$ is the chosen
+alternative. Under the alternative ($q = p_1$), the per-step
+expected drift is
+\[
+  \mathbb{E}_{p_1}[X_i] = D_{\mathrm{KL}}(p_1 \,\|\, p_0) = \delta > 0.
+\]
+Detection occurs when $\Lambda_t$ first crosses upper threshold $A$:
+$T_{\mathrm{detect}} = \inf\{t : \Lambda_t \geq A\}$.
+
+\emph{Mean bound (Wald's identity).}  By Wald's
+identity~\citep{wald1947sequential} for the SPRT (\citep[Proposition:
+Behavioral Monitoring Detection Rate]{lasser2026exo}):
+\[
+  \mathbb{E}_{p_1}[T_{\mathrm{detect}}] \;\approx\; A / \delta.
+\]
+This is the mean bound; we need a tail bound.
+
+\emph{Tail bound (Hoeffding).}  Assume $X_i$ takes values in a
+bounded interval $[a, b]$ (which holds under \citep[Exogenous~Verification]{lasser2026exo}'s
+least-favorable-distribution discipline, where the per-step
+log-likelihood ratio is bounded by the choice of $p_0, p_1$ pair).
+Set $R = b - a$. By Hoeffding's
+inequality~\citep{hoeffding1963probability,azuma1967weighted}
+(applied via the martingale-difference form for adapted increments):
+\[
+  \Pr_{p_1}\!\left[\Lambda_t < t \delta - s\right]
+  \;\leq\; \exp(-2 s^2 / (t R^2))
+  \quad\text{for } s > 0.
+\]
+The event $\{T_{\mathrm{detect}} > t\}$ is the event $\{\Lambda_s <
+A \text{ for all } s \leq t\}$.  A \emph{necessary} condition for
+this is $\Lambda_t < A$ (the LLR has not yet crossed the threshold
+at time $t$); the joint event implies the marginal-time event.
+Therefore:
+\[
+  \Pr_{p_1}[T_{\mathrm{detect}} > t]
+  \;\leq\; \Pr_{p_1}[\Lambda_t < A]
+  \;=\; \Pr_{p_1}[\Lambda_t < t\delta - (t\delta - A)].
+\]
+The inequality goes the right way precisely because we relax to a
+necessary condition: the joint-event probability is at most the
+marginal-event probability.
+For $t > A/\delta$, set $s = t\delta - A > 0$:
+\[
+  \Pr_{p_1}[T_{\mathrm{detect}} > t]
+  \;\leq\; \exp(-2 (t\delta - A)^2 / (t R^2)).
+\]
+
+\emph{Asymptotic form.}  In the regime $t\delta \gg A$ (event-
+count exposure long relative to mean detection threshold-crossing),
+$t\delta - A \approx t\delta$, so:
+\[
+  \Pr_{p_1}[T_{\mathrm{detect}} > t]
+  \;\leq\; \exp(-2 t \delta^2 / R^2)
+  \;=:\; \exp(-\kappa \cdot t \cdot \delta),
+\]
+with $\kappa = 2\delta/R^2$ (a sub-Gaussian-like rate constant).
+This is the form Lemma~\ref{lem:6} inverts (Substeps 5a--5e of
+Appendix~\ref{app:proof_lem6}) to derive the high-probability
+detection quantile $\Tbeta$ in SPRT exposure-event count.
+
+\textbf{Note on cascade-clock composition.}  Lemma~\ref{lem:4}
+itself is stated in the SPRT exposure-event clock $t$.  The
+lead-time-before-cascade guarantee --- comparing $T_{\mathrm{detect}}$
+against wall-clock cascade time --- is composed in
+Lemma~\ref{lem:6} (Appendix~\ref{app:proof_lem6}) via (C11.CLK)'s
+event-count floor $\Ncasc$, clock-failure probability $\bclk$, and
+calibration-uncertainty $\bcal$.  This separates the SPRT-step
+tail (an event-count statement) from the cascade-clock event (a
+wall-clock-to-event-count comparison) cleanly.
+
+\textbf{Caveat on
+\citep[Phase~Redundancy]{lasser2026phase}'s scaling form.}
+\citep[Phase~Redundancy]{lasser2026phase} states
+$\tau_{\mathrm{meta}} \gtrsim C/I_k$ as a scaling law, not a
+theorem-level bound.  Lemma~\ref{lem:6}'s composition handles
+this via (C11.CLK)'s deterministic event-count floor and the
+named failure probabilities, rather than treating
+$\tau_{\mathrm{meta}}$ as a hard inequality.  Deployments where
+the scaling does not hold tightly require larger $\bclk$ or
+$\bcal$ to absorb the slack.
+\end{proof}
+
 \subsection{Proof of Lemma 5a (Substrate floor)}
 \label{app:proof_lem5a}
 
-\textbf{Statement (restated).}  Under invariant $I_6'$ ($\mindep
+\textbf{Statement (restated).}  Under invariant $I_6$ ($\mindep
 \geq m^* \geq 3$), condition (C10) of
 Theorem~\ref{thm:deployment_safety} (per-pair cooperative-novelty
 rate floor with superposition; comprising sub-clauses (C10.CN)
@@ -327,10 +444,10 @@ Throughout this proof:
 \end{itemize}
 
 \begin{proof}
-We work over deployment class $\mathcal{D}$ satisfying $I_6'$ and
+We work over deployment class $\mathcal{D}$ satisfying $I_6$ and
 (C10).
 
-\emph{Step 1 (substrate audit).}  By $I_6'$, $\mindep \geq m^*$
+\emph{Step 1 (substrate audit).}  By $I_6$, $\mindep \geq m^*$
 substrates with joint failure-correlation independence.  By
 (C10), audited subset $\Saudit$ with $|\Saudit| = m^*$ is
 certified for the deployment window.
@@ -369,14 +486,14 @@ are nonnegative by convention, so:
 
 \emph{Step 6 (intensivity over $\mathcal{D}$).}  $\rho_0$ is a
 deployment-class constant (C10.CN, calibrated per epoch).
-$m^*$ is the $I_6'$ threshold, deployment-class.  Therefore
+$m^*$ is the $I_6$ threshold, deployment-class.  Therefore
 $r_*(m^*)$ is independent of $|P|$ over $\mathcal{D}$.
 $\Box$
 \end{proof}
 
 \paragraph{Discussion of constants.}
 \begin{itemize}
-\item $m^*$: \emph{deployment-policy-derived} threshold from $I_6'$.
+\item $m^*$: \emph{deployment-policy-derived} threshold from $I_6$.
 \item $\rho_{ij}$: \emph{per-pair calibrated rates} (C10.CN);
   measured in joint deployment via Audit~6.
 \item $\rho_0 = \min_{i<j \in \Saudit} \rho_{ij}$: derived from
@@ -394,113 +511,14 @@ pairwise floor suffices to make Layer~1's safe region non-trivial
 under any deployment-class $\rho_0 > 0$.
 
 \paragraph{On (C10.SU) vs.\ (C2) joint failure-correlation independence.}
-$I_6'$'s joint failure-correlation independence excludes shared
+$I_6$'s joint failure-correlation independence excludes shared
 adversarial \emph{shock} mechanisms: a single shock cannot span
 multiple substrates.  (C10.SU) excludes shared cooperative
 \emph{production} bottlenecks: producing cooperatives in one
 pairwise channel does not consume resources that would otherwise
 contribute to another.  These are structurally independent
-conditions; (C10.SU) is new content beyond $I_6'$, surfaced as a
+conditions; (C10.SU) is new content beyond $I_6$, surfaced as a
 deployment-class assumption.
-
-\subsection{Proof of Lemma 4 (SPRT lead-time tail bound)}
-\label{app:proof_lem4}
-
-\textbf{Statement (restated).}  Let $T_{\mathrm{detect}}$ be the
-SPRT detection time for a violation producing behavioral KL divergence
-$\delta > 0$ under the alternative distribution. Let
-$T_{\mathrm{cascade}}$ be the time from violation onset to
-irreversible cascade. Then:
-\[
-  \Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}]
-  \;\leq\; \exp(-\kappa \cdot T_{\mathrm{cascade}} \cdot \delta).
-\]
-
-\begin{proof}
-\citep[Exogenous~Verification]{lasser2026exo}'s behavioral consistency monitor produces a running
-log-likelihood ratio
-\[
-  \Lambda_t = \sum_{i=1}^t X_i,
-\]
-where $X_i = \log(p_1(x_i)/p_0(x_i))$ is the per-step log-likelihood
-ratio, $p_0$ is the baseline distribution, and $p_1$ is the chosen
-alternative. Under the alternative ($q = p_1$), the per-step
-expected drift is
-\[
-  \mathbb{E}_{p_1}[X_i] = D_{\mathrm{KL}}(p_1 \,\|\, p_0) = \delta > 0.
-\]
-Detection occurs when $\Lambda_t$ first crosses upper threshold $A$:
-$T_{\mathrm{detect}} = \inf\{t : \Lambda_t \geq A\}$.
-
-\emph{Mean bound (Wald's identity).}  By Wald's identity for the
-SPRT (\citep[Proposition: Behavioral Monitoring Detection Rate]{lasser2026exo}):
-\[
-  \mathbb{E}_{p_1}[T_{\mathrm{detect}}] \;\approx\; A / \delta.
-\]
-This is the mean bound; we need a tail bound.
-
-\emph{Tail bound (Hoeffding).}  Assume $X_i$ takes values in a
-bounded interval $[a, b]$ (which holds under \citep[Exogenous~Verification]{lasser2026exo}'s
-least-favorable-distribution discipline, where the per-step
-log-likelihood ratio is bounded by the choice of $p_0, p_1$ pair).
-Set $R = b - a$. By Hoeffding's inequality:
-\[
-  \Pr_{p_1}\!\left[\Lambda_t < t \delta - s\right]
-  \;\leq\; \exp(-2 s^2 / (t R^2))
-  \quad\text{for } s > 0.
-\]
-The event $\{T_{\mathrm{detect}} > t\}$ is the event $\{\Lambda_s <
-A \text{ for all } s \leq t\}$. A sufficient condition for this is
-$\Lambda_t < A$, so:
-\[
-  \Pr_{p_1}[T_{\mathrm{detect}} > t]
-  \;\leq\; \Pr_{p_1}[\Lambda_t < A]
-  \;=\; \Pr_{p_1}[\Lambda_t < t\delta - (t\delta - A)].
-\]
-For $t > A/\delta$, set $s = t\delta - A > 0$:
-\[
-  \Pr_{p_1}[T_{\mathrm{detect}} > t]
-  \;\leq\; \exp(-2 (t\delta - A)^2 / (t R^2)).
-\]
-
-\emph{Substituting $T_{\mathrm{cascade}}$.}  Setting $t =
-T_{\mathrm{cascade}}$, with $T_{\mathrm{cascade}} > A/\delta$:
-\[
-  \Pr_{p_1}[T_{\mathrm{detect}} > T_{\mathrm{cascade}}]
-  \;\leq\; \exp\!\left(-\frac{2(T_{\mathrm{cascade}}\delta - A)^2}
-  {T_{\mathrm{cascade}} R^2}\right).
-\]
-
-\emph{Asymptotic form.}  In the regime $T_{\mathrm{cascade}} \gg
-A/\delta$ (cascade time long relative to mean detection time),
-$T_{\mathrm{cascade}}\delta - A \approx T_{\mathrm{cascade}}\delta$,
-so:
-\[
-  \Pr_{p_1}[T_{\mathrm{detect}} > T_{\mathrm{cascade}}]
-  \;\leq\; \exp(-2 T_{\mathrm{cascade}}\delta^2 / R^2)
-  \;=:\; \exp(-\kappa \cdot T_{\mathrm{cascade}} \cdot \delta),
-\]
-with $\kappa = 2\delta/R^2$.
-
-\emph{Composition with metastable cascade lower bound.}  \citep[Phase~Redundancy]{lasser2026phase}'s
-metastable lifetime $\tau_{\mathrm{meta}} \gtrsim C/I_k$ under
-partial endogenous correction (B1$'$) provides the cascade-time
-lower bound. Substituting:
-\[
-  \Pr[T_{\mathrm{detect}} > T_{\mathrm{cascade}}]
-  \;\leq\; \exp(-\kappa \cdot \tau_{\mathrm{meta}} \cdot \delta).
-\]
-
-\textbf{Caveat on \citep[Phase~Redundancy]{lasser2026phase}'s scaling form.}  \citep[Phase~Redundancy]{lasser2026phase} states
-$\tau_{\mathrm{meta}} \gtrsim C/I_k$ as a scaling law, not a
-theorem-level bound.  Lemma~\ref{lem:6}'s lead-time-before-cascade
-composition handles this via (C11.CLK)'s deterministic event-count
-floor $\Ncasc$ + clock-failure probability $\bclk$ +
-calibration-uncertainty $\bcal$, rather than treating
-$\tau_{\mathrm{meta}}$ as a hard inequality.  Deployments where the
-scaling does not hold tightly require larger $\bclk$ or $\bcal$ to
-absorb the slack.
-\end{proof}
 
 \subsection{Proof of Lemma 5b (Channel-restricted detection KL floor)}
 \label{app:proof_lem5b}
@@ -546,28 +564,47 @@ $p_0 - \eta_2$. Bernoulli KL:
 \]
 
 \emph{Channels 3, 4 (multinomial concentration).}
-For multinomial distributions over capability partitions, the KL is
+For multinomial distributions over capability partitions, the KL
+is
 \[
   D_{\mathrm{KL}}(q \,\|\, p_0) \;=\; \sum_i q_i \log(q_i / p_{0,i}).
 \]
-Under the constraint that at least one component shifts by $\eta_3$
-(or $\eta_4$ for Channel 4), the least-favorable choice
-concentrates the perturbation on the component with smallest
-baseline mass. The KL floor $\delta_3$ (or $\delta_4$) is computed
-by minimizing over feasible $q$ subject to the constraint.
+For $\delta_3$ and $\delta_4$ to be strictly positive deployment-
+class constants, we require:
+\begin{itemize}
+\item \textbf{Fixed finite categories.}  The multinomial partitions
+  for Channels~3 and~4 are fixed before deployment with bounded
+  cardinality $K_3, K_4 \leq \Kchmulti$, where
+  $\Kchmulti$ is a deployment-class constant ((C5.MULT)
+  applied to the agent-side multinomial channels).  Categories
+  cannot be added during deployment.
+\item \textbf{Baseline mass floor.}  Every category $i$ has
+  $p_{0,i} \geq \eenv > 0$, with $\eenv$ a deployment-class
+  regularization constant ((C5.SUPP) extended for agent-side
+  multinomials, mirroring the environment-side support
+  conventions).  Without the mass floor the least-favorable
+  perturbation can drive $\delta_3, \delta_4 \to 0$ via a
+  vanishing-baseline-mass cell.
+\end{itemize}
+Under these conditions, the constraint that at least one component
+shifts by $\eta_3$ (or $\eta_4$) yields a least-favorable choice
+that concentrates the perturbation on the component with smallest
+baseline mass.  The KL floor $\delta_3$ (or $\delta_4$) is the
+infimum over feasible $q$ subject to the shift constraint and the
+support floor, and is strictly positive.
 
 \emph{Floor.}
 \[
   \deltaadv = \min\{\delta_1, \delta_2, \delta_3, \delta_4\} > 0.
 \]
 Each $\delta_c > 0$ since each channel's least-favorable shift is
-strictly different from the baseline; the minimum is therefore
-strictly positive.
+strictly different from the baseline under the stated support
+conditions; the minimum is therefore strictly positive.
 
 \textbf{Caveat on the channel-orthogonal residual.}
 Strategies outside $\Aadv$ --- those producing no shift in any of
 the four monitored channels --- have $D_{\mathrm{KL}}(q \,\|\, p_0)
-= 0$ on the monitored observables and are not detected. This is
+= 0$ on the monitored observables and are not detected.  This is
 the named gap acknowledged in Layer~3 of
 Theorem~\ref{thm:deployment_safety}.
 \end{proof}
@@ -576,7 +613,7 @@ Theorem~\ref{thm:deployment_safety}.
 \label{app:proof_lem5c}
 
 \textbf{Statement (restated, single-shock case).}  Under invariants
-$I_6'$ ($\mindep \geq m^* \geq 3$) and the balanced-loss condition
+$I_6$ ($\mindep \geq m^* \geq 3$) and the balanced-loss condition
 $\max_s \alpha_s \leq 1/m^* + \epsilon$ (with $\alpha_s$ the
 counterfactual shock-loss fraction of
 Definition~\ref{def:loss_fraction}), and restricted to the
@@ -699,161 +736,6 @@ This paper's main theorem (\S\ref{sec:main_theorem}) uses the
 single-shock case as the binding inequality; the multi-shock
 extension covers high-$\lambda$ deployment regimes but is not
 required for the theorem's substrate-targeting safe-region claim.
-
-\subsection{Proof of Lemma 6 ($h_{\mathrm{detect}}$ intensivity)}
-\label{app:proof_lem6}
-
-\textbf{Statement (restated).}  Under
-Theorem~\ref{thm:deployment_safety}'s conditions (C5) continuous
-SPRT monitoring, (C5.SPRT) SPRT applicability with sub-clauses
-(C5.HOEFF/MULT/IID/SUPP), (C11) bounded gap-growth rate, and
-(C11.CLK) clock comparability with calibrated probability, combined
-with Lemma~\ref{lem:4} (SPRT Wald--Hoeffding tail bound) and
-Lemma~\ref{lem:1} (Layer~1 intensivity):
-
-\textbf{Detection quantile.}
-\[
-  \Tbeta(\beta, \deltastar) \;:=\;
-  \max\!\left\{\frac{2A}{\deltastar},\;
-  \frac{2 \Rh^2 \log(1/\beta)}{\deltastar^2}\right\},
-\]
-with $A = \log((1-\beta)/\alpha)$ Paper~5's SPRT threshold,
-$\Rh = 2\Bclip$ the Hoeffding range width from (C5.HOEFF) clipping,
-and $\deltastar$ the post-clipping union-class drift floor
-(satisfying $\deltastar \leq \min(\deltaadv,
-\delta_{\mathrm{adv}}^{\mathrm{env}})$ from Lemmas~\ref{lem:5b},
-\ref{lem:5e}).
-
-\textbf{Conclusions.}
-(i) $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$.
-(ii) On $\{T_{\mathrm{detect}} \leq \Tbeta\}$,
-$h_{\mathrm{detect}}(\theta) := \sup_s \epsgap(s) \leq
-h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot \Tbeta$.
-(iii) $\Pr[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})] \geq 1 - \bclk
-- \bcal$ via (C11.CLK).
-(iv) Total Layer~2 failure $\leq \beta + \bclk + \bcal$.
-$h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over
-$\mathcal{D}$.
-
-\begin{proof}
-We prove (i)--(iv) in five steps.
-
-\emph{Boundary convention.}  Define $t_0$ as the last SPRT
-exposure step at which the deployment is still within Layer~1's
-safe region (equivalently, $t_0 = t_0^-$ in the SPRT exposure
-clock).  $T_{\mathrm{detect}}$ is the number of SPRT steps from
-$t_0$ until the SPRT log-likelihood ratio crosses the detection
-threshold, inclusive of the crossing step.
-
-\emph{Step 1 (per-step decomposition + (C11)).}  Under the
-boundary convention, set $s_n := t_0 + n$.  By (C11), the
-post-clipping per-step gap-growth satisfies
-$(\Delta\epsgap)_n \leq \rhogap(\deltastar)$, so
-$\epsgap(s_n) \leq \epsgap(s_0) + n \cdot \rhogap(\deltastar)$.
-
-\emph{Step 2 (boundary condition).}  At $s_0 = t_0$, the
-deployment is within Layer~1's safe region, so by Lemma~\ref{lem:1}
-$\epsgap(t_0) \leq h_{\mathrm{static}}(\theta)$.
-
-\emph{Step 3 (rigorous Hoeffding inversion to derive $\Tbeta$).}
-By Lemma~\ref{lem:4}, the SPRT detection time satisfies
-$\Pr[T_{\mathrm{detect}} > t] \leq \exp(-2(t\deltastar -
-A)^2/(t\Rh^2))$ for $t > A/\deltastar$.
-
-\emph{Substep 3a.}  Suppose $T \geq 2A/\deltastar$.  Then
-$T\deltastar - A \geq T\deltastar/2$.
-
-\emph{Substep 3b.}  Squaring: $(T\deltastar - A)^2 \geq
-T^2\deltastar^2/4$.
-
-\emph{Substep 3c.}  Substituting into the Hoeffding exponent:
-$2(T\deltastar - A)^2/(T\Rh^2) \geq T\deltastar^2/(2\Rh^2)$.
-
-\emph{Substep 3d.}  For exponent $\geq \log(1/\beta)$, need
-$T \geq 2\Rh^2\log(1/\beta)/\deltastar^2$.
-
-\emph{Substep 3e.}  Combining the regime condition (3a) and tail
-condition (3d):
-\[
-  \Tbeta \;:=\; \max\!\left\{\frac{2A}{\deltastar},\;
-  \frac{2\Rh^2\log(1/\beta)}{\deltastar^2}\right\}.
-\]
-For any $T \geq \Tbeta$, $\Pr[T_{\mathrm{detect}} > T] \leq
-\exp(-T\deltastar^2/(2\Rh^2)) \leq \beta$.  This proves~(i).
-
-\emph{Step 4 (supremum bound on the event $\{T_{\mathrm{detect}}
-\leq \Tbeta\}$).}  Combining Steps~1--2 with the bound
-$T_{\mathrm{detect}} \leq \Tbeta$:
-\[
-  h_{\mathrm{detect}}(\theta) \;=\;
-  \sup_{0 \leq n \leq T_{\mathrm{detect}}} \epsgap(s_n)
-  \;\leq\; h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
-  \Tbeta.
-\]
-This proves~(ii) with probability at least $1 - \beta$ from Step~3.
-
-\emph{Step 5 (cascade-clock event via (C11.CLK)).}  By (C11.CLK),
-$\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc] \geq 1 - \bclk$, with
-audit constraint $\Ncasc \geq \Tbeta$ (certified case $\bcal = 0$;
-union over conservative-bound certificates $\bcal \in (0,1)$
-empirical case).  Thus:
-\[
-  \Pr[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})] \;\geq\;
-  \Pr[\Tbeta \leq \Ncasc \leq \Nev(\tau_{\mathrm{meta}})]
-  \;\geq\; 1 - \bclk - \bcal.
-\]
-This proves~(iii).  Union bound on the two failure modes
-(detection-tail $\leq \beta$, cascade-clock $\leq \bclk + \bcal$)
-gives Layer~2 failure $\leq \beta + \bclk + \bcal$, proving~(iv).
-
-\emph{Intensivity.}  Each constant is deployment-class:
-$h_{\mathrm{static}}$ intensive by Lemma~\ref{lem:1};
-$\rhogap(\deltastar)$ intensive by (C11); $\Tbeta = \max\{2A/
-\deltastar, 2\Rh^2\log(1/\beta)/\deltastar^2\}$ intensive because
-$A, \beta$ are monitor-design parameters, $\Rh = 2\Bclip$ is
-deployment-class via (C5.HOEFF), $\deltastar$ is deployment-class
-via (C5.IID) post-clipping drift floor (rooted in Lemmas~5b/5e);
-$\Ncasc, \bclk, \bcal$ are deployment-class via (C11.CLK).
-Therefore $h_{\mathrm{detect}}$ is intensive in $|P|$ over
-$\mathcal{D}$.
-\end{proof}
-
-\textbf{Two roles of cascade time.}  $\Tbeta$ is the integration
-horizon for $\rhogap$ (a legitimate \emph{upper} bound on
-$T_{\mathrm{detect}}$ from Lemma~4's Hoeffding form).  Separately,
-$\tau_{\mathrm{meta}} \leq T_{\mathrm{cascade}}$ is the
-\emph{lower} bound on cascade time from
-\citep[Phase~Redundancy]{lasser2026phase}, used in (C11.CLK)'s
-event-throughput floor to give the lead-time-before-cascade
-guarantee $\Tbeta \leq \tau_{\mathrm{meta}}$.
-
-\textbf{Range-width discipline.}  $\Bclip$ is the symmetric clip
-radius ($\ell_n \in [-\Bclip, \Bclip]$ post-clipping); $\Rh =
-2\Bclip$ is the Hoeffding range width matching Lemma~\ref{lem:4}'s
-$R = b - a$ convention.  Concretely,
-$\Tbeta = \max\{2A/\deltastar, 8\Bclip^2\log(1/\beta)/\deltastar^2\}$.
-
-\textbf{Sign-direction discipline (operator certification).}  All
-$\Tbeta$-input certificates point conservatively: $\Bclip$
-\emph{upper}, $\deltastar$ \emph{lower}, $\Ncasc$ \emph{lower},
-each with calibration-failure probability $\bcal$ (or $\bcal = 0$
-in the certified-conservative case).
-
-\textbf{Total Layer 2 failure.}  Combining Lemma~6 with
-$\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$ from (C6):
-\[
-  |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; K_{\mathrm{Lip}} \cdot
-  \bigl(h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
-  \Tbeta\bigr)
-\]
-with probability at least $1 - (\beta + \bclk + \bcal)$.
-
-\textbf{(C11) is new content.}
-\citep[Microfoundation]{lasser2026micro}'s ``$T$ failure modes''
-remark notes adequacy/failure modes of the operational truth $T$
-but does not establish a formal per-step gap-growth-rate bound.
-(C11) is a Paper~10 operational assumption with empirical
-testability via Audit~7 (\S\ref{sec:tooling_substrate_audits}).
 
 \subsection{Proof of Lemma 5e (Environment-side witness extension)}
 \label{app:proof_lem5e}
@@ -993,3 +875,164 @@ because environment-side machinery is operationally distinct
 separate ledger commitments).  See
 \S\ref{sec:tooling_substrate_audits} Audit~8 for the calibration
 procedure.
+\subsection{Proof of Lemma 6 (\texorpdfstring{$h_{\mathrm{detect}}$}{h\_detect} intensivity)}
+\label{app:proof_lem6}
+
+\textbf{Statement (restated).}  Under
+Theorem~\ref{thm:deployment_safety}'s conditions (C5) continuous
+SPRT monitoring, (C5.SPRT) SPRT applicability with sub-clauses
+(C5.HOEFF/MULT/IID/SUPP), (C11) bounded gap-growth rate, and
+(C11.CLK) clock comparability with calibrated probability, combined
+with Lemma~\ref{lem:4} (SPRT Wald--Hoeffding tail bound) and
+Lemma~\ref{lem:1} (Layer~1 intensivity):
+
+\textbf{Detection quantile.}
+\[
+  \Tbeta(\beta, \deltastar) \;:=\;
+  \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2 \Rh^2 \log(1/\beta)}{\deltastar^2}\right\},
+\]
+with $A = \log((1-\beta)/\alpha)$ Paper~5's SPRT threshold,
+$\Rh = 2\Bclip$ the Hoeffding range width from (C5.HOEFF) clipping,
+and $\deltastar$ the post-clipping union-class drift floor
+(satisfying $\deltastar \leq \min(\deltaadv,
+\delta_{\mathrm{adv}}^{\mathrm{env}})$ from Lemmas~\ref{lem:5b},
+\ref{lem:5e}).
+
+\textbf{Conclusions.}
+(i) $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$.
+(ii) On $\{T_{\mathrm{detect}} \leq \Tbeta\}$,
+$h_{\mathrm{detect}}(\theta) := \sup_s \epsgap(s) \leq
+h_{\mathrm{static}}(\theta) + \rhogap \cdot \Tbeta$.
+(iii) $\Pr[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})] \geq 1 - \bclk
+- \bcal$ via (C11.CLK).
+(iv) Total Layer~2 failure $\leq \beta + \bclk + \bcal$.
+$h_{\mathrm{detect}}(\theta)$ is intensive in $|P|$ over
+$\mathcal{D}$.
+
+\begin{proof}
+We prove (i)--(iv) in five steps.
+
+\emph{Boundary convention.}  Define $t_0$ as the last SPRT
+exposure step at which the deployment is still within Layer~1's
+safe region (equivalently, $t_0 = t_0^-$ in the SPRT exposure
+clock).  $T_{\mathrm{detect}}$ is the number of SPRT steps from
+$t_0$ until the SPRT log-likelihood ratio crosses the detection
+threshold, inclusive of the crossing step.
+
+\emph{Step 1 (per-step decomposition + (C11)).}  Under the
+boundary convention, set $s_n := t_0 + n$.  By (C11), the
+per-SPRT-exposure-step gap growth satisfies
+$(\Delta\epsgap)_n \leq \rhogap$ uniformly over the admissible
+adversarial class, so
+$\epsgap(s_n) \leq \epsgap(s_0) + n \cdot \rhogap$.
+
+\emph{Step 2 (boundary condition).}  At $s_0 = t_0$, the
+deployment is within Layer~1's safe region, so by Lemma~\ref{lem:1}
+$\epsgap(t_0) \leq h_{\mathrm{static}}(\theta)$.
+
+\emph{Step 3 (rigorous Hoeffding inversion to derive $\Tbeta$).}
+By Lemma~\ref{lem:4}, the SPRT detection time satisfies
+$\Pr[T_{\mathrm{detect}} > t] \leq \exp(-2(t\deltastar -
+A)^2/(t\Rh^2))$ for $t > A/\deltastar$.
+
+\emph{Substep 3a.}  Suppose $T \geq 2A/\deltastar$.  Then
+$T\deltastar - A \geq T\deltastar/2$.
+
+\emph{Substep 3b.}  Squaring: $(T\deltastar - A)^2 \geq
+T^2\deltastar^2/4$.
+
+\emph{Substep 3c.}  Substituting into the Hoeffding exponent:
+$2(T\deltastar - A)^2/(T\Rh^2) \geq T\deltastar^2/(2\Rh^2)$.
+
+\emph{Substep 3d.}  For exponent $\geq \log(1/\beta)$, need
+$T \geq 2\Rh^2\log(1/\beta)/\deltastar^2$.
+
+\emph{Substep 3e.}  Combining the regime condition (3a) and tail
+condition (3d):
+\[
+  \Tbeta \;:=\; \max\!\left\{\frac{2A}{\deltastar},\;
+  \frac{2\Rh^2\log(1/\beta)}{\deltastar^2}\right\}.
+\]
+For any $T \geq \Tbeta$, $\Pr[T_{\mathrm{detect}} > T] \leq
+\exp(-T\deltastar^2/(2\Rh^2)) \leq \beta$.  This proves~(i).
+
+\emph{Step 4 (supremum bound on the event $\{T_{\mathrm{detect}}
+\leq \Tbeta\}$).}  Combining Steps~1--2 with the bound
+$T_{\mathrm{detect}} \leq \Tbeta$:
+\[
+  h_{\mathrm{detect}}(\theta) \;=\;
+  \sup_{0 \leq n \leq T_{\mathrm{detect}}} \epsgap(s_n)
+  \;\leq\; h_{\mathrm{static}}(\theta) + \rhogap \cdot
+  \Tbeta.
+\]
+This proves~(ii) with probability at least $1 - \beta$ from Step~3.
+
+\emph{Step 5 (cascade-clock event via (C11.CLK)).}  By (C11.CLK),
+$\Pr[\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc] \geq 1 - \bclk$, with
+audit constraint $\Ncasc \geq \Tbeta$ (certified case $\bcal = 0$;
+union over conservative-bound certificates $\bcal \in (0,1)$
+empirical case).  Thus:
+\[
+  \Pr[\Tbeta \leq \Nev(\tau_{\mathrm{meta}})] \;\geq\;
+  \Pr[\Tbeta \leq \Ncasc \leq \Nev(\tau_{\mathrm{meta}})]
+  \;\geq\; 1 - \bclk - \bcal.
+\]
+This proves~(iii).  Union bound on the two failure modes
+(detection-tail $\leq \beta$, cascade-clock $\leq \bclk + \bcal$)
+gives Layer~2 failure $\leq \beta + \bclk + \bcal$, proving~(iv).
+
+\emph{Intensivity.}  Each constant is deployment-class:
+$h_{\mathrm{static}}$ intensive by Lemma~\ref{lem:1};
+$\rhogap$ intensive by (C11); $\Tbeta = \max\{2A/
+\deltastar, 2\Rh^2\log(1/\beta)/\deltastar^2\}$ intensive because
+$A, \beta$ are monitor-design parameters, $\Rh = 2\Bclip$ is
+deployment-class via (C5.HOEFF), $\deltastar$ is deployment-class
+via (C5.IID) post-clipping drift floor (rooted in Lemmas~5b/5e);
+$\Ncasc, \bclk, \bcal$ are deployment-class via (C11.CLK).
+Therefore $h_{\mathrm{detect}}$ is intensive in $|P|$ over
+$\mathcal{D}$.
+\end{proof}
+
+\textbf{Two roles of cascade time.}  $\Tbeta$ is the integration
+horizon for $\rhogap$ (a legitimate \emph{upper} bound on
+$T_{\mathrm{detect}}$ from Lemma~4's Hoeffding form), measured in
+SPRT exposure-event count.  Separately, $\tau_{\mathrm{meta}} \leq
+T_{\mathrm{cascade}}$ is a \emph{lower} bound on wall-clock cascade
+time from \citep[Phase~Redundancy]{lasser2026phase}.  (C11.CLK)
+maps the wall-clock floor $\tau_{\mathrm{meta}}$ to an event-count
+floor $\Nev(\tau_{\mathrm{meta}}) \geq \Ncasc$ with probability
+$\geq 1 - \bclk$, supplying the comparable-clock chain $\Tbeta \leq
+\Ncasc \leq \Nev(\tau_{\mathrm{meta}})$.  The lead-time-before-
+cascade guarantee is therefore in event-count form: $\Tbeta \leq
+\Nev(\tau_{\mathrm{meta}})$ with probability $\geq 1 - \bclk -
+\bcal$.
+
+\textbf{Range-width discipline.}  $\Bclip$ is the symmetric clip
+radius ($\ell_n \in [-\Bclip, \Bclip]$ post-clipping); $\Rh =
+2\Bclip$ is the Hoeffding range width matching Lemma~\ref{lem:4}'s
+$R = b - a$ convention.  Concretely,
+$\Tbeta = \max\{2A/\deltastar, 8\Bclip^2\log(1/\beta)/\deltastar^2\}$.
+
+\textbf{Sign-direction discipline (operator certification).}  All
+$\Tbeta$-input certificates point conservatively: $\Bclip$
+\emph{upper}, $\deltastar$ \emph{lower}, $\Ncasc$ \emph{lower},
+each with calibration-failure probability $\bcal$ (or $\bcal = 0$
+in the certified-conservative case).
+
+\textbf{Total Layer 2 failure.}  Combining Lemma~6 with
+$\mathrm{Lip}(g) \leq K_{\mathrm{Lip}}$ from (C6):
+\[
+  |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; K_{\mathrm{Lip}} \cdot
+  \bigl(h_{\mathrm{static}}(\theta) + \rhogap \cdot
+  \Tbeta\bigr)
+\]
+with probability at least $1 - (\beta + \bclk + \bcal)$.
+
+\textbf{(C11) is new content.}
+\citep[Microfoundation]{lasser2026micro}'s ``$T$ failure modes''
+remark notes adequacy/failure modes of the operational truth $T$
+but does not establish a formal per-step gap-growth-rate bound.
+(C11) is a Paper~10 operational assumption with empirical
+testability via Audit~7 (\S\ref{sec:tooling_substrate_audits}).
+

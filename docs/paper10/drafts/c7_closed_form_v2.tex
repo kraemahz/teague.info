@@ -1,0 +1,580 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\Bclip}{B_{\mathrm{clip}}}
+\newcommand{\Kch}{K_{\mathrm{ch}}}
+\newcommand{\Aadv}{\mathcal{A}_{\mathrm{adv}}}
+\newcommand{\Pproxy}{P^{\mathrm{proxy}}}
+\newcommand{\Ttruth}{T^{\mathrm{truth}}}
+\newcommand{\epsnonresCoev}{\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}}}
+\newcommand{\Nev}{N_{\mathrm{ev}}}
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+\newcommand{\lammax}{\lambda_{\max}}
+\newcommand{\taumeta}{\tau_{\mathrm{meta}}}
+\newcommand{\Kchmulti}{K_{\mathrm{ch}}^{\mathrm{multi}}}
+
+\title{C7 closed-form derivation, v2: \\
+Lipschitz cross-channel sensitivity and cumulative cascade-window bound}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v1}
+
+\subsection{Goal}
+
+Derive (C7) bounded co-evolution from primitive operational
+parameters, so that $\bar{M}$ is no longer a free-floating
+deployment-class assumption but a corollary of (C5.HOEFF),
+(C5.MULT), and a structural property of the verification
+protocol's channel partition.
+
+\subsection{What v1 got wrong (per codex review)}
+
+\begin{enumerate}
+\item \textbf{Definition inconsistency (P0).} v1 defined
+  $M_{j \to j'}$ as total drift of $\mu_{j'}$ from baseline, but
+  Step~4 of the proof excluded $j'$-only drift from coupling.  Under
+  v1's definition, an adversary perturbing only $j'$-only actions
+  would set $|\mu_{j'}(q) - \mu_{j'}(q_0)| > 0$ even when channels
+  are action-disjoint, contradicting the closed-form claim
+  $\bar{M} = 0$ in that case.
+
+\item \textbf{Per-step vs.\ cumulative ambiguity (P0).} v1 proved a
+  per-step bound but the operational target (Audit~4 ``within
+  $\taumeta$'' / Microfoundation $K_{\mathrm{coev}}$ aggregation)
+  is cumulative.  v1 left this gap unresolved.
+
+\item \textbf{Step~4 false equality (P1).} v1's claim that ``$q$ and
+  $q'$ agreeing on $A \setminus A_{j,j'}$ implies $\mu_j(q) =
+  \mu_j(q')$'' is false; the agreement region needs to exclude $A_j$
+  as a whole, not just $A_{j,j'}$.
+
+\item \textbf{LLR support vs.\ structural incidence (P1).} v1
+  identified ``action $a$ affects channel $j$'' with $\ell^{(j)}(a)
+  \neq 0$, which is not generally valid: a channel's LLR can be
+  nonzero on outcomes that are not operationally causal for that
+  channel.
+
+\item \textbf{$Q^*$ defined only over admissible adversaries
+  (P1).} v1's Step~3 used $q_0(A_{j,j'}) \leq Q^*$, but $Q^*$ was
+  defined only over $\mathcal{A}_{\mathrm{adv}}$, not the baseline.
+
+\item \textbf{$Q^*$ intensivity not implied by (C5.MULT) (P1).}
+  v1 claimed $Q^*$ is intensive in $|P|$ from (C5.MULT) alone, but
+  (C5.MULT) fixes channel cardinality without preventing
+  adversaries from concentrating mass on shared actions as $|P|$
+  grows.
+
+\item \textbf{Single $q_0$ compatibility (P1).} v1 assumed a single
+  baseline $q_0$ corresponds to every per-channel $p_0^{(j)}$
+  without stating the compatibility condition.
+
+\item \textbf{Pairwise terminology (P2).} v1 prose said ``more than
+  one channel'' but the math used pairwise overlap.
+\end{enumerate}
+
+\subsection{Structural decisions for v2}
+
+\begin{itemize}
+\item Replace v1's total-drift definition with an
+  \textbf{L1-normalized directional sensitivity} (a Lipschitz
+  formulation that avoids the denominator-vanishing problem).
+\item Move to \textbf{cumulative} bound directly, with explicit
+  $\lammax \cdot \taumeta$ event-count factor; this matches Audit~4's
+  ``within $\taumeta$'' phrasing.
+\item Introduce a \textbf{structural channel-incidence map} $I_j$
+  separate from LLR support.
+\item Define $Q^*$ over the union $\{q_0\} \cup \mathcal{A}_{\mathrm{adv}}
+  \cup \mathcal{A}_{\mathrm{adv}}^{\mathrm{env}}$; use the
+  difference quantity $Q_\Delta^*$ for the bound.
+\item Add an explicit \textbf{overlap-mass stability sub-clause}
+  (C5.OVL) requiring $\sup_{|P|} \sup_q q(A_{j,j'}) \leq Q_{\max} <
+  1$.
+\item Add a \textbf{baseline compatibility} statement: $q_0$'s
+  channel projections equal $p_0^{(j)}$.
+\end{itemize}
+
+\section{Setup}
+
+\subsection{Verification ledger and action space}
+
+The deployment's verification ledger records events from a
+finite-or-countable action space $A$ (event types under the
+ledger's classification policy).  An \emph{adversary} is identified
+with a probability measure $q$ on $A$ (the per-step probability of
+each event type under that adversary's strategy).  Let $\mathcal{Q}
+:= \{q_0\} \cup \mathcal{A}_{\mathrm{adv}} \cup
+\mathcal{A}_{\mathrm{adv}}^{\mathrm{env}}$ denote the set of all
+admissible action distributions, including the baseline $q_0$.
+
+\subsection{Channel structure}
+
+The deployment monitors $\Kch$ channels indexed by $j \in \{1,
+\ldots, \Kch\}$.  Each channel has:
+\begin{itemize}
+\item A \textbf{structural incidence map} $I_j: A \to \{0, 1\}$
+  determined by the verification protocol's classification policy:
+  $I_j(a) = 1$ iff event $a$ is operationally classified into
+  channel $j$.  The set $A_j := \{a \in A : I_j(a) = 1\}$ is
+  channel $j$'s incidence set, fixed before deployment under
+  (C5.MULT).
+\item A baseline distribution $p_0^{(j)}$ over the events
+  classified into $A_j$.
+\item A least-favorable adversarial alternative $p_1^{(j)}$ at
+  threshold shift $\eta_j$.
+\item A clipped per-step log-likelihood-ratio function
+  $\ell^{(j)}: A \to [-\Bclip, \Bclip]$, with $\ell^{(j)}(a) = 0$
+  for $a \notin A_j$ by structural extension (zero-outside-incidence
+  convention).
+\end{itemize}
+
+\begin{remark}[Incidence vs.\ LLR support]
+\label{rem:incidence}
+The structural incidence map $I_j$ is a separate object from
+$\ell^{(j)}$'s support.  $I_j$ is \emph{operationally} fixed: it
+encodes the verification protocol's channel-classification policy,
+and identifies which events ``count toward'' channel $j$'s tests.
+$\ell^{(j)}$ is the formal LLR function used in SPRT detection.
+The convention $\ell^{(j)}(a) = 0$ for $a \notin A_j$ enforces that
+operational classification respects formal channel structure: events
+outside $A_j$ contribute nothing to channel $j$'s SPRT statistic.
+The opposite convention (where $\ell^{(j)}$ may be nonzero off
+$A_j$) corresponds to verification-protocol designs where channel
+boundaries are LLR-derived rather than classification-derived; we do
+not consider such designs here.
+\end{remark}
+
+\subsection{Pairwise shared-action sets}
+
+For ordered pairs $(j, j')$ with $j \neq j'$, define:
+\begin{align}
+  A_{j, j'} &:= A_j \cap A_{j'} \quad \text{(actions classified into
+    both channels)}.
+\end{align}
+$A_{j, j'} = \emptyset$ when channels $j$ and $j'$ are
+\textbf{action-disjoint} by classification.
+
+\subsection{Per-step expected drift}
+
+For an adversary $q \in \mathcal{Q}$, the per-step expected drift
+in channel $j$ is
+\begin{equation}
+\label{eq:drift-def}
+  \mu_j(q) \;:=\; \mathbb{E}_{a \sim q}[\ell^{(j)}(a)]
+  \;=\; \sum_{a \in A_j} q(a) \cdot \ell^{(j)}(a),
+\end{equation}
+the second equality by the zero-outside-incidence convention.
+
+\subsection{Baseline compatibility}
+
+\begin{assumption}[Baseline ledger compatibility]
+\label{ass:baseline-compat}
+There exists a baseline ledger distribution $q_0$ on $A$ such that
+for every channel $j \in \{1, \ldots, \Kch\}$, the conditional
+distribution $q_0(\cdot \mid A_j)$ equals the per-channel baseline
+$p_0^{(j)}$, and $\mu_j(q_0) \approx 0$ (the LLR has near-zero
+expectation under the per-channel baseline by SPRT design).
+\end{assumption}
+
+\section{Operational definition of \texorpdfstring{$M_{j \to j'}$}{M\_jj'}}
+
+\subsection{j-supported perturbations}
+
+A \emph{$j$-supported signed measure} is a function $\Delta: A \to
+\mathbb{R}$ with $\Delta(a) = 0$ for $a \notin A_j$ and
+$\sum_{a \in A_j} \Delta(a) = 0$.  Such $\Delta$ represents an
+adversary's deviation from baseline restricted to channel $j$'s
+incidence set.
+
+The set of \textbf{admissible $j$-perturbations} is
+\begin{equation}
+  \mathcal{D}_j \;:=\; \{ \Delta : A \to \mathbb{R} \mid \Delta
+  \text{ is $j$-supported}, \;\; q_0 + \Delta \in \mathcal{Q},
+  \;\; q_0 + \Delta \geq 0 \}.
+\end{equation}
+For each admissible $\Delta \in \mathcal{D}_j$, the adversary
+$q := q_0 + \Delta$ deviates from baseline only on $A_j$, and the
+induced per-channel drift shifts are
+\begin{align}
+  \Delta\mu_j[\Delta] &:= \mu_j(q_0 + \Delta) - \mu_j(q_0)
+    = \sum_{a \in A_j} \Delta(a) \cdot \ell^{(j)}(a), \\
+  \Delta\mu_{j'}[\Delta] &:= \mu_{j'}(q_0 + \Delta) - \mu_{j'}(q_0)
+    = \sum_{a \in A_{j, j'}} \Delta(a) \cdot \ell^{(j')}(a),
+\end{align}
+the second equality because $\Delta$ is supported on $A_j$ and
+$\ell^{(j')}$ vanishes off $A_{j'}$, so only $A_j \cap A_{j'} =
+A_{j,j'}$ contributes to channel $j'$'s drift.
+
+\subsection{Per-step coupling magnitude}
+
+\begin{definition}[Per-step coupling magnitude, L1-normalized]
+\label{def:M-formal-v2}
+For $j \neq j'$, the \emph{per-step coupling magnitude} of channel
+$j$ on channel $j'$ is the maximum $j'$-drift response per
+unit-magnitude $j$-perturbation:
+\begin{equation}
+\label{eq:M-def-v2}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D})
+  \;:=\; \sup_{\Delta \in \mathcal{D}_j \,:\, \|\Delta\|_1 \leq 1}
+  \big| \Delta\mu_{j'}[\Delta] \big|.
+\end{equation}
+
+The \emph{per-step deployment coupling magnitude} is
+$\bar{M}^{\mathrm{step}}(\mathcal{D}) := \max_{j \neq j'}
+M_{j \to j'}^{\mathrm{step}}(\mathcal{D})$.
+\end{definition}
+
+\begin{remark}[Why this is the Lipschitz formulation]
+\label{rem:lipschitz}
+Definition~\ref{def:M-formal-v2} captures the audit's
+``unit-perturbation propagation'' reading directly: a
+unit-$\ell_1$-magnitude $j$-perturbation produces a $j'$-drift
+shift bounded by $M_{j \to j'}^{\mathrm{step}}$.  This is the
+operator norm of the linear map $\Delta \mapsto \Delta\mu_{j'}$
+from the space of $j$-supported signed measures (with $\ell_1$ norm)
+to $\mathbb{R}$.
+
+In differential terms: if the adversary's strategy is parametrized
+by $\theta$ along a curve in $\mathcal{D}_j$, with
+$\frac{\partial}{\partial \theta} (q_0 + \Delta_\theta)|_{A_j}$
+having unit $\ell_1$ norm,
+then $\big|\frac{\partial \mu_{j'}}{\partial \theta}\big|
+\leq M_{j \to j'}^{\mathrm{step}}$.
+
+By contrast, the v1 definition (total $j'$-drift from baseline
+under any adversary) confused total drift with cross-channel
+sensitivity: an adversary perturbing only $A_{j'} \setminus A_j$
+would set total $j'$-drift positive but the cross-channel
+sensitivity to $A_j$ perturbations is zero.  The L1-normalized
+formulation isolates only $A_j$-perturbation responses.
+\end{remark}
+
+\section{Per-step closed-form bound}
+
+\begin{lemma}[Per-step bound on $M_{j \to j'}^{\mathrm{step}}$]
+\label{lem:per-step}
+Under (C5.HOEFF) (per-step LLR clipped to $[-\Bclip, \Bclip]$) and
+the structural-incidence convention (Section 2.2), for every $j
+\neq j'$:
+\begin{equation}
+\label{eq:per-step-bound}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D}) \;\leq\; \Bclip,
+\end{equation}
+with equality possible only when $A_{j, j'}$ is non-empty and the
+LLR magnitudes align favorably.  Furthermore, when the channels
+are action-disjoint ($A_{j, j'} = \emptyset$),
+$M_{j \to j'}^{\mathrm{step}}(\mathcal{D}) = 0$.
+\end{lemma}
+
+\begin{proof}
+By Definition~\ref{def:M-formal-v2},
+\[
+  \big| \Delta\mu_{j'}[\Delta] \big|
+  = \big| \sum_{a \in A_{j, j'}} \Delta(a) \ell^{(j')}(a) \big|
+  \leq \sum_{a \in A_{j, j'}} |\Delta(a)| \cdot |\ell^{(j')}(a)|
+  \leq \Bclip \sum_{a \in A_{j, j'}} |\Delta(a)|
+  \leq \Bclip \cdot \|\Delta\|_1
+  \leq \Bclip
+\]
+under $\|\Delta\|_1 \leq 1$.  Taking the supremum gives
+\eqref{eq:per-step-bound}.
+
+For the disjoint case, $A_{j, j'} = \emptyset$ implies the sum is
+empty, hence $\Delta\mu_{j'}[\Delta] = 0$ for all admissible
+$\Delta$, hence $M_{j \to j'}^{\mathrm{step}} = 0$.
+\end{proof}
+
+\begin{remark}[Tighter bound via mass concentration]
+\label{rem:tighter-bound}
+The bound $M_{j \to j'}^{\mathrm{step}} \leq \Bclip$ is loose: it
+ignores that admissible $\Delta$ has total $\ell_1$ mass at most 1,
+of which at most a fraction $Q^*$ lies on $A_{j, j'}$.  A tighter
+bound is
+\begin{equation}
+\label{eq:tighter-bound}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D}) \;\leq\;
+  \Bclip \cdot Q^*(\mathcal{D}),
+\end{equation}
+where $Q^*(\mathcal{D}) := \max_{j \neq j'} Q^*_{j, j'}(\mathcal{D})$
+and
+\[
+  Q^*_{j, j'}(\mathcal{D}) := \sup_{\Delta \in \mathcal{D}_j,
+  \|\Delta\|_1 \leq 1} \;\sum_{a \in A_{j, j'}} |\Delta(a)|.
+\]
+$Q^*_{j, j'}(\mathcal{D}) \in [0, 1]$ is the maximum fraction of a
+unit-$\ell_1$ $j$-perturbation that lies on the shared-action set
+$A_{j, j'}$.  For action-disjoint channels, $Q^*_{j,j'} = 0$.
+\end{remark}
+
+\section{Cumulative cascade-window bound}
+
+\subsection{Aggregating per-step over $\taumeta$}
+
+The operational target is bounding the cumulative coupling response
+over the cascade-time window $\taumeta$.  Under (C11.CLK), the
+maximum number of SPRT exposure events in $\taumeta$ is bounded by
+$\Nev(\taumeta) \leq \lammax \cdot \taumeta$ where $\lammax$ is the
+deployment-class action rate cap.
+
+\begin{lemma}[Cumulative cascade-window coupling bound]
+\label{lem:cumulative-bound}
+Under (C5.HOEFF), the structural-incidence convention, and a
+deployment-class action rate cap $\lammax$ (calibrated by
+(C11)/Audit~7), the cumulative coupling magnitude over $\taumeta$
+satisfies
+\begin{equation}
+\label{eq:cumulative-bound}
+  \bar{M}^{\mathrm{cum}}(\mathcal{D}) \;\leq\; \Bclip \cdot
+  Q^*(\mathcal{D}) \cdot \lammax \cdot \taumeta,
+\end{equation}
+where $\bar{M}^{\mathrm{cum}}$ is the maximum total $j'$-drift
+response, summed over all events in $\taumeta$, per unit-$\ell_1$
+$j$-perturbation maintained throughout the window.
+\end{lemma}
+
+\begin{proof}
+At each event step $n \in \{1, \ldots, \Nev(\taumeta)\}$, the
+per-step coupling response is bounded by
+$M_{j \to j'}^{\mathrm{step}} \leq \Bclip \cdot Q^*$
+(Remark~\ref{rem:tighter-bound}).  Summing over events:
+\[
+  \big| \sum_{n=1}^{\Nev(\taumeta)} \Delta\mu_{j'}^{(n)}[\Delta] \big|
+  \leq \Nev(\taumeta) \cdot \Bclip \cdot Q^*
+  \leq \lammax \cdot \taumeta \cdot \Bclip \cdot Q^*.
+\]
+Maximizing over $j \neq j'$ gives the deployment-coupling bound.
+\end{proof}
+
+\subsection{Connection to Audit 4 and (C7)}
+
+Audit~4's empirical procedure measures the response of channel
+$j'$ to a unit perturbation in channel $j$ over the cascade window
+$\taumeta$.  By Lemma~\ref{lem:cumulative-bound}, the audit-time
+$\bar{M}$ that operators must verify is bounded by
+$\Bclip \cdot Q^* \cdot \lammax \cdot \taumeta$.
+
+\textbf{(C7) follows as a corollary} when:
+\begin{enumerate}
+\item $\Bclip$ is a deployment-class constant (assumed in
+  (C5.HOEFF)).
+\item $Q^*(\mathcal{D})$ is intensive in $|P|$ (requires the
+  structural condition (C5.OVL) below; not implied by (C5.MULT)
+  alone).
+\item $\lammax$ is intensive in $|P|$ (assumed in (C11) action
+  rate cap).
+\item $\taumeta$ is intensive in $|P|$ (deployment-class via
+  \citep[Phase~Redundancy]{lasser2026phase}'s scaling).
+\end{enumerate}
+
+All four factors are deployment-class constants under their stated
+conditions.  The right-hand side of \eqref{eq:cumulative-bound} is
+therefore intensive in $|P|$, and $\bar{M}^{\mathrm{cum}}$ is
+bounded by a $|P|$-independent constant: this is exactly what (C7)
+asserts.
+
+\section{The new structural condition: (C5.OVL) overlap-mass stability}
+
+\subsection{Why (C5.MULT) is not sufficient}
+
+(C5.MULT) fixes the channel partition's cardinality $\Kch$ and the
+multinomial cardinality bound $\Kchmulti$ before deployment.  It
+does \emph{not} prevent admissible adversaries from concentrating
+$\ell_1$ mass on $A_{j, j'}$ at increasing rates as $|P|$ grows: a
+more capable agent might, for fixed channel partition, find
+adversarial strategies that place more probability mass on
+shared-action events.  This would scale $Q^*$ with $|P|$ and
+defeat the closed-form bound.
+
+\subsection{The new sub-clause}
+
+\begin{assumption}[Overlap-mass stability, (C5.OVL)]
+\label{ass:c5-ovl}
+The channel partition's shared-action mass is uniformly bounded
+across capability scales: there exists a deployment-class constant
+$Q_{\max} < 1$, independent of $|P|$, such that for every $j \neq
+j'$,
+\begin{equation}
+  \sup_{|P|} \;\sup_{\Delta \in \mathcal{D}_j, \|\Delta\|_1 \leq 1}
+  \;\sum_{a \in A_{j, j'}} |\Delta(a)| \;\leq\; Q_{\max}.
+\end{equation}
+\end{assumption}
+
+\begin{remark}[(C5.OVL) is testable from verification-protocol design]
+\label{rem:c5-ovl-design}
+(C5.OVL) is a \emph{design condition} on the verification
+protocol's event-classification policy.  It requires that, under
+$|P|$-scaling, the shared-action sets $A_{j, j'}$ either:
+\begin{enumerate}
+\item Remain empty (the action-disjoint case, $Q_{\max} = 0$); or
+\item Grow at rates that are matched by classification-policy
+  expansion of pure-channel sets, so that the \emph{mass fraction}
+  on shared actions stays bounded.
+\end{enumerate}
+The first case is achievable by design when the four channels of
+Lemma~5b measure structurally distinct ledger event types.  The
+second is operationally testable by auditing the
+classification-policy's growth rule against the deployment's
+capability scaling pattern.
+\end{remark}
+
+\section{Discussion}
+
+\subsection{What the v2 closed form delivers}
+
+If Lemma~\ref{lem:cumulative-bound} holds and (C5.OVL) is
+adopted, (C7) graduates from a free-floating assumption to a
+corollary of:
+\begin{itemize}
+\item (C5.HOEFF) per-step LLR clipping --- already required.
+\item (C5.MULT) bounded channel multiplicity with structural
+  incidence --- already required, slightly strengthened.
+\item (C5.OVL) overlap-mass stability --- new.
+\item (C11) action rate cap --- already required.
+\item Phase Redundancy's $\taumeta$ scaling --- already inherited.
+\end{itemize}
+
+Three of these are existing conditions; the new content is
+(C5.OVL), which encodes the structural property that the closed
+form requires.  The shift in epistemic burden is from ``$\bar{M}$
+is bounded by something'' to ``the verification protocol's
+classification policy maintains bounded shared-action mass under
+$|P|$-scaling.''  The latter is more structural and is
+verification-protocol-design-controllable.
+
+\subsection{What the v2 closed form does not deliver}
+
+\paragraph{(C5.OVL) is a non-trivial structural condition.}  It is
+not derived from existing conditions; it must be added.  It is
+testable in principle (audit the classification policy's
+$|P|$-scaling rule) but the test requires a deployment that has
+explicitly characterized its scaling rule.  Deployments that scale
+$|P|$ ad hoc (e.g., new capabilities mapped into channels by
+unconstrained policy) cannot certify (C5.OVL) directly.
+
+\paragraph{Pairwise-only bound.}  The cumulative bound is over
+\emph{pairs} $(j, j')$.  For deployments where multiple channels
+co-evolve simultaneously with shared-action coupling across more
+than two channels, the pairwise bound may be loose: the actual
+co-evolution correction term in Microfoundation's composition might
+scale with a higher-order overlap quantity (triple intersections
+$A_j \cap A_{j'} \cap A_{j''}$, etc.).  This is a refinement open
+question.
+
+\paragraph{Cumulative interpretation tied to $\taumeta$ as a hard
+window.}  Lemma~\ref{lem:cumulative-bound} treats $\taumeta$ as a
+hard upper bound on the cumulative window.  Under (C11.CLK), the
+event-count $\Nev(\taumeta)$ is bounded with high probability $1 -
+b_{\mathrm{clk}}$, so the cumulative-bound certification picks up
+this failure probability.  This is consistent with Lemma~6's clock
+comparability machinery; deployments where $b_{\mathrm{clk}}$ is
+non-negligible carry the corresponding stack-failure probability in
+the deployment claim.
+
+\subsection{Connection to (C11) capability-scaling caveat}
+
+(C11)'s capability-scaling caveat (a more capable agent may have
+richer effective action space) is structurally parallel to the
+$Q^*$-stability question: more capable agents may concentrate mass
+on shared actions in subtler ways, defeating (C5.OVL).  The closed
+form does not eliminate this concern --- it makes it explicit and
+operational, by tying the worry to a measurable
+verification-protocol property rather than to dynamics.
+
+\section{Open questions for codex review}
+
+\begin{enumerate}
+\item \textbf{Is the L1-normalized definition of
+  $M_{j \to j'}^{\mathrm{step}}$ in
+  Definition~\ref{def:M-formal-v2} the right operational reading
+  of Audit~4?}  v1's reviewer note suggests Audit~4 is windowed
+  /cumulative.  v2 splits this into per-step (Definition~3) and
+  cumulative (Lemma~2), with the cumulative version matching the
+  audit's ``within $\taumeta$'' phrasing directly.  Is the
+  L1-normalized per-step version a reasonable intermediate
+  quantity, or should the proof be cumulative-only?
+
+\item \textbf{Does Lemma~\ref{lem:per-step}'s tighter bound
+  (Remark~\ref{rem:tighter-bound}) hold under all admissible
+  $j$-perturbations?}  The bound $\Bclip \cdot Q^*$ uses that
+  $Q^*$ measures the maximum fraction of $\ell_1$ mass on
+  $A_{j, j'}$.  This implicitly assumes $\ell^{(j')}$ has worst-case
+  alignment with $\Delta$; in practice the bound may be loose by a
+  constant factor.  Is this tightness adequate?
+
+\item \textbf{Is (C5.OVL) a reasonable structural condition to
+  add?}  v2 adds (C5.OVL) as a new sub-clause of (C5.MULT).  The
+  alternative is to treat $\bar{M}$ itself as the
+  free-floating constant (current paper's posture).  Does
+  (C5.OVL) provide a strictly better epistemic posture (testable
+  property of verification-protocol design rather than empirical
+  measurement of $M$)?
+
+\item \textbf{Cumulative bound aggregation.}  Lemma~2 sums per-step
+  responses over $\Nev(\taumeta)$ events.  This treats the
+  $j$-perturbation as maintained throughout the window.  Does this
+  match what Microfoundation's $K_{\mathrm{coev}}$ aggregation
+  actually requires, or does $K_{\mathrm{coev}}$ aggregate via a
+  different (e.g., supremum or integral) operation?  If the latter,
+  the cumulative bound may need a different aggregation step.
+
+\item \textbf{Pairwise-only bound vs.\ multi-channel co-evolution.}
+  v2's bound is over channel pairs.  The cooperative-overlap
+  regime in Lemma~5c involves multi-substrate dynamics where
+  multiple channels co-evolve simultaneously.  Does the pairwise
+  bound suffice for Microfoundation's composition correction term,
+  or does the correction require a higher-order overlap bound?
+\end{enumerate}
+
+\section{Status}
+
+v2 attempts to close the v1 P0/P1 gaps via:
+\begin{itemize}
+\item Lipschitz formulation of $M_{j \to j'}$ (P0-1 fix).
+\item Cumulative bound directly with $\lammax \cdot \taumeta$
+  factors (P0-2 fix).
+\item Structural incidence map separate from LLR support (P1-4).
+\item $Q_\Delta^*$ formulation over signed measures (P1-3, P1-5).
+\item Explicit baseline compatibility (P1-7).
+\item New structural condition (C5.OVL) for $Q^*$ intensivity
+  (P1-6).
+\item Pairwise terminology consistency (P2-8).
+\end{itemize}
+
+The v2 closed form is more structurally honest than v1: it
+explicitly identifies the verification-protocol-design property
+(C5.OVL) on which (C7)'s intensivity depends, rather than
+asserting the intensivity directly.
+
+\end{document}

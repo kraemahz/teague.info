@@ -1,0 +1,124 @@
+\section{Composition with the deployment-safety theorem}
+\label{sec:composition}
+
+Theorem~\ref{thm:c7-corollary} (bounded co-evolution corollary)
+and Theorem~\ref{thm:concgap-scoped} (scoped Concentration-Gap)
+each enter the deployment-safety theorem
+\citep[Theorem~1]{lasser2026paper10} at specific points.  This
+section locates those points and lists the conditions each
+theorem adds to or removes from the deployment-claim hypothesis
+set.
+
+\subsection{Conditions removed and added}
+
+\paragraph{Removed.}  The deployment-claim hypothesis set, after
+the present theorems, no longer contains:
+\begin{itemize}
+\item The free-floating bounded co-evolution assumption that
+  $\bar{M}$ is bounded by some $|P|$-independent constant.
+  Replaced by Theorem~\ref{thm:c7-corollary}.  In
+  \citep[Deployment Safety]{lasser2026paper10}, the property is
+  now stated as condition~(C7) and invokes the corollary form
+  directly.
+\item The HHI surrogate-adequacy assumption: the
+  converse-direction sufficiency claim $\HHI < H^*
+  \Rightarrow \mathcal{R}_{\mathrm{press}}^c$. Replaced by
+  Theorem~\ref{thm:concgap-scoped} under the conjunction (REP) +
+  (DISP) + (COAL) and embedding compatibility
+  (Assumption~\ref{ass:embedding-companion}), now collected as
+  \citep[Assumption~1]{lasser2026paper10} (Concentration-Gap
+  structural conditions).
+\end{itemize}
+
+\paragraph{Added.} The deployment-claim hypothesis set acquires
+five explicit hypotheses, each operationally auditable (with
+embedding compatibility certified as a precondition for the
+embedded representations used by (REP) and (DISP)):
+\begin{itemize}
+\item \textbf{(C7.RATE).} Upper exposure-rate cap from
+  Assumption~\ref{ass:c7-rate}. Added as a sub-clause of
+  \citep[Condition~(C7)]{lasser2026paper10}.
+\item \textbf{(REP).} Representativeness from
+  Definition~\ref{def:rep-companion}.
+\item \textbf{(DISP).} Bounded dispersion from
+  Definition~\ref{def:disp-companion}.
+\item \textbf{(COAL).} Coalition closure from
+  Definition~\ref{def:coal-companion}, with explicit residual
+  $\eta_{\mathrm{latent}}$ for undetected coordination and
+  post-partition counterparty cardinality $N$ deployment-class
+  bounded (clause (ii); structurally required for the
+  HHI-to-$\chi^2$ translation to be $|P|$-independent).
+\item \textbf{Embedding compatibility} from
+  Assumption~\ref{ass:embedding-companion}: an affine isometry
+  (or bi-Lipschitz, with constants tracked through the bound)
+  $\phi: \mathcal{V}_\mathrm{utility} \to \mathcal{V}$ on the
+  operationally active subspace. This is the structural
+  prerequisite for transferring the algebraic distortion bound to
+  $\|\Pproxy - \Ttruth\|$ and thence to Goodhart slack.
+\end{itemize}
+
+(REP), (DISP), (COAL), and embedding compatibility are collected
+as the structural conditions for the Concentration-Gap selection
+bound; (C7.RATE) is the exposure-rate condition for the bounded
+co-evolution corollary.
+
+\subsection{Where each theorem enters Deployment Safety's proof}
+
+\paragraph{Theorem~\ref{thm:c7-corollary} enters at Lemma~1's co-evolution substitution.}
+\citep[Lemma~1, Step~4]{lasser2026paper10} substitutes the
+co-evolution correction term $(\epsnonresCoev)_+ \leq
+K_{\mathrm{coev}} \cdot \bar{M}$ into the four-channel
+decomposition; \citep[Lemma~1, Step~6]{lasser2026paper10}
+packages the result via the generic-$X$ intensivity argument.
+Both rely on $\bar{M}$ being a $|P|$-independent constant. The
+corollary supplies $\bar{M}^{\mathrm{cum}} \leq C \cdot \Bclip
+\cdot \lammax \cdot \taumeta$ with all factors deployment-class
+constants intensive in $|P|$, closing the substitution at Step~4
+without a free-floating constant.
+
+\paragraph{Theorem~\ref{thm:concgap-scoped} enters at Layer~1 binding via $I_5$.}
+\citep[Theorem~1, Layer~1 proof, Step~4]{lasser2026paper10} requires
+the converse-direction sufficiency $\HHI < H^* \Rightarrow$
+deployment outside $\mathcal{R}_{\mathrm{press}}$. The scoped
+selection theorem supplies the Goodhart-slack upper bound
+$|g(\Ttruth) - g(\Pproxy)| \leq \Lip(g) \cdot (\rho_\mathrm{rep} +
+\sigma \sqrt{\chi^2(w \|\mu)} + \eta_\mathrm{latent})$ under (REP)
++ (DISP) + (COAL) and embedding compatibility
+(Assumption~\ref{ass:embedding-companion}); for uniform $\mu$ on
+$N$ counterparties,
+$\chi^2 = N \HHI - 1$, so $\HHI < H^*$ yields a deployment-class
+constant ceiling on the slack.
+
+\paragraph{Both theorems enter Deployment Safety's sensitivity analysis.}
+\citep[\S 10.2]{lasser2026paper10}'s failure-mode taxonomy
+decomposes into specific structural-condition failures:
+bounded-co-evolution failure factors through (C5.HOEFF) /
+(C7.RATE) / channel-projection-structure failures (each with
+audit-detectable signal), and Concentration-Gap structural-condition
+failure factors through (REP) / (DISP) / (COAL) /
+embedding-compatibility failures (the last via the bi-Lipschitz
+$\phi$ certification of \S\ref{sec:audits}).
+
+\subsection{Deployment-claim shape}
+
+The structural shape of the deployment-safety theorem is
+preserved:
+\begin{itemize}
+\item Eleven operational invariants $I_1, \ldots, I_{11}$.
+\item Three-layer claim (static safe region /
+  detection-and-correction / acknowledged residuals).
+\item Five named residuals (R1)--(R5).
+\item Cooperative-anchoring property and canonical tripartite
+  substrate identification.
+\item Operational conditions (C2)--(C6) and (C8)--(C12) of
+  \citep[\S 5]{lasser2026paper10} retain their content;
+  (C1) and (C7) carry refined structural dependencies: (C1) now
+  explicitly invokes (REP), (DISP), (COAL), and embedding
+  compatibility via \citep[Assumption~1]{lasser2026paper10}, and
+  (C7) carries the (C7.RATE) sub-clause established here.
+\end{itemize}
+
+Theorem~\ref{thm:c7-corollary} and
+Theorem~\ref{thm:concgap-scoped} close structural gaps in the
+deployment-claim hypothesis set without altering the deployment
+claim's shape.

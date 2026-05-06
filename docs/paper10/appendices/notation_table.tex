@@ -3,22 +3,26 @@
 
 This appendix collects the full notation reconciliation table.  The
 source papers in the GFM sequence use different conventions for the
-same underlying quantities; This paper standardizes on a single set
+same underlying quantities; this paper standardizes on a single set
 of symbols across the composition.  Symbols introduced by this
 paper (rather than inherited from a source paper) are marked
 \emph{New} in column~2.
 
-\begin{table}[h]
-\centering
-\footnotesize
-\caption{Notation reconciliation across source papers and This paper's
-standardization.}
-\label{tab:notation}
+{\footnotesize
 \renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}p{0.13\textwidth} p{0.31\textwidth} p{0.48\textwidth}@{}}
+\begin{longtable}{@{}p{0.13\textwidth} p{0.31\textwidth} p{0.48\textwidth}@{}}
+\caption{Notation reconciliation across source papers and this paper's standardization.}
+\label{tab:notation}\\
 \toprule
 \textbf{This paper} & \textbf{Source paper} & \textbf{Meaning} \\
 \midrule
+\endfirsthead
+\toprule
+\textbf{This paper} & \textbf{Source paper} & \textbf{Meaning} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
 $\volL$ & \citep{lasser2026poset} & Possessed-capability volume \\
 $\volR$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\volR$ & Realized capability volume (latent) \\
 $\volRwin$ & \citep[Revealed Sacrifice]{lasser2026paper8a} $\volR^{[W]}$ & Window-active realized volume \\
@@ -61,6 +65,7 @@ $\deltastar$ & New & Post-clipping union-class drift floor; Lemma~\ref{lem:6}, (
 $\Bclip$ & New & Symmetric LLR clip radius; (C5.HOEFF) \\
 $\Rh = 2\Bclip$ & New & Hoeffding range width; (C5.HOEFF), Lemma~\ref{lem:4} \\
 $\Kch$ & New & Monitored-channel cardinality; (C5.MULT) \\
+$\Kchmulti$ & New & Multinomial-category cardinality bound for Channels~3, 4; (C5.MULT) \\
 $A = \log\!\frac{1-\beta}{\alpha}$ & New & SPRT threshold; Lemma~\ref{lem:6} \\
 $\Tbeta$ & New & SPRT high-probability detection quantile; Lemma~\ref{lem:6} \\
 $\rhogap$ & New & Per-step gap-growth rate; (C11) \\
@@ -70,17 +75,16 @@ $\bclk$ & New & Clock-failure probability; (C11.CLK) \\
 $\bcal$ & New & Calibration-uncertainty probability; (C11.CLK) empirical variant \\
 $\kappa$ & New & $2\delta/\Rh^2$ Hoeffding-asymptotic constant; Lemma~\ref{lem:4} \\
 $I_1, \ldots, I_{11}$ & New & Operational invariants \\
-\bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
+}
 
 The most consequential reconciliations:
 \begin{itemize}
 \item \citep[Phase Redundancy]{lasser2026phase}'s $\meff$ (nominal
-  substrate count) is upgraded to This paper's $\mindep$
+  substrate count) is upgraded to this paper's $\mindep$
   (failure-correlation-independent substrate count).  The
   distinction matters because nominally distinct substrates may
-  share failure modes (skeleton substrates), and This paper's
+  share failure modes (skeleton substrates), and this paper's
   safe-region calculation requires genuine independence.
 \item \citep[Microfoundation]{lasser2026micro}'s $P$ and $T$ (proxy
   and truth) are written as $\Pproxy = \volL$ and $\Ttruth =

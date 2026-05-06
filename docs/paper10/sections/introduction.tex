@@ -4,289 +4,304 @@
 \subsection{The result}
 \label{sec:problem}
 
-This paper identifies a regime under which deployment of
-capability-unbounded systems is provably safe within the
-Goal-Frontier Maximization framework. The regime is conditional on
-eleven operational invariants on the deployment substrate structure;
-under these invariants, the Goodhart slack between proxy and
-operational truth is bounded by a constant independent of the
-system's absolute capability magnitude. The bound holds for
-substrate-targeting adversarial events in a static safe region
-without active monitoring, and is preserved under
-detection-and-correction with a tail-bounded lead-time guarantee for
-substrate-targeting evasions of the static region within a
-four-channel observable class. Strategies achieving an effective
-internal-rate gain without producing any monitored four-channel
-deviation, environment manipulations that target unmonitored
-exogenous variables, and deployments outside the
-cooperative-overlap regime fall outside the safe regime; we name
-these residuals explicitly.
+This paper identifies a regime under which deployment of capability-unbounded
+systems is provably safe within the Goal-Frontier Maximization (GFM) framework.
+Such a regime is needed for the future safe development of AI systems which
+operate as independent agents capable of recursive self-improvement (RSI) and
+able to reach a classification of artificial superintelligence (ASI) within
+their operational lifetime.
 
-The result inverts the standard alignment-safety frame. Rather than
-asking \emph{what can the system do?} and conditioning safety on
-accurate capability estimation, we ask \emph{what operational
-properties of the deployment can we measure and bound?} The
-deployment-safety guarantee is then a property of the operational
-regime --- measurable from public ledger state under the verification
-infrastructure of \citep{lasser2026exo} --- rather than a property
-predicted from capability estimation. The cost is that the guarantee
-is conditional on the invariants holding throughout deployment; the
-benefit is that the guarantee scales past any capability level our
-estimation methods can characterize.
+The regime is conditional on eleven operational invariants on the deployment
+substrate structure plus an explicit set of operational conditions
+$(C1)$--$(C12)$ and four Concentration-Gap structural conditions
+(Assumption~\ref{ass:concgap_conditions}: representativeness, bounded
+dispersion, coalition closure, embedding compatibility); under these
+conditions, the Goodhart slack between proxy and operational truth is bounded
+by a constant independent of the system's absolute capability magnitude. The bound holds for substrate-targeting
+adversarial events in a static safe region without active monitoring, and is
+preserved under detection-and-correction with a tail-bounded lead-time
+guarantee for substrate-targeting evasions of the static region within a
+four-channel observable class.  Five named residuals fall outside the
+guarantee: channel-orthogonal restructuring, environment-witness-orthogonal
+manipulation, redundancy-dominated regime, capability-targeting and
+coalition-internal shocks, and calibration-exceeded gap-growth (Layer~3,
+(R1)--(R5); we name these residuals explicitly rather than gloss them).
+
+The result inverts the standard alignment-safety frame. Rather than asking
+\emph{what can the system do?} and conditioning safety on accurate capability
+estimation, we ask \emph{what operational properties of the deployment can we
+measure and bound?} The deployment-safety guarantee is then a property of the
+operational regime rather than a property predicted from capability estimation,
+and measurable from public ledger state under the verification infrastructure
+of \citep{lasser2026exo}. The cost is that the guarantee is conditional on the
+invariants holding throughout deployment; the benefit is that the guarantee
+scales past any capability level our estimation methods can characterize.
+
+\emph{What safety means in this context.}  Safety is a global property of the
+agent's optimization dynamics: under the invariants, the agent stays within an
+error-bounded distance of the operational truth its proxy tracks.  The
+Microfoundation paper~\citep{lasser2026micro} characterizes this operational
+truth in welfare-economic terms --- the agent's objective optimizes a
+welfare-relevant functional over the deployment's social structure.  This does
+not imply \emph{local safety}: an agent operating safely in this sense may
+still take disruptive actions or make mistakes.  It entails that the agent's
+objective remains aligned with its society throughout deployment.
 
 \subsection{What existing paradigms cannot deliver}
 \label{sec:wrong_frame}
 
-The capability-magnitude-independent guarantee is something the three
-dominant deployment-safety paradigms cannot supply. Each places
-capability estimation at the center, and each runs into the same
-scaling problem.
+The capability-magnitude-independent guarantee is something the three dominant
+deployment-safety paradigms cannot supply. Each places capability estimation at
+the center, and each runs into the same scaling problem.
 
-\textbf{Capability evaluations.} The standard approach is to
-construct benchmarks that probe specific capability classes
-(reasoning, planning, manipulation, self-directed action) and
-deploy systems whose benchmark performance falls below stated
-thresholds. The methodology is sound for systems whose capabilities
-are well-characterized by the benchmark suite. Its failure mode is
-that any capability class not anticipated by the benchmark
-construction is invisible. As capabilities grow, the gap between
-``what the benchmark measures'' and ``what the system can do''
+\textbf{Capability evaluations.} The standard approach is to construct
+benchmarks that probe specific capability classes (reasoning, planning,
+manipulation, self-directed action) and deploy systems whose benchmark
+performance falls below stated
+thresholds~\citep{liang2022holistic,srivastava2022bigbench,kinniment2023evaluating}.
+The methodology is sound for systems whose capabilities are well-characterized
+by the benchmark suite. Its failure mode is that any capability class not
+anticipated by the benchmark construction is invisible. As capabilities grow,
+the gap between ``what the benchmark measures'' and ``what the system can do''
 widens.
 
-\textbf{Scaling laws.} A second approach predicts capability
-growth from training compute, model size, and data, using observed
-scaling regularities. The predictions are calibrated on smaller
-systems and extrapolated forward. The failure mode is that the
-scaling regularities themselves change as capabilities cross
-qualitative thresholds (tool use, multi-step planning, in-context
-learning). Extrapolation past such thresholds requires assuming the
-regularities hold; in practice, they often don't.
+\textbf{Scaling laws.} A second approach predicts capability growth from
+training compute, model size, and data, using observed scaling
+regularities~\citep{kaplan2020scaling,hoffmann2022training}. The predictions
+are calibrated on smaller systems and extrapolated forward. The failure mode
+is that the scaling regularities themselves change as capabilities cross
+qualitative thresholds (tool use, multi-step planning, in-context learning).
+Extrapolation past such thresholds requires assuming the regularities hold; in
+practice, they often don't.
 
-\textbf{RLHF audits.} A third approach trains the system with
-human feedback to elicit aligned behavior, then audits the
-resulting policy. The failure mode is the verification asymmetry
-\citep{lasser2026exo}: the audit machinery can be gamed by a
-sufficiently capable system through outputs that look correct to
-the auditor but fail in deployment. The asymmetry grows
-monotonically with capability.
+\textbf{RLHF audits.} A third approach trains the system with human feedback
+to elicit aligned behavior, then audits the resulting
+policy~\citep{christiano2017deep,ouyang2022training}. The failure mode is the
+verification asymmetry \citep{lasser2026exo}: the audit machinery can be gamed
+by a sufficiently capable system through outputs that look correct to the
+auditor but fail in deployment. The asymmetry grows monotonically with
+capability.
 
-In each paradigm, the deployment-safety guarantee weakens precisely
-when the system's capabilities exceed the regime the methodology
-was calibrated on. This is the structural pattern this paper aims
-to invert: if the safety guarantee depends on quantities measurable
-\emph{during deployment} rather than \emph{predicted in advance},
-the dependence on capability estimation collapses.
+In each paradigm, the deployment-safety guarantee weakens precisely when the
+system's capabilities exceed the regime the methodology was calibrated on. This
+is the structural pattern this paper aims to invert: if the safety guarantee
+depends on quantities measurable \emph{during deployment} rather than
+\emph{predicted in advance}, the dependence on capability estimation collapses.
 
 \subsection{The composition approach}
 \label{sec:composition}
 
-The Goal-Frontier Maximization sequence supplies several pieces of
-the operational-invariant framework, none of which alone delivers
-the deployment claim. This paper composes them.
+The GFM sequence supplies several pieces of the operational-invariant
+framework, none of which alone delivers the deployment claim. This paper
+composes them.
 
 \textbf{The Horizon-Aware paper}~\citep{lasser2026horizon} establishes the
-\emph{anti-monopolar property}: under a discounted objective with
-positive cross-substrate cooperative novelty, full capability
-domination is anti-maximizing. The claim is structural: a
-diversity-maintaining strategy outvalues a domination-maximizing
-strategy at every sufficiently long planning horizon. The claim
-relies on the strategy-independent linearized growth model and
-admits a precise breakdown regime when the post-domination internal
-rate exceeds the cross-substrate cooperative contribution.
+\emph{anti-monopolar property}: under a discounted objective with positive
+cross-substrate cooperative novelty, full capability domination is
+anti-maximizing. The claim is structural: a diversity-maintaining strategy
+outvalues a domination-maximizing strategy at every sufficiently long planning
+horizon. The claim relies on the strategy-independent linearized growth model
+and admits a precise breakdown regime when the post-domination internal rate
+exceeds the cross-substrate cooperative contribution.
 
-\textbf{The Exogenous-Verification paper}~\citep{lasser2026exo} supplies the verification
-infrastructure: substrate-exclusive algorithmic witnesses,
-cryptographic commitment via Pedersen commitments, append-only
-ledger with cross-substrate distribution, and a governance fork
-protocol for evaluation-protocol acceptance. The infrastructure
-provides tamper-evident operational records and SPRT-based
-behavioral monitoring with an explicit detection-rate bound
-$\mathbb{E}[T_{\mathrm{detect}}] \leq A/\delta$.
+\textbf{The Exogenous-Verification paper}~\citep{lasser2026exo} supplies the
+verification infrastructure: substrate-exclusive algorithmic witnesses,
+cryptographic commitment via Pedersen commitments~\citep{pedersen1991noninteractive}, append-only ledger with
+cross-substrate distribution, and a governance fork protocol for
+evaluation-protocol acceptance. The infrastructure provides tamper-evident
+operational records and SPRT-based behavioral monitoring with an explicit
+detection-rate bound $\mathbb{E}[T_{\mathrm{detect}}] \leq A/\delta$.
 
-\textbf{The Phase-Redundancy paper}~\citep{lasser2026phase} provides the dynamical
-machinery: a Lyapunov function on world-model error, a phase
-boundary theorem separating self-correcting from absorbing
-trajectory regimes, and explicit characterization of the
-monopolar absorbing fixed point. The phase boundary uses
-intensive quantities (cross-substrate redundancy, subsumption
-frequency, drift exposure rate) rather than extensive
-capability counts.
+\textbf{The Phase-Redundancy paper}~\citep{lasser2026phase} provides the
+dynamical machinery: a Lyapunov function on world-model error, a phase boundary
+theorem separating self-correcting from absorbing trajectory regimes, and
+explicit characterization of the monopolar absorbing fixed point. The phase
+boundary uses intensive quantities (cross-substrate redundancy, subsumption
+frequency, drift exposure rate) rather than extensive capability counts.
 
-\textbf{The Revealed-Sacrifice and Need-Sufficiency papers} \citep{lasser2026paper8a,lasser2026paper8b}
-supply the empirical observation channel: an aggregate B-to-C lower
-bound from revealed-sacrifice observation that is monotone in
-observed events, plus a wireheading-consistent concentration signal
-(trade-flow HHI) that is Schur-convex in the majorization order.
+\textbf{The Revealed-Sacrifice and Need-Sufficiency papers}
+\citep{lasser2026paper8a,lasser2026paper8b} supply the empirical observation
+channel: an aggregate B-to-C lower bound from revealed-sacrifice observation
+that is monotone in observed events, plus a wireheading-consistent
+concentration signal (trade-flow HHI) that is Schur-convex in the majorization
+order~\citep{hardy1952inequalities,marshall2011inequalities}.
 
-\textbf{The Microfoundation paper}~\citep{lasser2026micro} establishes the static
-Goodhart bound: a Lipschitz transfer between proxy and operational
-truth on the active subspace of the capability poset, with a
-four-channel decomposition (observation density, attestation
-quality, individuation discipline, bundle decomposition) of the
-proxy-truth gap. The paper also flags an explicit dynamics
-conjecture (Conjecture 1: optimization pressure correlates with
-gap exploitation) deferred for future work.
+\textbf{The Microfoundation paper}~\citep{lasser2026micro} establishes the
+static Goodhart bound: a Lipschitz transfer between proxy and operational truth
+on the active subspace of the capability poset, with a four-channel
+decomposition (observation density, attestation quality, individuation
+discipline, bundle decomposition) of the proxy-truth gap. The paper also flags
+an explicit dynamics conjecture (Concentration-Gap~Conjecture: optimization
+pressure correlates with gap exploitation) deferred for future work.
 
-This paper composes these results. The composition is not
-mechanical: each source paper states its bound in intensive form
-(per-capability or per-channel), but proving the composition is
-intensive --- and operationally tractable --- requires substantive
-new content. The new content includes the three-layer deployment
-claim of \S\ref{sec:main_theorem}, the eleven operational
-invariants of \S\ref{sec:invariants}, the cooperative-anchoring
-property of \S\ref{sec:substrate_anchoring}, and the
-deployment-tooling specification of \S\ref{sec:deployment_tooling}.
+This paper composes these results. The composition is not mechanical: each
+source paper states its bound in intensive form (per-capability or
+per-channel), but proving the composition is intensive and tractable requires
+substantive new content. The new content includes the three-layer deployment
+claim of \S\ref{sec:main_theorem}, the eleven operational invariants of
+\S\ref{sec:invariants}, the cooperative-anchoring property of
+\S\ref{sec:substrate_anchoring}, and the deployment-tooling specification of
+\S\ref{sec:deployment_tooling}.
 
 \subsection{The three-layer deployment claim}
 \label{sec:claim_preview}
 
-This paper's main theorem
-(Theorem~\ref{thm:deployment_safety} in
+This paper's main theorem (Theorem~\ref{thm:deployment_safety} in
 \S\ref{sec:main_theorem}) is a three-layer claim:
 
-\textbf{Layer 1 (static safe region).} For substrate-targeting
-adversarial events under the cooperative-overlap regime, an
-agent's optimization pressure on cooperative outputs is locally
-rational toward preserving substrate diversity, with the safe
-region given by an explicit inequality
-(Lemma~\ref{lem:5c} in \S\ref{sec:lemmas}). Inside this region
-the deployment is safe without active monitoring.
+\textbf{Layer 1 (static safe region).} For substrate-targeting adversarial
+events under the cooperative-overlap regime, an agent's optimization pressure
+on cooperative outputs is locally rational toward preserving substrate
+diversity, with the safe region given by an explicit inequality
+(Lemma~\ref{lem:5c} in \S\ref{sec:lemmas}). Inside this region the deployment
+is safe without active monitoring.
 
-\textbf{Layer 2 (detection-and-correction).} Outside the static
-safe region but within a channel-restricted detection class
-$\Aadv \cup \Aadv^{\mathrm{env}}$, violations of the safe region
-are detected by \citep[Exogenous~Verification]{lasser2026exo}'s
-SPRT machinery within a tail-bounded high-probability detection
-quantile $\Tbeta$ before irreversible cascade (Lemmas~\ref{lem:5b},
-\ref{lem:5e}, \ref{lem:5d}, \ref{lem:6}).  The lead-time guarantee
-uses Wald's identity and Hoeffding-Azuma on the clipped SPRT
-increment to derive $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq \beta$,
-with cascade-clock comparability via (C11.CLK) giving total
-Layer~2 failure $\leq \beta + \bclk + \bcal$.
+\textbf{Layer 2 (detection-and-correction).} Outside the static safe region but
+within a channel-restricted detection class $\Aadv \cup \Aadv^{\mathrm{env}}$,
+violations of the safe region are detected by
+\citep[Exogenous~Verification]{lasser2026exo}'s SPRT machinery within a
+tail-bounded high-probability detection quantile $\Tbeta$ before irreversible
+cascade (Lemmas~\ref{lem:5b}, \ref{lem:5e}, \ref{lem:5d}, \ref{lem:6}).  The
+lead-time guarantee uses Wald's identity~\citep{wald1947sequential} and
+Hoeffding--Azuma~\citep{hoeffding1963probability,azuma1967weighted} on the
+clipped SPRT increment to derive $\Pr[T_{\mathrm{detect}} > \Tbeta] \leq
+\beta$, with cascade-clock comparability via (C11.CLK) giving total Layer~2
+failure $\leq \beta + \bclk + \bcal$.
 
-\textbf{Layer 3 (acknowledged residuals).} Strategies achieving
-$\Delta r_K \geq r_{\mathrm{ext}}$ without producing any monitored
-four-channel deviation, environment manipulations that target
-unmonitored exogenous variables, and deployments in the
-redundancy-dominated substrate-cooperative regime are outside the
-guarantee. We name these residuals explicitly rather than gloss
-them.
+\textbf{Layer 3 (acknowledged residuals).} Five named residuals are outside the
+guarantee: (R1) channel-orthogonal restructuring --- strategies achieving
+$\Delta r_K \geq r_{\mathrm{ext}}$ without producing any monitored four-channel
+deviation; (R2) environment-witness-orthogonal manipulation --- environment
+manipulations targeting only unmonitored exogenous variables and producing no
+threshold-exceeding monitored shift; (R3) redundancy-dominated regime ---
+deployments where redundant capabilities dominate cross-substrate cooperatives;
+(R4) capability-targeting and coalition-internal shocks --- adversarial event
+classes outside the substrate-targeting class; and (R5) calibration-exceeded
+gap-growth --- adversarial strategies whose per-step gap growth exceeds the
+calibrated $\rhogap$ from (C11).  We name these residuals explicitly rather
+than gloss them.
 
-The Goodhart slack between proxy and operational truth is bounded
-by an intensive constant in Layer 1 and by an SPRT-tail-bounded
-intensive constant in Layer 2. In neither case does the bound grow
-with the system's absolute capability magnitude.
+The Goodhart slack between proxy and operational truth is bounded by an
+intensive constant in Layer 1 and by an SPRT-tail-bounded intensive constant in
+Layer 2. In neither case does the bound grow with the system's absolute
+capability magnitude.
 
 \subsection{Substrate identification and cooperative anchoring}
 \label{sec:substrate_preview}
 
-The composition's load-bearing piece is the canonical tripartite
-substrate identification: \textbf{Human + AI +
-Formal-Operational}. These three are jointly failure-correlation
-independent in the sense \citep[Exogenous~Verification]{lasser2026exo}'s verification asymmetry argument
-requires --- prompt injection breaks neither human judgment nor
-cryptographic commitments; cognitive bias breaks neither LLM
-inference nor ledger integrity; trusted-setup failure breaks
-neither human reasoning nor LLM behavior.
+The composition's load-bearing piece is the canonical tripartite substrate
+identification: \textbf{Human + AI + Formal-Operational}. These three are
+jointly failure-correlation independent in the sense
+\citep[Exogenous~Verification]{lasser2026exo}'s verification asymmetry argument
+requires: prompt injection breaks neither human judgment nor cryptographic
+commitments; cognitive bias breaks neither LLM inference nor ledger integrity;
+trusted-setup failure breaks neither human reasoning nor LLM behavior.
 
-A common alternative identification (``two LLMs and a human'') fails
-the test, since LLMs share substantial adversarial-event surface
-through training-data overlap, prompt-injection vulnerabilities, and
-architectural similarity. The canonical tripartite identification
-makes the formal-operational layer (the verification infrastructure
-itself) explicit as the third substrate, rather than treating it as
-an undifferentiated ``safety machinery.''
+A common alternative identification (``two LLMs and a human'') fails the test,
+since LLMs share substantial adversarial-event surface through training-data
+overlap, prompt-injection vulnerabilities, and architectural similarity. The
+canonical tripartite identification makes the formal-operational layer (the
+verification infrastructure itself) explicit as the third substrate, rather
+than treating it as an undifferentiated ``safety machinery.''
 
 This identification has a structural consequence
-(\S\ref{sec:substrate_anchoring}): cross-substrate cooperative
-capabilities involving the formal-operational layer are jointly
-produced and not unilaterally replaceable. An agent cannot
-substitute a captured or weaker verification layer because the
-cooperative's value comes from the human substrate's actual
-participation in the specific shared infrastructure. This
+(\S\ref{sec:substrate_anchoring}): cross-substrate cooperative capabilities
+involving the formal-operational layer are jointly produced and not
+unilaterally replaceable. An agent cannot substitute a captured or weaker
+verification layer because the cooperative's value comes from the human
+substrate's actual participation in the specific shared infrastructure. This
 \emph{cooperative-anchoring} property defeats the literal
-replacement-verification attack on the deployment claim, narrowing
-the agent's capture options to attacks \citep[Exogenous~Verification]{lasser2026exo}'s existing
-defenses already address.
+replacement-verification attack on the deployment claim, narrowing the agent's
+capture options to attacks \citep[Exogenous~Verification]{lasser2026exo}'s
+existing defenses already address.
 
 \subsection{Scope, residuals, and what we do not claim}
 \label{sec:scope}
 
-This paper's deployment claim is conditional. We are explicit about
-what each conditional carries:
+This paper's deployment claim is conditional. We are explicit about what each
+conditional carries:
 
 \textbf{The eleven operational invariants} ($I_1$--$I_{11}$,
-\S\ref{sec:invariants}) are the deployment-time conditions. They
-include the inherited \citep[Phase~Redundancy]{lasser2026phase} invariants (cross-substrate
-redundancy $\rhomincross > \rho^*$, subsumption frequency
-$\rsub < r^*$, Lyapunov error $L < \epsilon_{\mathrm{safe}}$),
-inherited \citep[Revealed~Sacrifice]{lasser2026paper8a},~\citep[Need~Sufficiency]{lasser2026paper8b} invariants (B-to-C ratio, HHI), and new
-operational machinery ($I_8$ environment-side substrate-exclusive
-witnesses, $I_9$ substrate-exclusivity observability, $I_{10}$
-coverage/materiality, $I_{11}$ latency bounds). Each invariant is
-ledger-observable under \citep[Exogenous~Verification]{lasser2026exo}'s verification infrastructure.
+\S\ref{sec:invariants}) are the deployment-time conditions. They include the
+inherited \citep[Phase~Redundancy]{lasser2026phase} invariants (cross-substrate
+redundancy $\rhomincross > \rho^*$, subsumption frequency $\rsub < r^*$,
+Lyapunov error $L < \epsilon_{\mathrm{safe}}$), inherited
+\citep[Revealed~Sacrifice]{lasser2026paper8a},~\citep[Need~Sufficiency]{lasser2026paper8b}
+invariants (B-to-C ratio, HHI), and new operational machinery ($I_8$
+environment-side substrate-exclusive witnesses, $I_9$ substrate-exclusivity
+observability, $I_{10}$ coverage/materiality, $I_{11}$ latency bounds). Each
+invariant is ledger-observable under
+\citep[Exogenous~Verification]{lasser2026exo}'s verification infrastructure.
 
-\textbf{The substrate-targeting scope.} The static safe region
-covers substrate-targeting adversarial events specifically.
-Capability-targeting attacks, coalition-internal corruption, and
-environment manipulation outside the witness coverage are handled
-by separate machinery (the detection layer for some,
-acknowledged residuals for others).
+\textbf{The substrate-targeting scope.} The static safe region covers
+substrate-targeting adversarial events specifically. Capability-targeting
+attacks, coalition-internal corruption, and environment manipulation outside
+the witness coverage are handled by separate machinery (the detection layer for
+some, acknowledged residuals for others).
 
-\textbf{The cooperative-overlap regime.} Lemma 5c's multi-shock
-result is established for deployments where the
-substrate-cooperative structure is dominated by cross-substrate
-cooperatives (the canonical tripartite case) rather than
-redundant capabilities. Sequential counterfactual derivation for
-the redundancy regime is named as Lemma 5c-prime open work.
+\textbf{The cooperative-overlap regime.} Lemma 5c's single-shock safe-region
+result is established for deployments where the substrate-cooperative
+structure is dominated by cross-substrate cooperatives (the canonical
+tripartite case) rather than redundant capabilities. Sequential
+counterfactual derivation for the redundancy regime is named as Lemma
+5c-prime open work.
 
-\textbf{The weaker inner-alignment condition.} The cooperative-
-anchoring property requires the agent's effective objective to
-realize \emph{causally grounded cooperative-outcome value}, not
-merely reward-visible cooperation signals. This is more plausible
-than a strong substrate-aware mesa-objective requirement but is
-not delivered by vanilla RLHF; achieving it requires training-time
-discipline (delayed feedback, adversarial fake-verification
+\textbf{The weaker inner-alignment condition.} The cooperative-anchoring
+property requires the agent's effective objective to realize \emph{causally
+grounded cooperative-outcome value}, not merely reward-visible cooperation
+signals. This is more plausible than a strong substrate-aware mesa-objective
+requirement~\citep{hubinger2019risks} but is not delivered by vanilla RLHF;
+achieving it requires training-time discipline (delayed feedback, adversarial
+fake-verification
 examples, process supervision tied to real attestations).
 
-\textbf{What we explicitly do not claim.}  This paper does not
-prove that alignment pressure is universally reversed under
-substrate identification.  It does not solve the inner-alignment
-problem: condition (C4) is assumed, not discharged.  It does not
-establish basin entry --- whether a deployment can reach the
-cooperative-anchoring attractor from arbitrary initial conditions
-is an empirical training-time question, not one this composition
-can resolve.  It does not bound the residual classes named in
-Layer~3.  \S\ref{sec:conditional_structure} works through the
-distinction between conjectural conditions (argued, not proved),
-operational conditions (verifiable from deployment state), and
-explicit scope restrictions.
+\textbf{The Concentration-Gap structural conditions.} Theorem~1's Layer~1
+binding via invariant $I_5$ requires four operationally auditable structural
+conditions: representativeness (REP), bounded dispersion (DISP), coalition
+closure (COAL), and Lipschitz embedding compatibility (EMB), collected as
+Assumption~\ref{ass:concgap_conditions}. The conjunction of these four
+conditions plays the role previously assigned to a monolithic
+``HHI surrogate adequacy'' assumption; the companion
+paper~\citep{lasser2026foundations} derives the Goodhart-slack bound under
+these structural conditions, replacing what was previously an inherited
+empirical-adequacy claim with four explicit auditable conditions plus the
+HHI threshold itself. \S\ref{sec:conjecture_op} summarizes the structural
+content; \citep[\S 4]{lasser2026foundations} contains the formal derivation.
+
+\textbf{What we explicitly do not claim.}  This paper does not prove that
+alignment pressure is universally reversed under substrate identification.  It
+does not solve the inner-alignment problem: condition (C4) is assumed, and
+requires additional training infrastructure to be bounded.  It does not
+establish basin entry: whether a deployment can reach the cooperative-anchoring
+attractor from arbitrary initial conditions requires empirical training-time
+discipline from AI designers.  It does not bound the residual classes named in
+Layer~3. \S\ref{sec:conditional_structure} works through the distinction
+between conjectural conditions (argued, not proved), operational conditions
+(verifiable from deployment state), and explicit scope restrictions.
 
 \subsection{Paper roadmap}
 \label{sec:roadmap}
 
-\S\ref{sec:composition_setup} sets up the composition: how
-Papers 3, 5, 6, 8a, 8b, 9 stack into a unified framework, with
-notation reconciliation across the source papers.
-\S\ref{sec:invariants} defines the eleven operational invariants
-with their threshold semantics and ledger-observable measurement
-procedures.
-\S\ref{sec:lemmas} states and proves the nine compositional
-lemmas (1--4 plus the five-part Lemma 5 family).
-\S\ref{sec:main_theorem} states the three-layer deployment-safety
-theorem and gives its proof.
-\S\ref{sec:substrate_anchoring} develops the substrate
-identification and cooperative-anchoring property in detail,
-including the three additional invariants $I_9$--$I_{11}$ that
-bound non-substrate-targeting evasions.
-\S\ref{sec:conjecture_op} discusses the operationalization of
-\citep[Microfoundation]{lasser2026micro}'s Conjecture 1 (HHI as surrogate for optimization
-pressure) and what is gained vs.\ what would be gained by proving
-the conjecture itself.
-\S\ref{sec:deployment_tooling} specifies what a deployer must
-instrument to invoke the theorem.
-\S\ref{sec:worked_scenarios} walks through worked deployment
-scenarios, including a clean case, per-invariant violations, an
+\S\ref{sec:composition_setup} sets up the composition: how the theoretical
+foundation stacks into a unified framework, with notation reconciliation across
+the source papers. \S\ref{sec:invariants} defines the eleven operational
+invariants with their threshold semantics and ledger-observable measurement
+procedures. \S\ref{sec:lemmas} states and proves the ten compositional lemmas
+(1--4, the five-part Lemma 5 family, and Lemma 6).
+\S\ref{sec:main_theorem} states the three-layer deployment-safety theorem and
+gives its proof.
+\S\ref{sec:substrate_anchoring} develops the substrate identification and
+cooperative-anchoring property in detail, including the three additional
+invariants $I_9$--$I_{11}$ that bound non-substrate-targeting evasions.
+\S\ref{sec:conjecture_op} summarizes the operationalization of
+\citep[Microfoundation]{lasser2026micro}'s Concentration-Gap~Conjecture (the
+Herfindahl--Hirschman Index as surrogate for optimization pressure) and points
+to the companion paper~\citep{lasser2026foundations} for the formal scoped
+discharge under the structural conditions of
+Assumption~\ref{ass:concgap_conditions}.
+\S\ref{sec:deployment_tooling} specifies what a deployer must instrument to
+invoke the theorem. \S\ref{sec:worked_scenarios} walks through worked
+deployment scenarios, including a clean case, per-invariant violations, an
 adversarial-coalition scenario, and the canonical tripartite audit.
-\S\ref{sec:discussion} discusses what this paper establishes and what
-it defers, with explicit open questions for follow-up work.
+\S\ref{sec:discussion} discusses what this paper establishes and what it
+defers, with explicit open questions for follow-up work.

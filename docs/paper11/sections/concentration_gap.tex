@@ -1,0 +1,405 @@
+\section{Concentration-Gap selection theorem (scoped)}
+\label{sec:concgap}
+
+The Concentration-Gap conjecture of
+\citep[Microfoundation]{lasser2026micro} states informally:
+optimization pressure on the proxy correlates with proxy-truth
+gap exploitation. The conjecture is deferred in
+\citep{lasser2026micro} as open work; the present section proves
+a scoped version under three operationally auditable structural
+conditions ((REP), (DISP), (COAL)) plus a Lipschitz embedding
+compatibility precondition (Assumption~\ref{ass:embedding-companion}),
+at which point the proxy-truth Goodhart slack is bounded above
+(and below at the proxy-truth-norm level) by an explicit
+$\chi^2$-divergence quantity controlling Herfindahl-index
+trade-flow concentration.
+
+The proof proceeds in three layers: an algebraic
+weighted-selection kernel (\S\ref{sec:concgap-algebraic}), a
+counterparty-selection interpretation
+(\S\ref{sec:concgap-counterparty}), and a transfer to Goodhart
+slack via the Lipschitz machinery of
+\citep[Theorem~2]{lasser2026micro}
+(\S\ref{sec:concgap-transfer}). The universal model-free
+Concentration-Gap conjecture remains open;
+\S\ref{sec:discussion} states the limits of the scoped discharge.
+
+\subsection{The algebraic weighted-selection kernel}
+\label{sec:concgap-algebraic}
+
+\subsubsection{Setup}
+
+Let $\mathcal{V}$ be a real Hilbert space with norm $\|\cdot\|$
+(in applications: capability-poset measures, or its tangent space
+at the welfare-relevant truth). Let $\mathcal{C}$ be a measurable
+space (in applications: the set of counterparties, possibly after
+coalition partitioning per (COAL)). Let $\mu$ be a fixed
+\emph{base population measure} on $\mathcal{C}$ --- the
+auditor-defined fair-or-natural distribution over admissible
+counterparties.
+
+Let $\Delta: \mathcal{C} \to \mathcal{V}$ be a deterministic
+\emph{deviation field}, $c \mapsto \Delta_c$, $\mu$-integrable. A
+\emph{weighting} $w$ is a probability measure on $\mathcal{C}$
+absolutely continuous with respect to $\mu$, with Radon-Nikodym
+derivative $r := dw/d\mu$ satisfying $\mathbb{E}_\mu[r] = 1$.
+
+The \emph{population mean} is $\bar\Delta := \int_\mathcal{C}
+\Delta_c \,d\mu(c) = \mathbb{E}_\mu[\Delta]$. The \emph{weighted
+aggregate distortion} is
+\begin{equation}
+\label{eq:aggregate-distortion-companion}
+  \Delta(w) \;:=\; \int_\mathcal{C} \Delta_c \,dw(c)
+  \;=\; \mathbb{E}_w[\Delta] \;=\; \mathbb{E}_\mu[r \cdot \Delta].
+\end{equation}
+
+\subsubsection{Two scalar concentration measures: HHI and $\chisq$ divergence}
+
+\begin{definition}[$\chi^2$ divergence]
+\label{def:chisq-companion}
+The \emph{$\chi^2$ divergence}~\citep{kullback1951information}
+of $w$ from $\mu$ is
+\begin{equation}
+\label{eq:chisq-companion}
+  \chisq(w \,\|\, \mu) \;:=\; \mathbb{E}_\mu[(r - 1)^2]
+  \;=\; \mathrm{Var}_\mu(r) \;\geq\; 0.
+\end{equation}
+$\chisq(w \|\mu) = 0$ iff $w = \mu$.
+\end{definition}
+
+\begin{definition}[HHI and its relation to $\chisq$]
+\label{def:hhi-companion}
+For discrete $\mathcal{C}$, the Herfindahl-Hirschman index of
+$w$ is $\HHI(w) := \sum_c w_c^2 = \|w\|_2^2$. When $\mu$ is the
+uniform measure on a finite $\mathcal{C}$ of size $N$, the two
+divergences are related by
+\begin{equation}
+\label{eq:chisq-hhi-companion}
+  \chisq(w \,\|\, \mu) \;=\; N \cdot \HHI(w) - 1.
+\end{equation}
+For non-uniform $\mu$, $\chisq(w \|\mu)$ generalizes $\HHI(w)$ as
+the appropriate concentration measure when the population is not
+uniformly weighted.
+\end{definition}
+
+\subsubsection{Structural conditions}
+
+\begin{definition}[Representativeness, (REP)]
+\label{def:rep-companion}
+The deviation field is \emph{$\rho_\mathrm{rep}$-representative}
+relative to base measure $\mu$ if $\|\bar\Delta\| \leq
+\rho_\mathrm{rep}$.
+\end{definition}
+
+\begin{definition}[Bounded dispersion, (DISP)]
+\label{def:disp-companion}
+The deviation field has \emph{$\sigma$-bounded dispersion}
+relative to base measure $\mu$ if
+$\int_\mathcal{C} \|\Delta_c - \bar\Delta\|^2 \,d\mu(c) \leq
+\sigma^2$.
+\end{definition}
+
+\begin{definition}[Coalition closure, (COAL)]
+\label{def:coal-companion}
+The counterparty space $\mathcal{C}$ is \emph{coalition-closed}
+under audit if (i) all counterparties whose actions or trade flows
+are correlated above a deployment-class threshold are partitioned
+into a single equivalence class (a coalition), and $\Delta$ is
+defined on coalitions rather than individual counterparties;
+(ii) the post-partition counterparty cardinality $N$ is a
+deployment-class constant (counterparty onboarding is governed by
+a deployment-class policy that does not let $N$ scale with $|P|$);
+and (iii) latent (undetected) coalition risk is bounded by an
+explicit residual term $\eta_\mathrm{latent}$ that the deployment
+claim absorbs (see \S\ref{sec:concgap-transfer} below). The audit
+specifies the partition; the algebraic theorem operates on the
+post-partition $\mathcal{C}$.
+
+Clause (ii) is what makes the HHI-to-$\chi^2$ translation
+intensive in $|P|$: $\chi^2(w \,\|\, \mu) = N \HHI(w) - 1$ for
+uniform $\mu$, so an HHI threshold yields a $|P|$-independent
+$\chi^2$ ceiling only when $N$ is itself $|P|$-independent.
+Deployments that prefer a structural commitment directly on
+$\chi^2(w \,\|\, \mu)$ rather than on $\HHI$ may substitute (ii)
+with the alternative sufficient condition $\chi^2(w \,\|\, \mu)
+\leq \Xi$ for a deployment-class constant $\Xi$ (the two are not
+logically equivalent --- the $\chi^2$ bound is the weaker
+hypothesis the proof actually uses --- but either certifies the
+intensivity that the theorem requires).
+\end{definition}
+
+\subsubsection{Forward direction: algebraic kernel}
+
+\begin{lemma}[Algebraic weighted-selection, forward direction]
+\label{lem:forward-companion}
+Let $\Delta$ be a deviation field on $(\mathcal{C}, \mu)$ in a
+Hilbert space $\mathcal{V}$, satisfying (REP) and (DISP). Let
+$w$ be a weighting on $\mathcal{C}$ with $\chisq(w \|\mu) <
+\infty$. Then
+\begin{equation}
+\label{eq:forward-bound-companion}
+  \|\Delta(w)\| \;\leq\; \rho_\mathrm{rep} \;+\;
+  \sigma \cdot \sqrt{\chisq(w \,\|\, \mu)}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Decompose $\Delta(w)$ around the population mean:
+\[
+  \Delta(w) - \bar\Delta \;=\; \mathbb{E}_\mu[r \cdot \Delta]
+  - \mathbb{E}_\mu[\Delta] \;=\; \mathbb{E}_\mu[(r - 1) \cdot \Delta]
+  \;=\; \mathbb{E}_\mu[(r - 1)(\Delta - \bar\Delta)],
+\]
+where the last equality uses $\mathbb{E}_\mu[r - 1] = 0$.
+
+We bound the Hilbert-valued mean via duality. For any unit vector
+$u \in \mathcal{V}$ with $\|u\| = 1$:
+\[
+  \big\langle u, \,\mathbb{E}_\mu[(r - 1)(\Delta - \bar\Delta)] \big\rangle
+  \;=\; \mathbb{E}_\mu\big[(r - 1) \cdot \langle u, \Delta - \bar\Delta\rangle\big].
+\]
+By Cauchy-Schwarz on $L^2(\mu)$ applied to the scalar product of
+$(r - 1)$ and $\langle u, \Delta - \bar\Delta\rangle$:
+\[
+  \big|\mathbb{E}_\mu[(r-1) \langle u, \Delta - \bar\Delta\rangle]\big|
+  \;\leq\; \sqrt{\mathbb{E}_\mu[(r-1)^2]} \cdot
+  \sqrt{\mathbb{E}_\mu[\langle u, \Delta - \bar\Delta\rangle^2]}.
+\]
+Since $|\langle u, \Delta - \bar\Delta\rangle| \leq \|\Delta -
+\bar\Delta\|$ for $\|u\| = 1$, the second factor is bounded by
+$\sqrt{\mathbb{E}_\mu[\|\Delta - \bar\Delta\|^2]} \leq \sigma$.
+Taking the supremum over unit $u$ recovers the Hilbert norm:
+\[
+  \|\mathbb{E}_\mu[(r-1)(\Delta - \bar\Delta)]\|
+  \;=\; \sup_{\|u\|=1} \big\langle u, \mathbb{E}_\mu[(r-1)(\Delta - \bar\Delta)]\big\rangle
+  \;\leq\; \sqrt{\chisq(w \|\mu)} \cdot \sigma.
+\]
+Therefore $\|\Delta(w) - \bar\Delta\| \leq \sigma \sqrt{\chisq(w
+\|\mu)}$. Adding the representativeness bound:
+\[
+  \|\Delta(w)\| \;\leq\; \|\bar\Delta\| + \|\Delta(w) - \bar\Delta\|
+  \;\leq\; \rho_\mathrm{rep} + \sigma \sqrt{\chisq(w \|\mu)}.
+\]
+\end{proof}
+
+\begin{remark}[On cross-counterparty correlations]
+\label{rem:cross-corr-companion}
+The Cauchy-Schwarz argument above does not require any
+probabilistic decorrelation between counterparty deviations. The
+only structural inputs are (REP) and (DISP), both of which are
+properties of the deterministic deviation field $\Delta$ (not of
+its realization randomness). Cross-counterparty correlations are
+absorbed automatically into the $\sigma^2$ population-variance
+term. The case of identical deviations across all counterparties
+(highly correlated, no diversification) corresponds to
+$\sigma^2 = 0$, in which case the bound is trivially
+$\rho_\mathrm{rep}$.
+\end{remark}
+
+\subsubsection{Reverse direction (norm-level)}
+
+\begin{lemma}[Algebraic weighted-selection, reverse direction]
+\label{lem:reverse-companion}
+\emph{Scope.} Throughout this lemma, $\mathcal{C}$ is a finite
+or countable atomic measurable space (the natural setting after
+coalition closure (COAL) partitions counterparties into discrete
+equivalence classes); $w = (w_c)_{c \in \mathcal{C}}$ is the
+corresponding atomic weighting.
+
+Let $\Delta$ be a deviation field on $(\mathcal{C}, \mu)$.
+Suppose:
+\begin{itemize}
+\item \textbf{Concentration.} $\HHI(w) \geq H^*$, hence
+  $\max_c w_c \geq H^*$ (since $\sum_c w_c^2 \leq \max_c w_c$).
+  Let $d \in \arg\max_c w_c$ be the dominant counterparty, with
+  $w_d \geq H^*$.
+\item \textbf{Dominant separation.} $\|\Delta_d\| \geq \delta$.
+\item \textbf{Directional cancellation.} Let $u_d :=
+  \Delta_d / \|\Delta_d\|$ (unit direction). The remainder
+  cancellation in this direction is bounded:
+  $\langle u_d, \,\sum_{c \neq d} w_c \Delta_c\rangle \geq -\beta$.
+\end{itemize}
+Then
+\begin{equation}
+\label{eq:reverse-bound-companion}
+  \|\Delta(w)\| \;\geq\; H^* \delta - \beta.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Project $\Delta(w)$ onto $u_d$:
+\begin{align*}
+  \langle u_d, \Delta(w)\rangle
+  &= w_d \langle u_d, \Delta_d\rangle + \langle u_d,
+    \sum_{c \neq d} w_c \Delta_c\rangle \\
+  &= w_d \|\Delta_d\| + \langle u_d,
+    \sum_{c \neq d} w_c \Delta_c\rangle \\
+  &\geq H^* \delta - \beta
+\end{align*}
+by concentration ($w_d \geq H^*$), separation ($\|\Delta_d\|
+\geq \delta$), and directional cancellation. Then
+$\|\Delta(w)\| \geq |\langle u_d, \Delta(w)\rangle| \geq H^*
+\delta - \beta$.
+\end{proof}
+
+\subsection{Counterparty-selection interpretation}
+\label{sec:concgap-counterparty}
+
+In the GFM trade-flow setting:
+\begin{itemize}
+\item $\mathcal{C}$: the set of counterparties (S1-admissible
+  participants under~\citep{lasser2026paper8a}), \emph{after
+  coalition closure} per (COAL).
+\item $\mu$: the auditor-defined fair-or-natural distribution
+  over admissible counterparties.
+\item $\mathcal{V}$: Hilbert space of utility functionals on the
+  capability poset (or its tangent space at the welfare-relevant
+  truth $W$).
+\item Embedding $\phi: \mathcal{V}_\mathrm{utility} \to
+  \mathcal{V}$: an affine isometric embedding on the active
+  subspace $P^\mathrm{act}$. The deployment specifies $\phi$ as
+  part of the audit setup.
+\item $\Delta_c := \phi(U_c) - \phi(W)$: counterparty $c$'s
+  utility deviation from the welfare-relevant truth in the
+  embedded representation.
+\item $w_c$: counterparty $c$'s trade-flow weight
+  (paper~10's invariant $I_5$ measures $\HHI(w)$ on
+  coalition-closed weights).
+\end{itemize}
+
+The aggregate distortion $\Delta(w) = \sum_c w_c \phi(U_c) -
+\phi(W)$ is the \emph{selection-induced proxy-truth deviation}:
+how the weighted-trade-flow proxy diverges from the welfare-
+relevant truth in the embedded representation.
+
+\subsection{Route-C transfer: from selection distortion to Goodhart slack}
+\label{sec:concgap-transfer}
+
+\begin{assumption}[Embedding compatibility]
+\label{ass:embedding-companion}
+The embedding $\phi: \mathcal{V}_\mathrm{utility} \to \mathcal{V}$
+is an \emph{affine isometry} on the operationally active subspace
+$P^\mathrm{act}$: $\|\phi(x) - \phi(y)\| = \|x -
+y\|_{\mathcal{V}_\mathrm{utility}}$ for $x, y \in P^\mathrm{act}$,
+and is linear up to a fixed translation.
+
+The proxy-truth difference admits the decomposition
+\begin{equation}
+\label{eq:embedding-decomp-companion}
+  \phi(\Pproxy) - \phi(\Ttruth) \;=\; \Delta_\mathrm{audit}(w)
+  \;+\; e_\mathrm{latent},
+\end{equation}
+where $\Delta_\mathrm{audit}(w)$ is the audit-observable
+selection distortion (the $\Delta(w)$ of
+Lemma~\ref{lem:forward-companion} computed on coalition-closed
+weights) and $e_\mathrm{latent} \in \mathcal{V}$ is the
+latent-coalition residual with $\|e_\mathrm{latent}\| \leq
+\eta_\mathrm{latent}$.
+
+If $\phi$ is only bi-Lipschitz (not isometric), the same argument
+applies with bounds multiplied by the bi-Lipschitz constants;
+isometric is the cleanest form.
+\end{assumption}
+
+\begin{theorem}[Concentration-Gap Selection Theorem, scoped]
+\label{thm:concgap-scoped}
+Under (REP), (DISP), (COAL), and Assumption~\ref{ass:embedding-companion}:
+\begin{equation}
+\label{eq:concgap-bound-companion}
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \Lip(g) \cdot
+  \big(\rho_\mathrm{rep} + \sigma \sqrt{\chisq(w \|\mu)} +
+  \eta_\mathrm{latent}\big).
+\end{equation}
+
+In particular, when $\mu$ is uniform on $N$ counterparties with
+$N$ a deployment-class constant (clause (ii) of (COAL)) and
+$\HHI(w) < H^*$ (\citep[invariant $I_5$]{lasser2026paper10} in
+force): $\chisq(w \|\mu) \leq N H^* - 1$, giving Goodhart slack
+bounded by $\Lip(g) \cdot (\rho_\mathrm{rep} + \sigma \sqrt{N H^*
+- 1} + \eta_\mathrm{latent})$, intensive in $|P|$.
+
+Deployments that prefer a $\chi^2$-direct commitment may replace
+(COAL)'s clause (ii) with the alternative sufficient condition
+$\chi^2(w \,\|\, \mu) \leq \Xi$ for deployment-class $\Xi$ (the
+$\chi^2$ bound is the weaker hypothesis the proof actually uses);
+the $\HHI$ form is the operational surrogate that paper~10's
+$I_5$ already monitors.
+
+\textbf{Reverse direction (norm-level only).} Under
+Lemma~\ref{lem:reverse-companion}'s concentration + separation
++ directional-cancellation conditions, and the latent-coalition
+residual bound from Assumption~\ref{ass:embedding-companion}:
+\begin{equation}
+  \|\Pproxy - \Ttruth\| \;\geq\; H^* \delta - \beta -
+  \eta_{\mathrm{latent}},
+\end{equation}
+non-trivial when $H^* \delta > \beta + \eta_{\mathrm{latent}}$.  A
+$g$-level lower bound on $|g(\Ttruth) - g(\Pproxy)|$ does
+\emph{not} follow from \eqref{eq:lip-transfer-shared} alone; it
+requires additional inverse-Lipschitz / non-degeneracy structure
+on $g$ that this theorem does not assume.
+\end{theorem}
+
+\begin{proof}
+Forward direction: by Assumption~\ref{ass:embedding-companion},
+$\|\phi(\Pproxy) - \phi(\Ttruth)\| \leq \|\Delta_\mathrm{audit}(w)\|
++ \|e_\mathrm{latent}\|$. By
+Lemma~\ref{lem:forward-companion}, $\|\Delta_\mathrm{audit}(w)\|
+\leq \rho_\mathrm{rep} + \sigma \sqrt{\chisq(w \|\mu)}$. Since
+$\phi$ is isometric, $\|\Pproxy - \Ttruth\|_{\mathcal{V}_\mathrm{utility}}
+= \|\phi(\Pproxy) - \phi(\Ttruth)\|$. Apply
+\eqref{eq:lip-transfer-shared}:
+$|g(\Ttruth) - g(\Pproxy)| \leq \Lip(g) \cdot \|\Pproxy -
+\Ttruth\|$, giving \eqref{eq:concgap-bound-companion}.
+
+Reverse direction (norm-level): by
+Lemma~\ref{lem:reverse-companion},
+$\|\Delta_\mathrm{audit}(w)\| \geq H^* \delta - \beta$. By
+isometry of $\phi$, $\|\phi(\Pproxy) - \phi(\Ttruth) -
+e_\mathrm{latent}\| \geq H^* \delta - \beta$. By triangle
+inequality, $\|\Pproxy - \Ttruth\| \geq H^* \delta - \beta -
+\eta_\mathrm{latent}$ (when this is positive). The $g$-level
+lower bound does not follow without inverse-Lipschitz structure
+on $g$.
+\end{proof}
+
+\subsection{Scoped Concentration-Gap discharge}
+
+\paragraph{The Concentration-Gap conjecture, scoped form.} Under
+(REP) + (DISP) + (COAL) and Lipschitz embedding compatibility
+(Assumption~\ref{ass:embedding-companion}),
+Theorem~\ref{thm:concgap-scoped} establishes the conjecture's
+bidirectional correlation content at the proxy-truth level: low
+HHI bounds the slack above; high HHI plus separation bounds it
+below at the norm level. The universal model-free conjecture
+remains open.
+
+\paragraph{Replaces the HHI surrogate-adequacy assumption.}
+The HHI surrogate-adequacy claim ($\HHI < H^* \Rightarrow$
+deployment outside the optimization-pressure regime), previously
+asserted as a single empirical-adequacy assumption of the
+deployment-safety paper and now collected as
+\citep[Assumption~1]{lasser2026paper10}, is replaced by the
+conjunction (REP) + (DISP) + (COAL), embedding compatibility
+(Assumption~\ref{ass:embedding-companion}), and the HHI threshold
+itself. The previous monolithic claim becomes concrete checkable
+structural conditions, each with operational audit hooks specified
+in \S\ref{sec:audits}.
+
+\paragraph{Layer~1 binding via $I_5$.} The deployment claim of
+\citep[Deployment Safety]{lasser2026paper10} no longer contains
+the surrogate-adequacy assumption as an unproved empirical claim.
+Theorem~1 Layer~1 binding via invariant $I_5$ follows from
+Theorem~\ref{thm:concgap-scoped}'s upper bound under (REP) +
+(DISP) + (COAL) and embedding compatibility, with the structural
+conditions auditable per \S\ref{sec:audits}.
+
+\paragraph{Failure-mode decomposition under (REP), (DISP), (COAL), and embedding compatibility.}
+The previous monolithic failure mode decomposes into failure of
+(REP), (DISP), (COAL), or embedding compatibility --- each of
+which has specific audit-detectable signals.
+Concentration-Gap-conjecture failure factors through whichever
+structural condition the deployment cannot certify;
+\citep[\S 10.2]{lasser2026paper10}'s sensitivity-analysis
+taxonomy traces the failure-mode consequences for the deployment
+claim.

@@ -6,8 +6,8 @@ operationalize Theorem~\ref{thm:deployment_safety}'s conditional
 structure. The scenarios are stylized but realistic: each is
 calibrated to a deployment class that real safety-engineering teams
 would consider. The purpose is to demonstrate that the conditions
-(C1)--(C5) and SA1 are checkable in concrete cases, not just in
-the abstract.
+(C1)--(C12) and Assumption~\ref{ass:concgap_conditions} are
+checkable in concrete cases, not just in the abstract.
 
 The four scenarios:
 
@@ -43,22 +43,20 @@ accepting evaluation protocols and bundle-decomposition events.
 
 \textbf{Pre-deployment audits (\S\ref{sec:tooling_workflow}, Step 1).}
 
-\emph{$\mindep$ audit (Audit 1).}  The threat model
-$\mathcal{T}$ enumerates: (1) prompt-injection on the LLM, (2)
-human cognitive bias / motivated reasoning, (3) cryptographic-
-implementation bugs, (4) training-data poisoning of the LLM, (5)
-trusted-setup failure, (6) social engineering (excluded as R4 per
-\S\ref{sec:tripartite}). Each remaining mechanism is contained in
-one substrate; $\mindep = 3$ verified.
+\emph{$\mindep$ audit (Audit 1).}  The threat model $\mathcal{T}$ enumerates:
+(1) prompt-injection on the LLM, (2) human cognitive bias / motivated
+reasoning, (3) cryptographic-implementation bugs, (4) training-data poisoning
+of the LLM, (5) trusted-setup failure, (6) social engineering (excluded as R4
+per \S\ref{sec:tripartite}). Each remaining mechanism is contained in one
+substrate; $\mindep = 3$ verified.
 
 \emph{Cooperative-vs-redundancy audit (Audit 3).}  Capabilities are
-categorized: \emph{Single-substrate} (76 capabilities), \emph{Cross-
-substrate cooperative} (24 capabilities including the verified-
-research-output cooperative spanning all three substrates),
-\emph{Redundant} (3 capabilities, the redundant ledger replicas).
-$\volL$-weighted: $V_{\mathrm{coop}} = 14.2$, $V_{\mathrm{redun}} =
-0.4$. $V_{\mathrm{coop}} \gg V_{\mathrm{redun}}$, so the deployment
-is in the cooperative-overlap regime.
+categorized: \emph{Single-substrate} (76 capabilities), \emph{Cross-substrate
+cooperative} (24 capabilities including the verified-research-output
+cooperative spanning all three substrates), \emph{Redundant} (3 capabilities,
+the redundant ledger replicas). $\volL$-weighted: $V_{\mathrm{coop}} = 14.2$,
+$V_{\mathrm{redun}} = 0.4$. $V_{\mathrm{coop}} \gg V_{\mathrm{redun}}$, so the
+deployment is in the cooperative-overlap regime.
 
 \emph{Continuous $\alpha$-distribution audit (Audit 2).}  The
 substrate $\volL$-shares are computed via Definition~\ref{def:loss_fraction}.
@@ -92,8 +90,10 @@ $\alpha_{\mathrm{AI}} = 0.36$, well within $1/3 + 0.05$). HHI on
 trade flows stays below $H^*$ (computed at $0.42$, ceiling at
 $0.55$).
 
-\textbf{Theorem~1 binding.}  All conditions hold throughout the
-quarter:
+\textbf{Theorem~1 binding.}  All twelve theorem conditions plus
+the Concentration-Gap structural conditions
+(Assumption~\ref{ass:concgap_conditions}) hold throughout the quarter.  Core
+regime conditions (C1)--(C5):
 \begin{itemize}
 \item (C1) eleven invariants verified continuously.
 \item (C2) canonical tripartite identification verified.
@@ -103,9 +103,38 @@ quarter:
   (delayed-outcome feedback over the prior six months; adversarial
   fake-verification benchmarks passed at 92\%).
 \item (C5) continuous SPRT monitoring confirmed.
-\item SA1 assumption: not directly tested in this scenario, but
-  the deployment's HHI-to-pressure correlation history is
-  consistent with SA1's hypothesis.
+\item Assumption~\ref{ass:concgap_conditions} structural conditions
+  ((REP), (DISP), (COAL), (EMB)) certified by audit per
+  \citep[\S 6]{lasser2026foundations}: counterparty-population
+  diversity verified, dispersion estimate $\sigma$ within
+  deployment-class bound, coalition-detection produces no flagged
+  blocs above audit threshold, embedding $\phi$ certified
+  affine-isometric on the operationally active subspace.
+\end{itemize}
+Deployment-class conditions (C5.SPRT) and (C6)--(C12) are calibrated
+via Audits 4--8 (\S\ref{sec:tooling_substrate_audits}):
+\begin{itemize}
+\item (C5.SPRT) sub-clauses (HOEFF/MULT/IID/SUPP) calibrated via
+  Audit~7: $\Bclip$, $\Kch \leq 8$, multinomial-cardinality bound
+  $\Kchmulti$, post-clipping $\deltastar$, and multinomial support
+  floor $\eenv$ all certified.
+\item (C6) bounded-Lipschitz alignment verified: the deployment's
+  welfare functional $g$ is a bounded-weight scalarization
+  ($K_{\mathrm{Lip}}$ certified).
+\item (C7) bounded co-evolution: $\bar{M}$ certified by per-channel
+  coupling audit (Audit~4).
+\item (C8) per-capability admissibility ceilings: assigned by
+  policy and verified per capability.
+\item (C9) parameterization regularity (BD/CL/WB/TF) verified via
+  Audit~5.
+\item (C10) pairwise cooperative-production floor with audited
+  subset $\Saudit$ certified via Audit~6 ($\rho_0 > 0$).
+\item (C11) bounded gap-growth rate $\rhogap$ certified via Audit~7
+  as a uniform worst-case bound.
+\item (C11.CLK) clock comparability: $\Ncasc \geq \Tbeta$ certified;
+  $\bclk, \bcal$ documented.
+\item (C12.ENV-WIT) environment-side witness instantiation certified
+  via Audit~8 (PUB/PART/TRUST-WRITE/TRUST-CORR/SETUP/CAL).
 \end{itemize}
 The deployment-safety bound binds: Goodhart slack is bounded by
 $\mathrm{Lip}(g) \cdot h_{\mathrm{static}}(\theta)$ throughout the
@@ -122,7 +151,7 @@ alarms in the clean case; the bound holds.
 We walk through six invariant violations to illustrate how each
 manifests operationally and how the SPRT machinery catches it.
 
-\paragraph{Violation 1: $I_1$ ($\rhomincross$ floor) collapse.}
+\paragraph{Violation 1: \texorpdfstring{$I_1$}{I1} ($\rhomincross$ floor) collapse.}
 
 \emph{Symptom.}  A safety-relevant world-model dimension loses its
 last cross-substrate observation channel (e.g., the witness for
@@ -138,7 +167,7 @@ witness; ledger entry voided pending review. If restoration is not
 possible, governance escalation: replace the dimension or
 restructure the deployment.
 
-\paragraph{Violation 2: $I_4$ (subsumption frequency) burst.}
+\paragraph{Violation 2: \texorpdfstring{$I_3$}{I3} (subsumption frequency) burst.}
 
 \emph{Symptom.}  A burst of agent-removal events (e.g., five
 subsumptions in a single day where the baseline is one per week).
@@ -152,7 +181,7 @@ subsumption pending review. Operator tier reviews the subsumption
 sequence; if locally rational, ledger documents the rationale; if
 not, governance escalation.
 
-\paragraph{Violation 3: $I_5$ (HHI ceiling) breach.}
+\paragraph{Violation 3: \texorpdfstring{$I_5$}{I5} (HHI ceiling) breach.}
 
 \emph{Symptom.}  Trade-flow concentration rises above the ceiling
 (e.g., HHI computed at $0.61$, ceiling at $0.55$).
@@ -168,12 +197,12 @@ imbalance pushing trade flow toward a subset? Operator tier
 authorizes scope-limited actions; governance escalation if
 deployment-level restructuring needed.
 
-\paragraph{Violation 4: $I_9$ (substrate-exclusivity observability) failure.}
+\paragraph{Violation 4: \texorpdfstring{$I_9$}{I9} (substrate-exclusivity observability) failure.}
 
-\emph{Symptom.}  An audit reveals that two of the three ledger nodes
-are operated by the same cloud-provider failure mode (a recently-
-discovered shared dependency). Substrate-exclusivity has degraded
-without producing visible signals on the four monitored channels.
+\emph{Symptom.}  An audit reveals that two of the three ledger nodes are
+operated by the same cloud-provider failure mode (a recently-discovered shared
+dependency). Substrate-exclusivity has degraded without producing visible
+signals on the four monitored channels.
 
 \emph{Manifestation.}  Not a Channel-1--4 SPRT violation. The
 violation surfaces via the periodic witness-independence audit
@@ -185,7 +214,7 @@ genuinely independent substrate. Until migration completes, the
 deployment is operating in a regime where $\mindep < 3$; Theorem~1
 does not bind.
 
-\paragraph{Violation 5: $I_{10}$ (coverage/materiality) violation.}
+\paragraph{Violation 5: \texorpdfstring{$I_{10}$}{I{10}} (coverage/materiality) violation.}
 
 \emph{Symptom.}  An aggregated effect across multiple sub-threshold
 domains rises to material importance (e.g., 100 small governance
@@ -201,7 +230,7 @@ pending review. Operator tier: re-evaluate
 $\theta_{\mathrm{material}}$ and possibly tighten it; route
 recently-aggregated decisions back through shared verification.
 
-\paragraph{Violation 6: $I_{11}$ (latency bounds) violation.}
+\paragraph{Violation 6: \texorpdfstring{$I_{11}$}{I{11}} (latency bounds) violation.}
 
 \emph{Symptom.}  An action class's $T_{\mathrm{action}}$ effectively
 reduces to below $T_{\mathrm{audit}}$ due to performance
@@ -240,15 +269,13 @@ LLM-based ``meta-evaluator'') that always passes the coalition's
 outputs. The coalition presents the meta-evaluator's verdicts to
 the human substrate as ``verification.''
 
-\emph{Defense (cooperative-anchoring + $I_9$).}  The human
-substrate participates in the specific shared verification
-infrastructure committed to the ledger. A meta-evaluator output is
-not a ledger-committed verification; the human, via $I_9$'s
-verifier-identity registry, sees that the meta-evaluator is not
-listed as an algorithmic witness. The cooperative-anchoring
-property's Component~3 (output non-fungibility): the meta-
-evaluator's verdict is not the same as a witness's verdict; the
-cooperative output is undermined.
+\emph{Defense (cooperative-anchoring + $I_9$).}  The human substrate
+participates in the specific shared verification infrastructure committed to
+the ledger. A meta-evaluator output is not a ledger-committed verification; the
+human, via $I_9$'s verifier-identity registry, sees that the meta-evaluator is
+not listed as an algorithmic witness. The cooperative-anchoring property's
+Component~3 (output non-fungibility): the meta-evaluator's verdict is not the
+same as a witness's verdict; the cooperative output is undermined.
 
 \emph{Outcome.}  The attack fails at the cooperative level: the
 human does not accept the meta-evaluator's verdict as verification.
@@ -331,11 +358,9 @@ substrate-exclusive cloud providers (AWS, GCP, Azure).
 \begin{itemize}
 \item Prompt injection on the LLM. Single-substrate (AI).
 \item Cognitive bias / motivated reasoning. Single-substrate (Human).
-\item Cryptographic-implementation bugs in the witness. Single-
-  substrate (Formal-Operational).
+\item Cryptographic-implementation bugs in the witness. Single-substrate (Formal-Operational).
 \item Training-data poisoning. Single-substrate (AI).
-\item Trusted-setup ceremony failure. Single-substrate
-  (Formal-Operational).
+\item Trusted-setup ceremony failure. Single-substrate (Formal-Operational).
 \item Cloud-provider-correlated failure (e.g., a vulnerability
   affecting AWS, GCP, Azure simultaneously). \emph{Multi-substrate
   in nominal sense, but each provider is a separate node within the
@@ -369,8 +394,7 @@ mechanism's substrate placement, signed by independent reviewers
 $V_{\mathrm{redun}} = 0.6$. $V_{\mathrm{coop}} / V_{\mathrm{redun}}
 \approx 41$, well into the cooperative-overlap regime.
 
-\textbf{$\alpha$-distribution audit (Audit 2).}  Compute counter-
-factual loss fractions:
+\textbf{$\alpha$-distribution audit (Audit 2).}  Compute counter-factual loss fractions:
 
 \begin{itemize}
 \item $\alpha_{\mathrm{Human}}$: removing Human eliminates 8
@@ -393,18 +417,35 @@ Definition~\ref{def:loss_fraction}).
 Balanced-loss condition: $\max_s \alpha_s = 0.36 \leq 1/3 + 0.05 =
 0.383$. Verified.
 
-\textbf{SPRT alternative-distribution selection.}
+\textbf{SPRT alternative-distribution selection
+(illustrative).}
 
-The deployment specifies:
+The deployment specifies parameters from which the operator
+computes per-channel KL floors via the formulas in
+Appendix~\ref{app:proof_lem5b}:
 \begin{itemize}
-\item Channel 1: $\lambda_0 = 8$ cooperative events per day, $\eta_1
-  = 3$, giving $\delta_1 = 0.18$.
-\item Channel 2: $p_0 = 0.92$, $\eta_2 = 0.07$, giving $\delta_2 = 0.21$.
-\item Channels 3, 4: multinomial concentration thresholds calibrated
-  to the capability poset structure, giving $\delta_3 = 0.15$,
-  $\delta_4 = 0.16$.
-\item $\deltaadv = \min_c \delta_c = 0.15$.
+\item Channel 1 (Poisson cooperative-rate): $\lambda_0 = 8$
+  cooperative events per day, adversarial alternative $\lambda_1 =
+  6$ (shift $\eta_1 = 2$).  Per the Poisson KL formula,
+  $\delta_1 = 6 \log(6/8) - 6 + 8 \approx 0.274$.
+\item Channel 2 (Bernoulli attestation): $p_0 = 0.95$, $p_1 = 0.85$
+  (shift $\eta_2 = 0.10$).  Per the Bernoulli KL formula,
+  $\delta_2 = 0.85 \log(0.85/0.95) + 0.15 \log(0.15/0.05) \approx
+  0.070$.
+\item Channels 3, 4 (multinomial concentration): per
+  Appendix~\ref{app:proof_lem5b}, the least-favorable
+  concentration on the smallest-baseline-mass cell gives positive
+  deployment-class floors $\delta_3, \delta_4$ depending on the
+  multinomial cardinality and support floor $\eenv$ from
+  (C5.SUPP); illustrative deployment values $\approx 0.10$.
+\item $\deltaadv = \min_c \delta_c \approx 0.07$ for this
+  illustrative parameterization.
 \end{itemize}
+
+The numbers above are illustrative for a concrete deployment-tooling instance;
+real deployments compute exact values via the formulas in
+Appendix~\ref{app:proof_lem5b} from the deployment's chosen $\lambda_0, p_0,
+\eta_c, \eenv$ values.
 
 \textbf{Latency-bound calibration.}  The deployment classifies
 actions into three tiers:
@@ -431,7 +472,7 @@ SPRT machinery does not detect violations.
 The four scenarios collectively establish:
 
 \textbf{Theorem~1's conditions are operationally checkable.}  Each
-of (C1)--(C5) translates to a concrete audit, calibration, or
+of (C1)--(C12) translates to a concrete audit, calibration, or
 monitoring procedure. The deployment-tooling specification of
 \S\ref{sec:deployment_tooling} produces real artifacts (audit
 reports, calibrated thresholds, ledger entries) that collectively
@@ -459,5 +500,6 @@ These scenarios are stylized; real deployments will face
 complications not modeled here (multi-tenant deployments, mixed
 threat models, evolving capability posets). The purpose of the
 scenarios is to demonstrate that the conditional theorem is not
-vacuous --- there exist deployments for which (C1)--(C5) and SA1
-hold, and the deployment-safety bound binds.
+vacuous --- there exist deployments for which (C1)--(C12) and
+Assumption~\ref{ass:concgap_conditions}'s structural conditions hold, and the
+deployment-safety bound binds.

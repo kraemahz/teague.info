@@ -23,6 +23,7 @@
 \usepackage{bookmark}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{longtable}
 \usepackage{graphicx}
 \usepackage{xcolor}
 
@@ -115,6 +116,7 @@
 \newcommand{\Bclip}{B}
 \newcommand{\Rh}{R_{\mathrm{H}}}
 \newcommand{\Kch}{K_{\mathrm{ch}}}
+\newcommand{\Kchmulti}{K_{\mathrm{ch}}^{\mathrm{multi}}}
 \newcommand{\deltastar}{\delta_{*}}
 
 % Lemma 5e macros (added with §A.8 integration)
@@ -158,7 +160,7 @@
 % --- Section 6: Substrate Identification and Cooperative Anchoring ---
 \input{sections/substrate_anchoring}
 
-% --- Section 7: Operationalization of Conjecture 1 ---
+% --- Section 7: Operationalization of the Concentration-Gap Conjecture ---
 \input{sections/conjecture_op}
 
 % --- Section 8: Deployment Tooling Specification ---
@@ -179,7 +181,9 @@
 
 % --- Appendices ---
 \appendix
+\newpage
 \input{appendices/proofs}
+\newpage
 \input{appendices/notation_table}
 
 \end{document}

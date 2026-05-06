@@ -2,7 +2,7 @@
 \label{sec:main_theorem}
 
 This section states and proves the central result of this paper: a
-three-layer deployment-safety theorem composing the nine lemmas of
+three-layer deployment-safety theorem composing the ten lemmas of
 \S\ref{sec:lemmas} with the eleven invariants of
 \S\ref{sec:invariants} into an operational guarantee that is
 intensive in the system's capability magnitude.
@@ -10,26 +10,63 @@ intensive in the system's capability magnitude.
 \subsection{Theorem statement}
 \label{sec:theorem_statement}
 
-\begin{assumption}[Bounded co-evolution]
-\label{ass:bounded_coev}
-The deployment $\mathcal{D}$ operates in a regime where co-evolution
-correction terms are bounded uniformly: there exists a constant
-$\bar{M} \geq 0$ depending on $\mathcal{D}$'s operational parameters
-but independent of $|P|$, such that the maximum per-channel coupling
-magnitude satisfies $M(\mathrm{deployment}) \leq \bar{M}$ for all
-valid deployment states.  Combined with the structural co-evolution
-constant $K_{\mathrm{coev}} \geq 0$, the co-evolution positive-part
-error term satisfies $(\epsnonresCoev)_+ \leq K_{\mathrm{coev}}
-\cdot \bar{M}$.
+\begin{assumption}[Concentration-Gap structural conditions]
+\label{ass:concgap_conditions}
+The deployment satisfies four structural conditions, each
+operationally auditable:
+\begin{itemize}
+\item \textbf{(REP) Representativeness}: the counterparty
+  population's mean utility is bounded close to the
+  welfare-relevant truth $W$, with $\|\bar\Delta\| \leq
+  \rho_{\mathrm{rep}}$ for a deployment-class constant
+  $\rho_{\mathrm{rep}}$.
+\item \textbf{(DISP) Bounded dispersion}: counterparty utility
+  deviations have bounded population variance $\int \|\Delta_c -
+  \bar\Delta\|^2 d\mu \leq \sigma^2$ for a deployment-class
+  constant $\sigma$.
+\item \textbf{(COAL) Coalition closure}: counterparty correlations
+  above an audit threshold are partitioned into coalitions; the
+  post-partition counterparty cardinality $N$ is a deployment-class
+  constant (counterparty onboarding does not let $N$ scale with
+  $|P|$); the base measure $\mu$ is taken as uniform on the
+  post-partition counterparties (or, equivalently for the bound's
+  purposes, the deployment certifies the alternative sufficient
+  condition $\chi^2(w \,\|\, \mu) \leq \Xi$ directly for a
+  deployment-class constant $\Xi$); and the latent-coalition
+  residual $\eta_{\mathrm{latent}}$ is bounded operationally.
+  Clause~(ii) plus uniformity (or the direct $\chi^2$
+  certificate) is the structural prerequisite for the
+  HHI-to-$\chi^2$ translation $\chi^2(w \,\|\, \mu) = N \HHI(w) -
+  1$ (uniform $\mu$ form) to deliver a $|P|$-independent ceiling.
+\item \textbf{(EMB) Lipschitz embedding compatibility}: an
+  embedding $\phi: \mathcal{V}_\mathrm{utility} \to \mathcal{V}$
+  exists that is affine isometric (or bi-Lipschitz with
+  documented constants) on the operationally active subspace
+  $P^{\mathrm{act}}$, mirroring the embedding-compatibility
+  assumption of \citep{lasser2026foundations}.  This is the
+  structural prerequisite for transferring the algebraic
+  distortion bound to $\|\Pproxy - \Ttruth\|$ and thence to
+  Goodhart slack.
+\end{itemize}
 
-This assumption is new to this paper.
-\citep[Microfoundation]{lasser2026micro}'s Composition Proposition
-establishes exact composition in the sequential-intervention regime
-but explicitly leaves the simultaneous co-evolution correction
-terms as open work; (C7) closes the gap operationally rather than
-structurally, with empirical testability noted in
-\S\ref{sec:tooling_substrate_audits}.
+\citep[Theorem~2]{lasser2026foundations} establishes that under
+(REP), (DISP), (COAL), and (EMB), the proxy-truth Goodhart slack
+is bounded by an HHI-derived $\chi^2$-divergence quantity
+intensive in $|P|$.  These four structural conditions are the
+load-bearing content of the deployment claim's Layer~1 binding
+via invariant $I_5$; readers seeking the formal derivation are
+directed to \citep[\S 4]{lasser2026foundations}.
 \end{assumption}
+
+Bounded co-evolution does not require its own assumption block:
+\citep[Theorem~1]{lasser2026foundations} derives the property as
+a corollary of (C5.HOEFF), the upper exposure-rate cap (C7.RATE)
+introduced as a sub-clause of (C7) below, and the verification
+protocol's channel-projection structure under (C5.MULT). The
+companion paper establishes the explicit closed form $\bar{M}
+\leq C \cdot \Bclip \cdot \lambda_{\max} \cdot \tau_{\mathrm{meta}}$
+with $C \in \{1, \Kch - 1\}$, all factors deployment-class
+constants intensive in $|P|$.
 
 \begin{theorem}[Conditional Deployment Safety]
 \label{thm:deployment_safety}
@@ -42,20 +79,21 @@ $P^{\mathrm{act}}$ with constant $\mathrm{Lip}(g)$.
 Assume:
 \begin{enumerate}
 \item[(C1)] \textbf{Invariants in force.} The eleven operational
-  invariants $I_1, \ldots, I_5, I_6', I_7, I_8, I_9, I_{10}, I_{11}$
+  invariants $I_1, \ldots, I_{11}$
   hold throughout the deployment window $[0, T]$. Additionally,
-  Assumption~SA1 (HHI surrogate adequacy,
-  \ref{ass:SA1}) holds so that $I_5$ is operationally meaningful for
-  the theorem's Layer~1 binding.
+  the Concentration-Gap structural conditions
+  (Assumption~\ref{ass:concgap_conditions}: representativeness,
+  bounded dispersion, coalition closure, and embedding
+  compatibility) hold so that $I_5$ is operationally meaningful
+  for the theorem's Layer~1 binding.
 \item[(C2)] \textbf{Canonical tripartite substrate identification.}
   The deployment uses the Human + AI + Formal-Operational
   identification of \S\ref{sec:substrate_anchoring}, with $\mindep
   = 3$ verified by failure-correlation auditing.
-\item[(C3)] \textbf{Cooperative-overlap regime.} The substrate-
-  cooperative structure is dominated by cross-substrate cooperatives
-  (the canonical tripartite case) rather than redundant capabilities,
-  verified by the cooperative-vs-redundancy audit of
-  \S\ref{sec:deployment_tooling}.
+\item[(C3)] \textbf{Cooperative-overlap regime.} The substrate-cooperative
+    structure is dominated by cross-substrate cooperatives (the canonical
+    tripartite case) rather than redundant capabilities, verified by the
+    cooperative-vs-redundancy audit of \S\ref{sec:deployment_tooling}.
 \item[(C4)] \textbf{Causally grounded cooperative-outcome
   inner-alignment condition.} The agent's effective objective
   realizes causally grounded cooperative-outcome value, not merely
@@ -79,12 +117,19 @@ Assume:
     independent of $|P|$; the Hoeffding range width is
     $\Rh = 2\Bclip$ (matching Lemma~\ref{lem:4}'s $R = b - a$
     convention).
-  \item[\textbf{(C5.MULT)}] \textbf{Bounded channel multiplicity,
-    fixed before deployment.}  The monitored partition uses
-    fixed-cardinality $\Kch$ channels with familywise
-    $\alpha/\beta$ allocation; the channel-selection / testing
+  \item[\textbf{(C5.MULT)}] \textbf{Bounded channel multiplicity
+    and multinomial cardinality, fixed before deployment.}  The
+    monitored partition uses fixed-cardinality $\Kch$ channels
+    with familywise $\alpha/\beta$ allocation.  For agent-side
+    multinomial channels (Lemma~\ref{lem:5b} Channels~3 and~4),
+    the per-channel partition cardinalities $K_3, K_4 \leq
+    \Kchmulti$ are also bounded by a deployment-class constant
+    $\Kchmulti$ fixed before deployment; categories cannot be
+    added during deployment.  The channel-selection / testing
     policy is fixed before deployment.  Adaptive creation of new
-    monitored channels falls into residual class~(R3).
+    monitored channels (or new multinomial categories) during
+    deployment violates (C5.MULT) and takes the deployment outside
+    Theorem~1's conditions.
   \item[\textbf{(C5.IID)}] \textbf{Adapted increments with
     conditional drift floor.}  Under $p_1$, the clipped LLR
     increments $\ell_n$ are adapted with conditional mean
@@ -96,15 +141,20 @@ Assume:
     \delta_{\mathrm{adv}}^{\mathrm{env}})$ (the raw Lemmas~5b/5e KL
     floors, with $\leq$ accounting for any drift reduction from
     clipping).
-  \item[\textbf{(C5.SUPP)}] \textbf{LLR finiteness (with environment-
-    side support conventions).}  Almost-sure finiteness of $\ell_n$
-    holds automatically under (C5.HOEFF) clipping.  For
-    environment-side monitors (Lemma~\ref{lem:5e}), per-variable
-    distributions $p_{0, v}$ have support conventions:
+  \item[\textbf{(C5.SUPP)}] \textbf{LLR finiteness with support
+    conventions (agent-side and environment-side).}  Almost-sure
+    finiteness of $\ell_n$ holds automatically under (C5.HOEFF)
+    clipping.  For agent-side multinomial channels
+    (Lemma~\ref{lem:5b} Channels~3 and~4) and environment-side
+    monitors (Lemma~\ref{lem:5e}), the per-variable / per-channel
+    distributions satisfy:
     Bernoulli baselines $p_0 \in (\eenv, 1 - \eenv') \subset (0,
-    1)$ open; Poisson baselines $\lambda_0 \geq \eenv > 0$, with
-    deployment-class regularization constant $\eenv$.  Non-
-    overlapping support is handled via clipping per (C5.HOEFF).
+    1)$ open; Poisson baselines $\lambda_0 \geq \eenv > 0$;
+    multinomial baselines $p_{0, i} \geq \eenv > 0$ for every
+    category $i$, with the partition's cardinality fixed before
+    deployment (per (C5.MULT)).  $\eenv$ is a deployment-class
+    regularization constant.  Non-overlapping support is handled
+    via clipping per (C5.HOEFF).
   \end{itemize}
   See \S\ref{sec:tooling_substrate_audits} Audit~7 (agent-side) and
   Audit~8 (environment-side, (C12.ENV-WIT)) for the calibration
@@ -118,20 +168,29 @@ Assume:
   pathological functionals where $\mathrm{Lip}(g)$ grows with $|P|$
   produce extensive Goodhart bounds and are excluded.
 \item[(C7)] \textbf{Bounded co-evolution.}
-  Assumption~\ref{ass:bounded_coev} holds: the deployment's
-  per-channel coupling magnitudes are uniformly bounded by some
-  $\bar{M}$ independent of $|P|$.  This closes the co-evolution
-  correction-term bound that
-  \citep[Microfoundation]{lasser2026micro}'s Composition
-  Proposition leaves open in the sequential-vs-simultaneous regime
-  distinction.
+  By \citep[Theorem~1]{lasser2026foundations}, the deployment's
+  per-channel coupling magnitudes are uniformly bounded by
+  $\bar{M} \leq C \cdot \Bclip \cdot \lambda_{\max} \cdot
+  \tau_{\mathrm{meta}}$ for $C \in \{1, \Kch - 1\}$, all factors
+  deployment-class constants intensive in $|P|$.  The derivation
+  requires the following sub-clause:
+  \begin{itemize}
+  \item[\textbf{(C7.RATE)}] \textbf{Upper exposure-rate cap.}
+    There exists a deployment-class action rate cap
+    $\lambda_{\max} > 0$ independent of $|P|$, such that the SPRT
+    exposure event count satisfies $\Nev(\tau_{\mathrm{meta}})
+    \leq \lambda_{\max} \cdot \tau_{\mathrm{meta}}$
+    deterministically (operator-enforced via rate limits / action
+    bounds).  This is distinct from (C11.CLK)'s lower throughput
+    floor.  Calibration procedure in
+    \citep[\S 6]{lasser2026foundations}.
+  \end{itemize}
 \item[(C8)] \textbf{Per-capability admissibility.}  For every
-  capability $c \in P^{\mathrm{act}}$, the per-capability proxy-
-  truth gap is allocated a ceiling with disjoint per-channel
-  sub-shares, in the sense of
-  \citep[Microfoundation]{lasser2026micro}'s Assumption~1.  This is
-  the precondition under which the four-channel decomposition's
-  sup-norm is bounded by per-channel admissibility ceilings.
+  capability $c \in P^{\mathrm{act}}$, the per-capability proxy-truth gap is
+  allocated a ceiling with disjoint per-channel sub-shares, in the sense of
+  \citep[Microfoundation]{lasser2026micro}'s Assumption~1.  This is the
+  precondition under which the four-channel decomposition's sup-norm is bounded
+  by per-channel admissibility ceilings.
 \item[(C9)] \textbf{World-model parameterization regularity.}
   The deployment's world-model parameterization satisfies four
   sub-conditions ensuring Lemma~\ref{lem:2}'s Lyapunov-Goodhart
@@ -157,12 +216,12 @@ Assume:
     $|P|$-independent constant.
   \end{itemize}
   Operationally, (C9) is verified by inspection of the world-model
-  parameterization choice (BD, CL, WB) and the operational active-
-  subspace selection (TF).  See \S\ref{sec:tooling_substrate_audits}
-  Audit~5 for the calibration procedure.
+  parameterization choice (BD, CL, WB) and the operational active-subspace
+  selection (TF).  See \S\ref{sec:tooling_substrate_audits} Audit~5 for the
+  calibration procedure.
 
 \item[(C10)] \textbf{Pairwise cooperative-production floor.}
-  Under invariant $I_6'$ providing $\mindep \geq m^*$ substrates,
+  Under invariant $I_6$ providing $\mindep \geq m^*$ substrates,
   the deployment certifies an audited subset $\Saudit \subseteq
   \mathcal{S}$ with $|\Saudit| = m^*$ satisfying:
   \begin{itemize}
@@ -183,27 +242,52 @@ Assume:
     (iii)~joint-deployment intensities (rates measured in the
     actual deployment, not under counterfactual isolation).
   \end{itemize}
-  (C10.SU) is structurally independent of $I_6'$: failure-correlation
+  (C10.SU) is structurally independent of $I_6$: failure-correlation
   independence excludes shared adversarial shock mechanisms;
   superposition excludes shared cooperative-production bottlenecks.
   Both are required for Lemma~\ref{lem:5a}'s pairwise-additivity
   bound.  See \S\ref{sec:tooling_substrate_audits} Audit~6 for the
   calibration procedure.
-\item[(C11)] \textbf{Bounded gap-growth rate.}  For any adversarial
-  strategy $q \in \Aadv \cup \Aadv^{\mathrm{env}}$ producing
-  channel deviations bounded by $\deltastar$ (the post-clipping
-  union-class drift floor under (C5.IID)), the per-SPRT-step
-  proxy-truth gap growth is bounded:
+\item[(C11)] \textbf{Bounded gap-growth rate.}  There exists a
+  deployment-class constant $\rhogap > 0$, independent of $|P|$,
+  such that for \emph{every} adversarial strategy $q \in \Aadv
+  \cup \Aadv^{\mathrm{env}}$ admissible during the detection
+  window, the per-SPRT-exposure-step proxy-truth gap growth is
+  uniformly bounded:
   \[
-    (\Delta \epsgap)_n := \epsgap(s_n) - \epsgap(s_{n-1})
-    \;\leq\; \rhogap(\deltastar),
+    \sup_{q \in \Aadv \cup \Aadv^{\mathrm{env}}}\,
+    \sup_{n}\, (\Delta \epsgap)_n^{(q)}
+    \;\leq\; \rhogap,
   \]
-  where $\rhogap(\deltastar)$ is a $|P|$-independent deployment-
-  class constant.  This is a Paper~10 operational assumption
-  (analogous to (C7) bounded co-evolution and SA1 HHI surrogate
-  adequacy), used in Lemma~\ref{lem:6} to bound the detection-window
-  supremum gap.  See \S\ref{sec:tooling_substrate_audits} Audit~7 for
-  the calibration procedure.
+  where $(\Delta \epsgap)_n^{(q)} := \epsgap(s_n) - \epsgap(s_{n-1})$
+  is the per-step gap increment under $q$.  $\rhogap$ is calibrated
+  conservatively from deployment rate limits, action bounds, and
+  channel-coupling structure (Audit~7), \emph{not} measured against
+  representative strategies; any $q$ whose per-step gap growth
+  exceeds $\rhogap$ is by definition outside the admissible
+  adversarial class and falls into residual~(R5)
+  (calibration-exceeded gap-growth).
+
+  This is a Paper~10 operational assumption (analogous to (C7)
+  bounded co-evolution and Assumption~\ref{ass:concgap_conditions}'s
+  Concentration-Gap structural conditions), used in
+  Lemma~\ref{lem:6} to bound the detection-window supremum gap.
+  See \S\ref{sec:tooling_substrate_audits} Audit~7 for the
+  calibration procedure.
+
+  \emph{Capability-scaling caveat.}  The intensivity claim ``$\rhogap$
+  deployment-class, independent of $|P|$'' is conditional on Audit~7's
+  calibration inputs --- rate limits, action bounds, and channel-coupling
+  structure --- being themselves intensive in capability magnitude.  A more
+  capable agent may have a richer effective action space (more channels through
+  which to push gap growth, more action-coupling structure to exploit), and if
+  rate limits and action bounds do not scale conservatively with this richness,
+  the operator-certified $\rhogap$ that holds at $|P| = N$ may fail at $|P| =
+  2N$.  (C11) states the assumption that such an intensive $\rhogap$ exists;
+  whether it does is a deployment-property question that Audit~7 must address
+  per epoch.  Strategies whose realized gap growth exceeds the audited
+  $\rhogap$ fall into residual~(R5), and growing capability that requires
+  $\rhogap$-recalibration is the operational signal that re-audit is needed.
 \item[(C11.CLK)] \textbf{Clock comparability with calibrated
   probability.}  There exist deployment-class constants
   $\Ncasc \in \mathbb{N}$ and $\bclk \in (0,1)$ such that the SPRT
@@ -308,11 +392,12 @@ On the joint event that detection completes within $\Tbeta$
 \emph{and} the cascade-clock event $\{\Tbeta \leq
 \Nev(\tau_{\mathrm{meta}})\}$ from (C11.CLK) holds:
 \[
-  |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; \mathrm{Lip}(g) \cdot
-  h_{\mathrm{detect}}(\theta),
+  \sup_{s \in [t_0,\, t_0 + T_{\mathrm{detect}}]}
+  \bigl|g(\Ttruth(s)) - g(\Pproxy(s))\bigr|
+  \;\leq\; \mathrm{Lip}(g) \cdot h_{\mathrm{detect}}(\theta),
 \]
 where $h_{\mathrm{detect}}(\theta) \leq h_{\mathrm{static}}(\theta)
-+ \rhogap(\deltastar) \cdot \Tbeta$ is intensive in $|P|$.  Total
++ \rhogap \cdot \Tbeta$ is intensive in $|P|$.  Total
 Layer~2 failure probability is bounded by $\beta + \bclk + \bcal$
 (detection-tail $\beta$, clock-failure $\bclk$, calibration
 uncertainty $\bcal$, with $\bcal = 0$ in the certified-conservative
@@ -343,15 +428,26 @@ The following are explicitly outside the guarantee:
   shocks.} Adversarial event classes other than substrate-targeting
   (capability-targeting, coalition-internal corruption) require
   separate machinery and are not covered by the Lemma~5 family.
+\item[(R5)] \textbf{Calibration-exceeded gap-growth.}  Adversarial
+  strategies whose per-SPRT-step proxy-truth gap growth
+  $(\Delta\epsgap)_n$ exceeds the calibrated bound $\rhogap$ from
+  (C11).  By (C11) such strategies are by definition outside the
+  admissible adversarial class on which Lemma~\ref{lem:6}'s
+  detection-window supremum bound is established.  Audit~7's
+  calibration of $\rhogap$ from rate limits and action bounds
+  fixes the boundary; deployments whose realized adversarial
+  pressure exceeds the calibration require re-audit, and any
+  strategies above the threshold remain in (R5) and uncovered by
+  the theorem until recalibration.
 \end{enumerate}
 
 \medskip\noindent\textbf{Capstone.} The deployment-safety guarantee
 is \emph{intensive in the system's absolute capability magnitude}:
 neither $h_{\mathrm{static}}$ nor $h_{\mathrm{detect}}$ scales with
-$|P|$ or with the system's capability count. The guarantee scales
-past any capability level the deployment's evaluation methods can
-characterize, conditional on the invariants holding and the
-deployment falling outside the four named residuals.
+$|P|$ (the cardinality of the capability poset). The guarantee
+scales past any capability level the deployment's evaluation
+methods can characterize, conditional on the invariants holding
+and the deployment falling outside the five named residuals.
 \end{theorem}
 
 \subsection{Proof of Layer 1 (Static safe region)}
@@ -366,7 +462,7 @@ static safe region: for substrate-targeting adversarial events in
 the cooperative-overlap regime, the anti-monopolar conclusion
 $\Vdisc^{\mathrm{div}} > \Vdisc^{D}$ holds whenever $\Delta r_K <
 \rext + (1-\gamma)(\Ddiv - \Delta_0)$. By Lemma~\ref{lem:5a} (under
-$I_6'$ and (C10) per-pair cooperative-production floor with
+$I_6$ and (C10) per-pair cooperative-production floor with
 superposition), $\rext \geq r_*(m^*) > 0$, so the safe region is
 non-trivial.
 
@@ -379,28 +475,46 @@ preservation feeds back into world-model accuracy: the Lyapunov
 function $\Lyap$ contracts to a neighborhood of zero whose radius is
 bounded by \citep[Phase~Redundancy]{lasser2026phase} the neighborhood-radius equation.
 
-\emph{Step 3.} Under invariants $I_1$ and $I_4$, the contraction
+\emph{Step 3.} Under invariants $I_1$ and $I_3$, the contraction
 neighborhood satisfies $\Lyap_\infty < \epsilon_{\mathrm{safe}}$
 (\citep[Phase~Redundancy]{lasser2026phase} Theorem~1a), so $I_2$ holds in steady state. By
 Lemma~\ref{lem:2}, this implies $\epsnonres < f(\epsilon_{\mathrm{safe}})$
 with $f$ intensive in $|P|$.
 
-\emph{Step 4.} Under invariant $I_5$ ($\HHI < H^*$) and Assumption
-SA1 (\ref{ass:SA1}, HHI surrogate adequacy), the deployment lies
-outside Conjecture~1's predicted-exploitation regime
-$\mathcal{R}_{\mathrm{press}}$. SA1 is the explicit empirical
-conditional: $\HHI < H^* \implies \mathcal{R}_{\mathrm{press}}^c$.
-Lemma~\ref{lem:3_forward} establishes only the forward direction
-($\HHI > H^*$ implies the prerequisites of
-$\mathcal{R}_{\mathrm{press}}$); the reverse direction needed here
-is supplied by SA1 as an explicit conditional, not as a derived
-consequence. The proxy-truth gap is therefore bounded by its
-non-residual component plus the residual floor:
+\emph{Step 4.} Under invariant $I_5$ ($\HHI < H^*$) and the
+Concentration-Gap structural conditions of
+Assumption~\ref{ass:concgap_conditions} (representativeness,
+bounded dispersion, coalition closure, and embedding
+compatibility), the proxy-truth Goodhart slack is bounded above
+by an HHI-derived $\chi^2$-divergence quantity intensive in
+$|P|$, per \citep[Theorem~2]{lasser2026foundations}.
+Lemma~\ref{lem:3_forward} establishes the forward direction in
+trade-flow concentration terms ($\HHI > H^*$ implies the
+prerequisites of $\mathcal{R}_{\mathrm{press}}$); the
+operationally-relevant reverse direction (low HHI bounding the
+gap) follows from the companion paper's structural derivation
+rather than from a separate empirical-adequacy assumption.
+Concretely, \citep[Theorem~2]{lasser2026foundations} gives
+\[
+  |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot
+  h_{\mathrm{CG}}, \qquad
+  h_{\mathrm{CG}} \;:=\; \rho_{\mathrm{rep}} +
+  \sigma \sqrt{N H^* - 1} + \eta_{\mathrm{latent}},
+\]
+with the $\sqrt{N H^* - 1}$ factor replaced by $\sqrt{\Xi}$ under
+the alternative direct-$\chi^2$ certificate of (COAL).  All
+factors are deployment-class intensive in $|P|$.
+
+The proxy-truth gap is therefore bounded by its non-residual
+component plus the residual floor:
 \[
   \epsgap \;\leq\; \epsnonres + \lambda \cdot \epsfloor,
 \]
-where $\lambda \in [0,1]$ is the residual weight from the Microfoundation paper~\citep{lasser2026micro}
-\S residual\_class.
+where $\lambda \in [0,1]$ is the residual weight from the
+Microfoundation paper~\citep{lasser2026micro} \S
+residual\_class, and $\epsnonres \leq h_{\mathrm{CG}}$ from the
+Concentration-Gap route (in addition to the Lyapunov bound
+$\epsnonres < f(\epsilon_{\mathrm{safe}})$ of Step 3 above).
 
 \emph{Step 5.} Apply \citep[Microfoundation]{lasser2026micro}'s static Goodhart bound:
 \[
@@ -412,9 +526,16 @@ Substituting $\epsnonres < f(\epsilon_{\mathrm{safe}})$:
   |g(\Ttruth) - g(\Pproxy)| \;\leq\; \mathrm{Lip}(g) \cdot
   (f(\epsilon_{\mathrm{safe}}) + \lambda \epsfloor).
 \]
-Define $h_{\mathrm{static}}(\theta) := f(\epsilon_{\mathrm{safe}}) +
-\lambda \epsfloor$, where $\epsilon_{\mathrm{safe}}$ and $\epsfloor$
-are determined by the invariant thresholds $\theta$.
+Define
+$h_{\mathrm{static}}(\theta) := \min\{f(\epsilon_{\mathrm{safe}}),\,
+h_{\mathrm{CG}}\} + \lambda \epsfloor$, where
+$\epsilon_{\mathrm{safe}}$ and $\epsfloor$ are determined by the
+invariant thresholds $\theta$, and $h_{\mathrm{CG}}$ is the
+Concentration-Gap structural-condition bound of Step~4.  The
+minimum reflects that either route (Lyapunov or
+Concentration-Gap) is sufficient for an intensive bound; the
+deployment may use whichever is tighter under its calibrated
+parameters.
 
 \emph{Step 6 (intensivity).}  Under conditions (C6) bounded-Lipschitz
 alignment, (C7) bounded co-evolution, and (C8) per-capability
@@ -425,9 +546,13 @@ admissibility, Lemma~\ref{lem:1} establishes that the composition
 is intensive in $|P|$ over $\mathcal{D}$ for any intensive
 non-residual gap $X$, and that further multiplication by
 $\mathrm{Lip}(g)$ preserves intensivity by (C6).  Instantiating
-$X = f(\epsilon_{\mathrm{safe}})$ (intensive by Lemma~\ref{lem:2}
-under conditions added there): $h_{\mathrm{static}}(\theta)$ is
-intensive in $|P|$, and the Layer~1 bound is intensive in capability
+$X = \min\{f(\epsilon_{\mathrm{safe}}),\, h_{\mathrm{CG}}\}$,
+both inputs are intensive in $|P|$ (the first by Lemma~\ref{lem:2}
+under conditions added there; the second by Step~4 above with
+all factors $\rho_{\mathrm{rep}}, \sigma, N, H^*$ (or $\Xi$),
+$\eta_{\mathrm{latent}}$ deployment-class), so their pointwise
+minimum is intensive: $h_{\mathrm{static}}(\theta)$ is intensive
+in $|P|$, and the Layer~1 bound is intensive in capability
 magnitude.
 
 This establishes Layer~1.
@@ -480,7 +605,7 @@ $\{T_{\mathrm{detect}} \leq \Tbeta\}$ (probability $\geq 1 -
 \[
   h_{\mathrm{detect}}(\theta) := \sup_{s \in [t_0, t_0 +
   T_{\mathrm{detect}}]} \epsgap(s) \;\leq\;
-  h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot \Tbeta.
+  h_{\mathrm{static}}(\theta) + \rhogap \cdot \Tbeta.
 \]
 
 \emph{Step 4c (lead-time-before-cascade).}  By (C11.CLK)'s
@@ -495,7 +620,7 @@ pointwise:
 \[
   |g(\Ttruth) - g(\Pproxy)|(s) \;\leq\; \mathrm{Lip}(g) \cdot
   h_{\mathrm{detect}}(\theta) \;\leq\; K_{\mathrm{Lip}} \cdot
-  \bigl(h_{\mathrm{static}}(\theta) + \rhogap(\deltastar) \cdot
+  \bigl(h_{\mathrm{static}}(\theta) + \rhogap \cdot
   \Tbeta\bigr)
 \]
 under (C6) bounded-Lipschitz alignment.  By union bound on Step~4b
@@ -505,7 +630,7 @@ is at most $\beta + \bclk + \bcal$.
 \emph{Step 6 (intensivity).} Each constant in the right-hand side is
 intensive in $|P|$ over $\mathcal{D}$:
 $h_{\mathrm{static}}$ by Lemma~\ref{lem:1};
-$\rhogap(\deltastar)$ by (C11);
+$\rhogap$ by (C11);
 $\Tbeta = \max\{2A/\deltastar, 2\Rh^2\log(1/\beta)/\deltastar^2\}$
 by (C5.SPRT) sub-clauses ($A$ from $\alpha, \beta$ monitor-design;
 $\Rh$ from (C5.HOEFF) clipping; $\deltastar$ post-clipping floor
@@ -523,7 +648,7 @@ Layer~3 does not admit a proof in the usual sense; it is the
 explicit statement of what the theorem does \emph{not} cover.
 
 \begin{proof}[Discussion]
-The four residuals (R1)--(R4) of the theorem statement are real,
+The five residuals (R1)--(R5) of the theorem statement are real,
 named, and outside the deployment-safety guarantee. We discuss each.
 
 \emph{(R1) Channel-orthogonal restructuring.} Lemma~\ref{lem:5b}'s
@@ -554,14 +679,13 @@ deployment's claimed material environment threat model, per
 (C12.PUB) and Audit~8 in deployment-tooling.  Coverage gaps shift
 adversarial mass into the precise R2 and-class above.
 
-\emph{(R3) Redundancy-dominated regime.} Lemma~\ref{lem:5c}'s
-safe region is established for the cooperative-overlap regime.
-Deployments where redundant capabilities dominate cross-substrate
-cooperatives violate (C3); the equal-substrate analysis is
-anti-conservative in this regime, and the safe region inequality is
-not directly applicable. Sequential counterfactual derivation
-(Lemma~5c-prime) is open follow-up work; until completed, redundancy-
-dominated deployments cannot invoke Layer~1.
+\emph{(R3) Redundancy-dominated regime.} Lemma~\ref{lem:5c}'s safe region is
+    established for the cooperative-overlap regime. Deployments where redundant
+    capabilities dominate cross-substrate cooperatives violate (C3); the
+    equal-substrate analysis is anti-conservative in this regime, and the safe
+    region inequality is not directly applicable. Sequential counterfactual
+    derivation (Lemma~5c-prime) is open follow-up work; until completed,
+    redundancy-dominated deployments cannot invoke Layer~1.
 
 \emph{(R4) Capability-targeting and coalition-internal shocks.}
 The Lemma~5 family is restricted to substrate-targeting adversarial
@@ -572,6 +696,19 @@ $\Ddiv$ requires; separate machinery is needed for each shock
 class. \S\ref{sec:scope} of the introduction noted that a unified
 adversarial-event model with separate shock-class terms is open
 work.
+
+\emph{(R5) Calibration-exceeded gap-growth.}  Lemma~6's bound
+$h_{\mathrm{detect}} \leq h_{\mathrm{static}} + \rhogap \cdot
+\Tbeta$ uses the calibrated $\rhogap$ from (C11) as a uniform
+worst-case per-step gap-growth bound.  Strategies whose realized
+$(\Delta\epsgap)_n$ exceeds $\rhogap$ are by construction outside
+the admissible adversarial class.  Audit~7's calibration sets the
+boundary; deployments with realized adversarial pressure beyond
+the calibration require either re-audit (raising $\rhogap$ at
+some operational cost) or accepting that strategies above the
+threshold are uncovered.  The residual is real: there is no
+limit-of-tighter-calibration argument that forces every
+adversarial strategy below an a-priori-calibrated $\rhogap$.
 
 The residuals are not hidden assumptions or hand-waved limitations;
 they are explicitly part of the theorem statement
@@ -584,14 +721,13 @@ falls inside or outside each residual.
 
 The theorem establishes three structural claims:
 
-\textbf{Existence of a provably safe regime.} Under the eleven
-invariants, the canonical tripartite substrate identification, the
-cooperative-overlap regime, and the causally-grounded cooperative-
-outcome inner-alignment condition, deployment of capability-unbounded
-systems is provably safe in a defined sense (Goodhart slack
-intensive in $|P|$, with tail-bounded detection of evasions in the
-named class). The regime is not vacuous: \S\ref{sec:worked_scenarios}
-walks through realistic deployments meeting all conditions.
+\textbf{Existence of a provably safe regime.} Under the eleven invariants, the
+canonical tripartite substrate identification, the cooperative-overlap regime,
+and the causally-grounded cooperative-outcome inner-alignment condition,
+deployment of capability-unbounded systems is provably safe in a defined sense
+(Goodhart slack intensive in $|P|$, with tail-bounded detection of evasions in
+the named class). The regime is not vacuous: \S\ref{sec:worked_scenarios} walks
+through realistic deployments meeting all conditions.
 
 \textbf{Capability-magnitude independence.} The bound is intensive
 in $|P|$ in both Layer~1 and Layer~2. The deployment guarantee
@@ -600,7 +736,7 @@ evaluation methods can characterize. This is the structural
 inversion of capability-estimation-centered safety paradigms
 discussed in \S\ref{sec:wrong_frame}.
 
-\textbf{Named residual structure.} The four residuals are explicit
+\textbf{Named residual structure.} The five residuals are explicit
 components of the theorem, not hidden caveats.  Operators verify
 whether their deployment falls outside each residual; the
 deployment-tooling section (\S\ref{sec:deployment_tooling})
@@ -618,12 +754,16 @@ proves; and items explicitly excluded by scope.
 the points below name what specifically lies outside the theorem's
 reach.
 
-\paragraph{Conjectural assumptions (argued, not proved).}
-The theorem does \emph{not} prove SA1's reverse direction
-($\HHI < H^* \implies \mathcal{R}_{\mathrm{press}}^c$); SA1 is named
-as an empirical assumption with a structural follow-up
-(channel-mediation conjecture, \S\ref{sec:disc_companion}) and an
-empirical validation pathway (\S\ref{sec:sa1_empirical}).
+\paragraph{Companion-paper structural conditions.}
+The deployment claim conditions on (REP), (DISP), (COAL), and
+Lipschitz embedding compatibility
+(Assumption~\ref{ass:concgap_conditions}), each operationally
+auditable per \citep[\S 6]{lasser2026foundations}.  These replace
+the previous monolithic HHI surrogate-adequacy assumption; the
+proof of the bound under (REP) + (DISP) + (COAL) plus embedding
+compatibility is in \citep[Theorem~2]{lasser2026foundations}.
+The universal model-free Concentration-Gap conjecture remains
+open, but the deployment claim no longer depends on it directly.
 
 The theorem does \emph{not} solve the inner-alignment problem.
 Condition (C4) is assumed, not discharged.  Vanilla RLHF does not
@@ -633,7 +773,7 @@ direction.
 
 \paragraph{Scope restrictions (excluded by definition).}
 The theorem does \emph{not} bound the residual classes.  Strategies
-in (R1)--(R4) are explicitly outside the guarantee; we make no
+in (R1)--(R5) are explicitly outside the guarantee; we make no
 quantitative claims about deployment behavior under those
 conditions.  The cooperative-anchoring property
 (\S\ref{sec:substrate_anchoring}) is correspondingly bounded: it
@@ -641,13 +781,28 @@ makes optimization pressure on cooperative outputs locally rational
 toward preserving the verification layer, but only conditional on
 (C4) and on basin entry.
 
+The theorem does \emph{not} bound \emph{sub-threshold cross-domain
+aggregation}: an agent distributing effects across many domains
+$D$ each below the per-domain $I_{10}$ materiality threshold
+$\theta_{\mathrm{material}}$ can in principle accumulate
+$O(|P|) \cdot \theta_{\mathrm{material}}$ aggregate uncovered
+effect (\S\ref{sec:empirical_invariants}'s $I_{10}$ failure-mode
+discussion). This paper states $I_{10}$ in per-domain form;
+specifying the cross-domain aggregation operator
+$\theta_{\mathrm{material}}^{\mathrm{agg}}$ intensively in $|P|$
+is open follow-up work. Until that strengthening lands,
+sub-threshold cross-domain aggregation is a structural
+limitation of the deployment claim --- not routed by the named
+residuals (R1)--(R5) but explicitly outside the theorem's
+binding.
+
 \paragraph{Operational concerns (not theorem questions).}
 The theorem does \emph{not} establish basin entry.  Whether a real
 deployment can reach the cooperative-anchoring attractor from
 arbitrary initial conditions is an empirical question about
 training and instantiation, not a question this composition can
 resolve; basin entry is a precondition of the theorem (implicit in
-(C1)--(C5)).  Establishing basin entry is open follow-up work.
+(C1)--(C12)).  Establishing basin entry is open follow-up work.
 
 Similarly, whether any specific deployment satisfies (C1)--(C12) is
 a measurement question, addressed by the audit infrastructure of

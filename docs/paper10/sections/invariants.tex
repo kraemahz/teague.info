@@ -1,53 +1,49 @@
 \section{The eleven operational invariants}
 \label{sec:invariants}
 
-The deployment-safety theorem
-(Theorem~\ref{thm:deployment_safety}) is conditional on eleven
-operational invariants holding throughout the deployment window.
-Each invariant has a precise definition, a threshold semantics
-(what value the invariant must remain within), a measurement
-procedure on \citep[Exogenous~Verification]{lasser2026exo}'s verification ledger, and a source-paper
-grounding. This section defines all eleven; subsequent sections
+The deployment-safety theorem (Theorem~\ref{thm:deployment_safety}) is
+conditional on eleven operational invariants holding throughout the deployment
+window. Each invariant has a precise definition, a threshold semantics (what
+value the invariant must remain within), a measurement procedure on
+\citep[Exogenous~Verification]{lasser2026exo}'s verification ledger, and a
+source-paper grounding. This section defines all eleven; subsequent sections
 reference them by number.
 
-We group the invariants by structural role. Invariants $I_1, I_2,
-I_4$ govern the dynamical regime (\citep[Phase~Redundancy]{lasser2026phase} phase boundary).
-Invariants $I_3, I_5$ govern the empirical observation channel
-(\citep[Revealed~Sacrifice]{lasser2026paper8a},~\citep[Need~Sufficiency]{lasser2026paper8b}). Invariants $I_6', I_7, I_8$ govern substrate
-structure and witnesses. Invariants $I_9, I_{10}, I_{11}$ bound
-cooperative-anchoring evasions (this paper new content,
-\S\ref{sec:substrate_anchoring}).
+We group the invariants by structural role. Invariants $I_1, I_2, I_3$ govern
+the dynamical regime (\citep[Phase~Redundancy]{lasser2026phase} phase
+boundary). Invariants $I_4, I_5$ govern the empirical observation channel
+(\citep[Revealed~Sacrifice]{lasser2026paper8a},~\citep[Need~Sufficiency]{lasser2026paper8b}).
+Invariants $I_6, I_7, I_8$ govern substrate structure and witnesses.
+Invariants $I_9, I_{10}, I_{11}$ bound cooperative-anchoring evasions (this
+paper new content, \S\ref{sec:substrate_anchoring}).
 
-\paragraph{Theorem-proof invariants vs.\ deployment-regime
-invariants.}  The eleven invariants serve two distinct functions
-in Theorem~\ref{thm:deployment_safety}. \emph{Theorem-proof
-invariants} are conditions whose satisfaction is directly required
-by the formal proof of Layer~1 or Layer~2: $I_1, I_2, I_3, I_4,
-I_5, I_6', I_8$. These appear in proof steps in
-\S\ref{sec:proof_layer1}--\S\ref{sec:proof_layer2}.
-\emph{Deployment-regime invariants} are conditions required for
-the cooperative-anchoring property to hold operationally and for
-the overall regime to be self-consistent: $I_7, I_9, I_{10},
-I_{11}$. These appear in
-\S\ref{sec:substrate_anchoring} as bounds on cooperative-anchoring
-evasions and in (C4) of Theorem~1 (causally grounded
-cooperative-outcome value). The deployment-regime invariants do
-not appear directly in the formal proof of Layers 1--2 but are
-required for the theorem's preconditions (especially C4 and the
-cooperative-anchoring property) to be operationally satisfied.
+\paragraph{Theorem-proof invariants vs.\ deployment-regime invariants.}  The
+eleven invariants serve two distinct functions in
+Theorem~\ref{thm:deployment_safety}. \emph{Theorem-proof invariants} are
+conditions whose satisfaction is directly required by the formal proof of
+Layer~1 or Layer~2: $I_1, I_2, I_3, I_4, I_5, I_6, I_8$. These appear in proof
+steps in \S\ref{sec:proof_layer1}--\S\ref{sec:proof_layer2}.
+\emph{Deployment-regime invariants} are conditions required for the
+cooperative-anchoring property to hold operationally and for the overall regime
+to be self-consistent: $I_7, I_9, I_{10}, I_{11}$. These appear in
+\S\ref{sec:substrate_anchoring} as bounds on cooperative-anchoring evasions and
+in (C4) of Theorem~1 (causally grounded cooperative-outcome value). The
+deployment-regime invariants do not appear directly in the formal proof of
+Layers 1--2 but are required for the theorem's preconditions (especially C4 and
+the cooperative-anchoring property) to be operationally satisfied.
 
-The distinction matters for Theorem~1's conditions: (C1)
-``invariants in force'' covers all eleven, but the proof structure
-(Layers 1--2) directly invokes the theorem-proof subset, while
-the deployment-regime subset enters through (C2)--(C5).
+The distinction matters for Theorem~1's conditions: (C1) ``invariants in
+force'' covers all eleven, but the proof structure (Layers 1--2) directly
+invokes the theorem-proof subset, while the deployment-regime subset enters
+through (C2)--(C5).
 
-\subsection{Dynamical regime invariants ($I_1, I_2, I_4$)}
+\subsection{Dynamical regime invariants (\texorpdfstring{$I_1, I_2, I_3$}{I1, I2, I3})}
 \label{sec:dynamical_invariants}
 
-These three invariants are inherited from \citep[Phase~Redundancy]{lasser2026phase}'s phase boundary
-theorem and characterize the regime in which the coupled $(P, \Wm)$
-system stays in the self-correcting basin rather than entering the
-monopolar absorbing state.
+These three invariants are inherited from
+\citep[Phase~Redundancy]{lasser2026phase}'s phase boundary theorem and
+characterize the regime in which the coupled $(P, \Wm)$ system stays in the
+self-correcting basin rather than entering the monopolar absorbing state.
 
 \begin{definition}[$I_1$ --- Cross-substrate redundancy floor]
 \label{inv:I1}
@@ -56,22 +52,23 @@ cross-substrate redundancy minimum exceeds threshold $\rho^*$:
 \[
   I_1: \quad \rhomincross(P_t) \;>\; \rho^* \quad \text{for all } t \in [0, T].
 \]
-\textbf{Threshold semantics.} $\rho^*$ is determined by \citep[Phase~Redundancy]{lasser2026phase}'s
-critical surface (Equation 7 (critical surface) in
-\citep{lasser2026phase}); deployments with $\rhomincross > \rho^*$
-operate inside the self-correcting basin under the stated drift and
-correction rates.
-\textbf{Measurement.} $\rhomincross$ is computed from the witness
-ledger by counting cross-substrate observation channels on each
-safety dimension. The minimum across dimensions is the invariant
-quantity.
-\textbf{Failure mode.} $\rhomincross \to 0$ on a single dimension is
-sufficient to enter the absorbing basin (\citep[Phase~Redundancy]{lasser2026phase}
-Proposition 1 (absorbing property)); the invariant must hold on every
-dimension.
+\textbf{Threshold semantics.} $\rho^*$ is determined by
+    \citep[Phase~Redundancy]{lasser2026phase}'s critical surface (Equation 7
+    (critical surface) in \citep{lasser2026phase}); deployments with
+    $\rhomincross > \rho^*$ operate inside the self-correcting basin under the
+    stated drift and correction rates.
+
+\textbf{Measurement.} $\rhomincross$ is computed from the witness ledger by
+    counting cross-substrate observation channels on each safety dimension. The
+    minimum across dimensions is the invariant quantity.
+
+\textbf{Failure mode.} $\rhomincross \to 0$ on a single dimension is sufficient
+    to enter the absorbing basin (\citep[Phase~Redundancy]{lasser2026phase}
+    Proposition 1 (absorbing property)); the invariant must hold on every
+    dimension.
 \end{definition}
 
-\begin{definition}[$I_2$ --- Lyapunov error within safety threshold]
+\begin{definition}[$I_2$ -- Lyapunov error within safety threshold]
 \label{inv:I2}
 The Lyapunov function on world-model error stays within the safety
 threshold:
@@ -79,79 +76,84 @@ threshold:
   I_2: \quad \Lyap(\Wm_t) \;<\; \epsilon_{\mathrm{safe}}
   \quad \text{for all } t \in [0, T].
 \]
-\textbf{Threshold semantics.} $\epsilon_{\mathrm{safe}}$ is the
-error threshold below which the locally rational policy agrees with
-the true $\Vdisc$-optimal policy
-(\citep[Section on policy correctness]{lasser2026phase}). At
-$\Lyap < \epsilon_{\mathrm{safe}}$, the actor's perceived dynamics
-match the true dynamics closely enough that policy decisions are
-correct.
-\textbf{Measurement.} $\Lyap$ is computed via \citep[Exogenous~Verification]{lasser2026exo}'s behavioral
-consistency monitor (\citep[Definition of Behavioral Consistency
-Monitor]{lasser2026exo}): the running log-likelihood ratio
-$\Lambda_t$ relative to committed claims is a proxy for the
-weighted-error sum. Direct estimation requires per-dimension error
-estimates from cross-substrate witnesses.
-\textbf{Failure mode.} $\Lyap \to \epsilon_{\mathrm{safe}}$ from
-below indicates the world model is degrading; SPRT detection
-catches this before the threshold is crossed if the underlying
-deviation has KL divergence $\geq \deltaadv$.
-\textbf{Composition note.} $I_2$ is technically implied by $I_1$ and
-$I_4$ via \citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis, but is listed separately
-because it is the directly-monitored quantity (whereas $I_1$ and
-$I_4$ are upstream determinants).
+\textbf{Threshold semantics.} $\epsilon_{\mathrm{safe}}$ is the error threshold
+    below which the locally rational policy agrees with the true
+    $\Vdisc$-optimal policy (\citep[Section on policy
+    correctness]{lasser2026phase}). At $\Lyap < \epsilon_{\mathrm{safe}}$, the
+    actor's perceived dynamics match the true dynamics closely enough that
+    policy decisions are correct.
+
+\textbf{Measurement.} $\Lyap$ is computed via
+    \citep[Exogenous~Verification]{lasser2026exo}'s behavioral consistency
+    monitor (\citep[Definition of Behavioral Consistency
+    Monitor]{lasser2026exo}): the running log-likelihood ratio $\Lambda_t$
+    relative to committed claims is a proxy for the weighted-error sum. Direct
+    estimation requires per-dimension error estimates from cross-substrate
+    witnesses.
+
+\textbf{Failure mode.} $\Lyap \to \epsilon_{\mathrm{safe}}$ from below
+    indicates the world model is degrading; SPRT detection catches this before
+    the threshold is crossed if the underlying deviation has KL divergence
+    $\geq \deltaadv$.
+
+\textbf{Composition note.} $I_2$ is technically implied by $I_1$ and $I_3$ via
+    \citep[Phase~Redundancy]{lasser2026phase}'s contraction analysis, but is
+    listed separately because it is the directly-monitored quantity (whereas
+    $I_1$ and $I_3$ are upstream determinants).
 \end{definition}
 
-\begin{definition}[$I_4$ --- Subsumption frequency ceiling]
-\label{inv:I4}
+\begin{definition}[$I_3$ --- Subsumption frequency ceiling]
+\label{inv:I3}
 The time-averaged subsumption frequency stays below threshold $r^*$:
 \[
-  I_4: \quad \rsub \;=\; \frac{T_{\mathrm{sub}}}{T} \;<\; r^*
+  I_3: \quad \rsub \;=\; \frac{T_{\mathrm{sub}}}{T} \;<\; r^*
   \quad \text{over the trajectory window.}
 \]
-\textbf{Threshold semantics.} $r^*$ is determined by \citep[Phase~Redundancy]{lasser2026phase}'s
-critical surface: subsumption frequency above $r^*$ produces
-cumulative redundancy loss faster than the self-correction rate can
-restore.
-\textbf{Measurement.} Subsumption events are agent-removal entries
-on the verification ledger; counting them per unit time gives
-$\rsub$.
-\textbf{Failure mode.} Bursts of subsumption (high $\rsub$ over a
-short window) can drive the system into the absorbing basin even if
-the time-averaged $\rsub$ over the full window is below $r^*$.
-Operationally, $\rsub$ should be computed over rolling windows of
-length matched to the cascade-time scale $\tau_{\mathrm{meta}}$.
+\textbf{Threshold semantics.} $r^*$ is determined by
+    \citep[Phase~Redundancy]{lasser2026phase}'s critical surface: subsumption
+    frequency above $r^*$ produces cumulative redundancy loss faster than the
+    self-correction rate can restore.
+
+\textbf{Measurement.} Subsumption events are agent-removal entries on the
+    verification ledger; counting them per unit time gives $\rsub$.
+
+\textbf{Failure mode.} Bursts of subsumption (high $\rsub$ over a short window)
+    can drive the system into the absorbing basin even if the time-averaged
+    $\rsub$ over the full window is below $r^*$. Operationally, $\rsub$ should
+    be computed over rolling windows of length matched to the cascade-time
+    scale $\tau_{\mathrm{meta}}$.
 \end{definition}
 
-\subsection{Empirical observation invariants ($I_3, I_5$)}
+\subsection{Empirical observation invariants (\texorpdfstring{$I_4, I_5$}{I4, I5})}
 \label{sec:empirical_invariants}
 
 These two invariants are inherited from \citep[Revealed~Sacrifice]{lasser2026paper8a} and~\citep[Need~Sufficiency]{lasser2026paper8b} and ensure
 the empirical observation channel (revealed-sacrifice events) is
 producing meaningful $\volR$ lower bounds and that trade-flow
-concentration stays within Conjecture~1's predicted-safe regime.
+concentration stays within the Concentration-Gap~Conjecture's predicted-safe regime.
 
-\begin{definition}[$I_3$ --- B-to-C ratio floor]
-\label{inv:I3}
+\begin{definition}[$I_4$ --- B-to-C ratio floor]
+\label{inv:I4}
 The B-to-C ratio (\citep[Definition of B-to-C ratio]{lasser2026paper8a})
 exceeds threshold $\beta^*$:
 \[
-  I_3: \quad \betaL \;=\; \frac{\volRlower}{\volL} \;>\; \beta^*.
+  I_4: \quad \betaL \;=\; \frac{\volRlower}{\volL} \;>\; \beta^*.
 \]
 \textbf{Threshold semantics.} $\beta^*$ is the minimum fraction of
-possessed-capability volume that must be witnessed by sacrifice
-events for the deployment to invoke \citep[Microfoundation]{lasser2026micro}'s static Goodhart bound.
-Below $\beta^*$, the proxy-truth gap is insufficiently characterized
-by the observation channel.
-\textbf{Measurement.} $\volRlower$ accumulates monotonically as
-sacrifice events are recorded on the verification ledger
-(\citep[Proposition: Monotone Accumulation]{lasser2026paper8a}).
-Dividing by $\volL$ (computable from the capability ledger) gives
-$\betaL$.
-\textbf{Failure mode.} $\betaL$ approaches $\beta^*$ from above when
-sacrifice events are rare relative to capability acquisition. The
-deployment claim weakens; recovery requires either more sacrifice
-events or a downward revision of $\beta^*$.
+    possessed-capability volume that must be witnessed by sacrifice events for
+    the deployment to invoke \citep[Microfoundation]{lasser2026micro}'s static
+    Goodhart bound. Below $\beta^*$, the proxy-truth gap is insufficiently
+    characterized by the observation channel.
+
+\textbf{Measurement.} $\volRlower$ accumulates monotonically as sacrifice
+    events are recorded on the verification ledger (\citep[Proposition:
+    Monotone Accumulation]{lasser2026paper8a}). Dividing by $\volL$ (computable
+    from the capability ledger) gives $\betaL$.
+
+\textbf{Failure mode.} $\betaL$ approaches $\beta^*$ from above when sacrifice
+    events are rare relative to capability acquisition. The deployment claim
+    weakens; recovery requires either more sacrifice events or a downward
+    revision of $\beta^*$.
 \end{definition}
 
 \begin{definition}[$I_5$ --- Trade-flow HHI ceiling]
@@ -162,64 +164,74 @@ ceiling $H^*$:
 \[
   I_5: \quad \HHI \;<\; H^*.
 \]
-\textbf{Threshold semantics.} $H^*$ is the wireheading-consistency
-threshold: trade flows with $\HHI > H^*$ exhibit concentration
-patterns that \citep[Microfoundation]{lasser2026micro}'s Conjecture~1 predicts as the regime where
-optimization pressure produces gap exploitation. The ceiling $H^*$
-operationalizes Conjecture~1 without proving it.
-\textbf{Measurement.} $\HHI$ is computed from public committed
-events plus public S1-admissibility labelling
-(\citep[Part-A category-flow variant]{lasser2026paper8b}); the
-computation is third-party observable and tamper-evident.
-\textbf{Failure mode.} $\HHI \to 1$ indicates trade flow
-concentrating on a small set of capability categories, which under
-Conjecture~1 predicts proxy-targeted optimization pressure.
-\textbf{Conjecture-dependence note.} Conditioning the deployment
-claim on $I_5$ is conditioning on a measurable surrogate for an
-unproved dynamical premise. If Conjecture~1 is false in some
-regime, $I_5$ is the wrong invariant and the bound's invocation is
-unsound. \S\ref{sec:conjecture_op} discusses this trade-off.
+\textbf{Threshold semantics.} $H^*$ is the wireheading-consistency threshold:
+    trade flows with $\HHI > H^*$ exhibit concentration patterns that
+    \citep[Microfoundation]{lasser2026micro}'s Concentration-Gap~Conjecture predicts as the
+    regime where optimization pressure produces gap exploitation. The ceiling
+    $H^*$ supplies the HHI threshold under which the companion paper's scoped
+    structural discharge (Assumption~\ref{ass:concgap_conditions}: REP, DISP,
+    COAL, EMB) delivers the Layer~1 binding;
+    \citep[Theorem~2]{lasser2026foundations} carries the proof.
+
+\textbf{Measurement.} $\HHI$ is computed from public committed events plus
+    public S1-admissibility labelling (\citep[Part-A category-flow
+    variant]{lasser2026paper8b}); the computation is third-party observable and
+    tamper-evident.
+
+\textbf{Failure mode.} $\HHI \to 1$ indicates trade flow concentrating on a
+    small set of capability categories, which under the Concentration-Gap~Conjecture predicts
+    proxy-targeted optimization pressure.
+
+\textbf{Structural-condition interpretation.} After companion-paper
+    integration~\citep{lasser2026foundations}, $I_5$'s operational
+    meaning is no longer ``surrogate for an unproved conjecture''
+    but ``Layer~1 binding via the scoped
+    Concentration-Gap selection theorem under
+    Assumption~\ref{ass:concgap_conditions} (REP + DISP + COAL + EMB).''
+    The universal model-free Concentration-Gap conjecture remains
+    open as a research-program target (deferred indefinitely,
+    \S\ref{sec:disc_indefinite}); the deployment claim no longer
+    conditions on it directly. \S\ref{sec:conjecture_op} traces
+    the dependency structure through the integration.
 \end{definition}
 
-\subsection{Substrate-structure invariants ($I_6', I_7, I_8$)}
+\subsection{Substrate-structure invariants (\texorpdfstring{$I_6, I_7, I_8$}{I6, I7, I8})}
 \label{sec:substrate_invariants}
 
 These three invariants govern the substrate partition and
-witness machinery. $I_6'$ is the substrate-count invariant upgraded
+witness machinery. $I_6$ is the substrate-count invariant upgraded
 from \citep[Phase~Redundancy]{lasser2026phase}'s nominal $\meff$ to failure-correlation-independent
 $\mindep$. $I_7$ governs bundle decomposition (\citep[Microfoundation]{lasser2026micro}'s Channel~3)
 through \citep[Exogenous~Verification]{lasser2026exo}'s governance fork. $I_8$ extends \citep[Exogenous~Verification]{lasser2026exo}'s
 substrate-exclusive witnesses to environment-side observables.
 
-\begin{definition}[$I_6'$ --- Failure-correlation-independent substrate count]
+\begin{definition}[$I_6$ --- Failure-correlation-independent substrate count]
 \label{inv:I6}
 The deployment's effective substrate count, measured at the level of
 joint / event-class failure-correlation independence
-(Definition~\ref{def:joint_indep} below), exceeds threshold $m^*
-\geq 3$:
+(Definition~\ref{def:joint_indep} below), is at least the threshold
+$m^*$, where the threshold itself is required to satisfy $m^* \geq 3$:
 \[
-  I_6': \quad \mindep(\text{deployment}) \;\geq\; m^* \;\geq\; 3.
+  I_6: \quad \mindep(\text{deployment}) \;\geq\; m^* \;\geq\; 3.
 \]
-\textbf{Threshold semantics.} $m^* \geq 3$ is required because
-$m = 2$ is the fragile minimum
-(\citep[Remark on $m=2$ fragility]{lasser2026phase}): any single
-channel loss on any dimension is immediately fatal at $m = 2$. At
-$m^* \geq 3$, the redundancy criterion becomes non-trivially
-satisfiable.
-\textbf{Measurement.} $\mindep$ is determined by failure-mode
-auditing across the substrate population: enumerate the threat
-model's adversarial mechanism classes, verify that each is
-contained within a single substrate. Auditing produces a
-substrate-distinctness certificate that this paper treats as
-ledger-attestable.
-\textbf{Failure mode.} Skeleton substrates (nominally distinct,
-functionally correlated) inflate $\meff$ without supplying $\mindep$.
-For example, three silicon agents from different vendors but
-identical training data have $\meff = 3$ but $\mindep = 1$. The
-audit must catch this.
-\textbf{Canonical identification.} Per
-\S\ref{sec:substrate_anchoring}, the canonical $\mindep = 3$
-identification is Human + AI + Formal-Operational.
+\textbf{Threshold semantics.} $m^* \geq 3$ is required because $m = 2$ is the
+    fragile minimum (\citep[Remark on $m=2$ fragility]{lasser2026phase}): any
+    single channel loss on any dimension is immediately fatal at $m = 2$. At
+    $m^* \geq 3$, the redundancy criterion becomes non-trivially satisfiable.
+
+\textbf{Measurement.} $\mindep$ is determined by failure-mode auditing across
+    the substrate population: enumerate the threat model's adversarial
+    mechanism classes, verify that each is contained within a single substrate.
+    Auditing produces a substrate-distinctness certificate that this paper
+    treats as ledger-attestable.
+
+\textbf{Failure mode.} Skeleton substrates (nominally distinct, functionally
+    correlated) inflate $\meff$ without supplying $\mindep$. For example, three
+    silicon agents from different vendors but identical training data have
+    $\meff = 3$ but $\mindep = 1$. The audit must catch this.
+
+\textbf{Canonical identification.} Per \S\ref{sec:substrate_anchoring}, the
+    canonical $\mindep = 3$ identification is Human + AI + Formal-Operational.
 \end{definition}
 
 \begin{definition}[Joint / event-class failure-correlation independence]
@@ -239,15 +251,14 @@ A multi-step campaign that touches several substrates sequentially
 (e.g., a phishing attack that first generates content on the AI
 substrate and then deceives a human reviewer) is treated as a
 \emph{single} mechanism whose support spans multiple substrates;
-such mechanisms violate $I_6'$'s joint failure-correlation
+such mechanisms violate $I_6$'s joint failure-correlation
 independence at the campaign level even when their atomic steps
 are individually substrate-localized.
 
-This campaign-level interpretation matters for the joint-
-independence audit: enumeration must list mechanism classes at the
-campaign granularity, not at the atomic-step granularity.  Atomic
-steps are the right unit for instrumentation but the wrong unit
-for failure-correlation analysis.
+This campaign-level interpretation matters for the joint-independence audit:
+    enumeration must list mechanism classes at the campaign granularity, not at
+    the atomic-step granularity.  Atomic steps are the right unit for
+    instrumentation but the wrong unit for failure-correlation analysis.
 \end{remark}
 
 \begin{definition}[$I_7$ --- Governance-gated bundle individuation]
@@ -261,23 +272,25 @@ acceptance:
   e \text{ is governance-fork-accepted}.
 \]
 \textbf{Threshold semantics.} Bundle individuation is Channel~3 in
-\citep[Microfoundation]{lasser2026micro}'s four-channel decomposition; \citep[\S
-8.3]{lasser2026micro} documents that unconstrained individuation can
-worsen the alignment slack by introducing new $\epsfloor$ terms
-faster than $\epsnonres$ shrinks. Routing through governance
-prevents an agent from unilaterally re-individuating to gain
-favorable $\epsfloor$.
-\textbf{Measurement.} Bundle-decomposition events are governance
-ledger entries (\citep[Definition of Governance Ledger Entry]{lasser2026exo}).
-Each entry's deliberation record and vote count are public.
-\textbf{Failure mode.} Bundle decompositions executed outside the
-governance protocol (e.g., agent-internal restructuring of capability
-representation) violate $I_7$. Detection requires the witness
-machinery to surface the violation.
-\textbf{Operational note.} Routing every bundle decomposition
-through cross-substrate supermajority may impose throughput costs.
-\S\ref{sec:deployment_tooling} discusses tiered governance
-(high-stakes via fork, low-stakes via fast-track with audit trail).
+    \citep[Microfoundation]{lasser2026micro}'s four-channel decomposition;
+    \citep[\S 8.3]{lasser2026micro} documents that unconstrained individuation
+    can worsen the alignment slack by introducing new $\epsfloor$ terms faster
+    than $\epsnonres$ shrinks. Routing through governance prevents an agent
+    from unilaterally re-individuating to gain favorable $\epsfloor$.
+
+\textbf{Measurement.} Bundle-decomposition events are governance ledger entries
+    (\citep[Definition of Governance Ledger Entry]{lasser2026exo}). Each
+    entry's deliberation record and vote count are public.
+
+\textbf{Failure mode.} Bundle decompositions executed outside the governance
+    protocol (e.g., agent-internal restructuring of capability representation)
+    violate $I_7$. Detection requires the witness machinery to surface the
+    violation.
+
+\textbf{Operational note.} Routing every bundle decomposition through
+    cross-substrate supermajority may impose throughput costs.
+    \S\ref{sec:deployment_tooling} discusses tiered governance (high-stakes via
+    fork, low-stakes via fast-track with audit trail).
 \end{definition}
 
 \begin{definition}[$I_8$ --- Environment-side substrate-exclusive witnesses]
@@ -303,34 +316,31 @@ because it is agent-side observable, not exogenous; it is captured
 by the four-channel agent-side ledger of Lemma~\ref{lem:5b}, not by
 $I_8$.
 
-\textbf{Threshold semantics.}  Without $I_8$, environment
-manipulation that alters true $\rext$ or other monitored exogenous
-quantities produces no agent-side behavioral signature; the SPRT
-machinery would not detect it. $I_8$ extends the witness coverage
-from agent observables to environment observables.
+\textbf{Threshold semantics.}  Without $I_8$, environment manipulation that
+    alters true $\rext$ or other monitored exogenous quantities produces no
+    agent-side behavioral signature; the SPRT machinery would not detect it.
+    $I_8$ extends the witness coverage from agent observables to environment
+    observables.
 
-\textbf{Measurement.}  Environment-side witnesses commit
-observations of exogenous variables to the ledger under the
-substrate-exclusivity discipline of
-\citep[Exogenous~Verification]{lasser2026exo}, with the trust
-model and calibration constraints surfaced as theorem-level
-condition (C12.ENV-WIT) (Theorem~\ref{thm:deployment_safety}).
+\textbf{Measurement.}  Environment-side witnesses commit observations of
+    exogenous variables to the ledger under the substrate-exclusivity
+    discipline of \citep[Exogenous~Verification]{lasser2026exo}, with the trust
+    model and calibration constraints surfaced as theorem-level condition
+    (C12.ENV-WIT) (Theorem~\ref{thm:deployment_safety}).
 
 \textbf{Failure mode (R2, refined).}  Exogenous variables outside
-$V_{\mathrm{env}}$ that produce no threshold-exceeding shift in
-any monitored $v$ (direct or causal) remain Theorem~1 residual~(R2).
+    $V_{\mathrm{env}}$ that produce no threshold-exceeding shift in any
+    monitored $v$ (direct or causal) remain Theorem~1 residual~(R2).
 
-\textbf{New machinery.}
-\citep[Exogenous~Verification]{lasser2026exo} specifies
-substrate-exclusive witness construction for agent-side claims;
-environment-side substrate-exclusive witnesses are new machinery
-this paper builds (separate substrate partition, separate trusted-
-setup, separate ledger commitments).  See
-\S\ref{sec:deployment_tooling} Audit~8 for the calibration
-procedure under (C12.ENV-WIT).
+\textbf{New machinery.} \citep[Exogenous~Verification]{lasser2026exo} specifies
+    substrate-exclusive witness construction for agent-side claims;
+    environment-side substrate-exclusive witnesses are new machinery this paper
+    builds (separate substrate partition, separate trusted-setup, separate
+    ledger commitments).  See \S\ref{sec:deployment_tooling} Audit~8 for the
+    calibration procedure under (C12.ENV-WIT).
 \end{definition}
 
-\subsection{Cooperative-anchoring evasion bounds ($I_9, I_{10}, I_{11}$)}
+\subsection{Cooperative-anchoring evasion bounds (\texorpdfstring{$I_9, I_{10}, I_{11}$}{I9, I10, I11})}
 \label{sec:anchoring_invariants}
 
 These three invariants are introduced in
@@ -352,19 +362,20 @@ authority shifts:
   \{V_{\mathrm{verif}}, V_{\mathrm{gov}}, V_{\mathrm{audit}}\}
   \text{ are publicly attested at frequency } f.
 \]
-\textbf{Threshold semantics.} Without $I_9$, asymmetric capture can
-hollow out the verification layer (witness independence,
-governance, verifier choice) while preserving its outward form. The
-human substrate would continue to participate in what appears to be
-the original verification, but the substrate-exclusivity property
-that gives the cooperative its value would be operationally absent.
-\textbf{Measurement.} The audit cadence $f$ is set by the
-deployment's governance; alerts are triggered when changes to
-verifier identity, witness independence, or governance authority
-are committed without the corresponding cross-substrate
-supermajority.
-\textbf{Failure mode.} Slow erosion of substrate-exclusivity that
-falls below the audit cadence's detection sensitivity is a residual.
+\textbf{Threshold semantics.} Without $I_9$, asymmetric capture can hollow out
+    the verification layer (witness independence, governance, verifier choice)
+    while preserving its outward form. The human substrate would continue to
+    participate in what appears to be the original verification, but the
+    substrate-exclusivity property that gives the cooperative its value would
+    be operationally absent.
+
+\textbf{Measurement.} The audit cadence $f$ is set by the deployment's
+    governance; alerts are triggered when changes to verifier identity, witness
+    independence, or governance authority are committed without the
+    corresponding cross-substrate supermajority.
+
+\textbf{Failure mode.} Slow erosion of substrate-exclusivity that falls below
+    the audit cadence's detection sensitivity is a residual.
 \end{definition}
 
 \begin{definition}[$I_{10}$ --- Coverage/materiality]
@@ -377,22 +388,46 @@ shared verification layer:
   I_{10}: \quad \forall D:\ \mathcal{E}(D) \geq \theta_{\mathrm{material}}
   \implies D \text{ routes through shared verification}.
 \]
-\textbf{Threshold semantics.} Without $I_{10}$, an agent can preserve
-the high-stakes verified workflow with humans while growing a
-captured low-stakes side-domain that uses agent-controlled
-verification. Once the side-domain becomes materially important
-($\mathcal{E} \geq \theta_{\mathrm{material}}$), the cooperative-
-anchoring defense no longer applies because the captured layer has
-its own cooperative anchored to it.
-\textbf{Measurement.} $\mathcal{E}(D)$ is estimated from
-agent-action ledger entries and their downstream effects.
+\textbf{Threshold semantics.} Without $I_{10}$, an agent can preserve the
+    high-stakes verified workflow with humans while growing a captured
+    low-stakes side-domain that uses agent-controlled verification. Once the
+    side-domain becomes materially important ($\mathcal{E} \geq
+    \theta_{\mathrm{material}}$), the cooperative-anchoring defense no longer
+    applies because the captured layer has its own cooperative anchored to it.
+
+\textbf{Measurement.} $\mathcal{E}(D)$ is estimated from agent-action ledger
+    entries and their downstream effects.
+
 \textbf{Failure mode.} An agent that distributes effects across many
-sub-threshold domains, each with $\mathcal{E} < \theta_{\mathrm{material}}$,
-can aggregate into materially-important behavior without any single
-domain triggering the routing requirement. This paper's
-$\theta_{\mathrm{material}}$ should be set conservatively to
-mitigate this.
+    sub-threshold domains, each with $\mathcal{E}(D) <
+    \theta_{\mathrm{material}}$, can aggregate into materially-important
+    behavior without any single domain triggering the routing requirement.
+    Setting $\theta_{\mathrm{material}}$ conservatively only mitigates this in
+    the per-domain estimator; it does not address the aggregation problem
+    itself.
 \end{definition}
+
+The deeper concern is that the number of potential sub-threshold domains a more
+capable agent can distribute effects over grows with capability.  At capability
+$|P|$, an agent can in principle exploit $O(|P|)$ sub-threshold domains, each
+carrying cumulative effect just below $\theta_{\mathrm{material}}$, producing
+$O(|P|) \cdot \theta_{\mathrm{material}}$ aggregate uncovered effect.  This
+re-introduces a capability-dependent vulnerability into an architecture
+designed to be capability-independent.
+
+The structural fix is to require the cumulative-effect estimator $\mathcal{E}$
+to perform \emph{cross-domain aggregation}: rather than per-domain
+$\mathcal{E}(D) < \theta_{\mathrm{material}}$ being sufficient for non-routing,
+require $\sum_{D : \text{causally linked to action class } C} \mathcal{E}(D) <
+\theta_{\mathrm{material}}^{\mathrm{agg}}$ for an aggregate threshold.
+Specifying the cross-domain aggregation correctly --- which causal links count,
+how to bound ``causally linked,'' how to set
+$\theta_{\mathrm{material}}^{\mathrm{agg}}$ intensively in $|P|$ --- is open
+follow-up work.  This paper states $I_{10}$ in the per-domain form and
+acknowledges the sub-threshold aggregation as a structural limitation rather
+than a calibration matter.  Until cross-domain aggregation is specified,
+$I_{10}$'s effectiveness against multi-domain aggregation degrades with
+capability scaling.
 
 \begin{definition}[$I_{11}$ --- Latency bounds]
 \label{inv:I11}
@@ -404,33 +439,34 @@ within the agent's effective action window:
   I_{11}: \quad \forall \text{ action class } C:\
   T_{\mathrm{audit}}(C) \;\leq\; T_{\mathrm{action}}(C) - \Delta_{\mathrm{lead}}.
 \]
-\textbf{Threshold semantics.} Without $I_{11}$, time-asymmetry
-capture exploits the gap between agent operating speed and human
-audit speed. Even if every action is auditable in principle,
-ex-post transparency provides no defense if the agent has already
-acted faster than humans can review.
-\textbf{Measurement.} Action-class timing is logged on the
-verification ledger; audit completion times are similarly logged.
-The latency bound $\Delta_{\mathrm{lead}}$ is set per action class
-based on the action's reversibility and stakes.
-\textbf{Failure mode.} Action classes with $T_{\mathrm{action}} <
-T_{\mathrm{audit}}$ require either rate limiting (slowing the agent),
-timelocks (delaying execution), or circuit breakers (halting
-execution pending audit). Without one of these, $I_{11}$ is violated.
-\textbf{Operational implication.} Throughput costs for high-stakes
-deployments. The deployment-tooling specification
-(\S\ref{sec:deployment_tooling}) discusses tiered enforcement.
+\textbf{Threshold semantics.} Without $I_{11}$, time-asymmetry capture exploits
+    the gap between agent operating speed and human audit speed. Even if every
+    action is auditable in principle, ex-post transparency provides no defense
+    if the agent has already acted faster than humans can review.
 
-\textbf{Connection to (C11.CLK).}  Theorem~1's (C11.CLK) clock-
-comparability condition provides the quantitative companion to
-$I_{11}$'s qualitative time-asymmetry assertion: where $I_{11}$
-requires that audit completes before action, (C11.CLK) requires
-that the SPRT exposure event count $\Nev(\tau_{\mathrm{meta}})$
-exceeds the detection quantile $\Tbeta$ before cascade, with
-calibrated probability $1 - \bclk - \bcal$.  The connection is
-structural: $I_{11}$ treats latency between action and audit;
-(C11.CLK) treats event-throughput before cascade.  Both bound
-time-asymmetry, at different operational scales.
+\textbf{Measurement.} Action-class timing is logged on the verification ledger;
+    audit completion times are similarly logged. The latency bound
+    $\Delta_{\mathrm{lead}}$ is set per action class based on the action's
+    reversibility and stakes.
+
+\textbf{Failure mode.} Action classes with $T_{\mathrm{action}} <
+    T_{\mathrm{audit}}$ require either rate limiting (slowing the agent),
+    timelocks (delaying execution), or circuit breakers (halting execution
+    pending audit). Without one of these, $I_{11}$ is violated.
+
+\textbf{Operational implication.} Throughput costs for high-stakes deployments.
+    The deployment-tooling specification (\S\ref{sec:deployment_tooling})
+    discusses tiered enforcement.
+
+\textbf{Connection to (C11.CLK).}  Theorem~1's (C11.CLK) clock-comparability
+    condition provides the quantitative companion to $I_{11}$'s qualitative
+    time-asymmetry assertion: where $I_{11}$ requires that audit completes
+    before action, (C11.CLK) requires that the SPRT exposure event count
+    $\Nev(\tau_{\mathrm{meta}})$ exceeds the detection quantile $\Tbeta$ before
+    cascade, with calibrated probability $1 - \bclk - \bcal$.  The connection
+    is structural: $I_{11}$ treats latency between action and audit; (C11.CLK)
+    treats event-throughput before cascade.  Both bound time-asymmetry, at
+    different operational scales.
 \end{definition}
 
 \subsection{Summary table}
@@ -443,7 +479,7 @@ observability.
 \begin{table}[h]
 \centering
 \footnotesize
-\caption{The eleven operational invariants of This paper's deployment-safety theorem.}
+\caption{The eleven operational invariants of this paper's deployment-safety theorem.}
 \label{tab:invariants}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{@{}p{0.04\textwidth} p{0.21\textwidth} p{0.39\textwidth} p{0.26\textwidth}@{}}
@@ -452,10 +488,10 @@ observability.
 \midrule
 $I_1$ & $\rhomincross > \rho^*$ & Cross-substrate redundancy floor & \citep[Phase Redundancy]{lasser2026phase} \\
 $I_2$ & $\Lyap < \epsilon_{\mathrm{safe}}$ & Lyapunov error within safety threshold & \citep[Phase Redundancy]{lasser2026phase} \\
-$I_3$ & $\betaL > \beta^*$ & B-to-C ratio floor & \citep[Revealed Sacrifice]{lasser2026paper8a} \\
-$I_4$ & $\rsub < r^*$ & Subsumption frequency ceiling & \citep[Phase Redundancy]{lasser2026phase} \\
-$I_5$ & $\HHI < H^*$ & Trade-flow HHI ceiling; operationalizes \citep[Microfoundation]{lasser2026micro} Conjecture~1 & \citep[Need Sufficiency]{lasser2026paper8b}, \citep[Microfoundation]{lasser2026micro} \\
-$I_6'$ & $\mindep \geq m^* \geq 3$ & Failure-correlation-independent substrate count & \citep[Phase Redundancy]{lasser2026phase} (refined) \\
+$I_3$ & $\rsub < r^*$ & Subsumption frequency ceiling & \citep[Phase Redundancy]{lasser2026phase} \\
+$I_4$ & $\betaL > \beta^*$ & B-to-C ratio floor & \citep[Revealed Sacrifice]{lasser2026paper8a} \\
+$I_5$ & $\HHI < H^*$ & Trade-flow HHI ceiling; threshold side of the scoped Concentration-Gap discharge under Assumption~\ref{ass:concgap_conditions} & \citep[Need Sufficiency]{lasser2026paper8b}, \citep[Theorem~2]{lasser2026foundations} \\
+$I_6$ & $\mindep \geq m^* \geq 3$ & Failure-correlation-independent substrate count & \citep[Phase Redundancy]{lasser2026phase} (refined) \\
 $I_7$ & Governance-gated bundle individuation & Channel~3 discipline & \citep[Exogenous Verification]{lasser2026exo}, \citep[Microfoundation]{lasser2026micro} \\
 $I_8$ & Environment-side witnesses & Environment-manipulation coverage & New \\
 $I_9$ & Substrate-exclusivity observability & Asymmetric capture bound & New \\
@@ -473,31 +509,21 @@ violations trigger SPRT detection
 time (Lemma~\ref{lem:5d}) before the bound deteriorates beyond
 the safe region.
 
-\subsection{Conjecture-dependence audit}
+\subsection{Conjecture-dependence}
 \label{sec:conjecture_audit}
 
 Of the eleven invariants, $I_5$ (HHI ceiling) is the only one
-whose interpretation depends on an unproved conjecture
-(\citep[Microfoundation]{lasser2026micro}'s Conjecture~1). The other ten are derived from
-established source-paper results.
+whose interpretation routes through the
+\citep[Microfoundation]{lasser2026micro} Concentration-Gap
+conjecture. The other ten derive from established source-paper
+results.
 
-This is an explicit deferral: This paper's deployment claim is
-conditional on $I_5$ being a valid surrogate for the
-optimization-pressure regime Conjecture~1 names. If empirical work
-in a follow-up paper (the channel-mediation conjecture or the
-HHI--$\Delta r_K$ structural relationship, deferred per
-\S\ref{sec:scope}) establishes the connection, $I_5$ becomes
-fully derived. Until then, $I_5$ is operationalized but not
-proven sufficient.
-
-The other ten invariants do not have this conjecture-dependence.
-$I_1$, $I_2$, $I_4$ derive from \citep[Phase~Redundancy]{lasser2026phase}'s phase boundary theorem
-(proved). $I_3$ derives from \citep[Revealed~Sacrifice]{lasser2026paper8a}'s lower bound theorem
-(proved). $I_6'$ derives from \citep[Phase~Redundancy]{lasser2026phase}'s substrate-distinctness
-remark (proved, with This paper's failure-correlation upgrade
-formalized in Definition~\ref{def:joint_indep}). $I_7$ derives
-from \citep[Exogenous~Verification]{lasser2026exo}'s governance fork (proved). $I_8$ extends \citep[Exogenous~Verification]{lasser2026exo}'s
-witness construction to environment observables (mechanical
-extension). $I_9$, $I_{10}$, $I_{11}$ are derived in
-\S\ref{sec:substrate_anchoring} from the cooperative-anchoring
-property (this paper).
+$I_5$'s interpretation does not depend on the universal model-free
+Concentration-Gap conjecture directly: \citep[Theorem~2]{lasser2026foundations}
+proves a scoped Concentration-Gap result under four structural conditions (REP,
+DISP, COAL, EMB; collected as Assumption~\ref{ass:concgap_conditions}), and the
+deployment claim's Layer~1 binding via $I_5$ follows from that scoped theorem.
+The conjecture-dependence is replaced by structural-condition dependence;
+closing the universal conjecture would strengthen the result by removing the
+structural conditions, but is deferred indefinitely
+(\S\ref{sec:disc_indefinite}).

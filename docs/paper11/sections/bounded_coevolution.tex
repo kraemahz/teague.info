@@ -1,0 +1,328 @@
+\section{Bounded co-evolution as a corollary}
+\label{sec:bounded_coev}
+
+The bounded co-evolution assumption of
+\citep[Condition~(C7)]{lasser2026paper10} (invoked as condition (C7)
+of the deployment-safety theorem) asserts that the per-channel
+coupling magnitude $\bar{M}$ is bounded uniformly by a constant
+depending on deployment-class parameters but independent of $|P|$.
+This section derives the assertion from (C5.HOEFF), a new upper
+exposure-rate cap (C7.RATE), and the verification protocol's
+channel-projection structure under (C5.MULT).
+Audit~4 of \citep[\S 7]{lasser2026paper10} previously specified an
+empirical procedure for measuring $\bar{M}$ post-hoc; under the
+derivation below, the audit reduces to certifying the three
+structural inputs and computing $\bar{M}$ from primitives.
+
+\subsection{Per-channel coupling magnitude (definition)}
+
+\subsubsection{$j$-supported perturbations}
+
+A \emph{$j$-supported signed measure} is a function
+$\Delta: A \to \mathbb{R}$ with $\Delta(a) = 0$ for $a \notin A_j$
+and $\sum_{a \in A_j} \Delta(a) = 0$. The set of admissible
+$j$-perturbations
+$\mathcal{D}_j$ is the convex subset of $j$-supported signed
+measures satisfying $q_0 + \Delta \geq 0$ pointwise (so that
+$q_0 + \Delta$ is a valid probability measure on $A$).
+
+The ambient \emph{linear} space of $j$-supported zero-sum signed
+measures is
+\begin{equation}
+\label{eq:Hj-def-companion}
+  H_j \;:=\; \{\Delta : A \to \mathbb{R} \mid \Delta(a) = 0
+  \text{ for } a \notin A_j, \;\; \textstyle\sum_a \Delta(a) =
+  0\}.
+\end{equation}
+The functional $\Delta \mapsto \Delta\mu_{j'}[\Delta] := \sum_{a
+\in A_{j,j'}} \Delta(a) \ell^{(j')}(a)$ extends linearly from
+$\mathcal{D}_j$ to all of $H_j$.
+
+\subsubsection{Per-step coupling magnitude}
+
+\begin{definition}[Per-step coupling magnitude]
+\label{def:M-step}
+For $j \neq j'$, the \emph{per-step pairwise coupling magnitude}
+of channel $j$ on channel $j'$ is the operator norm of the linear
+functional $\Delta \mapsto \Delta\mu_{j'}[\Delta]$ on the linear
+space $H_j$ under the $\ell_1$ norm:
+\begin{equation}
+\label{eq:M-step-def}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D})
+  \;:=\; \sup_{\Delta \in H_j,\; \Delta \neq 0}
+  \;\frac{\big| \Delta\mu_{j'}[\Delta] \big|}{\|\Delta\|_1}.
+\end{equation}
+
+The \emph{per-step deployment coupling magnitude} is
+$\bar{M}^{\mathrm{step}}(\mathcal{D}) := \max_{j \neq j'}
+M_{j \to j'}^{\mathrm{step}}(\mathcal{D})$.
+\end{definition}
+
+By inclusion $\mathcal{D}_j \subseteq H_j$, the operator norm on
+$H_j$ upper-bounds the admissible-restricted supremum
+$\sup_{\Delta \in \mathcal{D}_j \setminus \{0\}}
+|\Delta\mu_{j'}[\Delta]|/\|\Delta\|_1$. We work with the
+$H_j$-bound throughout; equality of the two suprema requires
+$q_0$ to have strictly positive mass on every $a \in A_j$ (so
+$\mathcal{D}_j$ contains a neighborhood of $0$ in $H_j$), which
+we do not assume.
+
+\subsection{Per-step closed-form bound}
+
+\begin{lemma}[Per-step coupling bound]
+\label{lem:per-step-companion}
+Under (C5.HOEFF) (per-step LLR clipped to $[-\Bclip, \Bclip]$) and
+the zero-outside-engagement convention, for every $j \neq j'$:
+\begin{equation}
+\label{eq:per-step-bound-companion}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D}) \;\leq\; \Bclip,
+\end{equation}
+unconditionally. When channels are action-disjoint
+($A_{j, j'} = \emptyset$), $M_{j \to j'}^{\mathrm{step}} = 0$.
+\end{lemma}
+
+\begin{proof}
+For any $\Delta \in H_j$ with $\Delta \neq 0$:
+\begin{align*}
+  \big| \Delta\mu_{j'}[\Delta] \big|
+  &= \big| \sum_{a \in A_{j, j'}} \Delta(a) \ell^{(j')}(a) \big|
+  \leq \sum_{a \in A_{j, j'}} |\Delta(a)| \cdot |\ell^{(j')}(a)|
+  \\ &\leq \Bclip \sum_{a \in A_{j, j'}} |\Delta(a)|
+  \leq \Bclip \cdot \|\Delta\|_1.
+\end{align*}
+Dividing by $\|\Delta\|_1 \neq 0$ and taking supremum over $H_j
+\setminus \{0\}$ gives \eqref{eq:per-step-bound-companion}. When
+$A_{j, j'} = \emptyset$, the sum is empty and
+$\Delta\mu_{j'}[\Delta] = 0$ for all $\Delta \in H_j$, giving
+$M_{j \to j'}^{\mathrm{step}} = 0$.
+\end{proof}
+
+\subsection{Cumulative cascade-window bound}
+
+\subsubsection{Pathwise perturbation class}
+
+A \emph{pathwise $j$-perturbation over the cascade window} is a
+sequence $\{\Delta_n\}_{n=1}^{\Nev}$ where each
+$\Delta_n \in H_j$, applied at SPRT exposure step $n$. Two
+budget conventions are operationally relevant:
+\begin{itemize}
+\item \textbf{Per-step budget:} $\sup_n \|\Delta_n\|_1 \leq 1$.
+\item \textbf{Total budget:} $\sum_n \|\Delta_n\|_1 \leq 1$.
+\end{itemize}
+
+The cumulative cross-channel response is
+\[
+  \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n\}\big]
+  \;:=\; \sum_{n=1}^{\Nev(\taumeta)} \Delta\mu_{j'}[\Delta_n].
+\]
+
+\subsubsection{The new condition: upper exposure-rate cap (C7.RATE)}
+
+\begin{assumption}[Upper exposure-rate cap, (C7.RATE)]
+\label{ass:c7-rate}
+There exists a deployment-class action rate cap $\lammax > 0$
+independent of $|P|$, such that the SPRT exposure event count
+satisfies
+\begin{equation}
+\label{eq:c7-rate-companion}
+  \Nev(\taumeta) \;\leq\; \lammax \cdot \taumeta
+\end{equation}
+deterministically (operator-enforced via rate limits or action
+bounds). This is distinct from (C11.CLK) of
+\citep[Deployment Safety]{lasser2026paper10} which gives a lower bound on
+$\Nev(\taumeta)$ for detection purposes; (C7.RATE) is an upper
+bound for coupling-control purposes.
+
+Operationally, $\lammax$ is calibrated by the deployment's rate
+limits, action bounds, and channel-coupling structure (specified
+in \S\ref{sec:audits}).
+\end{assumption}
+
+\subsubsection{Cumulative bound}
+
+\begin{lemma}[Cumulative coupling bound]
+\label{lem:cumulative-companion}
+Under (C5.HOEFF), the zero-outside-engagement convention, and
+(C7.RATE):
+
+\emph{(a) Pairwise} cumulative coupling, per-step budget
+$\sup_n \|\Delta_n\|_1 \leq 1$:
+\begin{equation}
+\label{eq:pairwise-cum-companion}
+  \sup_{\substack{\Delta_n \in H_j \;\forall n \\
+        \sup_n \|\Delta_n\|_1 \leq 1}}
+  \big| \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n\}\big] \big|
+  \;\leq\; \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+
+\emph{(b1) Aggregate-incoming} cumulative coupling under
+\textbf{total per-step budget} $\sup_n \sum_j \|\Delta_n^{(j)}\|_1
+\leq 1$:
+\begin{equation}
+\label{eq:aggregate-total-companion}
+  \sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \sum_j \|\Delta_n^{(j)}\|_1 \leq 1}}
+  \big| \sum_{j \neq j'}
+    \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+
+\emph{(b2) Aggregate-incoming} cumulative coupling under
+\textbf{per-source per-step budget} $\sup_n
+\|\Delta_n^{(j)}\|_1 \leq 1$ for every $j$:
+\begin{equation}
+\label{eq:aggregate-source-companion}
+  \sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \|\Delta_n^{(j)}\|_1 \leq 1 \;\forall j}}
+  \big| \sum_{j \neq j'}
+    \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; (\Kch - 1) \cdot \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+
+The right-hand sides are deployment-class constants intensive in
+$|P|$ over $\mathcal{D}$ ($\Bclip$ from (C5.HOEFF), $\lammax$
+from (C7.RATE), $\taumeta$ from
+\citep[Phase Redundancy]{lasser2026phase}'s scaling, $\Kch$ from
+(C5.MULT)).
+\end{lemma}
+
+\begin{proof}
+\emph{Part (a).} By Lemma~\ref{lem:per-step-companion},
+$|\Delta\mu_{j'}[\Delta_n]| \leq \Bclip \cdot \|\Delta_n\|_1
+\leq \Bclip$ for each $n$ when $\sup_n \|\Delta_n\|_1 \leq 1$.
+Summing:
+\[
+  \big| \mu_{j'}^{\mathrm{cum}} \big| \leq
+  \sum_{n=1}^{\Nev(\taumeta)} |\Delta\mu_{j'}[\Delta_n]|
+  \leq \Nev(\taumeta) \cdot \Bclip
+  \leq \lammax \cdot \taumeta \cdot \Bclip,
+\]
+the last inequality by (C7.RATE).
+
+\emph{Part (b1) (total per-step budget).} At each step $n$,
+$\sum_j \|\Delta_n^{(j)}\|_1 \leq 1$. Each per-source contribution
+is bounded by $\Bclip \cdot \|\Delta_n^{(j)}\|_1$ via
+Lemma~\ref{lem:per-step-companion}. Summing over $j \neq j'$ at
+each step:
+\[
+  \big| \sum_{j \neq j'} \Delta\mu_{j'}[\Delta_n^{(j)}] \big|
+  \leq \Bclip \cdot \sum_{j \neq j'} \|\Delta_n^{(j)}\|_1
+  \leq \Bclip.
+\]
+Summing over $n$ and applying (C7.RATE) gives
+\eqref{eq:aggregate-total-companion}.
+
+\emph{Part (b2) (per-source per-step budget).} Now each source
+$j$ has $\|\Delta_n^{(j)}\|_1 \leq 1$ independently. Per-source
+contributions remain bounded by $\Bclip$ each; summing over
+$\Kch - 1$ sources:
+\[
+  \big| \sum_{j \neq j'} \Delta\mu_{j'}[\Delta_n^{(j)}] \big|
+  \leq (\Kch - 1) \cdot \Bclip.
+\]
+Summing over $n$ and applying (C7.RATE) gives
+\eqref{eq:aggregate-source-companion}. Which budget convention is
+operationally relevant depends on the audit specification of
+admissible adversarial classes; we state both for completeness.
+\end{proof}
+
+\subsection{Bounded co-evolution as a corollary of primitive parameters}
+
+\begin{theorem}[Bounded co-evolution corollary]
+\label{thm:c7-corollary}
+Under (C5.HOEFF) per-step LLR clipping, (C5.MULT) channel
+multiplicity bound, (C7.RATE) upper exposure-rate cap, and the
+$\taumeta$ scaling of \citep[Phase Redundancy]{lasser2026phase},
+the deployment's cumulative coupling magnitude
+$\bar{M}^{\mathrm{cum}}(\mathcal{D})$ over the cascade window
+$\taumeta$ satisfies
+\begin{equation}
+\label{eq:c7-corollary}
+  \bar{M}^{\mathrm{cum}}(\mathcal{D}) \;\leq\; C \cdot \Bclip
+  \cdot \lammax \cdot \taumeta,
+\end{equation}
+where $C \in \{1, \Kch - 1\}$ depending on the budget convention
+(pairwise, total, or per-source). All four factors on the RHS are
+deployment-class constants intensive in $|P|$.
+
+In particular: \citep[Condition~(C7)]{lasser2026paper10}'s
+bounded-co-evolution claim that $\bar{M}$ is bounded by a
+$|P|$-independent constant follows directly from
+\eqref{eq:c7-corollary}, with the constant given explicitly in
+terms of primitive deployment parameters.
+\end{theorem}
+
+\begin{proof}
+Direct application of Lemma~\ref{lem:cumulative-companion}.
+Intensivity of each RHS factor: $\Bclip$ from (C5.HOEFF) is a
+deployment-class constant; $\lammax$ from (C7.RATE) is operator-
+enforced and deployment-class; $\taumeta$ from
+\citep{lasser2026phase} depends on deployment-class redundancy
+and rate parameters but not on $|P|$; $\Kch$ from (C5.MULT) is
+fixed before deployment.
+\end{proof}
+
+\subsection{Optional sharper bound under coalition-overlap stability}
+
+The basic Theorem~\ref{thm:c7-corollary} bound uses only
+$\|\Delta\|_1 \leq 1$ to get $|\Delta\mu_{j'}| \leq \Bclip$. A
+sharper bound is available when the deployment imposes an
+additional structural condition on the channel partition's
+shared-action mass:
+
+\begin{definition}[Optional overlap-mass stability, (C5.OVL)]
+\label{def:c5-ovl}
+The channel partition's shared-action mass is bounded by a
+deployment-class constant $Q_{\max} < 1$, in the sense that for
+every $j \neq j'$,
+\[
+  \sup_{\Delta \in H_j,\; \Delta \neq 0}
+  \frac{\sum_{a \in A_{j, j'}} |\Delta(a)|}{\|\Delta\|_1}
+  \;\leq\; Q_{\max}.
+\]
+\end{definition}
+
+When (C5.OVL) is adopted, the per-step bound in
+Lemma~\ref{lem:per-step-companion} sharpens to
+$M_{j \to j'}^{\mathrm{step}} \leq Q_{\max} \cdot \Bclip$, and the
+cumulative bound in Theorem~\ref{thm:c7-corollary} sharpens to
+$\bar{M}^{\mathrm{cum}} \leq C \cdot Q_{\max} \cdot \Bclip \cdot
+\lammax \cdot \taumeta$. The intensivity claim does not require
+(C5.OVL); only strict-smallness ($\bar{M} \to 0$ as $Q_{\max} \to
+0$, i.e., as channels become action-disjoint) requires it.
+
+\subsection{Lemma~1 intensivity step}
+
+\citep[Lemma~1, Step~6]{lasser2026paper10} (intensivity step in
+the Goodhart-slack composition) requires
+$(\epsnonresCoev)_+ \leq K_{\mathrm{coev}} \cdot \bar{M}$ to be
+bounded by a $|P|$-independent constant, where $K_{\mathrm{coev}}$
+is the structural co-evolution constant from
+\citep{lasser2026micro}'s composition proposition.
+Theorem~\ref{thm:c7-corollary} provides this directly:
+\begin{equation}
+  (\epsnonresCoev)_+ \;\leq\; K_{\mathrm{coev}} \cdot
+  \bar{M}^{\mathrm{cum}} \;\leq\; K_{\mathrm{coev}} \cdot C \cdot
+  \Bclip \cdot \lammax \cdot \taumeta,
+\end{equation}
+all factors deployment-class constants. The Goodhart-slack
+intensivity property of \citep[Deployment Safety]{lasser2026paper10}'s deployment
+claim follows.
+
+\subsection{Failure-mode decomposition}
+
+\citep[\S 10.2]{lasser2026paper10}'s sensitivity analysis
+characterized bounded co-evolution failure as a hard-failure mode
+with no graceful-degradation pathway. Under
+Theorem~\ref{thm:c7-corollary}, the failure mode factors through
+the failure of (C7.RATE), (C5.HOEFF), or the channel-projection
+structure --- each of which has its own audit-detectable failure
+signal. The hard-failure characterization is therefore replaced
+by a structural diagnosis: \emph{which} primitive condition has
+failed, and how the deployment can restore it.
+
+The remainder of \citep[\S 10.2]{lasser2026paper10}'s
+sensitivity analysis simplifies correspondingly: the
+bounded-co-evolution paragraph becomes a forward reference to
+this section, with the failure-mode taxonomy decomposed across
+(C5.HOEFF), (C7.RATE), and channel-projection structure.

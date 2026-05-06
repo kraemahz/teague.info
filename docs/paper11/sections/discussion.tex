@@ -1,0 +1,137 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What the universal Concentration-Gap conjecture would require}
+
+The Concentration-Gap conjecture of
+\citep[Microfoundation]{lasser2026micro} is universal:
+optimization pressure on the proxy correlates with proxy-truth gap
+exploitation, in any deployment context.
+Theorem~\ref{thm:concgap-scoped} discharges only a \emph{scoped}
+version under (REP), (DISP), (COAL), embedding compatibility
+(Assumption~\ref{ass:embedding-companion}), and the
+Lipschitz-transfer machinery of \citep{lasser2026micro}. The
+universal conjecture would additionally require:
+
+\begin{itemize}
+\item A formal optimizer / selection model that captures
+  ``optimization pressure'' as a structural property of agents
+  rather than as the empirical correlate (HHI) used here. Existing
+  candidates include the mesa-optimization framework of
+  \citep{hubinger2019risks} and the formal-Goodhart machinery of
+  \citep{elmhamdi2024goodhart, majka2025strong}, none of which
+  alone yields a full proof.
+\item A characterization of ``gap exploitation'' robust to the
+  specific functional forms of $\Pproxy$ and $\Ttruth$.
+  Theorem~\ref{thm:concgap-scoped} works at the proxy-truth-norm
+  level; the universal conjecture would need to characterize the
+  alignment-property-level slack $|g(\Ttruth) - g(\Pproxy)|$,
+  which requires inverse-Lipschitz structure on $g$ not currently
+  available in the GFM apparatus.
+\end{itemize}
+
+This is a research-program target rather than a technical
+extension. The scoped version is achievable; a universal
+model-free version is not, given current machinery.
+
+\subsection{What the $g$-level reverse direction would require}
+
+Theorem~\ref{thm:concgap-scoped}'s reverse direction operates at
+the $\|\Pproxy - \Ttruth\|$ level: under high HHI plus separation
+plus directional cancellation, the proxy-truth norm is bounded
+below. The Lipschitz transfer of \citep[Theorem
+2]{lasser2026micro} is forward-only, so this norm-level lower
+bound does not transfer to a lower bound on $|g(\Ttruth) -
+g(\Pproxy)|$.
+
+Strengthening the reverse to the $g$-level would require an
+additional non-degeneracy condition on $g$: a constant $g$
+provides an immediate counterexample
+($|g(T) - g(P)| = 0$ regardless of $\|P - T\|$). The natural
+condition is bi-Lipschitz invertibility of $g$ on the relevant
+subspace, but this is a strong restriction on the alignment
+property's functional form.
+
+For deployment-claim purposes, the norm-level reverse is
+sufficient: it tells operators the regime in which non-trivial
+proxy-truth distortion is structurally guaranteed, which the
+detection layer (Layer 2) of \citep[Deployment Safety]{lasser2026paper10} can act
+on. The $g$-level reverse would strengthen the result but is not
+required for the deployment claim's operational utility.
+
+\subsection{What the latent-coalition residual would require}
+
+The (COAL) condition partitions counterparties whose correlations
+are detected by audit; the latent-coalition residual
+$\eta_\mathrm{latent}$ absorbs undetected-coordination risk as a
+\emph{norm bound} on the residual error term $e_\mathrm{latent}
+\in \mathcal{V}$ from
+Assumption~\ref{ass:embedding-companion}: $\|e_\mathrm{latent}\|
+\leq \eta_\mathrm{latent}$.
+
+Bounding $\eta_\mathrm{latent}$ in a specific deployment requires
+calibrating the audit's detection power against a worst-case
+deviation magnitude: $\eta_\mathrm{latent} \leq p_\mathrm{miss}
+\cdot \|\Delta\|_{\max}$ where $p_\mathrm{miss}$ is the probability
+that a coalition of given size escapes detection thresholds and
+$\|\Delta\|_{\max}$ is the worst-case per-counterparty deviation
+in the deployment's threat model. The audit specifies the
+detection thresholds, the detection-power model, and the
+one-sided upper-confidence procedure in (COAL)'s procedure
+(\S\ref{sec:audits}); $p_\mathrm{miss}$ and $\|\Delta\|_{\max}$
+are calibrated through that procedure rather than read off raw
+operating statistics, and the certification semantics this paper
+inherits do not derive their values from first principles.
+
+\subsection{Connection to existing Goodhart literature}
+
+The Concentration-Gap selection theorem fits into the broader
+formal-Goodhart literature in a specific position:
+\begin{itemize}
+\item It extends \citep{manheim2019categorizing}'s Adversarial Goodhart
+  variant by giving an explicit upper bound on the proxy-truth
+  divergence in terms of selection concentration, where Manheim
+  \& Garrabrant give a qualitative taxonomy.
+\item It complements \citep{elmhamdi2024goodhart}'s tail-based
+  formal Goodhart by addressing the \emph{selection-induced} gap
+  (where this paper sits) rather than the \emph{tail-event}
+  gap (where El-Mhamdi \& Hoang sit). The two are independent
+  failure modes; both should hold for the deployment claim to
+  bind.
+\item It fits \citep{majka2025strong}'s Strong/Weak/Benign
+  Goodhart classification at the ``Weak Goodhart'' boundary:
+  the proxy-truth gap is bounded under structural conditions,
+  but the conditions can fail (Strong Goodhart) or be irrelevant
+  (Benign Goodhart).
+\end{itemize}
+
+The selection theorem does not subsume any of these works; it
+combines their perspectives into a single deployment-relevant
+result.
+
+\subsection{Connection to bounded co-evolution failure modes}
+
+Theorem~\ref{thm:c7-corollary} replaces the
+free-floating-constant assumption of bounded co-evolution with a
+derivation from primitive parameters. The failure modes of
+bounded co-evolution now factor through specific structural
+conditions:
+\begin{itemize}
+\item (C5.HOEFF) failure: per-step LLR is unbounded, so
+  $\Bclip$ is undefined. Detection: SPRT-applicability audit
+  (paper 10 Audit 7) catches this.
+\item (C7.RATE) failure: exposure event count grows faster than
+  $\lammax \cdot \taumeta$. Detection: (C7.RATE) audit (this
+  paper, \S\ref{sec:audits}) catches this.
+\item Channel-projection failure: ledger event-classification
+  policy doesn't respect the zero-outside-engagement convention.
+  Detection: structural-projection audit (this paper,
+  \S\ref{sec:audits}) catches this.
+\end{itemize}
+
+This decomposition is the structural payoff of
+Theorem~\ref{thm:c7-corollary}: bounded-co-evolution failure is
+no longer an opaque single-mode risk but a triage of three
+specific structural-condition failures, each with its own audit
+detection.
+

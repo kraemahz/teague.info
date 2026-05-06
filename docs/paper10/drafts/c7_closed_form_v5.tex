@@ -1,0 +1,770 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+
+\newcommand{\Bclip}{B_{\mathrm{clip}}}
+\newcommand{\Kch}{K_{\mathrm{ch}}}
+\newcommand{\Aadv}{\mathcal{A}_{\mathrm{adv}}}
+\newcommand{\Pproxy}{P^{\mathrm{proxy}}}
+\newcommand{\Ttruth}{T^{\mathrm{truth}}}
+\newcommand{\epsnonresCoev}{\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}}}
+\newcommand{\Nev}{N_{\mathrm{ev}}}
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+\newcommand{\lammax}{\lambda_{\max}}
+\newcommand{\taumeta}{\tau_{\mathrm{meta}}}
+\newcommand{\Kchmulti}{K_{\mathrm{ch}}^{\mathrm{multi}}}
+\newcommand{\bclk}{b_{\mathrm{clk}}}
+\newcommand{\bcal}{b_{\mathrm{cal}}}
+
+\title{C7 closed-form derivation, v5: \\
+Lemma 1 over $H_j$, normalized conditional baselines, \\
+explicit $H_j$ membership in aggregate suprema}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal and changes from v4}
+
+\subsection{Goal}
+
+Same as v4: derive (C7) bounded co-evolution as a corollary of
+(C5.HOEFF), (C7.RATE), and channel-projection structure.
+
+\subsection{Changes from v4 (codex review responses)}
+
+\begin{enumerate}
+\item \textbf{$H_j$ scoping carried through to Lemma 1 (P1).}  v4
+  defined $M_{j \to j'}^{\mathrm{step}}$ over $H_j$ but Lemma~1's
+  proof was stated for $\Delta \in \mathcal{D}_j$.  v5 proves
+  Lemma~1 for $\Delta \in H_j$ directly (the inequality is purely
+  algebraic; positivity of $q_0 + \Delta$ is not needed).  v5 also
+  downgrades v4's equality-of-suprema claim to the upper-bound
+  direction; equality requires $q_0$ to have strictly positive
+  mass on every $a \in A_j$, which we do not assume.
+
+\item \textbf{Conditional baseline normalization fixed (P1).}  v4
+  defined $p_0^{(j)} := \bar{p}_0^{(j)}|_{V_j}$, which is a
+  sub-probability measure of mass $1 - \epsilon_j^{(0)}$, but
+  called it ``the conditional baseline'' as a probability measure.
+  v5 normalizes: $p_0^{(j)}(v) := \bar{p}_0^{(j)}(v) / (1 -
+  \epsilon_j^{(0)})$, defined when $\epsilon_j^{(0)} < 1$.
+  Assumption~1's projective consistency is restated using the
+  conditional pushforward
+  $\mathrm{Law}(\pi_j(a) \mid a \in A_j) = p_0^{(j)}$.
+
+\item \textbf{Aggregate suprema membership made explicit (P2).}
+  v4's Lemma~2(b1)/(b2) suprema listed only the budget condition.
+  v5 adds explicit $\Delta_n^{(j)} \in H_j$ membership to the
+  displayed suprema.
+\end{enumerate}
+
+\section{(legacy) Goal and changes from v3}
+
+\subsection{Goal}
+
+Derive (C7) bounded co-evolution as a corollary of (C5.HOEFF), a
+new explicit upper exposure-rate cap (C7.RATE), and the
+verification protocol's channel-projection structure.  v4 closes
+the four definitional cleanups codex flagged in v3: scoping the
+operator norm to a true linear space, type-correcting projective
+consistency, splitting aggregate-incoming budget conventions, and
+explicit exposure-binning for continuous-time channels.
+
+\subsection{Changes from v3 (codex review responses)}
+
+\begin{enumerate}
+\item \textbf{Operator-norm scoping fixed (P1).} v3 called the
+  supremum over admissible perturbations a ``proper operator
+  norm,'' but $\mathcal{D}_j$ is not a vector space because
+  admissibility includes $q_0 + \Delta \geq 0$.  v4 introduces the
+  linear space $H_j$ of $j$-supported zero-sum signed measures
+  (no positivity constraint), defines the operator norm on $H_j$,
+  and notes that the operator-norm bound on $H_j$ upper-bounds
+  the admissible-restricted supremum.
+
+\item \textbf{Projective consistency type-corrected (P1).} v3's
+  $(\pi_j)_* q_0 = p_0^{(j)}$ was type-mismatched: the pushforward
+  is on $V_j \cup \{*_j\}$ but $p_0^{(j)}$ was defined on $V_j$.
+  v4 introduces extended baselines $\bar{p}_0^{(j)}$ on $V_j \cup
+  \{*_j\}$, with the \emph{normalized} conditional baseline
+  $p_0^{(j)}(v) := \bar{p}_0^{(j)}(v)/(1 - \epsilon_j^{(0)})$
+  given engagement (v5 fix; v4 used the un-normalized restriction)
+  and $\epsilon_j^{(0)} := \bar{p}_0^{(j)}(\{*_j\})$ as the
+  baseline null-mass.
+
+\item \textbf{Aggregate-incoming clauses split (P1).} v3's Lemma
+  2(b) mixed total-per-step budget ($\sum_j \|\Delta_n^{(j)}\|_1
+  \leq 1$) with per-source budget ($\sup_j \|\Delta_n^{(j)}\|_1
+  \leq 1$): the proof derived $\Bclip \cdot \lammax \cdot \taumeta$
+  for the former but the statement claimed $(\Kch - 1)$ times that.
+  v4 splits into two sub-lemmas: (b1) total per-step budget gives
+  $C = 1$; (b2) per-source per-step budget gives $C = \Kch - 1$.
+
+\item \textbf{Idle-bucket exposure-binning made explicit (P2).}
+  v3's idle bucket worked but was operationally underspecified for
+  continuous-time channels (Poisson cooperative-output rate).  v4
+  adds explicit deterministic-binning of the cascade window
+  $[0, \taumeta]$ into $\Nev(\taumeta)$ exposure bins, with $a_0$
+  identified as ``count zero in this bin.''
+\end{enumerate}
+
+\subsection{Changes from v2 (carried forward from v3)}
+
+The following changes from v2 are preserved in v4:
+
+\begin{enumerate}
+\item \textbf{(C11.CLK) misuse fixed.}  v2 used (C11.CLK) as
+  an upper rate cap, but it is a lower throughput floor.  v3/v4
+  use a separate (C7.RATE) condition for the upper rate cap.
+
+\item \textbf{Perturbation model generalized.}  v2's zero-sum
+  $\Delta$ couldn't represent Poisson rate shifts.  v3/v4 use the
+  idle action $a_0$ so rate changes are representable.
+
+\item \textbf{Multi-label projection maps.}  v2's binary
+  incidence $I_j: A \to \{0,1\}$ was too coarse.  v3/v4 use
+  per-channel projection maps $\pi_j: A \to V_j \cup \{*_j\}$.
+
+\item \textbf{(C5.OVL) demoted to optional.}  v2's
+  overlap-mass stability sub-clause is unnecessary for
+  intensivity ($Q^*$ is auto in $[0,1]$).  v3/v4 demote it to
+  optional strict-smallness refinement.
+
+\item \textbf{Multi-channel aggregate bound.}  v3 introduced the
+  pairwise vs.\ aggregate-incoming distinction; v4 sharpens this
+  into properly-stated total-budget / per-source-budget clauses
+  (item 3 above).
+
+\item \textbf{Pathwise window budget specified.}  v3 introduced
+  pathwise perturbation classes; v4 inherits.
+\end{enumerate}
+
+\section{Setup}
+
+\subsection{Action space with idle bucket}
+
+The verification ledger's per-step state space is $A = A^{\mathrm{ev}}
+\sqcup \{a_0\}$, where $A^{\mathrm{ev}}$ is the set of recordable
+event types and $a_0$ is the \emph{idle action} representing
+``no observable event in this step.''  Per-step probability measures
+on $A$ then represent both event distributions (under
+$A^{\mathrm{ev}}$) and idle frequency (mass on $a_0$).  This
+captures Poisson-rate-shift perturbations as redistributions
+between $a_0$ and $A^{\mathrm{ev}}$.
+
+\textbf{Continuous-time observations and exposure binning.}  For
+channels whose underlying observation process is continuous-time
+(e.g., a Poisson cooperative-output rate channel),
+``per-step'' is the discrete observation window obtained by
+deterministic exposure binning of the continuous process: the
+cascade window $[0, \taumeta]$ is partitioned into $\Nev(\taumeta)$
+deterministic exposure bins, and each bin's outcome is recorded
+as a single per-step action.  Under this binning, $a_0$
+corresponds to ``count zero in this bin'' and $A^{\mathrm{ev}}$
+includes the positive-count buckets used by the ledger
+(typically count-1 and count-$\geq 2$, or finer if the audit
+specification calls for higher resolution).  Bin width is a
+deployment-class operational parameter calibrated together with
+$\lammax$ in (C7.RATE).
+
+\subsection{Channel projection structure}
+
+The deployment monitors $\Kch$ channels indexed by $j \in
+\{1, \ldots, \Kch\}$.  Each channel has:
+\begin{itemize}
+\item A \textbf{projection map} $\pi_j: A \to V_j \cup \{*_j\}$,
+  where $V_j$ is channel $j$'s observable space (e.g., counts for
+  Poisson, $\{0,1\}$ for Bernoulli, finite category set for
+  multinomial) and $*_j$ is the ``trivial'' / null projection.  An
+  action $a$ \emph{engages} channel $j$ iff $\pi_j(a) \in V_j$
+  (equivalently, $\pi_j(a) \neq *_j$).
+\item An \textbf{extended baseline distribution} $\bar{p}_0^{(j)}$
+  on $V_j \cup \{*_j\}$ representing the channel's baseline
+  including the engagement/null bucket; $\epsilon_j^{(0)} :=
+  \bar{p}_0^{(j)}(\{*_j\}) \in [0, 1)$ is the baseline null-mass.
+  The \textbf{conditional baseline given engagement} is the
+  normalized restriction
+  \[
+    p_0^{(j)}(v) \;:=\; \frac{\bar{p}_0^{(j)}(v)}{1 -
+    \epsilon_j^{(0)}}, \qquad v \in V_j,
+  \]
+  defined when $\epsilon_j^{(0)} < 1$; $p_0^{(j)}$ is then a
+  probability measure on $V_j$.
+\item A least-favorable adversarial alternative $p_1^{(j)}$ on
+  $V_j$ at threshold shift $\eta_j$ (defined on the engagement
+  subspace; the engagement probability under the alternative may
+  also differ).
+\item A clipped per-step LLR function
+  $\ell^{(j)}: A \to [-\Bclip, \Bclip]$ that depends on $a$ only
+  through $\pi_j(a)$, with $\ell^{(j)}(a) = 0$ whenever $\pi_j(a)
+  = *_j$ (zero-outside-engagement convention).
+\end{itemize}
+
+The set of actions engaging channel $j$ is
+$A_j := \{a \in A : \pi_j(a) \neq *_j\}$.  By the
+zero-outside-engagement convention, $\ell^{(j)}(a) = 0$ for $a
+\notin A_j$.
+
+\subsection{Pairwise overlap}
+
+For ordered channel pairs $(j, j')$ with $j \neq j'$, the
+\emph{pairwise overlap set} is
+\begin{equation}
+  A_{j, j'} \;:=\; A_j \cap A_{j'}
+  \;=\; \{a \in A : \pi_j(a) \neq *_j \text{ and } \pi_{j'}(a)
+  \neq *_{j'}\}.
+\end{equation}
+Channels $j$ and $j'$ are \emph{action-disjoint} when $A_{j, j'} =
+\emptyset$.  Multi-label entries (a ledger event carrying both
+attestation and substrate metadata, say) appear naturally in
+$A_{j, j'}$ if both projections are non-trivial.
+
+\subsection{Per-step expected drift}
+
+For an adversary $q$ on $A$, the per-step expected drift in channel
+$j$ is
+\begin{equation}
+\label{eq:drift-def-v3}
+  \mu_j(q) \;:=\; \mathbb{E}_{a \sim q}[\ell^{(j)}(a)]
+  \;=\; \sum_{a \in A_j} q(a) \cdot \ell^{(j)}(a),
+\end{equation}
+the second equality by zero-outside-engagement.  Since
+$\ell^{(j)}(a)$ depends on $a$ only through $\pi_j(a)$, this is
+equivalently $\mathbb{E}_{v \sim (\pi_j)_* q}[\ell^{(j)}(v)]$.
+
+\subsection{Baseline compatibility (with projective consistency)}
+
+\begin{assumption}[Baseline ledger compatibility, projective form]
+\label{ass:baseline-compat-v3}
+There exists a baseline ledger distribution $q_0$ on $A$ such that
+for every channel $j \in \{1, \ldots, \Kch\}$, the pushforward
+under the channel projection map equals the extended per-channel
+baseline:
+\begin{equation}
+\label{eq:projective-baseline}
+  (\pi_j)_* q_0 \;=\; \bar{p}_0^{(j)} \quad\text{on } V_j \cup \{*_j\}.
+\end{equation}
+Equivalently: the engagement probability $q_0(A_j) = 1 -
+\epsilon_j^{(0)}$, and the conditional pushforward (the normalized
+law of $\pi_j(a)$ given $a \in A_j$) equals the conditional
+baseline:
+\[
+  \mathrm{Law}\bigl(\pi_j(a) \,\big|\, a \in A_j\bigr) \;=\;
+  p_0^{(j)} \quad\text{on } V_j.
+\]
+
+The extended per-channel baselines $\{\bar{p}_0^{(j)}\}_j$ must be
+\emph{simultaneously realizable} as projections of a single $q_0$,
+which constrains the per-channel baselines to agree on shared
+projections (e.g., the marginal of $\bar{p}_0^{(j)}$ on the
+shared metadata between channels $j$ and $j'$ must equal the
+marginal of $\bar{p}_0^{(j')}$).  Verification protocols where
+per-channel baselines are independently calibrated must check this
+consistency at deployment activation.
+\end{assumption}
+
+\subsection{Admissible perturbations}
+
+A signed measure $\Delta: A \to \mathbb{R}$ is \emph{admissible} if
+$q_0 + \Delta \geq 0$ pointwise and $q_0 + \Delta$ is a probability
+measure on $A$ (equivalently, $\sum_a \Delta(a) = 0$).  A signed
+measure is \emph{$j$-supported} if $\Delta(a) = 0$ for $a \notin
+A_j$; equivalently, the perturbation only changes mass on actions
+engaging channel $j$ (potentially including the idle bucket if
+$a_0 \in A_j$ via $\pi_j(a_0)$ being non-trivial; see below).
+
+\begin{remark}[Idle-bucket convention]
+\label{rem:idle}
+Whether $a_0 \in A_j$ depends on the channel's protocol: for
+``count rate'' channels (Poisson cooperative-output rate),
+$\pi_j(a_0)$ is the ``no event in this step'' value, which is part
+of $V_j$; so $a_0 \in A_j$.  For ``status'' channels (Bernoulli
+attestation), $\pi_j(a_0) = *_j$ (no attestation event happened);
+so $a_0 \notin A_j$.  This per-channel decision determines whether
+rate-shift perturbations are representable in $\mathcal{D}_j$.
+\end{remark}
+
+The set of admissible $j$-perturbations is
+\begin{equation}
+  \mathcal{D}_j \;:=\; \{\Delta : A \to \mathbb{R}, \;\;\Delta
+  \text{ is admissible and $j$-supported}\}.
+\end{equation}
+
+We also need the ambient \emph{linear} space of $j$-supported
+signed measures, where the operator-norm interpretation of the
+coupling magnitude is well-defined:
+\begin{equation}
+\label{eq:Hj-def}
+  H_j \;:=\; \{\Delta : A \to \mathbb{R} \mid \Delta(a) = 0
+  \text{ for } a \notin A_j, \;\; \textstyle\sum_a \Delta(a) = 0\}.
+\end{equation}
+$H_j$ is a vector subspace of signed measures on $A$ (closed under
+linear combination, no positivity constraint).
+$\mathcal{D}_j \subseteq H_j$ is the convex subset of admissible
+perturbations (those satisfying the additional positivity
+constraint $q_0 + \Delta \geq 0$).  The functional
+$\Delta \mapsto \Delta\mu_{j'}[\Delta] = \sum_{a \in A_{j,j'}}
+\Delta(a) \ell^{(j')}(a)$ extends linearly from $\mathcal{D}_j$ to
+all of $H_j$.  We work with the operator norm of this functional
+on $H_j$; the operator-norm bound on $H_j$ then upper-bounds the
+admissible-restricted supremum
+$\sup_{\Delta \in \mathcal{D}_j \setminus \{0\}}
+|\Delta\mu_{j'}[\Delta]|/\|\Delta\|_1$ by the inclusion
+$\mathcal{D}_j \subseteq H_j$.  Equality of these two suprema
+holds when $q_0$ has strictly positive mass on every $a \in A_j$
+(so $\mathcal{D}_j$ contains a neighborhood of $0$ in $H_j$); we
+do not require this equality, only the upper-bound direction.
+
+\section{Operational definition of \texorpdfstring{$M_{j \to j'}$}{M\_jj'}}
+
+\subsection{Per-step coupling magnitude}
+
+For $\Delta \in \mathcal{D}_j$, the induced shifts in per-channel
+drift are
+\begin{align}
+  \Delta\mu_j[\Delta] &:= \mu_j(q_0 + \Delta) - \mu_j(q_0)
+    = \sum_{a \in A_j} \Delta(a) \cdot \ell^{(j)}(a), \\
+  \Delta\mu_{j'}[\Delta] &:= \mu_{j'}(q_0 + \Delta) - \mu_{j'}(q_0)
+    = \sum_{a \in A_{j, j'}} \Delta(a) \cdot \ell^{(j')}(a),
+\end{align}
+the second equality because $\Delta$ is supported on $A_j$ and
+$\ell^{(j')}$ vanishes off $A_{j'}$, so only $A_j \cap A_{j'} =
+A_{j,j'}$ contributes.
+
+\begin{definition}[Per-step coupling magnitude]
+\label{def:M-step-v3}
+For $j \neq j'$, the \emph{per-step pairwise coupling magnitude}
+of channel $j$ on channel $j'$ is the operator norm of the linear
+functional $\Delta \mapsto \Delta\mu_{j'}[\Delta]$ on the linear
+space $H_j$ (Equation~\eqref{eq:Hj-def}) under the $\ell_1$ norm:
+\begin{equation}
+\label{eq:M-step-def-v3}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D})
+  \;:=\; \sup_{\Delta \in H_j,\; \Delta \neq 0}
+  \;\frac{\big| \Delta\mu_{j'}[\Delta] \big|}{\|\Delta\|_1}.
+\end{equation}
+
+The \emph{per-step deployment coupling magnitude} is
+$\bar{M}^{\mathrm{step}}(\mathcal{D}) := \max_{j \neq j'}
+M_{j \to j'}^{\mathrm{step}}(\mathcal{D})$.
+\end{definition}
+
+\begin{remark}[Operator norm on $H_j$ vs.\ admissible-restricted sup]
+\label{rem:operator-norm}
+The ratio $|\Delta\mu_{j'}[\Delta]| / \|\Delta\|_1$ is scale-invariant
+under $\Delta \to t\Delta$ for $t \neq 0$, so the supremum over
+$H_j \setminus \{0\}$ equals the supremum over the unit sphere
+$\{\Delta \in H_j : \|\Delta\|_1 = 1\}$.  This is the operator
+norm of the linear functional $\Delta \mapsto \Delta\mu_{j'}[\Delta]$
+on $H_j$ (in the $\ell_1$-to-$\mathbb{R}$ sense).  By the
+inclusion $\mathcal{D}_j \subseteq H_j$, the operator norm on
+$H_j$ upper-bounds the admissible-restricted supremum
+$\sup_{\Delta \in \mathcal{D}_j \setminus \{0\}}
+|\Delta\mu_{j'}[\Delta]|/\|\Delta\|_1$.  Equality of the two
+suprema requires $q_0$ to have strictly positive mass on every
+$a \in A_j$ (so that $\mathcal{D}_j$ contains a neighborhood of
+$0$ in $H_j$); we do not assume this --- only the upper-bound
+direction is required for the deployment claim.
+\end{remark}
+
+\section{Per-step closed-form bound}
+
+\begin{lemma}[Per-step coupling bound]
+\label{lem:per-step-v3}
+Under (C5.HOEFF) and the zero-outside-engagement convention, for
+every $j \neq j'$:
+\begin{equation}
+\label{eq:per-step-bound-v3}
+  M_{j \to j'}^{\mathrm{step}}(\mathcal{D}) \;\leq\; \Bclip,
+\end{equation}
+unconditionally.  When channels are action-disjoint
+($A_{j, j'} = \emptyset$), $M_{j \to j'}^{\mathrm{step}} = 0$.
+\end{lemma}
+
+\begin{proof}
+For any $\Delta \in H_j$ with $\Delta \neq 0$ (the bound holds on
+the full linear space, not just on the admissible subset
+$\mathcal{D}_j$, since the inequality below uses only the
+zero-outside-engagement convention and (C5.HOEFF)'s clip bound,
+not positivity of $q_0 + \Delta$):
+\begin{align*}
+  \big| \Delta\mu_{j'}[\Delta] \big|
+  &= \big| \sum_{a \in A_{j, j'}} \Delta(a) \ell^{(j')}(a) \big|
+  \leq \sum_{a \in A_{j, j'}} |\Delta(a)| \cdot |\ell^{(j')}(a)|
+  \\ &\leq \Bclip \sum_{a \in A_{j, j'}} |\Delta(a)|
+  \leq \Bclip \cdot \|\Delta\|_1.
+\end{align*}
+Dividing by $\|\Delta\|_1 \neq 0$ and taking supremum over $H_j
+\setminus \{0\}$ gives \eqref{eq:per-step-bound-v3}.  When
+$A_{j, j'} = \emptyset$, the sum is empty and
+$\Delta\mu_{j'}[\Delta] = 0$ for all $\Delta \in H_j$, giving
+$M_{j \to j'}^{\mathrm{step}} = 0$.
+\end{proof}
+
+\begin{remark}[Tighter bound under (C5.OVL), if adopted]
+\label{rem:tighter-v3}
+If a deployment adopts the optional (C5.OVL) overlap-mass
+stability condition (introduced in v2 but \emph{not} required for
+intensivity), the supremum's shared-action concentration is
+bounded:
+\[
+  \sup_{\Delta \in \mathcal{D}_j,\; \Delta \neq 0}
+  \frac{\sum_{a \in A_{j, j'}} |\Delta(a)|}{\|\Delta\|_1}
+  \;\leq\; Q^*_{j, j'}(\mathcal{D}) \leq Q_{\max} < 1,
+\]
+yielding $M_{j \to j'}^{\mathrm{step}} \leq Q_{\max} \cdot \Bclip$
+in the strict-smallness regime.  This refinement matters when the
+deployment claim requires a constant strictly less than $\Bclip$
+(e.g., for stack-failure-probability budgeting); the intensivity
+claim of Lemma~\ref{lem:per-step-v3} does not need it.
+\end{remark}
+
+\section{Cumulative cascade-window bound}
+
+\subsection{Pathwise perturbation class}
+
+A \emph{pathwise $j$-perturbation over the cascade window} is a
+sequence $\{\Delta_n\}_{n=1}^{\Nev}$ where each
+$\Delta_n \in \mathcal{D}_j$, applied at SPRT step $n$.  Two
+budget conventions are operationally relevant:
+
+\begin{itemize}
+\item \textbf{Per-step budget:} $\sup_n \|\Delta_n\|_1 \leq 1$ ---
+  the adversary can sustain a unit-magnitude perturbation each
+  step.
+\item \textbf{Total-budget:} $\sum_n \|\Delta_n\|_1 \leq 1$ --- the
+  adversary has a fixed total perturbation budget across the
+  window.
+\end{itemize}
+
+The cumulative cross-channel response is
+\[
+  \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n\}\big]
+  \;:=\; \sum_{n=1}^{\Nev(\taumeta)} \Delta\mu_{j'}[\Delta_n].
+\]
+
+\subsection{New condition: upper exposure-rate cap (C7.RATE)}
+
+\begin{assumption}[Upper exposure-rate cap, (C7.RATE)]
+\label{ass:c7-rate}
+There exists a deployment-class action rate cap $\lammax > 0$
+independent of $|P|$, such that the SPRT exposure event count
+satisfies
+\begin{equation}
+\label{eq:c7-rate}
+  \Nev(\taumeta) \;\leq\; \lammax \cdot \taumeta
+\end{equation}
+deterministically (operator-enforced via rate limits / action
+bounds).  This is distinct from (C11.CLK) which gives a lower
+bound on $\Nev(\taumeta)$ for detection purposes.
+
+Operationally, $\lammax$ is calibrated by Audit~7 from the
+deployment's rate limits, action bounds, and channel-coupling
+structure.
+\end{assumption}
+
+\subsection{Cumulative bound under per-step budget}
+
+\begin{lemma}[Cumulative coupling bound, per-step budget]
+\label{lem:cumulative-v3}
+Under (C5.HOEFF), the zero-outside-engagement convention, and
+(C7.RATE):
+
+\emph{(a) Pairwise} cumulative coupling, per-step budget
+$\sup_n \|\Delta_n\|_1 \leq 1$:
+\begin{equation}
+\label{eq:pairwise-cum-v3}
+  \sup_{\substack{\Delta_n \in H_j \;\forall n \\
+        \sup_n \|\Delta_n\|_1 \leq 1}}
+  \big| \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n\}\big] \big|
+  \;\leq\; \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+
+\emph{(b1) Aggregate-incoming} cumulative coupling under
+\textbf{total per-step budget} $\sup_n \sum_j \|\Delta_n^{(j)}\|_1
+\leq 1$:
+\begin{equation}
+\label{eq:aggregate-total-v3}
+  \sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \sum_j \|\Delta_n^{(j)}\|_1 \leq 1}}
+  \big| \sum_{j \neq j'}
+    \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+The total-budget convention forces sources to share a single unit,
+so the aggregate factor stays at 1.
+
+\emph{(b2) Aggregate-incoming} cumulative coupling under
+\textbf{per-source per-step budget} $\sup_n \|\Delta_n^{(j)}\|_1
+\leq 1$ for every source $j$:
+\begin{equation}
+\label{eq:aggregate-source-v3}
+  \sup_{\substack{\Delta_n^{(j)} \in H_j \;\forall n, j \\
+    \sup_n \|\Delta_n^{(j)}\|_1 \leq 1 \;\forall j}}
+  \big| \sum_{j \neq j'}
+    \mu_{j'}^{\mathrm{cum}}\big[\{\Delta_n^{(j)}\}\big] \big|
+  \;\leq\; (\Kch - 1) \cdot \Bclip \cdot \lammax \cdot \taumeta.
+\end{equation}
+Each source can saturate the unit budget independently, giving
+the $\Kch - 1$ aggregation factor.
+
+The right-hand sides are deployment-class constants intensive in
+$|P|$ over $\mathcal{D}$ ($\Bclip$ from (C5.HOEFF), $\lammax$ from
+(C7.RATE), $\taumeta$ from \citep[Phase~Redundancy]{lasser2026phase}'s
+scaling, $\Kch$ from (C5.MULT)).
+\end{lemma}
+
+\begin{proof}
+\emph{Part (a).}  By Lemma~\ref{lem:per-step-v3}, $|\Delta\mu_{j'}[
+\Delta_n]| \leq \Bclip \cdot \|\Delta_n\|_1 \leq \Bclip \cdot 1 =
+\Bclip$ for each $n$ when $\sup_n \|\Delta_n\|_1 \leq 1$.  Summing:
+\[
+  \big| \mu_{j'}^{\mathrm{cum}} \big| \leq \sum_{n=1}^{\Nev(\taumeta)}
+  |\Delta\mu_{j'}[\Delta_n]| \leq \Nev(\taumeta) \cdot \Bclip
+  \leq \lammax \cdot \taumeta \cdot \Bclip,
+\]
+the last inequality by (C7.RATE).
+
+\emph{Part (b1) (total per-step budget).}  At each step $n$, the
+adversary's joint perturbation across source channels has $\sum_j
+\|\Delta_n^{(j)}\|_1 \leq 1$.  Each per-source contribution is
+bounded by $|\Delta\mu_{j'}[\Delta_n^{(j)}]| \leq \Bclip \cdot
+\|\Delta_n^{(j)}\|_1$ via Lemma~\ref{lem:per-step-v3}.  Summing
+over $j \neq j'$ at each step:
+\[
+  \big| \sum_{j \neq j'} \Delta\mu_{j'}[\Delta_n^{(j)}] \big|
+  \leq \Bclip \cdot \sum_{j \neq j'} \|\Delta_n^{(j)}\|_1
+  \leq \Bclip \cdot 1 = \Bclip.
+\]
+Summing over $n$ and applying (C7.RATE):
+\[
+  \big| \sum_{j \neq j'} \mu_{j'}^{\mathrm{cum}}[\{\Delta_n^{(j)}\}] \big|
+  \leq \Nev(\taumeta) \cdot \Bclip \leq \lammax \cdot \taumeta \cdot
+  \Bclip,
+\]
+giving \eqref{eq:aggregate-total-v3}.
+
+\emph{Part (b2) (per-source per-step budget).}  Now each source
+$j$ may have $\|\Delta_n^{(j)}\|_1 \leq 1$ independently.  Per-source
+contributions remain bounded by
+$|\Delta\mu_{j'}[\Delta_n^{(j)}]| \leq \Bclip \cdot
+\|\Delta_n^{(j)}\|_1 \leq \Bclip$ each, and summing over $\Kch -
+1$ source channels:
+\[
+  \big| \sum_{j \neq j'} \Delta\mu_{j'}[\Delta_n^{(j)}] \big|
+  \leq (\Kch - 1) \cdot \Bclip.
+\]
+Summing over $n$ and applying (C7.RATE) gives
+\eqref{eq:aggregate-source-v3}.
+
+Which of (b1) or (b2) is operationally relevant depends on the
+audit specification of admissible adversarial classes; we state
+both for completeness.
+\end{proof}
+
+\subsection{Connection to (C7) bounded co-evolution}
+
+\begin{corollary}[(C7) bounded co-evolution as a corollary]
+\label{cor:c7-corollary-v3}
+Under (C5.HOEFF), the zero-outside-engagement convention, and
+(C7.RATE), the deployment's cumulative coupling magnitude
+$\bar{M}^{\mathrm{cum}}(\mathcal{D})$ over the cascade window
+$\taumeta$ satisfies
+\begin{equation}
+  \bar{M}^{\mathrm{cum}}(\mathcal{D}) \;\leq\; C \cdot \Bclip \cdot
+  \lammax \cdot \taumeta,
+\end{equation}
+where $C \in \{1, \Kch - 1\}$ depending on the budget convention
+relevant to Microfoundation's $K_{\mathrm{coev}}$ aggregation.
+
+In particular, $\bar{M}^{\mathrm{cum}}$ is bounded by a
+deployment-class constant independent of $|P|$, which is the
+content of Assumption~\ref{ass:bounded_coev_placeholder} (C7).
+The corollary therefore promotes (C7) from a free-floating
+deployment-class assumption to a derived consequence of
+(C5.HOEFF), (C7.RATE), \citep[Phase~Redundancy]{lasser2026phase}'s
+$\taumeta$ scaling, and (C5.MULT)'s channel partition.
+\end{corollary}
+
+(Where Assumption~\ref{ass:bounded_coev_placeholder} stands in for
+Paper~10's existing Assumption labeled \texttt{ass:bounded\_coev}.)
+
+\section{Discussion}
+
+\subsection{What v3 delivers}
+
+\paragraph{(C7) is now derived, not assumed.}  Under
+(C5.HOEFF), (C7.RATE), and \citep[Phase~Redundancy]{lasser2026phase}'s
+$\taumeta$ scaling, (C7)'s claim that $\bar{M}$ is bounded by a
+$|P|$-independent constant follows from
+Corollary~\ref{cor:c7-corollary-v3}.  The previous paper's
+Assumption~\ref{ass:bounded_coev_placeholder} can be reframed as a
+\emph{statement of (C7.RATE)} (operator-certified upper exposure-
+rate cap) rather than a free-floating constant assumption.
+
+\paragraph{Three primitive conditions, all already present or
+inheritable.}  $\Bclip$ is from (C5.HOEFF).  $\taumeta$ is from
+\citep[Phase~Redundancy]{lasser2026phase}.  $\Kch$ is from
+(C5.MULT).  The new content is (C7.RATE), which adds an upper
+exposure-rate cap separate from (C11.CLK)'s lower throughput floor.
+This is the only new condition v3 introduces; (C5.OVL) from v2 is
+not needed for the intensivity claim.
+
+\paragraph{Audit~4 reinterpreted.}  Audit~4 currently measures
+$\bar{M}$ empirically.  Under v3, Audit~4 can be reinterpreted as
+verifying:
+\begin{enumerate}
+\item (C5.HOEFF)'s $\Bclip$ value (already part of Audit~7).
+\item (C7.RATE)'s $\lammax$ value.
+\item Channel projection structure: the $\pi_j$ maps are well-
+  defined and respect the zero-outside-engagement convention.
+\item (Optional) tighter (C5.OVL) ceiling $Q_{\max}$ for sharper
+  bounds.
+\end{enumerate}
+
+\subsection{What v3 does not deliver}
+
+\paragraph{Per-step vs.\ total-budget ambiguity persists.}
+Lemma~\ref{lem:cumulative-v3} states bounds for two budget
+conventions.  Which is operationally relevant depends on
+Microfoundation's $K_{\mathrm{coev}}$ aggregation semantics, which
+is not internal to this paper.  A future round should pin down
+which budget convention $K_{\mathrm{coev}}$ uses.
+
+\paragraph{Pairwise vs.\ aggregate-incoming ambiguity persists.}
+Whether the deployment-relevant $\bar{M}^{\mathrm{cum}}$ is
+pairwise (factor $C = 1$) or aggregate-incoming (factor $C = \Kch
+- 1$) depends on how Microfoundation's composition correction
+aggregates over source channels.
+
+\paragraph{The strict-smallness refinement requires (C5.OVL).}  If
+the deployment claim requires $\bar{M}^{\mathrm{cum}}$ strictly
+less than the $\Bclip \cdot \lammax \cdot \taumeta$ ceiling
+(e.g., for stack-failure-probability budgeting against $\beta +
+\bclk + \bcal$ to leave room for $\bar{M}$-driven slack), the
+optional (C5.OVL) condition $Q^*_{j,j'} \leq Q_{\max} < 1$ becomes
+necessary.  v3 reports this as an optional refinement; the main
+intensivity claim does not depend on it.
+
+\subsection{Connection to (C11) capability-scaling caveat}
+
+(C11)'s capability-scaling caveat noted that a more capable agent
+may have a richer effective action space and find subtler
+exploitation pathways.  v3's (C7.RATE) addresses this directly:
+the upper exposure-rate cap $\lammax$ is operator-certified from
+rate limits and action bounds, and any agent that exceeds
+$\lammax$ falls outside the (C7.RATE) regime by definition.  The
+capability-scaling caveat for $\rhogap$ is structurally parallel
+and may admit a similar derivation: a closed-form bound on
+$\rhogap$ from primitive operational parameters (rate limits +
+clip radius + channel structure) would provide the same epistemic
+shift for (C11) that v3 provides for (C7).
+
+\section{Open questions for codex review}
+
+\begin{enumerate}
+\item \textbf{Is the operator-norm definition of
+  $M_{j \to j'}^{\mathrm{step}}$
+  (Definition~\ref{def:M-step-v3}) the right operational reading?}
+  v3 uses $\sup_{\Delta \neq 0} |\Delta\mu_{j'}[\Delta]|/\|\Delta\|_1$.
+  This is a proper operator norm, scale-invariant.  The L1
+  normalization is inherited from the natural $\ell_1$ structure
+  on the action space.  Is this consistent with what Audit~4
+  empirically measures, or does Audit~4's perturbation methodology
+  imply a different normalization?
+
+\item \textbf{Is (C7.RATE) a clean formulation of the upper
+  exposure-rate cap?}  v3 states it as a deterministic upper
+  bound: $\Nev(\taumeta) \leq \lammax \cdot \taumeta$.  An
+  alternative is a probabilistic bound (e.g., w.h.p.\ analogous to
+  (C11.CLK)).  Which is cleaner for Microfoundation's composition
+  semantics?
+
+\item \textbf{Do the projection maps $\pi_j$ resolve the multi-label
+  ledger entry concern from v2?}  v3 replaces binary incidence with
+  per-channel projection maps.  Multi-label entries appear
+  naturally in $A_{j, j'}$ via simultaneous non-trivial
+  projections.  Are there ledger entry types that this still does
+  not handle (e.g., conditional projections, hierarchical
+  projections)?
+
+\item \textbf{Does the projective consistency condition
+  (Assumption~\ref{ass:baseline-compat-v3}) match what real
+  verification protocols can guarantee?}  The condition requires
+  $(\pi_j)_* q_0 = \bar{p}_0^{(j)}$ on $V_j \cup \{*_j\}$ for
+  every $j$ (equivalently, $\mathrm{Law}(\pi_j(a) \mid a \in A_j)
+  = p_0^{(j)}$ on $V_j$), with the extended per-channel baselines
+  being simultaneously realizable.  In practice this constrains
+  how per-channel baselines are calibrated.  Is this a reasonable
+  practical constraint?
+
+\item \textbf{Is the aggregate-incoming budget convention
+  (per-source vs.\ total) a real operational distinction or a
+  modeling artifact?}  v3 states both conventions and notes the
+  distinction is downstream-resolved by $K_{\mathrm{coev}}$
+  aggregation.  Is there a principled way to choose between them
+  at the v3 level, or does the choice genuinely require a
+  Microfoundation-internal answer?
+
+\item \textbf{Are there v2-finding-leftovers that v3 missed?}
+  Specifically: P0-1 (rate cap), P1-2 (Lipschitz norm), P1-3
+  (Poisson rate-shift), P1-4 (pairwise sum), P1-5 (C5.OVL
+  optional), P1-6 (multi-label projection), P1-7 (pathwise
+  budget), P2-8 (baseline compatibility) should all be addressed
+  in v3.  Is each adequately resolved?
+\end{enumerate}
+
+\section{Status}
+
+v3 attempts to close the v2 P0/P1 gaps via:
+\begin{itemize}
+\item (C7.RATE) added as separate upper exposure-rate cap (P0-1).
+\item Operator-norm Lipschitz definition (P1-2).
+\item Idle-bucket convention for Poisson rate shifts (P1-3).
+\item Aggregate-incoming bound with $(\Kch - 1)$ factor (P1-4).
+\item (C5.OVL) demoted to optional sharper-bound condition (P1-5).
+\item Per-channel projection maps replacing binary incidence (P1-6).
+\item Pathwise perturbation class with per-step / total-budget
+  conventions (P1-7).
+\item Projective consistency in baseline compatibility (P2-8).
+\end{itemize}
+
+The structural shape: under (C5.HOEFF) clipping, (C7.RATE) upper
+exposure-rate cap, and (C5.MULT) channel partition,
+$\bar{M}^{\mathrm{cum}}$ is bounded by a $|P|$-independent
+constant.  The closed form is $\Bclip \cdot \lammax \cdot \taumeta$
+(pairwise) or $(\Kch - 1) \cdot \Bclip \cdot \lammax \cdot \taumeta$
+(aggregate-incoming).
+
+\end{document}

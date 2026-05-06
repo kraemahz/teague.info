@@ -1,0 +1,81 @@
+\section{Introduction}
+\label{sec:intro}
+
+The deployment-safety theorem of
+\citep[Deployment Safety]{lasser2026paper10} establishes a
+conditional capability-magnitude-independent bound on Goodhart
+slack for capability-unbounded deployments under twelve
+operational conditions and an explicit empirical-adequacy
+assumption inherited from the
+\citep[Microfoundation]{lasser2026micro} Concentration-Gap
+conjecture (HHI surrogate adequacy). Two of these hypotheses sit awkwardly in the
+deployment-claim's conditional structure:
+
+\begin{enumerate}
+\item \textbf{(C7) bounded co-evolution}, a free-floating
+  deployment-class constant $\bar{M}$ asserted to be independent
+  of capability magnitude $|P|$, with no derivation from primitive
+  operational parameters. \citep[\S 10.2]{lasser2026paper10}
+  identifies this as a hard-failure mode under outright failure of
+  the assumption.
+\item \textbf{The Concentration-Gap conjecture}, inherited from
+  \citep{lasser2026micro} as deferred to follow-up work. The HHI
+  surrogate-adequacy assumption serves as its operational surrogate
+  but is itself an inherited empirical-adequacy claim rather than a
+  derived consequence.
+\end{enumerate}
+
+Both gaps are closed by structural derivations established in the
+present paper:
+
+\begin{itemize}
+\item \textbf{Theorem~\ref{thm:c7-corollary} (Bounded co-evolution
+  as a corollary).} Under (C5.HOEFF) per-step LLR clipping, an
+  explicit upper exposure-rate cap (C7.RATE), and the
+  channel-projection structure of (C5.MULT), the per-channel
+  coupling magnitude is bounded by a closed-form constant in
+  primitive deployment parameters: $\bar{M}^{\mathrm{cum}} \leq C
+  \cdot \Bclip \cdot \lammax \cdot \taumeta$ with $C \in \{1,
+  \Kch - 1\}$. The previously free-floating bounded co-evolution
+  assumption of \citep[Deployment Safety]{lasser2026paper10}
+  graduates to a corollary; the property is now invoked at
+  condition~(C7) of the deployment-safety theorem.
+
+\item \textbf{Theorem~\ref{thm:concgap-scoped} (Concentration-Gap
+  Selection Theorem, scoped).} Under three operationally
+  auditable structural conditions --- representativeness (REP),
+  bounded dispersion (DISP), coalition closure (COAL) --- and a
+  Lipschitz embedding compatibility assumption
+  (Assumption~\ref{ass:embedding-companion}), the proxy-truth
+  Goodhart slack is bounded by a $\chi^2$-divergence quantity that
+  controls $\HHI$ via $\chi^2(w \,\|\, \mu) = N \HHI(w) - 1$ for
+  uniform $\mu$ on a (COAL)-bounded counterparty population. The
+  HHI surrogate-adequacy assumption is replaced by the conjunction
+  (REP)~+~(DISP)~+~(COAL) plus the embedding compatibility
+  assumption plus the HHI threshold itself.
+\end{itemize}
+
+The universal model-free Concentration-Gap conjecture
+of~\citep{lasser2026micro} remains open: a model-free
+correlation-of-pressure-with-exploitation result is not provable
+from current GFM machinery without a formal optimizer/selection
+model, and the present paper's scoped discharge requires three
+explicit structural conditions. The reverse direction of
+Theorem~\ref{thm:concgap-scoped} also operates only at the
+proxy-truth-norm level, not the alignment-property level: a
+$g$-level lower bound would require additional inverse-Lipschitz
+structure on $g$ that the GFM apparatus does not provide.
+\S\ref{sec:discussion} states what each open item would require.
+
+\paragraph{Organization.} \S\ref{sec:setup} fixes shared notation,
+inheriting from the GFM
+sequence~\citep{lasser2026micro,lasser2026paper8a,lasser2026paper8b,lasser2026exo,lasser2026paper10}.
+\S\ref{sec:bounded_coev} proves
+Theorem~\ref{thm:c7-corollary}. \S\ref{sec:concgap} proves
+Theorem~\ref{thm:concgap-scoped}. \S\ref{sec:composition} locates
+where each theorem enters
+\citep[Deployment Safety]{lasser2026paper10}'s deployment-claim
+hypothesis set. \S\ref{sec:audits} specifies the operational
+audit procedures for (C7.RATE), (REP), (DISP), (COAL), and the
+embedding compatibility precondition.
+\S\ref{sec:discussion} collects the open items.

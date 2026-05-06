@@ -1,0 +1,468 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\makeatletter
+\newcommand{\citep}[2][]{%
+  \begingroup
+  \def\@tmpkey{#2}%
+  \ifx\@tmpkey\@empty\else
+    (\ifx\@empty#1\@empty\else #1, \fi
+     \@nameuse{bibkey@\@tmpkey})%
+  \fi
+  \endgroup
+}
+\expandafter\def\csname bibkey@lasser2026micro\endcsname{Microfoundation}
+\expandafter\def\csname bibkey@lasser2026exo\endcsname{Exogenous~Verification}
+\expandafter\def\csname bibkey@lasser2026phase\endcsname{Phase~Redundancy}
+\makeatother
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\Bclip}{B_{\mathrm{clip}}}
+\newcommand{\Kch}{K_{\mathrm{ch}}}
+\newcommand{\Aadv}{\mathcal{A}_{\mathrm{adv}}}
+\newcommand{\Pproxy}{P^{\mathrm{proxy}}}
+\newcommand{\Ttruth}{T^{\mathrm{truth}}}
+\newcommand{\epsnonresCoev}{\varepsilon_{\mathrm{coev}}^{\mathrm{nonres}}}
+\newcommand{\Nev}{N_{\mathrm{ev}}}
+\newcommand{\rhogap}{\rho_{\mathrm{gap}}}
+
+\title{C7 closed-form derivation: bounding $\bar{M}$ from primitive operational parameters}
+\author{Paper 10 working draft for codex review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Goal of this draft}
+
+Currently Paper 10's (C7) bounded co-evolution
+(Assumption~\ref{ass:bounded_coev}) is asserted as an explicit
+deployment-class assumption: there exists a constant $\bar{M}$
+depending on deployment-class parameters but independent of $|P|$
+such that the per-channel coupling magnitude
+$M(\mathrm{deployment}) \leq \bar{M}$.  Audit~4
+(\S\ref{sec:tooling_substrate_audits}) gives an empirical procedure
+for measuring $\bar{M}$ but does not derive it from primitive
+operational parameters.
+
+This draft attempts to close the gap by deriving $\bar{M}$ in
+closed form from already-named deployment-class quantities ---
+specifically, from (C5.HOEFF) clip radius $\Bclip$, (C5.MULT)
+channel partition structure, and a verification-protocol-derived
+\emph{shared-action probability bound} $Q^*$.  If the derivation
+holds, (C7) graduates from assumption to corollary, and the loose
+thread C7 represents in the deployment-claim hypothesis set
+disappears.
+
+The derivation does not rule out failure modes for $\bar{M}$ as
+$|P|$ grows: it identifies the structural quantity ($Q^*$)
+through which $|P|$-dependence could enter, and shows that under
+specific verification-protocol design, $Q^*$ is itself intensive in
+$|P|$.  The closed form thus shifts (C7)'s epistemic content from
+``$\bar{M}$ is bounded'' to ``$Q^*$ is intensive''---a more
+structural claim that connects to verification-protocol design.
+
+\section{Operational definition of \texorpdfstring{$M_{j \to j'}$}{M\_jj'}}
+
+\subsection{Setup}
+
+Paper 10's monitored channel structure (after (C5.MULT)) consists
+of $\Kch$ channels.  Each channel $j$ has:
+\begin{itemize}
+\item A baseline distribution $p_0^{(j)}$ over recorded events.
+\item A least-favorable adversarial alternative $p_1^{(j)}$ at
+  threshold shift $\eta_j$.
+\item A per-step (clipped) log-likelihood-ratio function
+  $\ell^{(j)}: A \to [-\Bclip, \Bclip]$ where $A$ is the action
+  space (the set of recordable event types in the verification
+  ledger).  $\Bclip$ is the (C5.HOEFF) clip radius, deployment-class.
+\end{itemize}
+
+For an adversarial action distribution $q \in \Delta(A)$ (a
+probability measure on $A$), define the per-step expected drift in
+channel $j$:
+\begin{equation}
+\label{eq:drift-def}
+  \mu_j(q) \;:=\; \mathbb{E}_{a \sim q}[\ell^{(j)}(a)]
+  \;=\; \sum_{a \in A} q(a) \cdot \ell^{(j)}(a).
+\end{equation}
+
+The baseline-adversary $q_0$ corresponds to $p_0^{(j)}$ for all
+$j$; under $q_0$, $\mu_j(q_0) = \mathbb{E}_{p_0^{(j)}}[\ell^{(j)}]$
+which is approximately zero (the LLR has near-zero expectation
+under the baseline).
+
+\subsection{Cross-channel coupling magnitude}
+
+The empirical interpretation of Audit~4 is:
+``how much does a unit perturbation in channel $j$ propagate to
+channel $j'$ within the cascade-time window
+$\tau_{\mathrm{meta}}$.''  We formalize this as the per-step
+cross-channel sensitivity:
+
+\begin{definition}[Per-channel coupling magnitude]
+\label{def:M-formal}
+For ordered channel pair $(j, j')$ with $j \neq j'$, the
+\emph{per-step coupling magnitude} is
+\begin{equation}
+\label{eq:M-def}
+  M_{j \to j'}(\mathcal{D})
+  \;:=\; \sup_{q \in \Aadv \cup \Aadv^{\mathrm{env}}}
+  \big| \mu_{j'}(q) - \mu_{j'}(q_0) \big|,
+\end{equation}
+where the supremum is over the bounded adversarial class
+admissible during the detection window.
+
+The \emph{deployment coupling magnitude} is
+$\bar{M}(\mathcal{D}) := \max_{j \neq j'} M_{j \to j'}(\mathcal{D})$.
+\end{definition}
+
+\begin{remark}[Why this captures Audit~4's intent]
+\label{rem:M-intent}
+Audit~4 measures $M$ as the response of channel $j'$ to a
+perturbation in channel $j$.  Definition~\ref{def:M-formal} bounds
+the response of channel $j'$ to \emph{any} adversarial choice that
+deviates from baseline; this is the worst case over the
+adversary's class, regardless of which channel was the
+adversary's primary target.  If the adversary perturbs channel $j$
+specifically, the response in $j'$ is at most
+$M_{j \to j'}$; this matches Audit~4's operational reading.
+\end{remark}
+
+\section{Closed-form bound}
+
+\subsection{The shared-action probability bound}
+
+The key structural quantity is the maximum probability mass any
+admissible adversary can place on actions that affect more than
+one channel simultaneously.
+
+\begin{definition}[Shared-action set and probability bound]
+\label{def:Q-star}
+For each ordered pair $(j, j')$ with $j \neq j'$, the
+\emph{shared-action set} is
+\begin{equation}
+  A_{j, j'} \;:=\; \{ a \in A : \ell^{(j)}(a) \neq 0 \text{ and }
+  \ell^{(j')}(a) \neq 0 \}.
+\end{equation}
+
+The \emph{shared-action probability bound} is
+\begin{equation}
+\label{eq:Q-star}
+  Q^*(\mathcal{D})
+  \;:=\; \max_{j \neq j'}\;
+  \sup_{q \in \Aadv \cup \Aadv^{\mathrm{env}}}\;
+  q(A_{j, j'})
+  \;=\; \max_{j \neq j'}\; \sup_q \sum_{a \in A_{j, j'}} q(a).
+\end{equation}
+
+$Q^*(\mathcal{D}) \in [0, 1]$ is a deployment-class quantity
+determined by:
+\begin{enumerate}
+\item The channel partition's structural overlap (i.e., how many
+  actions affect more than one channel's LLR), which is fixed by
+  the verification ledger's event-classification policy under
+  (C5.MULT); and
+\item The adversarial class $\Aadv \cup \Aadv^{\mathrm{env}}$,
+  which is bounded by deployment-class parameters (rate limits,
+  action bounds, channel-coverage restrictions).
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Disjoint channels: $Q^* = 0$]
+\label{rem:disjoint}
+If the verification protocol is designed so that each action $a$
+contributes to at most one channel's LLR (i.e., the channel
+partition is \emph{action-disjoint}), then $A_{j, j'} = \emptyset$
+for all $j \neq j'$, hence $Q^*(\mathcal{D}) = 0$.  This is the
+strongest version of (C7); the bound $\bar{M} = 0$ holds trivially.
+
+In practice, the four channels of Lemma~5b
+(cooperative-output rate, attestation share, individuation drift,
+bundle/cooperative-edge composition) measure structurally
+different ledger event types, so action-disjointness is a
+reasonable design target.  Any channel coupling that arises does
+so through verification-protocol artifacts (e.g., a single ledger
+event categorized into multiple channels) rather than through
+intrinsic structure.
+\end{remark}
+
+\subsection{Main lemma: $\bar{M}$ in closed form}
+
+\begin{lemma}[Closed-form bound on co-evolution coupling]
+\label{lem:c7-closed-form}
+Under (C5.HOEFF) (per-step LLR clipped to $[-\Bclip, \Bclip]$) and
+(C5.MULT) (bounded channel multiplicity with fixed pre-deployment
+partition), the per-channel coupling magnitude satisfies
+\begin{equation}
+\label{eq:M-bound}
+  \bar{M}(\mathcal{D}) \;\leq\; 2 \cdot Q^*(\mathcal{D}) \cdot \Bclip,
+\end{equation}
+where $Q^*(\mathcal{D})$ is the shared-action probability bound of
+Definition~\ref{def:Q-star} and $\Bclip$ is the (C5.HOEFF) clip
+radius.
+
+In particular, both $Q^*$ and $\Bclip$ are deployment-class
+constants intensive in $|P|$ over $\mathcal{D}$.  The bound
+\eqref{eq:M-bound} therefore proves (C7) bounded co-evolution as a
+corollary of (C5.HOEFF), (C5.MULT), and the structural property
+$Q^*$ of the verification protocol's channel partition.
+\end{lemma}
+
+\begin{proof}
+We bound the per-step drift response in channel $j'$ to any
+adversary $q \in \Aadv \cup \Aadv^{\mathrm{env}}$.
+
+\emph{Step 1 (decompose drift contributions by action).}  Using
+\eqref{eq:drift-def}:
+\[
+  \mu_{j'}(q) - \mu_{j'}(q_0) \;=\; \sum_{a \in A} (q(a) - q_0(a))
+  \cdot \ell^{(j')}(a).
+\]
+
+\emph{Step 2 (split actions into shared and non-shared sets for
+$j'$).}  Fix any other channel $j \neq j'$.  Split $A$ into:
+\begin{itemize}
+\item Actions shared between $j$ and $j'$:
+  $A_{j, j'} = \{a : \ell^{(j)}(a) \neq 0 \text{ and }
+  \ell^{(j')}(a) \neq 0 \}$.
+\item Actions affecting $j'$ but not $j$:
+  $A_{j'} \setminus A_{j, j'}$.
+\item Actions affecting neither: contribute zero to either drift.
+\end{itemize}
+The drift in $j'$ decomposes as:
+\[
+  \mu_{j'}(q) - \mu_{j'}(q_0)
+  = \underbrace{\sum_{a \in A_{j, j'}} (q(a) - q_0(a)) \ell^{(j')}(a)}_{
+    \text{cross-channel coupling contribution}}
+  + \underbrace{\sum_{a \in A_{j'} \setminus A_{j, j'}}
+    (q(a) - q_0(a)) \ell^{(j')}(a)}_{
+    \text{$j'$-only contribution}}.
+\]
+
+\emph{Step 3 (bound the cross-channel contribution).}
+By (C5.HOEFF), $|\ell^{(j')}(a)| \leq \Bclip$ for all $a$.
+The cross-channel contribution is therefore bounded:
+\[
+  \left|\sum_{a \in A_{j, j'}} (q(a) - q_0(a)) \ell^{(j')}(a)\right|
+  \;\leq\; \Bclip \cdot \sum_{a \in A_{j, j'}} |q(a) - q_0(a)|
+  \;\leq\; \Bclip \cdot \big(q(A_{j, j'}) + q_0(A_{j, j'})\big)
+  \;\leq\; \Bclip \cdot \big(Q^*(\mathcal{D}) + Q^*(\mathcal{D})\big)
+\]
+where the last inequality uses that both $q$ and $q_0$ have
+shared-action mass at most $Q^*(\mathcal{D})$ by
+Definition~\ref{def:Q-star}.
+
+\emph{Step 4 (the $j'$-only contribution does not couple $j$ to
+$j'$).}  Actions in $A_{j'} \setminus A_{j, j'}$ have
+$\ell^{(j)}(a) = 0$; perturbing these actions changes $\mu_{j'}$
+but does not change $\mu_j$.  The $j'$-only contribution is
+therefore not part of the cross-channel coupling from $j$ to $j'$:
+under the operational reading of $M_{j \to j'}$ as the response of
+$j'$ to a perturbation of $j$, only the shared-action contribution
+counts, since the $j'$-only contribution would be present even if
+the adversary did not perturb channel $j$.
+
+Formally: if $q$ and $q'$ are two adversaries that agree on
+$A \setminus A_{j, j'}$ (so $\mu_j(q) = \mu_j(q')$ via channel
+$j$'s LLR support), but differ on $A_{j, j'}$, then
+$\mu_{j'}(q) - \mu_{j'}(q')$ measures the cross-channel coupling
+exactly.  By the same Step~3 argument,
+\[
+  |\mu_{j'}(q) - \mu_{j'}(q')|
+  \;\leq\; \Bclip \cdot 2 \cdot Q^*(\mathcal{D})
+  \;=\; 2 Q^* \Bclip.
+\]
+
+\emph{Step 5 (conclude).}  Taking sup over $q$ in
+\eqref{eq:M-def} and noting that the bound from Step~3 covers all
+admissible adversarial choices:
+\[
+  M_{j \to j'}(\mathcal{D}) \;\leq\; 2 Q^*(\mathcal{D}) \cdot \Bclip.
+\]
+Maximizing over $j \neq j'$:
+\[
+  \bar{M}(\mathcal{D}) \;\leq\; 2 Q^*(\mathcal{D}) \cdot \Bclip.
+\]
+
+\emph{Step 6 (intensivity of the right-hand side).}  $\Bclip$ is a
+(C5.HOEFF) deployment-class constant, $|P|$-independent by
+hypothesis.  $Q^*(\mathcal{D})$ depends on:
+\begin{itemize}
+\item The channel partition's overlap structure under (C5.MULT)'s
+  fixed-cardinality $\Kch$ partition; this is fixed before
+  deployment and does not change with $|P|$.
+\item The verification ledger's event-classification policy, which
+  is a deployment-class operational parameter.
+\item The adversarial class $\Aadv \cup \Aadv^{\mathrm{env}}$,
+  which is bounded by Lemma~5b/5e under (C5.MULT) familywise
+  allocation.
+\end{itemize}
+None of these are functions of $|P|$.  Therefore $Q^*(\mathcal{D})$
+is intensive in $|P|$ over $\mathcal{D}$, and so is $\bar{M}$.
+\end{proof}
+
+\section{Discussion}
+
+\subsection{What the closed form buys}
+
+If Lemma~\ref{lem:c7-closed-form} holds, (C7) is no longer a
+free-floating assumption: it is a derived consequence of:
+\begin{enumerate}
+\item (C5.HOEFF) $\Bclip$ clipping --- already required for SPRT
+  applicability.
+\item (C5.MULT) bounded channel multiplicity --- already required
+  for SPRT applicability.
+\item A new structural condition on the verification protocol's
+  channel partition: $Q^*(\mathcal{D}) < 1$.  This is testable from
+  the verification ledger's event-classification policy and does
+  not require empirical measurement of historical drift data.
+\end{enumerate}
+
+In particular, the failure mode of (C7) ($\bar{M}$ scaling with
+$|P|$) reduces to the failure mode of $Q^*$: the verification
+protocol's channel partition allows new ($|P|$-induced) actions to
+fall into shared-action sets at rates that grow with $|P|$.  This
+is a verification-protocol design question, not a structural
+property of capability scaling.
+
+\subsection{What the closed form does not buy}
+
+\paragraph{The shared-action set must be carefully defined.}  The
+proof above defines $A_{j, j'}$ as actions where both
+$\ell^{(j)}(a)$ and $\ell^{(j')}(a)$ are nonzero.  This works for
+the specific four-channel structure of Lemma~5b (Poisson, Bernoulli,
+two multinomial), where $\ell^{(j)}(a) = 0$ corresponds to actions
+that don't shift channel $j$'s baseline.  For more complex channel
+structures (e.g., continuous-valued LLRs from non-discrete
+distributions), the shared-action set definition may need
+refinement.
+
+\paragraph{$Q^*$ is itself a non-trivial structural property.}
+The closed form shifts the load-bearing-ness from $\bar{M}$ to
+$Q^*$.  $Q^*$ is more structural than $\bar{M}$ (it depends on the
+channel partition rather than on observed dynamics), and is
+testable from the verification protocol's event-classification
+policy.  But $Q^*$ is still a structural property of the
+deployment that must be measured or bounded in some way.  The
+closed form is an improvement over assuming $\bar{M}$ directly
+because $Q^*$ has a more natural structural interpretation (and
+$Q^* = 0$ is achievable by design when channels are
+action-disjoint), but it does not reduce the problem to a fully
+foundational quantity.
+
+\paragraph{Cumulative vs.\ per-step interpretation of $M$.}  The
+operational reading of Audit~4 (``unit perturbation propagation
+within $\tau_{\mathrm{meta}}$'') admits both per-step and
+cumulative interpretations of $M$.  Lemma~\ref{lem:c7-closed-form}
+above handles the per-step case.  The cumulative case multiplies
+by the maximum event count $\Nev(\tau_{\mathrm{meta}}) \leq
+\lambda_{\max} \cdot \tau_{\mathrm{meta}}$:
+\[
+  \bar{M}^{\mathrm{cumulative}} \;\leq\; 2 Q^* \Bclip \cdot
+  \lambda_{\max} \cdot \tau_{\mathrm{meta}}.
+\]
+All three new factors ($\lambda_{\max}$, $\tau_{\mathrm{meta}}$,
+the existing $Q^*$, $\Bclip$) are deployment-class constants
+intensive in $|P|$.  Whether per-step or cumulative is the right
+interpretation depends on how Microfoundation's
+$K_{\mathrm{coev}}$ structural constant aggregates per-step
+drift; this is a Microfoundation-internal question that the
+closed form here does not resolve.
+
+\subsection{Connection to (C11) capability-scaling caveat}
+
+The vulnerability of $\bar{M}$ to capability scaling is
+structurally parallel to (C11)'s capability-scaling caveat: a more
+capable agent may find subtler exploitation pathways within fixed
+channels.  The closed form suggests that under (C5.HOEFF) clipping
++ (C5.MULT) channel partition + bounded $Q^*$, this failure mode
+is contained: subtler exploitation cannot increase $Q^*$ as long
+as the verification protocol's classification policy is fixed.
+
+A parallel closed-form derivation may apply to $\rhogap$ in (C11):
+the per-step gap-growth rate is bounded by per-action LLR magnitude
+$\Bclip$ times an action-coverage factor analogous to $Q^*$.  This
+suggests that (C7) and (C11) can be derived together from a single
+structural property of the verification protocol --- a worthwhile
+direction for follow-up work that this draft does not attempt.
+
+\section{Open questions}
+
+\begin{enumerate}
+\item \textbf{Is the shared-action probability bound $Q^*$ actually
+intensive in $|P|$?}  Under (C5.MULT)'s fixed channel partition,
+new actions added at higher $|P|$ are mapped into existing
+channels.  But the \emph{distribution} over actions (i.e., $q$)
+under an admissible adversary may concentrate more mass on shared
+actions as the action space grows.  The intensivity claim depends
+on a stability property of the channel partition under
+$|P|$-growth that is not captured by (C5.MULT) alone.
+
+\item \textbf{Does the per-step formulation match what
+Microfoundation's $K_{\mathrm{coev}}$ actually requires?}
+Microfoundation's composition uses
+$(\epsnonresCoev)_+ \leq K_{\mathrm{coev}} \cdot \bar{M}$ where
+$K_{\mathrm{coev}}$ is the structural co-evolution constant.  If
+$K_{\mathrm{coev}}$ aggregates per-step drift over the
+intervention window, the cumulative interpretation of $\bar{M}$ is
+correct.  If $K_{\mathrm{coev}}$ is itself a per-step quantity,
+the per-step interpretation is correct.  The Microfoundation paper
+should be re-read to resolve this.
+
+\item \textbf{Does the $j'$-only contribution argument
+(Step~4) hold under arbitrary adversarial classes?}  Step~4
+argues that the $j'$-only contribution does not couple $j$ to
+$j'$.  This is correct for the specific Lipschitz / Audit-4
+operational interpretation.  But under adversarial classes that
+permit correlated perturbations across channels, the
+$j'$-only contribution may track $\mu_j$ via a hidden common cause
+not visible at the action level.  The proof needs to either rule
+out such hidden-common-cause coupling or extend $A_{j, j'}$ to
+include actions that affect $j$ via hidden mechanisms.
+
+\item \textbf{What is the empirical value of $Q^*$ for the
+canonical tripartite deployment?}  The four channels of Lemma~5b
+measure substrate-distinct event types.  Reasoning suggests
+$Q^*$ should be small (channels are nearly action-disjoint by
+construction), but a specific deployment instance would need to
+audit its channel partition for shared events.  This is
+operational tooling work analogous to the existing Audit~4 but
+calibrated against the new closed-form bound.
+\end{enumerate}
+
+\section{Status}
+
+This draft is an attempt at a closed-form derivation of
+$\bar{M}$.  It makes the load-bearing structural quantity $Q^*$
+explicit, which is an improvement over assuming $\bar{M}$
+directly.  Whether the proof is correct depends on:
+\begin{itemize}
+\item The Lipschitz interpretation of $M$ being the right
+  operational reading (Audit~4 admits this reading; verification
+  needed).
+\item The $j'$-only argument (Step~4) being valid under all
+  admissible adversarial classes.
+\item The intensivity of $Q^*$ following from (C5.MULT) alone
+  (not requiring an additional condition on channel-partition
+  stability under $|P|$-growth).
+\end{itemize}
+
+The draft is suitable for codex review; codex should focus on the
+proof's correctness, the cleanness of the $Q^*$ definition, and
+whether the closed form actually delivers what (C7) requires.
+
+\end{document}

@@ -1,0 +1,251 @@
+\section{Audit infrastructure for the structural conditions}
+\label{sec:audits}
+
+Four operational structural conditions are added to
+\citep[Deployment Safety]{lasser2026paper10}'s deployment claim:
+(C7.RATE) (upper exposure-rate cap), (REP) (representativeness),
+(DISP) (bounded dispersion), and (COAL) (coalition closure);
+plus a Lipschitz embedding compatibility precondition
+(Assumption~\ref{ass:embedding-companion}) that certifies $\phi$
+before (REP) or (DISP) can be evaluated in the embedded
+representation. Each admits an operational audit, paralleling the
+existing audit structure of \citep[\S 7]{lasser2026paper10}: each
+audit produces an attestation on the verification
+ledger~\citep{lasser2026exo}, with cadence calibrated to
+deployment epoch boundaries. Confidence-bound construction in the
+(REP), (DISP), and (COAL) procedures below follows standard
+one-sided upper-confidence-bound machinery~\citep{lehmann2005testing}.
+
+\subsection{(C7.RATE) and channel-projection audit}
+
+This audit certifies the two structural inputs to
+Theorem~\ref{thm:c7-corollary} other than (C5.HOEFF) and
+(C5.MULT) (which are part of \citep[Audit~7]{lasser2026paper10}):
+the upper exposure-rate cap $\lammax$, and the verification
+protocol's channel-projection structure.
+
+\paragraph{Procedure (rate cap).}
+\begin{enumerate}
+\item Identify the per-step exposure event sources: ledger commit
+  rate, action-execution rate, governance-event rate.
+\item Inspect the hard mechanisms enforcing the rate ceiling ---
+  ledger commit caps, action-queue depth bounds, governance
+  rate-limit middleware, scheduler quotas --- and identify which
+  substrate owns the enforcement (substrate-exclusivity from
+  \citep{lasser2026exo}).
+\item Compute an upper-bound rate $\lammax$ from the certified
+  mechanisms (not from observed historical traffic).
+\item Document $\lammax$, the enforcing mechanisms, and the
+  substrate ownership in the audit attestation.
+\end{enumerate}
+
+Empirical traffic windows over $\taumeta$ may be used as
+\emph{monitoring} evidence (e.g., to alert on approach to
+$\lammax$), but cannot establish the deterministic deployment-class
+upper bound by themselves.
+
+\paragraph{Procedure (channel-projection structure).}
+\begin{enumerate}
+\item Enumerate the projection maps $\pi_j: A \to V_j \cup
+  \{*_j\}$ for $j = 1, \ldots, \Kch$ from the verification
+  protocol's event-classification policy.
+\item Verify that $\pi_j(a) = *_j$ holds for all actions $a
+  \notin A_j$, and that $\ell^{(j)}(a) = 0$ on $A \setminus A_j$
+  (zero-outside-engagement convention).
+\item Document the pairwise overlap sets $A_{j, j'} = A_j \cap
+  A_{j'}$ for use by downstream audits.
+\end{enumerate}
+
+\paragraph{Cadence.} Initial certification before deployment
+activation; re-certification when verification-protocol
+classification policy changes, when rate-limit mechanisms
+change, or when SPRT detection observes events at rates
+approaching $\lammax$.
+
+\paragraph{Failure mode.} Deployments where the exposure event
+rate cannot be bounded by certified mechanisms (e.g.,
+agent-controlled rate-limit overrides), or where the channel
+projection policy admits $\ell^{(j)}(a) \neq 0$ off $A_j$, fall
+outside Theorem~\ref{thm:c7-corollary}'s scope. Mitigation: hard
+rate limits enforced by substrate-exclusive infrastructure;
+verification-protocol classification redesign to respect the
+zero-outside-engagement convention.
+
+\subsection{Embedding $\phi$ certification (precondition for REP and DISP)}
+
+(REP) and (DISP) are stated relative to the embedded deviation
+field $\Delta_c = \phi(U_c) - \phi(W)$ in the Hilbert space
+$\mathcal{V}$ (Assumption~\ref{ass:embedding-companion}). The
+embedding $\phi$ must be certified before (REP) or (DISP) can
+be audited.
+
+\paragraph{Procedure.}
+\begin{enumerate}
+\item Specify the embedding $\phi: \mathcal{V}_\mathrm{utility}
+  \to \mathcal{V}$ in deployment documentation.
+\item Verify $\phi$ is affine isometric on the operationally
+  active subspace $P^\mathrm{act}$: $\|\phi(x) - \phi(y)\| =
+  \|x - y\|_{\mathcal{V}_\mathrm{utility}}$ for $x, y \in
+  P^\mathrm{act}$, with linearity up to a fixed translation.
+\item If $\phi$ is only bi-Lipschitz (not isometric), document
+  the bi-Lipschitz constants $(\underline{L}, \bar{L})$ and apply
+  them as multipliers to the (REP) / (DISP) bounds downstream.
+\end{enumerate}
+
+\paragraph{Failure mode.} If $\phi$ is not bi-Lipschitz on
+$P^\mathrm{act}$, the algebraic kernel of
+Theorem~\ref{thm:concgap-scoped} cannot be transferred to the
+deployment claim's $\|\Pproxy - \Ttruth\|$ form via
+Lipschitz transfer~\citep[Theorem~2]{lasser2026micro}. Mitigation:
+choose a different embedding, or restrict the deployment's scope
+to a subspace where bi-Lipschitz $\phi$ exists.
+
+\subsection{(REP) audit (representativeness)}
+
+\paragraph{Procedure.}
+\begin{enumerate}
+\item Define the base population measure $\mu$: the auditor's
+  fair-or-natural distribution over admissible counterparties
+  (typically uniform over S1-admissible
+  participants~\citep{lasser2026paper8a}, or weighted by some
+  natural allocation).
+\item In the embedded representation under the certified $\phi$,
+  produce a one-sided upper confidence bound on $\|\bar\Delta\|$
+  where $\bar\Delta := \mathbb{E}_\mu[\phi(U_c) - \phi(W)]$. The
+  bound is computed by sampling counterparties under $\mu$ (or
+  reweighting observed-attestation samples to $\mu$ with stated
+  coverage assumptions) from utility-disclosure attestations on
+  the verification ledger; conservative bounding is required
+  because (REP) is a hypothesis the deployment claim conditions
+  on, not a quantity the deployment claim merely monitors.
+\item Certify $\|\bar\Delta\| \leq \rho_\mathrm{rep}$ at the
+  audit's chosen confidence level for a deployment-class threshold
+  $\rho_\mathrm{rep}$.
+\item Document $\rho_\mathrm{rep}$, the confidence level, and the
+  sampling/reweighting design in the audit attestation.
+\end{enumerate}
+
+\paragraph{Cadence.} Initial calibration before deployment;
+re-calibration on counterparty-population changes (additions,
+removals, or substantial weight-redistribution).
+
+\paragraph{Failure mode.} The counterparty population's mean
+utility deviates systematically from the welfare-relevant truth
+$W$. Mitigation: counterparty-selection-process diversification,
+category-coverage audit~\citep[Audit
+3]{lasser2026paper10}, or restriction of the deployment's scope
+to a counterparty subset where (REP) holds.
+
+\subsection{(DISP) audit (bounded dispersion)}
+
+\paragraph{Procedure.}
+\begin{enumerate}
+\item In the embedded representation under the certified $\phi$,
+  produce a one-sided upper confidence bound on the
+  $\mu$-population variance $\int \|\Delta_c -
+  \bar\Delta\|^2 \,d\mu(c)$, where per-counterparty deviations
+  $\Delta_c = \phi(U_c) - \phi(W)$ are read from
+  utility-disclosure attestations. As with (REP), the variance is
+  taken with respect to $\mu$, not the trade-flow weighting $w$:
+  audit sampling under $\mu$ (or reweighting to $\mu$ with stated
+  coverage) is required.
+\item Certify the variance $\leq \sigma^2$ at the audit's chosen
+  confidence level for a deployment-class constant $\sigma$.
+\item Document $\sigma$, the confidence level, and the
+  sampling/reweighting design in the audit attestation.
+\end{enumerate}
+
+\paragraph{Cadence.} Continuous attestation under the calibrated
+$\mu$-sampling design over a rolling calibration window;
+confidence-bound violations trigger audit re-calibration. Observed
+trade-flow ($w$) statistics may serve as monitoring signal but do
+not by themselves certify the $\mu$-variance hypothesis.
+
+\paragraph{Failure mode.} High dispersion across counterparties
+(some counterparties' utilities deviate far from $W$, even when
+the population mean is centered). The bound in
+Theorem~\ref{thm:concgap-scoped} weakens but does not collapse;
+the deployment claim accommodates large $\sigma$ at the cost of
+larger Goodhart-slack ceiling.
+
+\subsection{(COAL) audit (coalition closure)}
+
+\paragraph{Procedure.}
+\begin{enumerate}
+\item Run \emph{coalition-detection analysis} on the verification
+  ledger: identify counterparties with correlated trade flows
+  above a deployment-class threshold (using
+  repeated-beneficiary linkage, governance-vote alignment,
+  attestation-source clustering).
+\item Partition $\mathcal{C}$ into equivalence classes
+  (coalitions) by the detected correlation structure.
+\item Re-compute $\HHI$ on the post-partition (coalition-level)
+  weights.
+\item \textbf{Certify clause~(ii) of (COAL).} Document the
+  deployment-class bound $N_{\max}$ on the post-partition
+  counterparty cardinality, together with the onboarding /
+  governance policy that prevents $N$ from scaling with $|P|$.
+  Document the choice of base measure $\mu$ as the uniform
+  distribution on the post-partition counterparties (the
+  structural prerequisite for the HHI-to-$\chi^2$ translation
+  $\chi^2(w \,\|\, \mu) = N \HHI(w) - 1$). Deployments that
+  prefer to commit directly to a $\chi^2$ ceiling certify
+  $\chi^2(w \,\|\, \mu) \leq \Xi$ for a deployment-class constant
+  $\Xi$ instead, with $\mu$ documented as whatever fair-or-natural
+  base measure the audit selects.
+\item Produce a one-sided upper confidence bound on the
+  latent-coalition residual $\eta_\mathrm{latent}$ from the
+  audit's detection-power calibration: bound $\eta_\mathrm{latent}
+  \leq p_\mathrm{miss} \cdot \|\Delta\|_{\max}$ where
+  $p_\mathrm{miss}$ is the threshold-miss probability for the
+  worst-case undetected coalition size and $\|\Delta\|_{\max}$ is
+  the worst-case per-counterparty deviation magnitude in the
+  deployment's threat model.
+\item Document the coalition partition, $N_{\max}$ (or $\Xi$),
+  and the $\eta_\mathrm{latent}$ confidence bound (with confidence
+  level) in the audit attestation.
+\end{enumerate}
+
+\paragraph{Cadence.} Continuous coalition detection on the
+verification ledger; audit-cadence alerts on detected
+coalition-formation events; re-partition triggered when new
+coalitions form.
+
+\paragraph{Failure mode.} Many small counterparties acting in
+coordinated fashion (a hidden coalition) drive the effective
+$\HHI$ above the audited threshold. The deployment claim's
+bound on Goodhart slack picks up the $\eta_\mathrm{latent}$
+residual; deployments where $\eta_\mathrm{latent}$ cannot be
+bounded operationally are outside
+Theorem~\ref{thm:concgap-scoped}'s scope.
+
+\subsection{Integration with existing audit infrastructure}
+
+Several of these new audits overlap with existing audits
+in~\citep[\S 7]{lasser2026paper10}:
+\begin{itemize}
+\item (C7.RATE) and channel-projection audit: integrates
+  primarily with Audit~4 (bounded co-evolution
+  calibration, dual-mode), which is the deployment-tooling home
+  for the structural inputs to
+  Theorem~\ref{thm:c7-corollary}; Audit~7 (SPRT-applicability +
+  gap-growth + clock comparability) supplies the (C5.HOEFF) clip
+  radius and related SPRT-side calibration inputs but not the
+  (C7.RATE) upper bound.
+\item (REP) audit: integrates with Audit~3
+  (cooperative-vs-redundancy audit), since both rely on
+  category-coverage analysis.
+\item (DISP) audit: new, but uses utility-disclosure attestations
+  that the existing infrastructure already produces.
+\item (COAL) audit: integrates with $I_9$
+  (substrate-exclusivity observability) and $I_{10}$
+  (coverage/materiality routing) of \citep[Deployment Safety]{lasser2026paper10},
+  since coalition detection uses ledger-linkage analysis those
+  invariants already specify.
+\end{itemize}
+
+The audit hooks above are the minimum needed for
+Theorem~\ref{thm:c7-corollary} and Theorem~\ref{thm:concgap-scoped}
+to apply; consolidated audit-tooling combining these with
+\citep[\S 7]{lasser2026paper10}'s existing audits is the natural
+target for further operational-tooling work.

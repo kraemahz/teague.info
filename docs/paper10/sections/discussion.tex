@@ -16,12 +16,16 @@ defensible deployment-safety claim with three components:
 Under the eleven invariants $I_1$--$I_{11}$, the canonical
 tripartite substrate identification, the cooperative-overlap
 regime, the causally-grounded inner-alignment condition, continuous
-SPRT monitoring, and the SA1 surrogate-adequacy assumption, the
-Goodhart slack between proxy and operational truth is bounded by a
-constant intensive in the system's absolute capability magnitude.
-Each conditional is named, ledger-observable (or, for SA1,
-empirically testable), and operationally implementable via the
-deployment-tooling specification of \S\ref{sec:deployment_tooling}.
+SPRT monitoring, and the Concentration-Gap structural conditions
+(Assumption~\ref{ass:concgap_conditions}: representativeness,
+bounded dispersion, coalition closure, and Lipschitz embedding
+compatibility), the Goodhart slack between proxy and
+operational truth is bounded by a constant intensive in the
+system's absolute capability magnitude. Each conditional is
+named, operationally auditable from ledger or
+verification-protocol-design state, and implementable via the
+deployment-tooling specification of
+\S\ref{sec:deployment_tooling}.
 
 \paragraph{Capability-magnitude independence.}
 The bound's intensivity is the structural inversion of
@@ -34,10 +38,11 @@ characterize. This is the punchline the title promises: a
 \emph{provably safe regime for capability-unbounded deployment}.
 
 \paragraph{Named residual structure.}
-The four residuals (R1--R4 of Theorem~1) are explicit components of
-the claim, not hidden caveats.  Operators can verify whether their
-deployment falls outside each residual; the residuals collectively
-name the boundaries of what the deployment claim covers.
+The five residuals (R1)--(R5) of Theorem~1 are explicit components
+of the claim, not hidden caveats.  Operators can verify whether
+their deployment falls outside each residual; the residuals
+collectively name the boundaries of what the deployment claim
+covers.
 
 The structural shape of the claim is a multi-conditional theorem
 with each condition visible, each empirical assumption named, and
@@ -46,6 +51,126 @@ sweeping safety guarantee; it is the demonstration that a sweeping
 guarantee is not necessary for operational deployment safety,
 provided the conditions are structurally chosen to make the bound
 capability-magnitude-independent.
+
+\subsection{Sensitivity to failure of the named conjecture and assumptions}
+\label{sec:disc_sensitivity}
+
+Theorem~\ref{thm:deployment_safety}'s three-layer claim is not
+unconditional.  After the companion-paper integration, the
+deployment claim conditions on the twelve operational conditions
+(C1)--(C12) plus the structural conditions of
+Assumption~\ref{ass:concgap_conditions} (representativeness,
+bounded dispersion, coalition closure, and Lipschitz embedding
+compatibility) and the (C7.RATE) sub-clause introduced as part
+of (C7).  Failure of any structural condition triggers a
+specific audit-detectable signal rather than a monolithic
+hard-failure; this subsection traces the failure-mode taxonomy
+under the structural decomposition.
+
+\paragraph{Bounded co-evolution failure factors through three primitive conditions.}
+\citep[Theorem~1]{lasser2026foundations} derives bounded
+co-evolution from (C5.HOEFF), the new (C7.RATE), and the
+verification protocol's channel-projection structure.  Failure of
+(C7) in the deployment claim therefore decomposes:
+
+\begin{itemize}
+\item \textbf{(C5.HOEFF) failure.}  Per-step LLR is unbounded,
+  $\Bclip$ is undefined.  Detection: Audit~7
+  (\S\ref{sec:tooling_substrate_audits}) catches this.  Mitigation:
+  enforce LLR clipping via verification-protocol design.
+\item \textbf{(C7.RATE) failure.}  Exposure event count grows
+  faster than $\lambda_{\max} \cdot \tau_{\mathrm{meta}}$.
+  Detection: (C7.RATE) audit
+  (\citep[\S 6]{lasser2026foundations}) catches this.  Mitigation:
+  hard rate limits enforced by substrate-exclusive infrastructure.
+\item \textbf{Channel-projection failure.}  Ledger event-classification
+  policy doesn't respect the zero-outside-engagement convention.
+  Detection: structural-projection audit
+  (\citep[\S 6]{lasser2026foundations}) catches this.  Mitigation:
+  redesign verification-protocol classification policy.
+\end{itemize}
+
+The previous characterization of bounded-co-evolution failure as
+``hard-failure with no graceful-degradation pathway'' is replaced
+by this decomposition: each primitive failure mode has its own
+audit signal and mitigation pathway.
+
+\paragraph{Concentration-Gap structural-condition failure factors through (REP), (DISP), (COAL), (EMB).}
+\citep[Theorem~2]{lasser2026foundations} establishes the scoped
+Concentration-Gap result under (REP) + (DISP) + (COAL) and
+Lipschitz embedding compatibility.  The previous monolithic
+HHI surrogate-adequacy failure mode decomposes:
+
+\begin{itemize}
+\item \textbf{(REP) failure.}  The counterparty population's mean
+  utility deviates systematically from the welfare-relevant truth
+  $W$, with $\|\bar\Delta\| > \rho_{\mathrm{rep}}$.  Detection:
+  counterparty-selection-process diversity audit.  Mitigation:
+  counterparty-population diversification or scope restriction.
+
+\item \textbf{(DISP) failure.}  Counterparty utility deviations
+  have unbounded population variance.  Detection: $\mu$-population
+  utility-disclosure sampling/reweighting per the (DISP) audit
+  procedure of \citep[\S 6]{lasser2026foundations} (trade-flow
+  $w$ statistics serve only as monitoring signal, not
+  certification).  Effect: the forward bound in
+  \citep[Theorem~2]{lasser2026foundations} weakens but does not
+  collapse; the deployment claim accommodates large $\sigma$ at
+  the cost of a larger Goodhart-slack ceiling.
+
+\item \textbf{(COAL) failure.}  Hidden coalitions of small
+  counterparties produce coordinated effects that the audit's
+  partition does not capture, with
+  $\eta_{\mathrm{latent}}$ unbounded.  Detection:
+  coalition-detection limits on the verification ledger.
+  Mitigation: tighter coalition-detection thresholds or scope
+  restriction.
+
+\item \textbf{(EMB) failure.}  The embedding $\phi$ is not
+  bi-Lipschitz on the operationally active subspace, so the
+  algebraic kernel of \citep[Theorem~2]{lasser2026foundations}
+  does not transfer to the deployment claim's $\|\Pproxy -
+  \Ttruth\|$ form.  Detection: embedding-$\phi$ certification
+  audit (\S\ref{sec:tooling_concgap_structural}).  Mitigation:
+  choose a different embedding, or restrict the deployment's
+  scope to a subspace where bi-Lipschitz $\phi$ exists.
+\end{itemize}
+
+The previous characterization of HHI surrogate-adequacy failure
+as ``Layer~1 collapses, Layer~2 binds without modification'' is
+partially preserved (the layers are still independent in their
+formal structure) but with structural specificity: Layer~1
+binding requires (REP) + (DISP) + (COAL) and embedding
+compatibility all to hold, and the deployment can localize which
+condition has failed.
+
+\paragraph{The universal Concentration-Gap conjecture.}
+\citep[Microfoundation]{lasser2026micro}'s universal model-free
+Concentration-Gap conjecture (optimization pressure correlates
+with gap exploitation in any deployment context) remains open.
+The companion paper~\citep{lasser2026foundations} discharges only
+the scoped version under (REP) + (DISP) + (COAL) + (EMB).  If
+the universal conjecture is false in some regime not
+characterized by these conditions, the deployment claim does not
+bind in that
+regime; the auditable conditions are precisely the ones that
+characterize where the deployment claim does bind.  See
+\S\ref{sec:disc_indefinite} for the conjecture's status as a
+deferred-indefinitely research-program target.
+
+\paragraph{Asymmetric failure profiles, after integration.}
+The companion-paper integration eliminates the previous
+asymmetry between bounded co-evolution (load-bearing,
+hard-failure) and the HHI surrogate-adequacy assumption
+(empirical-adequacy, graceful-degradation): both now decompose
+into specific structural-condition failures with audit-detectable
+signals.  The remaining empirical-adequacy
+question --- whether the universal Concentration-Gap conjecture
+holds outside the (REP) + (DISP) + (COAL) + (EMB) regime --- is a
+research-program question rather than a deployment-claim
+question.  The deployment claim binds within the audit-certifiable
+structural regime; failure modes outside that regime are scope
+restrictions, not deployment-claim failures.
 
 \subsection{Connection to the alignment-research program}
 \label{sec:disc_alignment}
@@ -98,15 +223,98 @@ adversarial fake-verification examples, process supervision tied
 to real attestations). These are research directions in their own
 right.
 
-Operators using deployments that meet (C4) can invoke This paper's
+Operators using deployments that meet (C4) can invoke this paper's
 theorem; operators using deployments that do not meet (C4) cannot.
 The deployment claim does not produce safety where (C4) fails; it
 produces safety where (C4) holds.
 
-\subsection{Open questions deferred to companion work}
+\subsection{Positioning relative to existing safety proposals}
+\label{sec:disc_related}
+
+\S\ref{sec:wrong_frame} contrasted this paper's approach with three
+paradigms (capability evaluations, scaling laws, RLHF audits) at
+the framing level.  The deployment-safety literature also contains
+several formal and semi-formal safety proposals that share
+structural features with the cooperative-anchoring architecture.
+Brief positioning:
+
+\paragraph{Constitutional AI \citep{bai2022constitutional}.}
+Constitutional AI uses a written constitution as a high-level
+training-objective specification, with self-critique against the
+constitution shaping the agent's effective objective.  The
+overlap with this paper's (C4) is conceptual: both target the
+agent's effective objective rather than just behavioral
+compliance.  The difference is that constitutional AI specifies
+\emph{what} the agent should value (the constitution), while
+(C4) specifies a \emph{structural property} the effective
+objective must have (causal grounding in cooperative production
+rather than verification-pass signals).  A constitutional-AI
+deployment that constitutionally values cooperative outputs
+\emph{causally} (not merely their pass-signals) could satisfy
+(C4); whether existing constitutional approaches deliver this
+causal-grounding property is the same open question
+\S\ref{sec:weaker_c4} flagged for vanilla RLHF.
+
+\paragraph{Debate, iterated amplification, and scalable oversight
+\citep{irving2018debate, christiano2018amplification, bowman2022scalable}.}
+These proposals all address the human-audit-bandwidth bottleneck
+that this paper formalizes via $I_{11}$ (latency bounds) and
+that drives the cooperative-anchoring asymmetric-capture residual.
+Debate is structurally a multi-substrate proposal: two AI
+substrates with opposing positions, adjudicated by a human
+substrate.  This pattern overlaps with this paper's tripartite
+identification, but the debate framework treats AI-vs-AI
+disagreement as the safety mechanism rather than substrate
+distinctness as a structural property.  Iterated amplification
+and scalable oversight propose recursive auditing patterns that
+could in principle satisfy $I_{11}$ at scale, but their formal
+guarantees are weaker than the conditional theorem this paper
+provides.  The relationship is that scalable-oversight protocols
+could be the operational machinery by which a deployment
+satisfies $I_{11}$; this paper would then bound the deployment
+safety conditional on that satisfaction.
+
+\paragraph{Formal verification of neural network properties
+\citep{katz2017reluplex, ehlers2017formal, wang2021beta}.}
+Formal NN-property verification produces certified bounds on
+specific input-output relationships of neural networks.  This is
+complementary to, not competing with, the deployment-safety
+theorem: NN-property verification certifies properties of the
+agent at the model level (input $\mapsto$ output behaviors);
+this paper certifies properties of the agent's deployment
+context (substrate structure, witness coverage, invariant
+satisfaction) and bounds Goodhart slack against the alignment
+property.  A deployment combining model-level certification
+(formal verification of specific input-output bounds) with
+deployment-level certification (Theorem~1 invocation) provides
+stronger guarantees than either alone.  Model-level
+certification does not, however, substitute for the $I_3$--$I_8$
+operational invariants this paper requires: even a fully-verified
+model can fail (C4) if its effective objective tracks
+verification-pass signals rather than causally-grounded
+cooperative outcomes.
+
+\paragraph{What this paper adds.}
+The novel contribution beyond these is the
+\emph{capability-magnitude-independent} bound: an intensive
+constant on Goodhart slack that does not scale with $|P|$.  The
+existing safety proposals all have implicit capability-dependence
+in their guarantees (debate effectiveness depends on debater
+capability; amplification depth grows with task complexity;
+scalable-oversight bandwidth grows with output volume; NN-property
+verification scales poorly with network size).  The composition
+this paper establishes shows that under named operational
+conditions, a sweeping capability-independent bound is achievable
+--- not by solving the inner-alignment problem, but by structuring
+the deployment so that the alignment property's failure mode is
+bounded by substrate-structural quantities rather than by
+capability-estimation properties.
+
+\subsection{Open questions deferred to follow-up work}
 \label{sec:disc_companion}
 
-Two structural items are deferred to a companion paper:
+After the companion-paper integration~\citep{lasser2026foundations},
+one structural item remains as a natural follow-up target:
 
 \paragraph{The channel-mediation conjecture.}
 ``All $\Delta r_K$ realizes through observable channels:
@@ -116,42 +324,53 @@ concentration, yielding a structural bound $\Delta r_K \leq L_H
 conjecture would close the channel-orthogonal residual (R1):
 strategies that achieve $\Delta r_K \geq \rext$ without producing
 any of the four monitored channel deviations would be impossible.
-The current paper acknowledges R1 as a real residual; the
-companion paper would establish whether R1 is empty or genuinely
-contains undetectable strategies.
+The current paper acknowledges R1 as a real residual; a follow-up
+paper would establish whether R1 is empty or genuinely contains
+undetectable strategies.
 
-\paragraph{The HHI--$\Delta r_K$ structural relationship.}
-The conjectural relationship between trade-flow concentration and
-post-domination internal-rate efficiency. If proved, this would
-either establish SA1 as a derived consequence (closing the
-empirical-adequacy assumption) or refute it (forcing replacement
-of $I_5$ with a different invariant). The empirical validation
-pathway of \S\ref{sec:sa1_empirical} is the natural companion-paper
-methodology.
-
-The two open questions are related but distinct: the channel-
-mediation conjecture closes R1; the HHI--$\Delta r_K$ relationship
-closes the SA1 dependence. This paper's deployment claim is
-strengthened by either; both would produce a deployment claim
-conditional only on (C1)--(C5), not on SA1.
+This open question is independent of the deployment claim's
+binding: the deployment claim binds under the companion-paper
+structural conditions plus operational invariants and conditions.
+Closing it would tighten the deployment claim's hypothesis set
+further but is not required for current operational use.
 
 \subsection{Open questions deferred indefinitely}
 \label{sec:disc_indefinite}
 
-Four items are not This paper's scope and require their own research
-programs:
+Five items are not this paper's scope and require their own
+research programs:
+
+\paragraph{The universal Concentration-Gap conjecture.}
+\citep[Microfoundation]{lasser2026micro}'s universal model-free
+Concentration-Gap conjecture (optimization pressure correlates
+with proxy-truth gap exploitation in any deployment context)
+remains open after the companion paper's scoped discharge.
+\citep[Theorem~2]{lasser2026foundations} proves the conjecture
+under (REP) + (DISP) + (COAL) + (EMB) plus the embedded-Lipschitz
+machinery of \citep[Microfoundation]{lasser2026micro}; a
+universal proof would require a formal optimizer/selection model
+that the current GFM machinery does not provide.  Candidate
+frameworks include the mesa-optimization
+work~\citep{hubinger2019risks} and the formal-Goodhart
+machinery~\citep{elmhamdi2024goodhart, majka2025strong}, none of
+which yields a full proof on their own.  This is a
+research-program target whose closure is not on the deployment
+claim's critical path: the scoped discharge is sufficient for
+current operational use, and the auditable structural conditions
+characterize precisely where the deployment claim does bind.
 
 \paragraph{The welfare-truth bridge.}
 Stance S0 takes operational truth $\Ttruth = \volRwin$ as the
 deployment claim's reference. The relationship between operational
 truth and welfare-relevant truth ($\Ttruth_{\mathrm{welfare}}$, in
-the sense of broader human flourishing) is not addressed. the Microfoundation paper~\citep{lasser2026micro}
-\S goodhart's $T$-failure-modes remark establishes that the
-operational and welfare-relevant truths can diverge; bridging them
-is its own research program.
+the sense of broader human flourishing) is not addressed.
+\citep[Microfoundation]{lasser2026micro}'s remark on Goodhart-type
+$T$-failure-modes establishes that the operational and
+welfare-relevant truths can diverge; bridging them is its own
+research program.
 
 \paragraph{The monolithic-agent action-partition refinement.}
-$I_4$ (subsumption frequency) and $I_5$ (HHI on trade flow)
+$I_3$ (subsumption frequency) and $I_5$ (HHI on trade flow)
 presuppose a clean partition of the agent's action space. Monolithic
 LLM-style agents without explicit subsumption operators may not
 satisfy this. Extending the deployment claim to monolithic agents
@@ -173,7 +392,7 @@ is the relevant research direction.
 
 \paragraph{Empirical threshold calibration.}
 The thresholds $(\theta_1, \ldots, \theta_{11})$ in the operational
-invariants are policy choices. this paper commits to a methodology
+invariants are policy choices. This paper commits to a methodology
 (deployment-specific calibration via the deployment-tooling
 specification) but does not fix specific numerical values. Real
 deployments will need to choose thresholds based on the deployment's
@@ -181,7 +400,7 @@ specific threat model, capability profile, and operational
 constraints. Empirical work on threshold calibration in real
 deployments is a substantial follow-on.
 
-\subsection{The structural significance of This paper's contribution}
+\subsection{The structural significance of this paper's contribution}
 \label{sec:disc_significance}
 
 We close with three observations on what this paper contributes to
