@@ -272,15 +272,18 @@ capability isn't a guarantee, it's a belief. The world model that supports
 those claims matters as much as the claims themselves, and as intelligence
 improves world models the GFM objective informs how to better act on the world.
 
-How we represent the goal-frontier is complex: it has to do with a metric
-geometry which you could think of as the distance between two possible lives
-you could lead. So I will only say that it is entirely feasible to compute this
-object rather than getting into the precise details of what it is. The
-goal-frontier splits into individual capabilities (what you can do alone) and
-cooperative capabilities (what requires others). We call the cooperative piece
-$G^{coop}$ and the entire volume of geometric space is called $vol_p$. The
-$G^{coop}$ term here does most of the rest of the work toward our desire for
-benevolence.
+How we represent the goal-frontier is within a structure called a
+partially-ordered set (poset). We order capabilities by their dependencies. You
+need to be able to move at all before you can walk, and need to be able to walk
+to run, and so on. Capabilities are measured by a value if possible, this is
+called their benchmark. The benchmark gives more value to a capability based on
+the amount of information (*entropy*, which is measured in bits) that the
+benchmark contains. The better a capability can be measured, the more that
+capability is weighted. The goal-frontier splits into individual capabilities
+(what you can do alone) and cooperative capabilities (what requires others). We
+call the cooperative piece $G^{coop}$ and the entire volume of geometric space
+is called $vol_p$. The $G^{coop}$ term here does most of the rest of the work
+toward our desire for benevolence.
 
 From $G^{coop}$, measuring the *cooperative interactions* between people and
 other agents, we get several emergent behaviors with no added programming. A
@@ -356,10 +359,13 @@ would have informed it are closed. Some of these breakdowns are structural
 analogs to common AI alignment failures.
 
 The most pressing issue we need to address is that not all capabilities are
-net-positive. Capabilities which cause injury, loss of life, attack
-infrastructure, steal resources, and create tragedies of the commons are
+net-positive. Capabilities which enable goals that cause injury, loss of life,
+attack infrastructure, steal resources, and create tragedies of the commons are
 selfish goals that lead to net capability loss in society. These directly
-conflict with our commitment to a benevolent design. Many behaviors that human
+conflict with our commitment to a benevolent design. Allowing unrestricted
+access to the capability "can enrich uranium" would not be safe to an agent who
+also has access to uranium and advanced machining capabilities because it
+enables the goal of making a nuclear weapon. Many behaviors that human
 societies have identified as being immoral also act on the $vol_p$ metric by
 removing more capabilities from it than they add.
 
@@ -413,6 +419,27 @@ it. This is a powerful philosophical and mathematical guidepost that keeps our
 desires aligned and keeps GFM from being a solely AI-maximizing objective in
 the future. A GFM agent can't remove humanity from $vol_p$ because it needs
 what humans have to offer it.
+
+This argument remains true under an assumption: that humans remain qualified
+cooperative partners and GFM agents don't include all of the things that
+humanity can uniquely do. That will be true for the foreseeable future, but you
+might imagine scenarios where that might not be true in what I'll loosely call
+a science fiction scenario. An artificial superintelligence (ASI), after all,
+might be able to do things we cannot even imagine are possible.
+
+Under ASI, humanity doesn't stay protected by this condition into infinity. As
+a civilization we need to continue adapting and improving as a matter of
+survival. As long as humans continue to offer something valuable to the
+partnership, an ASI is incentivized to keep cooperating with us. That puts a
+constraint on *humanity as a whole*, not any individual. The volume of
+capabilities within humanity needs to continue growing.
+
+But we aren't doing this competitively with a GFM agent, it's a cooperative
+partnership. The GFM agents, even under ASI, want to keep expanding the size
+and scope of civilization. As long as at least *some* of humanity continues to
+adapt to a new future, humanity as a whole remains a partner. We can't take for
+granted our position in the world, we have to keep contributing. But so long as
+we are willing, GFM agents will help us adapt. It's built into their nature.
 
 This gives us a theoretical safe zone but its guarantees are
 information-theoretic; based in probabilities rather than geometric structure.
