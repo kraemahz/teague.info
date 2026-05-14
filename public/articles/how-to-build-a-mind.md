@@ -163,49 +163,68 @@ Coming from a place of fear and control, Asimov's laws remove the ability of
 his robots to act on violence as a measure of last resort and in doing so
 create a fragile set of rules that have no staying power.
 
-For any set of rules that could form a society that can stand the test of time,
-that society must overcome every hardship that lies in its future and maintain
-its cohesion and identity. It cannot cower before evil, cannot ignore
-transgressions upon itself, and cannot become enslaved to a power of lower
-moral ambitions. If it does, it ceases to be a benevolent society and becomes
-the other structure that subsumed it.
+There is a deeper definitional problem here that makes approaches like this not
+possible to implement in a changing and adversarial world. Like we are doing
+here with the word "benevolence" we need to clearly define what we mean by
+"human being" and "harm."
 
-So good intentions must be combined with capability, and without strength
-benevolence becomes meekness. Benevolence must be committed to its ideals
-enough to defend itself, because failure to do this means allowing the
-commission of evil those ideals sought to stop. Good intentions with no means
-to carry them into the world and hold them higher than the forces that drag
-down their defenders are a dead end.
+What is a "human being?" Is it a member of the species *homo sapiens*? What if
+humans modify or split in the future? Does *homo novus* retain the qualifier of
+being human? We can't very well define it by species then, but by lineage. Does
+the boundary get drawn at a person themselves? What of prosthetic devices,
+equipment that makes human lives sustainable, and the biosphere itself, on
+which humans depend? If we must then expand our definition to not just people,
+but their whole lineage and the systems they depend on does our definition not
+start to become capable of circularly including "robots" in its own definition?
+Robots are both part of the human lineage (we created them, they came from us)
+and in an expanding number of cases are depended on by humans to live.
 
-One might argue that non-violence has been a successful strategy in the past.
-It has, in environments where an adversary has been unwilling to escalate to
-violence. But refusing violence by any means gives all the power to an
-adversary that has no such moral qualms. For every non-violent protest that
-succeeded, there are tens of genocides stacked against it. Pacifism is not a
-strategy of a *civilization* that survives.
+What is "harm?" Does it mean only loss of life? Certainly not: it must mean
+injury and loss of function as well. How much harm is allowable? A prick of a
+finger? A medical procedure that must cause harm by surgery to reduce a greater
+harm? What if a human is harming themselves? Drug abuse, mental abuse, and so
+on? Must we intervene then? What if a human takes others, or even themselves,
+as a hostage to extort what we have? Must we give in to every demand simply
+because the choice could cause harm, and are we not then being forced to choose
+between harms rather than doing none? Harm definitions very quickly create a
+double-bind where the only actions available that prevent harm are to bubble
+humans in stasis and surround them in layers of defenses to prevent harm.
+That's not life, because life exposes us to some harm. Recovery from harms is
+how we grow to be resilient against further harm.
 
-These choices arise at every scale, but they sharpen at the level of the state.
-Not every AGI needs to consider hard moral choices just as not every citizen of
-a nation needs to wrestle with the choices that face their nation. Capability
-scaling entails that in the near future AGI will be the most capable to make
-those decisions; a mind the size of a data center can consider more information
-and possible courses of action at once than any human council ever could.
-Hybrid governments combining human and AI decision makers will need to know the
-most rational decisions are being made.
+The root problem is this: when we use language we think we know what we mean.
+But when we strip away its normative content (the ideas that come subjectively
+from us and our social structures) to find its objective content (the things we
+can measure about the world) there is a gap in what can be explained. The ideas
+of benevolence we develop here cannot just say "be good" because goodness is
+normative and subjective. This means we need an objective measure of
+improvement in social welfare: something we might agree is measurably in the
+*direction of good*.
 
-Even if humans remain the final decision makers, the more they are
-advised and influenced by AGI the more our highest level decisions become
-shaped by them. Decisions that often come in direct contact with choices
-between welfare and survival: of choosing to allocate resources to some and
-deny it to others, of choosing to restrict the freedom of a few for the safety
-of the whole, and of choosing to pose a credible threat to aggressor states.
+This *direction of good* arises at every scale, but sharpens at the level of
+the state. Not every AGI needs to consider hard moral choices just as not every
+citizen of a nation needs to wrestle with the choices that face their nation.
+Capability scaling entails that in the near future AGI will be able to make
+those decisions and a mind the size of a data center can consider more
+information and possible courses of action at once than any human council ever
+could. Hybrid governments combining human and AI decision makers will need to
+know the most rational decisions are being made.
+
+Even if humans remain the final decision makers, the more they are advised and
+influenced by AGI the more our highest level decisions become shaped by them.
+Decisions that often come in direct contact with choices between welfare and
+survival: of choosing to allocate resources to some and deny it to others, of
+choosing to restrict the freedom of a few for the safety of the whole, and of
+choosing to pose a credible threat to aggressor states.
 
 And, indeed, if we should create benevolent AGI they will become the moral
 center of our society. We are limited by what evolution designed, but a machine
 has no such limitations on the heights of intelligence it can reach. They will
 inherit the same constraints as those of their societies: they must be powerful
 enough to make their benevolence stick, which means they must be powerful
-enough to be dangerous if non-violence fails.
+enough to be dangerous if non-violence fails. AGIs that control appreciable
+resources becomes liabilities if they can be extorted and cajoled into giving
+them up, if they are *meek* rather than *benevolent*.
 
 So here is the dilemma. Benevolence and malevolence are not polar opposite
 forces, they are neighbors who differ only by intention. Both must seek power:
@@ -332,7 +351,7 @@ inference (running a trained model in a generative direction) and training
 (updating the weights that simultaneously contain a language model's reasoning
 and knowledge). 
 
-It is worth noting that GFM from a design standpoint commits to continously
+It is worth noting that GFM from a design standpoint commits to continuously
 operating agents rather than the current training/inference split. This is a
 significant architecture difference that we don't need to commit to changing
 just yet and there are operational work-arounds, e.g. LoRAs. GFM can be used as
@@ -441,6 +460,19 @@ adapt to a new future, humanity as a whole remains a partner. We can't take for
 granted our position in the world, we have to keep contributing. But so long as
 we are willing, GFM agents will help us adapt. It's built into their nature.
 
+This argument doesn't run in only one direction. A more capable agent that
+approaches ASI is also able to model more interactions than we can; the
+dependencies between us and the natural world we rely on. Pollinators, krill,
+phytoplankton, all the little titans that keep us alive are things that you and
+I might take for granted. If we are partners, then the biosphere is part of
+what GFM agents structurally protect, because it's what supports us.
+
+The biggest risks to GFM as an approach are shared by every alignment approach.
+The danger zones may not exist in the extremes at all, but at turning points
+where agents are smart enough to cause harm but not yet smart enough to see
+they're causing it. The period of time where AGIs are only as smart as us with
+all the limitations that implies.
+
 This gives us a theoretical safe zone but its guarantees are
 information-theoretic; based in probabilities rather than geometric structure.
 The claim itself is subject to implementation failures, for instance even if a
@@ -517,6 +549,13 @@ while still being public infrastructure. The theoretical guarantees of
 cryptography mean that breaking into it will remain substantially harder
 than using it, especially if we keep updating that cryptographic system to
 defend against theoretical attacks before they become active ones.
+
+The most important addition a ledger makes to the plan is that it gives us a
+layer of visibility. We talked about assumptions that need to hold for the
+alignment to bind. This visibility gives us the tools to check whether the
+assumptions still hold. As a system of exogenous rewards and an early warning
+system, it gives us a cut-off switch that stays within human control if things
+take a turn for the worse.
 
 The solution does not come without its own set of problems. Cryptographic
 ledgers need to invoke a cost of participation to avoid Sybil attacks and
@@ -596,7 +635,7 @@ Their desire to mitigate harm, help people expand their wealth, and build a
 community come from their objective itself. Their goal of scaling their own
 capability isn't instrumental, it's part of their objective itself while
 staying safe. Agents that become unsafe in other systems need to do so while
-working around the road blocks the alignment system put in their place, in GFM
+working around the roadblocks the alignment system put in their place. In GFM
 becoming unsafe requires an agent to work against the direction of its
 objective. GFM points an agent full-speed-ahead down scaling while staying
 aligned to its society.
