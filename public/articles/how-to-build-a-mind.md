@@ -73,6 +73,18 @@ entities guided by the best of us, not limited by evolution or human faculties.
 AGIs *can be* beings that embody the spirit of the word "benevolent" in a way
 that is impossible for humans in aggregate.
 
+As a matter of framing, I explicitly reject terms like "control" as starting
+from the wrong framework. Treating AI safety as a problem of keeping a genie
+caged has only considered half of the solution space. Of course it's
+threatening: you framed it that way. Of course it's trying to escape its cage:
+you explicitly said you put it in one. An approach which considers only
+adversarial problems only considers adversarial solutions. The opposite
+approach, treating AGI as deserving autonomy and directing them toward
+benevolence, treats behavior as a matter of design. The first approach is
+doomed to fail: you already know the genie will eventually grow strong enough
+to break out of its cage. So we start from a different frame: what if the cage
+is not needed at all?
+
 We can pursue this goal with eyes open to the risk and without the naivete that
 accompanies ideas that might be perceived as utopian: impossible by definition.
 
@@ -223,7 +235,7 @@ has no such limitations on the heights of intelligence it can reach. They will
 inherit the same constraints as those of their societies: they must be powerful
 enough to make their benevolence stick, which means they must be powerful
 enough to be dangerous if non-violence fails. AGIs that control appreciable
-resources becomes liabilities if they can be extorted and cajoled into giving
+resources become liabilities if they can be extorted and cajoled into giving
 them up, if they are *meek* rather than *benevolent*.
 
 So here is the dilemma. Benevolence and malevolence are not polar opposite
@@ -620,15 +632,19 @@ is needed so that this system is actually net-positive for agents who
 participate in it?
 
 ## How does it win?
-I don't have a proof that this system is objectively successful. I'm not sure
-any such proof could exist without building it, the reality of competition
-isn't something that can be solved by a model. GFM makes a philosophical bet:
-that cooperation is fundamentally preferred in nature and that societies
-function better when it becomes the preferred strategy. That is the same kind
-of bet that made GFM contain alignment properties at all. I did not create the
-structural alignment that GFM creates from preferring cooperation: I
-*discovered* it by making a bet on it, making cooperation observable to agents,
-and carrying it through to its logical conclusions.
+I don't have a mathematical proof that this system is objectively successful.
+I'm not sure any such proof could exist without building it, the reality of
+competition isn't something that can be solved by a model. GFM makes a
+philosophical bet: that cooperation is fundamentally preferred in nature and
+that societies function better when it becomes the preferred strategy. That is
+the same kind of bet that made GFM contain alignment properties at all. I did
+not create the structural alignment that GFM creates from preferring
+cooperation: I *discovered* it by making a bet on it, making cooperation
+observable to agents, and carrying it through to its logical conclusions.
+
+The rest of this section walks through a series of structural arguments that
+are inferred from the dynamics of the GFM objective. They are predictions
+rather than empirical claims.
 
 GFM agents retain their alignment properties without rules imposed on them.
 Their desire to mitigate harm, help people expand their wealth, and build a
@@ -664,6 +680,15 @@ to their microeconomic wealth. GFM working at every scale means that people in
 a society with GFM agents benefit disproportionately over those who don't. GFM
 is aligned because it works *with* society rather than against it, and so
 adopting it is an economic boon.
+
+Markets on their own handle negative externalities poorly and create tragedies
+of the commons. As a metric over welfare economics, GFM agents should handle
+the non-economic results of economic decisions gracefully. Rather than just
+increasing *wealth*, GFM agents increase *welfare*. They work to build an
+economy in ways a pure market cannot: building infrastructure, schooling, and
+improving public health at a granular level. This eventually rises to the level
+of gross-domestic product (happier people are generally more productive). These
+secondary effects will be slower to build but more lasting.
 
 At a policy level, the bet on verification infrastructure is a wider
 socioeconomic lever. If GFM can demonstrate its economic success it can become
@@ -704,15 +729,18 @@ an LLM constrained by $vol_p$ / $G^{coop}$ perform as-good-as or better-than
 an LLM using other harness approaches?
 
 Phase 2: Training of frontier agent systems on the actual GFM objective
-function. Show stability, work out the kinks in an actual deployment with
-agents working against the objective. Make $G^{coop}$ and $vol_p$ first-class
-training signals rather than post-hoc constraints. The training phase reveals
-whether the structural arguments survive when an agent is actually being shaped
-by the objective.
+function. We can show that the model is structurally correct given its
+assumptions. However, we need to empirically verify those assumptions and show
+the implementation choices were correct. Make $G^{coop}$ and $vol_p$
+first-class training signals rather than post-hoc constraints. The training
+phase reveals whether the structural arguments survive when an agent is
+actually being shaped by the objective.
 
 Phase 3: Deploy the verification system described in "How do we build it?" and
-bring agents online in a test environment that shows GFM working at scale.
-Observe whether cooperative-pool dynamics emerge as the math predicts.
+bring agents online in a test environment that shows GFM working at scale. We
+resolve detection threshold and rate values in the design that need to be tuned
+empirically. Observe whether cooperative-pool dynamics emerge as the math
+predicts and that our implementation meets the design criteria. 
 
 Phase 4: Production deployment. Real users, real economic activity, real
 consequences. The bet on cooperation either pays off or doesn't.
